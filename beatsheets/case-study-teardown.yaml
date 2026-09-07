@@ -1,0 +1,122 @@
+# The case-study teardown.
+#
+# The shape a good investigative explainer has, expressed as structure rather
+# than as anybody's script. What is borrowed here is grammar - where the hook
+# lands, how long before the first payoff, where tension is renewed, where
+# evidence density peaks. Nothing in this file came from a transcript, and
+# nothing should: a paraphrase inherits the other show's specifics, which are
+# precisely the part that does not transfer.
+#
+# The curve to notice is that tension DROPS after the cold open. That is
+# deliberate and it is the thing most generated audio gets wrong: it opens hot
+# and then stays hot, which is exhausting and reads as hype. Earning attention
+# and then spending it on context is what makes the later turns land.
+
+id: case-study-teardown
+name: Case-study teardown
+kind: long
+intent: >
+  Reconstruct one thing that went badly or improbably well from primary
+  documents, and land on what was actually load-bearing.
+
+targetSeconds: [600, 720]
+
+beats:
+  - id: cold_open
+    type: cold_open
+    seconds: [8, 14]
+    function: State the anomaly, with no context and no framing.
+    constraints:
+      - One or two sentences, no more.
+      - Lead with a concrete noun, not an abstraction.
+      - Never open with "in this episode" or "today we're looking at".
+      - No question. A question here asks for patience before earning any.
+    minClaims: 1
+
+  - id: stakes
+    type: stakes
+    seconds: [20, 35]
+    function: Say who this mattered to and how much, so the listener knows why to stay.
+    constraints:
+      - Name a specific party, not "the industry".
+      - At least one number, spoken as speech.
+    minClaims: 2
+
+  - id: context
+    type: context
+    seconds: [60, 95]
+    function: The minimum background needed to follow the mechanism. No more.
+    constraints:
+      - Nothing here that the mechanism does not later depend on.
+      - No history for its own sake.
+    minClaims: 3
+
+  - id: turn_1
+    type: turn
+    seconds: [55, 85]
+    function: Introduce the complication that makes the obvious reading wrong.
+    constraints:
+      - Must contradict something a reasonable listener now believes.
+    minClaims: 2
+
+  - id: mechanism
+    type: mechanism
+    seconds: [120, 165]
+    function: The actual causal explanation. The part the episode exists for.
+    constraints:
+      - Every causal step sourced.
+      - State study design or document type when a claim rests on one.
+      - Never upgrade a correlation to a cause.
+    minClaims: 4
+
+  - id: turn_2
+    type: turn
+    seconds: [55, 85]
+    function: The second complication - usually why the fix that suggests itself did not work.
+    constraints:
+      - Must not restate turn_1 in different words.
+    minClaims: 2
+
+  - id: counterpoint
+    type: counterpoint
+    seconds: [45, 70]
+    function: The strongest honest case against this episode's own reading.
+    constraints:
+      - Steelman it. A counterpoint written to be knocked down is worse than none.
+      - Name who holds this view, or which document supports it.
+    minClaims: 2
+    # NOT optional, in any format. Confident one-sidedness is the most common
+    # way generated content is false while every individual sentence is sourced,
+    # and an optional beat is a beat that quietly stops appearing.
+    optional: false
+
+  - id: payoff
+    type: payoff
+    seconds: [60, 90]
+    function: What it actually resolves to, given both turns and the counterpoint.
+    constraints:
+      - No moral. The finding is the payoff.
+      - Must not claim more certainty than the mechanism supports.
+    minClaims: 2
+
+  - id: reckoning
+    type: reckoning
+    seconds: [35, 55]
+    function: "The recurring 'what it cost' segment: money, time, jobs, plainly stated."
+    constraints:
+      - Concrete figures only.
+      - No editorialising on the total.
+    minClaims: 2
+
+  - id: outro
+    type: outro
+    seconds: [12, 22]
+    function: Name the primary document the episode was built from, and stop.
+    constraints:
+      - No call to action beyond naming the source.
+      - Never tease a future episode that does not exist yet.
+    minClaims: 0
+
+# One entry per beat. Peaks at the payoff, not at the open, and drops hard into
+# context so the turns have somewhere to climb from.
+tensionCurve: [0.90, 0.55, 0.30, 0.60, 0.75, 0.65, 0.50, 1.00, 0.45, 0.20]

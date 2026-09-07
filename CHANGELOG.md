@@ -13,6 +13,13 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **An episode is beats, not a prose brief** (`src/formats`, `beatsheets/`).
+  Beat sheets are YAML with a closed set of beat types, per-beat claim floors,
+  and a reviewable tension curve. The first sheet is `case-study-teardown`.
+  Three things fall out of this that a prose brief cannot give: evidence density
+  enforceable per beat, a writer filling one bounded job at a time, and beat
+  start/end timestamps at render - which is what later lets drop-off be
+  attributed to a *kind* of beat rather than to an episode.
 - **A show is data, not a prompt** (`src/canon`, `personas/`). Personas are
   YAML, validated by a Zod schema at load, with the first show `the-teardown`
   shipped. Canon entries are append-only and effective-dated so a show can
@@ -42,6 +49,14 @@ Building toward the first publishable episode.
   asking cross-run questions. Moving then is a migration of files that were
   always structured; starting there would be setup friction paid before any
   episode existed.
+- **The counterpoint beat is never optional.** Confident one-sidedness is the
+  most common way generated content is false while every individual sentence is
+  sourced, and an optional beat is one that quietly stops appearing. Enforced by
+  a test over every shipped format, not by convention.
+- **Formats borrow structure, never text.** Where the hook lands and how tension
+  is renewed is grammar and transfers; a paraphrase inherits the other show's
+  specifics, which are exactly the part that does not. No transcript is ever
+  ingested.
 - **The voice lives in the persona file, never in the environment.** Voice is
   what a show IS to a listener, more than its name or artwork. A value that can
   drift by deployment is a value that will, and swapping one silently is the
