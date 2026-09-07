@@ -13,6 +13,12 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Every claim binds to a quote span you can find in the source**
+  (`src/evidence/claim.ts`). Two checks in order: deterministic (does this quote
+  actually occur in the document?) then semantic (does it support the claim?).
+  Plus per-type structural rules - a statistic must carry a number, a causal
+  claim may not be stated when the quote only reports an association, an
+  attribution may not rest on a T4 source.
 - **A source can only exist by being fetched** (`src/evidence`). `fetchSource`
   is the sole producer of a `Source`, so a model can select from what is there
   and has no path to create one. Citation hallucination is not discouraged here,
@@ -56,6 +62,11 @@ Building toward the first publishable episode.
   asking cross-run questions. Moving then is a migration of files that were
   always structured; starting there would be setup friction paid before any
   episode existed.
+- **Check that a quote EXISTS before asking whether it supports anything.** A
+  model asked to quote a source will, given the chance, produce something the
+  source almost says, and a semantic verifier handed that quote often approves
+  it - because the quote does support the claim, it just is not in the document.
+  Existence is deterministic, free, and closes that hole entirely.
 - **Source tiering guesses down, never up.** Anything unrecognised is T3, and a
   claim takes the *weakest* tier supporting it, so one forum post cannot be
   laundered into fact by sitting beside three papers. Domain is a weak signal
