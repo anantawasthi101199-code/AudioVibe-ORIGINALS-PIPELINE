@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+
+# Generated episodes. Every run writes its own directory of artifacts here -
+# corpus, claims, script, renders. Deliberately NOT committed: it is large,
+# it is reproducible from the inputs that ARE committed, and a rejected take
+# is not something the history needs to carry forever.
+runs/
+
+# Scratch audio
+*.wav
+*.mp3
