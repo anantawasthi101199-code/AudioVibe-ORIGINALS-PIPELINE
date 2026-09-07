@@ -1,0 +1,15 @@
+# LF in the repository, always, on every platform.
+#
+# Without this, a Windows checkout with core.autocrlf=true stores CRLF in files
+# that tooling then rejects: prettier and eslint report every line of an
+# otherwise untouched file as an error, which buries the real diff. This is not
+# hypothetical - it happened in the platform repo and produced 721 phantom lint
+# errors in a single afternoon.
+* text=auto eol=lf
+
+# Binary, never touched.
+*.png binary
+*.jpg binary
+*.mp3 binary
+*.wav binary
+*.m4a binary
