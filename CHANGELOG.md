@@ -13,6 +13,13 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A source can only exist by being fetched** (`src/evidence`). `fetchSource`
+  is the sole producer of a `Source`, so a model can select from what is there
+  and has no path to create one. Citation hallucination is not discouraged here,
+  it is structurally impossible: a reference that was never fetched has nowhere
+  to come from. Includes deterministic HTML-to-text extraction, content hashing
+  so a document that rewrites itself under a published episode is detectable,
+  and domain-based source tiering.
 - **An episode is beats, not a prose brief** (`src/formats`, `beatsheets/`).
   Beat sheets are YAML with a closed set of beat types, per-beat claim floors,
   and a reviewable tension curve. The first sheet is `case-study-teardown`.
@@ -49,6 +56,10 @@ Building toward the first publishable episode.
   asking cross-run questions. Moving then is a migration of files that were
   always structured; starting there would be setup friction paid before any
   episode existed.
+- **Source tiering guesses down, never up.** Anything unrecognised is T3, and a
+  claim takes the *weakest* tier supporting it, so one forum post cannot be
+  laundered into fact by sitting beside three papers. Domain is a weak signal
+  for authority and a human can override it on the record.
 - **The counterpoint beat is never optional.** Confident one-sidedness is the
   most common way generated content is false while every individual sentence is
   sourced, and an optional beat is one that quietly stops appearing. Enforced by
