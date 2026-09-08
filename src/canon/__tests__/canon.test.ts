@@ -18,9 +18,13 @@ category: Educational
 thesis: A show for testing.
 audience: Tests.
 register: Plain.
-voice:
-  provider: elevenlabs
-  voiceId: voice-123
+hosts:
+  - id: host
+    name: Host
+    role: Narrates the show.
+    voice:
+      provider: elevenlabs
+      voiceId: voice-123
 styleCard:
   sentenceWordsMean: 15
   sentenceWordsStdDevMin: 5
@@ -37,12 +41,13 @@ describe('parsePersona', () => {
   it('parses a minimal valid show and applies defaults', () => {
     const p = parsePersona(MINIMAL);
     expect(p.id).toBe('test-show');
-    expect(p.voice.provider).toBe('elevenlabs');
+    expect(p.hosts).toHaveLength(1);
+    expect(p.hosts[0]!.voice.provider).toBe('elevenlabs');
     // Defaults exist so a show bible does not have to state every knob.
     expect(p.canon).toEqual([]);
     expect(p.styleCard.forbiddenPhrases).toEqual([]);
     expect(p.styleCard.catchphraseBudget).toBe(2);
-    expect(p.voice.settings).toEqual({});
+    expect(p.hosts[0]!.voice.settings).toEqual({});
   });
 
   it('rejects invalid YAML with the file named', () => {
@@ -73,6 +78,22 @@ describe('parsePersona', () => {
     expect(() => parsePersona(MINIMAL.replace('formats: [case-study-teardown]', 'formats: []'))).toThrow(
       PersonaLoadError
     );
+  });
+
+  const extraHost = (id: string) =>
+    [`  - id: ${id}`, `    name: ${id}`, '    role: r', '    voice: {provider: elevenlabs, voiceId: v}'].join('\n');
+
+  it('accepts a two-host cast, which is what a conversation needs', () => {
+    const two = MINIMAL.replace('  - id: host', `${extraHost('a')}\n  - id: host`);
+    expect(parsePersona(two).hosts).toHaveLength(2);
+  });
+
+  it('caps the cast at two, past which listeners lose track of who is speaking', () => {
+    const three = MINIMAL.replace(
+      '  - id: host',
+      `${extraHost('a')}\n${extraHost('b')}\n  - id: host`
+    );
+    expect(() => parsePersona(three)).toThrow(PersonaLoadError);
   });
 
   it('requires a voice id, since a show without one cannot be rendered', () => {

@@ -13,7 +13,7 @@ category: Educational
 thesis: x
 audience: y
 register: z
-voice: {provider: elevenlabs, voiceId: v}
+hosts: [{id: host, name: Host, role: Narrates the show., voice: {provider: elevenlabs, voiceId: v}}]
 styleCard:
   sentenceWordsMean: 15
   sentenceWordsStdDevMin: 5
@@ -54,8 +54,20 @@ const script = (text = GOOD_PROSE): Script => ({
   description: 'A description.',
   writerModel: 'writer-1',
   beats: [
-    { beatId: 'cold_open', beatType: 'cold_open', text, claimIds: ['c1'] },
-    { beatId: 'payoff', beatType: 'payoff', text: 'It cost four million pounds in the end.', claimIds: ['c2', 'c3'] },
+    {
+      beatId: 'cold_open',
+      beatType: 'cold_open',
+      turns: [{ speaker: 'host', text }],
+      claimIds: ['c1'],
+      revisions: 0,
+    },
+    {
+      beatId: 'payoff',
+      beatType: 'payoff',
+      turns: [{ speaker: 'host', text: 'It cost four million pounds in the end.' }],
+      claimIds: ['c2', 'c3'],
+      revisions: 0,
+    },
   ],
 });
 

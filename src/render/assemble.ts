@@ -165,11 +165,36 @@ export interface RenderDeps {
   concat?: (files: string[], out: string, gap: number) => Promise<void>;
 }
 
-/** Render every beat, join them, and record where each one landed. */
+export interface RenderableTurn {
+  speaker: string;
+  text: string;
+}
+
+export interface RenderableBeat {
+  beatId: string;
+  beatType: string;
+  turns: RenderableTurn[];
+}
+
+/**
+ * Render every beat, join them, and record where each one landed.
+ *
+ * A beat with one speaker goes through plain text-to-speech. A beat with more
+ * than one goes through the provider's DIALOGUE endpoint as a single request,
+ * which is what produces turn-taking a listener reads as conversation: overlap,
+ * interruption, a reply landing early. Rendering each turn separately and
+ * splicing them cannot do any of that, and gives every turn identical prosody
+ * into the bargain.
+ *
+ * It falls back to per-turn synthesis when the provider has no dialogue
+ * endpoint, because a worse-sounding episode beats no episode - but the
+ * fallback is a real downgrade and the log says so.
+ */
 export const renderScript = async (
   input: {
-    beats: Array<{ beatId: string; beatType: string; text: string }>;
-    voice: import('../canon/schema').Voice;
+    beats: RenderableBeat[];
+    /** Voice per host id. */
+    voices: Record<string, import('../canon/schema').Voice>;
     beatPathFor: (name: string) => string;
     outputPath: string;
   },
@@ -183,18 +208,46 @@ export const renderScript = async (
 
   const { forSpeech } = await import('./tts');
 
+  const voiceFor = (speaker: string) => {
+    const voice = input.voices[speaker];
+    if (!voice) {
+      throw new Error(
+        `no voice for speaker "${speaker}" (have: ${Object.keys(input.voices).join(', ')})`
+      );
+    }
+    return voice;
+  };
+
   const files: string[] = [];
   const timings: Array<{ id: string; type: string; durationS: number }> = [];
   let costPence = 0;
   let provider = '';
   let model = '';
-  let voiceId = '';
+  const voiceIds = new Set<string>();
 
   for (const [i, beat] of input.beats.entries()) {
-    const result = await tts.synthesise({ text: forSpeech(beat.text), voice: input.voice });
+    const speakers = new Set(beat.turns.map((t) => t.speaker));
+    const multiVoice = speakers.size > 1;
+
+    const result =
+      multiVoice && tts.synthesiseDialogue
+        ? await tts.synthesiseDialogue({
+            lines: beat.turns.map((t) => ({
+              text: forSpeech(t.text),
+              voice: voiceFor(t.speaker),
+            })),
+          })
+        : await tts.synthesise({
+            // Single speaker, or a provider with no dialogue endpoint. Turns are
+            // joined with a blank line so the engine at least breathes between
+            // them.
+            text: forSpeech(beat.turns.map((t) => t.text).join('\n\n')),
+            voice: voiceFor(beat.turns[0]!.speaker),
+          });
+
     provider = result.provider;
     model = result.model;
-    voiceId = result.voiceId;
+    for (const id of result.voiceId.split('+')) voiceIds.add(id);
     costPence += result.costPence;
     onCost?.(result.costPence);
 
@@ -223,7 +276,7 @@ export const renderScript = async (
     beatMap,
     provider,
     model,
-    voiceId,
+    voiceId: [...voiceIds].join('+'),
     costPence,
   };
 };

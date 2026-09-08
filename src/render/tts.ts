@@ -28,6 +28,16 @@ export interface SynthesisRequest {
   voice: Voice;
 }
 
+/** One speaker's line in a multi-voice request. */
+export interface DialogueLine {
+  text: string;
+  voice: Voice;
+}
+
+export interface DialogueRequest {
+  lines: DialogueLine[];
+}
+
 export interface SynthesisResult {
   audio: Buffer;
   /** What actually produced this, recorded for reproducibility. */
@@ -41,6 +51,19 @@ export interface SynthesisResult {
 export interface TtsProvider {
   readonly name: string;
   synthesise(req: SynthesisRequest): Promise<SynthesisResult>;
+  /**
+   * Render an exchange as ONE request, letting the provider own turn-taking.
+   *
+   * Not the same as rendering each turn and concatenating. Splicing separate
+   * renders gives every turn the same flat prosody and a mechanical gap where a
+   * person would have come in early or trailed off; the provider generating the
+   * whole exchange at once is what produces overlap, interruption and a reply
+   * that starts before the previous line has quite landed.
+   *
+   * Optional so a provider without a dialogue endpoint can still be used for
+   * narrated shows rather than being unusable.
+   */
+  synthesiseDialogue?(req: DialogueRequest): Promise<SynthesisResult>;
 }
 
 export class TtsError extends Error {
@@ -130,6 +153,60 @@ export class ElevenLabsTts implements TtsProvider {
       model: this.model,
       voiceId: voice.voiceId,
       costPence: (text.length / 1000) * ELEVENLABS_PENCE_PER_1K_CHARS,
+    };
+  }
+
+  /**
+   * Text to Dialogue: the whole exchange in one request.
+   *
+   * Costs the same as rendering the turns separately, since billing is by
+   * character, and buys turn-taking the provider actually models - overlap,
+   * interruption, a reply landing early. Splicing separate renders cannot
+   * produce any of that, and gives every turn identical prosody besides.
+   */
+  async synthesiseDialogue({ lines }: DialogueRequest): Promise<SynthesisResult> {
+    if (!lines.length) throw new TtsError(this.name, 'no lines to speak');
+
+    for (const line of lines) {
+      if (line.voice.voiceId.startsWith('REPLACE_')) {
+        throw new TtsError(
+          this.name,
+          `a host still has a placeholder voiceId (${line.voice.voiceId}). ` +
+            `Pick a real voice for every host, and then never change them.`
+        );
+      }
+    }
+
+    const res = await this.post(
+      'https://api.elevenlabs.io/v1/text-to-dialogue',
+      { 'xi-api-key': this.apiKey, accept: 'audio/mpeg' },
+      {
+        model_id: this.model,
+        inputs: lines.map((l) => ({
+          text: l.text,
+          voice_id: l.voice.voiceId,
+          voice_settings: { stability: 0.5, similarity_boost: 0.75, ...l.voice.settings },
+        })),
+      }
+    );
+
+    if (res.status < 200 || res.status >= 300) {
+      throw new TtsError(this.name, `HTTP ${res.status}: ${res.text}`);
+    }
+    if (res.buffer.length < 1000) {
+      throw new TtsError(this.name, `returned only ${res.buffer.length} bytes, which is not audio`);
+    }
+
+    const characters = lines.reduce((n, l) => n + l.text.length, 0);
+
+    return {
+      audio: res.buffer,
+      provider: this.name,
+      model: this.model,
+      // Several voices produced this. Recorded as a joined list so provenance
+      // still answers "which voices made this episode".
+      voiceId: [...new Set(lines.map((l) => l.voice.voiceId))].join('+'),
+      costPence: (characters / 1000) * ELEVENLABS_PENCE_PER_1K_CHARS,
     };
   }
 }

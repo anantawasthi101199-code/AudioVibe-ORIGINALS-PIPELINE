@@ -207,7 +207,9 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     render = await renderScript(
       {
         beats: script.beats,
-        voice: persona.voice,
+        // Voice per host id. Built from the cast rather than passed as one
+        // voice, so a dialogue beat can be rendered as an exchange.
+        voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
       },

@@ -17,7 +17,7 @@ category: Educational
 thesis: x
 audience: y
 register: z
-voice: {provider: elevenlabs, voiceId: v}
+hosts: [{id: host, name: Host, role: Narrates the show., voice: {provider: elevenlabs, voiceId: v}}]
 styleCard:
   sentenceWordsMean: 15
   sentenceWordsStdDevMin: 5

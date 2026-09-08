@@ -113,15 +113,17 @@ describe('renderScript', () => {
   };
 
   const beats = [
-    { beatId: 'cold_open', beatType: 'cold_open', text: 'Open.' },
-    { beatId: 'payoff', beatType: 'payoff', text: 'Land.' },
+    { beatId: 'cold_open', beatType: 'cold_open', turns: [{ speaker: 'host', text: 'Open.' }] },
+    { beatId: 'payoff', beatType: 'payoff', turns: [{ speaker: 'host', text: 'Land.' }] },
   ];
+
+  const voices = { host: voice, other: { ...voice, voiceId: 'v456' } };
 
   it('renders each beat and builds the map from MEASURED durations', async () => {
     // Measured rather than estimated: the whole value of the map is that a
     // timestamp corresponds to what a listener actually heard.
     const res = await renderScript(
-      { beats, voice, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+      { beats, voices, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
       fakeTts(),
       deps([12, 30])
     );
@@ -133,7 +135,7 @@ describe('renderScript', () => {
 
   it('records which provider, model and voice produced it', async () => {
     const res = await renderScript(
-      { beats, voice, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+      { beats, voices, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
       fakeTts(),
       deps([1, 1])
     );
@@ -145,7 +147,7 @@ describe('renderScript', () => {
   it('reports cost per beat, so a budget trips at the beat that tripped it', async () => {
     const costs: number[] = [];
     await renderScript(
-      { beats, voice, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+      { beats, voices, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
       fakeTts(),
       deps([1, 1]),
       (c) => costs.push(c)
@@ -158,7 +160,7 @@ describe('renderScript', () => {
     // timestamps are the entire reason for rendering per beat.
     await expect(
       renderScript(
-        { beats, voice, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+        { beats, voices, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
         fakeTts(),
         deps([])
       )

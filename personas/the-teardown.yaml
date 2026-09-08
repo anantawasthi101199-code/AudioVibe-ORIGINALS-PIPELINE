@@ -31,16 +31,43 @@ register: >
   failure: the point is what was actually load-bearing, not that somebody was
   stupid.
 
-voice:
-  provider: elevenlabs
-  # Placeholder. Must be replaced with a real designed voice before the first
-  # publish, and then NEVER changed - see the note in canon/schema.ts.
-  voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-  settings:
-    stability: 0.45
-    similarity_boost: 0.75
-    # v3's expressiveness is the reason to be on it; at 0 it reads like v2.
-    style: 0.35
+# Two hosts, because narrated prose read by one synthetic voice is the most
+# AI-sounding format that exists. The roles are deliberately DIFFERENT: two
+# hosts with the same job produce the thing every AI podcast does, which is two
+# voices agreeing enthusiastically for ten minutes.
+#
+# Both voiceIds are placeholders. Replace before the first publish, then never
+# change them - see the note in canon/schema.ts.
+hosts:
+  - id: reporter
+    name: Nadia
+    role: >
+      Has read the documents and walks through what they say. Brings the
+      specifics, concedes readily when a document does not go as far as she
+      hoped, and is the one who names the primary source out loud.
+    voice:
+      provider: elevenlabs
+      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      settings:
+        stability: 0.45
+        similarity_boost: 0.75
+        # v3's expressiveness is the reason to be on it; at 0 it reads like v2.
+        style: 0.35
+
+  - id: sceptic
+    name: Theo
+    role: >
+      Has not read them, and presses. Asks what a claim actually rests on,
+      pushes back when a step does not follow, and is the one who raises the
+      counterpoint. Never contrarian for its own sake - he concedes when the
+      answer is good, and that is what makes the pushback worth anything.
+    voice:
+      provider: elevenlabs
+      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      settings:
+        stability: 0.4
+        similarity_boost: 0.75
+        style: 0.4
 
 styleCard:
   # Around 16 words, but the spread matters more than the mean: uniform

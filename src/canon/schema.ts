@@ -129,6 +129,38 @@ export const voiceSchema = z.object({
 
 export type Voice = z.infer<typeof voiceSchema>;
 
+/**
+ * A speaking part.
+ *
+ * WHY SHOWS HAVE HOSTS AND NOT A VOICE. Narrated prose read by a single
+ * synthetic voice is the most AI-sounding format that exists, because polished
+ * monologue is exactly what text-to-speech has always produced. Two people
+ * talking is dramatically more listenable, and the reason is not the technology
+ * - it is that conversation carries hesitation, interruption, disagreement and
+ * repair, none of which survive in prose written to be read aloud.
+ *
+ * So a show is a cast. A narrated show is simply a cast of one, which keeps
+ * one code path for both instead of a special case.
+ */
+export const hostSchema = z.object({
+  /** Referenced by the writer and in every script turn. */
+  id: z.string().regex(/^[a-z0-9_]+$/, 'lowercase, digits and underscores only'),
+  /** What listeners hear them called. */
+  name: z.string().min(1),
+  /**
+   * What this host is FOR in a conversation.
+   *
+   * Load-bearing rather than colour. Two hosts with the same job produce the
+   * thing every AI podcast does, which is two voices agreeing enthusiastically
+   * for ten minutes. Give one the job of pressing on the weak point and the
+   * conversation acquires a reason to exist.
+   */
+  role: z.string().min(1),
+  voice: voiceSchema,
+});
+
+export type Host = z.infer<typeof hostSchema>;
+
 export const personaSchema = z.object({
   /** Stable id. Used in run artifacts and sent to the platform as persona_ref. */
   id: z.string().regex(/^[a-z0-9-]+$/, 'lowercase, digits and hyphens only'),
@@ -151,7 +183,15 @@ export const personaSchema = z.object({
   /** How it sounds, in prose. The only prose field, and it does not gate anything. */
   register: z.string().min(1),
 
-  voice: voiceSchema,
+  /**
+   * The cast. One host is a narrated show; two is a conversation.
+   *
+   * Capped at two on purpose. Three synthetic voices in one room is where
+   * listeners stop being able to tell who is speaking, and turn-taking stops
+   * carrying meaning.
+   */
+  hosts: z.array(hostSchema).min(1).max(2),
+
   styleCard: styleCardSchema,
   canon: z.array(canonEntrySchema).default([]),
 
@@ -172,6 +212,20 @@ export const personaSchema = z.object({
 });
 
 export type Persona = z.infer<typeof personaSchema>;
+
+/** True when the show is a conversation rather than narration. */
+export const isDialogueShow = (persona: Persona): boolean => persona.hosts.length > 1;
+
+/** Look a host up by id, or throw naming what was available. */
+export const hostById = (persona: Persona, id: string): Host => {
+  const host = persona.hosts.find((h) => h.id === id);
+  if (!host) {
+    throw new Error(
+      `${persona.id} has no host "${id}" (has: ${persona.hosts.map((h) => h.id).join(', ')})`
+    );
+  }
+  return host;
+};
 
 /** Canon entries in force on a given date. */
 export const canonAsOf = (persona: Persona, isoDate: string): CanonEntry[] =>

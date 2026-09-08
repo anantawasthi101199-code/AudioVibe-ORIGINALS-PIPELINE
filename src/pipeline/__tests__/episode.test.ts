@@ -90,7 +90,13 @@ const fakeWriter = (sourceId: () => string): LlmClient & { calls: number } => {
       } else if (req.system.includes('title and description')) {
         text = JSON.stringify({ title: 'The Thursday Column', description: 'One. Two.' });
       } else {
-        text = JSON.stringify({ text: BEAT_PROSE, claimIds: [] });
+        text = JSON.stringify({
+          turns: [
+            { speaker: 'reporter', text: BEAT_PROSE },
+            { speaker: 'sceptic', text: 'Wait. Who signed the Thursday entry?' },
+          ],
+          claimIds: [],
+        });
       }
       return { text, inputTokens: 10, outputTokens: 10, costPence: 0.1, model: 'writer-1' };
     },

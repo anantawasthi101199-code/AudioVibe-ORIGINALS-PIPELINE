@@ -167,9 +167,12 @@ const cmdShows = (): number => {
     console.log(`  ${p.thesis.trim().replace(/\s+/g, ' ')}`);
     console.log(`  category: ${p.category}`);
     console.log(`  formats:  ${p.formats.join(', ')}`);
-    console.log(`  voice:    ${p.voice.provider}/${p.voice.voiceId}`);
-    if (p.voice.voiceId.startsWith('REPLACE_')) {
-      console.log('            ^ placeholder. Set a real voice before publishing, then never change it.');
+    console.log(`  ${p.hosts.length > 1 ? 'hosts:' : 'host: '}`);
+    for (const h of p.hosts) {
+      console.log(`    ${h.id} (${h.name})  ${h.voice.provider}/${h.voice.voiceId}`);
+      if (h.voice.voiceId.startsWith('REPLACE_')) {
+        console.log('      ^ placeholder. Set a real voice before publishing, then never change it.');
+      }
     }
     console.log('');
   }
@@ -244,9 +247,18 @@ const cmdScript = (argv: string[]): number => {
   const run = openRun(argv);
   const script: Script = run.readArtifact('script', scriptSchema);
   console.log(`${script.title}\n${script.description}\n`);
+  const persona = loadPersona(script.personaId);
+  const nameOf = (id: string) => persona.hosts.find((h) => h.id === id)?.name ?? id;
+
   for (const beat of script.beats) {
-    console.log(`--- ${beat.beatId} (${beat.beatType}) ---`);
-    console.log(`${beat.text}\n`);
+    const revised = beat.revisions ? ` [${beat.revisions} revision(s)]` : '';
+    console.log(`--- ${beat.beatId} (${beat.beatType})${revised} ---`);
+    for (const turn of beat.turns) {
+      // Speaker prefixed even on a narrated show, so reading this aloud matches
+      // what the render will actually produce.
+      console.log(`${nameOf(turn.speaker).toUpperCase()}: ${turn.text}`);
+    }
+    console.log('');
   }
   return 0;
 };
