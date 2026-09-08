@@ -35,6 +35,7 @@ import { ElevenLabsTts } from './render/tts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
+import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
 import { renderResultSchema } from './render/assemble';
 import { claimSetSchema, corpusSchema } from './evidence/research';
@@ -54,6 +55,7 @@ Commands
   gate [--run <id>]              Re-run the gate over an existing run
   script [--run <id>]            Print the script, for reading aloud
   publish --run <id> [--yes]     Publish a run that passed the gate
+  compare --a <run> --b <run>    Which of two scripts is better to listen to
 
 Notes
   make stops at the gate. Publishing is always a separate, deliberate step.
@@ -287,6 +289,39 @@ const cmdGate = (argv: string[]): number => {
   return gate.passed ? 0 : 2;
 };
 
+/**
+ * Pairwise comparison of two finished scripts.
+ *
+ * Separate from the pipeline on purpose: the gate answers "may this go out",
+ * which is a floor, and cannot answer "is this getting better". That second
+ * question is asked occasionally - after changing a beat sheet or a style card -
+ * so it is a command rather than a stage, and costs nothing on an ordinary run.
+ */
+const cmdCompare = async (argv: string[]): Promise<number> => {
+  const aId = arg(argv, 'a');
+  const bId = arg(argv, 'b');
+  if (!aId || !bId) {
+    console.error('Usage: compare --a <run-id> --b <run-id>');
+    return 1;
+  }
+
+  const load = (id: string) => {
+    const run = Run.open(id);
+    const script = run.readArtifact('script', scriptSchema);
+    return { label: id, title: script.title, text: fullText(script) };
+  };
+
+  const verifier = verifierConfig();
+  // The verifier client, not the writer: a model scores its own family's output
+  // higher, by as much as tens of percent, and the verifier is already required
+  // to be a different family from the writer.
+  const judge = new OpenAiClient(verifier.model, verifier.apiKey);
+
+  const result = await compare(load(aId), load(bId), judge);
+  console.log(formatComparison(result));
+  return 0;
+};
+
 const cmdPublish = async (argv: string[]): Promise<number> => {
   const run = openRun(argv);
   const gate = readGate(run);
@@ -378,6 +413,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdScript(rest);
       case 'gate':
         return cmdGate(rest);
+      case 'compare':
+        return await cmdCompare(rest);
       case 'publish':
         return await cmdPublish(rest);
       default:

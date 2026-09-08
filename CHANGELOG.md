@@ -26,6 +26,12 @@ Building toward the first publishable episode.
   nine contributes that paragraph.
 - **The lexical half of the AI tell** - sentence-opener diversity, repeated
   trigrams, and common-word share as a free stand-in for perplexity.
+- **Pairwise comparison** (`src/qa/compare.ts`, `foundry compare`). Answers "is
+  this getting better", which the gate cannot: every gate check is a floor, and
+  an episode can clear all of them and still be dull. Controls for position bias
+  (both orderings, disagreement recorded as a tie), self-preference (judged by
+  the verifier, a different family from the writer) and verbosity (stated in the
+  prompt). A separate command, so it costs nothing on an ordinary run.
 - **Optional Exa and Firecrawl** (`src/evidence/providers.ts`), opt-in by env
   var. Exa pools with Brave for neural search; Firecrawl renders JavaScript and
   falls back per URL.
