@@ -130,7 +130,7 @@ describe('AudioVibeClient', () => {
   it('publishes and returns the audio id', async () => {
     const client = new AudioVibeClient('https://api.example', 'tok', async () => ({
       status: 201,
-      json: { data: { id: 'aud-1', processing_status: 'pending' } },
+      json: { data: { audio: { id: 'aud-1', processing_status: 'pending' } } },
       text: '',
     }));
     expect(await client.publish(input())).toEqual({ audioId: 'aud-1', status: 'pending' });
@@ -142,7 +142,7 @@ describe('AudioVibeClient', () => {
     let form: FormData | null = null;
     const client = new AudioVibeClient('https://api.example', 'tok', async (_u, _h, f) => {
       form = f;
-      return { status: 201, json: { data: { id: 'a' } }, text: '' };
+      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
     });
     await client.publish(input());
     expect(form!.get('is_ai_generated')).toBe('true');
@@ -152,7 +152,7 @@ describe('AudioVibeClient', () => {
     let form: FormData | null = null;
     const client = new AudioVibeClient('https://api.example', 'tok', async (_u, _h, f) => {
       form = f;
-      return { status: 201, json: { data: { id: 'a' } }, text: '' };
+      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
     });
     await client.publish(input());
     expect(JSON.parse(String(form!.get('beat_map')))[0].id).toBe('cold_open');
@@ -163,7 +163,7 @@ describe('AudioVibeClient', () => {
     let headers: Record<string, string> = {};
     const client = new AudioVibeClient('https://api.example', 'tok', async (_u, h) => {
       headers = h;
-      return { status: 201, json: { data: { id: 'a' } }, text: '' };
+      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
     });
     await client.publish(input());
     expect(headers.authorization).toBe('Bearer tok');
@@ -174,7 +174,7 @@ describe('AudioVibeClient', () => {
     let headers: Record<string, string> = {};
     const client = new AudioVibeClient('https://api.example', 'tok', async (_u, h) => {
       headers = h;
-      return { status: 201, json: { data: { id: 'a' } }, text: '' };
+      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
     });
     await client.publish(input());
     expect(Object.keys(headers).map((k) => k.toLowerCase())).not.toContain('content-type');

@@ -113,12 +113,17 @@ export class AudioVibeClient {
       throw new PublishError(res.status, body?.message ?? res.text.slice(0, 300));
     }
 
-    const body = res.json as { data?: { id?: string; processing_status?: string } } | null;
-    const audioId = body?.data?.id;
+    // The shape the shared upload controller returns: { data: { audio, ... } }.
+    // Reading it correctly matters more than it looks - a missing id is treated
+    // as a failure below, and getting the path wrong would make every
+    // successful publish look like a failure and invite a retry that
+    // duplicates the episode.
+    const body = res.json as { data?: { audio?: { id?: string; processing_status?: string } } } | null;
+    const audioId = body?.data?.audio?.id;
     if (!audioId) {
       throw new PublishError(res.status, `succeeded but returned no audio id: ${res.text.slice(0, 200)}`);
     }
 
-    return { audioId, status: body?.data?.processing_status ?? 'pending' };
+    return { audioId, status: body?.data?.audio?.processing_status ?? 'pending' };
   }
 }
