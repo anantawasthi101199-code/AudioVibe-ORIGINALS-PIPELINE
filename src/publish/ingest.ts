@@ -103,7 +103,10 @@ export class AudioVibeClient {
     }
 
     const res = await this.post(
-      `${this.baseUrl}/api/audio/ingest`,
+      // /api/audioS, plural. The router mounts audioRoutes at '/audios' and
+      // getting this wrong 404s every publish, which the client then reports as
+      // a failure with no hint that the path is the problem.
+      `${this.baseUrl}/api/audios/ingest`,
       { authorization: `Bearer ${this.token}` },
       form
     );

@@ -159,6 +159,19 @@ describe('AudioVibeClient', () => {
     expect(JSON.parse(String(form!.get('provenance'))).persona_ref).toBe('the-teardown');
   });
 
+  it('posts to /api/audios (PLURAL), which is where the router mounts it', async () => {
+    // Verified against the live API: /api/audio/ingest 404s, /api/audios/ingest
+    // returns 401. Getting this wrong fails every publish with no hint that the
+    // path is the problem.
+    let url = '';
+    const client = new AudioVibeClient('https://api.example', 'tok', async (u) => {
+      url = u;
+      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
+    });
+    await client.publish(input());
+    expect(url).toBe('https://api.example/api/audios/ingest');
+  });
+
   it('authenticates with the ingest token as a bearer', async () => {
     let headers: Record<string, string> = {};
     const client = new AudioVibeClient('https://api.example', 'tok', async (_u, h) => {
