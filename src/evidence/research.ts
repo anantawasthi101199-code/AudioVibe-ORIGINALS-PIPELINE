@@ -26,6 +26,7 @@ import { EpisodeFormat } from '../formats/schema';
 import { extractJson, LlmClient } from '../models/client';
 import { Claim, claimSchema, checkLedger, UnsupportedClaim, unsupportedClaimSchema } from './claim';
 import { FetchDeps, fetchSource } from './fetch';
+import { selectPassages } from './passages';
 import { rankCandidates, SearchProvider } from './search';
 import { Source, tierForUrl } from './source';
 
@@ -219,11 +220,15 @@ export const extractClaims = async (
     .map((b) => `- ${b.id} (${b.type}, needs >= ${b.minClaims} claims): ${b.function}`)
     .join('\n');
 
+  // What the episode is trying to establish, which is what each passage is
+  // scored for relevance against.
+  const wanted = [brief.angle, ...brief.mustEstablish, ...brief.queries];
+
   const documents = corpus.sources
     .map(
       (s, i) =>
         `--- DOCUMENT ${i + 1} | sourceId: ${s.id} | tier: ${s.tier} | ${s.title}\n` +
-        s.text.slice(0, EXTRACT_CHARS_PER_SOURCE)
+        selectPassages(s.text, wanted, EXTRACT_CHARS_PER_SOURCE)
     )
     .join('\n\n');
 

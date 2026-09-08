@@ -97,6 +97,28 @@ export const stdDev = (xs: number[]): number => {
   return Math.sqrt(mean(xs.map((x) => (x - m) ** 2)));
 };
 
+/**
+ * The 200 commonest English words.
+ *
+ * Used as a cheap stand-in for perplexity. Real perplexity needs a model's
+ * logprobs, which means a call per draft; the share of tokens drawn from this
+ * list moves in the same direction for free. Generated prose reaches for the
+ * statistically likely word, so an unusually high common-word share is the
+ * lexical half of the same tell that uniform sentence length is the rhythmic
+ * half of.
+ */
+const COMMON_WORDS = new Set(
+  ('the be to of and a in that have i it for not on with he as you do at this but his by from they we say her ' +
+   'she or an will my one all would there their what so up out if about who get which go me when make can like ' +
+   'time no just him know take people into year your good some could them see other than then now look only come ' +
+   'its over think also back after use two how our work first well way even new want because any these give day ' +
+   'most us is are was were been being has had did does done said says going got made much many more very such ' +
+   'own same those own here where why while does off down before between under again both few own too through ' +
+   'during without within around against among since until upon another every each either neither always never ' +
+   'often sometimes really quite rather almost enough still yet already however therefore thus hence indeed')
+    .split(' ')
+);
+
 export interface StyleMeasurement {
   words: number;
   sentences: number;
@@ -107,6 +129,24 @@ export interface StyleMeasurement {
   hedgesPer100Words: number;
   /** Distinct words over total words. Low values mean repetitive prose. */
   typeTokenRatio: number;
+  /**
+   * Share of tokens drawn from the 200 commonest English words.
+   *
+   * The lexical half of the AI tell. Detection research treats predictable word
+   * choice as co-equal with uniform rhythm, and this pipeline measured only the
+   * rhythm until now.
+   */
+  commonWordRatio: number;
+  /**
+   * Distinct sentence openings over sentences.
+   *
+   * A very cheap and very reliable signal: generated prose starts sentence
+   * after sentence with "The", "It" and "This", where a person varies where a
+   * sentence enters.
+   */
+  openerDiversity: number;
+  /** Share of trigrams that occur more than once. Phrase-level self-repetition. */
+  repeatedTrigramRatio: number;
   bannedFound: string[];
 }
 
@@ -128,6 +168,28 @@ export const measure = (text: string, forbidden: string[] = []): StyleMeasuremen
   const tokens = lower.match(/[a-z']+/g) ?? [];
   const typeTokenRatio = tokens.length ? new Set(tokens).size / tokens.length : 0;
 
+  const commonWordRatio = tokens.length
+    ? tokens.filter((t) => COMMON_WORDS.has(t)).length / tokens.length
+    : 0;
+
+  // First two words of each sentence. Two rather than one, because "The
+  // regulator" and "The alarm" are different entrances while "The" alone
+  // collapses everything that begins with an article.
+  const openers = sentences
+    .map((s) => (s.toLowerCase().match(/[a-z']+/g) ?? []).slice(0, 2).join(' '))
+    .filter(Boolean);
+  const openerDiversity = openers.length ? new Set(openers).size / openers.length : 1;
+
+  const trigrams: string[] = [];
+  for (let i = 0; i + 2 < tokens.length; i++) {
+    trigrams.push(`${tokens[i]} ${tokens[i + 1]} ${tokens[i + 2]}`);
+  }
+  const trigramCounts = new Map<string, number>();
+  for (const g of trigrams) trigramCounts.set(g, (trigramCounts.get(g) ?? 0) + 1);
+  const repeatedTrigramRatio = trigrams.length
+    ? [...trigramCounts.values()].filter((n) => n > 1).length / trigramCounts.size
+    : 0;
+
   const bannedFound = [...NETWORK_BANNED_PHRASES, ...forbidden].filter((p) =>
     lower.includes(p.toLowerCase())
   );
@@ -141,9 +203,27 @@ export const measure = (text: string, forbidden: string[] = []): StyleMeasuremen
     secondPersonPer100Words: per100(secondPerson),
     hedgesPer100Words: per100(hedges),
     typeTokenRatio,
+    commonWordRatio,
+    openerDiversity,
+    repeatedTrigramRatio,
     bannedFound,
   };
 };
+
+/**
+ * Thresholds for the lexical tells.
+ *
+ * Set loose deliberately. These measure a tendency rather than a mistake, and a
+ * gate that fires on ordinary prose gets widened until it means nothing. They
+ * exist to catch the draft that is obviously machine-shaped, not to police
+ * word choice.
+ */
+export const MIN_OPENER_DIVERSITY = 0.62;
+export const MAX_COMMON_WORD_RATIO = 0.58;
+export const MAX_REPEATED_TRIGRAM_RATIO = 0.06;
+
+/** Below this many sentences these measures are noise, not signal. */
+const LEXICAL_MIN_SENTENCES = 6;
 
 export interface StyleViolation {
   rule: string;
@@ -199,6 +279,40 @@ export const checkStyle = (text: string, card: StyleCard): {
       detail: `hedges ${m.hedgesPer100Words.toFixed(1)} times per 100 words, over the ${card.hedgesPer100WordsMax} ceiling`,
       blocking: true,
     });
+  }
+
+  // The lexical half of the AI tell, which this file measured nothing of until
+  // now. Detection research treats predictable word choice as co-equal with
+  // uniform rhythm; the rhythm check above was only ever half the story.
+  if (m.sentences >= LEXICAL_MIN_SENTENCES) {
+    if (m.openerDiversity < MIN_OPENER_DIVERSITY) {
+      violations.push({
+        rule: 'openerDiversity',
+        detail:
+          `${((1 - m.openerDiversity) * 100).toFixed(0)}% of sentences start the same way as another. ` +
+          `Vary where a sentence enters, not just how long it is.`,
+        blocking: true,
+      });
+    }
+
+    if (m.repeatedTrigramRatio > MAX_REPEATED_TRIGRAM_RATIO) {
+      violations.push({
+        rule: 'repeatedPhrases',
+        detail: `${(m.repeatedTrigramRatio * 100).toFixed(0)}% of three-word phrases repeat`,
+        blocking: true,
+      });
+    }
+
+    // Advisory: a high common-word share can be a legitimately plain register,
+    // and blocking it would push the writer towards thesaurus prose, which is
+    // worse than the thing it fixes.
+    if (m.commonWordRatio > MAX_COMMON_WORD_RATIO) {
+      violations.push({
+        rule: 'commonWordRatio',
+        detail: `${(m.commonWordRatio * 100).toFixed(0)}% of words are among the 200 commonest, which reads as predictable`,
+        blocking: false,
+      });
+    }
   }
 
   const drift = (actual: number, target: number) =>

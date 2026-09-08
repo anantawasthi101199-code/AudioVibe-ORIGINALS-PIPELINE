@@ -167,3 +167,74 @@ describe('vocabularyOverlap', () => {
     expect(vocabularyOverlap('', 'anything')).toBe(0);
   });
 });
+
+describe('lexical tells', () => {
+  // The half this file measured nothing of until now. Detection research treats
+  // predictable word choice as co-equal with uniform rhythm.
+
+  it('BLOCKS sentences that all start the same way', () => {
+    // Very cheap and very reliable: generated prose starts sentence after
+    // sentence with "The", where a person varies where a sentence enters.
+    const sameOpener = [
+      'The regulator arrived on a Tuesday.',
+      'The regulator asked about the log.',
+      'The regulator found the column complete and untrue.',
+      'The regulator wrote it down.',
+      'The regulator left before lunch, having already worked out what nobody inside the building had.',
+      'The regulator came back a fortnight later.',
+    ].join(' ');
+    const { violations } = checkStyle(sameOpener, card);
+    expect(violations.some((v) => v.rule === 'openerDiversity' && v.blocking)).toBe(true);
+  });
+
+  it('BLOCKS phrase-level self-repetition', () => {
+    const repeated = Array.from(
+      { length: 8 },
+      (_, i) => `In the maintenance log the column was complete, entry ${i}, in the maintenance log again.`
+    ).join(' ');
+    const { violations } = checkStyle(repeated, card);
+    expect(violations.some((v) => v.rule === 'repeatedPhrases' && v.blocking)).toBe(true);
+  });
+
+  it('treats predictable vocabulary as ADVISORY, not blocking', () => {
+    // A high common-word share can be a legitimately plain register, and
+    // blocking it would push the writer towards thesaurus prose, which is worse
+    // than the thing it fixes.
+    const plain = [
+      'It was there for a long time and no one saw it.',
+      'They did not know what it was for, so they did not use it at all that year.',
+      'He said it would be fine.',
+      'She did not think so, but she had to go and do the other thing first.',
+      'We can see how it went from here.',
+      'You would have done the same.',
+    ].join(' ');
+    const { violations } = checkStyle(plain, card);
+    const common = violations.find((v) => v.rule === 'commonWordRatio');
+    if (common) expect(common.blocking).toBe(false);
+  });
+
+  it('does not judge lexical tells on a short draft, where they are noise', () => {
+    const { violations } = checkStyle('The one. The two. The three.', card);
+    expect(violations.some((v) => v.rule === 'openerDiversity')).toBe(false);
+  });
+
+  it('reports all three measures', () => {
+    const m = measure('The alarm was off. Nobody noticed it for weeks.');
+    expect(m.commonWordRatio).toBeGreaterThan(0);
+    expect(m.openerDiversity).toBeGreaterThan(0);
+    expect(m.repeatedTrigramRatio).toBeGreaterThanOrEqual(0);
+  });
+
+  it('passes prose that varies its openings', () => {
+    const varied = [
+      'The alarm had been off for eleven weeks.',
+      'Nobody noticed, because the log that would have shown it was filled in every Friday for the week ahead, which meant the column was always complete and never once actually true.',
+      'That is the part worth slowing down on.',
+      'Eleven weeks is a long time for a column to be complete and wrong.',
+      'What unravelled it, in the end, was a single question about who had signed the Thursday entry and whether anyone had ever checked it against the panel.',
+      'It cost four million pounds.',
+    ].join(' ');
+    const { violations } = checkStyle(varied, card);
+    expect(violations.filter((v) => v.blocking)).toEqual([]);
+  });
+});
