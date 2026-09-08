@@ -13,6 +13,23 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A show is a cast, not a voice.** Two hosts with different jobs, rendered
+  through the provider's dialogue endpoint as one request per beat so
+  turn-taking, overlap and interruption are modelled rather than spliced.
+  Narrated shows are a cast of one, so there is a single code path.
+- **Failed beats are repaired, not just rejected.** A beat that fails its
+  deterministic checks is handed the previous draft AND the specific failures
+  and rewritten, cooler than it drafted. Bounded at two revisions.
+- **Passage selection** (`src/evidence/passages.ts`). Extraction's character
+  budget is now filled by BM25-shaped scoring against the brief instead of
+  truncating from the front, so a filing whose relevant paragraph is on page
+  nine contributes that paragraph.
+- **The lexical half of the AI tell** - sentence-opener diversity, repeated
+  trigrams, and common-word share as a free stand-in for perplexity.
+- **Optional Exa and Firecrawl** (`src/evidence/providers.ts`), opt-in by env
+  var. Exa pools with Brave for neural search; Firecrawl renders JavaScript and
+  falls back per URL.
+
 - **The pipeline runs end to end** (`src/pipeline`, `src/cli.ts`). Nine stages,
   each persisting its artifact, fully resumable, with a budget ceiling checked
   after every costed call. `npm run foundry -- make --show the-teardown --topic
@@ -75,6 +92,25 @@ Building toward the first publishable episode.
   committed inputs, and a rejected take is not something history should carry.
 
 ### Decided
+
+- **Dialogue over narration.** Polished monologue read by a synthetic voice is
+  the most AI-sounding format available, because it is exactly what
+  text-to-speech has always produced. What makes two hosts work is not the
+  disfluencies but that they want different things: one has read the documents
+  and one has not and presses. Sprinkling hesitation onto agreement does not
+  work, which is why every AI podcast where two voices agree enthusiastically
+  still sounds like one.
+- **Not MCP, and the interfaces are why.** MCP exists so an agent can DISCOVER
+  tools it was not built against. This pipeline has nine fixed stages calling
+  the same things in the same order, so discovery buys nothing and costs a
+  transport and a schema round-trip per call. What MCP would actually provide is
+  a stable interface boundary, and `SearchProvider` and `FetchDeps` already are
+  one - an MCP-backed provider drops in behind either without anything upstream
+  noticing.
+- **Passage scoring, not a reranker API.** Hybrid-retrieve-then-cross-encode is
+  right when ranking thousands of candidates. Here the corpus is fourteen
+  already-fetched documents, so the question is which PARAGRAPHS, and that is a
+  lexical problem a local scorer solves for free.
 
 - **The pipeline never publishes.** The two gate checks that defer to a human -
   has the script acknowledged the counter-evidence, is that T4 source framed as

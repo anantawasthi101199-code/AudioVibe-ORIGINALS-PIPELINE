@@ -18,12 +18,18 @@ import {
   ttsConfig,
   verifierConfig,
   writerConfig,
-  ConfigError,
 } from './config';
 import { loadAllFormats, loadFormat } from './formats/load';
 import { loadAllPersonas, loadPersona } from './canon/load';
 import { AnthropicClient, OpenAiClient } from './models/client';
 import { BraveSearch } from './evidence/search';
+import {
+  buildSearch,
+  describeRetrieval,
+  ExaSearch,
+  firecrawlGet,
+  retrievalKeys,
+} from './evidence/providers';
 import { HttpResponse } from './evidence/fetch';
 import { ElevenLabsTts } from './render/tts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
@@ -117,8 +123,7 @@ const httpGet = async (url: string): Promise<HttpResponse> => {
 const buildDeps = (): PipelineDeps => {
   const writer = writerConfig();
   const verifier = verifierConfig();
-  const braveKey = process.env.BRAVE_SEARCH_API_KEY;
-  if (!braveKey) throw new ConfigError('BRAVE_SEARCH_API_KEY', 'is not set');
+  const keys = retrievalKeys();
 
   if (writer.model === verifier.model) {
     // The check exists because collapsing these is easy, silent, and destroys
@@ -129,12 +134,25 @@ const buildDeps = (): PipelineDeps => {
     );
   }
 
+  const search = buildSearch(keys, {
+    brave: (k) => new BraveSearch(k),
+    exa: (k) => new ExaSearch(k),
+  });
+
+  // Firecrawl renders JavaScript, which is the difference between a corpus and
+  // a pile of "paywall or a JS shell" rejections on some topics. It falls back
+  // to the plain fetcher per URL, so being out of credit costs documents rather
+  // than the run.
+  const get = keys.firecrawl ? firecrawlGet(keys.firecrawl, httpGet) : httpGet;
+
+  console.log(`  retrieval: ${describeRetrieval(keys)}`);
+
   return {
     writer: new AnthropicClient(writer.model, writer.apiKey),
     verifier: new OpenAiClient(verifier.model, verifier.apiKey),
-    search: new BraveSearch(braveKey),
+    search,
     tts: new ElevenLabsTts(ttsConfig().apiKey),
-    fetchDeps: { httpGet },
+    fetchDeps: { httpGet: get },
     priorTexts: priorEpisodeTexts(),
     log: (m) => console.log(`  ${m}`),
   };
