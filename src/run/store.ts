@@ -151,7 +151,16 @@ export class Run {
     return file;
   }
 
-  readArtifact<T>(stage: Stage, schema: z.ZodType<T>): T {
+  /**
+   * The third type parameter pins Input to `unknown` deliberately.
+   *
+   * With a bare `z.ZodType<T>` TypeScript unifies T with the schema's INPUT
+   * type, so any schema using `.default()` hands back a type whose defaulted
+   * fields are still optional - `contested?: boolean` rather than the
+   * `contested: boolean` that parsing actually produces. Everything downstream
+   * then has to handle an undefined that cannot occur.
+   */
+  readArtifact<T>(stage: Stage, schema: z.ZodType<T, z.ZodTypeDef, unknown>): T {
     const file = path.join(this.dir, `${stage}.json`);
     if (!fs.existsSync(file)) {
       throw new Error(`run ${this.id} has no ${stage} artifact yet`);

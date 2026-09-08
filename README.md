@@ -53,21 +53,44 @@ model versions that made it.
 
 ## Status
 
-**Building toward one publishable episode**, deliberately, rather than
-scaffolding all nine stages first. One real episode end to end teaches more than
-a complete framework that has never published anything, and if the first episode
-is not good enough to publish under AudioVibe's own name then the design is
-wrong and that is much cheaper to learn now.
+**The pipeline runs end to end.** 224 tests. What it has not yet done is publish
+a real episode, which needs two things a human has to supply:
 
-See [CHANGELOG.md](CHANGELOG.md) for what exists today.
+1. A real voice for the show. `personas/the-teardown.yaml` ships
+   `voiceId: REPLACE_BEFORE_FIRST_PUBLISH`. Pick one, set it, and then never
+   change it.
+2. The show's account on AudioVibe: a creator with `is_ai = true` and
+   `studio_slug = 'originals'`, plus an ingest credential minted on the platform
+   side with `mintIngestToken.ts`.
+
+See [CHANGELOG.md](CHANGELOG.md) for the decisions behind each stage.
 
 ## Running it
 
 ```bash
 npm install
 cp .env.example .env     # then fill it in
-npm run foundry -- --help
+
+npm run foundry -- shows
+npm run foundry -- make --show the-teardown --topic "what the episode is about"
+npm run foundry -- script          # read it before anything else
+npm run foundry -- publish --run <id>
 ```
+
+`make` researches, writes, renders and gates. **It never publishes.** Publishing
+is a separate command, run by a person who has read the gate report, because the
+two checks the gate defers to a human are exactly the ones automation would wave
+through.
+
+Every stage is resumable. A failed gate does not mean re-rendering: fix what it
+found and `npm run foundry -- resume`.
+
+## Cost
+
+The budget ceiling is `FOUNDRY_EPISODE_BUDGET_PENCE`, checked after every costed
+call. A run that would exceed it stops rather than degrading, because a cost
+overrun should be visible as silence, which somebody notices, rather than as
+quietly worse output, which nobody does.
 
 ## Conventions
 

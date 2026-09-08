@@ -13,6 +13,28 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **The pipeline runs end to end** (`src/pipeline`, `src/cli.ts`). Nine stages,
+  each persisting its artifact, fully resumable, with a budget ceiling checked
+  after every costed call. `npm run foundry -- make --show the-teardown --topic
+  "..."` researches, writes, renders and gates one episode.
+- **Publishing is a separate, deliberate command.** `make` always stops at the
+  gate.
+- **The QA gate** (`src/qa/gate.ts`): ledger, factuality, evidence density,
+  counter-evidence, style, self-similarity, duration and risk tier. Fails
+  closed. Two checks defer to a human rather than pretending arithmetic settles
+  them.
+- **Publish client and provenance** (`src/publish`). Publishes through the
+  ordinary creator upload API, sending the AI disclosure, the beat map and the
+  evidence summary that becomes the Sources sheet.
+- **Render per beat** (`src/render`) with measured durations, so beat
+  timestamps are real. Hands the platform a clean 48kHz mono source and does
+  not master.
+- **Writer and verifier clients** (`src/models`), different model families,
+  every call reporting its cost.
+- **Research** (`src/evidence/research.ts`, `search.ts`): brief, gather,
+  extract, counter-evidence.
+- **Run store** (`src/run`): a run is a directory you can open.
+
 - **Every claim binds to a quote span you can find in the source**
   (`src/evidence/claim.ts`). Two checks in order: deterministic (does this quote
   actually occur in the document?) then semantic (does it support the claim?).
@@ -53,6 +75,18 @@ Building toward the first publishable episode.
   committed inputs, and a rejected take is not something history should carry.
 
 ### Decided
+
+- **The pipeline never publishes.** The two gate checks that defer to a human -
+  has the script acknowledged the counter-evidence, is that T4 source framed as
+  an anecdote - are exactly the ones automation would wave through. A studio
+  that publishes without anyone reading the first episodes is the failure this
+  whole design exists to avoid.
+- **A rejected claim never reaches the writer.** Filtering at the point the
+  script is written, rather than catching it at the gate, means a single gate
+  bug cannot ship a claim the verifier already refused.
+- **A thin corpus abandons the run.** Fewer than four usable sources and the run
+  stops with the fetch failures recorded, because continuing produces a script
+  whose every claim comes from three documents.
 
 - **File-based run artifacts, not Postgres, for now.** The design document
   gives the Foundry its own database. That is right at volume, and wrong at
