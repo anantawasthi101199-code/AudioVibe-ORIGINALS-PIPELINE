@@ -45,8 +45,8 @@ model versions that made it.
 | 2. Signals | What to make an episode about |
 | 3. Evidence | Retrieval, claim-to-source binding, verification, counter-evidence |
 | 4. Format | Beat sheets: structure as data, never prose |
-| 5. Script | Fills beats in the show's voice, written for the ear |
-| 6. Render | TTS per beat, sound design, mastering handoff |
+| 5. Script | Fills beats as spoken turns, drafts then revises against deterministic critique |
+| 6. Render | Dialogue endpoint per beat, so turn-taking is modelled rather than spliced |
 | 7. QA | Separate judges: factuality, persona, safety, self-similarity |
 | 8. Publish | Ingest into the platform as the show's creator account |
 | 9. Loop | Beat-level retention feeding learned priors back into stage 4 |
@@ -77,6 +77,10 @@ npm run foundry -- script          # read it before anything else
 npm run foundry -- publish --run <id>
 ```
 
+```bash
+npm run foundry -- compare --a <run> --b <run>   # is it getting better?
+```
+
 `make` researches, writes, renders and gates. **It never publishes.** Publishing
 is a separate command, run by a person who has read the gate report, because the
 two checks the gate defers to a human are exactly the ones automation would wave
@@ -84,6 +88,35 @@ through.
 
 Every stage is resumable. A failed gate does not mean re-rendering: fix what it
 found and `npm run foundry -- resume`.
+
+## What makes it sound like people
+
+A show is a **cast**, not a voice. Narrated prose read by one synthetic voice is
+the most AI-sounding format available, because polished monologue is exactly
+what text-to-speech has always produced.
+
+But two voices are not enough on their own, and this is the part every AI
+podcast gets wrong: the hosts have to **want different things**. One has read
+the documents; the other has not, and presses. That gives the conversation a
+reason to exist. Disfluency and interruption are the surface of that, not the
+cause, and sprinkling hesitation onto agreement does not work.
+
+Structural checks enforce it. A beat where one host holds more than 72 percent
+of the words is a monologue with interruptions; a beat where only one host
+speaks is not an exchange. Both are what a writer produces by default, because
+both are easier.
+
+Rendering goes through the provider's dialogue endpoint, one request per beat,
+so overlap and turn-taking are modelled rather than spliced together from
+separate renders.
+
+## What makes it true
+
+Sources exist only by being fetched, so a citation cannot be invented. Quotes
+are checked for EXISTENCE in the document before any model is asked what they
+mean. Contested claims get an active search for evidence against them. The
+verifier sees only a claim and a quote, from a different model family than the
+writer, and "supports it more weakly than stated" blocks.
 
 ## Cost
 
