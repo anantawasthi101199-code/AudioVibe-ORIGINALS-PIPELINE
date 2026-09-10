@@ -33,6 +33,9 @@ import { Beat, EpisodeFormat } from '../formats/schema';
 import { Claim } from '../evidence/claim';
 import { extractJson, LlmClient } from '../models/client';
 import { NETWORK_BANNED_PHRASES, checkStyle } from './style';
+import { loopBrief, openBefore } from './loops';
+import { checkVoices, voiceBrief } from './voices';
+import { writeHook } from './hooks';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -109,9 +112,9 @@ const buildSystem = (persona: Persona, isoDate: string): string => {
       .map((c) => `- ${c.text.trim().replace(/\s+/g, ' ')}`)
       .join('\n');
 
-  const cast = persona.hosts
-    .map((h) => `- ${h.id} (${h.name}): ${h.role.trim().replace(/\s+/g, ' ')}`)
-    .join('\n');
+  // Roles AND measurable speech habits. The habits are what stop two hosts
+  // converging into one person by the fourth beat.
+  const cast = voiceBrief(persona.hosts);
 
   const dialogue = isDialogueShow(persona);
 
@@ -166,6 +169,20 @@ export interface BeatContext {
   previousTail?: string;
   angle: string;
   isoDate: string;
+  /**
+   * What this beat must leave unanswered, and what it must answer.
+   *
+   * Handed over as an instruction rather than left to inference. "Do not answer
+   * this" is followable; "be intriguing" is not.
+   */
+  loops?: string;
+  /**
+   * A pre-selected opening line for the first beat.
+   *
+   * Chosen by a competition the writer never sees, so it cannot talk itself out
+   * of a strong opening. See writeScript and hooks.ts.
+   */
+  openWith?: string;
 }
 
 const buildPrompt = (ctx: BeatContext): string => {
@@ -183,6 +200,8 @@ const buildPrompt = (ctx: BeatContext): string => {
       : '',
     `LENGTH: ${min} to ${max} words across all turns.`,
     ctx.previousTail ? `THE PREVIOUS BEAT ENDED:\n"...${ctx.previousTail}"` : 'This is the opening beat.',
+    ctx.loops ? `CURIOSITY - what this beat must and must not answer:\n${ctx.loops}` : '',
+    ctx.openWith ? `OPEN WITH EXACTLY THIS LINE, then continue:\n"${ctx.openWith}"` : '',
     `CLAIMS:\n${claims}`,
   ]
     .filter(Boolean)
@@ -226,6 +245,12 @@ export const critiqueBeat = (
     persona.hosts.map((h) => h.id)
   );
   for (const p of dialogueProblems) blocking.push(p.detail);
+
+  // Whether the two hosts still sound like two people. The most common way an
+  // AI two-hander falls apart, and invisible to read-through because every
+  // individual line is fine.
+  const { problems: voiceProblems } = checkVoices(turns, persona.hosts);
+  for (const p of voiceProblems) (p.blocking ? blocking : advisory).push(p.detail);
 
   const text = turns.map((t) => withoutTags(t.text)).join('\n');
   const { violations } = checkStyle(text, persona.styleCard);
@@ -377,7 +402,33 @@ export const writeScript = async (
   const beats: ScriptBeat[] = [];
   let previousTail: string | undefined;
 
-  for (const beat of input.format.beats) {
+  // THE OPENING IS WRITTEN DIFFERENTLY FROM EVERY OTHER BEAT.
+  //
+  // More listeners are lost in the first eight seconds than anywhere else, and
+  // an opening is short enough that writing sixteen of them and choosing costs
+  // almost nothing. Every other beat gets one draft plus revisions; this one
+  // gets a competition it has to win on measurable curiosity-gap properties.
+  let openingHook: string | undefined;
+  const firstLoop = input.format.loops[0];
+  if (firstLoop && input.format.beats[0]?.type === 'cold_open') {
+    try {
+      const hook = await writeHook(
+        {
+          angle: input.angle,
+          loopQuestion: firstLoop.question,
+          register: input.persona.register.trim().replace(/\s+/g, ' '),
+        },
+        writer,
+        onCost
+      );
+      openingHook = hook.text;
+    } catch {
+      // A failed competition must not cost the episode. The cold open is then
+      // written normally, which is exactly what happened before this existed.
+    }
+  }
+
+  for (const [index, beat] of input.format.beats.entries()) {
     const written = await writeBeat(
       {
         persona: input.persona,
@@ -387,6 +438,10 @@ export const writeScript = async (
         previousTail,
         angle: input.angle,
         isoDate: input.isoDate,
+        loops: input.format.loops.length
+          ? loopBrief(beat, input.format.loops, openBefore(input.format.beats, index))
+          : undefined,
+        openWith: index === 0 ? openingHook : undefined,
       },
       writer,
       onCost

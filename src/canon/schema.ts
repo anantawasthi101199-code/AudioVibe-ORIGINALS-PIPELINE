@@ -14,6 +14,7 @@
  * is "warm but not chatty".
  */
 import { z } from 'zod';
+import { idiolectSchema } from '../script/voices';
 
 /**
  * Canon entries are append-only and effective-dated.
@@ -157,6 +158,15 @@ export const hostSchema = z.object({
    */
   role: z.string().min(1),
   voice: voiceSchema,
+  /**
+   * How this host TALKS, as numbers.
+   *
+   * Optional so a narrated show does not have to state it, but on a two-host
+   * show it is what stops the pair converging into one person. See
+   * script/voices.ts for what each field does and why turn length is the one
+   * that matters most.
+   */
+  idiolect: idiolectSchema.optional(),
 });
 
 export type Host = z.infer<typeof hostSchema>;

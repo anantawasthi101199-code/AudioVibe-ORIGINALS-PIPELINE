@@ -25,6 +25,7 @@
  *      from later.
  */
 import { z } from 'zod';
+import { checkLoopStructure, loopSchema } from '../script/loops';
 
 /**
  * What a beat is FOR. Deliberately a closed set.
@@ -88,6 +89,18 @@ export const beatSchema = z.object({
   minClaims: z.number().int().nonnegative().default(0),
 
   /**
+   * Loops this beat OPENS - questions the listener now wants answered.
+   *
+   * The opening beat must open at least one and close none. A loop closed at
+   * the start lets the listener leave satisfied; an open one holds them for the
+   * whole runtime. See script/loops.ts.
+   */
+  opens: z.array(z.string()).default([]),
+
+  /** Loops this beat ANSWERS. */
+  closes: z.array(z.string()).default([]),
+
+  /**
    * Whether the beat may be dropped.
    *
    * `counterpoint` is required in every format here on purpose. Confident
@@ -117,6 +130,25 @@ export const formatSchema = z
     beats: z.array(beatSchema).min(2),
 
     /**
+     * The questions this format's episodes hang on.
+     *
+     * Declared here rather than inferred from the prose, because "is this
+     * question still open" is not reliably readable from text - but the
+     * arithmetic of which beat opens and closes what is checkable, and that is
+     * enough to enforce the rule that matters.
+     */
+    loops: z.array(loopSchema).default([]),
+
+    /**
+     * Whether an episode may end with a loop still open.
+     *
+     * True for a serialised show that hands over to the next episode. False
+     * everywhere else, so an accidental dangling loop reads as a bug rather
+     * than as intent.
+     */
+    serialised: z.boolean().default(false),
+
+    /**
      * Intended tension at each beat, 0 to 1, one entry per beat.
      *
      * Not used to generate anything directly. It exists so the shape is
@@ -143,6 +175,12 @@ export const formatSchema = z
         path: ['beats'],
         message: `duplicate beat ids: ${[...new Set(dupes)].join(', ')}`,
       });
+    }
+
+    for (const problem of checkLoopStructure(format.loops, format.beats, {
+      allowDangling: format.serialised,
+    })) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['loops'], message: problem.detail });
     }
 
     // The beats have to be able to add up to the episode. A format whose beats

@@ -21,11 +21,27 @@ intent: >
 
 targetSeconds: [600, 720]
 
+# The questions the episode hangs on.
+#
+# Written as the LISTENER would ask them, not as tasks. "Explain the log" is a
+# task; "who was signing for a week that had not happened yet?" is a gap - and
+# only the second one pulls anybody through nine minutes.
+loops:
+  - id: the_anomaly
+    question: What actually happened here, and why does it not add up?
+
+  - id: the_mechanism
+    question: How did something this obvious go unnoticed for so long?
+
+  - id: the_cost
+    question: What did it actually cost, and who paid?
+
 beats:
   - id: cold_open
     type: cold_open
     seconds: [8, 14]
     function: State the anomaly, with no context and no framing.
+    opens: [the_anomaly]
     constraints:
       - One or two sentences, no more.
       - Lead with a concrete noun, not an abstraction.
@@ -37,6 +53,7 @@ beats:
     type: stakes
     seconds: [20, 35]
     function: Say who this mattered to and how much, so the listener knows why to stay.
+    opens: [the_cost]
     constraints:
       - Name a specific party, not "the industry".
       - At least one number, spoken as speech.
@@ -55,6 +72,7 @@ beats:
     type: turn
     seconds: [55, 85]
     function: Introduce the complication that makes the obvious reading wrong.
+    opens: [the_mechanism]
     constraints:
       - Must contradict something a reasonable listener now believes.
     minClaims: 2
@@ -94,6 +112,7 @@ beats:
     type: payoff
     seconds: [60, 90]
     function: What it actually resolves to, given both turns and the counterpoint.
+    closes: [the_anomaly, the_mechanism]
     constraints:
       - No moral. The finding is the payoff.
       - Must not claim more certainty than the mechanism supports.
@@ -103,6 +122,7 @@ beats:
     type: reckoning
     seconds: [35, 55]
     function: "The recurring 'what it cost' segment: money, time, jobs, plainly stated."
+    closes: [the_cost]
     constraints:
       - Concrete figures only.
       - No editorialising on the total.

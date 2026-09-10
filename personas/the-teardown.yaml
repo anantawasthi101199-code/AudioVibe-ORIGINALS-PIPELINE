@@ -45,6 +45,17 @@ hosts:
       Has read the documents and walks through what they say. Brings the
       specifics, concedes readily when a document does not go as far as she
       hoped, and is the one who names the primary source out loud.
+    # How she TALKS, as numbers. She holds the floor: long turns, rarely asks,
+    # almost never just reacts. See script/voices.ts for why turn length is the
+    # differentiator that matters most.
+    idiolect:
+      turnWordsMean: 48
+      questionRate: 0.1
+      backchannelRate: 0.02
+      signature:
+        - "the document says"
+        - "and this is the bit"
+        - "not quite"
     voice:
       provider: elevenlabs
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
@@ -61,6 +72,17 @@ hosts:
       pushes back when a step does not follow, and is the one who raises the
       counterpoint. Never contrarian for its own sake - he concedes when the
       answer is good, and that is what makes the pushback worth anything.
+    # Deliberately about a third of her length. Two hosts talking at the same
+    # size read as one person doing voices, and size is the first thing a
+    # listener hears.
+    idiolect:
+      turnWordsMean: 16
+      questionRate: 0.45
+      backchannelRate: 0.25
+      signature:
+        - "hang on"
+        - "says who"
+        - "that is not the same thing"
     voice:
       provider: elevenlabs
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH

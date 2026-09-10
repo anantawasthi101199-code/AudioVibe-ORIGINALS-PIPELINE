@@ -13,6 +13,19 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Open loops** (`src/script/loops.ts`). A beat sheet declares which questions
+  each beat opens and which it answers, validated at load. The opening beat must
+  open at least one and close none; nothing may resolve before three quarters
+  through. The writer is told, per beat, what to leave unanswered.
+- **A hook competition** (`src/script/hooks.ts`). The opening is written sixteen
+  times, filtered on measurable curiosity-gap properties, and the survivors
+  judged. Every other beat gets one draft plus revisions; the first eight
+  seconds get a contest.
+- **Two hosts who stay two people** (`src/script/voices.ts`). Each host declares
+  measurable speech habits - mean turn length, question rate, backchannel rate,
+  signature phrases - and the distance between them is checked. Convergence,
+  flat turn rhythm, and one host using the other's phrases all block.
+
 - **A show is a cast, not a voice.** Two hosts with different jobs, rendered
   through the provider's dialogue endpoint as one request per beat so
   turn-taking, overlap and interruption are modelled rather than spliced.
@@ -98,6 +111,27 @@ Building toward the first publishable episode.
   committed inputs, and a rejected take is not something history should carry.
 
 ### Decided
+
+- **An open loop at the START, never a closed one.** The research is specific: a
+  loop opened at the start holds attention across the whole runtime, and one
+  closed at the start lets the listener leave satisfied in the first ten
+  seconds. Almost every weak opening is a closed loop - it summarises, explains
+  what the episode is about, or answers its own question. Enforced on the beat
+  sheet, because that is a structural failure and not a style preference.
+- **Curiosity needs a SPECIFIC missing piece.** Loewenstein's information-gap
+  account is precise about this: curiosity is the felt gap between what you know
+  and what you want to know. "Something strange happened" opens nothing;
+  "twenty-seven went in, twenty-six came out" opens a gap you cannot ignore. So
+  hook scoring rewards a number, a name, a date, and punishes abstraction.
+- **Loops are declared, not inferred.** You cannot reliably read "is this
+  question still open" out of prose. You can check the arithmetic of which beat
+  opens and closes what. Structure is checkable; intent is not.
+- **Backchannels are checked as a BAND, not a maximum.** Too few reads as two
+  monologues alternating; too many reads as one person being agreed with. Both
+  extremes measurably reduce how natural a conversation sounds.
+- **Turn-length variance is the dialogue version of sentence-length variance.**
+  Real conversation puts a four-word turn next to a sixty-word one. Uniform turn
+  length is two people taking it in turns to give speeches.
 
 - **Dialogue over narration.** Polished monologue read by a synthetic voice is
   the most AI-sounding format available, because it is exactly what
