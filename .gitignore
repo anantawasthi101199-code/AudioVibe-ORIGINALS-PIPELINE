@@ -10,6 +10,13 @@ dist/
 # is not something the history needs to carry forever.
 runs/
 
+# bibles/ is deliberately NOT ignored, and it is the one generated thing here
+# that is committed. A run is reproducible from its inputs; a series bible is
+# not - it IS the series' memory, and losing it means every later episode
+# contradicts freely with nothing to notice. It is a few kilobytes, it changes
+# once per published episode, and a diff on it is the most readable record of
+# what a show has established that exists anywhere.
+
 # Scratch audio
 *.wav
 *.mp3

@@ -219,6 +219,28 @@ export const personaSchema = z.object({
    * not get an episode quietly downgraded; it does not get the topic.
    */
   allowedRiskTiers: z.array(z.enum(['general', 'health', 'finance', 'legal', 'named_person'])),
+
+  /**
+   * Whether this show is fiction.
+   *
+   * A PROPERTY OF THE SHOW, NEVER OF AN EPISODE. A show that reconstructs cases
+   * from filings one week and invents a story the next has destroyed the only
+   * thing the evidence pipeline was buying it: a listener's ability to know,
+   * without checking, which kind of thing they are hearing. There is no format
+   * flag for this and there should never be one.
+   *
+   * What it changes is which checks apply, not how many. Fiction skips the
+   * evidence pipeline entirely - no search, no corpus, no quote binding, no
+   * verifier - because there is nothing to bind a made-up scene to. In its
+   * place it gets continuity checking, which is the same discipline pointed at
+   * a different ground truth: an episode may not contradict what the series has
+   * already established, and every named thing in it has to exist in the bible.
+   *
+   * It changes nothing about disclosure. A fiction show is labelled AI exactly
+   * as a factual one is. "It is obviously a story" is not a disclosure, and the
+   * EU AI Act does not have a fiction exemption.
+   */
+  fiction: z.boolean().default(false),
 });
 
 export type Persona = z.infer<typeof personaSchema>;

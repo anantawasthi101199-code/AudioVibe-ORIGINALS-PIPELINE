@@ -38,6 +38,19 @@ export const runsDir = (): string => {
 };
 
 /**
+ * Where series bibles live, one JSON file per fiction show.
+ *
+ * Separate from runs on purpose. A run is one episode and is finished; a bible
+ * spans every episode of a show and is the one artifact here that is meant to
+ * be mutated. Keeping it out of runs/ makes that difference visible in `ls`
+ * rather than only in a comment, and makes it obvious what has to be backed up.
+ */
+export const biblesDir = (): string => {
+  const configured = process.env.FOUNDRY_BIBLES_DIR || 'bibles';
+  return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
+};
+
+/**
  * Ceiling on what one episode may cost, in pence.
  *
  * A run that would exceed it stops rather than degrading. A cost overrun should

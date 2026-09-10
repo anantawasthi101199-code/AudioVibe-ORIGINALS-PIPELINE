@@ -1,0 +1,200 @@
+# Night Shift - the fiction show.
+#
+# WHY A FICTION SHOW EXISTS IN A STUDIO BUILT AROUND AN EVIDENCE LEDGER. Because
+# the ledger buys accuracy, and accuracy is not the same thing as a reason to
+# come back. A listener returns to The Teardown when the topic interests them,
+# which means the show competes topic by topic, forever. A listener returns to a
+# serial because they want to know what happens, which is a different and much
+# stronger reason, and it is the only format here that has it.
+#
+# It is also the cheapest full-length audio the studio can make - no search, no
+# corpus, no verification - but that is a consequence, not the argument. A cheap
+# show nobody finishes is worse than an expensive one they do.
+#
+# WHAT IT IS ANSWERABLE TO. Everything invented is still checked, just against
+# something else: the series bible. An episode that contradicts what an earlier
+# one established fails the gate the same way an unsourced claim does. See
+# fiction/continuity.ts - the parallel is the whole design, not a metaphor.
+#
+# THE LABEL IS IDENTICAL. This publishes as AI-generated exactly as the factual
+# shows do. "It is obviously a story" is not a disclosure.
+
+id: night-shift
+handle: nightshiftaudio
+name: Night Shift
+category: Fiction
+
+# The flag that changes which checks apply. A property of the SHOW - a show that
+# reconstructs filings one week and invents a story the next has destroyed the
+# only thing the evidence pipeline was buying it.
+fiction: true
+
+thesis: >
+  A hospital's overnight staff, and the things that only happen between two and
+  five in the morning. One case a night, and one much longer thing underneath
+  it that nobody has said out loud yet.
+
+audience: >
+  People listening while doing something else - a commute, a walk, washing up.
+  Assume attention comes and goes, so anything that matters is said twice in
+  different ways rather than once precisely.
+
+register: >
+  Quiet, unhurried, close. Two people who have worked nights together long
+  enough to say very little. Dry rather than bleak, and never sentimental about
+  the work - the job is a job, and that is what makes the moments that land,
+  land.
+
+hosts:
+  - id: senior
+    name: Ruth
+    role: >
+      Charge nurse, twenty years of nights. Says less than she knows and
+      considerably less than she thinks. Deals with a crisis by getting quieter,
+      which is the thing new staff find hardest about her.
+    # Long turns are Nadia's habit on the factual show; Ruth's is the opposite.
+    # She holds authority by NOT filling silence, so her mean turn is short and
+    # she almost never asks - she already knows, or does not want to say.
+    idiolect:
+      turnWordsMean: 14
+      questionRate: 0.08
+      backchannelRate: 0.18
+      signature:
+        - "mm"
+        - "leave it"
+        - "not tonight"
+    voice:
+      provider: elevenlabs
+      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      settings:
+        stability: 0.55
+        similarity_boost: 0.75
+        style: 0.3
+
+  - id: junior
+    name: Femi
+    role: >
+      Two years in, still narrates his own thinking out loud, which Ruth
+      tolerates because it is how he catches things. Fills silence. Asks the
+      question everybody else has decided not to ask.
+    # Deliberately more than three times her length, and the inverse of the
+    # factual show's pairing - there the long-turn host is the senior one. Same
+    # mechanism, opposite assignment, so the two shows do not sound like the
+    # same two people in different jobs.
+    idiolect:
+      turnWordsMean: 46
+      questionRate: 0.38
+      backchannelRate: 0.05
+      signature:
+        - "okay so"
+        - "the thing is"
+        - "am I wrong"
+    voice:
+      provider: elevenlabs
+      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      settings:
+        stability: 0.4
+        similarity_boost: 0.75
+        style: 0.45
+
+styleCard:
+  # Shorter than the factual show, with a wider spread. Dialogue under pressure
+  # is uneven by nature, and the spread is what carries that - a drama that
+  # holds a steady sentence length reads as a person describing a drama.
+  sentenceWordsMean: 12
+  sentenceWordsStdDevMin: 7.5
+
+  # Higher than the factual show. Femi asks constantly; that is his function.
+  questionsPer100Words: 3.5
+
+  # Characters address each other, not the listener. A drama that says "you"
+  # to the audience has broken the thing it is doing.
+  secondPersonPer100Words: 4.0
+
+  # Fiction hedges more than reporting, because people do. Still a ceiling:
+  # every character being tentative is not realism, it is a writer avoiding
+  # commitment.
+  hedgesPer100WordsMax: 2.5
+
+  metaphorDomains:
+    - weather and light
+    - machinery and maintenance
+    - water
+    - sleep and waking
+
+  forbiddenPhrases:
+    # The genre's tells. Every one of these announces a feeling the scene has
+    # not earned.
+    - little did
+    - in that moment
+    - time seemed to
+    - she couldn't help but
+    - a chill ran
+    - the silence was deafening
+    - what happened next
+
+  catchphraseBudget: 2
+
+canon:
+  - kind: belief
+    text: >
+      The job is a job. Competence is the texture of this show - people who are
+      good at something difficult, doing it at three in the morning.
+
+  - kind: belief
+    text: >
+      The interesting thing is never the emergency. It is what somebody says
+      forty minutes afterwards, when there is nothing to do.
+
+  - kind: taboo
+    text: >
+      No real people, no real hospitals, no real cases. Nothing here is
+      reconstructed from anything, and a listener must never be able to think
+      otherwise - the studio's factual shows depend on that line being sharp.
+
+  - kind: taboo
+    text: >
+      No medical advice, ever. Characters may be wrong about medicine, and
+      nothing they say is guidance. Procedures stay vague enough to be
+      unusable as instruction.
+
+  - kind: taboo
+    text: >
+      Never kill someone for effect. A death has to be the episode's subject,
+      not its punctuation.
+
+  - kind: taboo
+    text: >
+      No omniscient narrator. Everything the listener learns, they learn
+      because somebody says it or does it.
+
+  - kind: recurring_segment
+    text: >
+      The handover at the top of the shift - who is on, what came in, what is
+      still open from last night. It is how a returning listener catches up
+      without a recap.
+
+  - kind: stylistic_rule
+    text: >
+      People interrupt each other and leave sentences unfinished. Clean
+      complete turns are the clearest signal that dialogue was written rather
+      than heard.
+
+  - kind: stylistic_rule
+    text: >
+      The important thing is said sideways. Nobody in this show announces what
+      they feel, and a line that does has to be cut.
+
+  - kind: catchphrase
+    text: "Not tonight."
+
+formats:
+  - serial-episode
+
+episodeSeconds: [600, 720]
+
+# Fiction makes no claims about the world, so no tier applies. The list cannot
+# be empty, and `general` is the honest entry: this show is cleared for exactly
+# nothing, which is what having nothing to claim means.
+allowedRiskTiers:
+  - general

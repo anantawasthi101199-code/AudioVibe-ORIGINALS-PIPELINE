@@ -63,6 +63,24 @@ export const beatTypeSchema = z.enum([
    * a polite close is the thing that guarantees neither.
    */
   'button',
+  /**
+   * Two people who want different things, in one room, at length.
+   *
+   * Serial fiction only. Reporting has no equivalent - the closest thing, a
+   * mechanism beat, is one voice explaining rather than two colliding - and
+   * folding it into `turn` would put the longest beat in the format into the
+   * same retention bucket as the shortest.
+   */
+  'scene',
+  /**
+   * The last thing before the next episode. Serial fiction only.
+   *
+   * Deliberately not `outro`, and the difference is the whole point of the
+   * format: an outro closes an episode, a cliffhanger refuses to. Measuring
+   * them as one thing would make the single most important retention question
+   * a serial has - does the cliffhanger bring people back - unanswerable.
+   */
+  'cliffhanger',
 ]);
 
 export type BeatType = z.infer<typeof beatTypeSchema>;

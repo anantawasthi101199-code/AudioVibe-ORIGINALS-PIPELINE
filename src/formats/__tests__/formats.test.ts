@@ -139,7 +139,15 @@ describe('the shipped formats', () => {
     expect(shipped.length).toBeGreaterThan(0);
   });
 
-  it.each(shipped.filter((f) => f.kind === 'long').map((f) => [f.id, f] as const))(
+  // A format that requires evidence is a format that makes claims about the
+  // world, and that is what the counterpoint rule is actually about - not
+  // length. A serial drama is a long format with no claim floors anywhere,
+  // because it asserts nothing; demanding it steelman the other side of a
+  // scene would be theatre.
+  const evidenceBearing = shipped.filter((f) => f.kind === 'long' && minClaimsFor(f) > 0);
+  const claimless = shipped.filter((f) => minClaimsFor(f) === 0);
+
+  it.each(evidenceBearing.map((f) => [f.id, f] as const))(
     '%s carries a REQUIRED counterpoint beat',
     (_id, format) => {
       // The rule this repo cares about most. Confident one-sidedness is the
@@ -148,6 +156,23 @@ describe('the shipped formats', () => {
       const counterpoint = format.beats.find((b) => b.type === 'counterpoint');
       expect(counterpoint).toBeDefined();
       expect(counterpoint!.optional).toBe(false);
+    }
+  );
+
+  it('has at least one evidence-bearing long format, so the rule above is not vacuous', () => {
+    // Without this, deleting every claim floor in the repo would make the
+    // counterpoint test pass by having nothing to run on.
+    expect(evidenceBearing.length).toBeGreaterThan(0);
+  });
+
+  it.each(claimless.map((f) => [f.id, f] as const))(
+    '%s makes no claims, and so carries no counterpoint either',
+    (_id, format) => {
+      // The other half of the bargain. A counterpoint beat in a format that
+      // asserts nothing is a beat arguing against a story, which is not a
+      // thing, and it would make the retention numbers for counterpoint beats
+      // mean two different things at once.
+      expect(format.beats.find((b) => b.type === 'counterpoint')).toBeUndefined();
     }
   );
 

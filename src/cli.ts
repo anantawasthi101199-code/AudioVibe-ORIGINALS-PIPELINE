@@ -35,6 +35,8 @@ import { HttpResponse } from './evidence/fetch';
 import { ElevenLabsTts } from './render/tts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
 import { runShort } from './pipeline/short';
+import { runFiction } from './pipeline/fiction';
+import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
@@ -51,7 +53,8 @@ AudioVibe Foundry
 
 Commands
   shows                          List the shows and their formats
-  make --show <id> --topic "..." Research, write, render and gate one episode
+  make --show <id> --topic "..." Write, render and gate one episode
+                                 (fiction shows skip research, see Notes)
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
   resume [--run <id>]            Continue a run (default: the most recent)
@@ -60,6 +63,7 @@ Commands
   script [--run <id>]            Print the script, for reading aloud
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
+  series --show <id>             What a fiction show has established so far
 
 Notes
   make stops at the gate. Publishing is always a separate, deliberate step.
@@ -67,6 +71,9 @@ Notes
   short derives from a finished episode rather than researching its own, which
   is why it costs about a ninth of what a standalone short would. It produces
   its own run, publishable the same way as any other.
+  A fiction show skips the entire evidence pipeline - there is no document that
+  entails an invented scene - and is checked against its series bible instead.
+  That is a property of the SHOW, set in its persona file, never a flag.
 `;
 
 const arg = (argv: string[], name: string): string | undefined => {
@@ -232,9 +239,22 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   return finishRun(run, argv);
 };
 
+/**
+ * Run a run to its gate, through whichever pipeline the SHOW calls for.
+ *
+ * The branch is on the persona, never on a flag, and that is deliberate: a
+ * command-line switch that decides whether an episode gets fact-checked is one
+ * typo away from publishing an unsourced episode under a show whose entire
+ * claim on a listener is that it read the documents. The show decides, once,
+ * in its own file.
+ */
 const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
   const deps = buildDeps();
-  const { gate } = await runEpisode(run, deps);
+  const persona = loadPersona(run.manifest.personaId);
+
+  const { gate } = persona.fiction
+    ? await runFiction({ run }, deps)
+    : await runEpisode(run, deps);
 
   console.log('');
   console.log(formatGateReport(gate));
@@ -300,6 +320,52 @@ Read it first:  npm run foundry -- script --run ${shortRun.id}`);
     console.log(`Then publish:   npm run foundry -- publish --run ${shortRun.id}`);
   }
   return gate.passed ? 0 : 2;
+};
+
+/**
+ * What a fiction show has established, as a person would want to read it.
+ *
+ * The bible is JSON and grows to a few hundred lines within a season, which is
+ * fine for a checker and useless for the person deciding what the next episode
+ * is about. This is the same information as a cast list and a recap.
+ */
+const cmdSeries = (argv: string[]): number => {
+  const showId = arg(argv, 'show');
+  if (!showId) {
+    console.error('Usage: series --show <id>');
+    return 1;
+  }
+
+  const persona = loadPersona(showId);
+  if (!persona.fiction) {
+    console.error(`${persona.name} is not a fiction show, so it has no series bible.`);
+    return 1;
+  }
+
+  const bible = loadBible(persona.id);
+  console.log(`${persona.name} - ${bible.episodes.length} episode(s)`);
+  console.log('');
+
+  console.log('Cast and what is fixed about them:');
+  console.log(castBrief(bible));
+
+  const revisable = bible.entities.flatMap((e) =>
+    e.facts.filter((f) => f.revisable).map((f) => `  ${e.name}: ${f.text}`)
+  );
+  if (revisable.length) {
+    // Shown here and deliberately NOT shown to the writer. These are the
+    // threads the series can still pull on, which is exactly the thing a
+    // person planning the next episode needs and the writer must not treat as
+    // settled background.
+    console.log('');
+    console.log('Still open, and revisable:');
+    for (const line of revisable) console.log(line);
+  }
+
+  console.log('');
+  console.log('Story so far:');
+  console.log(storySoFar(bible, 100));
+  return 0;
 };
 
 const cmdStatus = (argv: string[]): number => {
@@ -473,6 +539,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdMake(rest);
       case 'short':
         return await cmdShort(rest);
+      case 'series':
+        return cmdSeries(rest);
       case 'resume':
         return await finishRun(openRun(rest), rest);
       case 'status':

@@ -1,0 +1,114 @@
+# A serial fiction episode.
+#
+# TWELVE MINUTES, AND IT ENDS UNRESOLVED. That is the format, and everything in
+# it follows from that one decision. The factual formats close their loop before
+# the outro because an episode that reconstructs a case and never says what
+# happened has wasted the listener's time. A serial is the opposite: the reason
+# to come back is that something is still open, and closing everything is how a
+# show becomes a catalogue of episodes rather than a show.
+#
+# TWO LOOPS, NOT ONE. The episode loop opens in the cold open and closes at the
+# payoff, so an episode is a whole thing and somebody who hears exactly one has
+# still had a story. The series loop opens and does NOT close, which is what
+# `serialised: true` on the format permits and what the loop checker would
+# otherwise block. Without the first, the show is a serial nobody can enter;
+# without the second, it is not a serial.
+#
+# WHY THE BEAT TYPES ARE THE FACTUAL ONES. Retention is aggregated across every
+# format by beat type. `cold_open` and `payoff` have to mean the same thing in a
+# drama as in a case study, or "cold opens over twelve seconds cost 22 percent"
+# stops being a question anyone can answer. Two names are new because serial
+# fiction genuinely has beats reporting does not: `scene` and `cliffhanger`.
+#
+# WHAT IS DELIBERATELY ABSENT: a counterpoint beat. That check exists because a
+# confident, one-sided account of something real is the most common way
+# generated content is false while every sentence is sourced. Fiction makes no
+# claims about the world, so there is no other side to state - and the gate
+# skips the whole evidence section for a fiction show rather than pretending a
+# story has a ledger.
+
+id: serial-episode
+name: Serial episode
+kind: long
+intent: >
+  One episode of a continuing story. Whole enough to be worth hearing alone,
+  open enough that the next one is worth waiting for.
+
+targetSeconds: [600, 720]
+
+# A serial is allowed to leave something unanswered. This is the flag the loop
+# checker reads, and without it a dangling loop is a blocking failure.
+serialised: true
+
+loops:
+  - id: episode_question
+    question: What is actually happening in this one?
+  - id: series_question
+    question: The thing the whole series is about, which this episode does not settle.
+
+beats:
+  - id: cold_open
+    type: cold_open
+    seconds: [25, 45]
+    function: In the middle of something. A moment, not a summary of last week.
+    opens: [episode_question]
+    constraints:
+      - Start inside a scene already happening. No recap, no narrator setting up.
+      - Somebody wants something and cannot have it yet.
+      - Name at most one person the listener has not met.
+
+  - id: reorient
+    type: context
+    seconds: [50, 80]
+    function: Let a returning listener catch up and a new one keep up, inside the scene.
+    constraints:
+      - Whatever the listener needs from earlier episodes arrives in dialogue, as
+        something a character has a reason to say now.
+      - No "previously" and no narration explaining the situation.
+
+  - id: complicate
+    type: turn
+    seconds: [90, 130]
+    function: The thing that makes this episode's problem harder than it looked.
+    opens: [series_question]
+    constraints:
+      - Something changes that cannot be changed back.
+
+  - id: pressure
+    type: scene
+    seconds: [100, 150]
+    function: Two people who want different things, in one room, at length.
+    constraints:
+      - The longest scene in the episode. Let it breathe.
+      - Neither of them is simply wrong.
+      - Nobody says what they actually mean until the last line of the scene.
+
+  - id: turn
+    type: turn
+    seconds: [80, 120]
+    function: What the listener assumed at the top turns out to be the wrong shape.
+    constraints:
+      - The reframe has to be earned by something already said, not by new information.
+
+  - id: payoff
+    type: payoff
+    seconds: [90, 130]
+    function: This episode's question, answered.
+    closes: [episode_question]
+    constraints:
+      - Answer it properly. A serial that answers nothing weekly trains people to stop.
+      - Do not touch the series question here.
+
+  - id: cliffhanger
+    type: cliffhanger
+    seconds: [20, 40]
+    function: One thing that makes the next episode necessary, then stop.
+    constraints:
+      - Under forty seconds. A long cliffhanger is a scene, and it deflates.
+      - It must come from what just happened, not from an unrelated new threat.
+      - End on the line. No sign-off, no music cue described, no "next time".
+
+# Climbs, drops at the payoff as the episode question closes, then kicks up for
+# the cliffhanger. The dip is what makes the last spike land - a curve that only
+# ever rises has no room left to rise at the end.
+tensionCurve: [0.70, 0.55, 0.75, 0.85, 0.95, 0.60, 0.90]
