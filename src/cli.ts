@@ -12,6 +12,7 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { z } from 'zod';
 import {
   clerkConfig,
   episodeBudgetPence,
@@ -44,7 +45,7 @@ import { fullText, Script, scriptSchema } from './script/write';
 import { renderResultSchema } from './render/assemble';
 import { claimSetSchema, corpusSchema } from './evidence/research';
 import { AudioVibeClient } from './publish/ingest';
-import { buildProvenance } from './publish/provenance';
+import { buildFictionProvenance, buildProvenance } from './publish/provenance';
 
 const USAGE = `
 AudioVibe Foundry
@@ -90,6 +91,18 @@ const flag = (argv: string[], name: string): boolean => argv.includes(`--${name}
  * every field of the gate report would be a second definition to keep in step
  * with the first for no safety it does not already have.
  */
+/**
+ * The parts of a fiction run's continuity report the Sources sheet needs.
+ *
+ * Narrow on purpose. The full report carries a verdict and a reason per fact,
+ * and none of that belongs on a listener's screen - what the sheet says is how
+ * many established facts this episode was held against and who held it.
+ */
+const continuityArtifactSchema = z.object({
+  findings: z.array(z.unknown()),
+  checkerModel: z.string(),
+});
+
 const readGate = (run: Run): GateReport =>
   JSON.parse(fs.readFileSync(path.join(run.dir, 'qa.json'), 'utf8')) as GateReport;
 
@@ -484,25 +497,54 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
   const persona = loadPersona(run.manifest.personaId);
   const script = run.readArtifact('script', scriptSchema);
   const render = run.readArtifact('render', renderResultSchema);
-  const corpus = run.readArtifact('corpus', corpusSchema);
-  const claims = run.readArtifact('claims', claimSetSchema);
-  const verification = readVerification(run);
 
-  const provenance = buildProvenance({
-    personaId: persona.id,
-    claims: claims.claims,
-    sources: corpus.sources,
-    counterEvidence: (verification.counterEvidence ?? []) as never,
-    // The human confirmed it by passing --yes past the review gate above.
-    counterEvidenceAddressed: flag(argv, 'yes'),
-    models: {
-      writer: script.writerModel,
-      verifier: verification.verification?.verifierModel ?? 'unknown',
-      tts: `${render.provider}/${render.model}`,
-      voice: render.voiceId,
-    },
-    renderedAt: new Date(),
-  });
+  // WHICH RECEIPTS THIS EPISODE CARRIES.
+  //
+  // A fiction run has no corpus and its `claims` artifact holds established
+  // facts rather than sourced claims, so reading it through the reported path
+  // fails outright. It used to, and nothing in the fiction pipeline would ever
+  // have noticed: the break was here, at the last command.
+  //
+  // The two are kept apart rather than merged behind empty arrays because a
+  // fiction episode with no sources needs none, while a reported episode with
+  // no sources has failed - and the Sources sheet must not render those two the
+  // same way. See publish/provenance.ts.
+  const provenance = persona.fiction
+    ? (() => {
+        const continuity = run.readArtifact('verification', continuityArtifactSchema);
+        return buildFictionProvenance({
+          personaId: persona.id,
+          factsChecked: continuity.findings.length,
+          priorEpisodes: loadBible(persona.id).episodes.length,
+          models: {
+            writer: script.writerModel,
+            continuityChecker: continuity.checkerModel,
+            tts: `${render.provider}/${render.model}`,
+            voice: render.voiceId,
+          },
+          renderedAt: new Date(),
+        });
+      })()
+    : (() => {
+        const corpus = run.readArtifact('corpus', corpusSchema);
+        const claims = run.readArtifact('claims', claimSetSchema);
+        const verification = readVerification(run);
+        return buildProvenance({
+          personaId: persona.id,
+          claims: claims.claims,
+          sources: corpus.sources,
+          counterEvidence: (verification.counterEvidence ?? []) as never,
+          // The human confirmed it by passing --yes past the review gate above.
+          counterEvidenceAddressed: flag(argv, 'yes'),
+          models: {
+            writer: script.writerModel,
+            verifier: verification.verification?.verifierModel ?? 'unknown',
+            tts: `${render.provider}/${render.model}`,
+            voice: render.voiceId,
+          },
+          renderedAt: new Date(),
+        });
+      })();
 
   console.log(`publishing to ${platform.url} as @${persona.handle}...`);
 

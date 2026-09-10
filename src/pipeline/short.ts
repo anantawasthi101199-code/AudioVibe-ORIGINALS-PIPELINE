@@ -188,7 +188,11 @@ export const runShort = async (
   };
 
   if (!run.hasArtifact('claims')) {
-    run.writeArtifact('claims', { claims });
+    // `unsupported` is not optional in claimSetSchema, and the publish command
+    // reads this artifact through it. Writing the bare `{claims}` shape here
+    // made every short unpublishable, which nothing in the short pipeline
+    // itself would ever have noticed.
+    run.writeArtifact('claims', { claims, unsupported: [] });
     run.markComplete('claims');
   }
   if (!run.hasArtifact('corpus')) {

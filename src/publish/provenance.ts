@@ -32,6 +32,20 @@ export const provenanceSourceSchema = z.object({
 
 export const provenancePayloadSchema = z.object({
   persona_ref: z.string(),
+  /**
+   * What kind of thing this is.
+   *
+   * NEEDED BECAUSE AN EMPTY SOURCES LIST IS AMBIGUOUS. A fiction episode has no
+   * sources because it needs none; a reported episode with no sources is a
+   * failure. Rendering both as a blank Sources sheet would make the honest case
+   * look like the broken one, and it is the fiction show that would suffer for
+   * it - the sheet is where the studio's credibility is spent, and a blank one
+   * reads as "we did not bother".
+   *
+   * So a fiction episode says so, and the player can render "Fiction. Nothing
+   * here is reconstructed from real events" instead of an empty list.
+   */
+  content_kind: z.enum(['reported', 'fiction']).default('reported'),
   generator_version: z.string(),
   model_ids: z.record(z.string()),
   evidence_summary: z.object({
@@ -40,6 +54,18 @@ export const provenancePayloadSchema = z.object({
     counter_evidence_found: z.boolean(),
     counter_evidence_addressed: z.boolean(),
     sources: z.array(provenanceSourceSchema),
+    /**
+     * Fiction only. What the episode was checked against instead of sources.
+     *
+     * Optional rather than a second top-level branch, so the platform stores
+     * one shape and the player reads one field to decide what to render.
+     */
+    continuity: z
+      .object({
+        facts_checked: z.number().int().nonnegative(),
+        prior_episodes: z.number().int().nonnegative(),
+      })
+      .optional(),
   }),
   rendered_at: z.string().datetime(),
 });
@@ -77,6 +103,7 @@ export const buildProvenance = (input: {
 
   return provenancePayloadSchema.parse({
     persona_ref: input.personaId,
+    content_kind: 'reported',
     generator_version: GENERATOR_VERSION,
     model_ids: input.models,
     evidence_summary: {
@@ -100,3 +127,53 @@ export const buildProvenance = (input: {
     rendered_at: input.renderedAt.toISOString(),
   });
 };
+
+/**
+ * The receipts for a fiction episode.
+ *
+ * A SEPARATE FUNCTION RATHER THAN A FLAG, because almost every field of the
+ * evidence summary is meaningless here and passing empty arrays through the
+ * reported path would produce a payload that says "we found no sources and no
+ * counter-evidence" - which is true of a fiction episode and also exactly what
+ * a broken reported episode says. The two must not be indistinguishable in the
+ * table the Sources sheet reads from.
+ *
+ * WHAT REPLACES THE SOURCE LIST. How many established facts the episode was
+ * checked against, and who checked. That is the fiction lane's equivalent claim
+ * on a listener's trust: not "we read the documents" but "this is consistent
+ * with everything you have already heard", which for a serial is the thing that
+ * is actually worth promising.
+ *
+ * THE LABEL IS UNCHANGED. Fiction discloses as AI-generated exactly as reported
+ * content does.
+ */
+export const buildFictionProvenance = (input: {
+  personaId: string;
+  /** Established facts this episode was checked against. */
+  factsChecked: number;
+  /** Episodes of the series that came before this one. */
+  priorEpisodes: number;
+  models: Record<string, string>;
+  renderedAt: Date;
+}): ProvenancePayload =>
+  provenancePayloadSchema.parse({
+    persona_ref: input.personaId,
+    content_kind: 'fiction',
+    generator_version: GENERATOR_VERSION,
+    model_ids: input.models,
+    evidence_summary: {
+      // Facts checked, not claims made. A fiction episode asserts nothing about
+      // the world, so counting claims would be counting zero and implying the
+      // episode had failed to source anything.
+      claim_count: 0,
+      claims_by_tier: {},
+      counter_evidence_found: false,
+      counter_evidence_addressed: false,
+      sources: [],
+      continuity: {
+        facts_checked: input.factsChecked,
+        prior_episodes: input.priorEpisodes,
+      },
+    },
+    rendered_at: input.renderedAt.toISOString(),
+  });

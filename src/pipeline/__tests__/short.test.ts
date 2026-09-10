@@ -22,6 +22,9 @@ import { TtsProvider } from '../../render/tts';
 import * as assemble from '../../render/assemble';
 import { sourceIdFor } from '../../evidence/source';
 import { claimSchema } from '../../evidence/claim';
+import { claimSetSchema, corpusSchema } from '../../evidence/research';
+import { scriptSchema } from '../../script/write';
+import { renderResultSchema } from '../../render/assemble';
 import { Run } from '../../run/store';
 import { runEpisode, PipelineDeps } from '../episode';
 import { runShort } from '../short';
@@ -282,6 +285,20 @@ describe('runShort', () => {
 
     const corpus = run.readArtifact('corpus', z.object({ sources: z.array(z.object({ id: z.string() })) }));
     expect(corpus.sources.map((s) => s.id)).toEqual([sourceIdRef.id]);
+  });
+
+  it('leaves artifacts the publish command can actually read', async () => {
+    // The gap nothing else would catch. Every stage of this pipeline succeeded
+    // while writing a `claims` artifact one field short of the shape the
+    // publisher parses, so a short could be made, gated and read, and then
+    // failed at the last command with a schema error.
+    const parent = await makeParent();
+    const { run } = await runShort({ parent, formatId: SHORT_FORMAT_ID }, buildDeps());
+
+    expect(() => run.readArtifact('claims', claimSetSchema)).not.toThrow();
+    expect(() => run.readArtifact('corpus', corpusSchema)).not.toThrow();
+    expect(() => run.readArtifact('script', scriptSchema)).not.toThrow();
+    expect(() => run.readArtifact('render', renderResultSchema)).not.toThrow();
   });
 
   it('never gives the button beat a claim to recite', async () => {

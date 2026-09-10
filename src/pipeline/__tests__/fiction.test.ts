@@ -19,7 +19,10 @@ import { SearchProvider } from '../../evidence/search';
 import { TtsProvider } from '../../render/tts';
 import * as assemble from '../../render/assemble';
 import { Run } from '../../run/store';
+import { z } from 'zod';
 import { loadBible } from '../../fiction/bible';
+import { buildFictionProvenance } from '../../publish/provenance';
+import { renderResultSchema } from '../../render/assemble';
 import { PipelineDeps } from '../episode';
 import { runFiction } from '../fiction';
 
@@ -287,6 +290,41 @@ describe('runFiction', () => {
     // and lives outside the run directory, so a second recording would never
     // be noticed - it would simply become two episodes that both happened.
     expect(loadBible(PERSONA_ID, bibles).episodes).toHaveLength(1);
+  });
+
+  it('produces receipts a fiction episode can publish', async () => {
+    // The gap nothing else would catch. A fiction run has no corpus and its
+    // `claims` artifact holds established facts rather than sourced claims, so
+    // the reported provenance path throws on it - at the LAST command, after
+    // the episode has been written, rendered and gated.
+    //
+    // And the receipts must say fiction rather than reporting nothing, because
+    // an empty sources list otherwise makes the honest case look like the
+    // broken one.
+    const run = makeRun();
+    const { script } = await runFiction({ run }, buildDeps());
+    const continuity = run.readArtifact(
+      'verification',
+      z.object({ findings: z.array(z.unknown()), checkerModel: z.string() })
+    );
+    const render = run.readArtifact('render', renderResultSchema);
+
+    const provenance = buildFictionProvenance({
+      personaId: PERSONA_ID,
+      factsChecked: continuity.findings.length,
+      priorEpisodes: loadBible(PERSONA_ID, bibles).episodes.length,
+      models: {
+        writer: script.writerModel,
+        continuityChecker: continuity.checkerModel,
+        tts: `${render.provider}/${render.model}`,
+        voice: render.voiceId,
+      },
+      renderedAt: new Date(),
+    });
+
+    expect(provenance.content_kind).toBe('fiction');
+    expect(provenance.evidence_summary.sources).toEqual([]);
+    expect(provenance.evidence_summary.continuity).toBeDefined();
   });
 
   it('REFUSES to run a factual show through it', async () => {
