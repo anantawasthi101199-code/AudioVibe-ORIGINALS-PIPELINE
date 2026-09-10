@@ -13,6 +13,44 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A short-form lane** (`src/script/shorts.ts`, `src/pipeline/short.ts`,
+  `beatsheets/short-teardown.yaml`, `foundry short`). Shorts are DERIVED from an
+  episode that already passed, not researched independently: a standalone short
+  would need its own brief, search, corpus, extraction, verification and
+  counter-evidence pass to produce seventy-five seconds of audio, which is about
+  a pound ten against twelve pence. Same verified facts, same voices.
+  A short is not a trailer, so the selection asks for the strongest
+  SELF-CONTAINED moment rather than the most representative one, and it may
+  carry no contested claim at all - seventy-five seconds cannot hold a
+  steelmanned counterpoint, and cramming one in produces a strawman, which is
+  worse than none because it looks like fairness. Rejected: a `--short` flag on
+  `make`, which would have made shorts a length rather than a format.
+- **A fiction lane** (`src/fiction/`, `src/pipeline/fiction.ts`,
+  `beatsheets/serial-episode.yaml`, `personas/night-shift.yaml`). Skips the
+  evidence pipeline entirely - there is no document that entails a conversation
+  nobody had - and is checked against a series bible instead: an episode may not
+  contradict what earlier episodes established. Same shape as verification
+  (deterministic pass first and free, then a different model family), different
+  ground truth. `unclear` blocks, for the same reason `partially_entailed` does.
+  Facts can be marked revisable, and those are hidden from the writer: fiction
+  turns on things being revealed as untrue, and enforcing every recorded fact
+  would forbid the twist. The bible is written only on a pass, and only once.
+  Rejected: fiction as a per-episode flag. A show that reconstructs filings one
+  week and invents a story the next has destroyed the only thing the evidence
+  pipeline was buying it, so it is a property of the show and there is no
+  command-line switch that turns fact-checking off.
+- **Prompt caching on the beat writer** (`src/models/client.ts`). The system
+  prompt is the show's canon, taboos, style rules and cast, it runs well over a
+  thousand tokens, and it is identical across the twelve to fifteen calls that
+  write one episode. Caching is a prefix match, so responses report cached
+  tokens: a cache that quietly stops hitting costs more than no cache at all
+  while every run still succeeds.
+- **A clerk model tier** (`clerkConfig`). A cheap model for mechanical work,
+  currently just the counter-evidence search queries. The rule is deliberately
+  strict: a cheap model may only do work whose output is checked by something
+  that is not a model. Not the brief, not extraction, not the hook, not the
+  title, not verification, not the series bible. Those are the show, and pennies
+  is the wrong price for them.
 - **Open loops** (`src/script/loops.ts`). A beat sheet declares which questions
   each beat opens and which it answers, validated at load. The opening beat must
   open at least one and close none; nothing may resolve before three quarters
@@ -58,7 +96,9 @@ Building toward the first publishable episode.
 - **The QA gate** (`src/qa/gate.ts`): ledger, factuality, evidence density,
   counter-evidence, style, self-similarity, duration and risk tier. Fails
   closed. Two checks defer to a human rather than pretending arithmetic settles
-  them.
+  them. A fiction show swaps the first four for continuity; everything from
+  style down applies to both, because those are properties of the audio rather
+  than of how it was sourced.
 - **Publish client and provenance** (`src/publish`). Publishes through the
   ordinary creator upload API, sending the AI disclosure, the beat map and the
   evidence summary that becomes the Sources sheet.
@@ -109,6 +149,26 @@ Building toward the first publishable episode.
   deploy, and the person tuning them should not need to read TypeScript.
 - `runs/` for generated episodes, git-ignored. Large, reproducible from the
   committed inputs, and a rejected take is not something history should carry.
+
+### Fixed
+
+- **Two runs of the same show in one second collided.** Run ids stamp to the
+  second, and `Run.create` mkdir -p'd straight into the existing directory:
+  same manifest path, same artifacts, `hasArtifact` true for stages the new run
+  had never done. It would have written an episode out of another episode's
+  corpus and looked entirely healthy doing it. Cutting a short immediately after
+  gating its parent does exactly that, so this was one command away from
+  happening for real. Ids now disambiguate, keeping the chronological sort.
+- **A resumed fiction run recorded its episode into the bible twice.** The bible
+  is append-only and lives outside the run directory, so nothing downstream
+  would ever have noticed the duplicate - it would simply have become two
+  episodes that both happened.
+- **A short's claim floors made it a list.** A floor on all four fact-bearing
+  beats forced four separately sourced facts into seventy-five seconds, which
+  is the opposite of one idea told properly. Floors now sit on the beat that
+  states the thing and the beat that answers it, and claim redistribution fills
+  floors before spreading - a plain round-robin looks fair and can leave both
+  required beats empty while filling the two that needed nothing.
 
 ### Decided
 

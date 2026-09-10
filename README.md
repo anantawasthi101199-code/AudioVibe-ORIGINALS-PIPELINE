@@ -77,8 +77,27 @@ npm run foundry -- script          # read it before anything else
 npm run foundry -- publish --run <id>
 ```
 
+Once an episode has passed, cut a short out of it:
+
+```bash
+npm run foundry -- short --run <id>
+```
+
+A short is **derived**, never researched independently. A standalone one would
+need its own brief, search, corpus, extraction, verification and counter-evidence
+pass to produce seventy-five seconds of audio - about a pound ten against twelve
+pence. It inherits the parent's verified facts and spends one call deciding which
+of them to tell.
+
+It is also not a trailer. It has to be worth hearing by somebody who will never
+play the long one, so it asks for the strongest self-contained moment rather than
+the most representative one. And it may carry no contested claim at all:
+seventy-five seconds cannot hold a steelmanned counterpoint, and cramming one in
+produces a strawman, which is worse than none because it looks like fairness.
+
 ```bash
 npm run foundry -- compare --a <run> --b <run>   # is it getting better?
+npm run foundry -- series --show night-shift     # what a serial has established
 ```
 
 `make` researches, writes, renders and gates. **It never publishes.** Publishing
@@ -88,6 +107,27 @@ through.
 
 Every stage is resumable. A failed gate does not mean re-rendering: fix what it
 found and `npm run foundry -- resume`.
+
+## Two kinds of show
+
+**Factual shows** answer to documents. Nothing is said that cannot be bound to a
+verbatim quote in something that was actually fetched.
+
+**Fiction shows** answer to a series bible. There is no document that entails a
+conversation nobody had, so the evidence pipeline is skipped entirely and
+replaced with continuity: an episode may not contradict what earlier episodes
+established. Same discipline - the prose is answerable to something outside
+itself - pointed at a different ground truth. Same deterministic-then-model
+shape, same different-model-family checker, and `unclear` blocks for the same
+reason `partially_entailed` does.
+
+This is a property of the **show**, set once in its persona file. There is no
+command-line switch that turns fact-checking off, and there should never be one:
+a show that reconstructs filings one week and invents a story the next has
+destroyed the only thing the evidence pipeline was buying it.
+
+The disclosure is identical either way. "It is obviously a story" is not a
+disclosure.
 
 ## What makes it sound like people
 
