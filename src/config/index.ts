@@ -82,6 +82,38 @@ export const verifierConfig = () => ({
   model: process.env.FOUNDRY_VERIFIER_MODEL || 'gpt-5',
 });
 
+/**
+ * The clerk: a cheap model for work that is mechanical rather than editorial.
+ *
+ * MODEL TIERING IS ONLY SAFE WHERE THE CHEAP MODEL'S OUTPUT IS CHECKED BY
+ * SOMETHING THAT IS NOT A MODEL. That is the whole rule, and it is deliberately
+ * strict, because the obvious places to save money here are exactly the places
+ * where a worse model produces a worse SHOW rather than a visible failure.
+ *
+ * What the clerk is allowed to do:
+ *   - Write search queries for the counter-evidence pass. A query is judged by
+ *     what it finds; a weak query finds nothing and the next one runs.
+ *
+ * What the clerk is deliberately NOT allowed to do, and why:
+ *   - The brief. It sets `likelyContested`, and an empty list means the search
+ *     for disconfirming evidence never happens. Getting that wrong makes the
+ *     episode confidently one-sided with every sentence still sourced.
+ *   - Claim extraction. Quote binding is exacting work and a sloppy span fails
+ *     the ledger, which costs a whole re-run rather than a few pence.
+ *   - Any beat, the hook choice, or the title. These are the show. A cheaper
+ *     model here saves pennies and costs listeners, which is the wrong trade
+ *     at any price.
+ *   - Verification. Cheapening the check is how you end up publishing the
+ *     thing the check exists to catch.
+ *
+ * Same family as the writer on purpose - it is doing the writer's clerical
+ * work, not checking the writer. The verifier's independence is unaffected.
+ */
+export const clerkConfig = () => ({
+  apiKey: required('ANTHROPIC_API_KEY'),
+  model: process.env.FOUNDRY_CLERK_MODEL || 'claude-haiku-4-5',
+});
+
 export const ttsConfig = () => ({
   apiKey: required('ELEVENLABS_API_KEY'),
 });

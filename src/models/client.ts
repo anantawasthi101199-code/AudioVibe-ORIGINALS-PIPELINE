@@ -21,6 +21,25 @@ export interface LlmRequest {
   maxTokens?: number;
   /** 0 for anything being checked or scored. Judgement should not wander. */
   temperature?: number;
+  /**
+   * Cache the system prompt.
+   *
+   * THE LARGEST FREE SAVING IN THE PIPELINE. Writing one episode sends the same
+   * system prompt ten to fifteen times - the show's canon, its taboos, its
+   * style rules, the whole banned-phrase list, the cast and their speech
+   * habits. That block is identical on every one of those calls and identical
+   * across every episode of the show, and it is well over a thousand tokens.
+   *
+   * Caching is a PREFIX match, so this only works because the system prompt is
+   * built from the persona alone and carries nothing per-request. Putting a
+   * timestamp, a run id, or the beat name into it would invalidate the cache on
+   * every call while looking like it still worked - the classic silent
+   * invalidator. Everything that varies lives in `prompt`, which comes after.
+   *
+   * Off by default so a one-shot call does not pay the write premium for a
+   * prefix nothing will read again.
+   */
+  cacheSystem?: boolean;
 }
 
 export interface LlmResponse {
@@ -29,6 +48,14 @@ export interface LlmResponse {
   outputTokens: number;
   costPence: number;
   model: string;
+  /**
+   * Tokens served from cache.
+   *
+   * Reported so a silent invalidator is discoverable. If this is zero across a
+   * whole episode, the system prefix is changing between calls and the caching
+   * is costing money rather than saving it.
+   */
+  cachedInputTokens?: number;
 }
 
 export interface LlmClient {
@@ -109,9 +136,55 @@ export const nodeHttpPost: HttpPost = async (url, headers, body) => {
 
 interface AnthropicShape {
   content?: Array<{ type: string; text?: string }>;
-  usage?: { input_tokens?: number; output_tokens?: number };
+  usage?: {
+    input_tokens?: number;
+    output_tokens?: number;
+    cache_creation_input_tokens?: number;
+    cache_read_input_tokens?: number;
+  };
   error?: { message?: string };
 }
+
+/**
+ * Cache pricing multipliers against the ordinary input price.
+ *
+ * Writing a prefix costs a premium; reading one back is nearly free. Those
+ * ratios are stable across the model line even as the absolute prices move,
+ * which is why they live here as multipliers rather than as another price
+ * table to fall out of date.
+ *
+ * The arithmetic that matters: a system prefix pays 1.25x once and 0.1x on
+ * every call after. Writing one episode makes twelve calls sharing that prefix,
+ * so the prefix costs 1.25 + 11 x 0.1 = 2.35 instead of 12. The break-even is
+ * the second call.
+ */
+const CACHE_WRITE_MULTIPLIER = 1.25;
+const CACHE_READ_MULTIPLIER = 0.1;
+
+/**
+ * Cost when part of the input was cached.
+ *
+ * `inputTokens` here is the UNCACHED remainder, which is how Anthropic reports
+ * it: input_tokens excludes both cache counters rather than including them.
+ * Adding them together and then charging full price for the lot would report a
+ * bill nobody was sent.
+ */
+export const costPenceWithCache = (
+  model: string,
+  inputTokens: number,
+  outputTokens: number,
+  cacheWriteTokens: number,
+  cacheReadTokens: number
+): number => {
+  const [inPrice, outPrice] = priceFor(model);
+  const perInputToken = inPrice / 1_000_000;
+  return (
+    inputTokens * perInputToken +
+    cacheWriteTokens * perInputToken * CACHE_WRITE_MULTIPLIER +
+    cacheReadTokens * perInputToken * CACHE_READ_MULTIPLIER +
+    (outputTokens / 1_000_000) * outPrice
+  );
+};
 
 export class AnthropicClient implements LlmClient {
   readonly name = 'anthropic';
@@ -123,6 +196,14 @@ export class AnthropicClient implements LlmClient {
   ) {}
 
   async complete(req: LlmRequest): Promise<LlmResponse> {
+    // A cached system prompt has to be sent as a BLOCK, because cache_control
+    // attaches to a block and there is nowhere to hang it on a bare string.
+    // Uncached calls keep sending the string, so the wire format only changes
+    // where caching is actually asked for.
+    const system = req.cacheSystem
+      ? [{ type: 'text', text: req.system, cache_control: { type: 'ephemeral' } }]
+      : req.system;
+
     const res = await this.post(
       'https://api.anthropic.com/v1/messages',
       { 'x-api-key': this.apiKey, 'anthropic-version': '2023-06-01' },
@@ -130,7 +211,7 @@ export class AnthropicClient implements LlmClient {
         model: this.model,
         max_tokens: req.maxTokens ?? 4096,
         temperature: req.temperature ?? 1,
-        system: req.system,
+        system,
         messages: [{ role: 'user', content: req.prompt }],
       }
     );
@@ -152,13 +233,26 @@ export class AnthropicClient implements LlmClient {
 
     const inputTokens = body.usage?.input_tokens ?? 0;
     const outputTokens = body.usage?.output_tokens ?? 0;
+    const cacheWrite = body.usage?.cache_creation_input_tokens ?? 0;
+    const cacheRead = body.usage?.cache_read_input_tokens ?? 0;
 
     return {
       text,
-      inputTokens,
+      // Reported as the total the call actually consumed, so a budget line
+      // still reads as tokens-in rather than tokens-in-except-the-cached-ones.
+      // The COST below is the thing that has to be exact, and it prices each
+      // bucket at its own rate.
+      inputTokens: inputTokens + cacheWrite + cacheRead,
       outputTokens,
-      costPence: costPenceFor(this.model, inputTokens, outputTokens),
+      costPence: costPenceWithCache(
+        this.model,
+        inputTokens,
+        outputTokens,
+        cacheWrite,
+        cacheRead
+      ),
       model: this.model,
+      cachedInputTokens: cacheRead,
     };
   }
 }

@@ -36,6 +36,7 @@ import { NETWORK_BANNED_PHRASES, checkStyle } from './style';
 import { loopBrief, openBefore } from './loops';
 import { checkVoices, voiceBrief } from './voices';
 import { writeHook } from './hooks';
+import { SHORT_FORM_GUIDANCE } from './shorts';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -104,7 +105,7 @@ const EAR_RULES = [
   'Never open a beat by announcing what the beat is about.',
 ];
 
-const buildSystem = (persona: Persona, isoDate: string): string => {
+const buildSystem = (persona: Persona, isoDate: string, kind: 'long' | 'short'): string => {
   const canon = canonAsOf(persona, isoDate);
   const say = (kind: string) =>
     canon
@@ -142,6 +143,11 @@ ${EAR_RULES.map((r) => `- ${r}`).join('\n')}
 ${
   dialogue
     ? `\nWRITING A CONVERSATION\n${DIALOGUE_GUIDANCE.map((r) => `- ${r}`).join('\n')}`
+    : ''
+}
+${
+  kind === 'short'
+    ? `\nTHIS IS A SHORT, NOT AN EPISODE\n${SHORT_FORM_GUIDANCE.map((r) => `- ${r}`).join('\n')}`
     : ''
 }
 
@@ -289,7 +295,7 @@ export const writeBeat = async (
   writer: LlmClient,
   onCost?: (pence: number) => void
 ): Promise<ScriptBeat> => {
-  const system = buildSystem(ctx.persona, ctx.isoDate);
+  const system = buildSystem(ctx.persona, ctx.isoDate, ctx.format.kind);
   const prompt = buildPrompt(ctx);
 
   // Calls made, not revisions made. The first is a draft, so revisions are
@@ -305,6 +311,16 @@ export const writeBeat = async (
 
     const res = await writer.complete({
       system,
+      // The one call site in the pipeline where caching pays, and it pays a
+      // lot. `system` is built once above and reused for every beat and every
+      // revision of this episode - typically twelve to fifteen calls against a
+      // prefix of well over a thousand tokens. See LlmRequest.cacheSystem.
+      //
+      // It stays valid because buildSystem takes the persona, the date and the
+      // format kind, all fixed for the run. If anything per-beat is ever moved
+      // into it, the cache silently stops hitting and the episode gets more
+      // expensive rather than failing - which is why runs report cached tokens.
+      cacheSystem: true,
       prompt: isRevision
         ? [
             prompt,

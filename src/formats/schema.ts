@@ -55,6 +55,14 @@ export const beatTypeSchema = z.enum([
   'callback',
   /** Closing. Deliberately short in every format here. */
   'outro',
+  /**
+   * The last line of a short. Not an outro.
+   *
+   * An outro closes politely; a button lands and stops. In short form the final
+   * two seconds decide whether somebody replays it or sends it to someone, and
+   * a polite close is the thing that guarantees neither.
+   */
+  'button',
 ]);
 
 export type BeatType = z.infer<typeof beatTypeSchema>;
@@ -118,7 +126,14 @@ export const formatSchema = z
     id: z.string().regex(/^[a-z0-9-]+$/, 'lowercase, digits and hyphens only'),
     name: z.string().min(1),
 
-    /** Long form or short form. Shorts are derived from a beat of a long episode. */
+    /**
+     * Long form or short form.
+     *
+     * Not a cosmetic label. A short is written differently (no preamble, no
+     * sign-off, starts mid-thought), scored differently, and - when derived
+     * from a parent episode - costs almost nothing because it reuses claims
+     * that have already been verified. See script/shorts.ts.
+     */
     kind: z.enum(['long', 'short']),
 
     /** One sentence on what this shape is good for. */

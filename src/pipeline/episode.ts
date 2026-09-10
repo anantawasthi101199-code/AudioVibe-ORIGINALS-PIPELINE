@@ -46,6 +46,14 @@ import { Run } from '../run/store';
 export interface PipelineDeps {
   writer: LlmClient;
   verifier: LlmClient;
+  /**
+   * A cheap model for mechanical work. See clerkConfig in config/index.ts for
+   * the rule governing what may and may not be given to it.
+   *
+   * Optional, and falls back to the writer. A missing clerk must never be a
+   * reason a run does not happen - it is a cost optimisation, not a dependency.
+   */
+  clerk?: LlmClient;
   search: SearchProvider;
   tts: TtsProvider;
   fetchDeps: FetchDeps;
@@ -152,11 +160,14 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     verification = await verifyAll(claims, corpus.sources, deps.verifier, spend);
 
     log('verification: searching for evidence against contested claims');
+    // The clerk writes these queries. It is generating search strings from a
+    // claim, and a weak one simply finds nothing - the failure is visible and
+    // cheap. Everything downstream of the search is unchanged.
     counterEvidence = await gatherCounterEvidence(
       claims,
       deps.search,
       deps.fetchDeps,
-      deps.writer,
+      deps.clerk ?? deps.writer,
       {},
       spend
     );

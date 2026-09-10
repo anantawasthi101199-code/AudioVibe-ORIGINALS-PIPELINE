@@ -1,0 +1,91 @@
+# The short.
+#
+# NOT a trailer for the episode, and not a summary of it. A short has to be
+# worth hearing on its own, by somebody who will never listen to the long one.
+# A summary is the thing that feels like an advert, and adverts get scrolled.
+#
+# WHAT IS DIFFERENT FROM LONG FORM, and it is not just length:
+#
+#   - It starts mid-thought. No greeting, no setup, no naming the show. In a
+#     feed, the listener arrived by accident and the first word is competing
+#     with a thumb.
+#   - It has no outro. It ends on a `button` - a line that lands and stops.
+#     A polite close is permission to move on.
+#   - Density is inverted. Long form earns attention and then spends it on
+#     context; a short has no room for context and must carry its own.
+#
+# WHY THE BEAT TYPES ARE THE SAME ONES LONG FORM USES. Retention is aggregated
+# across every format by beat type, so `cold_open` has to mean the same thing in
+# both or "cold opens over twelve seconds cost 22 percent" stops being
+# answerable. Only `button` is new, because short form genuinely has a beat long
+# form does not.
+
+id: short-teardown
+name: Teardown short
+kind: short
+intent: >
+  One strange, specific thing from a case, told in seventy-five seconds so that
+  somebody who never hears the full episode still got something whole.
+
+targetSeconds: [60, 90]
+
+# One loop, opened immediately and closed at the end. A short has no room to
+# carry two, and trying is how a short becomes confusing rather than tight.
+loops:
+  - id: the_thing
+    question: What is actually going on here?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [5, 9]
+    function: State the strange specific thing. Nothing before it.
+    opens: [the_thing]
+    constraints:
+      - First word is part of the fact. No greeting, no "so", no naming the show.
+      - One sentence.
+      - A concrete noun or a number in the first five words.
+    minClaims: 1
+
+  - id: escalate
+    type: turn
+    seconds: [15, 25]
+    function: Make it stranger. The listener should feel it getting worse, not clearer.
+    constraints:
+      - Add a detail that deepens the problem rather than explaining it.
+      - Do not begin to answer the question yet.
+    minClaims: 1
+
+  - id: pivot
+    type: turn
+    seconds: [15, 25]
+    function: The detail that reframes it - the reason it is not what it looked like.
+    constraints:
+      - Must contradict what the listener now assumes.
+    minClaims: 1
+
+  - id: land
+    type: payoff
+    seconds: [18, 28]
+    function: Answer it, plainly and completely.
+    closes: [the_thing]
+    constraints:
+      - No moral, no lesson, no "and that's why".
+      - Say the thing. Do not summarise having said it.
+    minClaims: 1
+
+  - id: button
+    type: button
+    seconds: [4, 8]
+    function: One line that lands and stops.
+    constraints:
+      - Under fifteen words.
+      - No call to action. No "follow for more". No naming the show.
+      - Not a summary of what was just said.
+      - It may be dry, or flat, or a single detail. It may not be a conclusion.
+    minClaims: 0
+
+# Climbs almost the whole way and drops off a cliff. Deliberately not the
+# long-form curve: a short has no room for the breathing space that makes a ten
+# minute episode bearable, and pacing it like one is how a short feels slow.
+tensionCurve: [0.80, 0.90, 0.95, 1.00, 0.35]

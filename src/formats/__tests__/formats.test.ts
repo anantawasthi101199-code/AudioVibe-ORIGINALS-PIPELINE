@@ -139,7 +139,7 @@ describe('the shipped formats', () => {
     expect(shipped.length).toBeGreaterThan(0);
   });
 
-  it.each(shipped.map((f) => [f.id, f] as const))(
+  it.each(shipped.filter((f) => f.kind === 'long').map((f) => [f.id, f] as const))(
     '%s carries a REQUIRED counterpoint beat',
     (_id, format) => {
       // The rule this repo cares about most. Confident one-sidedness is the
@@ -148,6 +148,21 @@ describe('the shipped formats', () => {
       const counterpoint = format.beats.find((b) => b.type === 'counterpoint');
       expect(counterpoint).toBeDefined();
       expect(counterpoint!.optional).toBe(false);
+    }
+  );
+
+  it.each(shipped.filter((f) => f.kind === 'short').map((f) => [f.id, f] as const))(
+    '%s has no counterpoint beat, and therefore may carry no contested claim',
+    (_id, format) => {
+      // Seventy-five seconds cannot hold a steelmanned counterpoint, and
+      // cramming one in produces a worse strawman than having none.
+      //
+      // So the principle is kept a different way rather than dropped: a short
+      // may not make a CONTESTED claim at all. If a fact needs the other side
+      // stating, it does not belong in a short - shorts carry established
+      // specifics, not contested interpretations. The gate enforces it (see
+      // qa/gate.ts), and this test pins the format side of the bargain.
+      expect(format.beats.find((b) => b.type === 'counterpoint')).toBeUndefined();
     }
   );
 

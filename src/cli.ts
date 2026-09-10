@@ -13,6 +13,7 @@
 import fs from 'fs';
 import path from 'path';
 import {
+  clerkConfig,
   episodeBudgetPence,
   platformConfig,
   ttsConfig,
@@ -125,6 +126,7 @@ const httpGet = async (url: string): Promise<HttpResponse> => {
 const buildDeps = (): PipelineDeps => {
   const writer = writerConfig();
   const verifier = verifierConfig();
+  const clerk = clerkConfig();
   const keys = retrievalKeys();
 
   if (writer.model === verifier.model) {
@@ -149,9 +151,14 @@ const buildDeps = (): PipelineDeps => {
 
   console.log(`  retrieval: ${describeRetrieval(keys)}`);
 
+  console.log(
+    `  models: ${writer.model} writing, ${verifier.model} verifying, ${clerk.model} clerking`
+  );
+
   return {
     writer: new AnthropicClient(writer.model, writer.apiKey),
     verifier: new OpenAiClient(verifier.model, verifier.apiKey),
+    clerk: new AnthropicClient(clerk.model, clerk.apiKey),
     search,
     tts: new ElevenLabsTts(ttsConfig().apiKey),
     fetchDeps: { httpGet: get },

@@ -92,6 +92,25 @@ export const runGate = (input: GateInput): GateReport => {
 
   // --- 4. Counter-evidence. The check that separates true from one-sided. ---
   const contested = input.claims.filter((c) => c.contested);
+
+  // A SHORT MAY NOT CARRY A CONTESTED CLAIM AT ALL.
+  //
+  // Long formats answer one-sidedness with a required counterpoint beat.
+  // Seventy-five seconds cannot hold a steelmanned counterpoint, and cramming
+  // one in produces a strawman - which is worse than having none, because it
+  // looks like fairness.
+  //
+  // So the principle is kept the other way round: if a fact needs the other
+  // side stating, it does not belong in a short. Shorts carry established
+  // specifics, not contested interpretations. Without this rule the short lane
+  // would quietly become the one where the show gets to be one-sided.
+  if (input.format.kind === 'short' && contested.length) {
+    add(
+      'shortCarriesContestedClaim',
+      `a short may not state a contested claim (${contested.map((c) => c.id).join(', ')}). ` +
+        `It has no room for the other side, so it must not need one.`
+    );
+  }
   const searched = new Set(input.counterEvidence.map((c) => c.claimId));
   for (const claim of contested) {
     if (!searched.has(claim.id)) {
