@@ -54,7 +54,12 @@ beats:
     constraints:
       - Add a detail that deepens the problem rather than explaining it.
       - Do not begin to answer the question yet.
-    minClaims: 1
+    # No floor, and that is not laziness. A floor on every beat would force four
+    # separately sourced facts into seventy-five seconds, which makes a short a
+    # LIST - the exact opposite of one idea told properly. The two beats that
+    # must be grounded are the one that states the thing and the one that
+    # answers it; escalate and pivot re-frame what is already on the table.
+    minClaims: 0
 
   - id: pivot
     type: turn
@@ -62,7 +67,8 @@ beats:
     function: The detail that reframes it - the reason it is not what it looked like.
     constraints:
       - Must contradict what the listener now assumes.
-    minClaims: 1
+    # See escalate. This beat turns the fact over rather than adding a new one.
+    minClaims: 0
 
   - id: land
     type: payoff

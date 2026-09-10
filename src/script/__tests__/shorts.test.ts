@@ -103,42 +103,65 @@ describe('selectShortAngle', () => {
 });
 
 describe('redistributeClaims', () => {
+  const slot = (id: string, minClaims = 0) => ({ id, minClaims });
+  const pick = (...ids: string[]) => ({ angle: 'a', claimIds: ids, reason: '' });
+
   it('re-points inherited claims onto the short beats', () => {
     // Without this the writer is handed claims addressed to `mechanism` while
     // writing `pivot`, sees none for the beat in front of it, and writes a beat
     // with no facts in it - which passes silently and reads as filler.
-    const out = redistributeClaims(
-      claims,
-      { angle: 'a', claimIds: ['c1', 'c2'], reason: '' },
-      ['hook', 'escalate']
-    );
-
+    const out = redistributeClaims(claims, pick('c1', 'c2'), [slot('hook'), slot('escalate')]);
     expect(out.map((c) => c.beatId)).toEqual(['hook', 'escalate']);
   });
 
   it('keeps everything about a claim except which beat it belongs to', () => {
-    const out = redistributeClaims(claims, { angle: 'a', claimIds: ['c1'], reason: '' }, ['hook']);
+    const out = redistributeClaims(claims, pick('c1'), [slot('hook')]);
     expect(out[0]).toEqual({ ...claims[0], beatId: 'hook' });
   });
 
-  it('spreads claims across the beats rather than piling them on one', () => {
-    const many = ['c1', 'c2', 'c3', 'c4'].map((id, i) => claim(id, `b${i}`));
-    const out = redistributeClaims(
-      many,
-      { angle: 'a', claimIds: ['c1', 'c2', 'c3', 'c4'], reason: '' },
-      ['hook', 'escalate']
-    );
+  it('FILLS THE FLOORS BEFORE SPREADING', () => {
+    // The bug a plain round-robin hides. Two claims, four beats, and the two
+    // beats that actually require a fact are the first and the last. Dealing
+    // them in order puts both on beats that needed neither and fails the short
+    // at the gate for having no facts in the beat that answers the question -
+    // after a render has been paid for.
+    const out = redistributeClaims(claims, pick('c1', 'c2'), [
+      slot('hook', 1),
+      slot('escalate'),
+      slot('pivot'),
+      slot('land', 1),
+    ]);
 
-    expect(out.map((c) => c.beatId)).toEqual(['hook', 'escalate', 'hook', 'escalate']);
+    expect(out.map((c) => c.beatId).sort()).toEqual(['hook', 'land']);
+  });
+
+  it('spreads what is left over after the floors are met', () => {
+    const many = ['c1', 'c2', 'c3', 'c4'].map((id, i) => claim(id, `b${i}`));
+    const out = redistributeClaims(many, pick('c1', 'c2', 'c3', 'c4'), [
+      slot('hook', 1),
+      slot('land', 1),
+    ]);
+
+    // Two fill the floors, two spread across both beats.
+    expect(out.map((c) => c.beatId)).toEqual(['hook', 'land', 'hook', 'land']);
+  });
+
+  it('REFUSES a selection too thin to meet the floors', () => {
+    // A short with nothing to say in the beat that answers the question. Worth
+    // failing here, where the parent's claims are still in hand and another
+    // selection costs one call, rather than at the gate after the render.
+    expect(() =>
+      redistributeClaims(claims, pick('c1'), [slot('hook', 1), slot('land', 1)])
+    ).toThrow(/require 2/);
   });
 
   it('drops claims the selection did not choose', () => {
-    const out = redistributeClaims(claims, { angle: 'a', claimIds: ['c2'], reason: '' }, ['hook']);
+    const out = redistributeClaims(claims, pick('c2'), [slot('hook')]);
     expect(out.map((c) => c.id)).toEqual(['c2']);
   });
 
   it('returns nothing when there are no beats to point at', () => {
-    expect(redistributeClaims(claims, { angle: 'a', claimIds: ['c1'], reason: '' }, [])).toEqual([]);
+    expect(redistributeClaims(claims, pick('c1'), [])).toEqual([]);
   });
 });
 

@@ -48,6 +48,15 @@ export const runManifestSchema = z.object({
   spentPence: z.number().nonnegative().default(0),
   /** Set when a run is abandoned, with the reason, rather than deleting it. */
   abandoned: z.string().optional(),
+  /**
+   * The run this one was derived from, for a short cut from a finished episode.
+   *
+   * Recorded on the run rather than inferred from a naming convention, because
+   * the provenance question a short has to be able to answer is "which verified
+   * facts is this restating", and the answer lives in the parent's claims
+   * artifact. A short whose parent is gone cannot answer it.
+   */
+  derivedFrom: z.string().optional(),
 });
 
 export type RunManifest = z.infer<typeof runManifestSchema>;
@@ -60,10 +69,32 @@ const MANIFEST = 'run.json';
  * A directory listing is the primary interface to these, so the order `ls`
  * gives has to be the order they happened. An opaque uuid would make the most
  * common question - "what did we make most recently" - need a tool.
+ *
+ * The stamp is only accurate to the second, so `exists` disambiguates a
+ * collision. Two runs of the same show inside one second is not hypothetical -
+ * cutting a short immediately after gating its parent does it - and before this
+ * existed the second run silently ADOPTED the first's directory: same manifest
+ * path, same artifacts, `hasArtifact` true for stages it had never run. It
+ * would have written an episode out of another episode's corpus and looked
+ * entirely healthy doing it.
+ *
+ * The suffix keeps the chronological sort, because it lands between this second
+ * and the next one either way.
  */
-export const newRunId = (personaId: string, now = new Date()): string => {
+export const newRunId = (
+  personaId: string,
+  now = new Date(),
+  exists: (id: string) => boolean = () => false
+): string => {
   const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\..+$/, '').replace('T', '-');
-  return `${stamp}-${personaId}`;
+  const base = `${stamp}-${personaId}`;
+
+  if (!exists(base)) return base;
+  for (let n = 2; n < 100; n++) {
+    const candidate = `${base}-${n}`;
+    if (!exists(candidate)) return candidate;
+  }
+  throw new Error(`cannot make a run id: ${base} and 98 suffixes are all taken`);
 };
 
 export class Run {
@@ -81,12 +112,14 @@ export class Run {
   }
 
   static create(
-    input: { personaId: string; formatId: string; topic: string },
+    input: { personaId: string; formatId: string; topic: string; derivedFrom?: string },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
     const now = opts.now?.() ?? new Date();
     const root = opts.root ?? runsDir();
-    const id = newRunId(input.personaId, now);
+    const id = newRunId(input.personaId, now, (candidate) =>
+      fs.existsSync(path.join(root, candidate, MANIFEST))
+    );
     const dir = path.join(root, id);
 
     fs.mkdirSync(dir, { recursive: true });
@@ -99,6 +132,7 @@ export class Run {
       createdAt: now.toISOString(),
       completed: [],
       spentPence: 0,
+      derivedFrom: input.derivedFrom,
     });
 
     const run = new Run(dir, manifest);

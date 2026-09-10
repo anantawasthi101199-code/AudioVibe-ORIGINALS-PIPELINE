@@ -34,6 +34,7 @@ import {
 import { HttpResponse } from './evidence/fetch';
 import { ElevenLabsTts } from './render/tts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
+import { runShort } from './pipeline/short';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
@@ -51,6 +52,8 @@ AudioVibe Foundry
 Commands
   shows                          List the shows and their formats
   make --show <id> --topic "..." Research, write, render and gate one episode
+  short --run <id> [--format <id>]
+                                 Cut a short out of an episode that passed
   resume [--run <id>]            Continue a run (default: the most recent)
   status [--run <id>]            What a run has done and what it cost
   gate [--run <id>]              Re-run the gate over an existing run
@@ -61,6 +64,9 @@ Commands
 Notes
   make stops at the gate. Publishing is always a separate, deliberate step.
   Every stage is resumable: a failed gate does not mean re-rendering.
+  short derives from a finished episode rather than researching its own, which
+  is why it costs about a ninth of what a standalone short would. It produces
+  its own run, publishable the same way as any other.
 `;
 
 const arg = (argv: string[], name: string): string | undefined => {
@@ -243,6 +249,59 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
   return gate.passed ? 0 : 2;
 };
 
+/**
+ * Cut a short out of a finished episode.
+ *
+ * REQUIRES THE PARENT TO HAVE PASSED ITS GATE, not merely to exist. A short
+ * inherits the parent's verification wholesale, so deriving from an episode
+ * that failed would launder a failure into a format that travels further than
+ * the episode ever would.
+ */
+const cmdShort = async (argv: string[]): Promise<number> => {
+  const parent = openRun(argv);
+
+  if (!parent.hasArtifact('qa')) {
+    console.error(`run ${parent.id} has not been gated yet. Run it before cutting a short.`);
+    return 1;
+  }
+  if (!readGate(parent).passed) {
+    console.error(
+      `run ${parent.id} did not pass its gate. A short inherits the parent's verification, ` +
+        `so deriving from a failed episode would carry the failure into a wider audience.`
+    );
+    return 1;
+  }
+
+  // Default to the show's own short format if it declares one. A show without
+  // one has not decided what its shorts sound like, and guessing is worse than
+  // asking.
+  const persona = loadPersona(parent.manifest.personaId);
+  const formatId =
+    arg(argv, 'format') ?? persona.formats.find((f) => loadFormat(f).kind === 'short');
+
+  if (!formatId) {
+    console.error(
+      `${persona.name} has no short format. Add one to its formats list, or pass --format.`
+    );
+    return 1;
+  }
+
+  const { run: shortRun, gate } = await runShort({ parent, formatId }, buildDeps());
+
+  console.log('');
+  console.log(formatGateReport(gate));
+  console.log('');
+  console.log(`spent ${shortRun.manifest.spentPence.toFixed(1)}p`);
+  console.log(`artifacts in ${shortRun.dir}`);
+
+  if (gate.passed) {
+    console.log(`
+Read it first:  npm run foundry -- script --run ${shortRun.id}`);
+    console.log(`Then publish:   npm run foundry -- publish --run ${shortRun.id}`);
+  }
+  return gate.passed ? 0 : 2;
+};
+
 const cmdStatus = (argv: string[]): number => {
   const run = openRun(argv);
   const m = run.manifest;
@@ -412,6 +471,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdShows();
       case 'make':
         return await cmdMake(rest);
+      case 'short':
+        return await cmdShort(rest);
       case 'resume':
         return await finishRun(openRun(rest), rest);
       case 'status':

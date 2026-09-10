@@ -17,6 +17,23 @@ describe('newRunId', () => {
   it('names the show, so a listing is readable', () => {
     expect(newRunId('the-teardown', new Date('2026-09-07T09:00:00Z'))).toContain('the-teardown');
   });
+
+  it('disambiguates two runs of the same show in the same second', () => {
+    // The stamp is only accurate to the second, and two runs of one show inside
+    // a second is not hypothetical: cutting a short right after gating its
+    // parent does it.
+    const at = new Date('2026-09-07T09:00:00Z');
+    const first = newRunId('show', at);
+    expect(newRunId('show', at, (id) => id === first)).not.toBe(first);
+  });
+
+  it('keeps the disambiguated id in chronological order', () => {
+    const at = new Date('2026-09-07T09:00:00Z');
+    const first = newRunId('show', at);
+    const second = newRunId('show', at, (id) => id === first);
+    const later = newRunId('show', new Date('2026-09-07T09:00:01Z'));
+    expect([later, second, first].sort()).toEqual([first, second, later]);
+  });
 });
 
 describe('Run', () => {
@@ -30,6 +47,24 @@ describe('Run', () => {
   });
   afterEach(() => {
     fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  it('NEVER adopts an existing run directory', () => {
+    // Before this, two runs of the same show in one second landed on the same
+    // id, and `Run.create` mkdir -p'd straight into the first one's directory:
+    // same manifest path, same artifacts, hasArtifact true for stages the new
+    // run had never done. It would have written an episode out of another
+    // episode's corpus and looked entirely healthy doing it.
+    const first = create();
+    first.writeArtifact('brief', { angle: 'the first run' });
+
+    const second = create();
+
+    expect(second.id).not.toBe(first.id);
+    expect(second.hasArtifact('brief')).toBe(false);
+    expect(first.readArtifact('brief', z.object({ angle: z.string() })).angle).toBe(
+      'the first run'
+    );
   });
 
   it('creates a directory with a manifest', () => {

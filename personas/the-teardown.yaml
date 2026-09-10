@@ -180,7 +180,13 @@ canon:
     text: "That is the part worth slowing down on."
 
 formats:
+  # The long show is what this persona is for. The short is cut out of a
+  # finished episode rather than written fresh, so it inherits these two voices,
+  # these taboos and this register - which is the whole point of listing it
+  # here rather than giving shorts their own show. Somebody who finds the show
+  # through a short and then plays an episode should recognise the same people.
   - case-study-teardown
+  - short-teardown
 
 # Ten to twelve minutes. Long enough to reconstruct something properly, short
 # enough to hold a commute.

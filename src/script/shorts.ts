@@ -79,6 +79,9 @@ A bad pick:
 - Needs the episode's context to make sense.
 - Is the episode's conclusion. A conclusion without its argument is just an assertion.
 
+Pick TWO to FOUR facts. One is not enough to state the thing and then answer
+it; more than four is a list rather than one idea.
+
 Return JSON only:
 {"angle": "the one thing this short is about, in a sentence",
  "claimIds": ["ids the short may state"],
@@ -123,27 +126,67 @@ export const selectShortAngle = async (
   return selection;
 };
 
+/** A short beat and how many claims it is required to carry. */
+export interface ShortBeatSlot {
+  id: string;
+  minClaims: number;
+}
+
 /**
  * The claims a derived short is allowed to use, re-pointed at its own beats.
  *
  * Claims carry the beat they were written for, and a short's beats have
  * different ids. Without this the writer is handed claims for `mechanism` while
  * writing `pivot`, sees none for the beat in front of it, and writes a beat with
- * no facts in it.
+ * no facts in it - which passes silently and reads as filler.
  *
- * Spread across the short's fact-bearing beats rather than piled onto one, so
- * each beat has something concrete to say.
+ * FLOORS FIRST, THEN SPREAD, and the order is the whole point. A plain
+ * round-robin looks fair and is wrong: with two claims and four beats it can
+ * put both on the beats that did not need one and leave the two that did
+ * empty, so the gate fails a short that had exactly the facts it needed. So
+ * every beat with a floor is filled to its floor in beat order first, and only
+ * what is left over gets spread.
+ *
+ * Throws when there are not enough claims to meet the floors at all. That is a
+ * real failure - a short with nothing to say in the beat that answers the
+ * question - and it belongs here, where the parent's claims are still in hand
+ * and a different selection is one cheap call away, rather than at the gate
+ * after a render has been paid for.
  */
 export const redistributeClaims = (
   claims: Claim[],
   selection: ShortSelection,
-  beatIds: string[]
+  beats: ShortBeatSlot[]
 ): Claim[] => {
   const chosen = claims.filter((c) => selection.claimIds.includes(c.id));
-  if (!chosen.length || !beatIds.length) return [];
+  if (!chosen.length || !beats.length) return [];
 
-  return chosen.map((claim, i) => ({
-    ...claim,
-    beatId: beatIds[i % beatIds.length]!,
-  }));
+  const required = beats.reduce((sum, b) => sum + b.minClaims, 0);
+  if (chosen.length < required) {
+    throw new Error(
+      `the short selected ${chosen.length} claim(s) but its beats require ${required}: ` +
+        beats
+          .filter((b) => b.minClaims > 0)
+          .map((b) => `${b.id} needs ${b.minClaims}`)
+          .join(', ')
+    );
+  }
+
+  const out: Claim[] = [];
+  const queue = [...chosen];
+
+  for (const beat of beats) {
+    for (let i = 0; i < beat.minClaims; i++) {
+      out.push({ ...queue.shift()!, beatId: beat.id });
+    }
+  }
+
+  // Whatever is left spreads across every beat, floors included, so a short
+  // with more facts than floors still gives its middle beats something
+  // concrete rather than leaving them to improvise.
+  queue.forEach((claim, i) => {
+    out.push({ ...claim, beatId: beats[i % beats.length]!.id });
+  });
+
+  return out;
 };
