@@ -241,6 +241,25 @@ export const personaSchema = z.object({
    * EU AI Act does not have a fiction exemption.
    */
   fiction: z.boolean().default(false),
+
+  /**
+   * Whether episodes publish into a series shelf rather than as loose cards.
+   *
+   * A SERIAL REQUIRES THIS. Without it every episode lands in the catalogue
+   * unnumbered and unordered, and a serial a listener cannot play in order is
+   * not a serial - it is a pile of audio that happens to share a voice.
+   *
+   * A topic show does not need it and may not want it. The Teardown's episodes
+   * stand alone, so each one competes on its own subject and gets its own shot
+   * at a feed; a shelf would add a follow surface but would also mean somebody
+   * arriving at episode nine feels late. That is a real trade and it belongs to
+   * the show rather than to a default.
+   *
+   * Off by default because the failure directions are asymmetric. A serial that
+   * forgot the flag has published loose episodes that have to be reattached one
+   * by one; a topic show that forgot it has published exactly what it meant to.
+   */
+  publishesAsSeries: z.boolean().default(false),
 });
 
 export type Persona = z.infer<typeof personaSchema>;

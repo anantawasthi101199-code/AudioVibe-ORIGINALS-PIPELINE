@@ -10,6 +10,13 @@ dist/
 # is not something the history needs to carry forever.
 runs/
 
+# series.json is deliberately NOT ignored either, for a sharper version of the
+# same reason. It records which platform series each show publishes into, series
+# creation has no create-or-get, and there is no way to look one up by title on
+# the ingest credential. Lose it and the next publish makes a SECOND shelf that
+# starts again at episode one, while the first keeps every episode already
+# published. Nothing about either looks wrong in isolation.
+
 # bibles/ is deliberately NOT ignored, and it is the one generated thing here
 # that is committed. A run is reproducible from its inputs; a series bible is
 # not - it IS the series' memory, and losing it means every later episode

@@ -38,6 +38,7 @@ import { runEpisode, PipelineDeps } from './pipeline/episode';
 import { runShort } from './pipeline/short';
 import { runFiction } from './pipeline/fiction';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
+import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
@@ -65,6 +66,7 @@ Commands
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
   series --show <id>             What a fiction show has established so far
+  series-setup --show <id>       Make the platform series a show publishes into
 
 Notes
   make stops at the gate. Publishing is always a separate, deliberate step.
@@ -381,6 +383,69 @@ const cmdSeries = (argv: string[]): number => {
   return 0;
 };
 
+/**
+ * Create the platform series a show publishes its episodes into.
+ *
+ * A SEPARATE, DELIBERATE COMMAND, run once per show per environment. Series
+ * creation is not idempotent and there is no create-or-get on the API, so a
+ * publish that quietly created one whenever the registry looked empty would
+ * fork the show into two shelves the first time the registry was mislaid - and
+ * both shelves would look entirely correct in isolation.
+ */
+const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
+  const showId = arg(argv, 'show');
+  if (!showId) {
+    console.error('Usage: series-setup --show <id>');
+    return 1;
+  }
+
+  const persona = loadPersona(showId);
+  if (!persona.publishesAsSeries) {
+    console.error(
+      `${persona.name} publishes loose episodes, not a series. Set publishesAsSeries ` +
+        `in its persona file first, and read the note there about why that is a ` +
+        `real trade rather than an oversight.`
+    );
+    return 1;
+  }
+
+  const platform = platformConfig();
+  const env = environmentKey(platform.url);
+
+  const existing = findSeries(persona.id, platform.url);
+  if (existing) {
+    console.log(`${persona.name} already publishes into "${existing.title}" on ${env}.`);
+    console.log(`  series ${existing.seriesId}, made ${existing.createdAt}`);
+    return 0;
+  }
+
+  if (platform.isProduction && !flag(argv, 'yes')) {
+    console.error(`AUDIOVIBE_API_URL points at PRODUCTION (${platform.url}).`);
+    console.error('Re-run with --yes if that is what you meant.');
+    return 1;
+  }
+
+  console.log(`creating a series for ${persona.name} on ${env}...`);
+
+  const client = new AudioVibeClient(platform.url, platform.token);
+  const created = await client.createSeries({
+    title: persona.name,
+    description: persona.thesis.trim().replace(/\s+/g, ' '),
+    category: persona.category,
+  });
+
+  recordSeries(persona.id, {
+    seriesId: created.seriesId,
+    title: created.title,
+    apiUrl: platform.url,
+    createdAt: new Date().toISOString(),
+  });
+
+  console.log(`series ${created.seriesId} - "${created.title}"`);
+  console.log('Recorded in series.json. Commit it: losing it forks the show.');
+  return 0;
+};
+
 const cmdStatus = (argv: string[]): number => {
   const run = openRun(argv);
   const m = run.manifest;
@@ -546,9 +611,37 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
         });
       })();
 
+  const client = new AudioVibeClient(platform.url, platform.token);
+
+  // WHICH SHELF, IF ANY.
+  //
+  // A short always publishes as a loose card, whatever the show does with its
+  // long episodes: a short's job is to be found by somebody who has never heard
+  // of the show, and burying it inside a series shelf is the opposite of that.
+  //
+  // For everything else, a show that publishes as a series MUST have one
+  // already. Creating it here would mean a publish silently making a second
+  // shelf whenever the registry was missing, and the registry going missing is
+  // exactly the situation where you least want that.
+  const format = loadFormat(run.manifest.formatId);
+  const wantsSeries = persona.publishesAsSeries && format.kind !== 'short';
+
+  let seriesId: string | undefined;
+  if (wantsSeries) {
+    const record = findSeries(persona.id, platform.url);
+    if (!record) {
+      console.error(
+        `${persona.name} publishes as a series and has none on ${environmentKey(platform.url)} yet.`
+      );
+      console.error(`Make it once:  npm run foundry -- series-setup --show ${persona.id}`);
+      return 1;
+    }
+    seriesId = record.seriesId;
+    console.log(`publishing into "${record.title}" (${seriesId})`);
+  }
+
   console.log(`publishing to ${platform.url} as @${persona.handle}...`);
 
-  const client = new AudioVibeClient(platform.url, platform.token);
   const result = await client.publish({
     title: script.title,
     description: script.description,
@@ -556,6 +649,7 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
     category: persona.category,
     beatMap: render.beatMap,
     provenance,
+    seriesId,
   });
 
   run.writeArtifact('publish', { ...result, publishedAt: new Date().toISOString(), url: platform.url });
@@ -583,6 +677,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdShort(rest);
       case 'series':
         return cmdSeries(rest);
+      case 'series-setup':
+        return await cmdSeriesSetup(rest);
       case 'resume':
         return await finishRun(openRun(rest), rest);
       case 'status':

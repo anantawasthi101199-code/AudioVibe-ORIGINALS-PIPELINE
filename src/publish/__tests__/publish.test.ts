@@ -99,6 +99,18 @@ describe('buildProvenance', () => {
   });
 });
 
+/**
+ * Category names have to be resolved to ids before any upload, so every client
+ * here needs the list. Injected rather than reached for: the unit suite must
+ * never touch the network, and before this existed these tests failed with
+ * "fetch failed" the moment the client learned to look categories up.
+ */
+const categoryGet = async () => ({
+  status: 200,
+  json: { data: { categories: [{ id: 'cat-1', name: 'Business & Finance' }] } },
+  text: '',
+});
+
 describe('AudioVibeClient', () => {
   let dir: string;
   let audioPath: string;
@@ -128,11 +140,16 @@ describe('AudioVibeClient', () => {
   });
 
   it('publishes and returns the audio id', async () => {
-    const client = new AudioVibeClient('https://api.example', 'tok', async () => ({
-      status: 201,
-      json: { data: { audio: { id: 'aud-1', processing_status: 'pending' } } },
-      text: '',
-    }));
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async () => ({
+        status: 201,
+        json: { data: { audio: { id: 'aud-1', processing_status: 'pending' } } },
+        text: '',
+      }),
+      categoryGet
+    );
     expect(await client.publish(input())).toEqual({ audioId: 'aud-1', status: 'pending' });
   });
 
@@ -140,20 +157,30 @@ describe('AudioVibeClient', () => {
     // is_ai_generated is a fact about the ITEM: a show could publish something
     // a human wrote and voiced.
     let form: FormData | null = null;
-    const client = new AudioVibeClient('https://api.example', 'tok', async (_u, _h, f) => {
-      form = f;
-      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
-    });
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async (_u, _h, f) => {
+        form = f;
+        return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
+      },
+      categoryGet
+    );
     await client.publish(input());
     expect(form!.get('is_ai_generated')).toBe('true');
   });
 
   it('sends the beat map and the provenance', async () => {
     let form: FormData | null = null;
-    const client = new AudioVibeClient('https://api.example', 'tok', async (_u, _h, f) => {
-      form = f;
-      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
-    });
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async (_u, _h, f) => {
+        form = f;
+        return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
+      },
+      categoryGet
+    );
     await client.publish(input());
     expect(JSON.parse(String(form!.get('beat_map')))[0].id).toBe('cold_open');
     expect(JSON.parse(String(form!.get('provenance'))).persona_ref).toBe('the-teardown');
@@ -164,20 +191,30 @@ describe('AudioVibeClient', () => {
     // returns 401. Getting this wrong fails every publish with no hint that the
     // path is the problem.
     let url = '';
-    const client = new AudioVibeClient('https://api.example', 'tok', async (u) => {
-      url = u;
-      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
-    });
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async (u) => {
+        url = u;
+        return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
+      },
+      categoryGet
+    );
     await client.publish(input());
     expect(url).toBe('https://api.example/api/audios/ingest');
   });
 
   it('authenticates with the ingest token as a bearer', async () => {
     let headers: Record<string, string> = {};
-    const client = new AudioVibeClient('https://api.example', 'tok', async (_u, h) => {
-      headers = h;
-      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
-    });
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async (_u, h) => {
+        headers = h;
+        return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
+      },
+      categoryGet
+    );
     await client.publish(input());
     expect(headers.authorization).toBe('Bearer tok');
   });
@@ -185,35 +222,47 @@ describe('AudioVibeClient', () => {
   it('does NOT set content-type, so fetch computes the multipart boundary', async () => {
     // Setting it by hand produces a body the server cannot parse.
     let headers: Record<string, string> = {};
-    const client = new AudioVibeClient('https://api.example', 'tok', async (_u, h) => {
-      headers = h;
-      return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
-    });
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async (_u, h) => {
+        headers = h;
+        return { status: 201, json: { data: { audio: { id: 'a' } } }, text: '' };
+      },
+      categoryGet
+    );
     await client.publish(input());
     expect(Object.keys(headers).map((k) => k.toLowerCase())).not.toContain('content-type');
   });
 
   it('refuses when the audio file is missing', async () => {
-    const client = new AudioVibeClient('https://api.example', 'tok', async () => ({ status: 201, json: {}, text: '' }));
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async () => ({ status: 201, json: {}, text: '' }),
+      categoryGet
+    );
     await expect(client.publish({ ...input(), audioPath: '/nope.wav' })).rejects.toThrow(PublishError);
   });
 
   it('surfaces the server message on failure', async () => {
-    const client = new AudioVibeClient('https://api.example', 'tok', async () => ({
-      status: 401,
-      json: { message: 'Unauthorized' },
-      text: '',
-    }));
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async () => ({ status: 401, json: { message: 'Unauthorized' }, text: '' }),
+      categoryGet
+    );
     await expect(client.publish(input())).rejects.toThrow(/Unauthorized/);
   });
 
   it('treats a success with no audio id as a failure', async () => {
     // Otherwise the run records a publish that may not have happened.
-    const client = new AudioVibeClient('https://api.example', 'tok', async () => ({
-      status: 201,
-      json: { data: {} },
-      text: '{}',
-    }));
+    const client = new AudioVibeClient(
+      'https://api.example',
+      'tok',
+      async () => ({ status: 201, json: { data: {} }, text: '{}' }),
+      categoryGet
+    );
     await expect(client.publish(input())).rejects.toThrow(/returned no audio id/);
   });
 });

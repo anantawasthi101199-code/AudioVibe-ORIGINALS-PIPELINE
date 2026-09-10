@@ -191,6 +191,11 @@ canon:
 formats:
   - serial-episode
 
+# A serial without a shelf is a pile of audio that happens to share a voice.
+# Episodes publish into a series so they carry numbers and an order, which is
+# the entire point of a serial - see canon/schema.ts.
+publishesAsSeries: true
+
 episodeSeconds: [600, 720]
 
 # Fiction makes no claims about the world, so no tier applies. The list cannot
