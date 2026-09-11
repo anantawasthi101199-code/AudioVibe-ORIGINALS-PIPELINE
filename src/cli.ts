@@ -11,6 +11,7 @@
  * are exactly the ones an automated pipeline would wave through.
  */
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { z } from 'zod';
 import {
@@ -23,6 +24,7 @@ import {
 } from './config';
 import { loadAllFormats, loadFormat } from './formats/load';
 import { loadAllPersonas, loadPersona } from './canon/load';
+import { Persona } from './canon/schema';
 import { AnthropicClient, OpenAiClient } from './models/client';
 import { BraveSearch } from './evidence/search';
 import {
@@ -39,6 +41,7 @@ import { runShort } from './pipeline/short';
 import { runFiction } from './pipeline/fiction';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
+import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
@@ -384,6 +387,30 @@ const cmdSeries = (argv: string[]): number => {
 };
 
 /**
+ * Which episode of the series this is, for the cover.
+ *
+ * READ FROM THE SERIES BIBLE, not from a count of runs. Runs include the ones
+ * that failed the gate and the ones abandoned halfway, and numbering from those
+ * would skip numbers in the listener's view for reasons only this repo knows
+ * about. The bible records exactly the episodes that were published, in the
+ * order they were published, which is the same list a listener sees.
+ *
+ * The platform assigns its OWN episode number on upload, from the series'
+ * episode count. This is the cover's copy of the same fact, and it is off by
+ * one only if a publish fails after the platform has counted it - visible as a
+ * cover that disagrees with the shelf, which is exactly the kind of thing that
+ * should be visible.
+ */
+const episodeNumberFor = (run: Run, persona: Persona): number | undefined => {
+  if (!persona.fiction) return undefined;
+  const bible = loadBible(persona.id);
+  const index = bible.episodes.findIndex((e) => e.id === run.id);
+  // Already recorded (the gate passed and the bible was written) means this is
+  // its position; not yet recorded means it is the next one.
+  return index >= 0 ? index + 1 : bible.episodes.length + 1;
+};
+
+/**
  * Create the platform series a show publishes its episodes into.
  *
  * A SEPARATE, DELIBERATE COMMAND, run once per show per environment. Series
@@ -427,11 +454,21 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
 
   console.log(`creating a series for ${persona.name} on ${env}...`);
 
+  // The shelf gets 16:9 art, which is the frame the platform crops series to.
+  // Sending a square one here would have the middle band of it kept and the
+  // top and bottom shaved off, taking the wordmark with them.
+  const coverPath = renderCover(
+    { showName: persona.name, title: persona.name, palette: paletteFor(persona.id) },
+    path.join(os.tmpdir(), `foundry-series-${persona.id}.png`),
+    SERIES_COVER_SIZE
+  );
+
   const client = new AudioVibeClient(platform.url, platform.token);
   const created = await client.createSeries({
     title: persona.name,
     description: persona.thesis.trim().replace(/\s+/g, ' '),
     category: persona.category,
+    coverPath,
   });
 
   recordSeries(persona.id, {
@@ -640,6 +677,22 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
     console.log(`publishing into "${record.title}" (${seriesId})`);
   }
 
+  // COVER ART IS DRAWN HERE, NOT AT RENDER TIME, because it depends on the
+  // title and on nothing expensive. Drawing it costs nothing and is
+  // deterministic, so re-publishing never quietly changes the artwork of
+  // something already in a listener's library. See art/cover.ts for why this
+  // is typography rather than a generated image.
+  const coverPath = renderCover(
+    {
+      showName: persona.name,
+      title: script.title,
+      palette: paletteFor(persona.id),
+      episodeNumber: seriesId ? episodeNumberFor(run, persona) : undefined,
+      kind: format.kind === 'short' ? 'short' : 'episode',
+    },
+    run.mediaPath('cover.png')
+  );
+
   console.log(`publishing to ${platform.url} as @${persona.handle}...`);
 
   const result = await client.publish({
@@ -650,6 +703,7 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
     beatMap: render.beatMap,
     provenance,
     seriesId,
+    coverPath,
   });
 
   run.writeArtifact('publish', { ...result, publishedAt: new Date().toISOString(), url: platform.url });
