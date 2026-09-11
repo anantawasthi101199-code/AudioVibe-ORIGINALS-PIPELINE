@@ -404,6 +404,34 @@ export const writeTitle = async (
  * each beat is given the tail of the one before it, which is what stops the
  * joins reading as seams between separately-written paragraphs.
  */
+/**
+ * Work already done, so a failure halfway through a script does not throw it
+ * away.
+ *
+ * WHY THIS IS WORTH THE COMPLICATION. Writing a ten-beat script is thirty model
+ * calls and ten to fifteen minutes. Before this, a failure on beat eight -
+ * a rate limit, a dropped connection, a laptop lid - discarded the twenty-one
+ * calls that had already succeeded and started again from nothing. Stage-level
+ * resumability does not help, because the whole script is one stage.
+ *
+ * The hook competition is checkpointed alongside the beats because it is
+ * sixteen generations plus a judgement, which is the single most expensive call
+ * in the stage and the most annoying one to pay for twice.
+ */
+export const scriptProgressSchema = z.object({
+  hook: z.string().optional(),
+  beats: z.array(scriptBeatSchema).default([]),
+});
+
+export type ScriptProgress = z.infer<typeof scriptProgressSchema>;
+
+export interface ScriptCheckpoint {
+  /** What a previous attempt already wrote. */
+  progress: ScriptProgress;
+  /** Called after the hook and after every beat. */
+  save: (progress: ScriptProgress) => void;
+}
+
 export const writeScript = async (
   input: {
     persona: Persona;
@@ -413,10 +441,26 @@ export const writeScript = async (
     isoDate: string;
   },
   writer: LlmClient,
-  onCost?: (pence: number) => void
+  onCost?: (pence: number) => void,
+  checkpoint?: ScriptCheckpoint,
+  onProgress?: (message: string) => void
 ): Promise<Script> => {
-  const beats: ScriptBeat[] = [];
-  let previousTail: string | undefined;
+  // Beats are resumed BY INDEX, and only a prefix is trusted. A checkpoint
+  // holding beats 1, 2 and 5 would be a checkpoint from a different format, and
+  // stitching those together would produce a script whose beats do not match
+  // its own beat sheet. Taking the prefix is the conservative reading.
+  const resumed = (checkpoint?.progress.beats ?? []).filter(
+    (b, i) => input.format.beats[i]?.id === b.beatId
+  );
+
+  const beats: ScriptBeat[] = [...resumed];
+  let previousTail = beats.length ? tailOf(beatText(beats[beats.length - 1]!)) : undefined;
+
+  if (beats.length) {
+    onProgress?.(`resuming after ${beats.length} beat(s) already written`);
+  }
+
+  const persist = (hook?: string) => checkpoint?.save({ hook, beats });
 
   // THE OPENING IS WRITTEN DIFFERENTLY FROM EVERY OTHER BEAT.
   //
@@ -424,10 +468,12 @@ export const writeScript = async (
   // an opening is short enough that writing sixteen of them and choosing costs
   // almost nothing. Every other beat gets one draft plus revisions; this one
   // gets a competition it has to win on measurable curiosity-gap properties.
-  let openingHook: string | undefined;
+  let openingHook: string | undefined = checkpoint?.progress.hook;
   const firstLoop = input.format.loops[0];
-  if (firstLoop && input.format.beats[0]?.type === 'cold_open') {
+
+  if (!openingHook && !beats.length && firstLoop && input.format.beats[0]?.type === 'cold_open') {
     try {
+      onProgress?.('writing sixteen openings and judging them');
       const hook = await writeHook(
         {
           angle: input.angle,
@@ -438,13 +484,19 @@ export const writeScript = async (
         onCost
       );
       openingHook = hook.text;
+      persist(openingHook);
     } catch {
       // A failed competition must not cost the episode. The cold open is then
       // written normally, which is exactly what happened before this existed.
+      onProgress?.('the opening competition failed; writing the cold open normally');
     }
   }
 
   for (const [index, beat] of input.format.beats.entries()) {
+    if (index < beats.length) continue;
+
+    onProgress?.(`beat ${index + 1}/${input.format.beats.length}: ${beat.id}`);
+
     const written = await writeBeat(
       {
         persona: input.persona,
@@ -464,8 +516,18 @@ export const writeScript = async (
     );
     beats.push(written);
     previousTail = tailOf(beatText(written));
+
+    // Saved after EVERY beat, not every few. The whole point is that whatever
+    // succeeded is kept, and a batching interval would be a window in which it
+    // is not.
+    persist(openingHook);
+
+    if (written.revisions) {
+      onProgress?.(`  rewritten ${written.revisions} time(s) before it passed`);
+    }
   }
 
+  onProgress?.('writing the title');
   const { title, description } = await writeTitle(input.persona, input.angle, beats, writer, onCost);
 
   return {

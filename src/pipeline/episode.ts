@@ -39,7 +39,7 @@ import { verificationReportSchema, verifyAll } from '../evidence/verify';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
-import { Script, scriptSchema, writeScript } from '../script/write';
+import { Script, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
 import { runGate, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 
@@ -84,9 +84,27 @@ export interface EpisodeResult {
  * everything.
  */
 export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeResult> => {
-  const log = deps.log ?? (() => undefined);
   const budget = episodeBudgetPence();
-  const spend = (pence: number) => run.spend(pence, budget);
+
+  // EVERY LINE THE PIPELINE PRINTS ALSO GOES TO THE RUN'S JOURNAL. A run that
+  // dies leaves a journal ending exactly where it died, which is the single
+  // most useful artifact for working out what happened - and it is readable
+  // with `tail -f` while the run is still going.
+  const say = (stage: string) => (message: string) => {
+    (deps.log ?? (() => undefined))(message);
+    run.journal({ stage, event: message });
+  };
+  const log = say('pipeline');
+
+  // Spend is journalled per call rather than only totalled, so "where did the
+  // money go" is answerable after the fact rather than only in aggregate.
+  let stage = 'pipeline';
+  const spend = (pence: number) => {
+    run.journal({ stage, event: 'spend', pence });
+    run.spend(pence, budget);
+  };
+
+  run.journal({ stage: 'pipeline', event: 'start', detail: run.manifest.topic });
 
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
@@ -97,6 +115,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     brief = run.readArtifact('brief', briefSchema);
     log(`brief: reusing "${brief.angle}"`);
   } else {
+    stage = 'brief';
     log('brief: planning the research');
     brief = await buildBrief(run.manifest.topic, persona, format, deps.writer, spend);
     run.writeArtifact('brief', brief);
@@ -110,6 +129,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     corpus = run.readArtifact('corpus', corpusSchema);
     log(`corpus: reusing ${corpus.sources.length} sources`);
   } else {
+    stage = 'corpus';
     log('corpus: searching and fetching');
     corpus = await gatherCorpus(brief.queries, deps.search, deps.fetchDeps, DEFAULT_GATHER);
     run.writeArtifact('corpus', corpus);
@@ -134,6 +154,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     claimSet = run.readArtifact('claims', claimSetSchema);
     log(`claims: reusing ${claimSet.claims.length}`);
   } else {
+    stage = 'claims';
     log('claims: extracting and binding to quotes');
     claimSet = await extractClaims(brief, corpus, format, deps.writer, spend);
     run.writeArtifact('claims', claimSet);
@@ -156,6 +177,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     counterEvidence = stored.counterEvidence;
     log(`verification: reusing (${verification.blocking.length} blocking)`);
   } else {
+    stage = 'verification';
     log('verification: checking every claim against its quote');
     verification = await verifyAll(claims, corpus.sources, deps.verifier, spend);
 
@@ -186,6 +208,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     script = run.readArtifact('script', scriptSchema);
     log(`script: reusing "${script.title}"`);
   } else {
+    stage = 'script';
     log('script: writing beats');
     script = await writeScript(
       {
@@ -201,10 +224,22 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         isoDate: new Date().toISOString().slice(0, 10),
       },
       deps.writer,
-      spend
+      spend,
+      // Beat-level checkpointing. Writing a ten-beat script is thirty model
+      // calls; before this, a failure on beat eight discarded the twenty-one
+      // that had already succeeded, because the whole script is one stage.
+      {
+        progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
+        save: (progress) => run.writeCheckpoint('script', progress),
+      },
+      say('script')
     );
     run.writeArtifact('script', script);
     run.markComplete('script');
+    // The checkpoint has served its purpose the moment the stage artifact
+    // exists, and leaving it would mean a re-run reads partial work in
+    // preference to a finished script.
+    run.clearCheckpoint('script');
     log(`script: "${script.title}", ${script.beats.length} beats`);
   }
 
@@ -214,6 +249,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     render = run.readArtifact('render', renderResultSchema);
     log(`render: reusing ${Math.round(render.durationS)}s of audio`);
   } else {
+    stage = 'render';
     log('render: synthesising each beat');
     render = await renderScript(
       {
@@ -226,7 +262,8 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       },
       deps.tts,
       {},
-      spend
+      spend,
+      say('render')
     );
     run.writeArtifact('render', render);
     run.markComplete('render');
@@ -250,6 +287,12 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   run.writeArtifact('qa', gate);
   run.markComplete('qa');
   log(gate.passed ? 'gate: passed' : `gate: FAILED (${gate.findings.filter((f) => f.blocking).length} blocking)`);
+  run.journal({
+    stage: 'pipeline',
+    event: gate.passed ? 'done' : 'gate-failed',
+    detail: script.title,
+    pence: run.manifest.spentPence,
+  });
 
   return { run, gate, script };
 };

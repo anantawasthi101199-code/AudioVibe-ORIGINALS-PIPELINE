@@ -242,6 +242,91 @@ export class Run {
   }
 
   /**
+   * Partial work inside a stage, so a failure halfway through does not throw
+   * away what was already paid for.
+   *
+   * WHY STAGE ARTIFACTS ARE NOT ENOUGH. A stage persists when it FINISHES. That
+   * makes a run resumable between stages and worthless within one: writing a
+   * ten-beat script is thirty model calls, and before this a failure on beat
+   * eight discarded the twenty-one calls that had already succeeded. The
+   * expensive failures are all mid-stage, because that is where the time is.
+   *
+   * Kept in a subdirectory rather than beside the stage artifacts so that a
+   * directory listing still reads as the nine stages, and so a checkpoint is
+   * obviously working state rather than a result.
+   */
+  writeCheckpoint(name: string, data: unknown): string {
+    const dir = path.join(this.dir, 'checkpoints');
+    fs.mkdirSync(dir, { recursive: true });
+    const file = path.join(dir, `${name}.json`);
+    fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+    return file;
+  }
+
+  readCheckpoint<T>(name: string, schema: z.ZodType<T, z.ZodTypeDef, unknown>): T | null {
+    const file = path.join(this.dir, 'checkpoints', `${name}.json`);
+    if (!fs.existsSync(file)) return null;
+
+    try {
+      return schema.parse(JSON.parse(fs.readFileSync(file, 'utf8')));
+    } catch {
+      // A checkpoint that cannot be read is work that has to be redone, which
+      // costs money but is correct. Throwing here would make a corrupt
+      // checkpoint permanently block a run that could simply start the stage
+      // again - the one situation where silently discarding is the right call.
+      return null;
+    }
+  }
+
+  clearCheckpoint(name: string): void {
+    const file = path.join(this.dir, 'checkpoints', `${name}.json`);
+    if (fs.existsSync(file)) fs.rmSync(file);
+  }
+
+  /**
+   * Append one line to the run's journal.
+   *
+   * APPEND-ONLY AND NEWLINE-DELIMITED, so it survives the process being killed
+   * mid-write and can be read with `tail -f` while a run is going. A run that
+   * dies leaves a journal ending exactly where it died, which is the single
+   * most useful thing for working out what happened.
+   *
+   * Never throws. An observability failure must not be able to fail a run that
+   * is otherwise fine - that would make the logging the least reliable part of
+   * the system and the most likely thing to take an episode down with it.
+   */
+  journal(event: { stage: string; event: string; detail?: string; pence?: number }): void {
+    try {
+      fs.appendFileSync(
+        path.join(this.dir, 'journal.jsonl'),
+        `${JSON.stringify({ at: new Date().toISOString(), ...event })}\n`,
+        'utf8'
+      );
+    } catch {
+      // Deliberately silent.
+    }
+  }
+
+  /** The journal, parsed. Lines that will not parse are skipped, not fatal. */
+  readJournal(): Array<{ at: string; stage: string; event: string; detail?: string; pence?: number }> {
+    const file = path.join(this.dir, 'journal.jsonl');
+    if (!fs.existsSync(file)) return [];
+
+    return fs
+      .readFileSync(file, 'utf8')
+      .split('\n')
+      .filter((line) => line.trim())
+      .flatMap((line) => {
+        try {
+          return [JSON.parse(line)];
+        } catch {
+          // A half-written last line is what a killed process leaves behind.
+          return [];
+        }
+      });
+  }
+
+  /**
    * When this run published, as the ISO string the publish artifact recorded.
    *
    * A NARROW READER RATHER THAN A SCHEMA, because the publish artifact is

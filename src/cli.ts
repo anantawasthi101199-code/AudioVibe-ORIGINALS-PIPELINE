@@ -46,6 +46,9 @@ import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
 import { buildPlan, historyFor, runSummary } from './schedule/plan';
+import { writeLibrary } from './run/library';
+import { costPenceFor } from './models/client';
+import { EpisodeFormat } from './formats/schema';
 import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/load';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
@@ -65,10 +68,13 @@ Commands
   shows                          List the shows and their formats
   make --show <id> --topic "..." Write, render and gate one episode
                                  (fiction shows skip research, see Notes)
+      ... --dry-run              What it would do and cost. Spends nothing.
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
   resume [--run <id>]            Continue a run (default: the most recent)
   status [--run <id>]            What a run has done and what it cost
+  journal [--run <id>]           Minute by minute, and where the money went
+  library                        Rebuild LIBRARY.md from every run
   gate [--run <id>]              Re-run the gate over an existing run
   script [--run <id>]            Print the script, for reading aloud
   publish --run <id> [--yes]     Publish a run that passed the gate
@@ -79,8 +85,10 @@ Commands
   tick [--dry-run]               Make the next due thing, then stop
 
 Notes
+  Everything is checkpointed. A run that dies is picked up by "resume" at the
+  beat or the audio file it reached, not at the start of the stage, so nothing
+  already paid for is paid for twice.
   make stops at the gate. Publishing is always a separate, deliberate step.
-  Every stage is resumable: a failed gate does not mean re-rendering.
   short derives from a finished episode rather than researching its own, which
   is why it costs about a ninth of what a standalone short would. It produces
   its own run, publishable the same way as any other.
@@ -93,9 +101,27 @@ Notes
   changes nothing and not firing for a week leaves a show visibly overdue.
 `;
 
+/**
+ * Read a --flag's value, joining everything up to the next flag.
+ *
+ * GREEDY ON PURPOSE. A topic is a sentence, and a sentence typed without quotes
+ * arrives as a dozen separate arguments. Taking only the first would run a
+ * three pound research pipeline on the word "the" and report nothing wrong -
+ * the brief would be strange, the corpus thin, and the failure would look like
+ * a bad topic rather than a bad shell.
+ *
+ * Joining is safe because a value that legitimately starts with "--" is not a
+ * thing any option here takes.
+ */
 const arg = (argv: string[], name: string): string | undefined => {
   const i = argv.indexOf(`--${name}`);
-  return i >= 0 ? argv[i + 1] : undefined;
+  if (i < 0) return undefined;
+
+  const parts: string[] = [];
+  for (let j = i + 1; j < argv.length && !argv[j]!.startsWith('--'); j++) {
+    parts.push(argv[j]!);
+  }
+  return parts.length ? parts.join(' ') : undefined;
 };
 const flag = (argv: string[], name: string): boolean => argv.includes(`--${name}`);
 
@@ -302,13 +328,89 @@ const cmdMake = async (argv: string[]): Promise<number> => {
 
   const persona = loadPersona(showId);
   const formatId = arg(argv, 'format') ?? persona.formats[0]!;
-  loadFormat(formatId); // Fail now if it is missing, not after the first API call.
+  const format = loadFormat(formatId); // Fail now, not after the first API call.
+
+  if (flag(argv, 'dry-run')) return describeRun(persona, format, topic);
 
   const run = Run.create({ personaId: persona.id, formatId, topic });
   console.log(`run ${run.id}`);
   console.log(`  budget ${episodeBudgetPence()}p\n`);
 
   return finishRun(run, argv);
+};
+
+/**
+ * What a run would do, and what it would cost, without doing any of it.
+ *
+ * SPENDS NOTHING AND CALLS NOTHING. The estimate comes from counting the calls
+ * the pipeline is going to make against the configured models' prices, which is
+ * arithmetic over things already on disk. A dry run that quietly made one
+ * "cheap" call to check something would be a dry run nobody trusts.
+ *
+ * The numbers are approximate and say so. Their job is to answer "is this about
+ * to cost fifty pence or fifteen pounds", which is the question somebody has
+ * before running this for the first time - not to predict an invoice.
+ */
+const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): number => {
+  const writer = writerConfig();
+  const verifier = verifierConfig();
+  const engine = ttsProvider();
+
+  // Rough token shapes per call, from what the prompts actually contain. Wrong
+  // in the third significant figure and right in the first, which is the
+  // accuracy this is for.
+  const beats = format.beats.length;
+  const claimFloor = format.beats.reduce((n, b) => n + b.minClaims, 0);
+  const estimatedClaims = Math.max(claimFloor, beats * 3);
+
+  const write = (model: string, calls: number, inTok: number, outTok: number) =>
+    calls * costPenceFor(model, inTok, outTok);
+
+  const stages: Array<[string, number, string]> = [
+    ['brief', write(writer.model, 1, 1_200, 900), '1 call'],
+    ['corpus', 0, 'search + fetch, no model calls'],
+    ['claims', write(writer.model, 1, 30_000, 6_000), '1 call over the whole corpus'],
+    [
+      'verification',
+      write(verifier.model, estimatedClaims, 1_400, 200),
+      `~${estimatedClaims} calls, one per claim`,
+    ],
+    [
+      'script',
+      write(writer.model, 1, 2_000, 1_500) + write(writer.model, beats * 1.6, 3_500, 1_200),
+      `hook competition + ~${Math.round(beats * 1.6)} beat calls (${beats} beats, some revised)`,
+    ],
+    ['title', write(writer.model, 1, 1_200, 200), '1 call'],
+  ];
+
+  // Speech is roughly 150 words a minute and 5.5 characters a word.
+  const nominal = (format.targetSeconds[0] + format.targetSeconds[1]) / 2;
+  const characters = Math.round((nominal / 60) * 150 * 5.5);
+  const voicePence = engine === 'openai' ? (characters / 1_000_000) * 1200 : (characters / 1000) * 20;
+
+  stages.push(['render', voicePence, `~${characters.toLocaleString()} characters on ${engine}`]);
+
+  const total = stages.reduce((sum, [, pence]) => sum + pence, 0);
+
+  console.log(`${persona.name} / ${format.name}`);
+  console.log(`  topic:  ${topic}`);
+  console.log(`  beats:  ${format.beats.map((b) => b.id).join(' -> ')}`);
+  console.log(
+    `  length: ${Math.round(format.targetSeconds[0] / 60)}-${Math.round(format.targetSeconds[1] / 60)} minutes`
+  );
+  console.log(`  models: ${writer.model} writing, ${verifier.model} verifying`);
+  console.log('');
+  console.log('Stages, and roughly what each costs:');
+  for (const [name, pence, detail] of stages) {
+    console.log(`  ${name.padEnd(13)} ${`${pence.toFixed(0)}p`.padStart(6)}   ${detail}`);
+  }
+  console.log(`  ${'TOTAL'.padEnd(13)} ${`${total.toFixed(0)}p`.padStart(6)}   about £${(total / 100).toFixed(2)}`);
+  console.log('');
+  console.log(`Budget ceiling is ${episodeBudgetPence()}p. A run that would exceed it stops.`);
+  console.log('These are estimates from call counts and list prices, not a quote.');
+  console.log('');
+  console.log('It will STOP AT THE GATE and publish nothing. Run without --dry-run to make it.');
+  return 0;
 };
 
 /**
@@ -703,6 +805,55 @@ const cmdTick = async (argv: string[]): Promise<number> => {
   return await cmdPublish(['--run', result.run.id, '--yes']);
 };
 
+/**
+ * What a run did, minute by minute, and where its money went.
+ *
+ * The journal is append-only and written as the run goes, so this works on a
+ * run that is still going and on one that died - and a run that died leaves a
+ * journal ending exactly where it died, which is the most useful thing there is
+ * for working out why.
+ */
+const cmdJournal = (argv: string[]): number => {
+  const run = openRun(argv);
+  const entries = run.readJournal();
+
+  if (!entries.length) {
+    console.log(`run ${run.id} has no journal. It predates journalling, or never started.`);
+    return 0;
+  }
+
+  const start = new Date(entries[0]!.at).getTime();
+  const byStage = new Map<string, number>();
+
+  for (const e of entries) {
+    const seconds = Math.round((new Date(e.at).getTime() - start) / 1000);
+    const stamp = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+
+    if (e.event === 'spend' && typeof e.pence === 'number') {
+      byStage.set(e.stage, (byStage.get(e.stage) ?? 0) + e.pence);
+      continue; // Individual calls are summarised below rather than listed.
+    }
+    console.log(`  ${stamp}  ${e.stage.padEnd(12)} ${e.event}${e.detail ? ` - ${e.detail}` : ''}`);
+  }
+
+  if (byStage.size) {
+    console.log('');
+    console.log('Where the money went:');
+    for (const [stage, pence] of [...byStage].sort((a, b) => b[1] - a[1])) {
+      console.log(`  ${stage.padEnd(14)} ${pence.toFixed(1)}p`);
+    }
+  }
+  return 0;
+};
+
+/** Rebuild LIBRARY.md from the run directories. */
+const cmdLibrary = (): number => {
+  const { markdown, json } = writeLibrary();
+  console.log(`wrote ${markdown}`);
+  console.log(`      ${json}`);
+  return 0;
+};
+
 const cmdStatus = (argv: string[]): number => {
   const run = openRun(argv);
   const m = run.manifest;
@@ -961,6 +1112,10 @@ export const run = async (argv: string[]): Promise<number> => {
         return await finishRun(openRun(rest), rest);
       case 'status':
         return cmdStatus(rest);
+      case 'journal':
+        return cmdJournal(rest);
+      case 'library':
+        return cmdLibrary();
       case 'script':
         return cmdScript(rest);
       case 'gate':

@@ -161,6 +161,14 @@ export const buildBeatMap = (
 };
 
 export interface RenderDeps {
+  /**
+   * Re-render beats that already have a file. Defaults to reusing them.
+   *
+   * Only ever set false to force a fresh take - a changed voice, a changed
+   * script, or a beat that came out wrong. Reuse is the right default because
+   * the alternative is paying twice for work that succeeded.
+   */
+  reuseExisting?: boolean;
   writeFile?: (file: string, data: Buffer) => void;
   probe?: (file: string) => Promise<number | null>;
   concat?: (files: string[], out: string, gap: number) => Promise<void>;
@@ -211,7 +219,8 @@ export const renderScript = async (
   },
   tts: import('./tts').TtsProvider,
   deps: RenderDeps = {},
-  onCost?: (pence: number) => void
+  onCost?: (pence: number) => void,
+  onProgress?: (message: string) => void
 ): Promise<RenderResult> => {
   const write = deps.writeFile ?? ((file, data) => fs.writeFileSync(file, data));
   const probe = deps.probe ?? probeDuration;
@@ -244,6 +253,32 @@ export const renderScript = async (
     // three paths below produces it directly rather than returning bytes for
     // the caller to write.
     const file = input.beatPathFor(`${String(i + 1).padStart(2, '0')}-${beat.beatId}.mp3`);
+
+    // ALREADY RENDERED BEATS ARE NOT RENDERED AGAIN. Synthesis is the most
+    // expensive step in the pipeline, and a run that died on beat nine would
+    // otherwise pay for the first eight a second time. The file existing is
+    // the only evidence needed: it is written only after a successful
+    // synthesis, and its duration is measured below either way.
+    //
+    // Zero-length files are treated as absent rather than as done, because a
+    // process killed mid-write leaves exactly that and it is the one case
+    // where trusting the file would silently produce a silent beat.
+    if (deps.reuseExisting !== false && fs.existsSync(file) && fs.statSync(file).size > 0) {
+      onProgress?.(`beat ${i + 1}/${input.beats.length}: ${beat.beatId} (already rendered)`);
+      files.push(file);
+
+      const existing = await probe(file);
+      if (existing === null) {
+        throw new Error(
+          `could not measure ${path.basename(file)}, which was already on disk. Delete it and ` +
+            `re-run: a beat map built on an estimated duration puts every later timestamp out.`
+        );
+      }
+      timings.push({ id: beat.beatId, type: beat.beatType, durationS: existing });
+      continue;
+    }
+
+    onProgress?.(`beat ${i + 1}/${input.beats.length}: ${beat.beatId}`);
 
     // THREE PATHS, AND THE MIDDLE ONE EXISTS BECAUSE THE OLD FALLBACK WAS
     // WRONG. It joined every turn of a multi-speaker beat into one request in

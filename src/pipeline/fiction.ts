@@ -32,7 +32,7 @@ import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
 import { episodeBudgetPence } from '../config';
 import { renderResultSchema, renderScript } from '../render/assemble';
-import { Script, scriptSchema, writeScript } from '../script/write';
+import { Script, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
 import { runGate, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 import {
@@ -78,8 +78,15 @@ export const runFiction = async (
   input: { run: Run; premise?: string },
   deps: PipelineDeps
 ): Promise<FictionResult> => {
-  const log = deps.log ?? (() => undefined);
   const { run } = input;
+
+  // Same journal as the factual pipeline, for the same reason: a run that dies
+  // should leave a record ending exactly where it died.
+  const say = (stage: string) => (message: string) => {
+    (deps.log ?? (() => undefined))(message);
+    run.journal({ stage, event: message });
+  };
+  const log = say('pipeline');
 
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
@@ -93,7 +100,13 @@ export const runFiction = async (
   }
 
   const budget = episodeBudgetPence();
-  const spend = (pence: number) => run.spend(pence, budget);
+  let stage = 'pipeline';
+  const spend = (pence: number) => {
+    run.journal({ stage, event: 'spend', pence });
+    run.spend(pence, budget);
+  };
+
+  run.journal({ stage: 'pipeline', event: 'start', detail: run.manifest.topic });
 
   let bible = loadBible(persona.id);
 
@@ -127,6 +140,7 @@ export const runFiction = async (
     script = run.readArtifact('script', scriptSchema);
     log(`script: reusing "${script.title}"`);
   } else {
+    stage = 'script';
     log('script: writing');
     script = await writeScript(
       {
@@ -149,10 +163,16 @@ export const runFiction = async (
         isoDate: new Date().toISOString().slice(0, 10),
       },
       deps.writer,
-      spend
+      spend,
+      {
+        progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
+        save: (progress) => run.writeCheckpoint('script', progress),
+      },
+      say('script')
     );
     run.writeArtifact('script', script);
     run.markComplete('script');
+    run.clearCheckpoint('script');
     log(`script: "${script.title}", ${script.beats.length} beats`);
   }
 
@@ -166,6 +186,7 @@ export const runFiction = async (
     continuity = run.readArtifact('verification', z.custom<ContinuityReport>());
     log(`continuity: reusing ${continuity.findings.length} checked fact(s)`);
   } else {
+    stage = 'continuity';
     log('continuity: checking against the series bible');
     continuity = await checkContinuity(script, bible, deps.verifier, spend);
     run.writeArtifact('verification', continuity);
@@ -182,6 +203,7 @@ export const runFiction = async (
     render = run.readArtifact('render', renderResultSchema);
     log(`render: reusing ${Math.round(render.durationS)}s of audio`);
   } else {
+    stage = 'render';
     log('render: synthesising each beat');
     render = await renderScript(
       {
@@ -192,7 +214,8 @@ export const runFiction = async (
       },
       deps.tts,
       {},
-      spend
+      spend,
+      say('render')
     );
     run.writeArtifact('render', render);
     run.markComplete('render');

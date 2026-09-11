@@ -251,7 +251,11 @@ export const runShort = async (
       },
       deps.tts,
       {},
-      spend
+      spend,
+      (m) => {
+        log(m);
+        run.journal({ stage: 'render', event: m });
+      }
     );
     run.writeArtifact('render', render);
     run.markComplete('render');

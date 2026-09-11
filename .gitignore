@@ -10,6 +10,13 @@ dist/
 # is not something the history needs to carry forever.
 runs/
 
+# LIBRARY.md and library.json are rebuilt from the run directories by
+# `foundry library`, and runs/ is ignored - so on any machine but the one that
+# made them they would describe runs that are not there. Committing them would
+# be committing a list of things nobody else can open.
+LIBRARY.md
+library.json
+
 # series.json is deliberately NOT ignored either, for a sharper version of the
 # same reason. It records which platform series each show publishes into, series
 # creation has no create-or-get, and there is no way to look one up by title on
