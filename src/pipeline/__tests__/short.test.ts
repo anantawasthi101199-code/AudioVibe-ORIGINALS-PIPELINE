@@ -98,9 +98,14 @@ const fakeWriter = (sourceId: () => string): LlmClient & { calls: number } => {
       } else if (req.system.includes('single strongest moment')) {
         // The short selection. Two claims from two different parent beats, so
         // the redistribution has something real to re-point.
+        // c1 and c14: extraction renumbers claims against the running total
+        // across chunks, because each chunk starts counting at c1 and two
+        // claims sharing an id would collide silently in the ledger. The ids
+        // the fixture's extractor emits are NOT the ids the pipeline ends up
+        // with, which is exactly the trap this pins.
         text = JSON.stringify({
           angle: 'the column that was always filled in a week early',
-          claimIds: ['c0_0', 'c4_1'],
+          claimIds: ['c1', 'c14'],
           reason: 'it is one specific thing and it needs no setup',
         });
       } else {
@@ -272,7 +277,7 @@ describe('runShort', () => {
     const { run } = await runShort({ parent, formatId: SHORT_FORMAT_ID }, buildDeps());
 
     const { claims } = run.readArtifact('claims', z.object({ claims: z.array(claimSchema) }));
-    expect(claims.map((c) => c.id).sort()).toEqual(['c0_0', 'c4_1']);
+    expect(claims.map((c) => c.id).sort()).toEqual(['c1', 'c14']);
 
     // Re-pointed at the SHORT's beats. Handed claims addressed to `mechanism`
     // while writing `pivot`, the writer sees none for the beat in front of it

@@ -216,17 +216,43 @@ Return JSON only:
  */
 export const EXTRACT_CHARS_PER_SOURCE = 6000;
 
+/**
+ * How many beats to extract claims for in one call.
+ *
+ * ONE CALL FOR THE WHOLE EPISODE DOES NOT FIT, which is how this was found: ten
+ * beats against fourteen documents, each claim carrying a verbatim quote of
+ * forty characters or more, ran past sixteen thousand output tokens twice and
+ * killed the run after the corpus had already been fetched and paid for.
+ *
+ * Three beats is small enough that the reply always fits with room to spare,
+ * and it is better work as well as safer: a model asked for claims for three
+ * beats reads the corpus for three specific jobs, where one asked for ten
+ * spreads itself and returns something thinner for each.
+ */
+export const BEATS_PER_EXTRACTION = 3;
+
+/**
+ * Extract the claims an episode needs, a few beats at a time.
+ *
+ * THE CORPUS IS SENT AS A CACHED SYSTEM PREFIX, which is what stops chunking
+ * from multiplying the bill. The documents are the expensive half of this
+ * prompt and they are identical across every chunk, so the first call writes
+ * the cache and the rest read it at a tenth of the price. Chunking without
+ * this would have tripled the input cost of the most input-heavy stage in the
+ * pipeline.
+ *
+ * Claim ids are renumbered across chunks. Each call starts counting at c1
+ * because it cannot see the others, and two claims sharing an id would collide
+ * silently in the ledger - the later one simply replacing the earlier.
+ */
 export const extractClaims = async (
   brief: Brief,
   corpus: Corpus,
   format: EpisodeFormat,
   writer: LlmClient,
-  onCost?: (pence: number) => void
+  onCost?: (pence: number) => void,
+  onProgress?: (message: string) => void
 ): Promise<ClaimSet> => {
-  const beats = format.beats
-    .map((b) => `- ${b.id} (${b.type}, needs >= ${b.minClaims} claims): ${b.function}`)
-    .join('\n');
-
   // What the episode is trying to establish, which is what each passage is
   // scored for relevance against.
   const wanted = [brief.angle, ...brief.mustEstablish, ...brief.queries];
@@ -239,28 +265,59 @@ export const extractClaims = async (
     )
     .join('\n\n');
 
-  const parsed = claimSetSchema.parse(
-    await completeJson(
-      writer,
-      {
-        system: EXTRACT_SYSTEM,
-        prompt: [
-          `ANGLE: ${brief.angle}`,
-          `MUST ESTABLISH:\n${brief.mustEstablish.map((m) => `- ${m}`).join('\n')}`,
-          `BEATS:\n${beats}`,
-          `CORPUS:\n${documents}`,
-        ].join('\n\n'),
-        temperature: 0.2,
-        maxTokens: 8000,
-      },
-      onCost
-    )
-  );
+  const system = `${EXTRACT_SYSTEM}\n\nCORPUS:\n${documents}`;
 
-  // Re-check here as well as in the gate. An extractor that produced a
-  // paraphrase should be corrected at the point of extraction, where the
-  // corpus is still in hand, rather than surfacing three stages later.
-  return parsed;
+  const chunks: (typeof format.beats)[] = [];
+  for (let i = 0; i < format.beats.length; i += BEATS_PER_EXTRACTION) {
+    chunks.push(format.beats.slice(i, i + BEATS_PER_EXTRACTION));
+  }
+
+  const claims: ClaimSet['claims'] = [];
+  const unsupported: ClaimSet['unsupported'] = [];
+
+  for (const [index, chunk] of chunks.entries()) {
+    onProgress?.(
+      `beats ${chunk.map((b) => b.id).join(', ')} (${index + 1}/${chunks.length})`
+    );
+
+    const beats = chunk
+      .map(
+        (b) =>
+          `- ${b.id} (${b.type}, needs >= ${b.minClaims} claims, and no more than ` +
+          `${b.minClaims + 2}): ${b.function}`
+      )
+      .join('\n');
+
+    const parsed = claimSetSchema.parse(
+      await completeJson(
+        writer,
+        {
+          system,
+          // The corpus never changes between chunks, so the prefix stays valid
+          // and every call after the first reads it rather than re-sending it.
+          cacheSystem: true,
+          prompt: [
+            `ANGLE: ${brief.angle}`,
+            `MUST ESTABLISH:\n${brief.mustEstablish.map((m) => `- ${m}`).join('\n')}`,
+            `Extract claims for THESE BEATS ONLY. Ignore every other beat of the episode.`,
+            `BEATS:\n${beats}`,
+          ].join('\n\n'),
+          temperature: 0.2,
+          maxTokens: 6000,
+        },
+        onCost
+      )
+    );
+
+    // Renumbered against the running total, not the chunk. Each call starts at
+    // c1 because it cannot see the others.
+    for (const claim of parsed.claims) {
+      claims.push({ ...claim, id: `c${claims.length + 1}` });
+    }
+    unsupported.push(...parsed.unsupported);
+  }
+
+  return { claims, unsupported };
 };
 
 // ---------------------------------------------------------------------------

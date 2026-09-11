@@ -164,7 +164,14 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   } else {
     stage = 'claims';
     log('claims: extracting and binding to quotes');
-    claimSet = await extractClaims(brief, corpus, format, deps.writer, spend);
+    claimSet = await extractClaims(
+      brief,
+      corpus,
+      format,
+      deps.writer,
+      spend,
+      say('claims')
+    );
     run.writeArtifact('claims', claimSet);
     run.markComplete('claims');
     log(`claims: ${claimSet.claims.length} bound, ${claimSet.unsupported.length} unsupported`);
