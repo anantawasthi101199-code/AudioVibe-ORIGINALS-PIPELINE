@@ -32,6 +32,15 @@ shows:
     # exactly as it does when run by hand.
     autoPublish: false
 
+  # Weekly. A narrative history show lives or dies on whether the reconstruction
+  # is properly done, and rushing that produces a summary with a mystery accent.
+  # Two shorts, because the strange specific detail a Dead Reckoning episode
+  # opens on is exactly what a short is for.
+  dead-reckoning:
+    everyDays: 7
+    shortsPerEpisode: 2
+    autoPublish: false
+
   # Weekly, because a serial trains an expectation and then has to keep it. A
   # drama that arrives whenever it is ready is one a listener stops waiting for.
   night-shift:

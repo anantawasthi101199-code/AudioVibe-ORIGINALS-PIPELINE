@@ -13,6 +13,22 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Dead Reckoning** (`personas/dead-reckoning.yaml`,
+  `beatsheets/reconstruction.yaml`), a third show: history mysteries
+  reconstructed from surviving documents. Same evidence discipline as The
+  Teardown, different spine - the Teardown's beats are the shape of an argument,
+  these are the shape of a story, ending on a callback to the cold open rather
+  than an outro. Its hosts are an archivist who has the documents and somebody
+  who likes the popular version and wants it to be true, which makes it worth
+  something when a document changes her mind.
+- **Checkpoints inside a stage, a journal per run, and `make --dry-run`**
+  (`src/run/store.ts`, `src/run/library.ts`). See Fixed below for what the first
+  one was actually for. The journal is append-only JSONL written as the run
+  goes, so `tail -f` works and a run that dies leaves a record ending where it
+  died. `LIBRARY.md` is rebuilt from the run directories with every episode's
+  cost, length and gate result, plus a count of which gate checks fail most -
+  one failure is an episode, the same one six times is a style card asking to
+  be changed.
 - **A cheap drafting voice** (`src/render/openaiTts.ts`, `FOUNDRY_TTS=openai`).
   Around fifteen pence an episode against roughly two pounds, so iterating on
   the writing costs nothing - and the writing is what decides whether a show is
@@ -180,6 +196,19 @@ Building toward the first publishable episode.
 
 ### Fixed
 
+- **Night Shift's category did not exist.** It shipped as "Fiction", which is
+  not one of the platform's fourteen; audio drama lives in Storytelling. The
+  name is resolved to an id on the last call of the pipeline, so it would have
+  run perfectly and failed after the research, the writing, the voicing and the
+  gate had all been paid for. Categories are now checked at persona load - as a
+  warning rather than a failure, because the local list is a copy and the live
+  one is the authority.
+- **A failure mid-stage threw away everything the stage had already paid for.**
+  Runs were resumable between stages and worthless within one, and the expensive
+  failures are all mid-stage because that is where the time is: a rate limit on
+  beat eight of ten discarded twenty-one successful model calls. Beats and the
+  hook competition now checkpoint individually, and synthesis skips any beat
+  whose audio already exists.
 - **Three silent breaks in the publish path**, in the one part of the repo that
   had never run against the real API. It sent a category NAME in a field that
   wants ids (and the API drops an id it does not recognise, so a wrong one

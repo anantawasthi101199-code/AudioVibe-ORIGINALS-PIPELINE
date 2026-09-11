@@ -16,6 +16,7 @@ import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import { Persona, personaSchema } from './schema';
+import { isKnownCategory, nearestCategory } from './categories';
 
 export class PersonaLoadError extends Error {
   constructor(
@@ -66,6 +67,27 @@ export const loadPersona = (id: string, dir = personasDir()): Persona => {
   if (persona.id !== id) {
     throw new PersonaLoadError(file, [`id is "${persona.id}" but the file is named "${id}.yaml"`]);
   }
+
+  // A WARNING, NOT A FAILURE, and the distinction is the whole point.
+  //
+  // The platform resolves a category name to an id at publish time, so a name
+  // it does not have fails there - at the last command, after the research,
+  // the writing, the voicing and the gate have all been paid for. Night Shift
+  // shipped with "Fiction", which is not a category, and would have done
+  // exactly that.
+  //
+  // It cannot be a hard failure, because the list here is a copy and the live
+  // one is the authority. If the platform adds a category, publishing works and
+  // this is merely stale - and being stale must never stop a show the platform
+  // would accept.
+  if (!isKnownCategory(persona.category)) {
+    const near = nearestCategory(persona.category);
+    console.warn(
+      `${persona.name}: "${persona.category}" is not a category AudioVibe has, so publishing ` +
+        `will fail on the last call.${near ? ` Did you mean "${near}"?` : ''}`
+    );
+  }
+
   return persona;
 };
 

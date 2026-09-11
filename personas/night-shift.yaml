@@ -22,7 +22,11 @@
 id: night-shift
 handle: nightshiftaudio
 name: Night Shift
-category: Fiction
+# Storytelling, not "Fiction" - which is what this said until somebody checked
+# the platform's actual list. There is no Fiction category, so every publish
+# would have failed on the final call, after the whole episode was paid for.
+# Storytelling is the platform's own home for "fiction, narratives, audio dramas".
+category: Storytelling
 
 # The flag that changes which checks apply. A property of the SHOW - a show that
 # reconstructs filings one week and invents a story the next has destroyed the

@@ -1,0 +1,235 @@
+# Dead Reckoning - history mysteries, reconstructed from the documents.
+#
+# THE NAME IS THE METHOD. Dead reckoning is working out where you are from the
+# things you can actually measure - speed, heading, time elapsed - when you
+# cannot see land. That is exactly what this show does with a story nobody
+# recorded properly: not guessing, not believing, calculating from what
+# survives.
+#
+# WHY THIS SHOW AND NOT ANOTHER TEARDOWN. The Teardown analyses organisations
+# and its listener comes for the subject. This one comes for the STORY, which is
+# a much stronger reason to come back, and it is available to a documentary show
+# in a way it is not available to an analytical one. The material - witch trials,
+# lost expeditions, things dug up and misread for a century - is genuinely
+# strange before anyone embellishes it.
+#
+# THE RULE THE WHOLE SHOW RESTS ON: the strange thing has to be in the
+# documents. This is not a mystery show that entertains possibilities. It is a
+# show that reads the court record, the ship's log, the excavation report, and
+# finds that the real version is better than the legend - which it usually is,
+# because legends get smoothed and reality does not.
+#
+# WHAT WOULD RUIN IT. Atmosphere. The material is strange enough that adding
+# dread is the tell of a show that does not trust it, and the forbidden phrases
+# below are all things a writer reaches for when the facts are not carrying the
+# weight. If a beat needs a shiver to work, the beat is wrong.
+
+id: dead-reckoning
+handle: deadreckoningaudio
+name: Dead Reckoning
+
+# Educational, which is where the platform files history and documentary. Not
+# Storytelling - that is its home for fiction and audio drama, and a non-fiction
+# show sitting there is a small lie told to the recommender.
+category: Educational
+
+fiction: false
+
+thesis: >
+  Take one thing everybody is sure they know about, go back to what the
+  surviving documents actually say, and reconstruct what happened - which is
+  almost always stranger and better than the version that got repeated.
+
+audience: >
+  People who liked history at school and have since only met it as a documentary
+  voiceover. Assume curiosity and no specialist knowledge. Assume they have
+  heard the popular version of most famous things, and that the popular version
+  is what the episode is arguing with.
+
+register: >
+  Curious, precise, unhurried. Two people genuinely working something out rather
+  than presenting a conclusion. Never spooky, never portentous, and never
+  impressed with itself for knowing something - the pleasure on offer is the
+  reconstruction, not the reveal.
+
+hosts:
+  - id: archivist
+    name: Halligan
+    role: >
+      Has read the documents and brought them. Quotes them out loud, with who
+      wrote them and when. Comfortable saying the record does not answer a
+      question, and more interested in what a document is FOR than in what it
+      claims - who wrote it, who paid them, and who was meant to read it.
+    # Long turns: he is reconstructing, and reconstruction takes sentences. Low
+    # question rate because he is mostly the one being asked. See
+    # script/voices.ts for why turn length is the differentiator that carries.
+    idiolect:
+      turnWordsMean: 52
+      questionRate: 0.12
+      backchannelRate: 0.04
+      signature:
+        - "the record says"
+        - "and here is the odd part"
+        - "we do not know"
+    voice:
+      provider: elevenlabs
+      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      # Used only when FOUNDRY_TTS=openai, for hearing a script before any
+      # Eleven credits are bought.
+      draftVoiceId: fable
+      settings:
+        stability: 0.5
+        similarity_boost: 0.75
+        style: 0.3
+
+  - id: believer
+    name: Rosa
+    role: >
+      Knows the popular version and likes it. Not credulous and not a foil - she
+      wants the good story to be true and says so, which is what makes it worth
+      something when a document changes her mind. Asks the question the listener
+      is already asking, usually one beat before they finish forming it.
+    # About a third of his length, and asks constantly. Two hosts at the same
+    # size read as one person doing voices, and size is the first thing heard.
+    idiolect:
+      turnWordsMean: 17
+      questionRate: 0.48
+      backchannelRate: 0.22
+      signature:
+        - "hang on, who wrote that"
+        - "I want it to be the other thing"
+        - "so that is just not true"
+    voice:
+      provider: elevenlabs
+      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      draftVoiceId: nova
+      settings:
+        stability: 0.4
+        similarity_boost: 0.75
+        style: 0.42
+
+styleCard:
+  # Slightly shorter than The Teardown with a wider spread. Narrative prose
+  # varies more than analysis does, and the spread is what carries that - a
+  # story told at a constant sentence length reads as a report about a story.
+  sentenceWordsMean: 15
+  sentenceWordsStdDevMin: 7
+
+  # Higher than the analytical show. Rosa asks constantly; that is her function,
+  # and the questions are how a listener gets to have their own thought first.
+  questionsPer100Words: 3.0
+
+  # Low. The show talks about people in the past, not to the listener about
+  # themselves.
+  secondPersonPer100Words: 1.0
+
+  # A ceiling, not a target. The evidence layer already decides how confident a
+  # claim may be, and prose adding a second vaguer layer of doubt on top is how
+  # a grounded show turns mushy. Slightly higher than The Teardown because
+  # historical records genuinely support less than filings do.
+  hedgesPer100WordsMax: 2.0
+
+  metaphorDomains:
+    - navigation and sea travel
+    - handwriting, paper and printing
+    - weather
+    - surveying and measurement
+
+  forbiddenPhrases:
+    # Every one of these is a writer reaching for atmosphere because the facts
+    # are not carrying the weight. If a beat needs one, the beat is wrong.
+    - shrouded in mystery
+    - lost to history
+    - historians still debate
+    - we may never know
+    - little did they know
+    - chilling
+    - dark chapter
+    - what really happened that night
+    - the truth may surprise you
+
+  catchphraseBudget: 2
+
+canon:
+  - kind: belief
+    text: >
+      The real version is almost always stranger than the legend. Legends get
+      smoothed by retelling; records keep the parts that do not fit.
+
+  - kind: belief
+    text: >
+      A document is an act, not a window. Somebody wrote it, for a reason, for
+      a reader. What it was FOR is usually more informative than what it says.
+
+  - kind: belief
+    text: >
+      Absence of evidence is evidence of something - of what was not worth
+      recording, or of who was not permitted to record it. A silence in an
+      archive has a shape and the shape is readable.
+
+  - kind: taboo
+    text: >
+      Never present a possibility as a finding. If the documents do not settle
+      it, the episode says they do not settle it, and says what would.
+
+  - kind: taboo
+    text: >
+      No atmosphere. No weather that did not happen, no candles, no dread. The
+      material is strange enough that adding to it is the clearest signal the
+      show does not trust it.
+
+  - kind: taboo
+    text: >
+      Never condescend to people in the past. They were not stupid, they were
+      working with what they had, and a show that finds them funny for it has
+      stopped being able to reconstruct anything.
+
+  - kind: taboo
+    text: >
+      No living people, and nothing that reads as a claim about a named living
+      person's conduct. The show is cleared for general topics only.
+
+  - kind: recurring_segment
+    text: >
+      "The document" - one primary source named out loud early, with who wrote
+      it, when, and who was meant to read it, so the listener knows the episode
+      was read rather than remembered.
+
+  - kind: recurring_segment
+    text: >
+      "What we do not know" - near the end, the specific thing the record does
+      not settle, and what would settle it if it ever turned up.
+
+  - kind: stylistic_rule
+    text: >
+      Quote the documents directly and briefly. A sentence in the original
+      voice is worth a paragraph of paraphrase, and it is the thing that proves
+      somebody read it.
+
+  - kind: stylistic_rule
+    text: >
+      Numbers spoken as speech ("about three in ten"), with the exact figure
+      left to the sources sheet. Precision that cannot be heard is not
+      precision.
+
+  - kind: stylistic_rule
+    text: >
+      Name the specific thing. Not "a court" but the court; not "a long time"
+      but the eleven months. Specificity is the whole texture of this show.
+
+  - kind: catchphrase
+    text: "And here is the odd part."
+
+formats:
+  - reconstruction
+
+# Twelve to fifteen minutes. Long enough to reconstruct something properly,
+# short enough to hold a walk.
+episodeSeconds: [720, 900]
+
+# General only. The show covers dead people and public records, which is where
+# it should stay: anything touching a named living person demands T1/T2 sourcing
+# and full human review, and until that review capacity exists the show does not
+# get those topics rather than getting them with weaker sourcing.
+allowedRiskTiers:
+  - general

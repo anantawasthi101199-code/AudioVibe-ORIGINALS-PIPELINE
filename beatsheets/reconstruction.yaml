@@ -1,0 +1,171 @@
+# The reconstruction: a history mystery, told as a story, built from documents.
+#
+# WHY THIS IS NOT THE TEARDOWN'S BEAT SHEET. The Teardown analyses an
+# organisation: its beats move from stakes through mechanism to a reckoning,
+# which is the shape of an argument. This moves from a strange detail through a
+# growing wrongness to an answer, which is the shape of a STORY. Same evidence
+# discipline, different spine.
+#
+# THE SPINE IS ONE QUESTION, ASKED IN THE FIRST TEN SECONDS AND ANSWERED IN THE
+# LAST TWO MINUTES. Everything between exists to make the listener need the
+# answer more than they did a minute ago. That is the whole design, and every
+# beat below is either raising the need or paying it.
+#
+# WHAT MAKES IT WORK IS RESTRAINT, NOT DRAMA. The material is genuinely strange
+# and the documents are genuinely real, so the temptation to add atmosphere is
+# the temptation to throw away the only advantage the show has. The style card
+# forbids the vocabulary; this sheet forbids the structure - no beat here is
+# allowed to tease, and no beat may withhold something the listener has already
+# earned.
+#
+# TWO LOOPS, AND THE SECOND ONE IS WHY PEOPLE COME BACK. The episode question
+# closes at the payoff, so a listener who hears exactly one episode has had a
+# whole story. The series question - what the records keep NOT saying - opens in
+# the turn and never closes, because it is the show's own thesis rather than any
+# episode's. `serialised: true` is what permits that.
+
+id: reconstruction
+name: Reconstruction
+kind: long
+intent: >
+  One strange thing that people are sure they know about, reconstructed from
+  what the surviving documents actually say, until it turns out to be a
+  different and better story than the one everybody repeats.
+
+targetSeconds: [720, 900]
+
+serialised: true
+
+loops:
+  - id: the_question
+    question: What actually happened, as opposed to what the story says happened?
+  - id: the_pattern
+    question: >
+      Why does the record keep failing at the same point, in case after case?
+
+beats:
+  - id: cold_open
+    type: cold_open
+    seconds: [30, 50]
+    function: >
+      One detail from the documents that cannot be true as the story tells it.
+      No framing, no welcome, no naming the show.
+    opens: [the_question]
+    constraints:
+      - Start with the detail itself. The first sentence contains a fact.
+      - A date, a name, a number or a place in the first fifteen words.
+      - Do not say what the episode is about. The detail says it.
+      - Do not hint that there is more to come. There obviously is.
+    minClaims: 2
+
+  - id: stakes
+    type: stakes
+    seconds: [70, 100]
+    function: >
+      The person this happened to, named, and what it cost them. Not the
+      historical significance - the cost to somebody who was there.
+    constraints:
+      - Name one person and stay with them.
+      - "Concrete loss: a year, a house, a hand, a life, a name."
+      - No "little did they know". They knew exactly what was at stake.
+    minClaims: 2
+
+  - id: context
+    type: context
+    seconds: [90, 130]
+    function: >
+      The minimum a listener needs to follow what comes next, and not one
+      sentence more.
+    constraints:
+      - Only what the next three beats will actually use.
+      - Explain the world through what a person in it could do and could not do.
+      - No dates for their own sake. A date earns its place by mattering.
+    minClaims: 2
+
+  - id: turn_1
+    type: turn
+    seconds: [100, 140]
+    function: >
+      The first document that does not fit the accepted story.
+    constraints:
+      - Name the document out loud and say who wrote it and when.
+      - State plainly what it says and what the story says instead.
+      - Do not resolve the contradiction here.
+    minClaims: 3
+
+  - id: mechanism
+    type: mechanism
+    seconds: [140, 190]
+    function: >
+      What the records show actually happening, step by step, in order.
+    constraints:
+      - Chronological. The listener should be able to follow it without a map.
+      - Every step rests on something somebody wrote down at the time.
+      - Where the record is silent, say so rather than bridging it.
+    minClaims: 5
+
+  - id: turn_2
+    type: turn
+    seconds: [90, 130]
+    function: >
+      The detail that makes it stranger rather than clearer. The point where
+      this stops being a correction and becomes its own story.
+    opens: [the_pattern]
+    constraints:
+      - It must come from the documents, not from the telling.
+      - Deepen the question rather than beginning to answer it.
+    minClaims: 3
+
+  - id: counterpoint
+    type: counterpoint
+    seconds: [80, 120]
+    function: >
+      The strongest honest case that the accepted story is right and this
+      reading is wrong.
+    constraints:
+      - Steelman it. A version the other side would recognise as their own.
+      - Name what evidence would settle it, and say whether it survives.
+      - Never introduce it as something about to be knocked down.
+    minClaims: 2
+
+  - id: payoff
+    type: payoff
+    seconds: [110, 150]
+    function: >
+      What the documents support, stated plainly and completely.
+    closes: [the_question]
+    constraints:
+      - Answer it. A show that reconstructs and then shrugs has wasted the time.
+      - Be exactly as certain as the sources are, and no more.
+      - Do not touch the series question here.
+    minClaims: 3
+
+  - id: reckoning
+    type: reckoning
+    seconds: [60, 90]
+    function: >
+      What it cost, and to whom. Back to the person from the stakes beat.
+    constraints:
+      - Concrete. Money, years, names, what happened to them afterwards.
+      - No moral. The accounting is the moral.
+    minClaims: 2
+
+  - id: callback
+    type: callback
+    seconds: [30, 50]
+    function: >
+      The detail from the cold open, now that it means something different.
+    constraints:
+      - The same detail, not a summary of the episode.
+      - It should land as an answer, not as a reminder.
+      - Stop on it. No sign-off, no next-time, no naming the show.
+    minClaims: 0
+
+# Opens interested rather than hot, climbs through the two turns, peaks at the
+# mechanism where the reconstruction actually happens, dips for the counterpoint
+# because honesty is quieter than argument, and lands.
+#
+# The callback rises again at the end. That is deliberate and it is the one
+# place this curve differs from an analytical show: the last thirty seconds are
+# what somebody remembers when deciding whether to play another.
+tensionCurve: [0.72, 0.60, 0.50, 0.78, 0.92, 0.88, 0.65, 1.00, 0.55, 0.80]

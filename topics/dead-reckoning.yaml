@@ -1,0 +1,48 @@
+# What Dead Reckoning covers next, in order, taken from the top.
+#
+# WHAT MAKES A GOOD ENTRY HERE, and it is a narrower test than it looks.
+#
+#   1. A STRANGE SPECIFIC THING, not a subject. "The Salem witch trials" is a
+#      subject and produces a summary. "The Salem magistrates recorded spectral
+#      evidence for months and then stopped in a single week" is a thing that
+#      happened, and produces an episode.
+#   2. SURVIVING DOCUMENTS somebody can fetch. Court records, ship's logs,
+#      excavation reports, inventories, letters, indictments. The show's entire
+#      claim on a listener is that it read the primary source, so a topic with
+#      no readable primary source is a topic this show cannot do.
+#   3. A POPULAR VERSION TO ARGUE WITH. The format turns on the moment a
+#      document contradicts the story everybody repeats. Something nobody has
+#      heard of has nothing to contradict, and the episode has no spine.
+#   4. NOBODY LIVING. The show is cleared for general topics only.
+#
+# A topic is taken BEFORE the run and put back if the run fails, so a failure
+# shows up in this file's diff rather than as a loop spending money on the same
+# subject forever.
+
+topics:
+  # Everything below satisfies all four tests, and the primary sources are named
+  # so the corpus stage has something to aim at.
+
+  - The 1590 North Berwick witch trials, where a king personally questioned the
+    accused and then wrote a book about it - what the trial records say happened
+    versus what Newes from Scotland told the public it was
+
+  - Why the Mary Celeste was found with her cargo intact, her chronometer gone
+    and one lifeboat missing - what the Gibraltar salvage hearing transcript
+    actually records, as against the abandoned-breakfast story
+
+  - The Antikythera mechanism spent fifty years in a museum drawer labelled as
+    corroded bronze - what the excavation and X-ray records show about who
+    realised what, and when
+
+  - Gobekli Tepe was surveyed in 1963, written up as a medieval cemetery, and
+    left alone for thirty years - what the original survey notes recorded and
+    why the conclusion followed from them
+
+  - The Dancing Plague of Strasbourg, 1518, is in the city's own municipal
+    records and the physicians' notes - what the council actually did about it,
+    which is stranger than the illness
+
+  - The Voynich manuscript has a documented ownership trail back to 1639 that
+    almost nobody cites - what the letters between its owners say they thought
+    they had bought
