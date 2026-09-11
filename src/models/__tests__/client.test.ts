@@ -1,5 +1,6 @@
 import {
   AnthropicClient,
+  completeJson,
   costPenceFor,
   costPenceWithCache,
   extractJson,
@@ -29,6 +30,88 @@ describe('pricing', () => {
 
   it('computes cost from token counts', () => {
     expect(costPenceFor('claude-haiku-4-5', 1_000_000, 1_000_000)).toBeCloseTo(400);
+  });
+});
+
+describe('completeJson', () => {
+  // THE BUG THAT KILLED THE SECOND REAL EPISODE. A truncated reply is a 200
+  // with perfectly valid text that simply stops mid-string, so the parse fails
+  // with "unterminated JSON" and sends you hunting for a prompt problem that
+  // is not there. The API says plainly that it hit the ceiling.
+
+  const client = (replies: Array<{ text: string; truncated?: boolean }>) => {
+    const seen: LlmRequest[] = [];
+    let i = 0;
+    return {
+      seen,
+      client: {
+        name: 'fake',
+        model: 'm',
+        async complete(req: LlmRequest): Promise<LlmResponse> {
+          seen.push(req);
+          const r = replies[Math.min(i++, replies.length - 1)]!;
+          return {
+            text: r.text,
+            inputTokens: 1,
+            outputTokens: 1,
+            costPence: 1,
+            model: 'm',
+            truncated: r.truncated,
+          };
+        },
+      } as LlmClient,
+    };
+  };
+
+  it('parses a complete reply without a second call', async () => {
+    const c = client([{ text: '{"a":1}' }]);
+    expect(await completeJson(c.client, { system: 'S', prompt: 'P' })).toEqual({ a: 1 });
+    expect(c.seen).toHaveLength(1);
+  });
+
+  it('RETRIES with double the room when the reply was cut off', async () => {
+    const c = client([
+      { text: '{"angle":"the North Berwick trials as reconst', truncated: true },
+      { text: '{"angle":"done"}' },
+    ]);
+
+    const out = await completeJson(c.client, { system: 'S', prompt: 'P', maxTokens: 1500 });
+
+    expect(out).toEqual({ angle: 'done' });
+    expect(c.seen[1]!.maxTokens).toBe(3000);
+  });
+
+  it('gives up after ONE retry rather than doubling forever', async () => {
+    // A loop that kept doubling would turn a runaway response into a runaway
+    // bill. If twice the room is not enough, the ceiling was not the problem.
+    const c = client([{ text: '{"a":', truncated: true }]);
+
+    await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).rejects.toThrow(
+      /ran out of room twice/
+    );
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('does NOT retry a reply that was merely unparseable', async () => {
+    // A model that returned prose instead of JSON returns prose again with
+    // more room, so retrying it is money for nothing.
+    const c = client([{ text: 'I am afraid I cannot do that' }]);
+
+    await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).rejects.toThrow(
+      /no JSON found/
+    );
+    expect(c.seen).toHaveLength(1);
+  });
+
+  it('counts BOTH calls toward the budget', async () => {
+    let spent = 0;
+    const c = client([{ text: '{', truncated: true }, { text: '{"a":1}' }]);
+    await completeJson(c.client, { system: 'S', prompt: 'P' }, (p) => (spent += p));
+    expect(spent).toBe(2);
+  });
+
+  it('says the reply was cut off, not that it was malformed', async () => {
+    expect(() => extractJson('{"angle":"the trials as reconst')).toThrow(/cut off/);
   });
 });
 

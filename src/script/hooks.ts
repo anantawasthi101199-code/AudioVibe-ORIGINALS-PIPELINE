@@ -21,7 +21,7 @@
  * "which of these is most intriguing" is exactly the judgement models are least
  * consistent at.
  */
-import { extractJson, LlmClient } from '../models/client';
+import { completeJson, extractJson, LlmClient } from '../models/client';
 
 export interface HookScore {
   text: string;
@@ -187,20 +187,25 @@ export const writeHook = async (
 ): Promise<{ text: string; considered: HookScore[]; reason: string }> => {
   const count = input.count ?? 16;
 
-  const generated = await writer.complete({
-    system: GENERATE_SYSTEM,
-    prompt: [
-      `EPISODE: ${input.angle}`,
-      `THE QUESTION THE OPENING MUST PLANT (without answering it): ${input.loopQuestion}`,
-      `THE SHOW SOUNDS LIKE: ${input.register}`,
-      `Write ${count} different openings. Vary the angle of attack, not just the wording.`,
-    ].join('\n\n'),
-    temperature: 1,
-    maxTokens: 2000,
-  });
-  onCost?.(generated.costPence);
-
-  const parsed = extractJson<{ hooks?: string[] }>(generated.text);
+  // Sixteen openings in one reply is the call most likely to run long, so it is
+  // also the one most likely to be cut off mid-list. completeJson gives it more
+  // room once rather than letting the competition fail and fall back to an
+  // ordinary cold open, which is a quality loss nothing would report.
+  const parsed = await completeJson<{ hooks?: string[] }>(
+    writer,
+    {
+      system: GENERATE_SYSTEM,
+      prompt: [
+        `EPISODE: ${input.angle}`,
+        `THE QUESTION THE OPENING MUST PLANT (without answering it): ${input.loopQuestion}`,
+        `THE SHOW SOUNDS LIKE: ${input.register}`,
+        `Write ${count} different openings. Vary the angle of attack, not just the wording.`,
+      ].join('\n\n'),
+      temperature: 1,
+      maxTokens: 3000,
+    },
+    onCost
+  );
   const ranked = rankHooks(parsed.hooks ?? []);
 
   if (!ranked.length) {

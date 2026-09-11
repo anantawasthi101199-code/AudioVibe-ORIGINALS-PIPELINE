@@ -31,7 +31,7 @@ import { z } from 'zod';
 import { Persona, canonAsOf, isDialogueShow } from '../canon/schema';
 import { Beat, EpisodeFormat } from '../formats/schema';
 import { Claim } from '../evidence/claim';
-import { extractJson, LlmClient } from '../models/client';
+import { completeJson, LlmClient } from '../models/client';
 import { NETWORK_BANNED_PHRASES, checkStyle } from './style';
 import { loopBrief, openBefore } from './loops';
 import { checkVoices, voiceBrief } from './voices';
@@ -214,10 +214,10 @@ const buildPrompt = (ctx: BeatContext): string => {
     .join('\n\n');
 };
 
-const parseTurns = (raw: string): { turns: Turn[]; claimIds: string[] } => {
+const parseTurns = (raw: unknown): { turns: Turn[]; claimIds: string[] } => {
   const parsed = z
     .object({ turns: z.array(turnSchema).min(1), claimIds: z.array(z.string()).default([]) })
-    .parse(extractJson(raw));
+    .parse(raw);
 
   return {
     // Unknown tags are stripped here rather than rejected. The renderer speaks
@@ -309,37 +309,46 @@ export const writeBeat = async (
     const isRevision = current !== null;
     calls++;
 
-    const res = await writer.complete({
-      system,
-      // The one call site in the pipeline where caching pays, and it pays a
-      // lot. `system` is built once above and reused for every beat and every
-      // revision of this episode - typically twelve to fifteen calls against a
-      // prefix of well over a thousand tokens. See LlmRequest.cacheSystem.
-      //
-      // It stays valid because buildSystem takes the persona, the date and the
-      // format kind, all fixed for the run. If anything per-beat is ever moved
-      // into it, the cache silently stops hitting and the episode gets more
-      // expensive rather than failing - which is why runs report cached tokens.
-      cacheSystem: true,
-      prompt: isRevision
-        ? [
-            prompt,
-            '',
-            REVISE_INSTRUCTION,
-            '',
-            `YOUR PREVIOUS DRAFT:\n${JSON.stringify({ turns: current!.turns }, null, 2)}`,
-            '',
-            `WHAT FAILED:\n${lastFailures.map((f) => `- ${f}`).join('\n')}`,
-          ].join('\n')
-        : prompt,
-      // Lower on revision: the first draft wants range, a repair wants
-      // precision, and a hot rewrite tends to discard the parts that worked.
-      temperature: isRevision ? 0.4 : 0.85,
-      maxTokens: Math.max(1500, wordsForBeat(ctx.beat).max * 4),
-    });
-    onCost?.(res.costPence);
+    // completeJson, not complete: a beat that runs out of room comes back as
+    // valid JSON cut off mid-sentence, and the parse failure says
+    // "unterminated JSON" rather than "give it more room". Beats are the most
+    // likely place to hit a ceiling, because their length is set from the beat
+    // sheet's word budget and a model that runs long overshoots it.
+    const parsed = await completeJson<unknown>(
+      writer,
+      {
+        system,
+        // The one call site in the pipeline where caching pays, and it pays a
+        // lot. `system` is built once above and reused for every beat and every
+        // revision of this episode - typically twelve to fifteen calls against
+        // a prefix of well over a thousand tokens. See LlmRequest.cacheSystem.
+        //
+        // It stays valid because buildSystem takes the persona, the date and
+        // the format kind, all fixed for the run. If anything per-beat is ever
+        // moved into it, the cache silently stops hitting and the episode gets
+        // more expensive rather than failing - which is why runs report cached
+        // tokens.
+        cacheSystem: true,
+        prompt: isRevision
+          ? [
+              prompt,
+              '',
+              REVISE_INSTRUCTION,
+              '',
+              `YOUR PREVIOUS DRAFT:\n${JSON.stringify({ turns: current!.turns }, null, 2)}`,
+              '',
+              `WHAT FAILED:\n${lastFailures.map((f) => `- ${f}`).join('\n')}`,
+            ].join('\n')
+          : prompt,
+        // Lower on revision: the first draft wants range, a repair wants
+        // precision, and a hot rewrite tends to discard the parts that worked.
+        temperature: isRevision ? 0.4 : 0.85,
+        maxTokens: Math.max(1500, wordsForBeat(ctx.beat).max * 4),
+      },
+      onCost
+    );
 
-    current = parseTurns(res.text);
+    current = parseTurns(parsed);
     const { blocking } = critiqueBeat(current.turns, ctx.persona, ctx.beat);
 
     if (!blocking.length) break;
@@ -376,25 +385,28 @@ export const writeTitle = async (
   writer: LlmClient,
   onCost?: (pence: number) => void
 ): Promise<{ title: string; description: string }> => {
-  const res = await writer.complete({
-    system: TITLE_SYSTEM,
-    prompt: [
-      `SHOW: ${persona.name}`,
-      `ANGLE: ${angle}`,
-      `OPENING: ${beats[0] ? beatText(beats[0]) : ''}`,
-      `PAYOFF: ${(() => {
-        const payoff = beats.find((b) => b.beatType === 'payoff');
-        return payoff ? beatText(payoff) : '';
-      })()}`,
-    ].join('\n\n'),
-    temperature: 0.8,
-    maxTokens: 400,
-  });
-  onCost?.(res.costPence);
+  const parsed = await completeJson<unknown>(
+    writer,
+    {
+      system: TITLE_SYSTEM,
+      prompt: [
+        `SHOW: ${persona.name}`,
+        `ANGLE: ${angle}`,
+        `OPENING: ${beats[0] ? beatText(beats[0]) : ''}`,
+        `PAYOFF: ${(() => {
+          const payoff = beats.find((b) => b.beatType === 'payoff');
+          return payoff ? beatText(payoff) : '';
+        })()}`,
+      ].join('\n\n'),
+      temperature: 0.8,
+      maxTokens: 600,
+    },
+    onCost
+  );
 
   return z
     .object({ title: z.string().min(1), description: z.string().min(1) })
-    .parse(extractJson(res.text));
+    .parse(parsed);
 };
 
 /**

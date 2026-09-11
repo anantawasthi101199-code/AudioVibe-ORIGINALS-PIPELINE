@@ -62,6 +62,16 @@ export interface LlmResponse {
    * is costing money rather than saving it.
    */
   cachedInputTokens?: number;
+  /**
+   * Whether the model stopped because it ran out of room.
+   *
+   * THE DIFFERENCE BETWEEN A USEFUL ERROR AND A BAFFLING ONE. A truncated
+   * response is still a 200 with perfectly valid text in it - the text just
+   * stops mid-sentence. Parsing it produces "unterminated JSON in model
+   * output", which sends you looking for a prompt problem that does not exist.
+   * The API says plainly that it hit the ceiling; this carries that through.
+   */
+  truncated?: boolean;
 }
 
 export interface LlmClient {
@@ -189,6 +199,7 @@ export const nodeHttpPost: HttpPost = async (url, headers, body) => {
 
 interface AnthropicShape {
   content?: Array<{ type: string; text?: string }>;
+  stop_reason?: string;
   usage?: {
     input_tokens?: number;
     output_tokens?: number;
@@ -309,6 +320,7 @@ export class AnthropicClient implements LlmClient {
       ),
       model: this.model,
       cachedInputTokens: cacheRead,
+      truncated: body.stop_reason === 'max_tokens',
     };
   }
 }
@@ -318,7 +330,7 @@ export class AnthropicClient implements LlmClient {
 // ---------------------------------------------------------------------------
 
 interface OpenAiShape {
-  choices?: Array<{ message?: { content?: string } }>;
+  choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
   usage?: { prompt_tokens?: number; completion_tokens?: number };
   error?: { message?: string };
 }
@@ -372,9 +384,53 @@ export class OpenAiClient implements LlmClient {
       outputTokens,
       costPence: costPenceFor(this.model, inputTokens, outputTokens),
       model: this.model,
+      truncated: body.choices?.[0]?.finish_reason === 'length',
     };
   }
 }
+
+/**
+ * Ask for JSON, and give the model more room if it ran out.
+ *
+ * WHY THIS EXISTS AS A SHARED HELPER. Every stage that wants structured output
+ * has the same failure: the model writes valid JSON, hits the token ceiling
+ * mid-string, and the parse fails with "unterminated JSON in model output". The
+ * first real episode died this way in the brief stage - and the message sends
+ * you hunting for a prompt problem that is not there.
+ *
+ * ONE RETRY, AT DOUBLE THE CEILING. Bounded on purpose: a loop that keeps
+ * doubling would turn a genuinely runaway response into a genuinely runaway
+ * bill. If twice the room is not enough, the ceiling was not the problem and
+ * the error should say so rather than keep paying to find out.
+ *
+ * Only retries on TRUNCATION. A model that returned prose instead of JSON will
+ * return prose again with more room, so retrying that is money for nothing.
+ */
+export const completeJson = async <T>(
+  client: LlmClient,
+  req: LlmRequest,
+  onCost?: (pence: number) => void
+): Promise<T> => {
+  const first = await client.complete(req);
+  onCost?.(first.costPence);
+
+  if (!first.truncated) return extractJson<T>(first.text);
+
+  const ceiling = (req.maxTokens ?? 4096) * 2;
+  const second = await client.complete({ ...req, maxTokens: ceiling });
+  onCost?.(second.costPence);
+
+  if (second.truncated) {
+    throw new LlmError(
+      client.name,
+      null,
+      `ran out of room twice, at ${ceiling} tokens. The response is not too small a ` +
+        `ceiling, it is too large a request - narrow what the prompt asks for.`
+    );
+  }
+
+  return extractJson<T>(second.text);
+};
 
 /**
  * Pull a JSON value out of a model response.
@@ -394,7 +450,15 @@ export const extractJson = <T>(text: string): T => {
   const opener = candidate[start];
   const closer = opener === '{' ? '}' : ']';
   const end = candidate.lastIndexOf(closer);
-  if (end <= start) throw new Error(`unterminated JSON in model output: ${text.slice(0, 200)}`);
+  if (end <= start) {
+    // Almost always truncation rather than a malformed reply, so the message
+    // says which end to look at. Callers using completeJson have already
+    // retried with more room by the time this is reached.
+    throw new Error(
+      `unterminated JSON in model output - the reply was almost certainly cut off ` +
+        `by the token ceiling rather than malformed. Ends: ...${text.slice(-120)}`
+    );
+  }
 
   try {
     return JSON.parse(candidate.slice(start, end + 1)) as T;

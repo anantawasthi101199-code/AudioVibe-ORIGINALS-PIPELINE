@@ -28,7 +28,7 @@
  * is a question for the person reading the gate report.
  */
 import { z } from 'zod';
-import { extractJson, LlmClient } from '../models/client';
+import { completeJson, LlmClient } from '../models/client';
 import { Script, fullText } from '../script/write';
 import { Bible, Entity, allFacts } from './bible';
 
@@ -224,15 +224,24 @@ export const checkContinuity = async (
 
   const numbered = facts.map(({ entity, fact }, i) => `${i}. [${entity.name}] ${fact.text}`);
 
-  const res = await checker.complete({
-    system: CHECK_SYSTEM,
-    prompt: [`ESTABLISHED:\n${numbered.join('\n')}`, `NEW EPISODE:\n${fullText(script)}`].join(
-      '\n\n'
-    ),
-    temperature: 0,
-    maxTokens: Math.max(1000, facts.length * 80),
-  });
-  onCost?.(res.costPence);
+  // Tracked separately because the report carries its own cost, and
+  // completeJson may make two calls.
+  let spent = 0;
+  const raw = await completeJson<unknown>(
+    checker,
+    {
+      system: CHECK_SYSTEM,
+      prompt: [`ESTABLISHED:\n${numbered.join('\n')}`, `NEW EPISODE:\n${fullText(script)}`].join(
+        '\n\n'
+      ),
+      temperature: 0,
+      maxTokens: Math.max(1000, facts.length * 80),
+    },
+    (pence) => {
+      spent += pence;
+      onCost?.(pence);
+    }
+  );
 
   const parsed = z
     .array(
@@ -242,7 +251,7 @@ export const checkContinuity = async (
         reason: z.string().default(''),
       })
     )
-    .parse(extractJson(res.text));
+    .parse(raw);
 
   const byIndex = new Map(parsed.map((p) => [p.index, p]));
 
@@ -268,7 +277,7 @@ export const checkContinuity = async (
     ...base,
     findings: all,
     blocking: all.filter((f) => BLOCKING_VERDICTS.includes(f.verdict)),
-    costPence: res.costPence,
+    costPence: spent,
   };
 };
 
@@ -336,19 +345,22 @@ export const extractEstablished = async (
 ): Promise<ExtractedEpisode> => {
   const existing = bible.entities.map((e) => `${e.id} (${e.kind}): ${e.name} - ${e.summary}`);
 
-  const res = await writer.complete({
-    system: EXTRACT_SYSTEM,
-    prompt: [
-      `ALREADY ON THE LIST:\n${existing.join('\n') || '(nothing yet)'}`,
-      `EPISODE: ${script.title}`,
-      fullText(script),
-    ].join('\n\n'),
-    temperature: 0.2,
-    maxTokens: 2000,
-  });
-  onCost?.(res.costPence);
-
-  return extractedEpisodeSchema.parse(extractJson(res.text));
+  return extractedEpisodeSchema.parse(
+    await completeJson(
+      writer,
+      {
+        system: EXTRACT_SYSTEM,
+        prompt: [
+          `ALREADY ON THE LIST:\n${existing.join('\n') || '(nothing yet)'}`,
+          `EPISODE: ${script.title}`,
+          fullText(script),
+        ].join('\n\n'),
+        temperature: 0.2,
+        maxTokens: 2000,
+      },
+      onCost
+    )
+  );
 };
 
 /**

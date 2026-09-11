@@ -29,7 +29,7 @@
  */
 import { z } from 'zod';
 import { Claim } from '../evidence/claim';
-import { extractJson, LlmClient } from '../models/client';
+import { completeJson, LlmClient } from '../models/client';
 import { Script, beatText } from './write';
 
 /**
@@ -101,15 +101,22 @@ export const selectShortAngle = async (
   const script = parent.beats.map((b) => `[${b.beatId}] ${beatText(b)}`).join('\n\n');
   const facts = claims.map((c) => `[${c.id}] (${c.type}) ${c.text}`).join('\n');
 
-  const res = await writer.complete({
-    system: SELECT_SYSTEM,
-    prompt: [`EPISODE: ${parent.title}`, `SCRIPT:\n${script}`, `VERIFIED FACTS:\n${facts}`].join('\n\n'),
-    temperature: 0.6,
-    maxTokens: 800,
-  });
-  onCost?.(res.costPence);
-
-  const selection = shortSelectionSchema.parse(extractJson(res.text));
+  const selection = shortSelectionSchema.parse(
+    await completeJson(
+      writer,
+      {
+        system: SELECT_SYSTEM,
+        prompt: [
+          `EPISODE: ${parent.title}`,
+          `SCRIPT:\n${script}`,
+          `VERIFIED FACTS:\n${facts}`,
+        ].join('\n\n'),
+        temperature: 0.6,
+        maxTokens: 800,
+      },
+      onCost
+    )
+  );
 
   // A short may only state facts the parent already verified. Anything else is
   // an unverified claim wearing a verified episode's clothes, and the whole

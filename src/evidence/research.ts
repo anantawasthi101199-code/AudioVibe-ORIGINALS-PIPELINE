@@ -23,7 +23,7 @@
 import { z } from 'zod';
 import { Persona } from '../canon/schema';
 import { EpisodeFormat } from '../formats/schema';
-import { extractJson, LlmClient } from '../models/client';
+import { completeJson, extractJson, LlmClient } from '../models/client';
 import { Claim, claimSchema, checkLedger, UnsupportedClaim, unsupportedClaimSchema } from './claim';
 import { FetchDeps, fetchSource } from './fetch';
 import { selectPassages } from './passages';
@@ -90,20 +90,27 @@ export const buildBrief = async (
   writer: LlmClient,
   onCost?: (pence: number) => void
 ): Promise<Brief> => {
-  const res = await writer.complete({
-    system: BRIEF_SYSTEM,
-    prompt: [
-      `SHOW: ${persona.name}`,
-      `THESIS: ${persona.thesis}`,
-      `AUDIENCE: ${persona.audience}`,
-      `FORMAT: ${format.name} - ${format.intent}`,
-      `TOPIC: ${topic}`,
-    ].join('\n'),
-    temperature: 0.7,
-    maxTokens: 1500,
-  });
-  onCost?.(res.costPence);
-  return briefSchema.parse(extractJson(res.text));
+  // completeJson rather than complete: a brief that runs out of room comes back
+  // as valid JSON cut off mid-string, and parsing that says "unterminated JSON"
+  // - which sends you looking for a prompt problem that is not there.
+  return briefSchema.parse(
+    await completeJson(
+      writer,
+      {
+        system: BRIEF_SYSTEM,
+        prompt: [
+          `SHOW: ${persona.name}`,
+          `THESIS: ${persona.thesis}`,
+          `AUDIENCE: ${persona.audience}`,
+          `FORMAT: ${format.name} - ${format.intent}`,
+          `TOPIC: ${topic}`,
+        ].join('\n'),
+        temperature: 0.7,
+        maxTokens: 2500,
+      },
+      onCost
+    )
+  );
 };
 
 // ---------------------------------------------------------------------------
@@ -232,20 +239,23 @@ export const extractClaims = async (
     )
     .join('\n\n');
 
-  const res = await writer.complete({
-    system: EXTRACT_SYSTEM,
-    prompt: [
-      `ANGLE: ${brief.angle}`,
-      `MUST ESTABLISH:\n${brief.mustEstablish.map((m) => `- ${m}`).join('\n')}`,
-      `BEATS:\n${beats}`,
-      `CORPUS:\n${documents}`,
-    ].join('\n\n'),
-    temperature: 0.2,
-    maxTokens: 8000,
-  });
-  onCost?.(res.costPence);
-
-  const parsed = claimSetSchema.parse(extractJson(res.text));
+  const parsed = claimSetSchema.parse(
+    await completeJson(
+      writer,
+      {
+        system: EXTRACT_SYSTEM,
+        prompt: [
+          `ANGLE: ${brief.angle}`,
+          `MUST ESTABLISH:\n${brief.mustEstablish.map((m) => `- ${m}`).join('\n')}`,
+          `BEATS:\n${beats}`,
+          `CORPUS:\n${documents}`,
+        ].join('\n\n'),
+        temperature: 0.2,
+        maxTokens: 8000,
+      },
+      onCost
+    )
+  );
 
   // Re-check here as well as in the gate. An extractor that produced a
   // paraphrase should be corrected at the point of extraction, where the
