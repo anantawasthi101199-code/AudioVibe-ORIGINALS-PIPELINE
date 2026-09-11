@@ -1149,11 +1149,42 @@ export const run = async (argv: string[]): Promise<number> => {
     }
   } catch (err) {
     console.error(`\n${(err as Error).message}`);
+
+    // A failure mid-run has almost always left work on disk worth resuming, and
+    // the one thing somebody needs at that moment is the command that picks it
+    // up rather than the command that starts again.
+    try {
+      const latest = Run.latest();
+      if (latest && !latest.isComplete('qa')) {
+        console.error('\nThe run kept everything it finished. Pick it up with:');
+        console.error(`  npm run foundry -- resume --run ${latest.id}`);
+        console.error(`  npm run foundry -- journal --run ${latest.id}`);
+      }
+    } catch {
+      // Advice is not worth a second failure on top of the first.
+    }
     return 1;
   }
 };
 
 /* istanbul ignore next -- entry point */
 if (require.main === module) {
-  run(process.argv.slice(2)).then((code) => process.exit(code));
+  const finish = (code: number) => {
+    // SET THE CODE, DO NOT CALL process.exit. Calling exit while fetch still
+    // holds keep-alive sockets crashes the Windows event loop with
+    // "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)" - which is what
+    // happened on the first real run, printed after the actual error and
+    // looking far more alarming than the thing that caused it.
+    //
+    // Setting exitCode lets Node drain and leave on its own. The unref'd timer
+    // is the backstop: if a socket somehow keeps the loop alive the process
+    // still exits, and the timer never holds it open itself.
+    process.exitCode = code;
+    setTimeout(() => process.exit(code), 2000).unref();
+  };
+
+  run(process.argv.slice(2)).then(finish, (err) => {
+    console.error(`\n${(err as Error)?.message ?? String(err)}`);
+    finish(1);
+  });
 }

@@ -6,6 +6,7 @@ import {
   LlmError,
   OpenAiClient,
   priceFor,
+  supportsTemperature,
 } from '../client';
 
 const post = (status: number, json: unknown, text = '') => async () => ({ status, json, text });
@@ -28,6 +29,64 @@ describe('pricing', () => {
 
   it('computes cost from token counts', () => {
     expect(costPenceFor('claude-haiku-4-5', 1_000_000, 1_000_000)).toBeCloseTo(400);
+  });
+});
+
+describe('temperature', () => {
+  // THE BUG THAT KILLED THE FIRST REAL EPISODE. Sonnet 5 rejects every value
+  // except 1 with a 400, and the client sent 0.7 on the very first call of the
+  // run - in the brief stage, after the search budget had already gone.
+
+  const body = (usage = { input_tokens: 1, output_tokens: 1 }) => ({
+    content: [{ type: 'text', text: 'hi' }],
+    usage,
+  });
+
+  const sentBy = async (model: string, temperature?: number) => {
+    let sent: Record<string, unknown> = {};
+    const client = new AnthropicClient(model, 'k', async (_u, _h, b) => {
+      sent = b as Record<string, unknown>;
+      return { status: 200, json: body(), text: '' };
+    });
+    await client.complete({ system: 'S', prompt: 'P', temperature });
+    return sent;
+  };
+
+  it('OMITS temperature on a model that rejects it', async () => {
+    expect(await sentBy('claude-sonnet-5', 0.7)).not.toHaveProperty('temperature');
+    expect(await sentBy('claude-opus-5', 0)).not.toHaveProperty('temperature');
+  });
+
+  it('omits it on an UNKNOWN model, because that is the survivable direction', async () => {
+    // Omitting from a model that would have accepted it costs a little
+    // control. Sending to one that rejects it kills the run.
+    expect(await sentBy('claude-some-future-6', 0.3)).not.toHaveProperty('temperature');
+  });
+
+  it('still sends it where it works', async () => {
+    expect(await sentBy('claude-haiku-4-5', 0.2)).toMatchObject({ temperature: 0.2 });
+  });
+
+  it('sends nothing when the caller asked for nothing', async () => {
+    expect(await sentBy('claude-haiku-4-5')).not.toHaveProperty('temperature');
+  });
+
+  it('applies the same rule to the OpenAI client', async () => {
+    // The verifier asks for zero on every single claim, so getting this wrong
+    // would 400 thirty times in a row.
+    let sent: Record<string, unknown> = {};
+    const client = new OpenAiClient('gpt-5', 'k', async (_u, _h, b) => {
+      sent = b as Record<string, unknown>;
+      return { status: 200, json: { choices: [{ message: { content: 'x' } }] }, text: '' };
+    });
+    await client.complete({ system: 'S', prompt: 'P', temperature: 0 });
+    expect(sent).not.toHaveProperty('temperature');
+  });
+
+  it('knows which models still take one', () => {
+    expect(supportsTemperature('claude-haiku-4-5-20251001')).toBe(true);
+    expect(supportsTemperature('claude-sonnet-5')).toBe(false);
+    expect(supportsTemperature('gpt-5-mini')).toBe(false);
   });
 });
 

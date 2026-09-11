@@ -19,7 +19,13 @@ export interface LlmRequest {
   system: string;
   prompt: string;
   maxTokens?: number;
-  /** 0 for anything being checked or scored. Judgement should not wander. */
+  /**
+   * 0 for anything being checked or scored. Judgement should not wander.
+   *
+   * A REQUEST, NOT A GUARANTEE. Models released after Claude Opus 4.6 reject
+   * every value except 1, so on those this is dropped before the request is
+   * sent rather than being sent and refused. See temperatureFor.
+   */
   temperature?: number;
   /**
    * Cache the system prompt.
@@ -93,6 +99,53 @@ export const priceFor = (model: string): [number, number] => {
 export const costPenceFor = (model: string, inputTokens: number, outputTokens: number): number => {
   const [inPrice, outPrice] = priceFor(model);
   return (inputTokens / 1_000_000) * inPrice + (outputTokens / 1_000_000) * outPrice;
+};
+
+/**
+ * Models that still accept a `temperature` other than 1.
+ *
+ * AN ALLOW-LIST, NOT A DENY-LIST, and the asymmetry is the whole point.
+ * Omitting temperature from a model that would have accepted it costs a little
+ * control. SENDING it to a model that rejects it is a 400 that kills the run -
+ * which is exactly what happened: Sonnet 5 refuses every value except 1.0, and
+ * the first real episode died on its first call, in the brief stage, having
+ * already spent the search budget.
+ *
+ * So an unknown model gets no temperature. A new model is far more likely to
+ * follow the newer rule than the older one, and being wrong in that direction
+ * is survivable.
+ *
+ * WHAT IS LOST, stated plainly rather than quietly. This pipeline used
+ * temperature deliberately: near zero for anything being judged or scored, high
+ * for drafting, cooler on a revision than on a first attempt. On the Claude 5
+ * family that lever no longer exists, so the hook chooser and the claim
+ * extractor are no longer pinned to deterministic settings. The deterministic
+ * checks around them - the quote existence check, the style scoring, the loop
+ * and voice checks - are untouched, and they were always the ones doing the
+ * real work.
+ */
+const TEMPERATURE_MODELS = [
+  'claude-haiku-4-5',
+  'claude-3-5',
+  'claude-3-7',
+  'gpt-4',
+  'gpt-4o',
+];
+
+export const supportsTemperature = (model: string): boolean =>
+  TEMPERATURE_MODELS.some((m) => model.startsWith(m));
+
+/**
+ * The temperature to send, or undefined to omit the field entirely.
+ *
+ * `1` is accepted everywhere for backwards compatibility, but it is also the
+ * default, so asking for it explicitly buys nothing and is one more thing that
+ * can be rejected later. Omitted is the safer shape.
+ */
+export const temperatureFor = (model: string, wanted?: number): number | undefined => {
+  if (wanted === undefined) return undefined;
+  if (!supportsTemperature(model)) return undefined;
+  return wanted;
 };
 
 export class LlmError extends Error {
@@ -210,7 +263,10 @@ export class AnthropicClient implements LlmClient {
       {
         model: this.model,
         max_tokens: req.maxTokens ?? 4096,
-        temperature: req.temperature ?? 1,
+        // Omitted entirely rather than defaulted. See temperatureFor.
+        ...(temperatureFor(this.model, req.temperature) !== undefined
+          ? { temperature: temperatureFor(this.model, req.temperature) }
+          : {}),
         system,
         messages: [{ role: 'user', content: req.prompt }],
       }
@@ -283,7 +339,12 @@ export class OpenAiClient implements LlmClient {
       {
         model: this.model,
         max_completion_tokens: req.maxTokens ?? 4096,
-        temperature: req.temperature ?? 1,
+        // Same rule as the Anthropic client, for the same reason: the gpt-5
+        // family rejects a non-default temperature too, and the verifier asks
+        // for zero on every single claim.
+        ...(temperatureFor(this.model, req.temperature) !== undefined
+          ? { temperature: temperatureFor(this.model, req.temperature) }
+          : {}),
         messages: [
           { role: 'system', content: req.system },
           { role: 'user', content: req.prompt },
