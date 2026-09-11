@@ -256,14 +256,39 @@ const cmdShows = (): number => {
     console.log(`  formats:  ${p.formats.join(', ')}`);
     console.log(`  ${p.hosts.length > 1 ? 'hosts:' : 'host: '}`);
     for (const h of p.hosts) {
-      console.log(`    ${h.id} (${h.name})  ${h.voice.provider}/${h.voice.voiceId}`);
+      // Both ids, because a show is ready for one engine and not the other and
+      // that distinction is the whole question somebody runs this to answer.
+      // Reporting only the publishing voice made a show look unusable when it
+      // was perfectly ready to draft.
+      const draft = h.voice.draftVoiceId ? `  draft: openai/${h.voice.draftVoiceId}` : '';
+      console.log(`    ${h.id} (${h.name})  ${h.voice.provider}/${h.voice.voiceId}${draft}`);
       if (h.voice.voiceId.startsWith('REPLACE_')) {
         console.log('      ^ placeholder. Set a real voice before publishing, then never change it.');
+      }
+      if (!h.voice.draftVoiceId) {
+        console.log('      ^ no draftVoiceId, so this host cannot be drafted on FOUNDRY_TTS=openai.');
       }
     }
     console.log('');
   }
   console.log(`Formats available: ${formats.map((f) => f.id).join(', ') || '(none)'}`);
+
+  // WHAT THIS SHOW CAN ACTUALLY DO RIGHT NOW. Listing the configuration without
+  // saying what it adds up to leaves the reader to work out for themselves
+  // whether a placeholder voice is a blocker, and the answer depends on which
+  // engine is selected - which is not on screen anywhere else.
+  const draftable = personas.filter((p) => p.hosts.every((h) => h.voice.draftVoiceId));
+  const publishable = personas.filter((p) =>
+    p.hosts.every((h) => !h.voice.voiceId.startsWith('REPLACE_'))
+  );
+
+  console.log('');
+  console.log(
+    `Ready to draft (FOUNDRY_TTS=openai): ${draftable.map((p) => p.id).join(', ') || '(none)'}`
+  );
+  console.log(
+    `Ready to publish (elevenlabs):       ${publishable.map((p) => p.id).join(', ') || '(none)'}`
+  );
   return 0;
 };
 
