@@ -1,0 +1,42 @@
+# How often each show publishes.
+#
+# READ THIS BEFORE TURNING IT ON. `foundry tick` makes ONE thing and stops.
+# Point a trigger at it - cron, Task Scheduler, a CI timer - as often as you
+# like: what is due is computed from what was actually published, so firing
+# twice in an hour changes nothing, and not firing for a week leaves a show
+# visibly overdue rather than silently skipped.
+#
+#   npm run foundry -- due              what it thinks should happen, costs nothing
+#   npm run foundry -- tick --dry-run   the same, from the command that would act
+#   npm run foundry -- tick             make the next due thing
+#
+# A SHOW ABSENT FROM HERE NEVER COMES UP AS DUE. That is the off switch for one
+# show; `paused` below is the off switch for all of them.
+
+paused: false
+
+shows:
+  # Twice a week is deliberately ambitious for a show that reads primary
+  # documents, and the topic queue is what keeps it honest: if nobody has
+  # queued anything, `due` reports the show as waiting rather than inventing a
+  # subject. A studio that picks its own subjects converges on whatever the
+  # model finds most available, which is the same handful of stories everyone
+  # else is already telling.
+  the-teardown:
+    everyDays: 3
+    # Two shorts per episode, cut on the days between episodes. They are cheap,
+    # they reach people who have never heard the show, and they are the only
+    # thing here that can publish on a day no episode does.
+    shortsPerEpisode: 2
+    # Off until somebody decides otherwise. The pipeline stops at the gate
+    # exactly as it does when run by hand.
+    autoPublish: false
+
+  # Weekly, because a serial trains an expectation and then has to keep it. A
+  # drama that arrives whenever it is ready is one a listener stops waiting for.
+  night-shift:
+    everyDays: 7
+    # None. A short cut from a serial episode either spoils it or makes no
+    # sense out of order, and both are worse than not making one.
+    shortsPerEpisode: 0
+    autoPublish: false

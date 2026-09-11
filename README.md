@@ -100,6 +100,38 @@ npm run foundry -- compare --a <run> --b <run>   # is it getting better?
 npm run foundry -- series --show night-shift     # what a serial has established
 ```
 
+## Running it on a cadence
+
+```bash
+npm run foundry -- due              # what should be made now. Costs nothing.
+npm run foundry -- tick --dry-run   # the same, from the command that would act
+npm run foundry -- tick             # make the next due thing, then stop
+```
+
+`schedule.yaml` says how often each show publishes. `topics/<show>.yaml` says
+what it covers next, in order, taken from the top - that file is the editorial
+surface of the whole studio, and it is deliberately a list a person writes.
+Generating topics automatically was considered and rejected: a studio that picks
+its own subjects converges on whatever the model finds most available, which is
+the same handful of stories everyone else is already telling.
+
+**What is due is computed from what was actually published**, never from a
+timer's own memory. That is the difference between this and cron, and it is not
+cosmetic: a show that missed last week is due NOW, where cron would silently
+skip whenever the machine was off, a run failed, or a gate rejected an episode.
+So the trigger is stateless and cannot drift. Point anything at `tick` - cron,
+Task Scheduler, a CI timer - as often as you like. Firing twice in an hour
+produces the same plan twice and the second finds the work done.
+
+`tick` makes **one** thing and stops, so a studio three weeks behind catches up
+at the rate its trigger fires rather than spending fifteen pounds in one go
+before anybody sees the first result.
+
+**It still stops at the gate.** A show can set `autoPublish: true`, and that
+option exists because refusing it entirely just means somebody writes a worse
+version in a shell script - but it is off per show until somebody decides
+otherwise, and even then an episode the gate flagged for human review waits.
+
 `make` researches, writes, renders and gates. **It never publishes.** Publishing
 is a separate command, run by a person who has read the gate report, because the
 two checks the gate defers to a human are exactly the ones automation would wave

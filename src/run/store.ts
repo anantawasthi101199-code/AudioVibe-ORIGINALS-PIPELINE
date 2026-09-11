@@ -241,6 +241,21 @@ export class Run {
     }
   }
 
+  /**
+   * When this run published, as the ISO string the publish artifact recorded.
+   *
+   * A NARROW READER RATHER THAN A SCHEMA, because the publish artifact is
+   * written and read by the same code and the only field anything else needs is
+   * this one. A Zod schema mirroring the platform's whole response would be a
+   * second definition to keep in step for no safety it does not already have.
+   */
+  readPublishTimestamp(): string | null {
+    const file = path.join(this.dir, 'publish.json');
+    if (!fs.existsSync(file)) return null;
+    const body = JSON.parse(fs.readFileSync(file, 'utf8')) as { publishedAt?: unknown };
+    return typeof body.publishedAt === 'string' ? body.publishedAt : null;
+  }
+
   abandon(reason: string): void {
     this.manifestData.abandoned = reason;
     this.save();

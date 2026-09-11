@@ -13,6 +13,28 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A publishing cadence** (`schedule.yaml`, `topics/`, `src/schedule/`,
+  `foundry due`, `foundry tick`). What is due is computed from what was actually
+  published rather than from a timer's own memory, which is the whole difference
+  from cron: a show that missed last week is due now, where cron silently skips
+  whenever the machine was off, a run failed, or a gate rejected an episode. The
+  trigger is stateless and carries no state to drift. `tick` makes one thing and
+  stops. Publishing still stops at the gate unless a show opts in, and even then
+  anything the gate flagged for human review waits. Topic choice stays a list a
+  person writes; auto-generated topics were rejected because a studio that picks
+  its own subjects converges on whatever the model finds most available.
+- **Cover art** (`src/art/cover.ts`). Drawn, not generated: a cover's one job is
+  to be recognised at 64 pixels in a scrolling feed, which is typography rather
+  than illustration; covers that vary week to week destroy the recognition they
+  exist for; and drawing is deterministic, so a re-publish never quietly changes
+  the artwork of something already in a listener's library. Square for a card,
+  16:9 for a series shelf, because art that does not match the platform's frame
+  is cropped on display.
+- **Series publishing** (`src/publish/seriesRegistry.ts`, `foundry
+  series-setup`, plus two ingest mounts on the platform). A serial's episodes
+  now carry numbers and an order. `series.json` is committed because series
+  creation has no create-or-get and losing the file forks a show into two
+  shelves.
 - **A short-form lane** (`src/script/shorts.ts`, `src/pipeline/short.ts`,
   `beatsheets/short-teardown.yaml`, `foundry short`). Shorts are DERIVED from an
   episode that already passed, not researched independently: a standalone short
@@ -151,6 +173,17 @@ Building toward the first publishable episode.
   committed inputs, and a rejected take is not something history should carry.
 
 ### Fixed
+
+- **Three silent breaks in the publish path**, in the one part of the repo that
+  had never run against the real API. It sent a category NAME in a field that
+  wants ids (and the API drops an id it does not recognise, so a wrong one
+  publishes an episode that plays perfectly and is invisible to every genre
+  rail); it omitted `content_rating`, which the API refuses rather than
+  defaults; and it had no series route, so a serial's episodes could only land
+  loose. All three land at the last command of a pipeline that has already spent
+  money.
+- **A long title ran off the edge of its cover.** It typechecked, it rendered,
+  and it would have published. Found by rendering one and looking at it.
 
 - **Two runs of the same show in one second collided.** Run ids stamp to the
   second, and `Run.create` mkdir -p'd straight into the existing directory:

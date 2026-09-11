@@ -42,6 +42,8 @@ import { runFiction } from './pipeline/fiction';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
+import { buildPlan, historyFor, runSummary } from './schedule/plan';
+import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/load';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
@@ -70,6 +72,8 @@ Commands
   compare --a <run> --b <run>    Which of two scripts is better to listen to
   series --show <id>             What a fiction show has established so far
   series-setup --show <id>       Make the platform series a show publishes into
+  due                            What the schedule says should be made now
+  tick [--dry-run]               Make the next due thing, then stop
 
 Notes
   make stops at the gate. Publishing is always a separate, deliberate step.
@@ -80,6 +84,10 @@ Notes
   A fiction show skips the entire evidence pipeline - there is no document that
   entails an invented scene - and is checked against its series bible instead.
   That is a property of the SHOW, set in its persona file, never a flag.
+  tick makes ONE thing and stops, so a studio that is behind catches up at the
+  rate its trigger fires rather than all at once. Point cron at it as often as
+  you like: what is due is computed from what was published, so firing twice
+  changes nothing and not firing for a week leaves a show visibly overdue.
 `;
 
 const arg = (argv: string[], name: string): string | undefined => {
@@ -483,6 +491,172 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
   return 0;
 };
 
+/**
+ * Everything the studio should make right now, and what is stopping it.
+ *
+ * READ-ONLY AND FREE. Separated from `tick` on purpose: a schedule you cannot
+ * inspect before it spends money is a schedule nobody trusts enough to turn on.
+ */
+const readPlan = (now = new Date()) => {
+  const personas = loadAllPersonas();
+  const kindOf = new Map(personas.map((p) => [p.id, p]));
+
+  const summaries = Run.list().map((id) => {
+    const run = Run.open(id);
+    // The format decides whether a run was an episode or a short. Reading it
+    // from the format rather than from the run's own manifest keeps one
+    // definition of what a short is.
+    let kind: 'long' | 'short' = 'long';
+    try {
+      kind = loadFormat(run.manifest.formatId).kind === 'short' ? 'short' : 'long';
+    } catch {
+      // A run whose format has since been deleted still counts as published;
+      // guessing long is the direction that does not invent a missing episode.
+    }
+    return runSummary(run, kind);
+  });
+
+  return buildPlan({
+    schedule: loadSchedule(),
+    personas: personas.filter((p) => kindOf.has(p.id)),
+    history: (personaId) => historyFor(personaId, summaries),
+    topicsQueued: (personaId) => loadTopics(personaId).topics.length,
+    now,
+  });
+};
+
+const cmdDue = (): number => {
+  const plan = readPlan();
+
+  if (!plan.due.length && !plan.blocked.length) {
+    console.log('Nothing due.');
+    return 0;
+  }
+
+  if (plan.due.length) {
+    console.log('Due now:');
+    for (const item of plan.due) {
+      const late = item.overdueDays > 0 ? `  [${item.overdueDays}d late]` : '';
+      console.log(`  ${item.personaId} ${item.kind}${late}`);
+      console.log(`    ${item.reason}`);
+    }
+  }
+
+  if (plan.blocked.length) {
+    // Shown as loudly as the due list. A show blocked on an empty topic queue
+    // is a show that has silently stopped publishing, and the whole reason it
+    // is reported rather than skipped is so that stops being silent.
+    if (plan.due.length) console.log('');
+    console.log('Waiting on you:');
+    for (const b of plan.blocked) console.log(`  ${b.personaId} ${b.reason}`);
+  }
+
+  return 0;
+};
+
+/**
+ * Make the next thing that is due. One item, then stop.
+ *
+ * ONE PER TICK, DELIBERATELY. A tick that drained the whole plan would, on a
+ * studio three weeks behind, spend fifteen pounds and an hour before anybody
+ * saw the first result - and if something were wrong with the pipeline it would
+ * be wrong fifteen times. One item per tick means the schedule catches up at
+ * the rate the trigger fires, which is a rate somebody chose.
+ *
+ * STOPS AT THE GATE unless the show has opted into automatic publishing, and
+ * even then an episode the gate flagged for human review waits. Those two
+ * checks - did the script acknowledge the counter-evidence, is that weakest
+ * source framed as one person's account - are exactly the ones an automated
+ * loop waves through.
+ */
+const cmdTick = async (argv: string[]): Promise<number> => {
+  const plan = readPlan();
+  const item = plan.due[0];
+
+  if (!item) {
+    for (const b of plan.blocked) console.log(`waiting: ${b.personaId} ${b.reason}`);
+    console.log('Nothing due.');
+    return 0;
+  }
+
+  const persona = loadPersona(item.personaId);
+  const cadence = loadSchedule().shows[item.personaId]!;
+  console.log(`${item.personaId}: ${item.reason}`);
+
+  if (flag(argv, 'dry-run')) {
+    console.log(`Would make one ${item.kind}. Nothing spent.`);
+    return 0;
+  }
+
+  let result: { run: Run; gate: GateReport };
+  let topic: string | null = null;
+
+  if (item.kind === 'short') {
+    const parent = Run.open(item.parentRunId!);
+    const formatId = persona.formats.find((f) => loadFormat(f).kind === 'short');
+    if (!formatId) {
+      console.error(`${persona.name} has no short format but its cadence asks for shorts.`);
+      return 1;
+    }
+    result = await runShort({ parent, formatId }, buildDeps());
+  } else {
+    // Taken BEFORE the run. A topic consumed only on success means a failing
+    // show retries the same subject on every tick forever, spending money each
+    // time. Consumed up front, a failure costs that topic, which is visible in
+    // the diff and recoverable by putting it back.
+    topic = persona.fiction ? persona.thesis.trim().replace(/\s+/g, ' ') : takeTopic(persona.id);
+    if (!topic) {
+      console.error(`${persona.name} has nothing queued to cover.`);
+      return 1;
+    }
+
+    const formatId = persona.formats.find((f) => loadFormat(f).kind !== 'short') ?? persona.formats[0]!;
+    const run = Run.create({ personaId: persona.id, formatId, topic });
+    console.log(`run ${run.id}: ${topic}`);
+
+    try {
+      result = persona.fiction
+        ? await runFiction({ run }, buildDeps())
+        : await runEpisode(run, buildDeps());
+    } catch (err) {
+      if (!persona.fiction && topic) returnTopic(persona.id, topic);
+      throw err;
+    }
+  }
+
+  console.log('');
+  console.log(formatGateReport(result.gate));
+  console.log('');
+  console.log(`spent ${result.run.manifest.spentPence.toFixed(1)}p`);
+
+  if (!result.gate.passed) {
+    if (!persona.fiction && topic) {
+      // A gate failure is usually the topic, not the pipeline. Putting it back
+      // lets a person look at it rather than losing it to a silent retry.
+      returnTopic(persona.id, topic);
+      console.log(`Put "${topic}" back on the queue.`);
+    }
+    return 2;
+  }
+
+  if (!cadence.autoPublish) {
+    console.log(`\nRead it:     npm run foundry -- script --run ${result.run.id}`);
+    console.log(`Then publish: npm run foundry -- publish --run ${result.run.id}`);
+    return 0;
+  }
+
+  if (result.gate.needsHumanReview) {
+    // autoPublish does not override this, and that is the point of having both.
+    console.log('\nThis one needs a person before it goes out:');
+    for (const r of result.gate.humanReviewReasons) console.log(`  - ${r}`);
+    console.log(`  npm run foundry -- publish --run ${result.run.id} --yes`);
+    return 0;
+  }
+
+  console.log('\nauto-publishing (the show opted in and the gate passed clean)');
+  return await cmdPublish(['--run', result.run.id, '--yes']);
+};
+
 const cmdStatus = (argv: string[]): number => {
   const run = openRun(argv);
   const m = run.manifest;
@@ -733,6 +907,10 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdSeries(rest);
       case 'series-setup':
         return await cmdSeriesSetup(rest);
+      case 'due':
+        return cmdDue();
+      case 'tick':
+        return await cmdTick(rest);
       case 'resume':
         return await finishRun(openRun(rest), rest);
       case 'status':

@@ -1,0 +1,26 @@
+# What The Teardown covers next, in order, taken from the top.
+#
+# THIS IS THE EDITORIAL SURFACE OF THE WHOLE STUDIO. It is the one place a
+# person decides what the shows are about, and it is deliberately dumb: a list,
+# consumed from the front. Generating topics automatically was considered and
+# rejected, because a studio that picks its own subjects converges on whatever
+# the model finds most available - which is the same handful of stories
+# everyone else is already telling, told slightly worse.
+#
+# WHAT MAKES A GOOD ENTRY HERE. One specific case that left documents behind.
+# Not a theme ("corporate fraud"), not a question ("why do startups fail"), and
+# not something whose whole story lives in other people's commentary. The show's
+# entire claim on a listener is that it went and read the primary source, so a
+# topic with no primary source to read is a topic this show cannot do.
+#
+# A topic is taken BEFORE the run and put back if the run fails, so a failure
+# is visible in this file's diff rather than as a loop retrying the same subject
+# and spending money on every tick.
+
+topics:
+  - The 2024 Post Office Horizon compensation scheme and why the first two
+    redress routes paid out so differently
+  - What the Baltimore Key Bridge incident reports say about the harbour pilot
+    exemption, as distinct from what the coverage said
+  - The FCA's 2024 motor finance commission review, and what the disclosure
+    rules actually required before it
