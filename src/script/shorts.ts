@@ -112,7 +112,8 @@ export const selectShortAngle = async (
           `VERIFIED FACTS:\n${facts}`,
         ].join('\n\n'),
         temperature: 0.6,
-        maxTokens: 800,
+        effort: 'medium',
+        maxTokens: 2000,
       },
       onCost
     )

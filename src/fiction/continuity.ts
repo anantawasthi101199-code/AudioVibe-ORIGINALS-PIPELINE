@@ -356,7 +356,8 @@ export const extractEstablished = async (
           fullText(script),
         ].join('\n\n'),
         temperature: 0.2,
-        maxTokens: 2000,
+        effort: 'low',
+        maxTokens: 4000,
       },
       onCost
     )

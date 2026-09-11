@@ -46,6 +46,26 @@ export interface LlmRequest {
    * prefix nothing will read again.
    */
   cacheSystem?: boolean;
+  /**
+   * How much work the model should put into the whole response.
+   *
+   * THE CONTROL THAT REPLACED TEMPERATURE, and the one that actually matters
+   * for cost. On Claude 5 the default is `high`, thinking is on, and THINKING
+   * TOKENS COUNT AGAINST max_tokens - so a mechanical task with a modest
+   * ceiling can spend its entire budget reasoning and return a response with no
+   * text block in it at all. That is not a hypothetical: claim extraction did
+   * exactly that, and the error was "returned no text", which explains nothing.
+   *
+   * Lower effort is therefore both cheaper AND more reliable for structured
+   * work. Thinking is billed at output rates, so an extractor that reasons at
+   * length about a JSON shape is paying premium rates to be less likely to
+   * finish.
+   *
+   * Reach for `low` when the shape of the answer is already decided and the
+   * model is filling it in; `medium` when it is making a judgement; leave it
+   * unset for anything genuinely hard.
+   */
+  effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 }
 
 export interface LlmResponse {
@@ -144,6 +164,29 @@ const TEMPERATURE_MODELS = [
 
 export const supportsTemperature = (model: string): boolean =>
   TEMPERATURE_MODELS.some((m) => model.startsWith(m));
+
+/**
+ * Models that accept `output_config.effort`.
+ *
+ * AN ALLOW-LIST AGAIN, and this one has a real gap in the middle of it:
+ * claude-haiku-4-5 does NOT support effort, while both its neighbours in this
+ * pipeline do. The clerk runs on Haiku, so a blanket "send effort to Anthropic
+ * models" would 400 every counter-evidence query - which is a stage that fails
+ * quietly into an empty query list rather than loudly.
+ */
+const EFFORT_MODELS = [
+  'claude-opus-5',
+  'claude-sonnet-5',
+  'claude-fable-5',
+  'claude-mythos-5',
+  'claude-opus-4-8',
+  'claude-opus-4-7',
+  'claude-opus-4-6',
+  'claude-sonnet-4-6',
+];
+
+export const supportsEffort = (model: string): boolean =>
+  EFFORT_MODELS.some((m) => model.startsWith(m));
 
 /**
  * The temperature to send, or undefined to omit the field entirely.
@@ -278,6 +321,12 @@ export class AnthropicClient implements LlmClient {
         ...(temperatureFor(this.model, req.temperature) !== undefined
           ? { temperature: temperatureFor(this.model, req.temperature) }
           : {}),
+        // Omitted where unsupported, for the same reason as temperature: the
+        // cost of leaving it out is a default, the cost of sending it wrongly
+        // is a dead run.
+        ...(req.effort && supportsEffort(this.model)
+          ? { output_config: { effort: req.effort } }
+          : {}),
         system,
         messages: [{ role: 'user', content: req.prompt }],
       }
@@ -294,7 +343,15 @@ export class AnthropicClient implements LlmClient {
       .map((b) => b.text ?? '')
       .join('');
 
-    if (!text.trim()) {
+    // NO TEXT IS ALMOST ALWAYS THINKING THAT ATE THE BUDGET. Thinking tokens
+    // count against max_tokens, so a model that reasons up to the ceiling
+    // returns content blocks with no text block among them. Reported as
+    // truncation rather than thrown, so completeJson retries with more room -
+    // "returned no text" explained nothing and killed a run that a second
+    // attempt would have completed.
+    const ranOut = body.stop_reason === 'max_tokens';
+
+    if (!text.trim() && !ranOut) {
       throw new LlmError('anthropic', res.status, 'returned no text');
     }
 
@@ -320,7 +377,7 @@ export class AnthropicClient implements LlmClient {
       ),
       model: this.model,
       cachedInputTokens: cacheRead,
-      truncated: body.stop_reason === 'max_tokens',
+      truncated: ranOut,
     };
   }
 }
@@ -416,6 +473,10 @@ export const completeJson = async <T>(
 
   if (!first.truncated) return extractJson<T>(first.text);
 
+  // A truncated reply with no text at all is thinking that consumed the whole
+  // ceiling. Doubling the room is the right response to both shapes.
+
+
   const ceiling = (req.maxTokens ?? 4096) * 2;
   const second = await client.complete({ ...req, maxTokens: ceiling });
   onCost?.(second.costPence);
@@ -424,8 +485,9 @@ export const completeJson = async <T>(
     throw new LlmError(
       client.name,
       null,
-      `ran out of room twice, at ${ceiling} tokens. The response is not too small a ` +
-        `ceiling, it is too large a request - narrow what the prompt asks for.`
+      `ran out of room twice, at ${ceiling} tokens${second.text.trim() ? '' : ' with no text at all'}. ` +
+        `Either the request asks for too much, or the model is thinking past its ceiling - ` +
+        `lower the effort on this call, or narrow what the prompt asks for.`
     );
   }
 

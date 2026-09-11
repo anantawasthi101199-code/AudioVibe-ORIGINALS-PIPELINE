@@ -1,3 +1,4 @@
+import type { LlmRequest } from '../client';
 import {
   AnthropicClient,
   completeJson,
@@ -7,6 +8,7 @@ import {
   LlmError,
   OpenAiClient,
   priceFor,
+  supportsEffort,
   supportsTemperature,
 } from '../client';
 
@@ -170,6 +172,83 @@ describe('temperature', () => {
     expect(supportsTemperature('claude-haiku-4-5-20251001')).toBe(true);
     expect(supportsTemperature('claude-sonnet-5')).toBe(false);
     expect(supportsTemperature('gpt-5-mini')).toBe(false);
+  });
+});
+
+describe('effort', () => {
+  // THE BUG THAT KILLED THE THIRD REAL EPISODE, with the least helpful error
+  // message of the three: "returned no text". On Claude 5 the default effort is
+  // high, thinking is on, and thinking tokens count against max_tokens - so a
+  // mechanical task with a modest ceiling can spend its whole budget reasoning
+  // and come back with content blocks and no text block among them.
+
+  const reply = (over: Record<string, unknown> = {}) => ({
+    content: [{ type: 'text', text: 'hi' }],
+    usage: { input_tokens: 1, output_tokens: 1 },
+    ...over,
+  });
+
+  const sentBy = async (model: string, effort?: LlmRequest['effort']) => {
+    let sent: Record<string, unknown> = {};
+    const client = new AnthropicClient(model, 'k', async (_u, _h, b) => {
+      sent = b as Record<string, unknown>;
+      return { status: 200, json: reply(), text: '' };
+    });
+    await client.complete({ system: 'S', prompt: 'P', effort });
+    return sent;
+  };
+
+  it('sends output_config on a model that supports it', async () => {
+    expect(await sentBy('claude-sonnet-5', 'low')).toMatchObject({
+      output_config: { effort: 'low' },
+    });
+  });
+
+  it('OMITS it on claude-haiku-4-5, which does not take the parameter', async () => {
+    // The gap in the middle of the allow-list. The clerk runs on Haiku, so a
+    // blanket "send effort to Anthropic models" would 400 every
+    // counter-evidence query - a stage that fails quietly into an empty query
+    // list rather than loudly.
+    expect(await sentBy('claude-haiku-4-5', 'low')).not.toHaveProperty('output_config');
+  });
+
+  it('omits it on an unknown model', async () => {
+    expect(await sentBy('claude-something-7', 'low')).not.toHaveProperty('output_config');
+  });
+
+  it('sends nothing when no effort was asked for', async () => {
+    expect(await sentBy('claude-sonnet-5')).not.toHaveProperty('output_config');
+  });
+
+  it('treats a reply with NO TEXT as truncation, not as a failure', async () => {
+    // So completeJson retries with more room. Thrown, it killed a run that a
+    // second attempt would have finished.
+    const client = new AnthropicClient('claude-sonnet-5', 'k', async () => ({
+      status: 200,
+      json: reply({ content: [{ type: 'thinking', thinking: '...' }], stop_reason: 'max_tokens' }),
+      text: '',
+    }));
+
+    const res = await client.complete({ system: 'S', prompt: 'P' });
+    expect(res.truncated).toBe(true);
+    expect(res.text).toBe('');
+  });
+
+  it('still fails loudly on an empty reply that did NOT run out of room', async () => {
+    // That one is a real anomaly and more room would not fix it.
+    const client = new AnthropicClient('claude-sonnet-5', 'k', async () => ({
+      status: 200,
+      json: reply({ content: [], stop_reason: 'end_turn' }),
+      text: '',
+    }));
+
+    await expect(client.complete({ system: 'S', prompt: 'P' })).rejects.toThrow(/no text/);
+  });
+
+  it('knows which models take an effort', () => {
+    expect(supportsEffort('claude-sonnet-5')).toBe(true);
+    expect(supportsEffort('claude-opus-5')).toBe(true);
+    expect(supportsEffort('claude-haiku-4-5')).toBe(false);
   });
 });
 

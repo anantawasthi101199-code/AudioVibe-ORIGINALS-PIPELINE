@@ -202,7 +202,10 @@ export const writeHook = async (
         `Write ${count} different openings. Vary the angle of attack, not just the wording.`,
       ].join('\n\n'),
       temperature: 1,
-      maxTokens: 3000,
+      // Medium: sixteen openings is generation, not reasoning, and the
+      // deterministic scorer does the judging afterwards.
+      effort: 'medium',
+      maxTokens: 6000,
     },
     onCost
   );

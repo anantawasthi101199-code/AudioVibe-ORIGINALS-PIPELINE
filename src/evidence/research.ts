@@ -106,7 +106,10 @@ export const buildBrief = async (
           `TOPIC: ${topic}`,
         ].join('\n'),
         temperature: 0.7,
-        maxTokens: 2500,
+        // Medium: choosing an angle and writing searchable queries is a
+        // judgement, but a small one.
+        effort: 'medium',
+        maxTokens: 4000,
       },
       onCost
     )
@@ -303,7 +306,13 @@ export const extractClaims = async (
             `BEATS:\n${beats}`,
           ].join('\n\n'),
           temperature: 0.2,
-          maxTokens: 6000,
+          // Low effort: the shape of the answer is already decided and the
+          // model is filling it in. Thinking is billed at output rates, so an
+          // extractor reasoning at length about a JSON schema pays premium
+          // rates to be less likely to finish - which is exactly how this stage
+          // died, returning content blocks with no text among them.
+          effort: 'low',
+          maxTokens: 12000,
         },
         onCost
       )

@@ -343,7 +343,12 @@ export const writeBeat = async (
         // Lower on revision: the first draft wants range, a repair wants
         // precision, and a hot rewrite tends to discard the parts that worked.
         temperature: isRevision ? 0.4 : 0.85,
-        maxTokens: Math.max(1500, wordsForBeat(ctx.beat).max * 4),
+        // Medium rather than high. A beat is constrained work - the beat sheet
+        // says what it must do, the style card says how, and the critique loop
+        // catches what neither did. Thinking at length about a beat is paying
+        // output rates to re-derive constraints that are already written down.
+        effort: 'medium',
+        maxTokens: Math.max(4000, wordsForBeat(ctx.beat).max * 6),
       },
       onCost
     );
@@ -399,7 +404,8 @@ export const writeTitle = async (
         })()}`,
       ].join('\n\n'),
       temperature: 0.8,
-      maxTokens: 600,
+      effort: 'low',
+      maxTokens: 1500,
     },
     onCost
   );
