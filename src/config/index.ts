@@ -78,9 +78,31 @@ export const platformConfig = () => {
   };
 };
 
+/**
+ * The writer, and the single biggest cost decision in the studio.
+ *
+ * SONNET BY DEFAULT, AND THAT IS A DELIBERATE CHANGE FROM OPUS. The writing
+ * stage is more than half of what an episode costs, and almost all of that is
+ * OUTPUT tokens - the script itself, which is the same length whichever model
+ * writes it. So the only real lever on it is the price per token, and Sonnet is
+ * five times cheaper than Opus for the same twelve minutes of audio.
+ *
+ * WHY THAT IS NOT OBVIOUSLY THE WRONG TRADE. Every structural thing that makes
+ * this pipeline's prose good is OUTSIDE the model: the beat sheet, the style
+ * card scored deterministically, the per-beat critique and revision loop, the
+ * hook competition, the voice distinctness checks. A weaker model writing into
+ * that scaffolding fails the checks more often and gets rewritten more often,
+ * which costs calls rather than quality. What a stronger model buys is fewer
+ * rewrites and better lines inside the constraints - real, but not structural.
+ *
+ * SO MEASURE IT RATHER THAN ASSUMING. `foundry compare` exists for exactly this
+ * question: write the same topic twice, judge both orderings with a third
+ * model, and see whether the difference is worth five times the price. Set
+ * FOUNDRY_WRITER_MODEL=claude-opus-5 to run the other side of it.
+ */
 export const writerConfig = () => ({
   apiKey: required('ANTHROPIC_API_KEY'),
-  model: process.env.FOUNDRY_WRITER_MODEL || 'claude-opus-5',
+  model: process.env.FOUNDRY_WRITER_MODEL || 'claude-sonnet-5',
 });
 
 /**
@@ -151,6 +173,29 @@ export const clerkConfig = () => ({
  * Defaults to elevenlabs, because the safe direction for a default is the one
  * that is right at publish time. Set FOUNDRY_TTS=openai while drafting.
  */
+/**
+ * The screening verifier: a cheap first pass over the claims.
+ *
+ * Verification is thirty-odd calls asking one narrow question at temperature
+ * zero, and most claims are clean. This model answers the clean ones; anything
+ * it does not mark plainly entailed is re-asked of the real verifier, which
+ * owns every decision that matters.
+ *
+ * A SCREEN THAT CAN ONLY ESCALATE. It has no authority to block and no
+ * authority to overrule - its only power is to confirm a clean pass, so it can
+ * never be the reason something wrong was published. The residual risk is a
+ * false `entailed` standing, which is why it is the same family and the same
+ * prompt as the verifier rather than something cheaper and different.
+ *
+ * Set FOUNDRY_SCREENER_MODEL to an empty string to turn it off and send every
+ * claim straight to the strong model.
+ */
+export const screenerConfig = (): { apiKey: string; model: string } | null => {
+  const model = process.env.FOUNDRY_SCREENER_MODEL ?? 'gpt-5-mini';
+  if (!model.trim()) return null;
+  return { apiKey: required('OPENAI_API_KEY'), model: model.trim() };
+};
+
 export const ttsProvider = (): 'elevenlabs' | 'openai' => {
   const value = (process.env.FOUNDRY_TTS || 'elevenlabs').trim().toLowerCase();
   if (value !== 'elevenlabs' && value !== 'openai') {

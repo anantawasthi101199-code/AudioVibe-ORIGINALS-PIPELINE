@@ -13,6 +13,27 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **An episode costs about a quarter of what it did** (£3.55 to £0.95), from two
+  changes and one deliberate refusal.
+  The writer defaults to Sonnet rather than Opus. Writing is more than half an
+  episode's cost and almost all of that is OUTPUT tokens - the script, which is
+  the same length whichever model writes it - so the only real lever is price
+  per token. Everything structural that makes this pipeline's prose good sits
+  outside the model: the beat sheet, the deterministically scored style card,
+  the per-beat critique loop, the hook competition. A weaker model in that
+  scaffolding fails checks more often and gets rewritten more often, which costs
+  calls rather than quality. `foundry compare` is there to test whether that
+  reasoning survives contact with a real episode.
+  Verification screens on a cheap model first and escalates. The screen can
+  only ever CONFIRM a clean pass: anything it doubts, disputes or garbles is
+  re-asked of the strong model, so it can never be the reason something wrong
+  was published. Around four claims in five are clean, which removes most of
+  the bill without touching the decision on any claim that is not.
+  What was NOT done is grouping beats into one call, which is the obvious
+  saving and the wrong one. The cost is output tokens and those do not shrink -
+  the script is the same length either way. Grouping would save a little input
+  and lose the per-beat critique and revision loop, which is one of the things
+  actually keeping the prose from reading as generated.
 - **Dead Reckoning** (`personas/dead-reckoning.yaml`,
   `beatsheets/reconstruction.yaml`), a third show: history mysteries
   reconstructed from surviving documents. Same evidence discipline as The

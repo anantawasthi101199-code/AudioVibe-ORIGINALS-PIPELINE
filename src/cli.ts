@@ -16,6 +16,7 @@ import path from 'path';
 import { z } from 'zod';
 import {
   clerkConfig,
+  screenerConfig,
   episodeBudgetPence,
   platformConfig,
   openAiTtsConfig,
@@ -241,10 +242,16 @@ const buildDeps = (): PipelineDeps => {
     `  models: ${writer.model} writing, ${verifier.model} verifying, ${clerk.model} clerking`
   );
 
+  const screener = screenerConfig();
+  if (screener) {
+    console.log(`  screening: ${screener.model} first, escalating anything unclear`);
+  }
+
   return {
     writer: new AnthropicClient(writer.model, writer.apiKey),
     verifier: new OpenAiClient(verifier.model, verifier.apiKey),
     clerk: new AnthropicClient(clerk.model, clerk.apiKey),
+    screener: screener ? new OpenAiClient(screener.model, screener.apiKey) : undefined,
     search,
     tts: buildTts(),
     fetchDeps: { httpGet: get },
@@ -372,8 +379,19 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
     ['claims', write(writer.model, 1, 30_000, 6_000), '1 call over the whole corpus'],
     [
       'verification',
-      write(verifier.model, estimatedClaims, 1_400, 200),
-      `~${estimatedClaims} calls, one per claim`,
+      (() => {
+        const screener = screenerConfig();
+        if (!screener) return write(verifier.model, estimatedClaims, 1_400, 200);
+        // Every claim is screened; roughly a fifth need the strong model. That
+        // fraction is a guess and the only soft number in this table.
+        return (
+          write(screener.model, estimatedClaims, 1_400, 200) +
+          write(verifier.model, Math.ceil(estimatedClaims * 0.2), 1_400, 200)
+        );
+      })(),
+      screenerConfig()
+        ? `~${estimatedClaims} screened on ${screenerConfig()!.model}, ~${Math.ceil(estimatedClaims * 0.2)} escalated`
+        : `~${estimatedClaims} calls, one per claim`,
     ],
     [
       'script',

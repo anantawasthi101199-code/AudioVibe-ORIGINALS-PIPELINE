@@ -54,6 +54,14 @@ export interface PipelineDeps {
    * reason a run does not happen - it is a cost optimisation, not a dependency.
    */
   clerk?: LlmClient;
+  /**
+   * A cheap first pass over the claims, which may only ever confirm a clean
+   * pass and must escalate everything else. See verifyAll.
+   *
+   * Optional. Without it every claim goes straight to the verifier, which is
+   * more expensive and exactly as correct.
+   */
+  screener?: LlmClient;
   search: SearchProvider;
   tts: TtsProvider;
   fetchDeps: FetchDeps;
@@ -179,7 +187,14 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   } else {
     stage = 'verification';
     log('verification: checking every claim against its quote');
-    verification = await verifyAll(claims, corpus.sources, deps.verifier, spend);
+    verification = await verifyAll(
+      claims,
+      corpus.sources,
+      deps.verifier,
+      spend,
+      deps.screener,
+      say('verification')
+    );
 
     log('verification: searching for evidence against contested claims');
     // The clerk writes these queries. It is generating search strings from a
