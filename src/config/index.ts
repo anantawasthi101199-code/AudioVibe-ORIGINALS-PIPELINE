@@ -127,6 +127,44 @@ export const clerkConfig = () => ({
   model: process.env.FOUNDRY_CLERK_MODEL || 'claude-haiku-4-5',
 });
 
+/**
+ * Which voice engine renders the audio.
+ *
+ * TWO PROVIDERS, FOR TWO DIFFERENT JOBS, and the distinction is worth being
+ * explicit about because it is easy to read as "the cheap one and the good one"
+ * and that is not quite it.
+ *
+ *   openai     drafting. Around fifteen pence an episode against roughly two
+ *              pounds, so iterating on the WRITING is effectively free - and
+ *              the writing is what decides whether a show is any good. No
+ *              dialogue endpoint, so an exchange is rendered a turn at a time
+ *              and joined, which sounds spliced.
+ *   elevenlabs publishing. Renders the whole exchange in one request, which is
+ *              what produces overlap, interruption and a reply that starts
+ *              before the last line has landed.
+ *
+ * The seam between spliced turns is the single most reliable tell of generated
+ * audio, and no amount of voice quality hides it. So drafting on openai costs
+ * nothing and tells you almost everything; publishing on it would give away the
+ * one thing the whole two-host design exists to avoid.
+ *
+ * Defaults to elevenlabs, because the safe direction for a default is the one
+ * that is right at publish time. Set FOUNDRY_TTS=openai while drafting.
+ */
+export const ttsProvider = (): 'elevenlabs' | 'openai' => {
+  const value = (process.env.FOUNDRY_TTS || 'elevenlabs').trim().toLowerCase();
+  if (value !== 'elevenlabs' && value !== 'openai') {
+    throw new ConfigError('FOUNDRY_TTS', `must be "elevenlabs" or "openai", not "${value}"`);
+  }
+  return value;
+};
+
 export const ttsConfig = () => ({
   apiKey: required('ELEVENLABS_API_KEY'),
+});
+
+export const openAiTtsConfig = () => ({
+  // The same key the verifier uses. One account, two products.
+  apiKey: required('OPENAI_API_KEY'),
+  model: process.env.FOUNDRY_TTS_MODEL || 'gpt-4o-mini-tts',
 });

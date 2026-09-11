@@ -13,6 +13,12 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A cheap drafting voice** (`src/render/openaiTts.ts`, `FOUNDRY_TTS=openai`).
+  Around fifteen pence an episode against roughly two pounds, so iterating on
+  the writing costs nothing - and the writing is what decides whether a show is
+  any good. It has no dialogue endpoint and deliberately does not fake one:
+  splicing turns while reporting the result as dialogue would hide the seam that
+  is the whole reason to pay for the real engine at publish time.
 - **A publishing cadence** (`schedule.yaml`, `topics/`, `src/schedule/`,
   `foundry due`, `foundry tick`). What is due is computed from what was actually
   published rather than from a timer's own memory, which is the whole difference
@@ -182,6 +188,12 @@ Building toward the first publishable episode.
   defaults; and it had no series route, so a serial's episodes could only land
   loose. All three land at the last command of a pipeline that has already spent
   money.
+- **A two-host beat was rendered entirely in one voice** whenever the provider
+  had no dialogue endpoint. Every turn was joined into a single request in the
+  FIRST speaker's voice, so the show came out as one person reading both parts -
+  silently, with no error and a perfectly valid file. Turns are now rendered
+  individually and joined, and the run artifact says `turnwise` so a spliced
+  take is never mistaken for a real exchange.
 - **A long title ran off the edge of its cover.** It typechecked, it rendered,
   and it would have published. Found by rendering one and looking at it.
 

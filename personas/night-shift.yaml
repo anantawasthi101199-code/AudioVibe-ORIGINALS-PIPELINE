@@ -66,6 +66,11 @@ hosts:
     voice:
       provider: elevenlabs
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      # Used only when FOUNDRY_TTS=openai, for hearing a script before any
+      # Eleven credits are bought. A different provider means a different set
+      # of voice ids, so both live here rather than one being swapped in and
+      # out of the field above and eventually left wrong.
+      draftVoiceId: sage
       settings:
         stability: 0.55
         similarity_boost: 0.75
@@ -92,6 +97,11 @@ hosts:
     voice:
       provider: elevenlabs
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
+      # Used only when FOUNDRY_TTS=openai, for hearing a script before any
+      # Eleven credits are bought. A different provider means a different set
+      # of voice ids, so both live here rather than one being swapped in and
+      # out of the field above and eventually left wrong.
+      draftVoiceId: ash
       settings:
         stability: 0.4
         similarity_boost: 0.75

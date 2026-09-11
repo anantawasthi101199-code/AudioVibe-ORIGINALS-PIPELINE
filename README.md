@@ -140,6 +140,32 @@ through.
 Every stage is resumable. A failed gate does not mean re-rendering: fix what it
 found and `npm run foundry -- resume`.
 
+## Drafting cheaply
+
+```bash
+FOUNDRY_TTS=openai npm run foundry -- make --show the-teardown --topic "..."
+```
+
+About fifteen pence an episode against roughly two pounds, so iterating costs
+nothing. Use it while you are still finding out whether a show works, because
+what you are judging at that stage is the WRITING, and that is audible through
+any competent voice.
+
+What it cannot tell you is whether the show sounds like two people. OpenAI has
+no dialogue endpoint, so an exchange is rendered a turn at a time and joined -
+and joined turns have a uniform prosody and a clean gap exactly where a real
+person would have come in early or trailed off. That gap is the single most
+reliable tell of generated audio, and no voice quality hides it.
+
+So draft here and publish on ElevenLabs, which renders the whole exchange in one
+request. Every run records which engine produced every take, so an episode
+drafted cheaply and re-rendered later is traceable rather than mystery audio.
+
+Each host holds two voice ids: `voiceId` for the real engine and `draftVoiceId`
+for this one. Both live in the persona rather than one being edited back and
+forth, because editing it back and forth is a thing somebody eventually forgets
+to undo.
+
 ## Two kinds of show
 
 **Factual shows** answer to documents. Nothing is said that cannot be bound to a

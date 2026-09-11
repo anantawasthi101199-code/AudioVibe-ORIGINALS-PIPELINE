@@ -124,6 +124,19 @@ export type StyleCard = z.infer<typeof styleCardSchema>;
 export const voiceSchema = z.object({
   provider: z.enum(['elevenlabs', 'inworld', 'gemini', 'chatterbox']),
   voiceId: z.string().min(1),
+  /**
+   * The voice to use when drafting on a cheaper provider.
+   *
+   * A VOICE ID BELONGS TO A PROVIDER. "onyx" means nothing to ElevenLabs and a
+   * twenty-character Eleven id means nothing to OpenAI, so switching engines
+   * means switching ids. Holding both is the alternative to editing `voiceId`
+   * back and forth, which is a thing somebody eventually forgets to undo - and
+   * the way you find out is a published episode in the wrong voice.
+   *
+   * Optional. A show without one simply cannot be drafted on the cheap engine,
+   * which is a clear failure rather than a silent substitution.
+   */
+  draftVoiceId: z.string().min(1).optional(),
   /** Provider-specific knobs, kept opaque so adding a provider is not a schema change. */
   settings: z.record(z.union([z.string(), z.number(), z.boolean()])).default({}),
 });

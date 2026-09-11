@@ -18,6 +18,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
+import type { SynthesisResult } from './tts';
 
 export const beatTimingSchema = z.object({
   id: z.string(),
@@ -190,6 +191,16 @@ export interface RenderableBeat {
  * endpoint, because a worse-sounding episode beats no episode - but the
  * fallback is a real downgrade and the log says so.
  */
+/**
+ * The gap between two turns of the same exchange.
+ *
+ * Much shorter than the gap between beats, because a reply lands on the
+ * previous line far faster than a new section starts - a beat-length pause
+ * between every turn is what makes spliced dialogue sound like two people in
+ * separate rooms.
+ */
+export const TURN_GAP_S = 0.22;
+
 export const renderScript = async (
   input: {
     beats: RenderableBeat[];
@@ -229,30 +240,86 @@ export const renderScript = async (
     const speakers = new Set(beat.turns.map((t) => t.speaker));
     const multiVoice = speakers.size > 1;
 
-    const result =
-      multiVoice && tts.synthesiseDialogue
-        ? await tts.synthesiseDialogue({
-            lines: beat.turns.map((t) => ({
-              text: forSpeech(t.text),
-              voice: voiceFor(t.speaker),
-            })),
-          })
-        : await tts.synthesise({
-            // Single speaker, or a provider with no dialogue endpoint. Turns are
-            // joined with a blank line so the engine at least breathes between
-            // them.
-            text: forSpeech(beat.turns.map((t) => t.text).join('\n\n')),
-            voice: voiceFor(beat.turns[0]!.speaker),
-          });
+    // THE BEAT'S FILE, DECIDED BEFORE ANYTHING IS RENDERED, because one of the
+    // three paths below produces it directly rather than returning bytes for
+    // the caller to write.
+    const file = input.beatPathFor(`${String(i + 1).padStart(2, '0')}-${beat.beatId}.mp3`);
+
+    // THREE PATHS, AND THE MIDDLE ONE EXISTS BECAUSE THE OLD FALLBACK WAS
+    // WRONG. It joined every turn of a multi-speaker beat into one request in
+    // the FIRST speaker's voice, so a two-host show came out as one person
+    // reading both parts - silently, with no error and a perfectly valid file.
+    // A show whose entire design rests on two people wanting different things
+    // cannot be judged from that.
+    let result: SynthesisResult;
+
+    if (multiVoice && tts.synthesiseDialogue) {
+      // The provider owns turn-taking. Overlap, interruption and a reply that
+      // starts before the last line has landed all come from here.
+      result = await tts.synthesiseDialogue({
+        lines: beat.turns.map((t) => ({
+          text: forSpeech(t.text),
+          voice: voiceFor(t.speaker),
+        })),
+      });
+      write(file, result.audio);
+    } else if (multiVoice) {
+      // A provider with no dialogue endpoint. Each turn in its own voice, then
+      // joined. The hosts stay two people; what is lost is the seam between
+      // them, which is audible, and is why this is a drafting path rather than
+      // a publishing one.
+      //
+      // This branch writes `file` ITSELF, by concatenating straight into it.
+      // Reading it back to hand bytes to a caller that would only write them
+      // out again was the first shape, and it is wrong twice: it reads a file
+      // for no reason, and it breaks the moment concatenation is stubbed.
+      const turnFiles: string[] = [];
+      let turnCost = 0;
+      let turnProvider = '';
+      let turnModel = '';
+      const turnVoices = new Set<string>();
+
+      for (const [t, turn] of beat.turns.entries()) {
+        const one = await tts.synthesise({
+          text: forSpeech(turn.text),
+          voice: voiceFor(turn.speaker),
+        });
+        const turnFile = input.beatPathFor(
+          `${String(i + 1).padStart(2, '0')}-${beat.beatId}-t${String(t + 1).padStart(2, '0')}.mp3`
+        );
+        write(turnFile, one.audio);
+        turnFiles.push(turnFile);
+
+        turnCost += one.costPence;
+        turnProvider = one.provider;
+        turnModel = one.model;
+        turnVoices.add(one.voiceId);
+      }
+
+      await join(turnFiles, file, TURN_GAP_S);
+
+      result = {
+        audio: Buffer.alloc(0),
+        // Named for what it actually is, so a run artifact never claims a
+        // provider rendered an exchange it only rendered the pieces of.
+        provider: `${turnProvider}+turnwise`,
+        model: turnModel,
+        voiceId: [...turnVoices].join('+'),
+        costPence: turnCost,
+      };
+    } else {
+      result = await tts.synthesise({
+        text: forSpeech(beat.turns.map((t) => t.text).join('\n\n')),
+        voice: voiceFor(beat.turns[0]!.speaker),
+      });
+      write(file, result.audio);
+    }
 
     provider = result.provider;
     model = result.model;
     for (const id of result.voiceId.split('+')) voiceIds.add(id);
     costPence += result.costPence;
     onCost?.(result.costPence);
-
-    const file = input.beatPathFor(`${String(i + 1).padStart(2, '0')}-${beat.beatId}.mp3`);
-    write(file, result.audio);
     files.push(file);
 
     const durationS = await probe(file);

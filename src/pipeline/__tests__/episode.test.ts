@@ -241,11 +241,34 @@ describe('runEpisode', () => {
   });
 
   it('renders one file per beat, so the beat map is real', async () => {
+    // Asserted on the BEAT MAP, which is the thing the name is about. It used
+    // to assert on the TTS call count, which is a different fact and stopped
+    // being one-per-beat the moment a provider without a dialogue endpoint
+    // started rendering a two-host beat a turn at a time - correctly.
+    renderStubs();
+    const run = makeRun();
+    await runEpisode(run, buildDeps());
+
+    const render = run.readArtifact('render', assemble.renderResultSchema);
+    expect(render.beatMap).toHaveLength(BEATS.length);
+    expect(render.beatMap.map((b) => b.id)).toEqual(BEATS);
+  });
+
+  it('gives each host their OWN voice even without a dialogue endpoint', async () => {
+    // The fake provider has no synthesiseDialogue, which is the case this
+    // guards: the old fallback rendered every turn of a two-host beat in the
+    // FIRST speaker's voice, so the show came out as one person reading both
+    // parts - silently, with no error and a perfectly valid file.
     renderStubs();
     const run = makeRun();
     const deps = buildDeps();
     await runEpisode(run, deps);
-    expect((deps.tts as TtsProvider & { calls: number }).calls).toBe(BEATS.length);
+
+    // Two turns per beat, each its own request.
+    expect((deps.tts as TtsProvider & { calls: number }).calls).toBe(BEATS.length * 2);
+
+    const render = run.readArtifact('render', assemble.renderResultSchema);
+    expect(render.provider).toContain('turnwise');
   });
 
   it('ABANDONS a run whose corpus is too thin, rather than writing from three documents', async () => {

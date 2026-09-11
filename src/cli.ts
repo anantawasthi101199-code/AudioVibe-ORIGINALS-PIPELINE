@@ -18,7 +18,9 @@ import {
   clerkConfig,
   episodeBudgetPence,
   platformConfig,
+  openAiTtsConfig,
   ttsConfig,
+  ttsProvider,
   verifierConfig,
   writerConfig,
 } from './config';
@@ -35,7 +37,8 @@ import {
   retrievalKeys,
 } from './evidence/providers';
 import { HttpResponse } from './evidence/fetch';
-import { ElevenLabsTts } from './render/tts';
+import { ElevenLabsTts, nodePostBinary } from './render/tts';
+import { OpenAiTts } from './render/openaiTts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
 import { runShort } from './pipeline/short';
 import { runFiction } from './pipeline/fiction';
@@ -162,6 +165,24 @@ const httpGet = async (url: string): Promise<HttpResponse> => {
   }
 };
 
+/**
+ * The voice engine, chosen by FOUNDRY_TTS.
+ *
+ * Loud about which one it picked, because the two sound different enough that
+ * listening to a draft and forgetting which engine made it is a real way to
+ * reach a wrong conclusion about the writing.
+ */
+const buildTts = () => {
+  if (ttsProvider() === 'openai') {
+    const cfg = openAiTtsConfig();
+    console.log(`  voices: ${cfg.model} (drafting - turns are spliced, not a real exchange)`);
+    return new OpenAiTts(cfg.apiKey, { post: nodePostBinary, model: cfg.model });
+  }
+
+  console.log('  voices: elevenlabs (the exchange is rendered in one request)');
+  return new ElevenLabsTts(ttsConfig().apiKey);
+};
+
 const buildDeps = (): PipelineDeps => {
   const writer = writerConfig();
   const verifier = verifierConfig();
@@ -199,7 +220,7 @@ const buildDeps = (): PipelineDeps => {
     verifier: new OpenAiClient(verifier.model, verifier.apiKey),
     clerk: new AnthropicClient(clerk.model, clerk.apiKey),
     search,
-    tts: new ElevenLabsTts(ttsConfig().apiKey),
+    tts: buildTts(),
     fetchDeps: { httpGet: get },
     priorTexts: priorEpisodeTexts(),
     log: (m) => console.log(`  ${m}`),
