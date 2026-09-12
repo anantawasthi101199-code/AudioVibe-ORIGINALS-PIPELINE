@@ -1,0 +1,159 @@
+# One myth, told in full, with the record of it woven through.
+#
+# WHY A MYTH DOES NOT FIT THE TOLD-STORY SHEET. That sheet is built for a crime
+# or a disaster: ordinary people, then the first thing that goes wrong, then it
+# gets worse, then the accounting. A myth has none of that shape. Nothing "goes
+# wrong" in the Descent of Inanna - a goddess decides to visit the underworld
+# and is required to give up one thing at each of seven gates, and that is the
+# story working exactly as intended by everyone in it.
+#
+# What a myth has instead is a WORLD with rules, and a story that only means
+# anything once the rules are known. A listener who does not know that Xibalba's
+# lords cheat at the ballgame, or that a Sumerian underworld charges an entry
+# toll in clothing, cannot follow what happens next - and no amount of good
+# prose rescues that, because the problem is missing knowledge rather than
+# missing craft.
+#
+# So the world gets its own beat, before the story, and it is a big one. That is
+# the single biggest structural difference from every other sheet here.
+#
+# THE PROVENANCE IS WOVEN, NOT BOLTED ON. This show's whole claim is that the
+# story told is the one somebody actually wrote down, so where it came from is
+# not a preamble to get through - it is information that lands hardest at the
+# moment it bites:
+#
+#   "...and here the oldest manuscript stops. What happens next survives only
+#    in a version a monk copied four hundred years later, and he was not a
+#    neutral party."
+#
+# Said at the start, that is bibliography. Said at the point where the text runs
+# out, it is the most interesting sentence in the episode. So no beat is set
+# aside for it, and two beats are required to carry it where it belongs.
+#
+# SIX BEATS, for the reason every sheet here has six: each boundary is a seam
+# between two separately written calls, and every fault found so far has been at
+# a join or caused by a check that could only see one beat.
+
+id: myth-told
+name: Myth, told
+kind: long
+intent: >
+  One myth from one culture, told in full and in order to somebody who has never
+  heard of it, with what is actually known about where it comes from surfacing
+  at the points in the telling where it changes what you are hearing.
+
+targetSeconds: [840, 1140]
+
+serialised: false
+
+loops:
+  - id: the_story
+    question: What happens in this story, and where does it come from?
+
+beats:
+  - id: cold_open
+    type: cold_open
+    seconds: [40, 70]
+    function: >
+      One moment from the middle of the myth, told as a scene. Something
+      happening to somebody, in a place.
+    opens: [the_story]
+    constraints:
+      - One moment, not a summary. Do not explain it yet.
+      - "No greeting, no music cue, no naming the show."
+    minClaims: 1
+
+  - id: orientation
+    type: orientation
+    seconds: [60, 95]
+    function: >
+      What this story is, whose it is, and roughly how old. Plainly, as if to
+      somebody who asked.
+    constraints:
+      - "Name it: the story, the culture, and the text it survives in."
+      - >
+        Say how old it is in a way a person can hold. "Older than the Iliad" is
+        worth more than a date, and a date on its own is worth almost nothing.
+      - Talk to the listener here if you want to. This is the one beat that may.
+      - No suspense. This beat trades mystery for trust and that is the trade.
+    minClaims: 2
+
+  - id: world
+    type: stakes
+    seconds: [200, 270]
+    function: >
+      The world this story happens in, as the people who told it understood it.
+      The rules that make everything after this make sense.
+    constraints:
+      - >
+        THE RULES COME FIRST AND THEY ARE THE POINT OF THIS BEAT. Who the gods
+        are and what they want, what the dead are owed, what a name or a gift or
+        a debt does in this world. A listener who does not know the rules hears
+        the story as a sequence of arbitrary events, and that is not a writing
+        failure, it is missing knowledge.
+      - >
+        Explain them the way the tellers believed them, without stopping to say
+        whether they are true. A myth explained from outside stops being a story
+        and becomes a lecture about somebody else's mistake.
+      - Name the people and powers here, before they act in the next beat.
+      - Concrete. What somebody in that world would actually do, and when.
+    minClaims: 5
+
+  - id: story
+    type: escalation
+    seconds: [260, 340]
+    function: >
+      The myth itself, from the beginning, in the order it happens, at length.
+    constraints:
+      - Chronological, at a pace that lets each thing land before the next.
+      - Tell it as a story, not as a summary of a story. Scenes, not a synopsis.
+      - Do not explain the meaning as you go. The story carries it.
+      - >
+        WHERE THE TEXT ITSELF MATTERS, SAY SO HERE rather than saving it. A gap
+        in the manuscript, a line nobody can translate, a detail only one
+        version has - these belong at the moment they bite, and they are usually
+        the most interesting sentence in the beat.
+    minClaims: 7
+
+  - id: ending
+    type: payoff
+    seconds: [180, 250]
+    function: >
+      How it ends, what that ending meant to the people who told it, and where
+      the surviving versions do not agree.
+    closes: [the_story]
+    constraints:
+      - Finish the story first. The ending is a scene, not a conclusion.
+      - >
+        Then say what it meant to them - what it explained, what it warned, what
+        it justified. Still from inside: what THEY took from it.
+      - >
+        WHERE THE VERSIONS DISAGREE, SAY SO PLAINLY AND SAY WHO SAYS WHAT. Most
+        myths survive in more than one telling and the tellings contradict each
+        other, which is information rather than an embarrassment. Name the
+        variant, name where it comes from, and do not pretend one is settled
+        when it is not.
+      - Be exactly as certain as the sources are and no more.
+      - No moral of your own. What it meant to them is the ending.
+    minClaims: 6
+
+  - id: close
+    type: outro
+    seconds: [40, 70]
+    function: >
+      One last thing worth knowing, and stop.
+    constraints:
+      - "One thing, not a summary, and not something the episode has said."
+      - "No sign-off, no call to action, no naming the show, no next-time."
+    minClaims: 1
+
+# Opens on a scene, drops through the orientation because that is where the
+# listener decides to stay, and then climbs steadily. The `world` beat sits low
+# on purpose: it is explanation, and explanation that pretends to be exciting is
+# the thing this network keeps having to cut out. It earns its place by making
+# the next two beats legible, not by being thrilling.
+#
+# The peak is the story rather than the ending, which is the opposite of the
+# crime sheet and is right for a myth: a myth's ending is usually quiet, and
+# often sad, and the tension has already done its work by then.
+tensionCurve: [0.7, 0.4, 0.5, 1.0, 0.85, 0.45]

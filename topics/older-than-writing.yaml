@@ -1,0 +1,87 @@
+# What Older Than Writing tells next, in order, taken from the top.
+#
+# WHAT MAKES A GOOD ENTRY HERE, and it is a stricter test than it looks, because
+# this show is on the FACTUAL lane. The story is told freely, but every
+# assertion binds to a quote from a text that can actually be fetched. So:
+#
+#   1. THERE IS A TEXT, ONLINE, IN ENGLISH. A translation on Sacred Texts, the
+#      Oxford ETCSL, Project Gutenberg or a university corpus. Without one the
+#      episode cannot be made at all - the extractor has nothing to bind to and
+#      the run abandons at the corpus stage.
+#   2. THE STORY HAS A SEQUENCE. Something happens, then something else, and
+#      the order matters. A pantheon is a subject, not a story; "a goddess
+#      goes down through seven gates and is charged a toll at each one" is a
+#      story.
+#   3. THE WORLD NEEDS EXPLAINING. This show's third beat is the rules of the
+#      world, and a myth that works fine without them is a myth that does not
+#      need this show.
+#   4. THE VERSIONS DISAGREE, or the manuscript has a hole in it, or the
+#      collector changed something. This is what the `ending` beat is for, and
+#      a story with one settled text gives it nothing to do.
+#   5. LESSER KNOWN, at least outside its own culture. Not a test of obscurity
+#      for its own sake - a story everybody already knows leaves the `world`
+#      beat with nothing to establish.
+#
+# NOT ON THIS LIST, deliberately: anything from a living tradition that is
+# closed, initiatory or not told outside the community. Availability in a
+# colonial-era translation is not the same as permission, and the show's taboo
+# about living traditions applies to what it chooses as well as how it tells it.
+
+topics:
+  # ETCSL at Oxford has the full composite text in translation, line-numbered,
+  # plus the variant tablets - which is close to a perfect source for this show.
+  # The seven gates give the middle beat a spine, and Inanna's substitute at the
+  # end is where the versions get complicated.
+  - The Descent of Inanna to the underworld, from the Sumerian tablets - the
+    seven gates, what she is required to give up at each one, and the argument
+    about who she sends to take her place
+
+  # The Sampo is the best possible subject for a show that says plainly when
+  # nobody knows something: it is the object the whole epic turns on and no two
+  # scholars agree what it is. Kirby's 1907 translation is on Gutenberg, and
+  # Lonnrot's 1835 and 1849 versions genuinely differ.
+  - The Sampo in the Kalevala - a thing forged, fought over and broken, that
+    nobody has ever been able to say what it actually was, and how Lonnrot's
+    first version of the story differs from his second
+
+  # The manuscript story here is as good as the myth: one copy, made by a priest
+  # in Guatemala who transcribed and translated it side by side, and the
+  # original he worked from is gone.
+  - The Hero Twins and the lords of Xibalba, from the Popol Vuh - a ballgame
+    played against the dead, and the single eighteenth-century manuscript that
+    is the only reason any of it survives
+
+  # Lady Charlotte Guest's translation is on Sacred Texts. The talking head that
+  # keeps company for eighty years is the kind of detail this show exists for,
+  # and the Welsh manuscripts differ on the ending.
+  - Branwen daughter of Llyr, from the Mabinogion - a starling carrying a
+    message across the Irish Sea, a cauldron that returns the dead without their
+    voices, and a severed head that stays good company for eighty years
+
+  # A frame story where the frame is the point, and Burton's 1870 translation is
+  # public domain. Each riddle ends with a question the king must answer, and
+  # answering costs him the corpse.
+  - The Vetala and King Vikramaditya, from the Baital Pachisi - a corpse-spirit
+    carried nightly on a king's back, twenty-five stories, and a rule that makes
+    the king lose every time he knows the answer
+
+  # Afanasyev's collection is translated and online. The nested hiding place is
+  # the most-copied idea in folklore and almost nobody knows where it comes from.
+  - Koschei the Deathless, from the Russian tales Afanasyev collected - a man
+    who keeps his death outside his body, in a needle, in an egg, in a duck, in
+    a hare, in a chest, under an oak, on an island
+
+  # Chamberlain's 1882 Kojiki translation is on Sacred Texts. Eight heads, eight
+  # vats of sake, and a sword found in the tail that becomes one of the three
+  # imperial regalia - so the myth is still doing work in the present.
+  - Yamata no Orochi, from the Kojiki - an eight-headed serpent, a plan built
+    entirely on sake, and the sword found in its tail that Japan still counts
+    among its imperial regalia
+
+  # Told with a painted scroll, overnight, by bhopas who light the panels with a
+  # lamp as they sing. The performance IS the text, which gives the provenance
+  # thread something unusual to say. John D. Smith's edition and his field notes
+  # are the scholarly anchor.
+  - The epic of Pabuji, from Rajasthan - a story that is not read but sung
+    across a painted cloth by lamplight over a whole night, and what happens to
+    a story when the scroll is the book
