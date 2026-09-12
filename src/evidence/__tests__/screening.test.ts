@@ -148,6 +148,73 @@ describe('screened verification', () => {
     expect(report.blocking[0]!.reason).toMatch(/not in the corpus/);
   });
 
+  describe('checkpointing', () => {
+    // Verification is the slowest stage whenever a rate limit is tight:
+    // thirty-five claims at three requests a minute is twelve minutes, and a
+    // real run lost all of it to a 429 on the first claim.
+
+    it('saves after every claim', async () => {
+      const saves: number[] = [];
+      await verifyAll(claims, [source()], judge('verifier', 'entailed'), undefined, undefined,
+        undefined, { done: {}, save: (d) => saves.push(Object.keys(d).length) });
+
+      expect(saves).toEqual([1, 2, 3]);
+    });
+
+    it('RESUMES rather than re-checking what was already settled', async () => {
+      const verifier = judge('verifier', 'entailed');
+      await verifyAll(claims, [source()], verifier, undefined, undefined, undefined, {
+        done: {
+          c1: { claimId: 'c1', verdict: 'entailed', reason: 'settled earlier' },
+          c2: { claimId: 'c2', verdict: 'entailed', reason: 'settled earlier' },
+        },
+        save: () => undefined,
+      });
+
+      expect(verifier.calls).toBe(1);
+    });
+
+    it('keeps a BLOCKING verdict reached by an earlier attempt', async () => {
+      // Resuming must not quietly downgrade a claim that already failed.
+      const report = await verifyAll(
+        claims,
+        [source()],
+        judge('verifier', 'entailed'),
+        undefined,
+        undefined,
+        undefined,
+        {
+          done: { c2: { claimId: 'c2', verdict: 'contradicted', reason: 'settled earlier' } },
+          save: () => undefined,
+        }
+      );
+
+      expect(report.blocking.map((b) => b.claimId)).toEqual(['c2']);
+    });
+
+    it('is keyed by CLAIM ID, not by position', async () => {
+      // Unlike beats and chunks, where position is identity. A verdict belongs
+      // to a specific claim, and claims can be re-extracted in a different
+      // order - a verdict recovered onto the wrong claim would be worse than
+      // none, because it would look like a real one.
+      const verifier = judge('verifier', 'entailed');
+      await verifyAll(
+        [claim('c3'), claim('c1'), claim('c2')],
+        [source()],
+        verifier,
+        undefined,
+        undefined,
+        undefined,
+        {
+          done: { c1: { claimId: 'c1', verdict: 'entailed', reason: 'earlier' } },
+          save: () => undefined,
+        }
+      );
+
+      expect(verifier.calls).toBe(2);
+    });
+  });
+
   it('counts every call it makes toward the budget', async () => {
     // Both passes cost money, and a budget that only counted the expensive one
     // would let a screened run overspend without the ceiling noticing.

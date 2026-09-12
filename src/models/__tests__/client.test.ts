@@ -1,4 +1,5 @@
 import type { LlmRequest } from '../client';
+import { setSleep } from '../retry';
 import {
   AnthropicClient,
   completeJson,
@@ -13,6 +14,13 @@ import {
 } from '../client';
 
 const post = (status: number, json: unknown, text = '') => async () => ({ status, json, text });
+
+// Retries are real, so a 429 or a 502 in any test below would wait out an
+// actual backoff. Replaced wholesale rather than per test, because the
+// alternative is quietly rewriting tests to use statuses that are never
+// retried - which tests the wrong thing to keep the suite fast.
+beforeAll(() => setSleep(async () => undefined));
+afterAll(() => setSleep(null));
 
 describe('pricing', () => {
   it('prices a known model', () => {

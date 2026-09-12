@@ -35,7 +35,7 @@ import {
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
 import { Source } from '../evidence/source';
-import { verificationReportSchema, verifyAll } from '../evidence/verify';
+import { verificationReportSchema, verificationSchema, verifyAll } from '../evidence/verify';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
@@ -209,7 +209,15 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       deps.verifier,
       spend,
       deps.screener,
-      say('verification')
+      say('verification'),
+      // Per-claim, because this is the slowest stage whenever a rate limit is
+      // tight: thirty-five claims at three requests a minute is twelve
+      // minutes, and losing that to a failure on the last one is the most
+      // expensive kind of waste in the pipeline.
+      {
+        done: run.readCheckpoint('verification', z.record(verificationSchema)) ?? {},
+        save: (d) => run.writeCheckpoint('verification', d),
+      }
     );
 
     log('verification: searching for evidence against contested claims');
@@ -227,6 +235,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
     run.writeArtifact('verification', { verification, counterEvidence });
     run.markComplete('verification');
+    run.clearCheckpoint('verification');
     log(
       `verification: ${verification.blocking.length} blocking, ` +
         `${counterEvidence.filter((c) => c.sources.length).length} contested claims with counter-sources`

@@ -15,6 +15,8 @@
  * roughly right and visible beats being exactly right and absent.
  */
 
+import { withRetry } from "./retry";
+
 export interface LlmRequest {
   system: string;
   prompt: string;
@@ -65,7 +67,7 @@ export interface LlmRequest {
    * model is filling it in; `medium` when it is making a judgement; leave it
    * unset for anything genuinely hard.
    */
-  effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+  effort?: "low" | "medium" | "high" | "xhigh" | "max";
 }
 
 export interface LlmResponse {
@@ -109,11 +111,11 @@ export interface LlmClient {
  * lets a run spend without limit and nobody does.
  */
 const PRICE_PENCE_PER_MTOK: Record<string, [number, number]> = {
-  'claude-opus-5': [1200, 6000],
-  'claude-sonnet-5': [240, 1200],
-  'claude-haiku-4-5': [80, 320],
-  'gpt-5': [1000, 4000],
-  'gpt-5-mini': [200, 800],
+  "claude-opus-5": [1200, 6000],
+  "claude-sonnet-5": [240, 1200],
+  "claude-haiku-4-5": [80, 320],
+  "gpt-5": [1000, 4000],
+  "gpt-5-mini": [200, 800],
 };
 
 const FALLBACK_PRICE: [number, number] = [1200, 6000];
@@ -122,13 +124,21 @@ export const priceFor = (model: string): [number, number] => {
   const exact = PRICE_PENCE_PER_MTOK[model];
   if (exact) return exact;
   // Match on prefix so a dated model id (claude-opus-5-20260101) still prices.
-  const prefix = Object.keys(PRICE_PENCE_PER_MTOK).find((k) => model.startsWith(k));
+  const prefix = Object.keys(PRICE_PENCE_PER_MTOK).find((k) =>
+    model.startsWith(k),
+  );
   return prefix ? PRICE_PENCE_PER_MTOK[prefix]! : FALLBACK_PRICE;
 };
 
-export const costPenceFor = (model: string, inputTokens: number, outputTokens: number): number => {
+export const costPenceFor = (
+  model: string,
+  inputTokens: number,
+  outputTokens: number,
+): number => {
   const [inPrice, outPrice] = priceFor(model);
-  return (inputTokens / 1_000_000) * inPrice + (outputTokens / 1_000_000) * outPrice;
+  return (
+    (inputTokens / 1_000_000) * inPrice + (outputTokens / 1_000_000) * outPrice
+  );
 };
 
 /**
@@ -155,11 +165,11 @@ export const costPenceFor = (model: string, inputTokens: number, outputTokens: n
  * real work.
  */
 const TEMPERATURE_MODELS = [
-  'claude-haiku-4-5',
-  'claude-3-5',
-  'claude-3-7',
-  'gpt-4',
-  'gpt-4o',
+  "claude-haiku-4-5",
+  "claude-3-5",
+  "claude-3-7",
+  "gpt-4",
+  "gpt-4o",
 ];
 
 export const supportsTemperature = (model: string): boolean =>
@@ -175,14 +185,14 @@ export const supportsTemperature = (model: string): boolean =>
  * quietly into an empty query list rather than loudly.
  */
 const EFFORT_MODELS = [
-  'claude-opus-5',
-  'claude-sonnet-5',
-  'claude-fable-5',
-  'claude-mythos-5',
-  'claude-opus-4-8',
-  'claude-opus-4-7',
-  'claude-opus-4-6',
-  'claude-sonnet-4-6',
+  "claude-opus-5",
+  "claude-sonnet-5",
+  "claude-fable-5",
+  "claude-mythos-5",
+  "claude-opus-4-8",
+  "claude-opus-4-7",
+  "claude-opus-4-6",
+  "claude-sonnet-4-6",
 ];
 
 export const supportsEffort = (model: string): boolean =>
@@ -203,7 +213,7 @@ export const supportsEffort = (model: string): boolean =>
  * reason as everything else here: omitting it costs a default, sending it to a
  * model that does not take it kills the run.
  */
-const REASONING_MODELS = ['gpt-5', 'o1', 'o3', 'o4'];
+const REASONING_MODELS = ["gpt-5", "o1", "o3", "o4"];
 
 export const supportsReasoningEffort = (model: string): boolean =>
   REASONING_MODELS.some((m) => model.startsWith(m));
@@ -215,7 +225,10 @@ export const supportsReasoningEffort = (model: string): boolean =>
  * default, so asking for it explicitly buys nothing and is one more thing that
  * can be rejected later. Omitted is the safer shape.
  */
-export const temperatureFor = (model: string, wanted?: number): number | undefined => {
+export const temperatureFor = (
+  model: string,
+  wanted?: number,
+): number | undefined => {
   if (wanted === undefined) return undefined;
   if (!supportsTemperature(model)) return undefined;
   return wanted;
@@ -225,10 +238,10 @@ export class LlmError extends Error {
   constructor(
     readonly provider: string,
     readonly status: number | null,
-    message: string
+    message: string,
   ) {
     super(`${provider}: ${message}`);
-    this.name = 'LlmError';
+    this.name = "LlmError";
   }
 }
 
@@ -236,13 +249,19 @@ export class LlmError extends Error {
 export type HttpPost = (
   url: string,
   headers: Record<string, string>,
-  body: unknown
-) => Promise<{ status: number; json: unknown; text: string }>;
+  body: unknown,
+) => Promise<{
+  status: number;
+  json: unknown;
+  text: string;
+  /** Response headers, lower-cased. Read for `retry-after`. */
+  headers?: Record<string, string>;
+}>;
 
 export const nodeHttpPost: HttpPost = async (url, headers, body) => {
   const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', ...headers },
+    method: "POST",
+    headers: { "content-type": "application/json", ...headers },
     body: JSON.stringify(body),
   });
   const text = await res.text();
@@ -253,7 +272,31 @@ export const nodeHttpPost: HttpPost = async (url, headers, body) => {
     // Left null; callers report the raw text, which is what an HTML error page
     // from a proxy looks like and is worth seeing verbatim.
   }
-  return { status: res.status, json, text };
+
+  const responseHeaders: Record<string, string> = {};
+  res.headers.forEach((value, key) => {
+    responseHeaders[key.toLowerCase()] = value;
+  });
+
+  return { status: res.status, json, text, headers: responseHeaders };
+};
+
+/**
+ * Told when a call is waiting out a rate limit.
+ *
+ * Module-level rather than threaded through every client, because the thing
+ * that needs to know is the terminal and the thing that knows is four layers
+ * down. A run that goes silent for two minutes is indistinguishable from a
+ * hang, and the reasonable response to a hang is to kill it - which on a rate
+ * limit is the one wrong move, since the thing it was waiting for was about to
+ * arrive.
+ */
+let waitReporter: ((message: string) => void) | null = null;
+
+export const onProviderWait = (
+  report: ((message: string) => void) | null,
+): void => {
+  waitReporter = report;
 };
 
 // ---------------------------------------------------------------------------
@@ -301,7 +344,7 @@ export const costPenceWithCache = (
   inputTokens: number,
   outputTokens: number,
   cacheWriteTokens: number,
-  cacheReadTokens: number
+  cacheReadTokens: number,
 ): number => {
   const [inPrice, outPrice] = priceFor(model);
   const perInputToken = inPrice / 1_000_000;
@@ -314,12 +357,12 @@ export const costPenceWithCache = (
 };
 
 export class AnthropicClient implements LlmClient {
-  readonly name = 'anthropic';
+  readonly name = "anthropic";
 
   constructor(
     readonly model: string,
     private apiKey: string,
-    private post: HttpPost = nodeHttpPost
+    private post: HttpPost = nodeHttpPost,
   ) {}
 
   async complete(req: LlmRequest): Promise<LlmResponse> {
@@ -328,40 +371,54 @@ export class AnthropicClient implements LlmClient {
     // Uncached calls keep sending the string, so the wire format only changes
     // where caching is actually asked for.
     const system = req.cacheSystem
-      ? [{ type: 'text', text: req.system, cache_control: { type: 'ephemeral' } }]
+      ? [
+          {
+            type: "text",
+            text: req.system,
+            cache_control: { type: "ephemeral" },
+          },
+        ]
       : req.system;
 
-    const res = await this.post(
-      'https://api.anthropic.com/v1/messages',
-      { 'x-api-key': this.apiKey, 'anthropic-version': '2023-06-01' },
-      {
-        model: this.model,
-        max_tokens: req.maxTokens ?? 4096,
-        // Omitted entirely rather than defaulted. See temperatureFor.
-        ...(temperatureFor(this.model, req.temperature) !== undefined
-          ? { temperature: temperatureFor(this.model, req.temperature) }
-          : {}),
-        // Omitted where unsupported, for the same reason as temperature: the
-        // cost of leaving it out is a default, the cost of sending it wrongly
-        // is a dead run.
-        ...(req.effort && supportsEffort(this.model)
-          ? { output_config: { effort: req.effort } }
-          : {}),
-        system,
-        messages: [{ role: 'user', content: req.prompt }],
-      }
+    const res = await withRetry(
+      () =>
+        this.post(
+          "https://api.anthropic.com/v1/messages",
+          { "x-api-key": this.apiKey, "anthropic-version": "2023-06-01" },
+          {
+            model: this.model,
+            max_tokens: req.maxTokens ?? 4096,
+            // Omitted entirely rather than defaulted. See temperatureFor.
+            ...(temperatureFor(this.model, req.temperature) !== undefined
+              ? { temperature: temperatureFor(this.model, req.temperature) }
+              : {}),
+            // Omitted where unsupported, for the same reason as temperature: the
+            // cost of leaving it out is a default, the cost of sending it wrongly
+            // is a dead run.
+            ...(req.effort && supportsEffort(this.model)
+              ? { output_config: { effort: req.effort } }
+              : {}),
+            system,
+            messages: [{ role: "user", content: req.prompt }],
+          },
+        ),
+      { onWait: (m) => waitReporter?.(`anthropic: ${m}`) },
     );
 
     if (res.status < 200 || res.status >= 300) {
       const body = res.json as AnthropicShape | null;
-      throw new LlmError('anthropic', res.status, body?.error?.message ?? res.text.slice(0, 300));
+      throw new LlmError(
+        "anthropic",
+        res.status,
+        body?.error?.message ?? res.text.slice(0, 300),
+      );
     }
 
     const body = res.json as AnthropicShape;
     const text = (body.content ?? [])
-      .filter((b) => b.type === 'text')
-      .map((b) => b.text ?? '')
-      .join('');
+      .filter((b) => b.type === "text")
+      .map((b) => b.text ?? "")
+      .join("");
 
     // NO TEXT IS ALMOST ALWAYS THINKING THAT ATE THE BUDGET. Thinking tokens
     // count against max_tokens, so a model that reasons up to the ceiling
@@ -369,10 +426,10 @@ export class AnthropicClient implements LlmClient {
     // truncation rather than thrown, so completeJson retries with more room -
     // "returned no text" explained nothing and killed a run that a second
     // attempt would have completed.
-    const ranOut = body.stop_reason === 'max_tokens';
+    const ranOut = body.stop_reason === "max_tokens";
 
     if (!text.trim() && !ranOut) {
-      throw new LlmError('anthropic', res.status, 'returned no text');
+      throw new LlmError("anthropic", res.status, "returned no text");
     }
 
     const inputTokens = body.usage?.input_tokens ?? 0;
@@ -393,7 +450,7 @@ export class AnthropicClient implements LlmClient {
         inputTokens,
         outputTokens,
         cacheWrite,
-        cacheRead
+        cacheRead,
       ),
       model: this.model,
       cachedInputTokens: cacheRead,
@@ -413,57 +470,72 @@ interface OpenAiShape {
 }
 
 export class OpenAiClient implements LlmClient {
-  readonly name = 'openai';
+  readonly name = "openai";
 
   constructor(
     readonly model: string,
     private apiKey: string,
-    private post: HttpPost = nodeHttpPost
+    private post: HttpPost = nodeHttpPost,
   ) {}
 
   async complete(req: LlmRequest): Promise<LlmResponse> {
-    const res = await this.post(
-      'https://api.openai.com/v1/chat/completions',
-      { authorization: `Bearer ${this.apiKey}` },
-      {
-        model: this.model,
-        max_completion_tokens: req.maxTokens ?? 4096,
-        // Same rule as the Anthropic client, for the same reason: the gpt-5
-        // family rejects a non-default temperature too, and the verifier asks
-        // for zero on every single claim.
-        ...(temperatureFor(this.model, req.temperature) !== undefined
-          ? { temperature: temperatureFor(this.model, req.temperature) }
-          : {}),
-        // `effort` in, `reasoning_effort` out. Same intent, provider's name.
-        // `high` is dropped rather than sent, because it is the default and
-        // sending a default buys nothing while being one more value that can
-        // be rejected later.
-        ...(req.effort && req.effort !== 'high' && supportsReasoningEffort(this.model)
-          ? { reasoning_effort: req.effort === 'max' || req.effort === 'xhigh' ? 'high' : req.effort }
-          : {}),
-        messages: [
-          { role: 'system', content: req.system },
-          { role: 'user', content: req.prompt },
-        ],
-      }
+    const res = await withRetry(
+      () =>
+        this.post(
+          "https://api.openai.com/v1/chat/completions",
+          { authorization: `Bearer ${this.apiKey}` },
+          {
+            model: this.model,
+            max_completion_tokens: req.maxTokens ?? 4096,
+            // Same rule as the Anthropic client, for the same reason: the gpt-5
+            // family rejects a non-default temperature too, and the verifier asks
+            // for zero on every single claim.
+            ...(temperatureFor(this.model, req.temperature) !== undefined
+              ? { temperature: temperatureFor(this.model, req.temperature) }
+              : {}),
+            // `effort` in, `reasoning_effort` out. Same intent, provider's name.
+            // `high` is dropped rather than sent, because it is the default and
+            // sending a default buys nothing while being one more value that can
+            // be rejected later.
+            ...(req.effort &&
+            req.effort !== "high" &&
+            supportsReasoningEffort(this.model)
+              ? {
+                  reasoning_effort:
+                    req.effort === "max" || req.effort === "xhigh"
+                      ? "high"
+                      : req.effort,
+                }
+              : {}),
+            messages: [
+              { role: "system", content: req.system },
+              { role: "user", content: req.prompt },
+            ],
+          },
+        ),
+      { onWait: (m) => waitReporter?.(`openai: ${m}`) },
     );
 
     if (res.status < 200 || res.status >= 300) {
       const body = res.json as OpenAiShape | null;
-      throw new LlmError('openai', res.status, body?.error?.message ?? res.text.slice(0, 300));
+      throw new LlmError(
+        "openai",
+        res.status,
+        body?.error?.message ?? res.text.slice(0, 300),
+      );
     }
 
     const body = res.json as OpenAiShape;
-    const text = body.choices?.[0]?.message?.content ?? '';
+    const text = body.choices?.[0]?.message?.content ?? "";
 
     // EMPTY CONTENT IS ALMOST ALWAYS REASONING THAT ATE THE BUDGET, the exact
     // mirror of the Claude case. Reported as truncation rather than thrown, so
     // callers can give it more room - "returned no text" explained nothing and
     // killed a run on the first of thirty-five claims.
-    const ranOut = body.choices?.[0]?.finish_reason === 'length';
+    const ranOut = body.choices?.[0]?.finish_reason === "length";
 
     if (!text.trim() && !ranOut) {
-      throw new LlmError('openai', res.status, 'returned no text');
+      throw new LlmError("openai", res.status, "returned no text");
     }
 
     const inputTokens = body.usage?.prompt_tokens ?? 0;
@@ -500,7 +572,7 @@ export class OpenAiClient implements LlmClient {
 export const completeJson = async <T>(
   client: LlmClient,
   req: LlmRequest,
-  onCost?: (pence: number) => void
+  onCost?: (pence: number) => void,
 ): Promise<T> => {
   const first = await client.complete(req);
   onCost?.(first.costPence);
@@ -510,7 +582,6 @@ export const completeJson = async <T>(
   // A truncated reply with no text at all is thinking that consumed the whole
   // ceiling. Doubling the room is the right response to both shapes.
 
-
   const ceiling = (req.maxTokens ?? 4096) * 2;
   const second = await client.complete({ ...req, maxTokens: ceiling });
   onCost?.(second.costPence);
@@ -519,9 +590,9 @@ export const completeJson = async <T>(
     throw new LlmError(
       client.name,
       null,
-      `ran out of room twice, at ${ceiling} tokens${second.text.trim() ? '' : ' with no text at all'}. ` +
+      `ran out of room twice, at ${ceiling} tokens${second.text.trim() ? "" : " with no text at all"}. ` +
         `Either the request asks for too much, or the model is thinking past its ceiling - ` +
-        `lower the effort on this call, or narrow what the prompt asks for.`
+        `lower the effort on this call, or narrow what the prompt asks for.`,
     );
   }
 
@@ -541,10 +612,11 @@ export const extractJson = <T>(text: string): T => {
   const candidate = (fenced?.[1] ?? text).trim();
 
   const start = candidate.search(/[[{]/);
-  if (start < 0) throw new Error(`no JSON found in model output: ${text.slice(0, 200)}`);
+  if (start < 0)
+    throw new Error(`no JSON found in model output: ${text.slice(0, 200)}`);
 
   const opener = candidate[start];
-  const closer = opener === '{' ? '}' : ']';
+  const closer = opener === "{" ? "}" : "]";
   const end = candidate.lastIndexOf(closer);
   if (end <= start) {
     // Almost always truncation rather than a malformed reply, so the message
@@ -552,7 +624,7 @@ export const extractJson = <T>(text: string): T => {
     // retried with more room by the time this is reached.
     throw new Error(
       `unterminated JSON in model output - the reply was almost certainly cut off ` +
-        `by the token ceiling rather than malformed. Ends: ...${text.slice(-120)}`
+        `by the token ceiling rather than malformed. Ends: ...${text.slice(-120)}`,
     );
   }
 

@@ -187,20 +187,49 @@ export const verifyClaim = async (
  * saving here and it is the wrong one: it trades correctness for a saving the
  * screen already delivers without touching isolation.
  */
+export interface VerificationCheckpoint {
+  /** Verdicts a previous attempt already reached, keyed by claim id. */
+  done: Record<string, Verification>;
+  save: (done: Record<string, Verification>) => void;
+}
+
 export const verifyAll = async (
   claims: Claim[],
   sources: Source[],
   verifier: LlmClient,
   onCost?: (pence: number) => void,
   screener?: LlmClient,
-  onProgress?: (message: string) => void
+  onProgress?: (message: string) => void,
+  checkpoint?: VerificationCheckpoint
 ): Promise<VerificationReport> => {
   const byId = new Map(sources.map((s) => [s.id, s]));
   const results: Verification[] = [];
   let costPence = 0;
   let escalated = 0;
 
+  // KEYED BY CLAIM ID, NOT BY POSITION, unlike the beat and chunk checkpoints.
+  // Those resume an ordered sequence where position IS identity; a verdict
+  // belongs to a specific claim, and claims can be re-extracted in a different
+  // order. A verdict recovered onto the wrong claim would be worse than no
+  // verdict at all, because it would look like a real one.
+  const done: Record<string, Verification> = { ...(checkpoint?.done ?? {}) };
+  const resumed = claims.filter((c) => done[c.id]).length;
+
+  if (resumed) {
+    onProgress?.(`resuming with ${resumed} claim(s) already checked`);
+  }
+
   for (const [i, claim] of claims.entries()) {
+    // Already settled by an earlier attempt. Verification is the slowest stage
+    // on a constrained rate limit - thirty-five claims at three requests a
+    // minute is twelve minutes - so re-checking what was already checked is
+    // the most expensive kind of waste there is here.
+    const already = done[claim.id];
+    if (already) {
+      results.push(already);
+      continue;
+    }
+
     const source = byId.get(claim.sourceId);
     if (!source) {
       results.push({
@@ -236,6 +265,10 @@ export const verifyAll = async (
     }
 
     results.push(verification);
+    done[claim.id] = verification;
+    // Saved after every claim. At three requests a minute, a claim is twenty
+    // seconds of wall clock as well as a call.
+    checkpoint?.save(done);
 
     if ((i + 1) % 10 === 0) {
       onProgress?.(`checked ${i + 1}/${claims.length} claims (${escalated} needed a second look)`);

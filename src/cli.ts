@@ -39,6 +39,7 @@ import {
 } from './evidence/providers';
 import { HttpResponse } from './evidence/fetch';
 import { ElevenLabsTts, nodePostBinary } from './render/tts';
+import { onProviderWait } from './models/client';
 import { OpenAiTts } from './render/openaiTts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
 import { runShort } from './pipeline/short';
@@ -211,6 +212,12 @@ const buildTts = () => {
 };
 
 const buildDeps = (): PipelineDeps => {
+  // A rate limit is a WAIT, not a failure, and a run that goes quiet for two
+  // minutes is indistinguishable from a hang. Saying so is the difference
+  // between somebody waiting and somebody pressing Ctrl-C on a call that was
+  // about to succeed.
+  onProviderWait((message) => console.log(`  ${message}`));
+
   const writer = writerConfig();
   const verifier = verifierConfig();
   const clerk = clerkConfig();
