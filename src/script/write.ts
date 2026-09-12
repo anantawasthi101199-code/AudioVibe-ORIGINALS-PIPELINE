@@ -312,7 +312,14 @@ export const buildPrompt = (ctx: BeatContext): string => {
     ctx.beat.constraints.length
       ? `CONSTRAINTS:\n${ctx.beat.constraints.map((c) => `- ${c}`).join('\n')}`
       : '',
-    `LENGTH: ${min} to ${max} words across all turns.`,
+    // A GUIDE, SAID TO BE A GUIDE. Given as a hard target, a beat with four
+    // claims' worth of material to cover writes to the number instead of to the
+    // material, and what fills the gap is a second description of something
+    // already described.
+    `LENGTH: roughly ${min} to ${max} words, but this is a guide and not a ` +
+      `target. Say what the claims support, as fully as they support it, and ` +
+      `then stop. A short beat that says everything once is right. Never reach ` +
+      `for length.`,
     ctx.plan ?? '',
     // THE WHOLE SCRIPT SO FAR, not a sentence of it. Sent in the prompt rather
     // than the system block because it changes every beat and would invalidate
@@ -461,23 +468,27 @@ export const critiqueBeat = (
   const { violations } = checkStyle(text, persona.styleCard);
   for (const v of violations) (v.blocking ? blocking : advisory).push(v.detail);
 
-  // Length is advisory in the middle and blocking at the edges, and the LOW
-  // edge moved from 0.6 to 0.85 because at 0.6 it never fired on the thing it
-  // exists to catch. Three beats of a real episode came in at 65 to 76% of
-  // their minimum, every one of them "passing", and the episode rendered at 8
-  // minutes against a 13-17 minute format.
+  // THERE IS NO LONGER A FLOOR, and removing it is a correction rather than a
+  // relaxation. It was raised to 0.85 of the minimum one commit after an
+  // episode came in short, and the very next episode was described as "forced
+  // to be long" - which is exactly what a floor produces when a beat has said
+  // everything its claims support. A writer told to reach a word count with
+  // nothing left to say pads, and the cheapest padding is describing something
+  // it has already described.
   //
-  // The risk of tightening it is padding, and that risk is now covered from the
-  // other side: checkRepetition blocks a beat that pads by restating, so the
-  // only way to reach the floor is to say something new. If there is nothing
-  // new to say, the shortage is in the claims and the fix is more research, not
-  // more words.
+  // The listener settled it: "it should be information heavy, not repeating
+  // situation and things again and again, no need to match any length, based on
+  // the amount of information the episode length can be anything."
+  //
+  // So length follows the material. What survives is a ceiling, because a beat
+  // running half again over its slot is a beat that has started rambling, and
+  // that is a real fault rather than an arithmetic one.
   const words = text.split(/\s+/).filter(Boolean).length;
   const { min, max } = wordsForBeat(beat);
-  if (words < min * 0.85 || words > max * 1.5) {
-    blocking.push(`runs ${words} words against a target of ${min} to ${max}`);
+  if (words > max * 1.5) {
+    blocking.push(`runs ${words} words, well past the ${max} this beat has room for`);
   } else if (words < min || words > max) {
-    advisory.push(`runs ${words} words against a target of ${min} to ${max}`);
+    advisory.push(`runs ${words} words against a guide of ${min} to ${max}`);
   }
 
   return { blocking, advisory };

@@ -121,8 +121,14 @@ describe('checkRepetition', () => {
   it('does not fire on contractions, which used to look like repetition', () => {
     // Splitting on the apostrophe turns every "don't" into the token "t", and
     // then an episode of ordinary speech reports itself as repetitive.
-    const soFar = "They don't know. He doesn't know either, and they don't ask.";
-    expect(codesOf("She doesn't know what he doesn't know.", soFar)).toEqual([]);
+    //
+    // The example changed when the across-beat threshold dropped to three
+    // content words: the old one was "they don't know / she doesn't know what
+    // he doesn't know", which at three words genuinely IS a repeated phrase.
+    // A test fixture that only passed because the threshold was too loose was
+    // testing the threshold, not the contractions.
+    const soFar = "They don't know who unlocked the shutter that night.";
+    expect(codesOf("She doesn't remember the name on the lease.", soFar)).toEqual([]);
   });
 
   it('is quiet on an episode that says each thing once', () => {

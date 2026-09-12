@@ -199,13 +199,30 @@ describe('runGate', () => {
     expect(report.findings.some((f) => f.check === 'selfSimilarity')).toBe(false);
   });
 
-  it('BLOCKS an episode far outside its format length', () => {
-    expect(runGate(input({ durationS: 60 })).passed).toBe(false);
-    expect(runGate(input({ durationS: 900 })).passed).toBe(false);
+  it('REPORTS an episode far outside its format length without blocking it', () => {
+    // THIS USED TO BLOCK, and blocking it was wrong. A format's target length
+    // is a planning number - roughly what shape of story suits the show - and
+    // enforcing it on a finished episode makes the writer pad to reach it. The
+    // very next episode after the floor was tightened was described as "forced
+    // to be long", and the cheapest padding is describing something already
+    // described.
+    //
+    // Still reported, because a big miss is worth knowing about: half the
+    // target usually means thin research, double usually means rambling beats.
+    // Both worth a look, neither worth refusing to publish over.
+    for (const durationS of [60, 900]) {
+      const report = runGate(input({ durationS }));
+      expect(report.passed).toBe(true);
+      const duration = report.findings.find((f) => f.check === 'duration');
+      expect(duration).toBeDefined();
+      expect(duration!.blocking).toBe(false);
+    }
   });
 
-  it('allows modest duration drift', () => {
-    expect(runGate(input({ durationS: 290 })).passed).toBe(true);
+  it('says nothing at all about a duration inside the guide', () => {
+    expect(runGate(input({ durationS: 290 })).findings.some((f) => f.check === 'duration')).toBe(
+      false
+    );
   });
 
   it('BLOCKS a show making claims about named parties it is not cleared for', () => {
@@ -223,24 +240,42 @@ describe('runGate', () => {
   });
 
   it('reports every problem at once, so one run tells you everything', () => {
+    // Two genuinely blocking problems. This used to pair a ledger fault with a
+    // duration miss, and duration stopped blocking when length became a guide
+    // rather than a target - so the test was asserting "more than one" against
+    // a pair that had quietly become one.
     const report = runGate(
       input({
-        durationS: 60,
         ledger: ledger({ ok: false, problems: [{ claimId: 'c1', kind: 'shape', detail: 'x' }] }),
+        verification: verification({
+          blocking: [{ claimId: 'c2', verdict: 'not_entailed', reason: 'says nothing about it' }],
+        }),
       })
     );
     expect(report.findings.filter((f) => f.blocking).length).toBeGreaterThan(1);
+    expect(report.findings.filter((f) => f.blocking).map((f) => f.check)).toEqual(
+      expect.arrayContaining(['ledger', 'factuality'])
+    );
   });
 });
 
 describe('formatGateReport', () => {
+  // A SHORT DURATION USED TO BE THE HANDY WAY TO MAKE THE GATE FAIL in these
+  // formatting tests, and it stopped failing when length became a guide. Using
+  // a real blocking fault instead is also a better test: the report's job is to
+  // present findings that matter.
+  const failing = () =>
+    input({
+      ledger: ledger({ ok: false, problems: [{ claimId: 'c1', kind: 'shape', detail: 'x' }] }),
+    });
+
   it('says plainly whether it passed', () => {
     expect(formatGateReport(runGate(input()))).toContain('GATE: passed');
-    expect(formatGateReport(runGate(input({ durationS: 10 })))).toContain('GATE: FAILED');
+    expect(formatGateReport(runGate(failing()))).toContain('GATE: FAILED');
   });
 
   it('separates blocking from advisory', () => {
-    const text = formatGateReport(runGate(input({ durationS: 10 })));
+    const text = formatGateReport(runGate(failing()));
     expect(text).toContain('Blocking:');
   });
 

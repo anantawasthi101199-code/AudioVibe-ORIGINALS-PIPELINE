@@ -90,6 +90,26 @@ const NEGATION_OPENER = /^Not\b/;
 const DENIAL_CONTRAST = /^(This|That|These|Those|It|He|She|They)\s+(is|was|were|are)\s+not\b/i;
 
 /**
+ * The same tic in the form it actually takes: rule things out, then say it.
+ *
+ * "No door forced, no glass broken, no alarm tripped on the way in, just a lift
+ * shaft nobody had thought to watch." "Nothing clever, nothing out of a film,
+ * just a car somebody noticed on a camera."
+ *
+ * A listener described it exactly: "to describe something it just doesn't say
+ * it - if it needs to say situation A happened, it says not situation B, not C,
+ * but A happened, which is not how people talk."
+ *
+ * Right, and the earlier checks missed every instance because they only looked
+ * at the START of a sentence. This is the same move buried mid-sentence, and
+ * it is the commonest form by some distance: five in one episode, none of them
+ * caught. The shape is a negation, then within a short reach, a word that
+ * announces the real answer.
+ */
+const RULED_OUT_THEN_ANSWERED =
+  /\b(no|nothing|not|never|neither)\b[^.!?]{0,70}?\b(just|only|but|simply|merely|instead)\b/i;
+
+/**
  * Sentences about the telling rather than about the events.
  *
  * Phrases, not a grammar, because the failure is idiomatic. Each one here was
@@ -134,6 +154,18 @@ export const checkForward = (
         `starting with "${openers[0]!.slice(0, 60)}". Say what WAS, not what ` +
         `was not. If the point is that the fact is surprising, the fact is ` +
         `already surprising.`,
+      blocking: true,
+    });
+  }
+
+  const ruledOut = sentences.filter((s) => RULED_OUT_THEN_ANSWERED.test(s));
+  if (ruledOut.length > 0) {
+    problems.push({
+      code: 'forward:ruledOutThenAnswered',
+      detail:
+        `${ruledOut.length} sentence(s) rule things out before saying what happened: ` +
+        `"${ruledOut[0]!.slice(0, 70)}". Say what was there. A listener is not ` +
+        `holding a list of possibilities for you to cross off.`,
       blocking: true,
     });
   }
@@ -221,8 +253,22 @@ const gramsWithPositions = (words: string[], n: number): Map<string, number[]> =
  */
 const RESTATEMENT_GAP = 20;
 
-/** Long enough to be a phrase rather than a collocation. Tuned on a real episode. */
-const ACROSS_BEATS_GRAM = 4;
+/**
+ * How long a repeated phrase must be, across beats, to count.
+ *
+ * LOWERED FROM FOUR TO THREE, because four was letting through exactly what a
+ * listener complained about: "a lot of repetitive statements, describing the
+ * same things in multiple ways". At three, one real episode gives twelve hits
+ * and every one is genuine - the Hilti drill described twice in almost the same
+ * words ("built for grinding through concrete and steel", then "built to eat
+ * through concrete and steel"), "fourteen million pounds" three times, "twenty
+ * past nine" twice.
+ *
+ * Three content words is short enough to catch a paraphrase and long enough not
+ * to fire on ordinary English, with one exception that had to be handled: a
+ * NAME is three content words and is legitimately repeated. See PROPER_NOUNS.
+ */
+const ACROSS_BEATS_GRAM = 3;
 const WITHIN_BEAT_GRAM = 3;
 
 /**
@@ -240,13 +286,43 @@ const WITHIN_BEAT_GRAM = 3;
  * `storySoFar` is the whole episode up to this beat, which is what makes this
  * the only check in the file that can see outside its own beat.
  */
+/**
+ * Words the script capitalises mid-sentence, which are names.
+ *
+ * A NAME IS NOT A REPETITION. "Brian Reader" appears in the beat that
+ * introduces him and again in the beat that sentences him, and it must - the
+ * alternative is a pronoun the listener has to resolve, which is worse. So a
+ * phrase made ENTIRELY of names is exempt, while "fourteen million pounds" and
+ * "built to eat through concrete and steel" are not.
+ *
+ * Detected from the text rather than passed in, so this works for any show and
+ * for a claim about somebody the plan never listed.
+ */
+const properNouns = (text: string): Set<string> => {
+  const out = new Set<string>();
+  for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+    const words = sentence.replace(/\[[^\]]{0,40}\]/g, ' ').trim().split(/\s+/);
+    // The first word of a sentence is capitalised for being first, so it tells
+    // us nothing and is skipped.
+    for (const raw of words.slice(1)) {
+      const word = raw.replace(/[^A-Za-z0-9'’-]/g, '');
+      if (/^[A-Z][a-zA-Z0-9'’-]*$/.test(word)) {
+        out.add(word.toLowerCase().replace(/ies$/, 'y').replace(/(ed|ing|es|s)$/, ''));
+      }
+    }
+  }
+  return out;
+};
+
 export const checkRepetition = (text: string, storySoFar = ''): ForwardProblem[] => {
   const problems: ForwardProblem[] = [];
   const words = contentWords(text);
+  const names = properNouns(`${storySoFar}\n${text}`);
+  const allNames = (gram: string) => gram.split(' ').every((w) => names.has(w));
 
   const already = new Set(gramsWithPositions(contentWords(storySoFar), ACROSS_BEATS_GRAM).keys());
-  const across = [...gramsWithPositions(words, ACROSS_BEATS_GRAM).keys()].filter((g) =>
-    already.has(g)
+  const across = [...gramsWithPositions(words, ACROSS_BEATS_GRAM).keys()].filter(
+    (g) => already.has(g) && !allNames(g)
   );
   if (across.length > 0) {
     problems.push({
@@ -284,6 +360,7 @@ export const checkRepetition = (text: string, storySoFar = ''): ForwardProblem[]
 export const FORWARD_GUIDANCE = [
   'ALWAYS FORWARD. Never step back to correct an impression the listener never had. In particular: never "Not X. Y." or "This was not X, it was Y." Nobody thought X. Say what was true and let it be surprising on its own.',
   'SAY EACH THING ONCE, across the whole episode and not just this beat. A phrase, a figure or a line from a document that has been used is spent. A listener told everything twice learns that missing a sentence costs nothing, and then stops listening properly.',
+  'THAT INCLUDES DESCRIBING SOMETHING AGAIN IN DIFFERENT WORDS. If an earlier beat said the drill was built for grinding through concrete and steel, this beat says "the drill" and moves on. A second description is not a reminder, it is the episode standing still.',
   'TELL THE EVENTS, DO NOT DISCUSS THE EPISODE. No "here is where the story turns", no "you would be forgiven for thinking". Perform the turn by telling what happened next.',
   'The facts are what is interesting, so let them be. A drill bit, a price, a time on a clock, a name. If a stretch of the story is ordinary, tell it plainly and briefly and move on - an ordinary hour inflated into drama is the fastest way to lose somebody, because they can hear it.',
 ];

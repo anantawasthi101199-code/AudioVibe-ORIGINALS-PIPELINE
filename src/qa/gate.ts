@@ -314,10 +314,22 @@ export const runGate = (input: GateInput): GateReport => {
   const [lo, hi] = input.format.targetSeconds;
   const min = lo * (1 - DURATION_TOLERANCE);
   const max = hi * (1 + DURATION_TOLERANCE);
+  // ADVISORY, NOT BLOCKING. A format's target length is a planning number - it
+  // says roughly what shape of story suits the show - and it was being enforced
+  // as though a finished episode owed it something. It does not: the length
+  // that is right is the length the material supports, and an episode held to a
+  // floor pads to reach it.
+  //
+  // Still reported, because a big miss is worth knowing about. An episode at
+  // half the target usually means thin research, and one at double usually
+  // means the beats are rambling - both worth a look, neither worth refusing to
+  // publish over.
   if (input.durationS < min || input.durationS > max) {
     add(
       'duration',
-      `runs ${Math.round(input.durationS)}s, outside the ${Math.round(min)}-${Math.round(max)}s the format allows`
+      `runs ${Math.round(input.durationS)}s against a ${Math.round(min)}-${Math.round(max)}s guide. ` +
+        `Worth a look if the gap is large, but length follows the material.`,
+      false
     );
   }
 

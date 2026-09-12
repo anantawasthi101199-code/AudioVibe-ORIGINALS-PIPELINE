@@ -216,26 +216,28 @@ describe('critiqueBeat', () => {
     expect(blocking).toEqual([]);
   });
 
-  it('blocks a beat that comes in short of its length', () => {
-    // THE LOW EDGE MOVED FROM 0.6 TO 0.85 OF THE MINIMUM, and this test moved
-    // with it. At 0.6 the check never fired on the thing it exists to catch:
-    // three beats of a real episode came in at 65 to 76% of their minimum,
-    // every one of them passing, and the episode rendered at 8 minutes against
-    // a 13-17 minute format.
+  it('does NOT block a beat that comes in short', () => {
+    // THERE IS NO FLOOR ANY MORE, and its removal is a correction. It was
+    // raised to 0.85 of the minimum one commit after an episode came in short,
+    // and the very next episode was described as "forced to be long" - which is
+    // what a floor produces once a beat has said everything its claims support.
+    // The cheapest padding is describing something already described.
     //
-    // The old fear was that tightening this teaches the writer to pad. That is
-    // now covered from the other side - checkRepetition blocks a beat that pads
-    // by restating, so the only way to reach the floor is to say something new.
-    expect(
-      critiqueBeat([{ speaker: 'host', text: 'Short.' }], SOLO, FORMAT.beats[0]!).blocking.join(' ')
-    ).toMatch(/runs \d+ words/);
+    // Length follows the material now. A short beat that says everything once
+    // is the right beat.
+    const short = critiqueBeat([{ speaker: 'host', text: 'Short.' }], SOLO, FORMAT.beats[0]!);
+    expect(short.blocking.filter((b) => /runs \d+ words/.test(b))).toEqual([]);
+    expect(short.advisory.join(' ')).toMatch(/runs \d+ words/);
+  });
 
-    const { min } = wordsForBeat(FORMAT.beats[0]!);
-    const twoThirds = Array.from({ length: Math.round(min * 0.7) }, () => 'word').join(' ');
+  it('still blocks a beat that runs away with itself', () => {
+    // The ceiling survives, because a beat half again over its slot has started
+    // rambling - a real fault rather than an arithmetic one.
+    const { max } = wordsForBeat(FORMAT.beats[0]!);
+    const rambling = Array.from({ length: Math.round(max * 1.8) }, () => 'word').join(' ');
     expect(
-      critiqueBeat([{ speaker: 'host', text: twoThirds }], SOLO, FORMAT.beats[0]!)
-        .blocking.join(' ')
-    ).toMatch(/runs \d+ words/);
+      critiqueBeat([{ speaker: 'host', text: rambling }], SOLO, FORMAT.beats[0]!).blocking.join(' ')
+    ).toMatch(/well past the \d+/);
   });
 
   it('only advises a beat that is a little over', () => {
@@ -249,7 +251,7 @@ describe('critiqueBeat', () => {
       FORMAT.beats[0]!
     );
     expect(nearMiss.blocking.filter((b) => /runs \d+ words/.test(b))).toEqual([]);
-    expect(nearMiss.advisory.join(' ')).toMatch(/runs \d+ words/);
+    expect(nearMiss.advisory.join(' ')).toMatch(/runs \d+ words against a guide/);
   });
 
   it('blocks a banned phrase', () => {
@@ -316,8 +318,15 @@ describe('writeBeat', () => {
   });
 
   describe('revision', () => {
+    // THE TRIGGER USED TO BE A BEAT THAT WAS TOO SHORT, and it stopped being a
+    // failure when length became a guide rather than a target. Using the
+    // negation tic instead is a better fixture anyway: it is the fault the
+    // revision loop most often has to fix on a real run, and it is one a
+    // listener actually complained about.
     const failsThenPasses = (_r: LlmRequest, n: number) =>
-      n === 0 ? soloTurns('Too short.') : soloTurns();
+      n === 0
+        ? soloTurns(`${GOOD} Not a legend, not a heist film pitch.`)
+        : soloTurns();
 
     it('REVISES a beat that fails, and hands it the failures', async () => {
       // Writing once and judging wasted every rejection: the critique knew
@@ -328,7 +337,7 @@ describe('writeBeat', () => {
       expect(beat.revisions).toBe(1);
       expect(w.seen).toHaveLength(2);
       expect(w.seen[1]!.prompt).toMatch(/WHAT FAILED/);
-      expect(w.seen[1]!.prompt).toMatch(/runs \d+ words/);
+      expect(w.seen[1]!.prompt).toMatch(/denying something nobody said/);
     });
 
     it('hands back the previous draft as well as the failures', async () => {
@@ -337,7 +346,7 @@ describe('writeBeat', () => {
       const w = fakeWriter(failsThenPasses);
       await writeBeat(ctx(), w);
       expect(w.seen[1]!.prompt).toMatch(/YOUR PREVIOUS DRAFT/);
-      expect(w.seen[1]!.prompt).toContain('Too short.');
+      expect(w.seen[1]!.prompt).toContain('Not a legend');
     });
 
     it('revises cooler than it drafts', async () => {
@@ -350,7 +359,9 @@ describe('writeBeat', () => {
     it('gives up after a bounded number of attempts rather than burning calls', async () => {
       // Past two, the failure is usually in the claims or the beat definition
       // rather than the prose, and more calls arrive at the same place.
-      const w = fakeWriter(soloTurns('Too short.'));
+      // A draft that keeps failing the same way. "Too short" used to be the
+      // handy one and stopped being a failure when length became a guide.
+      const w = fakeWriter(soloTurns(`${GOOD} Not a legend, not a heist film pitch.`));
       const beat = await writeBeat(ctx(), w);
       expect(beat.revisions).toBe(MAX_REVISIONS);
       expect(w.seen).toHaveLength(MAX_REVISIONS + 1);
