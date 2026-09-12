@@ -50,7 +50,7 @@
 # same disagreement told as a separate movement is an essay interrupting a
 # story.
 #
-# SIX BEATS, DOWN FROM SEVEN. One fewer seam, and the beats that remain are
+# FIVE BEATS, DOWN FROM SEVEN. Two fewer seams, and the beats that remain are
 # longer, which is the direction every fault found so far points: they have all
 # been at a join, or caused by a check that could only see one beat.
 #
@@ -99,6 +99,30 @@
 # listener genuinely cannot follow names they were never given), chronology
 # survives (it is the format), and the honesty rules survive (they are the
 # show). The craft instructions are gone.
+#
+# THE COLD OPEN IS GONE, 2026-09-12, and it was a mistake carried over from
+# television. A listener said it plainly: "episodes start from nowhere... it
+# takes me 2-3 minutes to just understand what is happening... this is only
+# listening and visualizing."
+#
+# A teaser before the titles works on screen because the picture is already
+# doing the orienting: you can SEE it is a basement, at night, with four men and
+# a drill. Strip the picture out and the same forty seconds is a voice
+# describing an unexplained thing happening to unnamed people in an unnamed
+# place, and the listener spends all of it guessing instead of listening. Then
+# the orientation arrives and they have to go back and re-understand what they
+# already heard.
+#
+# So the episode now opens by saying what it is. What happened, to whom, where,
+# when, and why it is worth a quarter of an hour. Everything after that is in
+# order, and the listener is never behind.
+#
+# THIS ALSO SWITCHES OFF THE HOOK COMPETITION, which is deliberate rather than
+# incidental. writeScript only runs it when the first beat is typed `cold_open`,
+# and its prompt says "trust the listener, do not explain" and "never announce
+# the episode" - the exact instructions this change exists to reverse. Sixteen
+# opening lines were being generated and judged per episode for a beat that
+# should not exist. That cost goes too.
 
 id: told-story
 name: Told story
@@ -107,7 +131,7 @@ intent: >
   One true story, told by one person in the order it happened, to somebody who
   has never heard of it and will not be looking at anything while they listen.
 
-targetSeconds: [780, 1020]
+targetSeconds: [720, 1000]
 
 serialised: false
 
@@ -116,29 +140,36 @@ loops:
     question: What actually happened here, and how did it end?
 
 beats:
-  - id: cold_open
-    type: cold_open
-    seconds: [35, 55]
+  - id: opening
+    type: orientation
+    seconds: [95, 145]
     function: >
-      One moment from the middle of the story, told as a scene. Somewhere
-      specific, someone specific, something happening.
+      Say what this episode is about, completely, before anything happens. What
+      the thing was, who it happened to, where, when, and why it is worth
+      a quarter of an hour.
     opens: [the_question]
     constraints:
-      - One moment, not a summary of the episode. Do not explain it yet.
-      - "No greeting, no music cue, no naming the show."
-    minClaims: 2
-
-  - id: orientation
-    type: orientation
-    seconds: [60, 95]
-    function: >
-      Say what this is, when and where it happened, and what the episode is
-      going to work out. Plainly, as if to somebody who asked.
-    constraints:
-      - "Name the thing: what it is called, when it happened, where, and how big."
+      - >
+        START BY SAYING WHAT THIS IS. Not a scene, not a detail held back, not a
+        question. The first two sentences name the thing and place it: what
+        happened, and where and when. A listener has nothing to look at, so
+        anything withheld here is a listener guessing instead of listening.
+      - >
+        Then the rest of the context they need to follow what is coming: roughly
+        who is involved and how many, what kind of place this is, and what was
+        normal there before any of it started.
+      - >
+        Say how big it was in plain terms - how many people, how much money, how
+        long it took. Scale is what somebody uses to decide whether to stay.
       - "Say what the episode will settle by the end. A promise, kept later."
-      - No suspense. This beat trades mystery for trust and that is the trade.
-    minClaims: 2
+      - Talk to the listener directly here. This is the one beat that may.
+      - >
+        No suspense and no teasing. This beat trades mystery for trust, and that
+        is the trade. Nothing here is being saved for later.
+      - >
+        Warm and spoken, not a briefing. This is somebody telling you what they
+        are about to tell you, in the order a person would actually say it.
+    minClaims: 3
 
   - id: before
     type: stakes
@@ -212,4 +243,4 @@ beats:
 # curve it produced - up, then down, then up - is what a listener hears as
 # losing the thread. A told story earns its rest at the orientation and then
 # does not stop again until it is over.
-tensionCurve: [0.68, 0.40, 0.66, 0.95, 1.00, 0.45]
+tensionCurve: [0.45, 0.66, 0.95, 1.00, 0.45]

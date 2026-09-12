@@ -30,9 +30,33 @@
 # out, it is the most interesting sentence in the episode. So no beat is set
 # aside for it, and two beats are required to carry it where it belongs.
 #
-# SIX BEATS, for the reason every sheet here has six: each boundary is a seam
-# between two separately written calls, and every fault found so far has been at
-# a join or caused by a check that could only see one beat.
+# FIVE BEATS, and fewer is the direction every finding points: each boundary is
+# a seam between two separately written calls, and every fault found so far has
+# been at a join or caused by a check that could only see one beat.
+#
+# THE COLD OPEN IS GONE, 2026-09-12, and it was a mistake carried over from
+# television. A listener said it plainly: "episodes start from nowhere... it
+# takes me 2-3 minutes to just understand what is happening... this is only
+# listening and visualizing."
+#
+# A teaser before the titles works on screen because the picture is already
+# doing the orienting: you can SEE it is a basement, at night, with four men and
+# a drill. Strip the picture out and the same forty seconds is a voice
+# describing an unexplained thing happening to unnamed people in an unnamed
+# place, and the listener spends all of it guessing instead of listening. Then
+# the orientation arrives and they have to go back and re-understand what they
+# already heard.
+#
+# So the episode now opens by saying what it is. What happened, to whom, where,
+# when, and why it is worth a quarter of an hour. Everything after that is in
+# order, and the listener is never behind.
+#
+# THIS ALSO SWITCHES OFF THE HOOK COMPETITION, which is deliberate rather than
+# incidental. writeScript only runs it when the first beat is typed `cold_open`,
+# and its prompt says "trust the listener, do not explain" and "never announce
+# the episode" - the exact instructions this change exists to reverse. Sixteen
+# opening lines were being generated and judged per episode for a beat that
+# should not exist. That cost goes too.
 
 id: myth-told
 name: Myth, told
@@ -42,7 +66,7 @@ intent: >
   heard of it, with what is actually known about where it comes from surfacing
   at the points in the telling where it changes what you are hearing.
 
-targetSeconds: [840, 1140]
+targetSeconds: [780, 1080]
 
 serialised: false
 
@@ -51,32 +75,30 @@ loops:
     question: What happens in this story, and where does it come from?
 
 beats:
-  - id: cold_open
-    type: cold_open
-    seconds: [40, 70]
+  - id: opening
+    type: orientation
+    seconds: [95, 145]
     function: >
-      One moment from the middle of the myth, told as a scene. Something
-      happening to somebody, in a place.
+      Say what this story is, whose it is, how old, and what happens in it in
+      one line - before any of it is told.
     opens: [the_story]
     constraints:
-      - One moment, not a summary. Do not explain it yet.
-      - "No greeting, no music cue, no naming the show."
-    minClaims: 1
-
-  - id: orientation
-    type: orientation
-    seconds: [60, 95]
-    function: >
-      What this story is, whose it is, and roughly how old. Plainly, as if to
-      somebody who asked.
-    constraints:
-      - "Name it: the story, the culture, and the text it survives in."
+      - >
+        START BY SAYING WHAT THIS IS. The story, the culture it belongs to, and
+        the text it survives in, in the first two sentences. A listener with
+        nothing to look at and no knowledge of this pantheon cannot be dropped
+        into a scene; they will spend it guessing rather than listening.
       - >
         Say how old it is in a way a person can hold. "Older than the Iliad" is
         worth more than a date, and a date on its own is worth almost nothing.
-      - Talk to the listener here if you want to. This is the one beat that may.
-      - No suspense. This beat trades mystery for trust and that is the trade.
-    minClaims: 2
+      - >
+        Give the shape of the story in one or two sentences, before telling it.
+        Knowing where a story is going does not spoil a myth - everybody who
+        first heard these already knew how they ended - and it lets a listener
+        follow the telling instead of tracking it.
+      - Talk to the listener directly here. This is the one beat that may.
+      - No suspense and no teasing. Nothing here is being saved for later.
+    minClaims: 3
 
   - id: world
     type: stakes
@@ -156,4 +178,4 @@ beats:
 # The peak is the story rather than the ending, which is the opposite of the
 # crime sheet and is right for a myth: a myth's ending is usually quiet, and
 # often sad, and the tension has already done its work by then.
-tensionCurve: [0.7, 0.4, 0.5, 1.0, 0.85, 0.45]
+tensionCurve: [0.45, 0.5, 1.0, 0.85, 0.45]

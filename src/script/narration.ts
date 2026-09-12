@@ -68,6 +68,13 @@ export const NARRATION_GUIDANCE = [
   // its own rate. Same reason as the rhetorical question above: a device a
   // narrated show may want is not a rule every narrated show needs.
   'A narrator at one speed for fifteen minutes is the flattest thing there is.',
+  // THE LISTENER IS BUILDING A PICTURE AND HAS NOTHING TO BUILD IT FROM but
+  // what is said. That is the actual constraint of audio, and it is different
+  // from "keep it simple": a listener who cannot see the place cannot follow
+  // who moved where, and loses the scene without noticing they have lost it.
+  'LET THEM SEE IT. Before anything happens in a place, say what the place is like in a sentence or two - how big, how dark, what is underfoot, who else is there. A listener is building the picture from nothing, and they cannot follow people moving through a room they have not been given.',
+  'Give size and distance by comparison, never by number alone. "A hundred and seventy-five feet down" means little; "as far down as a fifteen-storey building" can be seen. Do both if the exact figure matters.',
+  'Say where people are in relation to each other and to the thing that matters. Who is nearest the door, what is between them and the way out, what they can and cannot see from where they are standing.',
   'Chronological. Say when things happened as a person says it - "that March", "two weeks later", "by the summer".',
   'When the record does not say, say so plainly. "Nobody wrote that down" is more interesting than a guess and it is the show\'s whole credibility.',
 ];

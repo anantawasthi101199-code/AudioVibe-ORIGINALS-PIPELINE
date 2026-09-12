@@ -447,8 +447,14 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
     ],
     [
       'script',
+      // The first call is the STORY PLAN, which every format pays for. It used
+      // to be described here as the hook competition, and that description went
+      // stale the moment the long formats dropped their cold opens: writeScript
+      // only runs a hook competition when the first beat is typed `cold_open`,
+      // so an estimate naming it was quoting for work the run would not do.
       write(writer.model, 1, 2_000, 1_500) + write(writer.model, beats * 1.6, 3_500, 1_200),
-      `hook competition + ~${Math.round(beats * 1.6)} beat calls (${beats} beats, some revised)`,
+      `story plan${format.beats[0]?.type === 'cold_open' ? ' + hook competition' : ''} + ` +
+        `~${Math.round(beats * 1.6)} beat calls (${beats} beats, some revised)`,
     ],
     ['title', write(writer.model, 1, 1_200, 200), '1 call'],
   ];
