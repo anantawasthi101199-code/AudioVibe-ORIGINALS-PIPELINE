@@ -128,6 +128,18 @@ const ABOUT_THE_TELLING = [
   /\bhere'?s the (honest|real|actual) version\b/i,
   /\bwhat (I|we) want to (work out|show you|get to)\b/i,
   /\b(the )?rest of this (story|episode)\b/i,
+  // A RECAP WEARING A SENTENCE'S CLOTHES. "What followed was the gas, the
+  // joint, the hiss the men heard, the blast at ten o'clock, and Bollands
+  // thrown across the control room - all of it now explained." That lists five
+  // things the episode has already told and then announces that it has
+  // finished explaining them, which is the episode reporting on its own
+  // progress rather than making any.
+  /\ball of it now\b/i,
+  /\bnow explained\b/i,
+  /\bwhich we now know\b/i,
+  /\bas (I|we) (said|mentioned)\b/i,
+  /\bearlier in this\b/i,
+  /\bto recap\b/i,
 ];
 
 /**

@@ -6,6 +6,7 @@
  */
 import { fetchSource, htmlToText, extractMetadata, MIN_USABLE_CHARS, SourceFetchError, HttpResponse } from '../fetch';
 import { sourceIdFor, tierForUrl, weakestTier, hashText } from '../source';
+import { locateQuote } from '../claim';
 
 const body = (chars = MIN_USABLE_CHARS + 100) =>
   `<html><head><title>A Paper</title></head><body><p>${'word '.repeat(Math.ceil(chars / 5))}</p></body></html>`;
@@ -228,5 +229,55 @@ describe('fetchSource', () => {
       deps(ok({ contentType: 'text/plain', body: 'plain '.repeat(200) }))
     );
     expect(s.text.startsWith('plain')).toBe(true);
+  });
+});
+
+describe('citation markers and orphaned spaces', () => {
+  // THE THIRD FALSE REJECTION OF VALID WORK, and the same shape every time: the
+  // deterministic quote check is the foundation of the evidence layer, so when
+  // it is wrong in this direction it looks exactly like the model misbehaving.
+  //
+  // Both strings here are verbatim from a real run. Wikipedia carries its
+  // references as superscripts, and stripping the tag leaves the number sitting
+  // inside the sentence as plain text.
+
+  const SOURCE =
+    'At or shortly before 22:00, [ 23 ] gas was reintroduced into pump A, filling it. ' +
+    'The loosely fitted flange did not withstand the resulting pressure. [ 48 ] ' +
+    'Gas audibly leaked out at high pressure, drawing the attention of several men ' +
+    'and triggering multiple gas alarms . Before anyone could act, the gas ignited.';
+
+  it('finds a quote whose sentence contained a reference marker', () => {
+    const quote =
+      'At or shortly before 22:00, gas was reintroduced into pump A, filling it. ' +
+      'The loosely fitted flange did not withstand the resulting pressure.';
+    expect(locateQuote(SOURCE, quote).found).toBe(true);
+  });
+
+  it('finds a quote across the orphaned space a stripped tag leaves', () => {
+    // "alarms ." in the source, "alarms." in the quote. The whitespace collapse
+    // does not touch this, because the space sits between a word and a
+    // punctuation mark rather than inside a run.
+    const quote =
+      'Gas audibly leaked out at high pressure, drawing the attention of several men ' +
+      'and triggering multiple gas alarms.';
+    expect(locateQuote(SOURCE, quote).found).toBe(true);
+  });
+
+  it('still refuses a quote that differs in a WORD', () => {
+    // The whole value of the check. Folding layout must not fold meaning.
+    expect(
+      locateQuote(SOURCE, 'Gas audibly leaked out at low pressure, drawing the attention of several men.')
+        .found
+    ).toBe(false);
+  });
+
+  it('keeps editorial brackets, which are content', () => {
+    // "[sic]" and "[emphasis added]" are things a document says about itself,
+    // unlike a reference number, so they are matched rather than stripped.
+    const withSic = 'The log recorded the valve as closed [sic] on the Wednesday morning shift.';
+    expect(locateQuote(withSic, 'The log recorded the valve as closed [sic] on the Wednesday morning shift.').found).toBe(
+      true
+    );
   });
 });

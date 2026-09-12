@@ -136,6 +136,25 @@ export type UnsupportedClaim = z.infer<typeof unsupportedClaimSchema>;
  *
  * Typographic quotes and dashes are folded for the same reason: a document
  * using a curly apostrophe and a quote using a straight one are the same words.
+ *
+ * CITATION MARKERS AND ORPHANED SPACES ARE FOLDED TOO, and that was another
+ * false rejection of valid work - the third of this kind, and the same shape
+ * every time. A Wikipedia sentence carries its references as superscripts, and
+ * stripping the tag leaves the number behind as plain text:
+ *
+ *   source: "At or shortly before 22:00, [ 23 ] gas was reintroduced into
+ *            pump A ... withstand the resulting pressure. [ 48 ]"
+ *   quote:  "At or shortly before 22:00, gas was reintroduced into pump A ...
+ *            withstand the resulting pressure."
+ *
+ * The model quoted the sentence correctly. The check said the quote did not
+ * occur. The same strip also leaves a space before the full stop - "alarms ." -
+ * which the whitespace collapse above does not remove, because it sits between
+ * a word and a punctuation mark rather than inside a run.
+ *
+ * Folding both HERE rather than only at fetch time is deliberate: it repairs
+ * runs whose corpus is already on disk, and it is symmetric, so a quote that
+ * genuinely differs in a WORD still fails.
  */
 export const normaliseForMatch = (s: string): string =>
   s
@@ -143,7 +162,14 @@ export const normaliseForMatch = (s: string): string =>
     .replace(/[“”„‟]/g, '"')
     .replace(/[‐-―−]/g, '-')
     .replace(/\u00a0/g, ' ')
+    // Reference markers, section-edit links and editorial flags. Bracketed
+    // digits in a fetched document are citations essentially without exception.
+    // The named ones are listed rather than matched generally, because "[sic]"
+    // and "[emphasis added]" are content and have to survive.
+    .replace(/\[\s*\d+\s*\]/g, ' ')
+    .replace(/\[\s*(edit|citation needed|clarification needed|who\?|when\?)\s*\]/gi, ' ')
     .replace(/\s+/g, ' ')
+    .replace(/\s+([.,;:!?])/g, '$1')
     .trim()
     .toLowerCase();
 

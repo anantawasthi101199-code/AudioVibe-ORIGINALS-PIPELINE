@@ -1,5 +1,6 @@
 import { parsePersona } from '../../canon/load';
 import {
+  checkPrintOnly,
   checkStyle,
   countWords,
   measure,
@@ -236,5 +237,40 @@ describe('lexical tells', () => {
     ].join(' ');
     const { violations } = checkStyle(varied, card);
     expect(violations.filter((v) => v.blocking)).toEqual([]);
+  });
+});
+
+describe('checkPrintOnly', () => {
+  // THE EAR RULE FORBIDDING THESE WAS PURE HOPE. Nothing checked it, and a real
+  // episode came back with five em dashes in it.
+  it('catches an em dash, which a listener cannot hear', () => {
+    const real =
+      'That was the pattern of the whole night — men choosing between two kinds of danger.';
+    expect(checkPrintOnly(real).map((v) => v.rule)).toEqual(['printOnly']);
+    expect(checkPrintOnly(real)[0]!.blocking).toBe(true);
+  });
+
+  it('catches an en dash too', () => {
+    expect(checkPrintOnly('He waited – and then he jumped.')).toHaveLength(1);
+  });
+
+  it('leaves a hyphenated compound alone', () => {
+    // One word to a speaker, and it reads correctly out loud.
+    expect(checkPrintOnly('a hand-tightened cover on a high-pressure line')).toEqual([]);
+  });
+
+  it('catches semicolons and parentheses', () => {
+    expect(checkPrintOnly('He signed it; nobody checked.')).toHaveLength(1);
+    expect(checkPrintOnly('The valve (PSV 504) was out.')).toHaveLength(1);
+  });
+
+  it('says nothing about ordinary speech', () => {
+    expect(
+      checkPrintOnly('He pulled the valve, capped the pipe, and wrote it down on his permit.')
+    ).toEqual([]);
+  });
+
+  it('counts what it found, so a rewrite knows how much to fix', () => {
+    expect(checkPrintOnly('a — b — c — d')[0]!.detail).toMatch(/uses 3 em or en dashes/);
   });
 });

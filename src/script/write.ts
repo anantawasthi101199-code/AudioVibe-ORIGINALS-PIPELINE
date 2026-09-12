@@ -147,7 +147,7 @@ export const fullText = (script: Script): string =>
  */
 export const EAR_RULES = [
   'Write for the ear. This will be spoken aloud by one voice to somebody who cannot see the page and cannot rewind.',
-  'Nothing that only works in print: no parentheses, no semicolons, no bullet points, no headings, no "firstly, secondly, finally".',
+  'Nothing that only works in print: no dashes of any kind holding a sentence together, no parentheses, no semicolons, no bullet points, no headings, no "firstly, secondly, finally". A listener cannot hear any of them.',
   'Numbers as a person says them out loud. "About three in ten", not "31.4 per cent". The exact figure lives in the sources list.',
   'Write whatever length of sentence the moment wants. A long one that gathers several things and lands them together is usually the best sentence in a beat.',
 ];

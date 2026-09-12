@@ -241,12 +241,42 @@ export interface StyleViolation {
  */
 export const MEAN_TOLERANCE = 0.4;
 
+/**
+ * Punctuation that only works on a page.
+ *
+ * THE EAR RULE FORBIDDING THESE WAS PURE HOPE - nothing checked it, and a real
+ * episode came back with five em dashes in it. A dash is invisible to a
+ * listener: the voice either runs straight through it or inserts a pause the
+ * writer did not intend, and either way the sentence it was holding together
+ * arrives in pieces.
+ *
+ * Semicolons and parentheses are the same failure. A listener cannot tell a
+ * semicolon from a full stop, and a parenthesis is a whole clause delivered at
+ * the same pitch as everything around it.
+ *
+ * Hyphens are deliberately NOT here: a hyphenated compound is one word to a
+ * speaker and reads correctly out loud.
+ */
+const PRINT_ONLY: Array<[RegExp, string]> = [
+  [/[—–]/g, 'em or en dashes, which a listener cannot hear. Use a full stop, a comma, or rewrite the sentence'],
+  [/;/g, 'semicolons, which sound exactly like a full stop and are not one'],
+  [/\([^)]*\)/g, 'parentheses, which deliver a whole clause at the same pitch as everything around it'],
+];
+
+export const checkPrintOnly = (text: string): StyleViolation[] =>
+  PRINT_ONLY.flatMap(([re, why]) => {
+    const hits = text.match(re) ?? [];
+    return hits.length
+      ? [{ rule: 'printOnly', detail: `uses ${hits.length} ${why}.`, blocking: true }]
+      : [];
+  });
+
 export const checkStyle = (text: string, card: StyleCard): {
   measurement: StyleMeasurement;
   violations: StyleViolation[];
 } => {
   const m = measure(text, card.forbiddenPhrases);
-  const violations: StyleViolation[] = [];
+  const violations: StyleViolation[] = [...checkPrintOnly(text)];
 
   // BLOCKING: uniform sentence length. The clearest tell there is, and the
   // reason a mean alone is not a style card.
