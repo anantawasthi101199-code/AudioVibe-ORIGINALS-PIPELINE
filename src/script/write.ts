@@ -38,6 +38,7 @@ import { checkVoices, voiceBrief } from './voices';
 import { writeHook } from './hooks';
 import { SHORT_FORM_GUIDANCE } from './shorts';
 import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
+import { StoryPlan, planBrief, planStory, storyPlanSchema } from './plan';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -180,6 +181,18 @@ export interface BeatContext {
   claims: Claim[];
   /** The tail of the previous beat, so the join does not read as a seam. */
   previousTail?: string;
+  /**
+   * Everything already written, in order.
+   *
+   * TWENTY-FIVE WORDS WAS NOT ENOUGH, and that one number caused most of what
+   * was wrong with the first real episode. A beat that can only see the last
+   * sentence cannot know what the listener believes, who has been introduced,
+   * or what has already been said - so it re-introduces people, repeats facts,
+   * and overturns things that were never established.
+   */
+  storySoFar?: string;
+  /** The plan for the whole episode, with this beat marked. */
+  plan?: string;
   angle: string;
   isoDate: string;
   /**
@@ -212,7 +225,16 @@ const buildPrompt = (ctx: BeatContext): string => {
       ? `CONSTRAINTS:\n${ctx.beat.constraints.map((c) => `- ${c}`).join('\n')}`
       : '',
     `LENGTH: ${min} to ${max} words across all turns.`,
-    ctx.previousTail ? `THE PREVIOUS BEAT ENDED:\n"...${ctx.previousTail}"` : 'This is the opening beat.',
+    ctx.plan ?? '',
+    // THE WHOLE SCRIPT SO FAR, not a sentence of it. Sent in the prompt rather
+    // than the system block because it changes every beat and would invalidate
+    // the cached prefix; as input tokens it is trivial next to what it fixes.
+    ctx.storySoFar
+      ? `THE EPISODE SO FAR, word for word. Do not repeat any of it, do not ` +
+        `re-introduce anybody already introduced, and continue from where it ` +
+        `leaves off:\n${ctx.storySoFar}`
+      : 'This is the opening beat. Nothing has been said yet.',
+    ctx.previousTail ? `IT ENDED ON:\n"...${ctx.previousTail}"` : '',
     ctx.loops ? `CURIOSITY - what this beat must and must not answer:\n${ctx.loops}` : '',
     ctx.openWith ? `OPEN WITH EXACTLY THIS LINE, then continue:\n"${ctx.openWith}"` : '',
     `CLAIMS:\n${claims}`,
@@ -457,6 +479,11 @@ export const writeTitle = async (
  */
 export const scriptProgressSchema = z.object({
   hook: z.string().optional(),
+  /**
+   * The story plan, so a resumed run writes the second half of the same episode
+   * the first half was written for.
+   */
+  plan: storyPlanSchema.optional(),
   beats: z.array(scriptBeatSchema).default([]),
 });
 
@@ -493,11 +520,47 @@ export const writeScript = async (
   const beats: ScriptBeat[] = [...resumed];
   let previousTail = beats.length ? tailOf(beatText(beats[beats.length - 1]!)) : undefined;
 
+  /** Every beat written so far, labelled, for the next one to read. */
+  const storySoFar = () =>
+    beats.length
+      ? beats.map((b) => `[${b.beatId}]\n${beatText(b)}`).join('\n\n')
+      : undefined;
+
   if (beats.length) {
     onProgress?.(`resuming after ${beats.length} beat(s) already written`);
   }
 
-  const persist = (hook?: string) => checkpoint?.save({ hook, beats });
+  let plan: StoryPlan | undefined = checkpoint?.progress.plan;
+
+  const persist = (hook?: string) => checkpoint?.save({ hook, beats, plan });
+
+  // THE PLAN COMES FIRST, before a word is written, because it is the only
+  // thing in the system that sees the episode as one story. Skipped on a resume
+  // that already has one - it is deterministic enough that re-planning midway
+  // would risk the second half being written against a different story from the
+  // first.
+  if (!plan) {
+    try {
+      onProgress?.('planning the whole story before writing any of it');
+      plan = await planStory(
+        {
+          persona: input.persona,
+          format: input.format,
+          claims: input.claims,
+          angle: input.angle,
+        },
+        writer,
+        onCost
+      );
+      persist(checkpoint?.progress.hook);
+      onProgress?.(`the story: ${plan.spine}`);
+    } catch (err) {
+      // A failed plan must not cost the episode. Without one, every beat falls
+      // back to what it had before - the previous beat's tail - which is worse
+      // but is not nothing.
+      onProgress?.(`planning failed, writing beat by beat instead: ${(err as Error).message}`);
+    }
+  }
 
   // THE OPENING IS WRITTEN DIFFERENTLY FROM EVERY OTHER BEAT.
   //
@@ -541,6 +604,8 @@ export const writeScript = async (
         beat,
         claims: input.claims.filter((c) => c.beatId === beat.id),
         previousTail,
+        storySoFar: storySoFar(),
+        plan: plan ? planBrief(plan, beat.id) : undefined,
         angle: input.angle,
         isoDate: input.isoDate,
         loops: input.format.loops.length

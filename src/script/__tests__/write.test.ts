@@ -122,6 +122,19 @@ const fakeWriter = (
   };
 };
 
+/**
+ * Requests that actually wrote a beat.
+ *
+ * writeScript now makes a PLANNING call first, which deliberately sees every
+ * claim and the whole beat sheet - that is the entire point of it. Tests about
+ * what a BEAT is shown have to exclude it, or they end up asserting that the
+ * planner is as blinkered as the writer, which is the opposite of the design.
+ */
+const beatCalls = (w: { seen: LlmRequest[] }): LlmRequest[] =>
+  w.seen.filter(
+    (r) => !r.system.includes('plan one episode') && !r.system.includes('title and description')
+  );
+
 const ctx = (p = SOLO) => ({
   persona: p,
   format: FORMAT,
@@ -336,8 +349,9 @@ describe('writeScript', () => {
   it('gives each beat the tail of the one before, so joins are not seams', async () => {
     const w = fakeWriter(both);
     await writeScript({ persona: SOLO, format: FORMAT, claims: [], angle: 'a', isoDate: '2026-09-08' }, w);
-    expect(w.seen[0]!.prompt).toContain('This is the opening beat.');
-    expect(w.seen[1]!.prompt).toContain('THE PREVIOUS BEAT ENDED');
+    // beatCalls, because seen[0] is now the planning call.
+    expect(beatCalls(w)[0]!.prompt).toContain('This is the opening beat.');
+    expect(beatCalls(w)[1]!.prompt).toContain('IT ENDED ON');
   });
 
   it('gives each beat only its own claims', async () => {
@@ -352,8 +366,70 @@ describe('writeScript', () => {
       },
       w
     );
-    expect(w.seen[0]!.prompt).toContain('[open1]');
-    expect(w.seen[0]!.prompt).not.toContain('[pay1]');
+    // The BEAT writer, not the planner. The planner sees every claim by design.
+    const first = beatCalls(w)[0]!;
+    expect(first.prompt).toContain('[open1]');
+    expect(first.prompt).not.toContain('[pay1]');
+  });
+
+  it('lets the PLANNER see every claim, because that is its whole job', () => {
+    // The plan is the only thing in the system that sees the episode as one
+    // story. A planner shown a tenth of the facts at a time would reproduce the
+    // disconnection it exists to fix.
+    const w = fakeWriter(both);
+    return writeScript(
+      {
+        persona: SOLO,
+        format: FORMAT,
+        claims: [claim({ id: 'open1', beatId: 'cold_open' }), claim({ id: 'pay1', beatId: 'payoff' })],
+        angle: 'a',
+        isoDate: '2026-09-08',
+      },
+      w
+    ).then(() => {
+      const plan = w.seen.find((r) => r.system.includes('plan one episode'))!;
+      expect(plan.prompt).toContain('[open1]');
+      expect(plan.prompt).toContain('[pay1]');
+    });
+  });
+
+  it('gives a beat the WHOLE episode so far, not just the last sentence', async () => {
+    // Twenty-five words was the entire memory a beat had of its own episode,
+    // and most of what went wrong with the first real one follows from it: a
+    // beat that cannot see what was said cannot avoid repeating it, cannot know
+    // who has been introduced, and cannot overturn something never established.
+    const w = fakeWriter(both);
+    await writeScript(
+      { persona: SOLO, format: FORMAT, claims: [], angle: 'a', isoDate: '2026-09-08' },
+      w
+    );
+
+    const second = beatCalls(w)[1]!;
+    expect(second.prompt).toContain('THE EPISODE SO FAR');
+    expect(second.prompt).toContain('[cold_open]');
+  });
+
+  it('tells the opening beat that nothing has been said yet', async () => {
+    const w = fakeWriter(both);
+    await writeScript(
+      { persona: SOLO, format: FORMAT, claims: [], angle: 'a', isoDate: '2026-09-08' },
+      w
+    );
+    expect(beatCalls(w)[0]!.prompt).toContain('Nothing has been said yet');
+  });
+
+  it('writes the beats even when planning fails', async () => {
+    // A failed plan must not cost the episode. Without one every beat falls
+    // back to what it had before, which is worse but is not nothing.
+    const w = fakeWriter((req) =>
+      req.system.includes('plan one episode') ? 'not json at all' : both(req)
+    );
+
+    const script = await writeScript(
+      { persona: SOLO, format: FORMAT, claims: [], angle: 'a', isoDate: '2026-09-08' },
+      w
+    );
+    expect(script.beats).toHaveLength(FORMAT.beats.length);
   });
 });
 

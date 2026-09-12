@@ -73,7 +73,12 @@ const writer = (failOnBeat?: number): LlmClient & { calls: number; beats: number
     async complete(req: LlmRequest): Promise<LlmResponse> {
       client.calls++;
 
-      const isBeat = !req.system.includes('title and description');
+      // Planning is neither a beat nor a title, and it happens once before any
+      // beat. Counting it as a beat would make "fail on beat three" mean beat
+      // two, which is exactly the kind of off-by-one this fixture exists to
+      // avoid.
+      const isBeat =
+        !req.system.includes('title and description') && !req.system.includes('plan one episode');
       const isRevision = req.prompt.includes('YOUR PREVIOUS DRAFT');
       if (isBeat && !isRevision) {
         client.beats++;
