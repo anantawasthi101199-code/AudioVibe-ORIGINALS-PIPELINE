@@ -15,6 +15,8 @@
  * without anyone reading the first episodes is the failure mode this whole
  * design exists to avoid.
  */
+import fs from 'fs';
+import path from 'path';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
@@ -387,10 +389,31 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
   // --- 6. Render ----------------------------------------------------------
   let render: z.infer<typeof renderResultSchema>;
-  if (run.hasArtifact('render')) {
+  // THE ARTIFACT IS NOT THE AUDIO. Every other stage can be resumed from its
+  // JSON because the JSON *is* the output; this one describes a file sitting
+  // next to it, and the two can come apart. Deleting the media directory to
+  // force a fresh render leaves render.json behind claiming nine minutes of
+  // audio, and the run then "reused" a recording that does not exist, gated a
+  // duration measured from a missing file, and reported "no audio created"
+  // without ever saying what was wrong.
+  //
+  // So the audio has to be there before the record of it is believed.
+  // RESOLVE RATHER THAN JOIN. The schema calls audioFile "relative to the run
+  // directory" and renderScript stores the absolute path it was given, so the
+  // two disagree and have since the field existed. resolve is correct for both
+  // readings; join silently mangles the absolute one into a path that never
+  // exists, which would make this check re-render every single time.
+  const renderedAudio = run.hasArtifact('render')
+    ? path.resolve(run.dir, run.readArtifact('render', renderResultSchema).audioFile)
+    : null;
+
+  if (renderedAudio && fs.existsSync(renderedAudio)) {
     render = run.readArtifact('render', renderResultSchema);
     log(`render: reusing ${Math.round(render.durationS)}s of audio`);
   } else {
+    if (renderedAudio) {
+      log('render: the previous audio is gone, so it is being made again');
+    }
     stage = 'render';
     log('render: synthesising each beat');
     render = await renderScript(

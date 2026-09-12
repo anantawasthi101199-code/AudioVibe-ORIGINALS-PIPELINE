@@ -195,7 +195,15 @@ describe('runEpisode', () => {
   // ffmpeg. The beat map arithmetic itself is covered in render tests.
   const renderStubs = () => {
     jest.spyOn(assemble, 'probeDuration').mockResolvedValue(65);
-    jest.spyOn(assemble, 'concatBeats').mockResolvedValue(undefined);
+    // THE STUB HAS TO PRODUCE THE FILE, because a concat that leaves nothing on
+    // disk is not a concat, and the pipeline now checks that the audio a render
+    // artifact describes actually exists before reusing it. Mocking this as a
+    // no-op made the fixture claim a render that had not happened.
+    jest
+      .spyOn(assemble, 'concatBeats')
+      .mockImplementation(async (_files: string[], out: string) => {
+        fs.writeFileSync(out, Buffer.alloc(16));
+      });
   };
 
   it('runs every stage and writes an artifact for each', async () => {
@@ -338,4 +346,45 @@ describe('runEpisode', () => {
     // And the gate fails anyway, because the beats are now below their floors.
     expect(gate.passed).toBe(false);
   });
+
+    /**
+     * THE ARTIFACT IS NOT THE AUDIO, and this is the one stage where that
+     * distinction bites. Every other stage resumes from its JSON because the JSON
+     * IS the output; render.json only describes a file sitting next to it, and
+     * the two come apart the moment somebody deletes the media directory to force
+     * a fresh take.
+     *
+     * That happened. The run reported "render: reusing 553s of audio", gated a
+     * duration measured from a file that was not there, and finished with "no
+     * audio created" without ever saying what was wrong.
+     */
+    it('renders again instead of reusing a recording that does not exist', async () => {
+      jest.spyOn(assemble, 'probeDuration').mockResolvedValue(65);
+      jest
+        .spyOn(assemble, 'concatBeats')
+        .mockImplementation(async (_files: string[], out: string) => {
+          fs.writeFileSync(out, Buffer.alloc(16));
+        });
+
+      const run = makeRun();
+      const first = buildDeps();
+      await runEpisode(run, first);
+
+      const render = run.readArtifact('render', assemble.renderResultSchema);
+      const audio = path.resolve(run.dir, render.audioFile);
+      expect(fs.existsSync(audio)).toBe(true);
+
+      // What deleting the media directory leaves behind.
+      fs.rmSync(audio, { force: true });
+      fs.rmSync(path.join(run.dir, 'media'), { recursive: true, force: true });
+
+      const second = buildDeps();
+      await runEpisode(run, second);
+
+      expect((second.tts as TtsProvider & { calls: number }).calls).toBeGreaterThan(0);
+      expect(fs.existsSync(path.resolve(run.dir, render.audioFile))).toBe(true);
+      // And nothing upstream was paid for twice.
+      expect((second.writer as LlmClient & { calls: number }).calls).toBe(0);
+    });
+
 });
