@@ -100,6 +100,7 @@ export const fullText = (script: Script): string =>
 const EAR_RULES = [
   'Write for the ear. A listener cannot re-read a sentence.',
   'Vary sentence length deliberately. Uniform sentence length is the clearest sign of generated speech, and it is measured.',
+  'Keep sentences under twenty-five words. That is one breath at speaking pace, and it is measured. A sentence held together by three commas is two sentences.',
   'No parentheses, no semicolons, no bullet points, no headings.',
   'No "firstly", "secondly", "finally" scaffolding.',
   'Speak numbers as speech: "about three in ten", not "31.4 per cent". The exact figure lives in the sources list.',

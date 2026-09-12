@@ -26,6 +26,40 @@ const deps = (res: HttpResponse | Error) => ({
   now: () => new Date('2026-09-07T12:00:00.000Z'),
 });
 
+describe('HTML entities', () => {
+  // THE DETERMINISTIC QUOTE CHECK IS THE FOUNDATION OF THE EVIDENCE LAYER, and
+  // an entity left undecoded makes it reject valid work - which is the worst
+  // way for it to be wrong, because a false rejection looks exactly like the
+  // model misbehaving. Two real claims from one episode were thrown out this
+  // way, both of them correct.
+
+  it('decodes HEXADECIMAL entities, which the BBC uses for apostrophes', () => {
+    // The actual bug. Source text read "London&#x27;s", the model correctly
+    // quoted "London's", and the check said the quote did not occur.
+    expect(htmlToText('<p>London&#x27;s quarter</p>')).toBe("London's quarter");
+  });
+
+  it('decodes decimal entities', () => {
+    expect(htmlToText('<p>it&#39;s here</p>')).toBe("it's here");
+  });
+
+  it('decodes a hex entity above the basic plane', () => {
+    // fromCodePoint rather than fromCharCode, or anything past U+FFFF lands in
+    // the middle of a quote as a replacement character.
+    expect(htmlToText('<p>&#x1F600;</p>')).toBe(String.fromCodePoint(0x1f600));
+  });
+
+  it('decodes named entities', () => {
+    expect(htmlToText('<p>a &mdash; b &amp; c</p>')).toBe('a - b & c');
+  });
+
+  it('does not double-decode an escaped ampersand', () => {
+    // "&amp;#39;" is a literal "&#39;", not an apostrophe. Decoding the
+    // ampersand before the numeric forms would turn it into one.
+    expect(htmlToText('<p>&amp;#39;</p>')).toBe('&#39;');
+  });
+});
+
 describe('sourceIdFor', () => {
   it('is stable for the same document', () => {
     expect(sourceIdFor('https://example.org/a')).toBe(sourceIdFor('https://example.org/a'));

@@ -106,7 +106,19 @@ export const htmlToText = (html: string): string => {
   for (const [ent, ch] of Object.entries(entities)) {
     out = out.split(ent).join(ch);
   }
-  out = out.replace(/&#(\d+);/g, (_m, code) => String.fromCharCode(Number(code)));
+  // NUMERIC ENTITIES, DECIMAL **AND HEXADECIMAL**. Missing the hex form was a
+  // real and expensive bug: the BBC writes apostrophes as `&#x27;`, so every
+  // quote containing one survived into the corpus undecoded, and the
+  // deterministic quote check then rejected a perfectly good quote because the
+  // model had correctly written "London's" where the text said "London&#x27;s".
+  //
+  // That check is the foundation of the whole evidence layer, and this was
+  // making it reject valid work - the worst way for it to be wrong, because a
+  // false rejection looks exactly like the model misbehaving.
+  out = out.replace(/&#x([0-9a-f]+);/gi, (_m, hex) =>
+    String.fromCodePoint(Number.parseInt(hex, 16))
+  );
+  out = out.replace(/&#(\d+);/g, (_m, code) => String.fromCodePoint(Number(code)));
   out = out.replace(/&amp;/g, '&');
 
   // Whitespace. Horizontal runs collapse; vertical runs cap at one blank line.
