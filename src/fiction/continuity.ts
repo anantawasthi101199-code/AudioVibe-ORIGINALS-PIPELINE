@@ -155,7 +155,7 @@ export const obviousContradictions = (
   return out;
 };
 
-const CHECK_SYSTEM = `You check one episode of a serial audio drama against what
+export const CHECK_SYSTEM = `You check one episode of a serial audio drama against what
 earlier episodes established.
 
 You are given the established facts and the new episode's script. You are NOT
@@ -281,7 +281,7 @@ export const checkContinuity = async (
   };
 };
 
-const EXTRACT_SYSTEM = `You read one episode of a serial audio drama and record
+export const EXTRACT_SYSTEM = `You read one episode of a serial audio drama and record
 what it ESTABLISHED, so later episodes do not contradict it.
 
 Record only what the episode presents as TRUE. Not what a character believes,

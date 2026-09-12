@@ -52,7 +52,7 @@ export interface ComparisonResult {
   costPence: number;
 }
 
-const SYSTEM = `You judge which of two audio scripts is better to LISTEN to.
+export const SYSTEM = `You judge which of two audio scripts is better to LISTEN to.
 
 You are given two scripts, A and B. Decide which one a listener would rather
 hear, and say why in one sentence.

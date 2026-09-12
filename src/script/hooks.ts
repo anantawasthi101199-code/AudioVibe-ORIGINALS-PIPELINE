@@ -142,7 +142,7 @@ export const rankHooks = (candidates: string[]): HookScore[] =>
     .filter((h) => h.score > 0)
     .sort((a, b) => b.score - a.score);
 
-const GENERATE_SYSTEM = `You write opening lines for an audio show. Not the
+export const GENERATE_SYSTEM = `You write opening lines for an audio show. Not the
 episode - just the first thing a listener hears.
 
 An opening's only job is to make someone need to know what happens next. It
@@ -162,7 +162,7 @@ Never:
 
 Return JSON only: {"hooks": ["...", "...", ...]}`;
 
-const CHOOSE_SYSTEM = `You pick the best opening line for an audio show.
+export const CHOOSE_SYSTEM = `You pick the best opening line for an audio show.
 
 You are given several candidates. Choose the one that most makes a listener
 need to hear what comes next.

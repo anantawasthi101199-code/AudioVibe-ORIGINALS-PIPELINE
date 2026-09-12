@@ -199,10 +199,15 @@ canon:
       need to go back" is a sentence that costs the listener something, and it
       is worth paying at most once.
 
+  # This used to repeat the network's own rule about speaking numbers, down to
+  # the same example, so the assembled prompt carried it twice. The generic rule
+  # lives in EAR_RULES and every show gets it; what belongs HERE is only the
+  # part that is this show's rather than the network's.
   - kind: stylistic_rule
     text: >
-      Say numbers as a person says them. "About three in ten." "Just under two
-      thousand pounds." Precision that cannot be heard is not precision.
+      Precision that cannot be heard is not precision. A figure this show cannot
+      say out loud in the shape a person would say it is a figure for the
+      sources list, not for the script.
 
   - kind: stylistic_rule
     text: >

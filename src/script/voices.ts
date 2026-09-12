@@ -257,8 +257,17 @@ export const voiceBrief = (hosts: Host[]): string =>
         i.questionRate >= 0.3 ? 'asks often' : 'rarely asks',
         i.backchannelRate >= 0.2 ? 'reacts a lot in short beats' : 'reacts rarely',
       ];
+      // WHY THE SOLO CASE IS SPELLED OUT. This line used to end "and the other
+      // host never uses these" unconditionally, which on a one-host show tells
+      // the writer to avoid colliding with a person who does not exist. Found
+      // by rendering the assembled prompt and reading it, which is the only way
+      // a fault in composed text is ever found.
+      const soloShow = hosts.length === 1;
       const sig = i.signature.length
-        ? ` Reaches for: ${i.signature.map((s) => `"${s}"`).join(', ')} - and the other host never uses these.`
+        ? ` Reaches for: ${i.signature.map((s) => `"${s}"`).join(', ')}` +
+          (soloShow
+            ? ' - these belong to this narrator, use them where they fit.'
+            : ' - and the other host never uses these.')
         : '';
       return `- ${h.id} (${h.name}): ${h.role.trim().replace(/\s+/g, ' ')} Speech: ${bits.join(', ')}.${sig}`;
     })

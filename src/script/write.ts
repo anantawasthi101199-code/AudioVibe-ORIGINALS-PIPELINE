@@ -98,7 +98,7 @@ export const beatText = (beat: { turns: Turn[] }): string =>
 export const fullText = (script: Script): string =>
   script.beats.map((b) => beatText(b)).join('\n\n');
 
-const EAR_RULES = [
+export const EAR_RULES = [
   'Write for the ear. A listener cannot re-read a sentence.',
   'Vary sentence length deliberately. Uniform sentence length is the clearest sign of generated speech, and it is measured.',
   'Keep sentences under twenty-five words. That is one breath at speaking pace, and it is measured. A sentence held together by three commas is two sentences.',
@@ -109,7 +109,7 @@ const EAR_RULES = [
   'Never open a beat by announcing what the beat is about.',
 ];
 
-const buildSystem = (persona: Persona, isoDate: string, kind: 'long' | 'short'): string => {
+export const buildSystem = (persona: Persona, isoDate: string, kind: 'long' | 'short'): string => {
   const canon = canonAsOf(persona, isoDate);
   const say = (kind: string) =>
     canon
@@ -225,7 +225,7 @@ export interface BeatContext {
   openWith?: string;
 }
 
-const buildPrompt = (ctx: BeatContext): string => {
+export const buildPrompt = (ctx: BeatContext): string => {
   const { min, max } = wordsForBeat(ctx.beat);
   const claims = ctx.claims.length
     ? ctx.claims.map((c) => `[${c.id}] (${c.type}) ${c.text}`).join('\n')
@@ -376,7 +376,7 @@ export const critiqueBeat = (
   return { blocking, advisory };
 };
 
-const REVISE_INSTRUCTION = `Your previous draft of this beat failed specific
+export const REVISE_INSTRUCTION = `Your previous draft of this beat failed specific
 checks. Rewrite it so it does not.
 
 Fix ONLY what is listed. Do not rewrite what was working, do not change the
@@ -490,7 +490,7 @@ export const writeBeat = async (
 export const tailOf = (text: string, words = 25): string =>
   text.split(/\s+/).slice(-words).join(' ');
 
-const TITLE_SYSTEM = `You write the title and description for one episode.
+export const TITLE_SYSTEM = `You write the title and description for one episode.
 
 The title is what someone sees in a feed. Make it specific and concrete: name
 the thing. No colons introducing a subtitle, no "How X changed Y forever", no

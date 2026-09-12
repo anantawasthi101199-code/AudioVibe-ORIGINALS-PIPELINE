@@ -94,7 +94,7 @@ export const storyPlanSchema = z.object({
 
 export type StoryPlan = z.infer<typeof storyPlanSchema>;
 
-const PLAN_SYSTEM = `You plan one episode of an audio show before it is written.
+export const PLAN_SYSTEM = `You plan one episode of an audio show before it is written.
 
 You are given the show, the beats it must fill, and every verified fact
 available. Lay out what happens in each beat so that the episode is ONE STORY

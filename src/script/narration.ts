@@ -14,12 +14,22 @@
  * The reasons were structural and every one of them is addressed below:
  *
  *   The listener never learned what they were listening to.
- *   Nothing was ever said twice, so a moment's inattention was permanent.
  *   The narrator never changed pace, so nothing felt more important.
  *   Facts arrived in the order the argument wanted, not the order they happened.
  *
+ * A FOURTH ITEM USED TO SIT IN THAT LIST: "nothing was ever said twice, so a
+ * moment's inattention was permanent". It was wrong, and the rule it produced
+ * did more damage than the other three put together. See the note on the
+ * say-it-once line below, and script/forward.ts.
+ *
  * Phrased as things to DO. "Do not be complex" produces a model's idea of
  * simple, which is short flat sentences about nothing.
+ *
+ * NOTHING HERE MAY REPEAT EAR_RULES OR FORWARD_GUIDANCE, both of which are
+ * composed into the same prompt. Two of these lines did - the breath limit and
+ * the say-it-once rule - so the prompt forbidding repetition contained the same
+ * instruction twice. Found by rendering the assembled prompt with
+ * `foundry prompts` and reading it, and pinned by prompts/registry.test.ts.
  */
 
 export const NARRATION_GUIDANCE = [
@@ -46,10 +56,10 @@ export const NARRATION_GUIDANCE = [
   // net was standing in for: say it once, and say it so it does not need
   // saying again. checkRepetition in script/forward.ts enforces it across the
   // whole episode, because a beat cannot see that it is repeating another one.
-  'Say each thing ONCE. Not once and then again in other words, not once and then summarised - once, in the clearest sentence you can build, and then move on to the next thing that happened.',
-  'Because you get one pass at it, put the weight in the words rather than in the repetition. The right number, the right name, the shortest sentence that carries it. A fact worth hearing twice is a fact that was not said well enough the first time.',
+  // The say-it-once rule itself lives in FORWARD_GUIDANCE, which every show
+  // gets. Repeating it here is the fault it bans, in the prompt that bans it.
+  'You get one pass at each thing, so choose precisely: the exact number, the person by name, the shortest sentence that carries it whole.',
   'Ask the question the listener is forming, out loud, and then answer it. "So why did nobody check? Because checking was somebody else\'s job, and that somebody had left in March." This is the single most important habit in solo narration - it is what a second host used to do.',
-  'KEEP SENTENCES UNDER TWENTY-FIVE WORDS. That is one breath at narration pace, and it is measured. A listener who loses a long sentence loses the paragraph with it, because there is no way back. If a sentence needs three commas to hold itself together, it is two sentences.',
   'Change pace at the seams. Short sentences when it speeds up. One long one when it needs to land. A narrator at one speed for fifteen minutes is the flattest thing there is.',
   'Use "you" often, and mean it. "You can see where this is going." "If you were in that room, you would have believed him too."',
   'Put the person first in the sentence, then what they did. "The clerk wrote one line" beats "one line was written".',

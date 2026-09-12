@@ -76,7 +76,7 @@ export type ClaimSet = z.infer<typeof claimSetSchema>;
 // 1. Brief
 // ---------------------------------------------------------------------------
 
-const BRIEF_SYSTEM = `You plan the research for one episode of an audio show.
+export const BRIEF_SYSTEM = `You plan the research for one episode of an audio show.
 
 You are NOT writing the episode. You are deciding what has to be found out
 before anyone can write it, and what to search for.
@@ -191,7 +191,7 @@ export const gatherCorpus = async (
 // 3. Extract
 // ---------------------------------------------------------------------------
 
-const EXTRACT_SYSTEM = `You extract factual claims from a corpus of documents,
+export const EXTRACT_SYSTEM = `You extract factual claims from a corpus of documents,
 for one episode of an audio show.
 
 You will be given the episode's beats and a numbered corpus. For each beat,
@@ -421,7 +421,7 @@ export const extractClaims = async (
 // 4. Counter-evidence
 // ---------------------------------------------------------------------------
 
-const COUNTER_SYSTEM = `You are looking for evidence AGAINST a claim.
+export const COUNTER_SYSTEM = `You are looking for evidence AGAINST a claim.
 
 Given a claim, propose search queries most likely to surface credible
 disagreement, failed replications, corrections, retractions, or contrary

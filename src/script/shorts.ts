@@ -60,7 +60,7 @@ export const shortSelectionSchema = z.object({
 
 export type ShortSelection = z.infer<typeof shortSelectionSchema>;
 
-const SELECT_SYSTEM = `You pick the single strongest moment from a finished
+export const SELECT_SYSTEM = `You pick the single strongest moment from a finished
 audio episode, to be told on its own as a seventy-five second short.
 
 You are given the episode's script and the verified facts it was built from.

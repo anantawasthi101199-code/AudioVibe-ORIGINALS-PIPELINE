@@ -51,6 +51,7 @@ import { buildPlan, historyFor, runSummary } from './schedule/plan';
 import { writeLibrary } from './run/library';
 import { costPenceFor } from './models/client';
 import { EpisodeFormat } from './formats/schema';
+import { COMPOSED_INTO_WRITER, promptRegistry } from './prompts/registry';
 import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/load';
 import { Run } from './run/store';
 import { formatGateReport, GateReport } from './qa/gate';
@@ -79,6 +80,8 @@ Commands
   library                        Rebuild LIBRARY.md from every run
   gate [--run <id>]              Re-run the gate over an existing run
   script [--run <id>]            Print the script, for reading aloud
+  prompts [--show <id>] [--only <id>] [--out <file>]
+                                 Every prompt sent to a model, as it is sent
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
   series --show <id>             What a fiction show has established so far
@@ -972,6 +975,66 @@ const cmdScript = (argv: string[]): number => {
   return 0;
 };
 
+/**
+ * Print every prompt the studio sends a model.
+ *
+ * WHY THIS IS A COMMAND RATHER THAN A DOCUMENT. Prompt text is the most-edited
+ * thing in the repo and most of what has gone wrong with an episode was fixed
+ * by changing one. A written copy is stale within a week, and a stale copy is
+ * worse than none because somebody then reasons about the version in the
+ * document instead of the version being sent.
+ *
+ * Rendering the composed ones needs a show, because the writer's system prompt
+ * is assembled from a persona's canon, hosts and style card. Defaults to the
+ * first show rather than demanding one, so that the bare command works.
+ */
+const cmdPrompts = (argv: string[]): number => {
+  const showId = arg(argv, 'show');
+  const persona = showId ? loadPersona(showId) : loadAllPersonas()[0];
+  if (!persona) {
+    console.error('No shows are defined, so there is no persona to render the writer prompt for.');
+    return 1;
+  }
+  const format = loadFormat(persona.formats[0]!);
+  const isoDate = new Date().toISOString().slice(0, 10);
+
+  const only = arg(argv, 'only');
+  const all = promptRegistry({ persona, format, isoDate });
+  const entries = only ? all.filter((e) => e.id === only) : all;
+  if (!entries.length) {
+    console.error(`No prompt called "${only}". Known: ${all.map((e) => e.id).join(', ')}`);
+    return 1;
+  }
+
+  const out: string[] = [];
+  out.push(`Prompts as of ${isoDate}, rendered for "${persona.name}" (${format.id}).`);
+  out.push('');
+  out.push('Composed into the writer system prompt:');
+  for (const c of COMPOSED_INTO_WRITER) out.push(`  ${c.name.padEnd(24)} ${c.source}`);
+  out.push('');
+
+  for (const e of entries) {
+    out.push('='.repeat(78));
+    out.push(`${e.id}   [${e.stage}]   ${e.source}`);
+    out.push('='.repeat(78));
+    out.push(e.note);
+    out.push('');
+    out.push(e.text.trim());
+    out.push('');
+  }
+
+  const text = out.join('\n');
+  const file = arg(argv, 'out');
+  if (file) {
+    fs.writeFileSync(file, text, 'utf8');
+    const words = text.split(/\s+/).filter(Boolean).length;
+    console.log(`Wrote ${entries.length} prompt(s), about ${words} words, to ${file}`);
+  } else {
+    console.log(text);
+  }
+  return 0;
+};
+
 const cmdGate = (argv: string[]): number => {
   const gate = readGate(openRun(argv));
   console.log(formatGateReport(gate));
@@ -1189,6 +1252,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdLibrary();
       case 'script':
         return cmdScript(rest);
+      case 'prompts':
+        return cmdPrompts(rest);
       case 'gate':
         return cmdGate(rest);
       case 'compare':

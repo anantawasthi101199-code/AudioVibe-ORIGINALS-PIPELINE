@@ -65,7 +65,7 @@ export const verificationReportSchema = z.object({
 
 export type VerificationReport = z.infer<typeof verificationReportSchema>;
 
-const SYSTEM = `You check whether a quoted passage supports a specific claim.
+export const SYSTEM = `You check whether a quoted passage supports a specific claim.
 
 You will be given exactly two things: a CLAIM and a QUOTE. You have no other
 context and you must not imagine any. Do not consider whether the claim is
