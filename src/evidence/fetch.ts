@@ -27,6 +27,15 @@ export interface HttpResponse {
   /** Final URL after redirects, which is what should be cited. */
   finalUrl: string;
   contentType?: string;
+  /**
+   * The raw bytes, when the body is not text.
+   *
+   * Only a PDF needs this, and only because a PDF is where a great deal of the
+   * best primary material lives - sentencing remarks, inquest findings, filings,
+   * regulator notices. A fetcher that cannot read one is a fetcher that cannot
+   * read the documents this studio exists to read.
+   */
+  bytes?: Buffer;
 }
 
 export type HttpGet = (url: string) => Promise<HttpResponse>;
@@ -159,6 +168,41 @@ export const extractMetadata = (html: string) => ({
  */
 export const MIN_USABLE_CHARS = 400;
 
+/**
+ * Text out of a PDF.
+ *
+ * Loaded lazily, and failing softly into a rejected source rather than a thrown
+ * run. A malformed PDF is one document out of fourteen; it should cost that
+ * document and nothing else, and the corpus stage already knows how to report
+ * a fetch that did not work.
+ */
+const pdfToText = async (res: HttpResponse, url: string): Promise<string> => {
+  if (!res.bytes?.length) {
+    throw new SourceFetchError(url, 'is a PDF but the fetcher returned no bytes to read');
+  }
+
+  try {
+    // Imported lazily so the cost lands only on runs that actually meet a PDF,
+    // and so a command that never fetches anything does not pay to load it.
+    const { PDFParse } = await import('pdf-parse');
+    const parser = new PDFParse({ data: res.bytes });
+    try {
+      const parsed = await parser.getText();
+      return parsed.text
+        .replace(/[ \t\u00a0]+/g, ' ')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    } finally {
+      // Releases the worker. Without it a run that fetches several PDFs leaves
+      // the process alive after the CLI has finished, which on Windows is
+      // indistinguishable from a hang.
+      await parser.destroy();
+    }
+  } catch (err) {
+    throw new SourceFetchError(url, `is a PDF that could not be read: ${(err as Error).message}`);
+  }
+};
+
 export const fetchSource = async (
   url: string,
   deps: FetchDeps,
@@ -179,8 +223,22 @@ export const fetchSource = async (
     throw new SourceFetchError(url, `HTTP ${res.status}`);
   }
 
-  const isHtml = !res.contentType || /html|xml/i.test(res.contentType);
-  const text = isHtml ? htmlToText(res.body) : res.body.trim();
+  const isPdf = /pdf/i.test(res.contentType ?? '') || /\.pdf($|\?)/i.test(res.finalUrl);
+  const isHtml = !isPdf && (!res.contentType || /html|xml/i.test(res.contentType));
+
+  let text: string;
+  if (isPdf) {
+    // A PDF READ AS TEXT IS BINARY GARBAGE THAT PASSES EVERY LENGTH CHECK.
+    // Before this, a sentencing remark fetched from judiciary.uk went into the
+    // corpus as thousands of characters of stream objects and font tables - a
+    // "source" the extractor would then be asked to find quotes in, silently
+    // producing nothing useful from the best document in the set.
+    text = await pdfToText(res, url);
+  } else if (isHtml) {
+    text = htmlToText(res.body);
+  } else {
+    text = res.body.trim();
+  }
 
   if (text.length < MIN_USABLE_CHARS) {
     throw new SourceFetchError(
@@ -189,7 +247,9 @@ export const fetchSource = async (
     );
   }
 
-  const meta = isHtml ? extractMetadata(res.body) : { title: '', author: undefined, publisher: undefined, publishedAt: undefined, doi: undefined };
+  const meta = isHtml
+    ? extractMetadata(res.body)
+    : { title: '', author: undefined, publisher: undefined, publishedAt: undefined, doi: undefined };
 
   // The FINAL url is what gets cited and tiered. A redirect from a shortener to
   // a paper should be tiered as the paper, and citing the shortener would make

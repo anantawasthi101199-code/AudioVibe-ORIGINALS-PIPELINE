@@ -24,16 +24,42 @@ import { z } from 'zod';
  * tag a writer may use is listed here and anything else is stripped.
  */
 export const AUDIO_TAGS = [
+  // --- Conversation management. Two-host shows only. ---
+  'interrupting',
+  'overlapping',
+
+  // --- Breath and hesitation. The sound of somebody thinking. ---
   'laughs',
   'sighs',
   'exhales',
   'hesitates',
   'pauses',
-  'interrupting',
-  'overlapping',
-  'quietly',
+
+  // --- Pace. A narrator who never changes speed is the flattest thing there
+  // is, and pace is what carries a story: rushed for the moment it all goes
+  // wrong, drawn out for the thing that will not be hurried.
   'slowly',
+  'rushed',
+  'drawn out',
+
+  // --- Tone. THE PART THAT WAS MISSING ENTIRELY. A solo narrator has no
+  // second voice to play against, so every change of register has to come from
+  // the delivery of one person - and a fifteen-minute monologue at one
+  // emotional pitch is exactly the robot listeners complain about.
+  //
+  // Eleven v3 reads these as performance direction. A provider that does not
+  // understand a tag speaks it out loud, which is why the renderer strips
+  // anything not on this list rather than passing it through hopefully.
+  'quietly',
+  'whispers',
   'emphatically',
+  'excited',
+  'curious',
+  'serious',
+  'grim',
+  'wry',
+  'flat',
+  'warmly',
 ] as const;
 
 export type AudioTag = (typeof AUDIO_TAGS)[number];

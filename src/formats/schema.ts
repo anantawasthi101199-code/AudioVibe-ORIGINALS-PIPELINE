@@ -81,6 +81,30 @@ export const beatTypeSchema = z.enum([
    * a serial has - does the cliffhanger bring people back - unanswerable.
    */
   'cliffhanger',
+  /**
+   * Says what the episode is about, and what you will know by the end.
+   *
+   * THE BEAT THIS STUDIO WAS MISSING. Every format here opened cold and stayed
+   * cold, on the reasoning that a cold open earns attention and explaining
+   * yourself squanders it. That reasoning is correct for a SHORT, where the
+   * listener arrived by accident and owes you nothing.
+   *
+   * It is wrong for a fifteen-minute episode, which somebody chose to play. They
+   * have already given you the attention a hook is for. What they want next is
+   * to know what they have signed up for - and withholding it does not build
+   * curiosity, it builds the feeling of having walked into a conversation
+   * already in progress. Every narrative channel worth studying does this
+   * explicitly, in the first minute, and none of them lose the audience by it.
+   */
+  'orientation',
+  /**
+   * Consequences arriving faster than anyone can deal with them.
+   *
+   * Distinct from `turn`, which changes what the listener BELIEVES. This changes
+   * what is HAPPENING, and it is the beat that makes a story feel like it is
+   * running rather than being explained.
+   */
+  'escalation',
 ]);
 
 export type BeatType = z.infer<typeof beatTypeSchema>;

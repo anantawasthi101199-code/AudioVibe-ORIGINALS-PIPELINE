@@ -32,6 +32,13 @@ shows:
     # exactly as it does when run by hand.
     autoPublish: false
 
+  # Weekly, and the flagship. A told story lives or dies on the telling, and
+  # nothing about that gets better by doing it twice as often.
+  the-long-way-round:
+    everyDays: 7
+    shortsPerEpisode: 2
+    autoPublish: false
+
   # Weekly. A narrative history show lives or dies on whether the reconstruction
   # is properly done, and rushing that produces a summary with a mystery accent.
   # Two shorts, because the strange specific detail a Dead Reckoning episode

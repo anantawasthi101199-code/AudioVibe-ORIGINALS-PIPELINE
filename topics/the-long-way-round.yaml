@@ -1,0 +1,54 @@
+# What The Long Way Round tells next, in order, taken from the top.
+#
+# WHAT MAKES A GOOD ENTRY HERE. This show is a STORY told start to finish, so
+# the test is different from an analytical show's:
+#
+#   1. IT HAS A SEQUENCE. Something happened, then something else, and the
+#      order matters. "Why do people believe X" is a subject, not a story.
+#      "Six men drilled through a wall over a bank holiday weekend" is a story.
+#   2. IT HAS PEOPLE, NAMED, WHO WERE DOING SOMETHING ELSE FIRST. The show's
+#      whole belief is that people in a story are not walking towards their
+#      ending, and a topic with no one in it cannot carry that.
+#   3. THE DOCUMENTS ARE FETCHABLE. Sentencing remarks, inquest findings,
+#      accident reports, court transcripts. The show's claim on a listener is
+#      that somebody read the file, so a topic with no readable file is one this
+#      show cannot do. PDFs are fine now - judiciary.uk publishes sentencing
+#      remarks as PDFs and the fetcher reads them.
+#   4. IT ENDS. Something was resolved, somebody was sentenced, a report was
+#      published. An open mystery gives the payoff beat nothing to pay off.
+#   5. NOBODY LIVING IS THE SUBJECT. Convicted people in published judgments are
+#      a matter of public record and the judgment is the source; the show still
+#      does not speculate about them beyond what a court wrote down.
+
+topics:
+  # Sentencing remarks published in full at judiciary.uk, which is a T1 primary
+  # document with the whole sequence in it: the planning, the weekend, the
+  # drill, the second night they went back, and what each man got.
+  - The Hatton Garden safe deposit burglary of Easter 2015, from the sentencing
+    remarks of HHJ Kinch at Woolwich Crown Court - six men, most of them past
+    sixty, a diamond-tipped drill, and the decision to go back a second night
+    after the first attempt failed
+
+  # The Marchioness, 1989. Full public inquiry report, plus the inquest. A
+  # sequence with a clear before, a clear cause and a long aftermath about who
+  # was told what.
+  - The sinking of the Marchioness on the Thames in August 1989, from Lord
+    Justice Clarke's public inquiry - what the lookout arrangements on both
+    vessels actually were, and why it took eleven years to get an inquiry
+
+  # Air accident reports are the best-written primary documents in existence:
+  # minute-by-minute, technical, and completely unsentimental.
+  - The Kegworth air disaster of January 1989, from the AAIB report - how a
+    crew shut down the working engine, what the instruments in front of them
+    actually showed, and what changed in every cockpit afterwards
+
+  # A heist with a court record and an ending, and the detail that the money has
+  # never been fully recovered gives the aftermath beat something real.
+  - The Securitas depot robbery in Tonbridge, February 2006, from the Crown
+    Court judgments - the largest cash robbery in British history, a family
+    taken hostage, and the two men still unaccounted for
+
+  # Documented from the inquiry, and the sequence is genuinely strange: the
+  # failure was known about, written down, and filed.
+  - The Piper Alpha fire of July 1988, from the Cullen Inquiry - the permit to
+    work system, one valve, and the shift handover that did not happen

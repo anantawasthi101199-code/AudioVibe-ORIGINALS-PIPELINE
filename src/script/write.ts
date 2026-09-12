@@ -37,6 +37,7 @@ import { loopBrief, openBefore } from './loops';
 import { checkVoices, voiceBrief } from './voices';
 import { writeHook } from './hooks';
 import { SHORT_FORM_GUIDANCE } from './shorts';
+import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -143,7 +144,13 @@ ${EAR_RULES.map((r) => `- ${r}`).join('\n')}
 ${
   dialogue
     ? `\nWRITING A CONVERSATION\n${DIALOGUE_GUIDANCE.map((r) => `- ${r}`).join('\n')}`
-    : ''
+    : // A SOLO SHOW IS NOT A DIALOGUE SHOW WITH ONE SPEAKER. Dialogue gets
+      // varied pace, rhetorical questions and changes of register for free,
+      // because two people interrupting each other produce them. A narrator has
+      // none of that, so every one of those effects has to be written in - and a
+      // model handed the dialogue rules and one speaker writes an essay.
+      `\nWRITING NARRATION FOR ONE VOICE\n${NARRATION_GUIDANCE.map((r) => `- ${r}`).join('\n')}` +
+      `\n\nDELIVERY\n${NARRATION_TAGS.map((r) => `- ${r}`).join('\n')}`
 }
 ${
   kind === 'short'

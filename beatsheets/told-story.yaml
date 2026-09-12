@@ -1,0 +1,183 @@
+# One narrator, telling a true story in the order it happened.
+#
+# WHAT THIS FIXES, AND IT IS A FORMAT PROBLEM RATHER THAN A WRITING ONE. The
+# first real episode measured well on every prose metric there is - short
+# sentences, low clause depth, low information density, signposting present -
+# and was still hard to follow. The reason was structural, in three parts:
+#
+#   1. IT NEVER SAID WHAT IT WAS ABOUT. It opened mid-argument, comparing two
+#      documents, on the theory that a cold open earns attention. A listener who
+#      has already pressed play does not need to be hooked, they need to be
+#      oriented, and withholding that reads as having walked in late.
+#   2. ITS SPINE WAS AN ARGUMENT, NOT A STORY. "Here is a document that
+#      contradicts the accepted version" is analysis. It has a thesis, evidence
+#      and a conclusion, and a listener has to hold the thesis in mind
+#      throughout. A story has a sequence, and the sequence holds itself.
+#   3. TWO VOICES FRAGMENTED IT. Changing speaker every couple of sentences
+#      means nobody builds momentum, which reads as slow AND as complicated,
+#      because the listener is tracking two threads instead of following one.
+#
+# So: one narrator, oriented early, chronological throughout.
+#
+# CHRONOLOGY IS THE WHOLE TECHNIQUE. Events in the order they happened need no
+# scaffolding, because the listener already knows how time works. Every time a
+# script jumps - "but to understand that, we need to go back" - it spends
+# attention on bookkeeping. This sheet permits exactly one jump, at the turn,
+# and makes it the point of the episode rather than a convenience.
+#
+# THE TENSION CURVE IS NOT A CLIMB. It rises, drops at the orientation on
+# purpose, and climbs again. That dip is the beat where the listener relaxes and
+# decides to stay, and a format that never lets them relax is one they leave.
+
+id: told-story
+name: Told story
+kind: long
+intent: >
+  One true story, told by one person in the order it happened, to somebody who
+  has never heard of it and will not be looking at anything while they listen.
+
+targetSeconds: [780, 1020]
+
+serialised: false
+
+loops:
+  - id: the_question
+    question: What actually happened here, and how did it end?
+
+beats:
+  - id: cold_open
+    type: cold_open
+    seconds: [30, 50]
+    function: >
+      One moment from the middle of the story, told as a scene. Somewhere
+      specific, someone specific, something happening.
+    opens: [the_question]
+    constraints:
+      - Present tense. Put the listener in the room.
+      - A place and a person in the first two sentences.
+      - One moment, not a summary of the episode. Do not explain it yet.
+      - "No greeting, no music cue, no naming the show."
+    minClaims: 2
+
+  - id: orientation
+    type: orientation
+    seconds: [50, 80]
+    function: >
+      Say what this is, when and where it happened, and what the episode is
+      going to work out. Plainly, as if to somebody who asked.
+    constraints:
+      - "Name the thing: what it is called, when it happened, where."
+      - "Say what is strange about it in one sentence."
+      - "Say what the episode will settle by the end. A promise, kept later."
+      - Talk to the listener directly here. This is the one beat that may.
+      - No suspense. This beat trades mystery for trust and that is the trade.
+    minClaims: 2
+
+  - id: setup
+    type: stakes
+    seconds: [90, 130]
+    function: >
+      The people this happened to, before it happened. Who they were, what they
+      did all day, what they had to lose.
+    constraints:
+      - Start at the earliest point that matters and move forward.
+      - One or two people, named, with something concrete about their lives.
+      - Nothing about what is coming. Let them be ordinary first.
+    minClaims: 3
+
+  - id: rising
+    type: scene
+    seconds: [120, 170]
+    function: >
+      What happened, in order, up to the point where it stopped being ordinary.
+    constraints:
+      - Strict chronology. Dates and times spoken as a person would say them.
+      - Scenes, not summary. Somebody does something, then something follows.
+      - "End on the first moment that is genuinely wrong."
+    minClaims: 4
+
+  - id: complication
+    type: escalation
+    seconds: [110, 160]
+    function: >
+      It gets worse, and faster than anyone involved can keep up with.
+    constraints:
+      - Keep moving forward in time. No flashbacks here.
+      - Shorter sentences than the setup. The pace is the point.
+      - Say what the people involved believed at the time, not what we know now.
+    minClaims: 4
+
+  - id: turn
+    type: turn
+    seconds: [100, 150]
+    function: >
+      The thing that changes what the whole story has been about. The one
+      permitted step out of chronology, if it needs one.
+    constraints:
+      - It must be earned by something already said, not by new information.
+      - Say plainly what the listener believed a minute ago and why it was wrong.
+      - This is the only beat allowed to go back in time, and only once.
+    minClaims: 4
+
+  - id: objection
+    type: counterpoint
+    seconds: [80, 120]
+    function: >
+      The strongest honest version of the story where this reading is wrong,
+      and why people hold it.
+    constraints:
+      - "Told as what somebody BELIEVES, not as an abstract position: name who
+        thinks it and what they are looking at when they think it."
+      - Steelman it. A version the other side would recognise as their own.
+      - Say what evidence would settle it, and whether it survives.
+      - Never introduce it as something about to be knocked down.
+    minClaims: 3
+
+  - id: payoff
+    type: payoff
+    seconds: [110, 160]
+    function: >
+      What actually happened, start to finish, now that it makes sense.
+    closes: [the_question]
+    constraints:
+      - Answer the promise made in the orientation, in the same words if you can.
+      - Be exactly as certain as the sources are and no more.
+      - Chronological again. This is the story retold correctly, not a summary.
+    minClaims: 4
+
+  - id: aftermath
+    type: reckoning
+    seconds: [70, 110]
+    function: >
+      What it cost, to whom, and what happened to them afterwards.
+    constraints:
+      - Names and numbers. Years served, money, what became of the people.
+      - No moral. The accounting is the moral.
+    minClaims: 3
+
+  - id: close
+    type: outro
+    seconds: [35, 60]
+    function: >
+      One last thing worth knowing, and stop.
+    constraints:
+      - "One detail, one image, or one line from a document. Not a summary."
+      - Under a hundred words.
+      - "No sign-off, no call to action, no naming the show, no next-time."
+    minClaims: 1
+
+# Opens warm rather than hot, drops through the orientation because that beat is
+# where the listener relaxes and decides to stay, then climbs without a break to
+# the turn. It dips again for the objection, because honesty is quieter than
+# argument and a listener can hear a show pretending to take the other side
+# seriously. The payoff is the peak: in an argument the peak is the evidence, in
+# a story it is the moment it all lands.
+#
+# THE OBJECTION BEAT IS NOT A CONCESSION TO THE GATE. Confident one-sidedness is
+# the most common way generated content is false while every sentence is
+# sourced, and a true story told one way is exactly where that bites. Every
+# narrative channel worth studying does this move - "now, some people think" -
+# and none of them lose the audience by it. What breaks a story is an ABSTRACT
+# counterpoint; what works is naming who believes the other thing and what they
+# are looking at when they believe it, which is why the constraints say so.
+tensionCurve: [0.68, 0.40, 0.50, 0.72, 0.88, 0.95, 0.70, 1.00, 0.60, 0.45]

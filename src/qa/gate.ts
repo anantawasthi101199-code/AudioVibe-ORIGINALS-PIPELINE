@@ -20,6 +20,8 @@ import { CounterEvidence } from '../evidence/research';
 import { Script, fullText } from '../script/write';
 import { checkStyle, StyleMeasurement, vocabularyOverlap } from '../script/style';
 import { ContinuityReport } from '../fiction/continuity';
+import { checkSpeakability } from '../script/speakable';
+import { withoutTags } from '../script/dialogue';
 
 export interface GateFinding {
   check: string;
@@ -196,6 +198,27 @@ export const runGate = (input: GateInput): GateReport => {
   const { measurement, violations } = checkStyle(fullText(input.script), input.persona.styleCard);
   for (const v of violations) {
     add(`style:${v.rule}`, v.detail, v.blocking);
+  }
+
+  // --- 5a. Speakability. Whether it can be followed BY EAR. ---
+  //
+  // Separate from style, because they are different standards. Style asks
+  // whether the prose is good; this asks whether it survives being heard once,
+  // with no way back. A reader who loses a clause re-reads the line. A listener
+  // who loses one has lost the paragraph, because the words keep arriving.
+  //
+  // It found nothing on the first real episode, which is worth recording: that
+  // script was measurably fine by every one of these and still hard to follow.
+  // The problem there was structural - no orientation, an argument where a
+  // story belonged - and no sentence metric was ever going to see it. This is a
+  // floor, not a diagnosis.
+  const speech = checkSpeakability(withoutTags(fullText(input.script)));
+  for (const problem of speech.problems) {
+    add(
+      `speakable:${problem.rule}`,
+      problem.example ? `${problem.detail} Worst: "${problem.example}"` : problem.detail,
+      problem.blocking
+    );
   }
 
   // --- 5b. Beat openers. ---

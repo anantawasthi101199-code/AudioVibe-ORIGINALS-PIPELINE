@@ -179,14 +179,31 @@ const httpGet = async (url: string): Promise<HttpResponse> => {
         // documents than this does.
         'user-agent':
           'Mozilla/5.0 (compatible; AudioVibeFoundry/0.1; +https://audiovibe.co) research fetcher',
-        accept: 'text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8',
+        // PDFs are named explicitly because a great deal of the best primary
+        // material is one: sentencing remarks, inquest findings, regulator
+        // notices. A server that content-negotiates will otherwise hand back an
+        // HTML landing page about the document instead of the document.
+        accept:
+          'text/html,application/xhtml+xml,application/pdf,text/plain;q=0.9,*/*;q=0.8',
       },
     });
+
+    // READ THE BODY ONCE, AS BYTES, then decode. A response can only be
+    // consumed once, so reading text() first would leave nothing for a PDF -
+    // and reading arrayBuffer() first costs nothing for HTML.
+    const bytes = Buffer.from(await res.arrayBuffer());
+    const contentType = res.headers.get('content-type') ?? undefined;
+    const isPdf = /pdf/i.test(contentType ?? '') || /\.pdf($|\?)/i.test(res.url || url);
+
     return {
       status: res.status,
-      body: await res.text(),
+      // A PDF decoded as utf-8 is binary noise. It is never read in that form -
+      // fetch.ts takes the bytes - but leaving the field empty keeps the noise
+      // out of any error message that quotes the body.
+      body: isPdf ? '' : bytes.toString('utf8'),
+      bytes,
       finalUrl: res.url || url,
-      contentType: res.headers.get('content-type') ?? undefined,
+      contentType,
     };
   } finally {
     clearTimeout(timer);
