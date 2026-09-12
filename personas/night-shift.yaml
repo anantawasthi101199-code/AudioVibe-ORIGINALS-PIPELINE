@@ -115,7 +115,7 @@ styleCard:
   # Shorter than the factual show, with a wider spread. Dialogue under pressure
   # is uneven by nature, and the spread is what carries that - a drama that
   # holds a steady sentence length reads as a person describing a drama.
-  sentenceWordsMean: 12
+  sentenceWordsMean: 17  # raised 2026-09-12: the network ran too clipped
   sentenceWordsStdDevMin: 7.5
 
   # Higher than the factual show. Femi asks constantly; that is his function.

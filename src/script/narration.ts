@@ -33,7 +33,8 @@
  */
 
 export const NARRATION_GUIDANCE = [
-  'You are ONE person telling ONE listener a story out loud. Not reading an essay, not presenting. Write what you would actually say.',
+  'You are ONE person telling a story out loud, from beginning to end, to somebody who has never heard it. Not reading an essay, not presenting.',
+  'THE STORY AND THE FACTS ARE THE SUBJECT. Not the listener, and not the telling. "You can see where this is going" and "if you were in that room" are sentences spent on the audience instead of on what happened. Address the listener directly only where it genuinely earns its place, which is rarely.',
   // THIS LINE USED TO SAY "say things twice, differently", AND IT WAS WRONG
   // TWICE OVER.
   //
@@ -58,14 +59,16 @@ export const NARRATION_GUIDANCE = [
   // whole episode, because a beat cannot see that it is repeating another one.
   // The say-it-once rule itself lives in FORWARD_GUIDANCE, which every show
   // gets. Repeating it here is the fault it bans, in the prompt that bans it.
-  'You get one pass at each thing, so choose precisely: the exact number, the person by name, the shortest sentence that carries it whole.',
-  'Ask the question the listener is forming, out loud, and then answer it. "So why did nobody check? Because checking was somebody else\'s job, and that somebody had left in March." This is the single most important habit in solo narration - it is what a second host used to do.',
-  'Change pace at the seams. Short sentences when it speeds up. One long one when it needs to land. A narrator at one speed for fifteen minutes is the flattest thing there is.',
-  'Use "you" often, and mean it. "You can see where this is going." "If you were in that room, you would have believed him too."',
-  'Put the person first in the sentence, then what they did. "The clerk wrote one line" beats "one line was written".',
+  // The rhetorical question used to be instructed here as "the single most
+  // important habit in solo narration", which is how it became a tic: two per
+  // hundred words, one every fifteen seconds. It is a device a show may want,
+  // not something every narrated show must do, so it now lives in the persona
+  // canon of the show that wants it and at the rate that show wants it.
+  // Pace belongs to the show too, and this show's canon says it better and at
+  // its own rate. Same reason as the rhetorical question above: a device a
+  // narrated show may want is not a rule every narrated show needs.
+  'A narrator at one speed for fifteen minutes is the flattest thing there is.',
   'Chronological. Say when things happened as a person says it - "that March", "two weeks later", "by the summer".',
-  'Concrete nouns over abstractions. A door, a letter, a name, a number. Never "the situation", "the circumstances", "the nature of".',
-  'Name things when you introduce them, and use the same name every time afterwards. A listener who meets "Geillis" and later hears "Duncan" is meeting two people.',
   'When the record does not say, say so plainly. "Nobody wrote that down" is more interesting than a guess and it is the show\'s whole credibility.',
 ];
 
@@ -86,12 +89,14 @@ export const NARRATION_GUIDANCE = [
  * script/dialogue.ts strips anything outside the known list rather than hoping.
  */
 export const NARRATION_TAGS = [
-  'Mark delivery with tags in square brackets, on their own before the sentence they affect.',
-  '[excited] for a detail you genuinely enjoy. [curious] for the question nobody asked.',
-  '[serious] and [grim] for harm done to real people. Never for effect - this show does not perform gravity.',
-  '[quietly] and [whispers] for the worst moment, which should be the quietest rather than the loudest.',
-  '[rushed] when events outrun everyone. [slowly] and [drawn out] for the thing that will not be hurried.',
-  '[wry] for the absurd detail, which real cases are full of. [warmly] for the people.',
-  '[pauses] before a revelation, once or twice an episode at most.',
-  'Three to six tags per beat. A tag on every line is a tag on nothing - the contrast is what carries.',
+  'Mark delivery with a tag in square brackets, on its own before the sentence it affects.',
+  // THE LIST IS NOT ADVICE, IT IS THE VOCABULARY. Anything outside it would be
+  // SPOKEN by the voice rather than performed, so script/dialogue.ts strips
+  // unknown tags - which means an unlisted tag is silently lost rather than
+  // wrong. Naming them is the one part of this that has to be prescriptive.
+  'The available tags: [excited] [curious] [serious] [grim] [quietly] [whispers] [rushed] [slowly] [drawn out] [wry] [warmly] [pauses]. Anything else is discarded.',
+  // The rule against performing gravity the facts have not earned belongs to
+  // the show, not to the tag list, and this repeated it. The persona's taboos
+  // already carry it into the same prompt.
+  'Use them where the delivery genuinely changes, three to six times in a beat. A tag on every line is a tag on nothing.',
 ];

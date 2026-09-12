@@ -98,15 +98,32 @@ export const beatText = (beat: { turns: Turn[] }): string =>
 export const fullText = (script: Script): string =>
   script.beats.map((b) => beatText(b)).join('\n\n');
 
+/**
+ * The few things about audio a good writer would not otherwise know.
+ *
+ * CUT FROM EIGHT RULES TO FOUR, and the cut is the point. This list had grown
+ * into craft instruction - vary your sentence length, keep under twenty-five
+ * words, put the person first, prefer concrete nouns - and every one of those
+ * was telling a language model how to write, which is the one thing it does not
+ * need telling. What came back was a show that measured well and sounded
+ * managed, because it was.
+ *
+ * The test for anything in this list: would a good writer get it wrong WITHOUT
+ * being told, for a reason specific to audio or to this pipeline? A semicolon
+ * is inaudible, so that stays. "Vary sentence length" is what writing is, so it
+ * goes - and the style card still measures the result, which is the right place
+ * for it: measuring an outcome leaves the writer free to reach it their own
+ * way, while instructing the technique does not.
+ *
+ * The FACTS block below this in the prompt is a different kind of rule and is
+ * not being relaxed. Constraining what may be asserted is the job; constraining
+ * how it is phrased is not.
+ */
 export const EAR_RULES = [
-  'Write for the ear. A listener cannot re-read a sentence.',
-  'Vary sentence length deliberately. Uniform sentence length is the clearest sign of generated speech, and it is measured.',
-  'Keep sentences under twenty-five words. That is one breath at speaking pace, and it is measured. A sentence held together by three commas is two sentences.',
-  'No parentheses, no semicolons, no bullet points, no headings.',
-  'No "firstly", "secondly", "finally" scaffolding.',
-  'Speak numbers as speech: "about three in ten", not "31.4 per cent". The exact figure lives in the sources list.',
-  'Name specific things. Not "a regulator" but the regulator.',
-  'Never open a beat by announcing what the beat is about.',
+  'Write for the ear. This will be spoken aloud by one voice to somebody who cannot see the page and cannot rewind.',
+  'Nothing that only works in print: no parentheses, no semicolons, no bullet points, no headings, no "firstly, secondly, finally".',
+  'Numbers as a person says them out loud. "About three in ten", not "31.4 per cent". The exact figure lives in the sources list.',
+  'Write whatever length of sentence the moment wants. A long one that gathers several things and lands them together is usually the best sentence in a beat.',
 ];
 
 export const buildSystem = (persona: Persona, isoDate: string, kind: 'long' | 'short'): string => {

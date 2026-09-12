@@ -105,7 +105,7 @@ styleCard:
   # Around 16 words, but the spread matters more than the mean: uniform
   # sentence length is the clearest tell of generated prose, so a draft that
   # hits 16.0 with no variance FAILS this rather than passing it.
-  sentenceWordsMean: 16
+  sentenceWordsMean: 20  # raised 2026-09-12: the network ran too clipped
   sentenceWordsStdDevMin: 6.5
 
   # Asks something roughly every other paragraph. Enough to keep a listener

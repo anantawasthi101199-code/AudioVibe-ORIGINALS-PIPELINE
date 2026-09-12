@@ -282,11 +282,8 @@ export const checkRepetition = (text: string, storySoFar = ''): ForwardProblem[]
  * model's idea of unforced, which is flat.
  */
 export const FORWARD_GUIDANCE = [
-  'ALWAYS FORWARD. Every sentence adds something that was not there before. Never take a step back to correct an impression the listener never had.',
-  'NEVER write "Not X. Y." or "This was not X, it was Y." Nobody thought X. Say what was true and let it be surprising on its own: "His first conviction was in 1950, when he was eleven" needs no help.',
-  'SAY EACH THING ONCE. Not once and then again in other words, not once and then summarised at the end. A listener who is told everything twice learns that missing a sentence costs nothing, and then stops listening properly. Put the weight in the words instead, and trust them.',
-  'This holds across the WHOLE episode, not just this beat. A phrase, a figure or a line from a document that has already been used is spent. If it was worth using, it was heard.',
-  'TELL THE EVENTS, DO NOT DISCUSS THE EPISODE. No "here is where the story turns", no "you would be forgiven for thinking", no "what I want to work out with you". Perform the turn by telling what happened next. If it is a surprise, it will read as one.',
-  'Interest comes from the facts being specific, not from being told they are interesting. A drill bit, a price, a time on a clock, a name. Never reach for a phrase that tells the listener how to feel about a fact.',
-  'If a stretch of the story is ordinary, tell it plainly and briefly and move on. An ordinary hour inflated into drama is the fastest way to lose somebody, because they can hear it.',
+  'ALWAYS FORWARD. Never step back to correct an impression the listener never had. In particular: never "Not X. Y." or "This was not X, it was Y." Nobody thought X. Say what was true and let it be surprising on its own.',
+  'SAY EACH THING ONCE, across the whole episode and not just this beat. A phrase, a figure or a line from a document that has been used is spent. A listener told everything twice learns that missing a sentence costs nothing, and then stops listening properly.',
+  'TELL THE EVENTS, DO NOT DISCUSS THE EPISODE. No "here is where the story turns", no "you would be forgiven for thinking". Perform the turn by telling what happened next.',
+  'The facts are what is interesting, so let them be. A drill bit, a price, a time on a clock, a name. If a stretch of the story is ordinary, tell it plainly and briefly and move on - an ordinary hour inflated into drama is the fastest way to lose somebody, because they can hear it.',
 ];

@@ -80,6 +80,26 @@
 # cost and it is worth paying, because a smooth episode nobody leaves is more
 # useful than precise data about why they left a rough one.
 
+#
+# CONSTRAINTS CUT ROUGHLY IN HALF, 2026-09-12, and the reason is a correction
+# worth keeping: "don't micromanage the creator with prompts, don't try to fix
+# it to a template too strictly, let the models have creativity in writing,
+# language models are inherently good at writing, only fact check."
+#
+# That is right, and the drift it names is real. Every fault found in an episode
+# got answered with another constraint, and the sheet grew from a description of
+# what each beat is FOR into a specification of how to write it - present tense
+# here, a place and a person in the first two sentences, start with one or two
+# named people doing something ordinary. The result passed everything and
+# sounded managed, because it was.
+#
+# The line kept is this: a constraint earns its place if it is about WHAT THE
+# BEAT MUST ACHIEVE or about a fact the writer cannot know. It does not earn its
+# place by describing a technique for achieving it. So the roster survives (the
+# listener genuinely cannot follow names they were never given), chronology
+# survives (it is the format), and the honesty rules survive (they are the
+# show). The craft instructions are gone.
+
 id: told-story
 name: Told story
 kind: long
@@ -104,8 +124,6 @@ beats:
       specific, someone specific, something happening.
     opens: [the_question]
     constraints:
-      - Present tense. Put the listener in the room.
-      - A place and a person in the first two sentences.
       - One moment, not a summary of the episode. Do not explain it yet.
       - "No greeting, no music cue, no naming the show."
     minClaims: 2
@@ -117,15 +135,9 @@ beats:
       Say what this is, when and where it happened, and what the episode is
       going to work out. Plainly, as if to somebody who asked.
     constraints:
-      - "Name the thing: what it is called, when it happened, where."
-      - "Say what is strange about it in one sentence."
+      - "Name the thing: what it is called, when it happened, where, and how big."
       - "Say what the episode will settle by the end. A promise, kept later."
-      - Talk to the listener directly here. This is the one beat that may.
       - No suspense. This beat trades mystery for trust and that is the trade.
-      - >
-        Say how big the thing was in plain terms - how many people, how much
-        money, how long it took. The listener is deciding whether to stay, and
-        scale is what they are deciding on.
     minClaims: 2
 
   - id: before
@@ -136,17 +148,11 @@ beats:
       happened up to the first moment something was genuinely wrong.
     constraints:
       - >
-        THE ROSTER COMES FIRST. Before anybody does anything, say how many there
-        were, then name them one at a time with one thing about each the
-        listener can hold on to - what he did for a living, what he had done
-        before, how old he was. A name that arrives mid-action costs the
+        THE ROSTER COMES FIRST, and this one is not a matter of taste: say how
+        many there were, then introduce them with something about each that the
+        listener can hold on to. A name that arrives mid-action costs the
         listener the sentence it arrives in, and they do not get it back.
-      - >
-        Introduce them in the order they matter, not the order a list would have
-        them in. The one the story turns on gets the most, and gets it first.
-      - Then strict chronology. Dates said as a person says them.
-      - Scenes, not summary. Somebody does something, then something follows.
-      - "End on the first moment that is genuinely wrong."
+      - Then chronological, to the first moment something is genuinely wrong.
       - One beat, one continuous run of time. Do not break it into sections.
     minClaims: 7
 
@@ -159,7 +165,6 @@ beats:
     opens: []
     constraints:
       - Keep moving forward in time until the turn, which may look back once.
-      - Shorter sentences as it speeds up. The pace is the point.
       - Say what the people involved believed at the time, not what we know now.
       - >
         At the turn, tell what happened. Do not announce that a turn is
@@ -186,7 +191,6 @@ beats:
         who said what, and carry on. Never stop the story to weigh two readings
         against each other - a disagreement told in its place is information, a
         disagreement told as its own section is an essay interrupting a story.
-      - Chronological again. The story retold correctly, not a summary of it.
       - "Then the accounting: names, numbers, years, what happened afterwards."
       - No moral. The accounting is the moral.
     minClaims: 6
@@ -197,8 +201,7 @@ beats:
     function: >
       One last thing worth knowing, and stop.
     constraints:
-      - "One detail, one image, or one line from a document. Not a summary."
-      - Under a hundred words.
+      - "One thing, not a summary, and not something the episode has said."
       - "No sign-off, no call to action, no naming the show, no next-time."
     minClaims: 1
 

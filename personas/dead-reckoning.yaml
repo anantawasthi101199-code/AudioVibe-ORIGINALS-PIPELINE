@@ -118,7 +118,7 @@ styleCard:
   # The spread is the number that actually matters, and 6.5 is genuinely varied.
   # The floor sits just under what the show produces naturally, so it catches
   # prose flattening out without failing every episode for being a conversation.
-  sentenceWordsMean: 10
+  sentenceWordsMean: 16  # raised 2026-09-12: the network ran too clipped
   sentenceWordsStdDevMin: 6
 
   # Measured 0.7 on the first episode against a target of 3, which is the one

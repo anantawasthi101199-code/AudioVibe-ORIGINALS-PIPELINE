@@ -70,26 +70,44 @@ export interface SpeakabilityProblem {
 }
 
 /**
- * One breath, at narration pace.
+ * The outer edge of what a narrator can deliver in one go.
  *
- * Around 150 words a minute means twenty-five words is roughly ten seconds,
- * which is the far end of what a narrator delivers without breaking. Sentences
- * beyond it are not forbidden - one now and then is a deliberate rush - but a
- * script full of them is unspeakable.
+ * RAISED FROM TWENTY-FIVE, and the old number was the mistake. Twenty-five
+ * words is a real breath at narration pace, so it looked like a principled
+ * limit, and it was the wrong thing to measure: an audio script does not have
+ * to fit a sentence into one breath, because a narrator BREATHES. What they
+ * cannot do is hold a sentence whose grammar has come apart.
+ *
+ * What the low number actually produced was a show of short flat declaratives,
+ * which reads as clipped rather than clear, and the listener said so. The good
+ * long sentence - the one that gathers a few things and lands them together -
+ * is most of what makes narration engaging, and it was being rewritten out of
+ * every beat.
+ *
+ * So this is now a genuine ceiling rather than a target: forty-two words is
+ * about seventeen seconds, past which a sentence is usually not long but
+ * broken. The share below is generous for the same reason.
  */
-export const BREATH_WORDS = 25;
+export const BREATH_WORDS = 42;
 
 /** Above this share of over-long sentences, the script is hard work. */
-export const MAX_OVERLONG_SHARE = 0.12;
+export const MAX_OVERLONG_SHARE = 0.25;
 
-/** Mean subordinate clauses per sentence, above which the thread drops. */
-export const MAX_CLAUSE_DEPTH = 1.0;
+/**
+ * Mean subordinate clauses per sentence, above which the thread drops.
+ *
+ * Raised with the length. A longer sentence has more clauses by definition, so
+ * leaving this at one would have taken back what raising BREATH_WORDS gave -
+ * three instruments measuring the same preference from different angles is how
+ * a limit survives being removed.
+ */
+export const MAX_CLAUSE_DEPTH = 1.6;
 
 /** Share of sentences that may open on a subordinate clause. */
-export const MAX_FRONT_LOADED_SHARE = 0.2;
+export const MAX_FRONT_LOADED_SHARE = 0.35;
 
 /** Share of sentences that may have an abstraction as their subject. */
-export const MAX_ABSTRACT_SUBJECT_SHARE = 0.25;
+export const MAX_ABSTRACT_SUBJECT_SHARE = 0.3;
 
 const SUBORDINATORS =
   /\b(because|although|though|whereas|while|unless|since|if|when|whenever|after|before|until|as|that|which|who|whom|whose|where)\b/gi;

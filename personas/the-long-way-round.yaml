@@ -61,10 +61,10 @@ hosts:
     name: Cal
     role: >
       Has read the files and is telling you about them. Explains things without
-      making you feel behind, admits what the record does not say, and is more
-      interested in the people than in being right. Talks TO you, not at an
-      audience - the second person is used, deliberately and often, because that
-      is what one person telling another person a story actually sounds like.
+      leaving anyone behind, admits what the record does not say, and is far
+      more interested in the people than in being right. Speaks as one person to
+      one person, and keeps the attention on what happened rather than on
+      whoever is hearing about it.
     # THE IDIOLECT OF A NARRATOR IS PACE, NOT TURN LENGTH. There is no second
     # host to be different from, so the numbers that matter are how often the
     # delivery changes and how often the listener is addressed. Long mean turn
@@ -73,7 +73,7 @@ hosts:
     # used to do.
     idiolect:
       turnWordsMean: 110
-      questionRate: 0.25
+      questionRate: 0.08
       backchannelRate: 0.0
       signature:
         - "here is the part that gets me"
@@ -97,27 +97,38 @@ hosts:
         style: 0.55
 
 styleCard:
-  # SHORTER THAN ANY OTHER SHOW HERE, and the reason is that there is nobody to
-  # interrupt. In dialogue, a four-word question from the other host breaks up a
-  # long explanation for free. A narrator has to do that themselves, which means
-  # the sentences do the work.
+  # RAISED FROM THIRTEEN, which was too short and made the show sound clipped.
   #
-  # The spread matters more than the mean, as always, but it matters more here
-  # than anywhere: a run of short sentences then one long one IS the pacing, and
-  # it is the only pacing a single voice has.
-  sentenceWordsMean: 13
-  sentenceWordsStdDevMin: 7
+  # The old reasoning was that a narrator has nobody to interrupt them, so the
+  # sentences have to do the breaking up themselves. That is true and it does
+  # not imply short: what a long sentence does, when it works, is gather several
+  # things and land them together, and that is most of what makes narration
+  # engaging rather than merely clear. Thirteen words leaves no room for it.
+  #
+  # The spread still matters more than the mean. A run of medium sentences and
+  # then a long one IS the pacing, and it is the only pacing a single voice has,
+  # so the minimum spread goes UP alongside the mean rather than staying put.
+  sentenceWordsMean: 19
+  sentenceWordsStdDevMin: 8
 
-  # Rhetorical questions, asked and answered. This is the number that replaces
-  # the second host - the listener's question, said out loud before they finish
-  # forming it, then answered.
-  questionsPer100Words: 2.0
+  # SPARSE, DOWN FROM TWO. Rhetorical questions were doing the job of a second
+  # host, and two per hundred words is one every fifteen seconds - which stops
+  # being a narrator thinking out loud and becomes a format tic. Kept above zero
+  # because the genuine question, asked once when the listener is actually
+  # forming it, is still the best way to change direction.
+  questionsPer100Words: 0.6
 
-  # HIGH, and deliberately the highest of any show here. One person telling
-  # another person a story says "you" constantly, and the dialogue shows
-  # forbade it because characters address each other rather than the audience.
-  # A narrator who never says "you" is reading a document at somebody.
-  secondPersonPer100Words: 3.0
+  # SPARSE, DOWN FROM THREE, which was the highest of any show here and wrong.
+  #
+  # The reasoning was that one person telling another person a story says "you"
+  # constantly. What it produced was a script about the listener - "you can see
+  # where this is going", "if you were in that room" - and every one of those
+  # sentences is a sentence not spent on what happened. The story and the facts
+  # are the subject. The listener is who it is for, which is not the same thing.
+  #
+  # Not zero. A narrator who never says "you" is reading a document at somebody,
+  # and once or twice an episode the direct address earns its place.
+  secondPersonPer100Words: 0.6
 
   # Generous, because a narrator who never hedges sounds like they are making it
   # up. Still a ceiling: the evidence layer decides how certain a claim may be,
@@ -187,11 +198,14 @@ canon:
       "Here is what we actually know" - once an episode, usually near the turn,
       the narrator separates what is in the record from what everybody assumes.
 
+  # WAS "several times an episode", WHICH MADE IT A TIC. The device is good and
+  # it was being run as a quota, so the script kept stopping to stage a question
+  # nobody had asked. Once or twice, when the question is genuinely the next
+  # thing in the listener's head, is the whole of it.
   - kind: stylistic_rule
     text: >
-      Ask the listener's question out loud and then answer it. This is how a
-      single narrator does what a second host would have done, and it should
-      happen several times an episode.
+      Once or twice an episode, when the question really is the next thing
+      anybody would ask, ask it out loud and answer it. Not as a habit.
 
   - kind: stylistic_rule
     text: >
