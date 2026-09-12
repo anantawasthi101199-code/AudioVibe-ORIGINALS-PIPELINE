@@ -105,6 +105,17 @@ interface OpenAiTtsDeps {
 
 export class OpenAiTts implements TtsProvider {
   readonly name = 'openai';
+
+  /**
+   * It speaks them. A drafted episode said "serious" out loud mid-sentence,
+   * because the script marks delivery as `[serious]` for Eleven v3 and this
+   * engine has no idea that is not a word.
+   *
+   * Stated rather than left to the default so that reading this class answers
+   * the question, and so a future model that does understand them is a one-line
+   * change in the obvious place.
+   */
+  readonly understandsTags = false;
   private model: string;
 
   constructor(

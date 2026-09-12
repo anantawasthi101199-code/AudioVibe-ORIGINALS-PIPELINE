@@ -316,3 +316,84 @@ describe('the truncation guard', () => {
     expect(said.join(' ')).toMatch(/1\.5s of silence.*tail was dropped/);
   });
 });
+
+describe('performance tags reaching an engine that would speak them', () => {
+  /**
+   * A listener: "it says serious in between, i think that was meant to be for
+   * emotion in []".
+   *
+   * Exactly right. The writer is told to mark delivery as `[serious]` and
+   * `[quietly]` because Eleven v3 reads them as direction - that is the whole
+   * reason they are in the script. OpenAI's engine has no idea they are not
+   * words, and every drafted episode had been announcing its own stage
+   * directions mid-sentence.
+   */
+  const beats = [
+    {
+      beatId: 'world',
+      beatType: 'stakes',
+      turns: [{ speaker: 'host', text: '[serious] The Sumerians pictured the world in layers.' }],
+    },
+  ];
+
+  const spy = (understandsTags: boolean | undefined) => {
+    const sent: string[] = [];
+    const tts = {
+      name: 'fake',
+      understandsTags,
+      async synthesise(req: { text: string }) {
+        sent.push(req.text);
+        return { audio: Buffer.alloc(2000), provider: 'fake', model: 'm', voiceId: 'v', costPence: 1 };
+      },
+    } as unknown as TtsProvider;
+
+    return {
+      sent,
+      done: renderScript(
+        { beats, voices: { host: voice }, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+        tts,
+        {
+          writeFile: () => undefined,
+          probe: async () => 60,
+          trailing: async () => 0.3,
+          concat: async () => undefined,
+        }
+      ),
+    };
+  };
+
+  it('STRIPS the tag for an engine that reads it as words', async () => {
+    const { sent, done } = spy(false);
+    await done;
+    expect(sent[0]).not.toMatch(/serious/);
+    expect(sent[0]).toMatch(/The Sumerians pictured the world in layers\./);
+  });
+
+  it('keeps the tag for an engine that reads it as direction', async () => {
+    const { sent, done } = spy(true);
+    await done;
+    expect(sent[0]).toMatch(/\[serious\]/);
+  });
+
+  it('treats an unstated provider as one that would speak them', async () => {
+    // Absent means no. A provider that has not thought about it would read them
+    // aloud, and that failure is loud and constant while stripping wrongly
+    // costs one flat sentence.
+    const { sent, done } = spy(undefined);
+    await done;
+    expect(sent[0]).not.toMatch(/serious/);
+  });
+});
+
+describe('ElevenLabsTts.understandsTags', () => {
+  it('is true on v3, which reads them as direction', () => {
+    expect(new ElevenLabsTts('k', 'eleven_v3').understandsTags).toBe(true);
+  });
+
+  it('is FALSE on an older model, which would say them out loud', () => {
+    // Checked against the model rather than hardcoded, because a show dropping
+    // to an older model for cost would otherwise start announcing its own
+    // stage directions with nothing to flag it.
+    expect(new ElevenLabsTts('k', 'eleven_multilingual_v2').understandsTags).toBe(false);
+  });
+});

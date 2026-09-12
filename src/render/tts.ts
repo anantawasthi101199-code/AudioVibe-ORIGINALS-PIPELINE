@@ -71,6 +71,27 @@ export interface SynthesisResult {
 }
 
 export interface TtsProvider {
+  /**
+   * Whether this engine READS a bracketed tag as direction or as words.
+   *
+   * A listener heard the answer before any check did: the drafted audio says
+   * "serious" out loud, in the middle of a sentence, because the script marks
+   * delivery as `[serious]` and OpenAI's speech endpoint has no idea that is
+   * not something to say.
+   *
+   * Eleven v3 takes the tags as performance direction, which is the entire
+   * reason the writer is told to put them in. Every other engine here - and
+   * every older Eleven model - treats them as text. So the renderer has to
+   * strip them for anything that would speak them, and the only thing that
+   * knows is the provider.
+   *
+   * Optional, and absent means NO. A provider that has not thought about it is
+   * a provider that would read them aloud, and the failure of reading them
+   * aloud is loud and constant while the cost of stripping them wrongly is one
+   * flat sentence.
+   */
+  readonly understandsTags?: boolean;
+
   readonly name: string;
   synthesise(req: SynthesisRequest): Promise<SynthesisResult>;
   /**
@@ -126,6 +147,17 @@ export const ELEVENLABS_PENCE_PER_1K_CHARS = 12;
 
 export class ElevenLabsTts implements TtsProvider {
   readonly name = 'elevenlabs';
+
+  /**
+   * v3 reads the tags as direction. Earlier models speak them.
+   *
+   * Checked against the model rather than hardcoded true, because a show that
+   * drops to eleven_multilingual_v2 for cost would otherwise start announcing
+   * its own stage directions and nothing would flag it.
+   */
+  get understandsTags(): boolean {
+    return /v3/.test(this.model);
+  }
 
   constructor(
     private apiKey: string,

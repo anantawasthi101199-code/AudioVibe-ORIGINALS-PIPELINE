@@ -317,6 +317,18 @@ export const renderScript = async (
   const join = deps.concat ?? concatBeats;
 
   const { forSpeech } = await import('./tts');
+  const { withoutTags } = await import('../script/dialogue');
+
+  // WHAT THE ENGINE WILL ACTUALLY SAY. The script marks delivery as `[serious]`
+  // or `[quietly]` for Eleven v3, which reads them as direction. Anything else
+  // reads them as words, and a drafted episode was saying "serious" out loud in
+  // the middle of a sentence. See TtsProvider.understandsTags.
+  //
+  // Every path that hands text to a provider goes through this, including the
+  // prosody context: sending a tag as previous_text to an engine that cannot
+  // read tags is asking it to imitate the sound of somebody saying "quietly".
+  const speakable = (text: string): string =>
+    tts.understandsTags ? forSpeech(text) : forSpeech(withoutTags(text));
 
   const voiceFor = (speaker: string) => {
     const voice = input.voices[speaker];
@@ -388,7 +400,7 @@ export const renderScript = async (
       // starts before the last line has landed all come from here.
       result = await tts.synthesiseDialogue({
         lines: beat.turns.map((t) => ({
-          text: forSpeech(t.text),
+          text: speakable(t.text),
           voice: voiceFor(t.speaker),
         })),
       });
@@ -411,7 +423,7 @@ export const renderScript = async (
 
       for (const [t, turn] of beat.turns.entries()) {
         const one = await tts.synthesise({
-          text: forSpeech(turn.text),
+          text: speakable(turn.text),
           voice: voiceFor(turn.speaker),
         });
         const turnFile = input.beatPathFor(
@@ -449,13 +461,13 @@ export const renderScript = async (
       const before = input.beats[i - 1];
       const after = input.beats[i + 1];
       const request = {
-        text: forSpeech(beat.turns.map((t) => t.text).join('\n\n')),
+        text: speakable(beat.turns.map((t) => t.text).join('\n\n')),
         voice: voiceFor(beat.turns[0]!.speaker),
         previousText: before
-          ? forSpeech(before.turns.map((t) => t.text).join(' ')).slice(-STITCH_CHARS)
+          ? speakable(before.turns.map((t) => t.text).join(' ')).slice(-STITCH_CHARS)
           : undefined,
         nextText: after
-          ? forSpeech(after.turns.map((t) => t.text).join(' ')).slice(0, STITCH_CHARS)
+          ? speakable(after.turns.map((t) => t.text).join(' ')).slice(0, STITCH_CHARS)
           : undefined,
       };
 
