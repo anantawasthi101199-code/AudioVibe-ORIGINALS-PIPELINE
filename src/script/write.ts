@@ -40,6 +40,7 @@ import { SHORT_FORM_GUIDANCE } from './shorts';
 import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
 import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
+import { PLAIN_GUIDANCE, checkPlainWords } from './plain';
 import { PRONOUN_RULE } from '../qa/pronouns';
 import { soundsUncertain } from '../evidence/repair';
 import {
@@ -190,6 +191,9 @@ ${EAR_RULES.map((r) => `- ${r}`).join('\n')}
 
 KEEPING THE STORY MOVING FORWARD
 ${FORWARD_GUIDANCE.map((r) => `- ${r}`).join('\n')}
+
+PLAIN WORDS
+${PLAIN_GUIDANCE.map((r) => `- ${r}`).join('\n')}
 ${
   dialogue
     ? `\nWRITING A CONVERSATION\n${DIALOGUE_GUIDANCE.map((r) => `- ${r}`).join('\n')}`
@@ -464,6 +468,12 @@ export const critiqueBeat = (
         `Say what is not established, in your own words, where it belongs.`
     );
   }
+
+  // Vocabulary, which no other check looks at. Mostly advisory: there are
+  // already ten blocking checks on the writing, and every rejection pushes
+  // prose toward the safe and the flat. The prompt does the work; this reports
+  // whether it worked, and blocks only where the beat has stopped being speech.
+  for (const p of checkPlainWords(text)) (p.blocking ? blocking : advisory).push(p.detail);
 
   const { violations } = checkStyle(text, persona.styleCard);
   for (const v of violations) (v.blocking ? blocking : advisory).push(v.detail);
