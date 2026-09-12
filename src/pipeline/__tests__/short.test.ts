@@ -225,15 +225,17 @@ describe('runShort', () => {
     expect(run.manifest.formatId).toBe(SHORT_FORMAT_ID);
     expect(script.beats).toHaveLength(5);
 
-    // The evidence and format checks pass on real inherited claims. Style and
-    // self-similarity deliberately DO fire, because the fake writer returns one
-    // identical paragraph for every beat of both the parent and the short -
-    // that is the gate working, and the self-similarity test below depends on
-    // it. Asserting a clean gate here would mean writing a fixture good enough
-    // to pass a prose check, which tests the fixture rather than the pipeline.
+    // The evidence and format checks pass on real inherited claims. Style,
+    // self-similarity and beat openers deliberately DO fire, because the fake
+    // writer returns one identical paragraph for every beat of both the parent
+    // and the short - that is three checks working, and the self-similarity
+    // test below depends on it. Asserting a clean gate here would mean writing
+    // a fixture good enough to pass a prose check, which tests the fixture
+    // rather than the pipeline.
+    const prose = ['selfSimilarity', 'beatOpeners'];
     const structural = gate.findings
       .filter((f) => f.blocking)
-      .filter((f) => !f.check.startsWith('style:') && f.check !== 'selfSimilarity');
+      .filter((f) => !f.check.startsWith('style:') && !prose.includes(f.check));
     expect(structural).toEqual([]);
   });
 

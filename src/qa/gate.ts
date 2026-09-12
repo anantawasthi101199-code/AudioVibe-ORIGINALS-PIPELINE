@@ -198,6 +198,43 @@ export const runGate = (input: GateInput): GateReport => {
     add(`style:${v.rule}`, v.detail, v.blocking);
   }
 
+  // --- 5b. Beat openers. ---
+  //
+  // THE FIRST SENTENCE OF A BEAT CARRIES FAR MORE WEIGHT THAN ITS POSITION IN
+  // the word count suggests, and sentence-level opener diversity does not see
+  // it: four beats opening "Start with the name", "Start with the shape",
+  // "Start with the person", "Start with what's dated" is four sentences out of
+  // two hundred and forty, which no ratio over the whole script will ever flag.
+  //
+  // But a listener hears it immediately. It is the audio equivalent of every
+  // paragraph starting the same way, and it is one of the most recognisable
+  // tells that beats were written separately by the same machine - which is
+  // exactly what happened, and exactly what the rest of the design works to
+  // hide.
+  const openers = input.script.beats
+    .map((b) => b.turns[0]?.text ?? '')
+    // TWO WORDS, NOT THREE. The real case was "Start with the name", "Start
+    // with the shape", "Start with the person", "Start with what's dated" - a
+    // three-word window catches three of those and lets the fourth through,
+    // which is the one that would make somebody think the check was working.
+    // Across ten beats a two-word window is sensitive enough to be useful and
+    // still narrow enough that "In 1591" and "In Edinburgh" do not collide.
+    .map((t) => t.trim().split(/\s+/).slice(0, 2).join(' ').toLowerCase())
+    .filter(Boolean);
+
+  const openerCounts = new Map<string, number>();
+  for (const opener of openers) openerCounts.set(opener, (openerCounts.get(opener) ?? 0) + 1);
+
+  const repeatedOpeners = [...openerCounts].filter(([, n]) => n > 1);
+  if (repeatedOpeners.length) {
+    add(
+      'beatOpeners',
+      `${repeatedOpeners.map(([o, n]) => `"${o}..." opens ${n} beats`).join(', ')}. ` +
+        `A listener hears a repeated beat opening immediately, and it is the clearest ` +
+        `sign the beats were written separately by the same machine.`
+    );
+  }
+
   // --- 6. Self-similarity. ---
   for (const prior of input.priorTexts ?? []) {
     const overlap = vocabularyOverlap(fullText(input.script), prior.text);
@@ -222,10 +259,22 @@ export const runGate = (input: GateInput): GateReport => {
 
   // --- 8. Risk tier. A show does not get a topic it is not cleared for. ---
   //
-  // Skipped for fiction, which has no claims to tier. The equivalent risk in a
-  // fiction show - inventing something about a REAL named person - is not
-  // something arithmetic can see, and it is handled where it belongs: in the
-  // persona's taboos, which the beat critique enforces on every draft.
+  // WHAT THIS IS ACTUALLY PROTECTING AGAINST: a claim about a LIVING named
+  // person, which is where the legal and ethical exposure is and where T1/T2
+  // sourcing plus full human review are non-negotiable.
+  //
+  // It cannot tell living from dead, because nothing in a claim says which. So
+  // a show whose whole method is attributing statements to named people in
+  // court records - a history show - has to be cleared for `named_person` or it
+  // can never publish anything. Dead Reckoning failed on this with thirty-seven
+  // claims about people who died in 1591.
+  //
+  // The protection does not disappear, it moves to where it can be expressed:
+  // the persona's taboos, which say in words that the show covers no living
+  // people, and which the beat critique enforces on every draft. A rule a
+  // person writes and a model is held to beats a rule arithmetic cannot state.
+  //
+  // Skipped for fiction, which has no claims to tier.
   const riskyTypes = new Set(['attribution']);
   const hasNamedPersonClaims = !fiction && input.claims.some((c) => riskyTypes.has(c.type));
   if (hasNamedPersonClaims && !input.persona.allowedRiskTiers.includes('named_person')) {

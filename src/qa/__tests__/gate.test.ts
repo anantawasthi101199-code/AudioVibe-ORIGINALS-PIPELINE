@@ -248,3 +248,80 @@ describe('formatGateReport', () => {
     expect(formatGateReport(runGate(input()))).toMatch(/Prose: \d+ words/);
   });
 });
+
+describe('beat openers', () => {
+  // A repeated beat opening is heard immediately and is invisible to
+  // sentence-level opener diversity: four beats opening "Start with..." is four
+  // sentences out of two hundred and forty, which no whole-script ratio flags.
+  // A real episode did exactly that.
+
+  const withOpenings = (openings: string[]): Script => ({
+    ...script(),
+    beats: openings.map((text, i) => ({
+      beatId: `b${i}`,
+      beatType: 'turn' as const,
+      turns: [{ speaker: 'host', text }],
+      claimIds: [],
+      revisions: 0,
+    })),
+  });
+
+  it('blocks when two beats open the same way', () => {
+    const findings = runGate(
+      input({
+        script: withOpenings([
+            'Start with the name, because the pamphlet mostly does not.',
+            'Start with the shape of it, before the woman herself.',
+        ]),
+      })
+    ).findings;
+
+    const opener = findings.find((f) => f.check === 'beatOpeners');
+    expect(opener?.blocking).toBe(true);
+    expect(opener?.detail).toContain('start with');
+  });
+
+  it('says how many beats share the opening', () => {
+    const findings = runGate(
+      input({
+        script: withOpenings([
+            // The real four, one of which a three-word window would miss.
+            'Start with the name of her.',
+            'Start with the shape of it.',
+            "Start with what's dated here.",
+        ]),
+      })
+    ).findings;
+
+    expect(findings.find((f) => f.check === 'beatOpeners')?.detail).toContain('opens 3 beats');
+  });
+
+  it('passes when the beats open differently', () => {
+    const findings = runGate(
+      input({
+        script: withOpenings([
+            'The Justiciary Court clerk wrote down one confession.',
+            'Nobody had written the other two up, which happens.',
+            'By two in the morning the corridor had gone quiet.',
+        ]),
+      })
+    ).findings;
+
+    expect(findings.find((f) => f.check === 'beatOpeners')).toBeUndefined();
+  });
+
+  it('compares the opening WORDS, not the whole sentence', () => {
+    // Two beats opening "Start with" are the same tell whether or not the rest
+    // of the sentence differs, which is the entire point.
+    const findings = runGate(
+      input({
+        script: withOpenings([
+            'Start with the completely different first thing.',
+            'Start with the entirely unrelated second thing.',
+        ]),
+      })
+    ).findings;
+
+    expect(findings.find((f) => f.check === 'beatOpeners')).toBeDefined();
+  });
+});

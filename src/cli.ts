@@ -262,15 +262,23 @@ const buildDeps = (): PipelineDeps => {
     search,
     tts: buildTts(),
     fetchDeps: { httpGet: get },
+    // Narrowed per run in finishRun, which knows which run is being gated.
     priorTexts: priorEpisodeTexts(),
     log: (m) => console.log(`  ${m}`),
   };
 };
 
 /** Earlier episodes from this repo's runs, for the self-similarity check. */
-const priorEpisodeTexts = (): Array<{ label: string; text: string }> => {
+const priorEpisodeTexts = (exclude?: string): Array<{ label: string; text: string }> => {
   const out: Array<{ label: string; text: string }> = [];
   for (const id of Run.list()) {
+    // NEVER THE RUN BEING GATED. Every script shares one hundred percent of its
+    // vocabulary with itself, so including it made self-similarity fail on
+    // every episode this studio has ever produced - loudly, with a message
+    // naming the run as its own plagiarism source, which at least made it
+    // obvious once somebody read it.
+    if (id === exclude) continue;
+
     try {
       const run = Run.open(id);
       if (!run.hasArtifact('script')) continue;
@@ -450,6 +458,10 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
 const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
   const deps = buildDeps();
   const persona = loadPersona(run.manifest.personaId);
+
+  // Self-similarity compares against every OTHER run. buildDeps cannot know
+  // which run is being gated, so it is narrowed here, where that is known.
+  deps.priorTexts = priorEpisodeTexts(run.id);
 
   const { gate } = persona.fiction
     ? await runFiction({ run }, deps)

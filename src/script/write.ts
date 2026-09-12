@@ -209,6 +209,18 @@ const buildPrompt = (ctx: BeatContext): string => {
     ctx.loops ? `CURIOSITY - what this beat must and must not answer:\n${ctx.loops}` : '',
     ctx.openWith ? `OPEN WITH EXACTLY THIS LINE, then continue:\n"${ctx.openWith}"` : '',
     `CLAIMS:\n${claims}`,
+    // SPELL NAMES EXACTLY AS THE CLAIMS SPELL THEM. Beats are written
+    // separately and cannot see each other, so a name the sources give three
+    // ways - Geillis, Gillis, Gilly - comes out three ways across one episode
+    // and a listener hears two different people. The claims are the one thing
+    // every beat of an episode does share, so they are the authority.
+    'Spell every name exactly as the CLAIMS above spell it, even if you know ' +
+      'another spelling. The other beats of this episode are written from the ' +
+      'same claims and have to agree with you.',
+    // Beats cannot see each other, so nothing stops four of them opening the
+    // same way. The gate blocks it; saying so here is cheaper than a rewrite.
+    'Do not open with "Start with", "Here is", "So", or any phrase that sounds ' +
+      'like the beginning of a section. Open inside the thought.',
   ]
     .filter(Boolean)
     .join('\n\n');

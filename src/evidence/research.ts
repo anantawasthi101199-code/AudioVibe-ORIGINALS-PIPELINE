@@ -219,6 +219,17 @@ RULES, and these are not style preferences:
    One claim, one fact, one quote. If you find yourself writing "and" or a
    comma-separated list of circumstances, split it.
 
+   THE COMMONEST VERSION OF THIS IS A PRONOUN. If the quote says "she was
+   tortured", the claim may not say "Geillis Duncan was tortured" unless the
+   SAME quote also names her. Resolving a pronoun from elsewhere in the
+   document, or from what you know, is adding a fact the quote does not carry.
+   Either find a quote that names her, or write the claim about "she" and let a
+   separate claim establish who she is.
+
+   THE SAME APPLIES TO WHAT A THING IS. If the quote says "the pilliwinks", the
+   claim may not gloss it as "the pilliwinks, a thumbscrew" unless the quote
+   says so. Glosses are facts.
+
 2. The quote must be COPIED EXACTLY from the document. Not paraphrased, not
    tidied, not shortened with ellipses. It is checked character by character
    against the source and a paraphrase is rejected.
@@ -230,6 +241,13 @@ RULES, and these are not style preferences:
    definition. A statistic must state a number and its quote must contain one.
    Only call something causal if the document states a cause; if the document
    says "associated with", the claim says associated with.
+
+   TYPE IT "quotation" ONLY IF THE CLAIM REPRODUCES THE QUOTED WORDING. A
+   quotation claim is checked by looking for the claim's own words inside the
+   quote, so a claim that DESCRIBES what someone said is not a quotation - it is
+   an attribution. "The pamphlet says the tortures were described with relish"
+   is an attribution. "The pamphlet calls it 'the most cruell torment'" is a
+   quotation, and only if those exact words are in the quote.
 6. Mark contested: true when informed people would disagree.
 
 Return JSON only:
