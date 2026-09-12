@@ -25,6 +25,7 @@ import { Persona } from '../canon/schema';
 import { EpisodeFormat } from '../formats/schema';
 import { BRIEF_SYSTEM, COUNTER_SYSTEM, EXTRACT_SYSTEM } from '../evidence/research';
 import { SYSTEM as VERIFY_SYSTEM } from '../evidence/verify';
+import { NARROW_SYSTEM } from '../evidence/repair';
 import { SYSTEM as COMPARE_SYSTEM } from '../qa/compare';
 import { CHECK_SYSTEM, EXTRACT_SYSTEM as FICTION_EXTRACT_SYSTEM } from '../fiction/continuity';
 import { CHOOSE_SYSTEM, GENERATE_SYSTEM } from '../script/hooks';
@@ -95,6 +96,17 @@ export const promptRegistry = (input: {
         'spot cannot pass itself. The cheap screener may only CONFIRM a clean entailment; ' +
         'anything else escalates to the full verifier on this same prompt.',
       text: VERIFY_SYSTEM,
+    },
+    {
+      id: 'narrow',
+      stage: 'repair',
+      source: 'src/evidence/repair.ts',
+      note:
+        'Runs only on claims that FAILED. Rewrites a claim to say exactly what its quote ' +
+        'establishes, so the over-reach is lost instead of the fact. What it cannot save is ' +
+        'rebound to another source, and what that cannot save survives as unsettled with a ' +
+        'hedge the script must say out loud.',
+      text: NARROW_SYSTEM,
     },
     {
       id: 'plan',

@@ -230,6 +230,31 @@ RULES, and these are not style preferences:
    claim may not gloss it as "the pilliwinks, a thumbscrew" unless the quote
    says so. Glosses are facts.
 
+   FOUR MORE WAYS THIS HAPPENS, every one of them from a real episode that
+   failed on it. All four are the same move as the pronoun: reaching into the
+   surrounding document, or into what you know, for something the quote itself
+   does not carry.
+
+   COMPLETING A NAME. Quote: "Wood, 59, of Cheshunt". The claim may not say
+   "Carl Wood is 59". The quote says Wood. Another claim can establish that
+   Wood is Carl Wood.
+
+   DECODING AN INITIAL OR A COURT FORM. Quote: "in 1985 you took part in the
+   Security Express robbery" from a sentencing remark addressed to TP. The
+   claim may not say "Perkins took part". Sentencing remarks address defendants
+   as "you" and abbreviate them to initials; resolving that is exactly this
+   mistake in its most tempting form.
+
+   NAMING THE SPEAKER OF A QUOTATION. Quote: "the burglary stood in a class of
+   its own". The claim may not say "Judge Kinch said it stood in a class of its
+   own" unless the quote names him. Who said it is a second fact and needs a
+   second quote.
+
+   ANCHORING IT IN TIME. Quote: "they drilled through the wall but could not
+   move the cabinets". The claim may not say "on the FIRST night they drilled
+   through". Which night is not in the quote, however obvious it is from the
+   document around it.
+
 2. The quote must be COPIED EXACTLY from the document. Not paraphrased, not
    tidied, not shortened with ellipses. It is checked character by character
    against the source and a paraphrase is rejected.

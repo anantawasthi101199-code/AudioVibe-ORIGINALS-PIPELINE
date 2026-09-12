@@ -69,6 +69,45 @@ export const claimSchema = z.object({
    * way generated content is false while every sentence is individually sourced.
    */
   contested: z.boolean().default(false),
+
+  /**
+   * Whether the quote settles this claim, after repair.
+   *
+   * 'verified' is the only state the old pipeline had, and everything else was
+   * deleted. That cost whole sections of episodes: a claim saying "Collins,
+   * Jones and Perkins each got seven years" against a quote saying "three
+   * ringleaders each received seven years" was binned, and the seven years went
+   * with the three names. One episode named six men and sentenced two.
+   *
+   * 'unverified' is what survives when narrowing and rebinding have both failed
+   * and the fact still matters. It is NOT an unchecked claim - it has been
+   * through extraction, the deterministic quote check, verification, a
+   * narrowing pass and a rebinding pass, and what remains is a gap the record
+   * genuinely does not close. The script may use it ONLY while saying so, which
+   * the gate enforces. See evidence/repair.ts.
+   */
+  status: z.enum(['verified', 'unverified']).default('verified'),
+
+  /**
+   * What the script must tell the listener about what is not settled.
+   *
+   * Written as speech rather than as a flag, because its whole purpose is to
+   * reach the listener. Present only on an unverified claim.
+   */
+  hedge: z.string().optional(),
+
+  /** What this claim said before it was narrowed, so the change is auditable. */
+  narrowedFrom: z.string().optional(),
+
+  /**
+   * The source this claim was bound to before it was rebound to a better one.
+   *
+   * Symmetric with narrowedFrom, and needed for the same reason: verification
+   * runs BEFORE repair, so its rejection list is a snapshot of what was wrong
+   * before anything was done about it. Without a mark saying "this one was
+   * fixed", the gate re-reports a fault that no longer exists.
+   */
+  reboundFrom: z.string().optional(),
 });
 
 export type Claim = z.infer<typeof claimSchema>;

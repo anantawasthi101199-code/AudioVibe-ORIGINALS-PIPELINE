@@ -41,6 +41,7 @@ import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
 import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
 import { PRONOUN_RULE } from '../qa/pronouns';
+import { soundsUncertain } from '../evidence/repair';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -219,6 +220,13 @@ figures, dates, names or causes from your own knowledge, however confident you
 are. If a claim is not there, write around it. Claims are pre-verified against
 their sources; anything you add is not.
 
+Some claims are marked NOT SETTLED. Use them - they are often the most
+interesting thing in a beat - and say plainly what the record does not
+establish, in your own words, at the point in the story where it matters.
+"Nobody wrote down which of them decided" is a better sentence than a confident
+guess and a better sentence than a silence, and it is most of what this show is
+for. A beat that uses one of these without saying what is unsettled is rejected.
+
 Return JSON only:
 {"turns": [{"speaker": "${persona.hosts[0]!.id}", "text": "..."}], "claimIds": ["ids used"]}`;
 };
@@ -271,8 +279,22 @@ export interface BeatContext {
 
 export const buildPrompt = (ctx: BeatContext): string => {
   const { min, max } = wordsForBeat(ctx.beat);
+  // UNVERIFIED CLAIMS ARE MARKED, NOT HIDDEN. They survived extraction, the
+  // deterministic quote check, verification, a narrowing pass and a rebinding
+  // pass, and what is left is a gap the record genuinely does not close.
+  // Dropping them cost real content - one episode named six men and gave
+  // sentences for two - so they are handed over together with the thing that
+  // has to be said about them.
   const claims = ctx.claims.length
-    ? ctx.claims.map((c) => `[${c.id}] (${c.type}) ${c.text}`).join('\n')
+    ? ctx.claims
+        .map((c) =>
+          c.status === 'unverified'
+            ? `[${c.id}] (${c.type}, NOT SETTLED) ${c.text}\n` +
+              `      -> Use it if it belongs here, but ${c.hedge ?? 'the record does not settle it and the script must say so'}. ` +
+              `Say that in your own words, as part of the story.`
+            : `[${c.id}] (${c.type}) ${c.text}`
+        )
+        .join('\n')
     : '(none available - write this beat without stating new facts)';
 
   return [
@@ -361,7 +383,14 @@ export const critiqueBeat = (
    * genuinely cannot tell that its best phrasing for something is also the
    * phrasing two beats ago reached for.
    */
-  storySoFar?: string
+  storySoFar?: string,
+  /**
+   * The claims this beat was given, so the check can tell which are unsettled.
+   *
+   * Defaulted to empty rather than required: every other check in here works
+   * without claims, and a caller that has none should still get them all.
+   */
+  claims: Claim[] = []
 ): { blocking: string[]; advisory: string[] } => {
   const blocking: string[] = [];
   const advisory: string[] = [];
@@ -402,6 +431,23 @@ export const critiqueBeat = (
   // spends the rest of the beat catching up rather than listening.
   if (plan) {
     for (const problem of checkCast(text, plan, beat.id)) blocking.push(problem);
+  }
+
+  // AN UNSETTLED CLAIM SPOKEN FLATLY IS INDISTINGUISHABLE FROM A VERIFIED ONE,
+  // and the whole argument for keeping these - that an honest "we do not know"
+  // beats a silence - collapses if the "we do not know" never gets said. So the
+  // permission and the obligation are enforced together, or neither is real.
+  //
+  // Caught here rather than only at the gate so the writer gets one rewrite to
+  // fix it, instead of the episode failing after the audio has been paid for.
+  const unsettled = claims.filter((c) => c.status === 'unverified');
+  if (unsettled.length && !soundsUncertain(text)) {
+    blocking.push(
+      `uses ${unsettled.length} claim(s) the record does not settle (${unsettled
+        .map((c) => c.id)
+        .join(', ')}) without telling the listener so. ` +
+        `Say what is not established, in your own words, where it belongs.`
+    );
   }
 
   const { violations } = checkStyle(text, persona.styleCard);
@@ -524,7 +570,14 @@ export const writeBeat = async (
     );
 
     current = parseTurns(parsed);
-    const { blocking } = critiqueBeat(current.turns, ctx.persona, ctx.beat, ctx.storyPlan, ctx.storySoFar);
+    const { blocking } = critiqueBeat(
+      current.turns,
+      ctx.persona,
+      ctx.beat,
+      ctx.storyPlan,
+      ctx.storySoFar,
+      ctx.claims
+    );
 
     if (!blocking.length) break;
     lastFailures = blocking;

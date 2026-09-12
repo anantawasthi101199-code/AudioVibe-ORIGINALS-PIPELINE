@@ -14,11 +14,12 @@
  */
 import { EpisodeFormat } from '../formats/schema';
 import { checkPronouns } from './pronouns';
+import { MAX_UNVERIFIED_SHARE, unhedgedClaims } from '../evidence/repair';
 import { Persona } from '../canon/schema';
 import { beatsBelowClaimFloor, Claim, LedgerReport } from '../evidence/claim';
 import { VerificationReport } from '../evidence/verify';
 import { CounterEvidence } from '../evidence/research';
-import { Script, fullText } from '../script/write';
+import { Script, beatText, fullText } from '../script/write';
 import { checkStyle, StyleMeasurement, vocabularyOverlap } from '../script/style';
 import { ContinuityReport } from '../fiction/continuity';
 import { checkSpeakability } from '../script/speakable';
@@ -121,8 +122,31 @@ export const runGate = (input: GateInput): GateReport => {
   }
 
   // --- 2. Factuality, from a different model family than the writer. ---
+  //
+  // A VERDICT THE REPAIR STAGE ALREADY ANSWERED IS NOT A FINDING. Verification
+  // runs before repair, so its blocking list is a snapshot of what was wrong
+  // BEFORE anything was done about it. A claim that was narrowed to what its
+  // quote supports, or rebound to a source that does support it, carries a
+  // stale rejection in that list and would fail the gate for a fault that no
+  // longer exists.
+  //
+  // A claim that came out of repair still unsettled is not reported here
+  // either: it is section 7a's business, where what matters is whether the
+  // script said so, not whether the quote settled it. Reporting it twice would
+  // make the honest route look like the failing one.
+  //
+  // What IS still reported: a blocking verdict on a claim that came through
+  // unchanged. That means repair did not run, or did not reach it, and the
+  // episode is asserting something its source does not support.
   if (!fiction) {
+    const byId = new Map(input.claims.map((c) => [c.id, c]));
     for (const v of input.verification.blocking) {
+      const claim = byId.get(v.claimId);
+      // Gone from the claim set entirely: nothing in the script can be resting
+      // on it, so there is nothing to warn about.
+      if (!claim) continue;
+      if (claim.status === 'unverified') continue;
+      if (claim.narrowedFrom || claim.reboundFrom) continue;
       add('factuality', `${v.claimId} is ${v.verdict}: ${v.reason}`);
     }
   }
@@ -295,6 +319,47 @@ export const runGate = (input: GateInput): GateReport => {
       'duration',
       `runs ${Math.round(input.durationS)}s, outside the ${Math.round(min)}-${Math.round(max)}s the format allows`
     );
+  }
+
+  // --- 7a. Claims the record does not settle. ---
+  //
+  // These are NOT gate failures. They have been through extraction, the
+  // deterministic quote check, verification, a narrowing pass and a rebinding
+  // pass, and what is left is a gap the record genuinely does not close. The
+  // old pipeline deleted them, and deleting them cost real content: one episode
+  // named six men and gave sentences for two, because the claim carrying the
+  // other four said more than its quote and went in the bin with the fact.
+  //
+  // What IS a failure is using one silently. An unsettled claim spoken flatly
+  // is indistinguishable from a verified one, so the permission and the
+  // obligation are enforced together or neither is real.
+  if (!fiction) {
+    const beats = input.script.beats.map((b) => ({
+      beatId: b.beatId,
+      claimIds: b.claimIds,
+      text: beatText(b),
+    }));
+
+    for (const problem of unhedgedClaims(beats, input.claims)) {
+      add(
+        'unhedged',
+        `beat "${problem.beatId}" states ${problem.claimId} as settled fact, but ${problem.hedge}`
+      );
+    }
+
+    // A SHOW WHOSE FACTS ARE MOSTLY HEDGED IS NOT A FACTUAL SHOW, however
+    // honestly each hedge is worded. This is the line between "the record does
+    // not say which of them, and that is interesting" and an episode narrating
+    // its own ignorance - and it is also the thing that stops the repair stage
+    // quietly becoming a way to pass anything.
+    const unverified = input.claims.filter((c) => c.status === 'unverified').length;
+    if (input.claims.length && unverified / input.claims.length > MAX_UNVERIFIED_SHARE) {
+      add(
+        'unverifiedShare',
+        `${unverified} of ${input.claims.length} claims are unsettled, over the ` +
+          `${Math.round(MAX_UNVERIFIED_SHARE * 100)}% an episode may carry. The research is too thin for this story.`
+      );
+    }
   }
 
   // --- 7b. Pronouns for real people. ---

@@ -28,6 +28,11 @@ export const STAGES = [
   'corpus',
   'claims',
   'verification',
+  // Narrowing, rebinding and hedging the claims that failed verification, so a
+  // claim that says more than its quote loses the over-reach instead of losing
+  // the fact. Its own stage because it is separately resumable and separately
+  // costed - see evidence/repair.ts.
+  'repair',
   'script',
   'render',
   'qa',

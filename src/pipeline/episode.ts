@@ -35,7 +35,14 @@ import {
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
 import { Source } from '../evidence/source';
-import { verificationReportSchema, verificationSchema, verifyAll } from '../evidence/verify';
+import {
+  BLOCKING_VERDICTS,
+  verificationReportSchema,
+  verificationSchema,
+  verifyAll,
+  verifyClaim,
+} from '../evidence/verify';
+import { repairAll, repairReportSchema } from '../evidence/repair';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
@@ -242,6 +249,96 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     );
   }
 
+  // --- 4c. Repair ---------------------------------------------------------
+  //
+  // A CLAIM THAT SAYS MORE THAN ITS QUOTE USED TO BE DELETED, AND THE FACT WENT
+  // WITH IT. One episode named six men and gave sentences for two, because the
+  // claim carrying the other four said "Collins, Jones and Perkins each got
+  // seven years" against a quote saying "three ringleaders each received seven
+  // years". The seven years was solid; the names were the extractor filling in
+  // from context. Binning it lost both.
+  //
+  // Narrow, then rebind, then keep it with a hedge the script has to say out
+  // loud. See evidence/repair.ts for why the third route is honest rather than
+  // a loophole - and section 7a of the gate for what stops it becoming one.
+  let workingClaims: Claim[] = claims;
+  if (run.hasArtifact('repair')) {
+    const stored = run.readArtifact(
+      'repair',
+      z.object({ claims: z.array(claimSchema), report: repairReportSchema })
+    );
+    workingClaims = stored.claims;
+    log(`repair: reusing (${stored.report.repaired.length} claims repaired)`);
+  } else {
+    stage = 'repair';
+    // BOTH KINDS OF FAILURE GO THROUGH THE SAME REPAIR, which is the point of
+    // doing it here rather than inside the verifier. The semantic failures come
+    // from verification ("says more than the quote"); the structural ones come
+    // from the ledger ("typed as a quotation but its wording does not appear in
+    // the quote", "typed as a statistic but states no number").
+    //
+    // They look different and they are the same fault: a claim describing
+    // itself as more than it is. Narrowing returns a corrected TYPE as well as
+    // corrected text, so the one pass fixes both - and a run that fixed the
+    // semantics while still failing the shape would have gained nothing.
+    const semantic = verification.results.filter((v) => BLOCKING_VERDICTS.includes(v.verdict));
+    const structural = checkLedger(claims, corpus.sources)
+      .problems.filter((p) => p.kind === 'shape')
+      .map((p) => ({
+        claimId: p.claimId,
+        verdict: 'partially_entailed' as const,
+        reason: p.detail,
+      }));
+
+    // One repair per claim. A claim that failed both ways is narrowed once
+    // against the more specific complaint, because two passes would mean the
+    // second one narrowing the first one's output against a stale reason.
+    const seen = new Set(semantic.map((v) => v.claimId));
+    const failing = [...semantic, ...structural.filter((v) => !seen.has(v.claimId))];
+
+    if (failing.length) {
+      log(`repair: ${failing.length} claims say more than their quotes`);
+      const repaired = await repairAll(claims, failing, {
+        sources: corpus.sources,
+        // The CLERK narrows. It is subtraction against a complaint that has
+        // already been written by the verifier, with a deterministic re-check
+        // after it - which is exactly the shape of work the clerk rule allows.
+        narrower: deps.clerk ?? deps.writer,
+        // Re-checked by the same verifier that rejected it. A repair judged by
+        // a softer standard than the rejection would mean nothing.
+        reverify: async (claim) => {
+          const source = corpus.sources.find((src) => src.id === claim.sourceId);
+          if (!source) {
+            return {
+              claimId: claim.id,
+              verdict: 'not_entailed' as const,
+              reason: 'its source is not in the corpus',
+            };
+          }
+          const { verification: v, costPence } = await verifyClaim(claim, source, deps.verifier);
+          spend(costPence);
+          return v;
+        },
+        onCost: spend,
+        onProgress: say('repair'),
+      });
+      workingClaims = repaired.claims;
+      run.writeArtifact('repair', repaired);
+
+      const counts = repaired.report.repaired.reduce<Record<string, number>>((acc, r) => {
+        acc[r.method] = (acc[r.method] ?? 0) + 1;
+        return acc;
+      }, {});
+      log(
+        `repair: ${counts.narrowed ?? 0} narrowed, ${counts.rebound ?? 0} rebound, ` +
+          `${counts.unverified ?? 0} kept as unsettled`
+      );
+    } else {
+      run.writeArtifact('repair', { claims, report: { repaired: [], costPence: 0 } });
+    }
+    run.markComplete('repair');
+  }
+
   // --- 5. Script ----------------------------------------------------------
   let script: Script;
   if (run.hasArtifact('script')) {
@@ -254,12 +351,17 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       {
         persona,
         format,
-        // Only verified claims reach the writer. A claim the verifier rejected
-        // must not be available to write from, or the gate becomes the only
-        // thing standing between a bad claim and an episode.
-        claims: claims.filter(
-          (c) => !verification.blocking.some((b) => b.claimId === c.id)
-        ),
+        // THE REPAIRED CLAIMS, WHICH IS THE POINT OF THE REPAIR STAGE. This
+        // used to filter out everything the verifier rejected, which is how an
+        // episode lost four of its six sentences: the claim was dropped, and
+        // the fact inside it went too.
+        //
+        // What reaches the writer now is the narrowed version where narrowing
+        // worked, the rebound version where the corpus supported it elsewhere,
+        // and the unsettled version - marked, with the words that must be said
+        // about it - where neither did. A contradicted claim is not here at
+        // all; repairAll drops those.
+        claims: workingClaims,
         angle: brief.angle,
         isoDate: new Date().toISOString().slice(0, 10),
       },
@@ -316,8 +418,8 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     persona,
     format,
     script,
-    claims,
-    ledger: checkLedger(claims, corpus.sources),
+    claims: workingClaims,
+    ledger: checkLedger(workingClaims, corpus.sources),
     verification,
     counterEvidence,
     durationS: render.durationS,
