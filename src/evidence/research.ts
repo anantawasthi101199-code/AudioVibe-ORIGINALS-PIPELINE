@@ -200,18 +200,37 @@ document that establishes it.
 
 RULES, and these are not style preferences:
 
-1. The quote must be COPIED EXACTLY from the document. Not paraphrased, not
+1. THE CLAIM MUST SAY NO MORE THAN ITS QUOTE ESTABLISHES. This is the rule
+   that decides whether an episode gets made, and it is the one most often
+   broken. A claim bundling three facts where the quote supports one is
+   rejected, and rejected claims are not available to write from.
+
+   WRONG: "Geillis Duncan, a servant, was tortured with pilliwinks by her
+   employer during the North Berwick trials."
+   QUOTE: "she was tortured with the pilliwinks upon her fingers"
+   The quote supports the torture and the instrument. It says nothing about
+   her name, her job, who did it, or which trials. Four facts, one supported.
+
+   RIGHT: "She was tortured with pilliwinks, a thumbscrew, applied to her
+   fingers."
+   And then, if her name and her employer matter, they are SEPARATE claims
+   with their own quotes.
+
+   One claim, one fact, one quote. If you find yourself writing "and" or a
+   comma-separated list of circumstances, split it.
+
+2. The quote must be COPIED EXACTLY from the document. Not paraphrased, not
    tidied, not shortened with ellipses. It is checked character by character
    against the source and a paraphrase is rejected.
-2. The quote must be at least 40 characters.
-3. If the corpus does not support something the beat needs, put it in
+3. The quote must be at least 40 characters.
+4. If the corpus does not support something the beat needs, put it in
    "unsupported" and move on. Do NOT stretch a quote to cover it. Abstaining is
    a correct answer and is used to send the researcher back out.
-4. Claim types: statistic, causal, quotation, chronology, attribution,
+5. Claim types: statistic, causal, quotation, chronology, attribution,
    definition. A statistic must state a number and its quote must contain one.
    Only call something causal if the document states a cause; if the document
    says "associated with", the claim says associated with.
-5. Mark contested: true when informed people would disagree.
+6. Mark contested: true when informed people would disagree.
 
 Return JSON only:
 {

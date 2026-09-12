@@ -102,15 +102,64 @@ describe('completeJson', () => {
     expect(c.seen).toHaveLength(2);
   });
 
-  it('does NOT retry a reply that was merely unparseable', async () => {
-    // A model that returned prose instead of JSON returns prose again with
-    // more room, so retrying it is money for nothing.
+  it('does NOT retry a reply with no JSON in it at all', async () => {
+    // A model that answered in prose answers in prose again. Repairing that is
+    // money for nothing, which is why "repairable" is a property of the error
+    // rather than a blanket retry.
     const c = client([{ text: 'I am afraid I cannot do that' }]);
 
     await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).rejects.toThrow(
       /no JSON found/
     );
     expect(c.seen).toHaveLength(1);
+  });
+
+  it('REPAIRS JSON that was found but would not parse', async () => {
+    // The commonest cause is an unescaped quotation mark inside a string, which
+    // a show that quotes documents out loud produces constantly. No amount of
+    // extra room fixes it - the reply was complete, it was simply invalid.
+    const c = client([
+      { text: '{"text": "the record says "witches" were tried"}' },
+      { text: '{"text": "the record says \\"witches\\" were tried"}' },
+    ]);
+
+    const out = await completeJson<{ text: string }>(c.client, { system: 'S', prompt: 'P' });
+    expect(out.text).toContain('witches');
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('hands the parser complaint back, not just an order to try again', async () => {
+    // Asking blind mostly does not work, because the model cannot see what it
+    // got wrong. Telling it the position and the expectation mostly does.
+    const c = client([
+      { text: '{"a": "b" "c"}' },
+      { text: '{"a": "b"}' },
+    ]);
+
+    await completeJson(c.client, { system: 'S', prompt: 'P' });
+    expect(c.seen[1]!.prompt).toMatch(/PARSER SAID:/);
+    expect(c.seen[1]!.prompt).toContain('{"a": "b" "c"}');
+  });
+
+  it('repairs at LOW effort, because escaping is not a thinking problem', async () => {
+    const c = client([{ text: '{"a": "b" "c"}' }, { text: '{"a": "b"}' }]);
+    await completeJson(c.client, { system: 'S', prompt: 'P' });
+    expect(c.seen[1]!.effort).toBe('low');
+  });
+
+  it('gives up if the repair does not fix it', async () => {
+    const c = client([{ text: '{"a": "b" "c"}' }, { text: '{"still": "broken" "x"}' }]);
+    await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).rejects.toThrow(
+      /repair attempt did not fix it/
+    );
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('counts the repair toward the budget', async () => {
+    let spent = 0;
+    const c = client([{ text: '{"a": "b" "c"}' }, { text: '{"a": "b"}' }]);
+    await completeJson(c.client, { system: 'S', prompt: 'P' }, (p) => (spent += p));
+    expect(spent).toBe(2);
   });
 
   it('counts BOTH calls toward the budget', async () => {

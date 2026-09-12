@@ -577,11 +577,22 @@ export const completeJson = async <T>(
   const first = await client.complete(req);
   onCost?.(first.costPence);
 
-  if (!first.truncated) return extractJson<T>(first.text);
+  if (!first.truncated) {
+    try {
+      return extractJson<T>(first.text);
+    } catch (err) {
+      if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
+      // MALFORMED IS A DIFFERENT PROBLEM FROM TRUNCATED and needs a different
+      // retry. The commonest cause is an unescaped quotation mark inside a
+      // string, which a show that quotes documents out loud produces constantly
+      // - and no amount of extra room fixes it, because the reply was complete,
+      // it was simply invalid.
+      return await repairJson<T>(client, req, first.text, (err as Error).message, onCost);
+    }
+  }
 
   // A truncated reply with no text at all is thinking that consumed the whole
   // ceiling. Doubling the room is the right response to both shapes.
-
   const ceiling = (req.maxTokens ?? 4096) * 2;
   const second = await client.complete({ ...req, maxTokens: ceiling });
   onCost?.(second.costPence);
@@ -596,7 +607,62 @@ export const completeJson = async <T>(
     );
   }
 
-  return extractJson<T>(second.text);
+  try {
+    return extractJson<T>(second.text);
+  } catch (err) {
+    if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
+    return await repairJson<T>(client, req, second.text, (err as Error).message, onCost);
+  }
+};
+
+/**
+ * Hand a broken reply back and ask for it again, properly.
+ *
+ * ONE ATTEMPT, AND IT IS A REPAIR RATHER THAN A RE-RUN. The work is already in
+ * the text; asking for it again from scratch would throw that away and cost the
+ * same a second time. What is wrong is the encoding, not the content.
+ *
+ * The parser's own complaint goes back with it. Asking blind - "return valid
+ * JSON" - mostly does not work, because the model cannot see what it got wrong;
+ * telling it the position and the expectation mostly does.
+ *
+ * Deliberately low effort. Fixing an escape is not a thinking problem, and on a
+ * model that reasons by default it would become one, consuming the ceiling
+ * before reaching the answer.
+ */
+const repairJson = async <T>(
+  client: LlmClient,
+  original: LlmRequest,
+  broken: string,
+  complaint: string,
+  onCost?: (pence: number) => void,
+): Promise<T> => {
+  const res = await client.complete({
+    system:
+      'You fix malformed JSON. You are given a document that was meant to be JSON ' +
+      'and the parser error it produced. Return the SAME content as valid JSON, ' +
+      'changing nothing except what is needed to make it parse.\n\n' +
+      'The usual cause is an unescaped quotation mark, backslash or newline inside ' +
+      'a string value. Escape them. Do not summarise, shorten or rewrite any text, ' +
+      'and do not drop any field.\n\n' +
+      'Return JSON only.',
+    prompt: `PARSER SAID: ${complaint}\n\nDOCUMENT:\n${broken}`,
+    temperature: 0,
+    effort: 'low',
+    maxTokens: Math.max(original.maxTokens ?? 4096, 4096),
+  });
+  onCost?.(res.costPence);
+
+  try {
+    return extractJson<T>(res.text);
+  } catch (err) {
+    throw new LlmError(
+      client.name,
+      null,
+      `returned JSON that would not parse, and the repair attempt did not fix it: ` +
+        `${(err as Error).message}`,
+    );
+  }
 };
 
 /**
@@ -607,13 +673,35 @@ export const completeJson = async <T>(
  * absurd. Everything before the first brace or bracket and after the last is
  * discarded.
  */
+/**
+ * A reply that was meant to be JSON and was not.
+ *
+ * `repairable` is the distinction that decides whether a second call is worth
+ * making. JSON that was FOUND and would not parse is an encoding problem - an
+ * unescaped quote, a stray newline - and handing it back with the parser's own
+ * complaint fixes it almost every time. A reply with no JSON in it at all is a
+ * model that answered in prose, and it will answer in prose again.
+ */
+export class JsonExtractError extends Error {
+  constructor(
+    message: string,
+    readonly repairable: boolean,
+  ) {
+    super(message);
+    this.name = 'JsonExtractError';
+  }
+}
+
 export const extractJson = <T>(text: string): T => {
   const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(text);
   const candidate = (fenced?.[1] ?? text).trim();
 
   const start = candidate.search(/[[{]/);
-  if (start < 0)
-    throw new Error(`no JSON found in model output: ${text.slice(0, 200)}`);
+  // No JSON at all: the model answered in prose. NOT repairable - it will
+  // answer in prose again, and a repair call would be money for nothing.
+  if (start < 0) {
+    throw new JsonExtractError(`no JSON found in model output: ${text.slice(0, 200)}`, false);
+  }
 
   const opener = candidate[start];
   const closer = opener === "{" ? "}" : "]";
@@ -621,16 +709,21 @@ export const extractJson = <T>(text: string): T => {
   if (end <= start) {
     // Almost always truncation rather than a malformed reply, so the message
     // says which end to look at. Callers using completeJson have already
-    // retried with more room by the time this is reached.
-    throw new Error(
+    // retried with more room by the time this is reached, so a repair would
+    // not help either.
+    throw new JsonExtractError(
       `unterminated JSON in model output - the reply was almost certainly cut off ` +
         `by the token ceiling rather than malformed. Ends: ...${text.slice(-120)}`,
+      false,
     );
   }
 
   try {
     return JSON.parse(candidate.slice(start, end + 1)) as T;
   } catch (err) {
-    throw new Error(`invalid JSON from model: ${(err as Error).message}`);
+    // Found, but will not parse. Almost always an unescaped quotation mark
+    // inside a string, which a show that quotes documents out loud produces
+    // constantly. Worth exactly one repair.
+    throw new JsonExtractError(`invalid JSON from model: ${(err as Error).message}`, true);
   }
 };
