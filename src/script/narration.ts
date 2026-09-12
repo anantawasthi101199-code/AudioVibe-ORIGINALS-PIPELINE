@@ -24,17 +24,30 @@
 
 export const NARRATION_GUIDANCE = [
   'You are ONE person telling ONE listener a story out loud. Not reading an essay, not presenting. Write what you would actually say.',
-  // THIS LINE USED TO SAY "say things twice, differently", AND IT CAUSED THE
-  // WORST FAULT IN THE FIRST SOLO EPISODE. A model implements say-it-twice as
-  // say-it-wrong-then-correct-it - "eleven years old. Not eleven months into a
-  // criminal career. Eleven years old, full stop" - because that is the shape
-  // restatement takes in written argument. The listener hears the narrator
-  // arguing with himself about something neither of them said.
+  // THIS LINE USED TO SAY "say things twice, differently", AND IT WAS WRONG
+  // TWICE OVER.
   //
-  // The need is real: a listener genuinely cannot rewind. So the rule is kept
-  // and made ADDITIVE, with the second pass carrying new information rather
-  // than a denial. See script/forward.ts, which measures whether it worked.
-  'Say the important things twice, and the second time must ADD something. State it, then a moment later give it a size, a date or a consequence - "eleven weeks. The alarm stayed off from the start of March to the middle of May." Never restate by correcting; nobody misheard you.',
+  // First, a model implements say-it-twice as say-it-wrong-then-correct-it -
+  // "eleven years old. Not eleven months into a criminal career. Eleven years
+  // old, full stop" - because that is the shape restatement takes in written
+  // argument. The listener hears the narrator arguing with himself about
+  // something neither of them said. That much was fixed by making the second
+  // pass additive rather than corrective.
+  //
+  // It was still wrong, and the listener said why: "the best engaging stories
+  // are when people want to listen to what has been told, don't say anything
+  // twice". Additive restatement is still restatement. The premise underneath
+  // it - that a listener needs a safety net because they cannot rewind - treats
+  // attention as something to be insured against losing rather than something
+  // to be held. A story that repeats itself teaches the listener that missing a
+  // sentence costs nothing, and then they stop holding on.
+  //
+  // The rule is gone, not softened. What replaces it is the thing the safety
+  // net was standing in for: say it once, and say it so it does not need
+  // saying again. checkRepetition in script/forward.ts enforces it across the
+  // whole episode, because a beat cannot see that it is repeating another one.
+  'Say each thing ONCE. Not once and then again in other words, not once and then summarised - once, in the clearest sentence you can build, and then move on to the next thing that happened.',
+  'Because you get one pass at it, put the weight in the words rather than in the repetition. The right number, the right name, the shortest sentence that carries it. A fact worth hearing twice is a fact that was not said well enough the first time.',
   'Ask the question the listener is forming, out loud, and then answer it. "So why did nobody check? Because checking was somebody else\'s job, and that somebody had left in March." This is the single most important habit in solo narration - it is what a second host used to do.',
   'KEEP SENTENCES UNDER TWENTY-FIVE WORDS. That is one breath at narration pace, and it is measured. A listener who loses a long sentence loses the paragraph with it, because there is no way back. If a sentence needs three commas to hold itself together, it is two sentences.',
   'Change pace at the seams. Short sentences when it speeds up. One long one when it needs to land. A narrator at one speed for fifteen minutes is the flattest thing there is.',

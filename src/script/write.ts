@@ -39,7 +39,7 @@ import { writeHook } from './hooks';
 import { SHORT_FORM_GUIDANCE } from './shorts';
 import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
-import { FORWARD_GUIDANCE, checkForward } from './forward';
+import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -308,7 +308,16 @@ export const critiqueBeat = (
    * that look OUTSIDE the beat, and a caller without a plan should still get
    * every check that does not need one.
    */
-  plan?: StoryPlan
+  plan?: StoryPlan,
+  /**
+   * Everything the episode has already said.
+   *
+   * The only input to this function that comes from outside the beat, and the
+   * only way repetition can be caught at all - a beat written on its own
+   * genuinely cannot tell that its best phrasing for something is also the
+   * phrasing two beats ago reached for.
+   */
+  storySoFar?: string
 ): { blocking: string[]; advisory: string[] } => {
   const blocking: string[] = [];
   const advisory: string[] = [];
@@ -333,6 +342,14 @@ export const critiqueBeat = (
   // metric there is - which is why they are counted here rather than hoped for
   // in the prompt.
   for (const p of checkForward(text, { isOrientation: beat.type === 'orientation' })) {
+    (p.blocking ? blocking : advisory).push(p.detail);
+  }
+
+  // Anything said twice, inside this beat or anywhere earlier in the episode.
+  // Blocking, and deliberately strict: the listener's instruction was "don't
+  // say anything twice", and a check that allowed a little repetition would be
+  // back to arguing about how much.
+  for (const p of checkRepetition(text, storySoFar)) {
     (p.blocking ? blocking : advisory).push(p.detail);
   }
 
@@ -454,7 +471,7 @@ export const writeBeat = async (
     );
 
     current = parseTurns(parsed);
-    const { blocking } = critiqueBeat(current.turns, ctx.persona, ctx.beat, ctx.storyPlan);
+    const { blocking } = critiqueBeat(current.turns, ctx.persona, ctx.beat, ctx.storyPlan, ctx.storySoFar);
 
     if (!blocking.length) break;
     lastFailures = blocking;
