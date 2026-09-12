@@ -180,6 +180,13 @@ export const checkPlainWords = (text: string): PlainProblem[] => {
 export const PLAIN_GUIDANCE = [
   'PUT THE PERSON BACK IN THE SENTENCE. English lets you turn a verb into a noun - decide becomes decision, maintain becomes maintenance - and every time you do, whoever did it disappears. "A decision was made that a response was not required" becomes "somebody decided nobody needed to go and look". Shorter, plainer, and it has a person in it.',
   'Use the word a person would use out loud. Not "recertification" but "it was due to be checked". Not "the regulatory overhaul that followed" but "the rules changed". If a word only appears in documents, say what it means instead.',
-  'Where a technical term is the actual subject and cannot be avoided, say it once and say what it is in the same breath, in ordinary words. "A pressure safety valve, the thing that lets gas escape before it can build up." Then just use the short name.',
+  // GENERIC ON PURPOSE. This used to say "where a technical term is the actual
+  // subject and cannot be avoided", which let almost everything through: a city
+  // nobody has heard of, a job title, an institution, a word from the language
+  // the story is in. None of those are technical terms and all of them stop a
+  // listener dead, because a listener cannot look anything up and cannot ask.
+  'THE FIRST TIME A LISTENER MEETS AN UNFAMILIAR WORD, GIVE IT TO THEM. Anything outside everyday speech gets a few plain words attached the first time it is used, and after that it is just the short name. This covers far more than jargon: a job ("an epidemiologist, one of the people who work out how a disease is spreading"), a place ("Uruk, a city in what is now southern Iraq"), an institution ("the Cullen Inquiry, the public investigation set up afterwards"), a piece of equipment, a title, a rank, a word from another language, a period of history.',
+  'ATTACH THE EXPLANATION, DO NOT STOP FOR IT. It belongs in the same breath as the word, as an aside - never as its own sentence beginning "now, a ziggurat is...". Stopping to define something is how a story turns into a lecture, and the listener feels the gear change.',
+  'If an unfamiliar word appears once and nothing depends on it, cut the word rather than explaining it. A name the listener will never meet again costs them more to hold than it is worth.',
   'Keep it continuous. One thing leads to the next, and the listener never has to hold something in mind waiting for it to be picked up later.',
 ];
