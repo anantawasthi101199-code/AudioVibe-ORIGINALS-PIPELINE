@@ -406,7 +406,10 @@ describe('writeScript', () => {
 
     const second = beatCalls(w)[1]!;
     expect(second.prompt).toContain('THE EPISODE SO FAR');
-    expect(second.prompt).toContain('[cold_open]');
+    // Labelled with hyphens rather than brackets, because `[cold_open]` is both
+    // JSON array syntax and an audio tag, and a model shown that copied it.
+    expect(second.prompt).toContain('--- cold_open ---');
+    expect(second.prompt).not.toContain('[cold_open]');
   });
 
   it('tells the opening beat that nothing has been said yet', async () => {

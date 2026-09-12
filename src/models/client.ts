@@ -801,6 +801,30 @@ export const extractJson = <T>(text: string): T => {
 
   try {
     return JSON.parse(candidate.slice(start, end + 1)) as T;
+  } catch {
+    // SECOND CHANCE FROM THE FIRST BRACE. Taking the first bracket of either
+    // kind is right most of the time and wrong in one specific way: a reply
+    // that opens with something square before the actual object - a stray
+    // label, a citation marker, a copied transcript header - parses from the
+    // wrong place and fails.
+    //
+    // That happened for real. A beat came back beginning "[before]", copied
+    // from a label in its own prompt, and the parse started there rather than
+    // at the object two lines down.
+    const brace = candidate.indexOf('{');
+    const lastBrace = candidate.lastIndexOf('}');
+    if (brace >= 0 && lastBrace > brace) {
+      try {
+        return JSON.parse(candidate.slice(brace, lastBrace + 1)) as T;
+      } catch {
+        // Fall through to the error below, which reports the original failure
+        // rather than this one - the first attempt is the more informative.
+      }
+    }
+  }
+
+  try {
+    return JSON.parse(candidate.slice(start, end + 1)) as T;
   } catch (err) {
     // Found, but will not parse. Almost always an unescaped quotation mark
     // inside a string, which a show that quotes documents out loud produces

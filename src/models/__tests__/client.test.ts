@@ -549,6 +549,22 @@ describe('extractJson', () => {
     expect(extractJson('Here you go:\n{"a":1}\nHope that helps!')).toEqual({ a: 1 });
   });
 
+  it('recovers when a stray bracket comes before the object', () => {
+    // A beat came back beginning "[before]", copied from a label in its own
+    // prompt, and the parse started there rather than at the object two lines
+    // down. Taking the first bracket of either kind is right most of the time
+    // and wrong in exactly this way.
+    expect(extractJson('[before]\n{"turns":[{"speaker":"a","text":"x"}]}')).toEqual({
+      turns: [{ speaker: 'a', text: 'x' }],
+    });
+  });
+
+  it('still reads a top-level array when that is genuinely what was sent', () => {
+    // The recovery must not break the case it is guarding, which is why it only
+    // runs after the ordinary parse has failed.
+    expect(extractJson('[{"a":1},{"a":2}]')).toEqual([{ a: 1 }, { a: 2 }]);
+  });
+
   it('reads a top-level array', () => {
     expect(extractJson('[1,2]')).toEqual([1, 2]);
   });

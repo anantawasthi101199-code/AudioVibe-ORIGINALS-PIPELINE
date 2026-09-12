@@ -541,9 +541,19 @@ export const writeScript = async (
   let previousTail = beats.length ? tailOf(beatText(beats[beats.length - 1]!)) : undefined;
 
   /** Every beat written so far, labelled, for the next one to read. */
+  /**
+   * THE LABEL FORMAT MATTERS, AND THE OBVIOUS ONE IS WRONG. This read
+   * `[before]`, which collides with two things at once: it is how a JSON array
+   * opens, and it is exactly the shape of an audio tag. A model shown a
+   * transcript formatted that way copied it, and returned a beat beginning
+   * "[before]" - which failed to parse as JSON, failed to repair, and killed
+   * the run on the beat after the two that had worked.
+   *
+   * A row of hyphens is neither of those things.
+   */
   const storySoFar = () =>
     beats.length
-      ? beats.map((b) => `[${b.beatId}]\n${beatText(b)}`).join('\n\n')
+      ? beats.map((b) => `--- ${b.beatId} ---\n${beatText(b)}`).join('\n\n')
       : undefined;
 
   if (beats.length) {
