@@ -13,6 +13,7 @@
  * over the script and the ledger. A model is never asked "is this good".
  */
 import { EpisodeFormat } from '../formats/schema';
+import { checkPronouns } from './pronouns';
 import { Persona } from '../canon/schema';
 import { beatsBelowClaimFloor, Claim, LedgerReport } from '../evidence/claim';
 import { VerificationReport } from '../evidence/verify';
@@ -64,6 +65,22 @@ export interface GateInput {
   durationS: number;
   /** Prior scripts to compare against: the network's own, and the platform's. */
   priorTexts?: Array<{ label: string; text: string }>;
+  /**
+   * The source text, and the people the episode set out to name.
+   *
+   * THE ONLY INPUT HERE THAT IS NOT A CLAIM, and it exists because the claims
+   * turned out not to cover everything the script asserts. An episode called
+   * the sentencing judge "her" all the way through; the sources say "His
+   * Honour Judge Kinch" and "he did not know"; and no claim mentioned him at
+   * all, because his name arrived from the brief and everything else about him
+   * was written into the prose between the claims.
+   *
+   * Optional, because a fiction show has no corpus and an older run has none
+   * stored. Absent means the check does not run, which is honest - it does not
+   * mean the pronouns are right.
+   */
+  corpusText?: string;
+  castNames?: string[];
   /**
    * Continuity, for a fiction show. Required when persona.fiction is set.
    *
@@ -278,6 +295,19 @@ export const runGate = (input: GateInput): GateReport => {
       'duration',
       `runs ${Math.round(input.durationS)}s, outside the ${Math.round(min)}-${Math.round(max)}s the format allows`
     );
+  }
+
+  // --- 7b. Pronouns for real people. ---
+  //
+  // Not part of the ledger, and it cannot be: the ledger checks that each claim
+  // is entailed by its quote, and this is an assertion that never passed
+  // through a claim at all. Blocking, because getting a named real person's identity wrong in
+  // public is the single worst thing this studio could publish, and it is the
+  // exact failure the whole evidence apparatus is supposed to prevent.
+  if (!fiction && input.corpusText && input.castNames?.length) {
+    for (const p of checkPronouns(fullText(input.script), input.corpusText, input.castNames)) {
+      add('pronoun', p.detail);
+    }
   }
 
   // --- 8. Risk tier. A show does not get a topic it is not cleared for. ---

@@ -322,6 +322,10 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     counterEvidence,
     durationS: render.durationS,
     priorTexts: deps.priorTexts,
+    // The corpus and the roster, for the one check that looks outside the
+    // claims. See GateInput.corpusText.
+    corpusText: corpus.sources.map((s) => s.text).join('\n'),
+    castNames: script.plan?.cast.map((c) => c.name) ?? [],
   });
 
   run.writeArtifact('qa', gate);

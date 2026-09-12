@@ -40,6 +40,7 @@ import { SHORT_FORM_GUIDANCE } from './shorts';
 import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
 import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
+import { PRONOUN_RULE } from '../qa/pronouns';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -69,12 +70,36 @@ export const scriptSchema = z.object({
   description: z.string().min(1),
   beats: z.array(scriptBeatSchema).min(1),
   writerModel: z.string(),
+  /**
+   * The plan the episode was written to, kept with the script.
+   *
+   * IT USED TO LIVE ONLY IN A CHECKPOINT, which is deleted when the run
+   * finishes - so by the time the gate ran, the cast roster that every beat had
+   * been written against no longer existed anywhere. The pronoun check needs
+   * it, and so does anybody reading a finished run afterwards and asking why a
+   * beat introduced somebody where it did.
+   *
+   * Optional so that scripts written before this parse unchanged.
+   */
+  plan: storyPlanSchema.optional(),
 });
 
 export type Script = z.infer<typeof scriptSchema>;
 
-/** Words per second of speech, for turning a target duration into a word count. */
-export const WORDS_PER_SECOND = 2.6;
+/**
+ * Words per second of speech, for turning a target duration into a word count.
+ *
+ * MEASURED, NOT GUESSED, AND THE GUESS WAS 9% LOW. Two finished episodes came
+ * in at 2.83 and 2.87 words per second of rendered audio against an assumed
+ * 2.6, so every beat was given a word target that under-fills its slot even
+ * when the writer hits it exactly. Compounded across six beats that is most of
+ * a minute, and it is why an episode written to a 13-17 minute format rendered
+ * at 8 minutes 24.
+ *
+ * Worth re-measuring whenever the voice provider changes: this is a property of
+ * the speaking rate, and Eleven at 0.35 stability will not be OpenAI's.
+ */
+export const WORDS_PER_SECOND = 2.85;
 
 /**
  * How many times a beat may be rewritten before the run gives up on it.
@@ -187,6 +212,8 @@ ${NETWORK_BANNED_PHRASES.concat(persona.styleCard.forbiddenPhrases)
   .join('\n')}
 
 FACTS
+${PRONOUN_RULE}
+
 You may state a fact ONLY if it appears in the CLAIMS you are given. Do not add
 figures, dates, names or causes from your own knowledge, however confident you
 are. If a claim is not there, write around it. Claims are pre-verified against
@@ -380,11 +407,20 @@ export const critiqueBeat = (
   const { violations } = checkStyle(text, persona.styleCard);
   for (const v of violations) (v.blocking ? blocking : advisory).push(v.detail);
 
-  // Length is advisory: a beat twenty words over does not need a rewrite, and
-  // rejecting on it teaches the writer to pad or clip mid-thought.
+  // Length is advisory in the middle and blocking at the edges, and the LOW
+  // edge moved from 0.6 to 0.85 because at 0.6 it never fired on the thing it
+  // exists to catch. Three beats of a real episode came in at 65 to 76% of
+  // their minimum, every one of them "passing", and the episode rendered at 8
+  // minutes against a 13-17 minute format.
+  //
+  // The risk of tightening it is padding, and that risk is now covered from the
+  // other side: checkRepetition blocks a beat that pads by restating, so the
+  // only way to reach the floor is to say something new. If there is nothing
+  // new to say, the shortage is in the claims and the fix is more research, not
+  // more words.
   const words = text.split(/\s+/).filter(Boolean).length;
   const { min, max } = wordsForBeat(beat);
-  if (words < min * 0.6 || words > max * 1.5) {
+  if (words < min * 0.85 || words > max * 1.5) {
     blocking.push(`runs ${words} words against a target of ${min} to ${max}`);
   } else if (words < min || words > max) {
     advisory.push(`runs ${words} words against a target of ${min} to ${max}`);
@@ -743,5 +779,6 @@ export const writeScript = async (
     description,
     beats,
     writerModel: writer.model,
+    plan,
   };
 };

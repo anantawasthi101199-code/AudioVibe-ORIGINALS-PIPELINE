@@ -197,6 +197,18 @@ describe('critiqueBeat', () => {
           speaker: 'sceptic',
           text: 'Hold on. Somebody filled that in ahead of time? Who signed it, and did anyone ever check the column against the panel?',
         },
+        {
+          // The long turn goes to the SCEPTIC, which keeps the split near even.
+          // Handing it to the reporter made one voice 74% of the beat and
+          // tripped the monologue check - a fixture that trips an unrelated
+          // rule tests nothing.
+          speaker: 'sceptic',
+          text: 'A contractor signed it, every Friday, in the same blue biro. He was working from a printed rota that nobody had updated since the panel was replaced in the March, so the column he was filling in described a system that had stopped existing.',
+        },
+        {
+          speaker: 'reporter',
+          text: 'And nobody reading it afterwards had any reason to think that.',
+        },
       ],
       DUO,
       FORMAT.beats[0]!
@@ -204,19 +216,40 @@ describe('critiqueBeat', () => {
     expect(blocking).toEqual([]);
   });
 
-  it('blocks a beat wildly outside its length but only advises a near miss', () => {
-    // Rejecting a beat twenty words over teaches the writer to pad or to clip
-    // mid-thought.
+  it('blocks a beat that comes in short of its length', () => {
+    // THE LOW EDGE MOVED FROM 0.6 TO 0.85 OF THE MINIMUM, and this test moved
+    // with it. At 0.6 the check never fired on the thing it exists to catch:
+    // three beats of a real episode came in at 65 to 76% of their minimum,
+    // every one of them passing, and the episode rendered at 8 minutes against
+    // a 13-17 minute format.
+    //
+    // The old fear was that tightening this teaches the writer to pad. That is
+    // now covered from the other side - checkRepetition blocks a beat that pads
+    // by restating, so the only way to reach the floor is to say something new.
     expect(
       critiqueBeat([{ speaker: 'host', text: 'Short.' }], SOLO, FORMAT.beats[0]!).blocking.join(' ')
     ).toMatch(/runs \d+ words/);
 
+    const { min } = wordsForBeat(FORMAT.beats[0]!);
+    const twoThirds = Array.from({ length: Math.round(min * 0.7) }, () => 'word').join(' ');
+    expect(
+      critiqueBeat([{ speaker: 'host', text: twoThirds }], SOLO, FORMAT.beats[0]!)
+        .blocking.join(' ')
+    ).toMatch(/runs \d+ words/);
+  });
+
+  it('only advises a beat that is a little over', () => {
+    // Rejecting a beat twenty words over still teaches the writer to pad or to
+    // clip mid-thought, so the HIGH edge is unchanged.
+    const { max } = wordsForBeat(FORMAT.beats[0]!);
+    const slightlyOver = Array.from({ length: max + 12 }, () => 'word').join(' ');
     const nearMiss = critiqueBeat(
-      [{ speaker: 'host', text: `${GOOD} One more sentence goes here.` }],
+      [{ speaker: 'host', text: slightlyOver }],
       SOLO,
       FORMAT.beats[0]!
     );
     expect(nearMiss.blocking.filter((b) => /runs \d+ words/.test(b))).toEqual([]);
+    expect(nearMiss.advisory.join(' ')).toMatch(/runs \d+ words/);
   });
 
   it('blocks a banned phrase', () => {
