@@ -187,6 +187,18 @@ export const clerkConfig = () => ({
  * false `entailed` standing, which is why it is the same family and the same
  * prompt as the verifier rather than something cheaper and different.
  *
+ * IT TRADES CALLS FOR TOKENS, WHICH IS THE WRONG TRADE ON SOME ACCOUNTS. A
+ * claim the screen passes costs one cheap call instead of one expensive one, so
+ * it wins whenever tokens are the scarce thing. But a claim it ESCALATES costs
+ * two calls instead of one - and on an account limited by requests per day
+ * rather than by spend, that is straightforwardly worse. A real run hit
+ * "gpt-5-mini ... requests per day: Limit 50, Used 50" for exactly this reason:
+ * thirty-seven claims had become fifty-two calls.
+ *
+ * So: keep it when the bill is the constraint, turn it off when the call count
+ * is. Turning it off is not a downgrade - every claim then goes straight to the
+ * strong model, which is better verification and merely more expensive.
+ *
  * Set FOUNDRY_SCREENER_MODEL to an empty string to turn it off and send every
  * claim straight to the strong model.
  */
