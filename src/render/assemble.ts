@@ -125,11 +125,21 @@ export const concatBeats = async (
     ...inputs,
     '-filter_complex', parts.join(';'),
     '-map', '[out]',
-    // 48kHz mono WAV. The platform masters and transcodes; handing it a clean
-    // uncompressed source makes its single 192k encode the only lossy step.
     '-ar', '48000',
     '-ac', '1',
-    '-c:a', 'pcm_s16le',
+    // THE CODEC FOLLOWS THE CONTAINER, and it has to, because this function has
+    // two callers wanting two different things. Joining beats produces the
+    // episode as 48kHz mono WAV: the platform masters and transcodes, so
+    // handing it a clean uncompressed source makes its single 192k encode the
+    // only lossy step. Joining TURNS produces one beat file, and beat files are
+    // mp3 because that is what the TTS providers return.
+    //
+    // Hardcoding PCM meant writing raw samples into an .mp3 container, which
+    // ffmpeg refuses with "Invalid audio stream. Exactly one MP3 audio stream
+    // is required" - a message that names neither the codec nor the caller.
+    ...(outputPath.toLowerCase().endsWith('.mp3')
+      ? ['-c:a', 'libmp3lame', '-b:a', '192k']
+      : ['-c:a', 'pcm_s16le']),
     outputPath,
   ]);
 
