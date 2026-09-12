@@ -89,9 +89,9 @@ with it whatever the quote genuinely supports. Keep as much as the quote earns.
 
 Rules:
 - SAY NO MORE THAN THE QUOTE ESTABLISHES. If the quote says "three ringleaders
-  each received seven years" and the claim names them, the names go and the
-  seven years stays: "three of the ringleaders were each sentenced to seven
-  years".
+  each received seven years" and the claim names them, the names go and
+  everything else stays: "three of the ringleaders were each sentenced to seven
+  years in prison".
 - DO NOT RESOLVE WHAT THE QUOTE LEAVES OPEN. If the quote says "you" or "TP",
   the narrowed claim may not say "Perkins" - not even when you are sure. That
   resolution is exactly the failure being repaired.
@@ -100,6 +100,31 @@ Rules:
 - KEEP IT USEFUL. A claim narrowed to nothing is worse than no claim, because
   it costs a beat a fact and gives back a sentence not worth saying. If what
   survives is not worth a listener's time, say so with "keep": false.
+- NARROWING MEANS REMOVING WHAT IS UNSUPPORTED, NOT RETREATING INTO VAGUENESS.
+  This is the difference between a narrowed claim that still carries the
+  episode and one that quietly drains it. When you take something out, replace
+  it with the MOST specific thing the quote does support, never with a general
+  word.
+
+  Say "three of the six ringleaders were each sentenced to seven years in
+  prison", not "three people received seven years", and not "some of the men
+  were sentenced". The names had to go. The count, the group they are counted
+  out of, the length, and the fact that it is a prison sentence all stayed,
+  because the quote carries every one of them.
+
+  Keep the units, the nouns and the figures that make a fact plain out loud.
+  "Fourteen million pounds' worth of jewellery" rather than "a large amount".
+  "Seven years in prison" rather than "seven years". A listener cannot look
+  anything up, so a fact stripped to an abstraction has not been made safer,
+  it has been made useless.
+- ANCHOR A COUNT TO THE WHOLE IT COMES OUT OF, where the quote gives you one.
+  "Three of the six" is worth far more to a listener than "three", because it
+  tells them how much of the group is still unaccounted for. Never invent the
+  whole - only use it when the quote establishes it.
+- DO NOT MAKE THE CLAIM RELATIVE TO THE EPISODE. "The other three" is a true
+  sentence only in an episode that has already named the first three, and this
+  claim does not know what has been said. Write it true on its own, and let the
+  script connect it.
 - GLOSSES ARE ADDITIONS. "his age at sentencing" from a quote that says "is 67"
   adds both the possessive and the occasion. Say "is 67".
 - CHECK THE TYPE. A claim typed "statistic" must state a number. One typed
@@ -282,6 +307,16 @@ export const repairAll = async (
       narrowed = { keep: false, text: '', type: claim.type, lost: '' };
     }
 
+    // A NARROWING THAT DRAINED THE CLAIM IS REFUSED HERE, before it is
+    // verified, because it would PASS. "Some of the men were sentenced" is
+    // perfectly true and perfectly checkable and worth nothing to a listener
+    // who cannot look anything up - which makes it worse than the original
+    // failure, since the rejected claim at least announced itself.
+    if (narrowed.keep && wasDrained(wasText, narrowed.text)) {
+      deps.onProgress?.(`refused a narrowing of ${claim.id} that removed the facts, not the over-reach`);
+      narrowed = { ...narrowed, keep: false };
+    }
+
     if (narrowed.keep) {
       const candidate = claimSchema.parse({
         ...claim,
@@ -424,4 +459,55 @@ export const unhedgedClaims = (
     }
   }
   return problems;
+};
+
+/**
+ * Words a claim retreats into when narrowing goes wrong.
+ *
+ * NARROWING HAS A FAILURE MODE OF ITS OWN, and it is quiet. Asked to remove
+ * what a quote does not support, a model will sometimes remove the specificity
+ * instead of the over-reach: "Collins, Jones and Perkins were each sentenced to
+ * seven years" becomes "some of the men were sentenced", which is now perfectly
+ * true, perfectly verifiable, and worth nothing to a listener who cannot look
+ * anything up.
+ *
+ * That is worse than the original failure, because it passes. The rejected
+ * claim at least announced itself; this one sails through verification and
+ * drains the episode a sentence at a time.
+ */
+const VAGUE = [
+  /\bsome (of|people|men|women|others)\b/i,
+  /\bseveral\b/i,
+  /\ba number of\b/i,
+  /\bvarious\b/i,
+  /\bcertain (people|men|individuals|others)\b/i,
+  /\ba large (amount|sum|number)\b/i,
+  /\ba significant\b/i,
+  /\bmany of\b/i,
+  /\bat one point\b/i,
+  /\bsomeone\b/i,
+  /\bsomething happened\b/i,
+];
+
+/** Numbers as digits or as the words a claim is likely to use. */
+const CONCRETE =
+  /\b(\d|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|hundred|thousand|million|billion)\b/i;
+
+/**
+ * Whether a narrowing kept the fact or only kept the truth.
+ *
+ * The test is deliberately crude: a claim that lost every number and every
+ * proper noun, and reached for a hedging quantifier instead, has almost
+ * certainly been drained rather than narrowed. Reported so the narrowing can be
+ * refused, not so it can be silently patched - a vague claim is better replaced
+ * by the unsettled original, which at least still says something.
+ */
+export const wasDrained = (before: string, after: string): boolean => {
+  if (!VAGUE.some((re) => re.test(after))) return false;
+
+  const lostNumbers = CONCRETE.test(before) && !CONCRETE.test(after);
+  const properNouns = (text: string) => (text.match(/\b[A-Z][a-z]{2,}/g) ?? []).length;
+  const lostNames = properNouns(before) > 0 && properNouns(after) === 0;
+
+  return lostNumbers || lostNames;
 };

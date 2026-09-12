@@ -14,6 +14,7 @@ import {
   findBetterQuote,
   hedgeFor,
   repairAll,
+  wasDrained,
   unhedgedClaims,
 } from '../repair';
 import { LlmClient } from '../../models/client';
@@ -271,5 +272,55 @@ describe('unhedgedClaims', () => {
   it('says nothing about a verified claim stated flatly, which is the normal case', () => {
     const beats = [{ beatId: 'payoff', claimIds: ['c30'], text: 'They were sentenced.' }];
     expect(unhedgedClaims(beats, [claim()])).toEqual([]);
+  });
+});
+
+describe('wasDrained - narrowing that removes the facts instead of the over-reach', () => {
+  const BEFORE = "Collins, Jones and Perkins were each sentenced to seven years.";
+
+  it('catches a narrowing that retreats into vagueness', () => {
+    // Perfectly true, perfectly verifiable, and worth nothing to a listener who
+    // cannot look anything up. Worse than the original failure, because it
+    // passes: the rejected claim at least announced itself.
+    expect(wasDrained(BEFORE, 'Some of the men were sentenced.')).toBe(true);
+    expect(wasDrained(BEFORE, 'A number of those involved received prison terms.')).toBe(true);
+  });
+
+  it('accepts a narrowing that keeps the count and the length', () => {
+    // What the listener asked for: the names go, everything the quote carries
+    // stays, and the sentence still lands in the story.
+    expect(
+      wasDrained(BEFORE, 'Three of the six ringleaders were each sentenced to seven years in prison.')
+    ).toBe(false);
+  });
+
+  it('accepts a hedging word when the specifics survived alongside it', () => {
+    // "Some of" is only a symptom when the numbers and names went with it.
+    expect(
+      wasDrained(BEFORE, 'Some of the six were sentenced to seven years in prison.')
+    ).toBe(false);
+  });
+
+  it('says nothing about a narrowing with no hedging word at all', () => {
+    expect(wasDrained(BEFORE, 'The ringleaders were sentenced.')).toBe(false);
+  });
+});
+
+describe('repairAll refuses a drained narrowing', () => {
+  it('falls through to unsettled rather than accepting a claim worth nothing', async () => {
+    const { claims, report } = await repairAll([claim()], [FAILURE], {
+      sources: [source('s1', 'Three ringleaders behind the heist each received seven years.')],
+      narrower: narrower({
+        keep: true,
+        text: 'Some of the men were sentenced.',
+        type: 'chronology',
+        lost: 'which of them, and for how long',
+      }),
+      // Would have passed, which is exactly the danger.
+      reverify: async () => ({ claimId: 'c30', verdict: 'entailed', reason: 'ok' }),
+    });
+
+    expect(claims[0]!.text).not.toMatch(/Some of the men/);
+    expect(report.repaired[0]!.method).toBe('unverified');
   });
 });

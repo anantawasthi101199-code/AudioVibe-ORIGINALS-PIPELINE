@@ -220,6 +220,14 @@ figures, dates, names or causes from your own knowledge, however confident you
 are. If a claim is not there, write around it. Claims are pre-verified against
 their sources; anything you add is not.
 
+CONNECT A CLAIM TO WHAT THE EPISODE HAS ALREADY SAID. A claim is written to be
+true standing on its own, because it cannot know what has been said before it.
+You do know. So a claim reading "three of the six ringleaders were each
+sentenced to seven years in prison", in a beat that has already given sentences
+for Reader, Wood and Doyle, is spoken as "the OTHER three each got seven years".
+Same fact, and it lands in the story instead of beside it. Never do this unless
+the connection is actually true of what you have written.
+
 Some claims are marked NOT SETTLED. Use them - they are often the most
 interesting thing in a beat - and say plainly what the record does not
 establish, in your own words, at the point in the story where it matters.
