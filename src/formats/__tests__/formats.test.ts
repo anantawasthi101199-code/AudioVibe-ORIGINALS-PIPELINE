@@ -147,15 +147,42 @@ describe('the shipped formats', () => {
   const evidenceBearing = shipped.filter((f) => f.kind === 'long' && minClaimsFor(f) > 0);
   const claimless = shipped.filter((f) => minClaimsFor(f) === 0);
 
+  /**
+   * Somewhere in every evidence-bearing format, the duty to say where the
+   * accounts disagree.
+   *
+   * THIS USED TO REQUIRE A COUNTERPOINT BEAT, and the change is deliberate
+   * rather than a relaxation. A told story that stops two thirds through to
+   * weigh two readings of itself against each other loses the listener at the
+   * halt, however good the writing in it is - which is what happened, and a
+   * listener named it without being asked. So `told-story` folded the duty into
+   * its payoff: say where the accounts disagree AT THE POINT IN THE STORY where
+   * they disagree, and carry on.
+   *
+   * What must not change is that the duty exists somewhere and is not optional.
+   * Confident one-sidedness is still the most common way generated content is
+   * false while every sentence is sourced. So this test now accepts EITHER
+   * shape and insists on one of them, because the thing worth pinning is the
+   * obligation, not the beat that used to carry it.
+   */
+  const DISAGREEMENT = /disagree|counter|steelman|other side|contested|dispute/i;
+
   it.each(evidenceBearing.map((f) => [f.id, f] as const))(
-    '%s carries a REQUIRED counterpoint beat',
+    '%s is required to say where the accounts disagree',
     (_id, format) => {
-      // The rule this repo cares about most. Confident one-sidedness is the
-      // most common way generated content is false while every sentence is
-      // sourced, and an optional beat is one that quietly stops appearing.
-      const counterpoint = format.beats.find((b) => b.type === 'counterpoint');
-      expect(counterpoint).toBeDefined();
-      expect(counterpoint!.optional).toBe(false);
+      const counterpointBeat = format.beats.find((b) => b.type === 'counterpoint');
+      if (counterpointBeat) {
+        expect(counterpointBeat.optional).toBe(false);
+        return;
+      }
+
+      // No dedicated beat, so a required beat must carry the duty in its
+      // constraints. An optional beat carrying it would be a beat that quietly
+      // stops appearing, which is the failure this test has always been about.
+      const inlined = format.beats.filter(
+        (b) => !b.optional && b.constraints.some((c) => DISAGREEMENT.test(c))
+      );
+      expect(inlined.length).toBeGreaterThan(0);
     }
   );
 

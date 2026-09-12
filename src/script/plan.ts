@@ -44,6 +44,38 @@ export const storyPlanSchema = z.object({
    */
   spine: z.string().min(1),
   /**
+   * Everybody the episode names, and the beat that introduces them.
+   *
+   * WHY THE CAST IS PLANNED RATHER THAN LEFT TO THE WRITER. In the first solo
+   * episode, Carl Wood WALKED OUT OF THE VAULT in beat four having never been
+   * introduced; Hugh Doyle was SENTENCED in beat six having never appeared at
+   * all; Terry Perkins, who led the second night, was not in the episode; and
+   * the listener was never told how many men there were. A listener described
+   * it exactly: "the characters are being introduced randomly, not that there
+   * were five people, out of which the first was X, the second Y".
+   *
+   * None of that is a writing failure. Each beat was written by a call that
+   * could see the story so far but had no roster, so nobody owned the question
+   * "has this person been introduced yet" - and a name that arrives mid-action
+   * costs the listener the whole sentence it arrives in.
+   *
+   * Planned here, the roster becomes a thing the writer is handed and a thing
+   * that can be CHECKED: a name used before its introducing beat is a
+   * deterministic failure, not a matter of taste. See checkCast below.
+   */
+  cast: z
+    .array(
+      z.object({
+        /** Exactly as the claims spell it. The whole point is one spelling. */
+        name: z.string().min(1),
+        /** Who they are, in the words the episode will use. One clause. */
+        who: z.string().min(1),
+        /** The beat that introduces them. They may not be named before it. */
+        introducedIn: z.string().min(1),
+      })
+    )
+    .default([]),
+  /**
    * What happens in each beat, in order, keyed by beat id.
    *
    * Keyed rather than positional so a beat sheet that gains a beat does not
@@ -79,8 +111,17 @@ Rules:
   would cover the same ground, change one.
 - Say what the listener should BELIEVE at the end of each beat, especially
   before a turn. A turn only works if the thing it overturns was established.
-- Introduce each person ONCE, in the earliest beat that needs them, and say in
-  that beat's entry that this is where they are introduced.
+- THE CAST IS A ROSTER AND IT COMES FIRST. List everybody the episode will
+  name, with one clause saying who they are, and the beat that introduces them.
+  Introduce each person ONCE, in the earliest beat that names them - so nobody
+  ever acts in this episode before the listener has been told who they are.
+- If the story has a group - a crew, a family, a board - the beat that
+  introduces the first of them must say HOW MANY there were, before naming any.
+  A listener who does not know whether there were three men or nine cannot hold
+  the story, and every name after that lands as a stranger.
+- Do not put every introduction in one beat either. Introduce each person in
+  the beat where they first matter, so the listener meets them with something
+  to attach the name to.
 - Work only from the facts you are given. Do not plan a beat around something
   you know but cannot cite.
 - If the facts do not support a beat, say so plainly in its entry rather than
@@ -88,6 +129,7 @@ Rules:
 
 Return JSON only:
 {"spine": "the whole episode as one sentence, as a sequence of events",
+ "cast": [{"name": "as the claims spell it", "who": "one clause", "introducedIn": "beatId"}],
  "beats": [{"beatId": "...", "happens": "...", "leaves": "what the listener now believes"}]}`;
 
 /**
@@ -161,10 +203,78 @@ export const planBrief = (plan: StoryPlan, currentBeatId: string): string => {
     return `${marker}${b.beatId}: ${b.happens}${leaves}`;
   });
 
+  const order = plan.beats.map((b) => b.beatId);
+  const here = order.indexOf(currentBeatId);
+  // Split into met / not yet met rather than listed flat, because the writer's
+  // actual question at every name is "can I use this one yet", and a flat list
+  // makes them work it out from beat ids.
+  const met = plan.cast.filter((c) => order.indexOf(c.introducedIn) < here);
+  const mine = plan.cast.filter((c) => c.introducedIn === currentBeatId);
+  const later = plan.cast.filter((c) => order.indexOf(c.introducedIn) > here);
+
+  const castLines = plan.cast.length
+    ? [
+        '',
+        'THE PEOPLE IN THIS STORY.',
+        met.length
+          ? `Already introduced, so use the name alone: ${met.map((c) => c.name).join(', ')}.`
+          : 'Nobody has been introduced yet.',
+        mine.length
+          ? `YOU INTRODUCE THESE, in this beat, before they do anything: ` +
+            mine.map((c) => `${c.name} (${c.who})`).join('; ') + '.'
+          : 'You introduce nobody new in this beat.',
+        later.length
+          ? `Do NOT name these yet, they are introduced later: ${later.map((c) => c.name).join(', ')}.`
+          : '',
+      ].filter(Boolean)
+    : [];
+
   return [
     `THE WHOLE EPISODE: ${plan.spine}`,
     '',
     'THE PLAN, in order. The beat marked >>> is the one you are writing:',
     ...lines,
+    ...castLines,
   ].join('\n');
+};
+
+/**
+ * Names used before the listener has been told who they are.
+ *
+ * DETERMINISTIC, AND THAT IS THE WHOLE VALUE. "Introduce people properly" is
+ * advice a draft can agree with and still break; "Carl Wood is named in `wrong`
+ * but introduced in `payoff`" is a fact. This is the check that would have
+ * caught a man walking out of a vault before the listener knew he was in it.
+ *
+ * Surname-only matching on purpose: a beat that says "Wood pulls out" has used
+ * the person, whatever it called them. Matched on a word boundary so "Reader"
+ * does not fire on "readers".
+ */
+export const checkCast = (
+  text: string,
+  plan: StoryPlan,
+  currentBeatId: string
+): string[] => {
+  const order = plan.beats.map((b) => b.beatId);
+  const here = order.indexOf(currentBeatId);
+  if (here < 0) return [];
+
+  const early: string[] = [];
+  for (const person of plan.cast) {
+    const at = order.indexOf(person.introducedIn);
+    if (at < 0 || at <= here) continue;
+
+    // The last word of the name, which is the surname for a person and the
+    // distinctive word for an organisation.
+    const key = person.name.trim().split(/\s+/).pop() ?? '';
+    if (key.length < 3) continue;
+    const re = new RegExp(`\\b${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
+    if (re.test(text)) {
+      early.push(
+        `names ${person.name} before the listener has been told who they are ` +
+          `(introduced in ${person.introducedIn}, this is ${currentBeatId})`
+      );
+    }
+  }
+  return early;
 };

@@ -24,7 +24,17 @@
 
 export const NARRATION_GUIDANCE = [
   'You are ONE person telling ONE listener a story out loud. Not reading an essay, not presenting. Write what you would actually say.',
-  'Say things twice, differently. A listener cannot rewind. Any fact the story turns on gets stated, then said again in other words a moment later - "eleven weeks. Nearly three months with the alarm off."',
+  // THIS LINE USED TO SAY "say things twice, differently", AND IT CAUSED THE
+  // WORST FAULT IN THE FIRST SOLO EPISODE. A model implements say-it-twice as
+  // say-it-wrong-then-correct-it - "eleven years old. Not eleven months into a
+  // criminal career. Eleven years old, full stop" - because that is the shape
+  // restatement takes in written argument. The listener hears the narrator
+  // arguing with himself about something neither of them said.
+  //
+  // The need is real: a listener genuinely cannot rewind. So the rule is kept
+  // and made ADDITIVE, with the second pass carrying new information rather
+  // than a denial. See script/forward.ts, which measures whether it worked.
+  'Say the important things twice, and the second time must ADD something. State it, then a moment later give it a size, a date or a consequence - "eleven weeks. The alarm stayed off from the start of March to the middle of May." Never restate by correcting; nobody misheard you.',
   'Ask the question the listener is forming, out loud, and then answer it. "So why did nobody check? Because checking was somebody else\'s job, and that somebody had left in March." This is the single most important habit in solo narration - it is what a second host used to do.',
   'KEEP SENTENCES UNDER TWENTY-FIVE WORDS. That is one breath at narration pace, and it is measured. A listener who loses a long sentence loses the paragraph with it, because there is no way back. If a sentence needs three commas to hold itself together, it is two sentences.',
   'Change pace at the seams. Short sentences when it speeds up. One long one when it needs to land. A narrator at one speed for fifteen minutes is the flattest thing there is.',

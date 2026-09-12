@@ -38,7 +38,8 @@ import { checkVoices, voiceBrief } from './voices';
 import { writeHook } from './hooks';
 import { SHORT_FORM_GUIDANCE } from './shorts';
 import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
-import { StoryPlan, planBrief, planStory, storyPlanSchema } from './plan';
+import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
+import { FORWARD_GUIDANCE, checkForward } from './forward';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -143,6 +144,9 @@ ${say('stylistic_rule') || '- (none recorded)'}
 
 WRITING FOR AUDIO
 ${EAR_RULES.map((r) => `- ${r}`).join('\n')}
+
+KEEPING THE STORY MOVING FORWARD
+${FORWARD_GUIDANCE.map((r) => `- ${r}`).join('\n')}
 ${
   dialogue
     ? `\nWRITING A CONVERSATION\n${DIALOGUE_GUIDANCE.map((r) => `- ${r}`).join('\n')}`
@@ -192,8 +196,17 @@ export interface BeatContext {
    * and overturns things that were never established.
    */
   storySoFar?: string;
-  /** The plan for the whole episode, with this beat marked. */
+  /** The plan for the whole episode, with this beat marked. Prompt text. */
   plan?: string;
+  /**
+   * The same plan as data, for the checks that need it.
+   *
+   * Kept alongside the rendered brief rather than replacing it: the writer
+   * wants prose, and checkCast wants the roster and the beat order. Deriving
+   * one from the other at either end would be parsing something we already
+   * have structured.
+   */
+  storyPlan?: StoryPlan;
   angle: string;
   isoDate: string;
   /**
@@ -287,7 +300,15 @@ const parseTurns = (raw: unknown): { turns: Turn[]; claimIds: string[] } => {
 export const critiqueBeat = (
   turns: Turn[],
   persona: Persona,
-  beat: Beat
+  beat: Beat,
+  /**
+   * The episode plan, when there is one.
+   *
+   * Optional because the checks that need it are the only ones in this function
+   * that look OUTSIDE the beat, and a caller without a plan should still get
+   * every check that does not need one.
+   */
+  plan?: StoryPlan
 ): { blocking: string[]; advisory: string[] } => {
   const blocking: string[] = [];
   const advisory: string[] = [];
@@ -305,6 +326,23 @@ export const critiqueBeat = (
   for (const p of voiceProblems) (p.blocking ? blocking : advisory).push(p.detail);
 
   const text = turns.map((t) => withoutTags(t.text)).join('\n');
+
+  // The two ways a told story stops going forward: denying something nobody
+  // said, and discussing the episode instead of telling it. Both were found by
+  // a listener rather than by a check, on an episode that passed every style
+  // metric there is - which is why they are counted here rather than hoped for
+  // in the prompt.
+  for (const p of checkForward(text, { isOrientation: beat.type === 'orientation' })) {
+    (p.blocking ? blocking : advisory).push(p.detail);
+  }
+
+  // A name used before the listener has been told whose it is. Blocking,
+  // because the cost lands on the sentence it appears in and the listener
+  // spends the rest of the beat catching up rather than listening.
+  if (plan) {
+    for (const problem of checkCast(text, plan, beat.id)) blocking.push(problem);
+  }
+
   const { violations } = checkStyle(text, persona.styleCard);
   for (const v of violations) (v.blocking ? blocking : advisory).push(v.detail);
 
@@ -416,7 +454,7 @@ export const writeBeat = async (
     );
 
     current = parseTurns(parsed);
-    const { blocking } = critiqueBeat(current.turns, ctx.persona, ctx.beat);
+    const { blocking } = critiqueBeat(current.turns, ctx.persona, ctx.beat, ctx.storyPlan);
 
     if (!blocking.length) break;
     lastFailures = blocking;
@@ -637,6 +675,7 @@ export const writeScript = async (
         previousTail,
         storySoFar: storySoFar(),
         plan: plan ? planBrief(plan, beat.id) : undefined,
+        storyPlan: plan,
         angle: input.angle,
         isoDate: input.isoDate,
         loops: input.format.loops.length

@@ -19,6 +19,41 @@
 #
 # So: one narrator, oriented early, chronological throughout.
 #
+# WHAT THE FIRST EPISODE ON THIS SHEET GOT WRONG, from a listener who heard four
+# minutes of it. Three faults, and this sheet answers two of them - the third,
+# the negation tic, is answered in script/forward.ts.
+#
+#   "the characters are being introduced randomly, not that there were five
+#    people, out of which the first was X, the second Y, third Z, and then
+#    explain their back stories"
+#
+# Exactly right, and worse than it sounds: Carl Wood walked OUT of the vault
+# having never been introduced, Hugh Doyle was sentenced having never appeared,
+# the man who led the second night was not in the episode at all, and the
+# listener was never told how many men there were. The `before` beat now owns
+# the roster, and the plan carries it as data so that it can be checked.
+#
+#   "it should just be informative and on track"
+#
+# THE OBJECTION BEAT IS GONE, and that is the substantive change here. It asked
+# for the strongest version of the story where this reading is wrong, and what
+# it produced was the episode stopping dead two thirds through to argue with
+# itself about whether the men were careful professionals or proud old men, and
+# then resuming. That is a structural version of going back on yourself, and no
+# amount of writing quality rescues it, because the fault IS the halt.
+#
+# The thing it protected against is real: confident one-sidedness is the most
+# common way generated content is false while every sentence is sourced. So the
+# duty moved rather than disappeared. The payoff beat now has to say where the
+# accounts disagree AT THE POINT IN THE STORY WHERE THEY DISAGREE, in a sentence
+# or two, and keep going. A disagreement told in its place is information. The
+# same disagreement told as a separate movement is an essay interrupting a
+# story.
+#
+# SIX BEATS, DOWN FROM SEVEN. One fewer seam, and the beats that remain are
+# longer, which is the direction every fault found so far points: they have all
+# been at a join, or caused by a check that could only see one beat.
+#
 # CHRONOLOGY IS THE WHOLE TECHNIQUE. Events in the order they happened need no
 # scaffolding, because the listener already knows how time works. Every time a
 # script jumps - "but to understand that, we need to go back" - it spends
@@ -77,7 +112,7 @@ beats:
 
   - id: orientation
     type: orientation
-    seconds: [55, 85]
+    seconds: [60, 95]
     function: >
       Say what this is, when and where it happened, and what the episode is
       going to work out. Plainly, as if to somebody who asked.
@@ -87,25 +122,37 @@ beats:
       - "Say what the episode will settle by the end. A promise, kept later."
       - Talk to the listener directly here. This is the one beat that may.
       - No suspense. This beat trades mystery for trust and that is the trade.
+      - >
+        Say how big the thing was in plain terms - how many people, how much
+        money, how long it took. The listener is deciding whether to stay, and
+        scale is what they are deciding on.
     minClaims: 2
 
   - id: before
     type: stakes
-    seconds: [170, 230]
+    seconds: [190, 250]
     function: >
       Who these people were before any of it happened, and then everything that
       happened up to the first moment something was genuinely wrong.
     constraints:
-      - Start with one or two named people doing something ordinary.
+      - >
+        THE ROSTER COMES FIRST. Before anybody does anything, say how many there
+        were, then name them one at a time with one thing about each the
+        listener can hold on to - what he did for a living, what he had done
+        before, how old he was. A name that arrives mid-action costs the
+        listener the sentence it arrives in, and they do not get it back.
+      - >
+        Introduce them in the order they matter, not the order a list would have
+        them in. The one the story turns on gets the most, and gets it first.
       - Then strict chronology. Dates said as a person says them.
       - Scenes, not summary. Somebody does something, then something follows.
       - "End on the first moment that is genuinely wrong."
       - One beat, one continuous run of time. Do not break it into sections.
-    minClaims: 6
+    minClaims: 7
 
   - id: wrong
     type: escalation
-    seconds: [170, 230]
+    seconds: [190, 250]
     function: >
       It gets worse and faster than anyone involved can keep up with, and then
       the thing happens that changes what the whole story has been about.
@@ -114,26 +161,17 @@ beats:
       - Keep moving forward in time until the turn, which may look back once.
       - Shorter sentences as it speeds up. The pace is the point.
       - Say what the people involved believed at the time, not what we know now.
-      - "At the turn, say plainly what the listener believed and why it was wrong."
+      - >
+        At the turn, tell what happened. Do not announce that a turn is
+        happening, do not say the story is not the one they thought they were
+        in, and do not tell the listener what they believed. If it is a surprise
+        they will feel it without help, and being told to be surprised is how a
+        listener stops being surprised.
     minClaims: 6
-
-  - id: objection
-    type: counterpoint
-    seconds: [85, 125]
-    function: >
-      The strongest honest version of the story where this reading is wrong,
-      and why people hold it.
-    constraints:
-      - "Told as what somebody BELIEVES, not as an abstract position: name who
-        thinks it and what they are looking at when they think it."
-      - Steelman it. A version the other side would recognise as their own.
-      - Say what evidence would settle it, and whether it survives.
-      - Never introduce it as something about to be knocked down.
-    minClaims: 3
 
   - id: payoff
     type: payoff
-    seconds: [180, 250]
+    seconds: [200, 270]
     function: >
       What actually happened, start to finish, now that it makes sense - and
       then what it cost, to whom, and what became of them.
@@ -141,6 +179,13 @@ beats:
     constraints:
       - Answer the promise made in the orientation, in the same words if you can.
       - Be exactly as certain as the sources are and no more.
+      - >
+        WHERE THE ACCOUNTS DISAGREE, SAY SO WHERE IT HAPPENS. If the people
+        involved told it differently, or the record does not settle it, put that
+        in at the moment in the story it belongs to, in a sentence or two, name
+        who said what, and carry on. Never stop the story to weigh two readings
+        against each other - a disagreement told in its place is information, a
+        disagreement told as its own section is an essay interrupting a story.
       - Chronological again. The story retold correctly, not a summary of it.
       - "Then the accounting: names, numbers, years, what happened afterwards."
       - No moral. The accounting is the moral.
@@ -159,16 +204,9 @@ beats:
 
 # Opens warm rather than hot, drops through the orientation because that beat is
 # where the listener relaxes and decides to stay, then climbs without a break to
-# the turn. It dips again for the objection, because honesty is quieter than
-# argument and a listener can hear a show pretending to take the other side
-# seriously. The payoff is the peak: in an argument the peak is the evidence, in
-# a story it is the moment it all lands.
-#
-# THE OBJECTION BEAT IS NOT A CONCESSION TO THE GATE. Confident one-sidedness is
-# the most common way generated content is false while every sentence is
-# sourced, and a true story told one way is exactly where that bites. Every
-# narrative channel worth studying does this move - "now, some people think" -
-# and none of them lose the audience by it. What breaks a story is an ABSTRACT
-# counterpoint; what works is naming who believes the other thing and what they
-# are looking at when they believe it, which is why the constraints say so.
-tensionCurve: [0.68, 0.40, 0.62, 0.95, 0.70, 1.00, 0.45]
+# the turn and on into the payoff. There is no dip between them any more: the
+# beat that used to sit there stopped the story to argue with itself, and the
+# curve it produced - up, then down, then up - is what a listener hears as
+# losing the thread. A told story earns its rest at the orientation and then
+# does not stop again until it is over.
+tensionCurve: [0.68, 0.40, 0.66, 0.95, 1.00, 0.45]
