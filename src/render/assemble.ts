@@ -74,6 +74,66 @@ export const probeDuration = async (file: string): Promise<number | null> => {
 };
 
 /**
+ * How long the silence at the end of a rendered beat may run.
+ *
+ * THIS IS A TRUNCATION DETECTOR, and it exists because a listener heard one.
+ * The words "does not let people leave" were in the script, the beat was
+ * complete, and they were simply not in the audio - the file stopped after "by
+ * its own law" and the next beat began.
+ *
+ * Re-rendering the identical text through the identical code settled what
+ * happened: 67.56s and 67.20s on two fresh attempts against the 65.95s the run
+ * produced. OpenAI's speech endpoint drops the tail of an utterance
+ * intermittently, and nothing downstream noticed because the loss is about two
+ * per cent of the beat - far inside the normal variation in speaking rate, so
+ * no duration ratio could ever separate it from a beat that simply reads fast.
+ *
+ * The trailing silence CAN separate them, and by a wide margin:
+ *
+ *   complete   0.31s and 0.41s of silence after the last word
+ *   truncated  1.48s
+ *
+ * Whatever the mechanism - the model appears to emit its end-of-utterance
+ * padding after stopping early - the signal is four times clearer than the
+ * duration and points the right way.
+ */
+export const MAX_TRAILING_SILENCE_S = 0.9;
+
+/** Below this the detector is measuring the encoder, not the speech. */
+const SILENCE_FLOOR_DB = -40;
+
+/**
+ * Seconds of silence at the end of a file, or null when it cannot be measured.
+ *
+ * Null is treated as "no problem found" by the caller, which is the right way
+ * round: this is a heuristic guarding against a provider defect, and a missing
+ * measurement must never be able to fail a render on its own.
+ */
+export const trailingSilence = async (file: string, durationS: number): Promise<number | null> => {
+  // Keeps the unit suite hermetic: a test driving renderScript with an injected
+  // writeFile never puts bytes on disk, and spawning ffmpeg to be told so would
+  // make these tests depend on ffmpeg for an answer already known.
+  if (!fs.existsSync(file)) return null;
+
+  const res = await runProcess(ffmpegBin(), [
+    '-nostats',
+    '-v', 'info',
+    '-i', file,
+    '-af', `silencedetect=noise=${SILENCE_FLOOR_DB}dB:d=0.2`,
+    '-f', 'null',
+    '-',
+  ]);
+
+  // ffmpeg writes filter output to stderr even on success.
+  const starts = [...res.stderr.matchAll(/silence_start:\s*([0-9.]+)/g)].map((m) => Number(m[1]));
+  const last = starts.filter((n) => Number.isFinite(n)).pop();
+  if (last === undefined) return null;
+
+  const trailing = durationS - last;
+  return trailing >= 0 ? trailing : null;
+};
+
+/**
  * Silence between beats, in seconds.
  *
  * Not decoration. A beat boundary is a change of job - the cold open stops and
@@ -181,6 +241,15 @@ export interface RenderDeps {
   reuseExisting?: boolean;
   writeFile?: (file: string, data: Buffer) => void;
   probe?: (file: string) => Promise<number | null>;
+  /**
+   * Trailing silence in a rendered file, for the truncation guard.
+   *
+   * Injected so the unit suite can drive the retry without ffmpeg, and so a
+   * caller that cannot run ffmpeg at all gets the render rather than an error:
+   * the default returns the measurement, and a null from it means "nothing
+   * found", never "fail".
+   */
+  trailing?: (file: string, durationS: number) => Promise<number | null>;
   concat?: (files: string[], out: string, gap: number) => Promise<void>;
 }
 
@@ -244,6 +313,7 @@ export const renderScript = async (
 ): Promise<RenderResult> => {
   const write = deps.writeFile ?? ((file, data) => fs.writeFileSync(file, data));
   const probe = deps.probe ?? probeDuration;
+  const measureTrailing = deps.trailing ?? trailingSilence;
   const join = deps.concat ?? concatBeats;
 
   const { forSpeech } = await import('./tts');
@@ -268,6 +338,11 @@ export const renderScript = async (
   for (const [i, beat] of input.beats.entries()) {
     const speakers = new Set(beat.turns.map((t) => t.speaker));
     const multiVoice = speakers.size > 1;
+
+    // Measured once, by whichever path measures it. The beat map needs a real
+    // duration and the truncation guard needs one too, and probing the same
+    // file twice would be a second process for a number already in hand.
+    let measured: number | null = null;
 
     // THE BEAT'S FILE, DECIDED BEFORE ANYTHING IS RENDERED, because one of the
     // three paths below produces it directly rather than returning bytes for
@@ -373,7 +448,7 @@ export const renderScript = async (
       // bills by them while changing nothing.
       const before = input.beats[i - 1];
       const after = input.beats[i + 1];
-      result = await tts.synthesise({
+      const request = {
         text: forSpeech(beat.turns.map((t) => t.text).join('\n\n')),
         voice: voiceFor(beat.turns[0]!.speaker),
         previousText: before
@@ -382,8 +457,52 @@ export const renderScript = async (
         nextText: after
           ? forSpeech(after.turns.map((t) => t.text).join(' ')).slice(0, STITCH_CHARS)
           : undefined,
-      });
+      };
+
+      result = await tts.synthesise(request);
       write(file, result.audio);
+
+      // A TRUNCATED RENDER IS WORTH ONE MORE CALL. The provider drops the tail
+      // of an utterance intermittently - proven by rendering identical text
+      // three times and getting 67.56s, 67.20s and 65.95s - and the loss lands
+      // on the last words of a beat, which is the most noticeable place for it.
+      //
+      // Detected on trailing silence rather than duration, because the loss is
+      // about two per cent of the beat and no duration ratio can separate that
+      // from a beat that simply reads fast. See MAX_TRAILING_SILENCE_S.
+      //
+      // The retry is kept only if it is actually better, so a beat that ends on
+      // a deliberate long pause is not made worse by a second attempt.
+      measured = await probe(file);
+      const firstTrailing =
+        measured === null ? null : await measureTrailing(file, measured);
+
+      if (firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
+        onProgress?.(
+          `beat ${i + 1}/${input.beats.length}: ${beat.beatId} ended on ` +
+            `${firstTrailing.toFixed(1)}s of silence, which usually means the tail was dropped. Re-rendering.`
+        );
+
+        const retry = await tts.synthesise(request);
+        const retryFile = `${file}.retry`;
+        write(retryFile, retry.audio);
+        costPence += retry.costPence;
+        onCost?.(retry.costPence);
+
+        const retryDuration = await probe(retryFile);
+        const retryTrailing =
+          retryDuration === null ? null : await measureTrailing(retryFile, retryDuration);
+
+        if (retryTrailing !== null && retryTrailing < firstTrailing) {
+          // Written through the injected writer rather than renamed, because
+          // everything else in this function goes through it and a direct fs
+          // call here would be the one path that touches the disk regardless.
+          write(file, retry.audio);
+          result = retry;
+          measured = retryDuration;
+        }
+        fs.rmSync(retryFile, { force: true });
+      }
     }
 
     provider = result.provider;
@@ -393,7 +512,7 @@ export const renderScript = async (
     onCost?.(result.costPence);
     files.push(file);
 
-    const durationS = await probe(file);
+    const durationS = measured ?? (await probe(file));
     if (durationS === null) {
       throw new Error(
         `could not measure the duration of ${path.basename(file)}. The beat map depends on ` +

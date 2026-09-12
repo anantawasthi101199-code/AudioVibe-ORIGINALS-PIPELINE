@@ -1,5 +1,5 @@
 import { Voice } from '../../canon/schema';
-import { buildBeatMap, BEAT_GAP_S, renderScript } from '../assemble';
+import { buildBeatMap, BEAT_GAP_S, MAX_TRAILING_SILENCE_S, renderScript } from '../assemble';
 import { ElevenLabsTts, forSpeech, TtsError, TtsProvider } from '../tts';
 
 const voice: Voice = { provider: 'elevenlabs', voiceId: 'v123', settings: {} };
@@ -221,5 +221,98 @@ describe('stitching beats into one continuous read', () => {
       previousText: 'y',
     });
     expect((bodies[0]!.voice_settings as { stability: number }).stability).toBe(0.35);
+  });
+});
+
+describe('the truncation guard', () => {
+  /**
+   * A listener heard this before any check did: "it stops at 'by its own
+   * law', the words after dont run in the audio and then a new voice starts".
+   *
+   * The words were in the script and the beat was complete. Rendering the
+   * identical text three times settled it - 67.56s, 67.20s, and the 65.95s the
+   * run produced - so the provider drops the tail intermittently.
+   *
+   * Duration cannot detect it: the loss is about two per cent, well inside the
+   * variation between beats that read fast and slow. Trailing silence can, and
+   * by four times: 0.31s and 0.41s on the complete renders against 1.48s on the
+   * truncated one.
+   */
+  const beats = [{ beatId: 'opening', beatType: 'orientation', turns: [{ speaker: 'host', text: 'A sentence that should finish.' }] }];
+
+  const render = (trailings: Array<number | null>, onProgress?: (m: string) => void) => {
+    const calls: string[] = [];
+    const tts: TtsProvider = {
+      name: 'fake',
+      async synthesise() {
+        calls.push('synthesise');
+        return { audio: Buffer.alloc(2000), provider: 'fake', model: 'm', voiceId: 'v', costPence: 1 };
+      },
+    };
+    let i = 0;
+    return {
+      calls,
+      done: renderScript(
+        {
+          beats,
+          voices: { host: voice },
+          beatPathFor: (n: string) => `/tmp/${n}`,
+          outputPath: '/tmp/out.wav',
+        },
+        tts,
+        {
+          writeFile: () => undefined,
+          probe: async () => 60,
+          trailing: async () => trailings[i++] ?? null,
+          concat: async () => undefined,
+        },
+        undefined,
+        onProgress
+      ),
+    };
+  };
+
+  it('RE-RENDERS a beat that ended on a long silence', async () => {
+    const { calls, done } = render([1.48, 0.35]);
+    await done;
+    expect(calls).toHaveLength(2);
+  });
+
+  it('keeps the retry only when it is actually better', async () => {
+    // A beat that genuinely ends on a long deliberate pause must not be made
+    // worse by a second attempt that is no better.
+    const { calls, done } = render([1.4, 1.6]);
+    const result = await done;
+    expect(calls).toHaveLength(2);
+    // Both renders cost, and the budget has to see both whichever is kept.
+    expect(result.costPence).toBe(2);
+  });
+
+  it('does not re-render a beat that ended cleanly', async () => {
+    const { calls, done } = render([0.31]);
+    await done;
+    expect(calls).toHaveLength(1);
+  });
+
+  it('sits its threshold between the measured good and bad renders', () => {
+    // 0.31 and 0.41 on complete renders, 1.48 on the truncated one. A
+    // threshold outside that band is either deaf or trigger-happy.
+    expect(MAX_TRAILING_SILENCE_S).toBeGreaterThan(0.41);
+    expect(MAX_TRAILING_SILENCE_S).toBeLessThan(1.48);
+  });
+
+  it('does not re-render when the silence cannot be measured', async () => {
+    // A heuristic guarding against a provider defect must never be able to
+    // spend money on the strength of a measurement it did not get.
+    const { calls, done } = render([null]);
+    await done;
+    expect(calls).toHaveLength(1);
+  });
+
+  it('says out loud that it is re-rendering, and why', async () => {
+    const said: string[] = [];
+    const { done } = render([1.48, 0.35], (m) => said.push(m));
+    await done;
+    expect(said.join(' ')).toMatch(/1\.5s of silence.*tail was dropped/);
   });
 });
