@@ -170,6 +170,122 @@ describe('extractClaims', () => {
     expect(spent).toBe(Math.ceil(9 / BEATS_PER_EXTRACTION));
   });
 
+  it('treats an ABSENT unsupported array as an empty one', async () => {
+    // A model asked for claims and anything it could not support omits
+    // "unsupported" entirely when there was nothing it could not support. One
+    // did exactly that, on the last chunk of a real run, after the first three
+    // had succeeded and been paid for.
+    const w = {
+      name: 'fake',
+      model: 'm',
+      async complete(): Promise<LlmResponse> {
+        return {
+          text: JSON.stringify({ claims: [] }),
+          inputTokens: 1,
+          outputTokens: 1,
+          costPence: 1,
+          model: 'm',
+        };
+      },
+    } as LlmClient;
+
+    const out = await extractClaims(brief, corpus, format(3), w);
+    expect(out.unsupported).toEqual([]);
+  });
+
+  it('names the beats when the extractor returns something unusable', async () => {
+    // A bare Zod path with no context does not tell you which of four chunks
+    // failed, or what the model actually said.
+    const w = {
+      name: 'fake',
+      model: 'm',
+      async complete(): Promise<LlmResponse> {
+        return {
+          text: JSON.stringify({ claims: 'not an array' }),
+          inputTokens: 1,
+          outputTokens: 1,
+          costPence: 1,
+          model: 'm',
+        };
+      },
+    } as LlmClient;
+
+    await expect(extractClaims(brief, corpus, format(3), w)).rejects.toThrow(/b0, b1, b2/);
+  });
+
+  describe('checkpointing', () => {
+    // Each chunk is thousands of tokens over a corpus that had to be searched
+    // and fetched first. A real run lost three of four chunks because the
+    // fourth came back in an unexpected shape.
+
+    it('saves after every chunk', async () => {
+      const saves: number[] = [];
+      await extractClaims(brief, corpus, format(9), writer(), undefined, undefined, {
+        done: [],
+        save: (d) => saves.push(d.length),
+      });
+      expect(saves).toEqual([1, 2, 3]);
+    });
+
+    it('RESUMES rather than re-extracting what already succeeded', async () => {
+      const alreadyDone = [
+        { claims: [], unsupported: [] },
+        { claims: [], unsupported: [] },
+      ];
+      const w = writer();
+
+      await extractClaims(brief, corpus, format(9), w, undefined, undefined, {
+        done: alreadyDone,
+        save: () => undefined,
+      });
+
+      // Three chunks in total, two already done, so exactly one call.
+      expect(w.seen).toHaveLength(1);
+    });
+
+    it('keeps the claims the earlier chunks produced', async () => {
+      const alreadyDone = [
+        {
+          claims: [
+            {
+              id: 'c1',
+              beatId: 'b0',
+              text: 'an earlier fact',
+              type: 'chronology' as const,
+              sourceId: 's1',
+              quote: QUOTE,
+              contested: false,
+            },
+          ],
+          unsupported: [],
+        },
+      ];
+
+      const out = await extractClaims(brief, corpus, format(6), writer(), undefined, undefined, {
+        done: alreadyDone,
+        save: () => undefined,
+      });
+
+      expect(out.claims[0]!.text).toBe('an earlier fact');
+      // Still renumbered across the whole run, resumed chunks included.
+      expect(out.claims.map((c) => c.id)).toEqual(['c1', 'c2', 'c3']);
+    });
+
+    it('ignores a checkpoint holding more chunks than this format has', async () => {
+      // A checkpoint from a longer format would otherwise skip real work and
+      // leave beats with no claims at all.
+      const tooMany = Array.from({ length: 9 }, () => ({ claims: [], unsupported: [] }));
+      const w = writer();
+
+      await extractClaims(brief, corpus, format(3), w, undefined, undefined, {
+        done: tooMany,
+        save: () => undefined,
+      });
+
+      expect(w.seen).toHaveLength(0);
+    });
+  });
+
   it('caps how many claims a beat may return', async () => {
     // Without a ceiling the model returns fifteen claims for one beat and the
     // reply runs past the token limit, which is how this whole problem

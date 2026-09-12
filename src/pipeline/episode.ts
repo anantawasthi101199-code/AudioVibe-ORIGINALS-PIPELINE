@@ -170,10 +170,19 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       format,
       deps.writer,
       spend,
-      say('claims')
+      say('claims'),
+      // Chunk-level checkpointing, for the same reason beats have it: each
+      // chunk is thousands of tokens over a corpus that had to be searched and
+      // fetched first, and a real run lost three of four to the fourth coming
+      // back in an unexpected shape.
+      {
+        done: run.readCheckpoint('claims', z.array(claimSetSchema)) ?? [],
+        save: (done) => run.writeCheckpoint('claims', done),
+      }
     );
     run.writeArtifact('claims', claimSet);
     run.markComplete('claims');
+    run.clearCheckpoint('claims');
     log(`claims: ${claimSet.claims.length} bound, ${claimSet.unsupported.length} unsupported`);
   }
 

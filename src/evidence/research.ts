@@ -51,9 +51,23 @@ export const corpusSchema = z.object({
 
 export type Corpus = z.infer<typeof corpusSchema>;
 
+/**
+ * Both arrays default to empty, because an ABSENT array means an empty one.
+ *
+ * A model asked for claims and anything it could not support omits
+ * "unsupported" entirely when there was nothing it could not support. That is
+ * the natural reading of the instruction and it is what one actually did - on
+ * the last chunk of a real run, after the first three had succeeded and been
+ * paid for.
+ *
+ * This does not weaken anything. Claim floors are checked per beat in the gate,
+ * deterministically, so a beat that genuinely returned nothing still blocks
+ * there. What defaulting removes is a schema error standing in for a content
+ * problem the gate is better placed to report.
+ */
 export const claimSetSchema = z.object({
-  claims: z.array(claimSchema),
-  unsupported: z.array(unsupportedClaimSchema),
+  claims: z.array(claimSchema).default([]),
+  unsupported: z.array(unsupportedClaimSchema).default([]),
 });
 
 export type ClaimSet = z.infer<typeof claimSetSchema>;
@@ -248,13 +262,20 @@ export const BEATS_PER_EXTRACTION = 3;
  * because it cannot see the others, and two claims sharing an id would collide
  * silently in the ledger - the later one simply replacing the earlier.
  */
+export interface ExtractionCheckpoint {
+  /** Chunks a previous attempt already extracted, in order. */
+  done: ClaimSet[];
+  save: (done: ClaimSet[]) => void;
+}
+
 export const extractClaims = async (
   brief: Brief,
   corpus: Corpus,
   format: EpisodeFormat,
   writer: LlmClient,
   onCost?: (pence: number) => void,
-  onProgress?: (message: string) => void
+  onProgress?: (message: string) => void,
+  checkpoint?: ExtractionCheckpoint
 ): Promise<ClaimSet> => {
   // What the episode is trying to establish, which is what each passage is
   // scored for relevance against.
@@ -275,10 +296,19 @@ export const extractClaims = async (
     chunks.push(format.beats.slice(i, i + BEATS_PER_EXTRACTION));
   }
 
-  const claims: ClaimSet['claims'] = [];
-  const unsupported: ClaimSet['unsupported'] = [];
+  // Chunks already extracted by a previous attempt. Each one is several
+  // thousand tokens over a corpus that had to be searched and fetched first, so
+  // throwing three away because the fourth came back in an unexpected shape is
+  // exactly the waste the rest of this pipeline checkpoints to avoid.
+  const done: ClaimSet[] = [...(checkpoint?.done ?? [])].slice(0, chunks.length);
+
+  if (done.length) {
+    onProgress?.(`resuming after ${done.length} chunk(s) already extracted`);
+  }
 
   for (const [index, chunk] of chunks.entries()) {
+    if (index < done.length) continue;
+
     onProgress?.(
       `beats ${chunk.map((b) => b.id).join(', ')} (${index + 1}/${chunks.length})`
     );
@@ -291,10 +321,9 @@ export const extractClaims = async (
       )
       .join('\n');
 
-    const parsed = claimSetSchema.parse(
-      await completeJson(
-        writer,
-        {
+    const raw = await completeJson<unknown>(
+      writer,
+      {
           system,
           // The corpus never changes between chunks, so the prefix stays valid
           // and every call after the first reads it rather than re-sending it.
@@ -311,19 +340,41 @@ export const extractClaims = async (
           // extractor reasoning at length about a JSON schema pays premium
           // rates to be less likely to finish - which is exactly how this stage
           // died, returning content blocks with no text among them.
-          effort: 'low',
-          maxTokens: 12000,
-        },
-        onCost
-      )
+        effort: 'low',
+        maxTokens: 12000,
+      },
+      onCost
     );
 
-    // Renumbered against the running total, not the chunk. Each call starts at
-    // c1 because it cannot see the others.
-    for (const claim of parsed.claims) {
+    const result = claimSetSchema.safeParse(raw);
+    if (!result.success) {
+      // Named, so the message says which chunk and what came back rather than
+      // printing a bare Zod path with no context at all.
+      throw new Error(
+        `the extractor returned something unusable for beats ` +
+          `${chunk.map((b) => b.id).join(', ')}: ` +
+          `${result.error.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}\n` +
+          `It returned: ${JSON.stringify(raw).slice(0, 300)}`
+      );
+    }
+
+    done.push(result.data);
+    // Saved after EVERY chunk. Each is thousands of tokens over a corpus that
+    // had to be fetched first.
+    checkpoint?.save(done);
+  }
+
+  // Renumbered against the running total across chunks, not within one. Each
+  // call starts at c1 because it cannot see the others, and two claims sharing
+  // an id collide silently in the ledger.
+  const claims: ClaimSet['claims'] = [];
+  const unsupported: ClaimSet['unsupported'] = [];
+
+  for (const chunkResult of done) {
+    for (const claim of chunkResult.claims) {
       claims.push({ ...claim, id: `c${claims.length + 1}` });
     }
-    unsupported.push(...parsed.unsupported);
+    unsupported.push(...chunkResult.unsupported);
   }
 
   return { claims, unsupported };
