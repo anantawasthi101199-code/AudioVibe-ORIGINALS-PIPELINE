@@ -98,15 +98,32 @@ export const verifyClaim = async (
   source: Source,
   verifier: LlmClient
 ): Promise<{ verification: Verification; costPence: number }> => {
-  const res = await verifier.complete({
-    system: SYSTEM,
-    // Claim first, quote second, and nothing else. No source title, no url, no
-    // publisher: authority is not what is being judged here, and telling the
-    // verifier the quote came from Nature would bias it toward accepting.
-    prompt: `CLAIM: ${claim.text}\n\nQUOTE: ${claim.quote}`,
-    temperature: 0,
-    maxTokens: 300,
-  });
+  const ask = (maxTokens: number) =>
+    verifier.complete({
+      system: SYSTEM,
+      // Claim first, quote second, and nothing else. No source title, no url,
+      // no publisher: authority is not what is being judged here, and telling
+      // the verifier the quote came from Nature would bias it toward accepting.
+      prompt: `CLAIM: ${claim.text}\n\nQUOTE: ${claim.quote}`,
+      temperature: 0,
+      // LOW EFFORT, AND GENEROUS ROOM, which is not a contradiction. This is a
+      // narrow question with a fixed answer shape, so deep reasoning buys
+      // nothing - but reasoning tokens come out of the same ceiling as the
+      // answer, so a tight ceiling means an empty response rather than a short
+      // one. Three hundred tokens was enough for the verdict and not enough for
+      // the thinking in front of it, which is how this stage died.
+      effort: 'low',
+      maxTokens,
+    });
+
+  let res = await ask(1500);
+  let costPence = res.costPence;
+
+  if (res.truncated) {
+    const second = await ask(4000);
+    costPence += second.costPence;
+    res = second;
+  }
 
   let parsed: { verdict?: string; reason?: string };
   try {
@@ -118,9 +135,11 @@ export const verifyClaim = async (
       verification: {
         claimId: claim.id,
         verdict: 'not_entailed',
-        reason: `verifier returned unparseable output: ${res.text.slice(0, 120)}`,
+        reason: res.truncated
+          ? `verifier ran out of room twice and returned nothing usable`
+          : `verifier returned unparseable output: ${res.text.slice(0, 120)}`,
       },
-      costPence: res.costPence,
+      costPence,
     };
   }
 
@@ -133,7 +152,10 @@ export const verifyClaim = async (
         ? (parsed.reason ?? '')
         : `verifier returned unknown verdict "${String(parsed.verdict)}"`,
     },
-    costPence: res.costPence,
+    // Both attempts, not just the one that answered. A budget that counted only
+    // the successful call would let a stage that retried every claim spend
+    // twice what the ceiling thought it had allowed.
+    costPence,
   };
 };
 

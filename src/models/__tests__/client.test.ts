@@ -245,6 +245,56 @@ describe('effort', () => {
     await expect(client.complete({ system: 'S', prompt: 'P' })).rejects.toThrow(/no text/);
   });
 
+  it('maps effort to reasoning_effort for the gpt-5 family', async () => {
+    // Same intent expressed once at the call site, each provider handed the
+    // name it recognises.
+    let sent: Record<string, unknown> = {};
+    const client = new OpenAiClient('gpt-5-mini', 'k', async (_u, _h, b) => {
+      sent = b as Record<string, unknown>;
+      return { status: 200, json: { choices: [{ message: { content: 'x' } }] }, text: '' };
+    });
+
+    await client.complete({ system: 'S', prompt: 'P', effort: 'low' });
+    expect(sent.reasoning_effort).toBe('low');
+    expect(sent).not.toHaveProperty('output_config');
+  });
+
+  it('does not send reasoning_effort to a model that does not reason', async () => {
+    let sent: Record<string, unknown> = {};
+    const client = new OpenAiClient('gpt-4o', 'k', async (_u, _h, b) => {
+      sent = b as Record<string, unknown>;
+      return { status: 200, json: { choices: [{ message: { content: 'x' } }] }, text: '' };
+    });
+
+    await client.complete({ system: 'S', prompt: 'P', effort: 'low' });
+    expect(sent).not.toHaveProperty('reasoning_effort');
+  });
+
+  it('treats EMPTY OpenAI content as truncation, not as a failure', async () => {
+    // The mirror of the Claude case: reasoning tokens come out of
+    // max_completion_tokens, so a tight ceiling returns a valid response with
+    // nothing in it. Thrown, it killed a run on the first of thirty-five
+    // claims.
+    const client = new OpenAiClient('gpt-5-mini', 'k', async () => ({
+      status: 200,
+      json: { choices: [{ message: { content: '' }, finish_reason: 'length' }] },
+      text: '',
+    }));
+
+    const res = await client.complete({ system: 'S', prompt: 'P' });
+    expect(res.truncated).toBe(true);
+  });
+
+  it('still fails loudly on empty content that did NOT run out of room', async () => {
+    const client = new OpenAiClient('gpt-5-mini', 'k', async () => ({
+      status: 200,
+      json: { choices: [{ message: { content: '' }, finish_reason: 'stop' }] },
+      text: '',
+    }));
+
+    await expect(client.complete({ system: 'S', prompt: 'P' })).rejects.toThrow(/no text/);
+  });
+
   it('knows which models take an effort', () => {
     expect(supportsEffort('claude-sonnet-5')).toBe(true);
     expect(supportsEffort('claude-opus-5')).toBe(true);

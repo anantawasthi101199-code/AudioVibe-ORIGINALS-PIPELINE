@@ -189,6 +189,26 @@ export const supportsEffort = (model: string): boolean =>
   EFFORT_MODELS.some((m) => model.startsWith(m));
 
 /**
+ * OpenAI's equivalent of effort, under a different name and on a different set
+ * of models.
+ *
+ * The gpt-5 family reasons before answering and those tokens come out of
+ * max_completion_tokens, exactly as thinking does on Claude 5. Verification
+ * asked for three hundred tokens per claim, which the screener spent entirely
+ * on reasoning - returning a valid response with empty content, and the error
+ * "openai: returned no text".
+ *
+ * Mapped from the same `effort` field so a call site expresses intent once and
+ * each provider is handed the name it recognises. Allow-listed for the same
+ * reason as everything else here: omitting it costs a default, sending it to a
+ * model that does not take it kills the run.
+ */
+const REASONING_MODELS = ['gpt-5', 'o1', 'o3', 'o4'];
+
+export const supportsReasoningEffort = (model: string): boolean =>
+  REASONING_MODELS.some((m) => model.startsWith(m));
+
+/**
  * The temperature to send, or undefined to omit the field entirely.
  *
  * `1` is accepted everywhere for backwards compatibility, but it is also the
@@ -414,6 +434,13 @@ export class OpenAiClient implements LlmClient {
         ...(temperatureFor(this.model, req.temperature) !== undefined
           ? { temperature: temperatureFor(this.model, req.temperature) }
           : {}),
+        // `effort` in, `reasoning_effort` out. Same intent, provider's name.
+        // `high` is dropped rather than sent, because it is the default and
+        // sending a default buys nothing while being one more value that can
+        // be rejected later.
+        ...(req.effort && req.effort !== 'high' && supportsReasoningEffort(this.model)
+          ? { reasoning_effort: req.effort === 'max' || req.effort === 'xhigh' ? 'high' : req.effort }
+          : {}),
         messages: [
           { role: 'system', content: req.system },
           { role: 'user', content: req.prompt },
@@ -428,7 +455,14 @@ export class OpenAiClient implements LlmClient {
 
     const body = res.json as OpenAiShape;
     const text = body.choices?.[0]?.message?.content ?? '';
-    if (!text.trim()) {
+
+    // EMPTY CONTENT IS ALMOST ALWAYS REASONING THAT ATE THE BUDGET, the exact
+    // mirror of the Claude case. Reported as truncation rather than thrown, so
+    // callers can give it more room - "returned no text" explained nothing and
+    // killed a run on the first of thirty-five claims.
+    const ranOut = body.choices?.[0]?.finish_reason === 'length';
+
+    if (!text.trim() && !ranOut) {
       throw new LlmError('openai', res.status, 'returned no text');
     }
 
@@ -441,7 +475,7 @@ export class OpenAiClient implements LlmClient {
       outputTokens,
       costPence: costPenceFor(this.model, inputTokens, outputTokens),
       model: this.model,
-      truncated: body.choices?.[0]?.finish_reason === 'length',
+      truncated: ranOut,
     };
   }
 }
