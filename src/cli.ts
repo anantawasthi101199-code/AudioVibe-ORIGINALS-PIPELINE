@@ -391,7 +391,24 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
   const stages: Array<[string, number, string]> = [
     ['brief', write(writer.model, 1, 1_200, 900), '1 call'],
     ['corpus', 0, 'search + fetch, no model calls'],
-    ['claims', write(writer.model, 1, 30_000, 6_000), '1 call over the whole corpus'],
+    [
+      'claims',
+      (() => {
+        // CHUNKED, so this is not one call. The corpus rides in a cached system
+        // prefix, so the first chunk pays a 1.25x write and the rest read at
+        // 0.1x - but the OUTPUT is per chunk and does not shrink, and output is
+        // where the money is when every claim carries a verbatim quote.
+        //
+        // Measured at 67p on a real ten-beat episode with fourteen sources,
+        // against the 14p this used to guess. The old number assumed one call
+        // and cheap quotes, and was wrong about both.
+        const chunks = Math.ceil(format.beats.length / 3);
+        const corpusIn = 30_000;
+        const cached = corpusIn * (1.25 + 0.1 * (chunks - 1));
+        return write(writer.model, 1, cached, 0) + write(writer.model, chunks, 500, 5_000);
+      })(),
+      `${Math.ceil(format.beats.length / 3)} calls, three beats each, sharing a cached corpus`,
+    ],
     [
       'verification',
       (() => {
