@@ -28,6 +28,22 @@
 # THE TENSION CURVE IS NOT A CLIMB. It rises, drops at the orientation on
 # purpose, and climbs again. That dip is the beat where the listener relaxes and
 # decides to stay, and a format that never lets them relax is one they leave.
+#
+# SEVEN BEATS, NOT TEN, AND THE COUNT IS A DESIGN DECISION. Every beat boundary
+# is a seam: two pieces of writing produced by separate calls, joined. The
+# joins are where an episode stops feeling like one telling, and ten beats in
+# fifteen minutes means a seam every ninety seconds.
+#
+# It is also where revision does its damage. A beat that fails a style check is
+# rewritten, and every check it is being rewritten for looks at that beat ALONE
+# - sentence variance, opening words, how the voices differ. None of them can
+# see whether the rewrite still follows from the beat before. Fewer beats means
+# fewer joins exposed to that.
+#
+# What is lost is resolution in the retention data: a three-minute beat tells
+# you less about WHERE somebody stopped than a ninety-second one. That is a real
+# cost and it is worth paying, because a smooth episode nobody leaves is more
+# useful than precise data about why they left a rough one.
 
 id: told-story
 name: Told story
@@ -47,7 +63,7 @@ loops:
 beats:
   - id: cold_open
     type: cold_open
-    seconds: [30, 50]
+    seconds: [35, 55]
     function: >
       One moment from the middle of the story, told as a scene. Somewhere
       specific, someone specific, something happening.
@@ -61,7 +77,7 @@ beats:
 
   - id: orientation
     type: orientation
-    seconds: [50, 80]
+    seconds: [55, 85]
     function: >
       Say what this is, when and where it happened, and what the episode is
       going to work out. Plainly, as if to somebody who asked.
@@ -73,55 +89,37 @@ beats:
       - No suspense. This beat trades mystery for trust and that is the trade.
     minClaims: 2
 
-  - id: setup
+  - id: before
     type: stakes
-    seconds: [90, 130]
+    seconds: [170, 230]
     function: >
-      The people this happened to, before it happened. Who they were, what they
-      did all day, what they had to lose.
+      Who these people were before any of it happened, and then everything that
+      happened up to the first moment something was genuinely wrong.
     constraints:
-      - Start at the earliest point that matters and move forward.
-      - One or two people, named, with something concrete about their lives.
-      - Nothing about what is coming. Let them be ordinary first.
-    minClaims: 3
-
-  - id: rising
-    type: scene
-    seconds: [120, 170]
-    function: >
-      What happened, in order, up to the point where it stopped being ordinary.
-    constraints:
-      - Strict chronology. Dates and times spoken as a person would say them.
+      - Start with one or two named people doing something ordinary.
+      - Then strict chronology. Dates said as a person says them.
       - Scenes, not summary. Somebody does something, then something follows.
       - "End on the first moment that is genuinely wrong."
-    minClaims: 4
+      - One beat, one continuous run of time. Do not break it into sections.
+    minClaims: 6
 
-  - id: complication
+  - id: wrong
     type: escalation
-    seconds: [110, 160]
+    seconds: [170, 230]
     function: >
-      It gets worse, and faster than anyone involved can keep up with.
+      It gets worse and faster than anyone involved can keep up with, and then
+      the thing happens that changes what the whole story has been about.
+    opens: []
     constraints:
-      - Keep moving forward in time. No flashbacks here.
-      - Shorter sentences than the setup. The pace is the point.
+      - Keep moving forward in time until the turn, which may look back once.
+      - Shorter sentences as it speeds up. The pace is the point.
       - Say what the people involved believed at the time, not what we know now.
-    minClaims: 4
-
-  - id: turn
-    type: turn
-    seconds: [100, 150]
-    function: >
-      The thing that changes what the whole story has been about. The one
-      permitted step out of chronology, if it needs one.
-    constraints:
-      - It must be earned by something already said, not by new information.
-      - Say plainly what the listener believed a minute ago and why it was wrong.
-      - This is the only beat allowed to go back in time, and only once.
-    minClaims: 4
+      - "At the turn, say plainly what the listener believed and why it was wrong."
+    minClaims: 6
 
   - id: objection
     type: counterpoint
-    seconds: [80, 120]
+    seconds: [85, 125]
     function: >
       The strongest honest version of the story where this reading is wrong,
       and why people hold it.
@@ -135,25 +133,18 @@ beats:
 
   - id: payoff
     type: payoff
-    seconds: [110, 160]
+    seconds: [180, 250]
     function: >
-      What actually happened, start to finish, now that it makes sense.
+      What actually happened, start to finish, now that it makes sense - and
+      then what it cost, to whom, and what became of them.
     closes: [the_question]
     constraints:
       - Answer the promise made in the orientation, in the same words if you can.
       - Be exactly as certain as the sources are and no more.
-      - Chronological again. This is the story retold correctly, not a summary.
-    minClaims: 4
-
-  - id: aftermath
-    type: reckoning
-    seconds: [70, 110]
-    function: >
-      What it cost, to whom, and what happened to them afterwards.
-    constraints:
-      - Names and numbers. Years served, money, what became of the people.
+      - Chronological again. The story retold correctly, not a summary of it.
+      - "Then the accounting: names, numbers, years, what happened afterwards."
       - No moral. The accounting is the moral.
-    minClaims: 3
+    minClaims: 6
 
   - id: close
     type: outro
@@ -180,4 +171,4 @@ beats:
 # and none of them lose the audience by it. What breaks a story is an ABSTRACT
 # counterpoint; what works is naming who believes the other thing and what they
 # are looking at when they believe it, which is why the constraints say so.
-tensionCurve: [0.68, 0.40, 0.50, 0.72, 0.88, 0.95, 0.70, 1.00, 0.60, 0.45]
+tensionCurve: [0.68, 0.40, 0.62, 0.95, 0.70, 1.00, 0.45]

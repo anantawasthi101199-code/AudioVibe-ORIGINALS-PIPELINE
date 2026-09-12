@@ -321,7 +321,17 @@ checks. Rewrite it so it does not.
 
 Fix ONLY what is listed. Do not rewrite what was working, do not change the
 facts, and do not add claims. Keep the same claim ids unless a fix genuinely
-removes one.`;
+removes one.
+
+KEEP THE JOIN. Every check you are fixing looks at this beat ON ITS OWN -
+sentence variance, opening words, how the voices differ. None of them can see
+whether the beat still follows from the one before it, so a rewrite that fixes
+the style and breaks the join passes every check and makes the episode worse.
+
+So: the first sentence must still follow from what the episode has said so far,
+the same people must still be the people already introduced, and events must
+still be in the order the plan puts them. If fixing a check would break the
+join, fix it a different way.`;
 
 /**
  * Write one beat, then revise it until it passes or the budget of attempts runs
