@@ -610,7 +610,7 @@ export const completeJson = async <T>(
       // string, which a show that quotes documents out loud produces constantly
       // - and no amount of extra room fixes it, because the reply was complete,
       // it was simply invalid.
-      return await repairJson<T>(client, req, first.text, (err as Error).message, onCost);
+      return await repairJson<T>(client, req, first.text, (err as Error).message, onCost, shape);
     }
   }
 
@@ -634,7 +634,7 @@ export const completeJson = async <T>(
     return await checkShape<T>(client, req, extractJson<T>(second.text), shape, onCost);
   } catch (err) {
     if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
-    return await repairJson<T>(client, req, second.text, (err as Error).message, onCost);
+    return await repairJson<T>(client, req, second.text, (err as Error).message, onCost, shape);
   }
 };
 
@@ -717,6 +717,18 @@ const repairJson = async <T>(
   broken: string,
   complaint: string,
   onCost?: (pence: number) => void,
+  /**
+   * The caller's schema, so a repair cannot smuggle the wrong shape through.
+   *
+   * THIS PARAMETER IS THE WHOLE BUG FIX. Repair used to return whatever parsed,
+   * and every other route into completeJson went through checkShape - so a
+   * reply that was malformed AND the wrong shape was the one combination that
+   * reached the caller unvalidated. It killed a run on the fifth of six beats:
+   * the model returned broken JSON, the repair fixed the syntax and dropped
+   * `turns`, and the failure surfaced as a bare Zod issue with none of the
+   * labelling this module exists to add - which is how it was found.
+   */
+  shape?: JsonShape<T>,
 ): Promise<T> => {
   const res = await client.complete({
     system:
@@ -734,8 +746,9 @@ const repairJson = async <T>(
   });
   onCost?.(res.costPence);
 
+  let repaired: T;
   try {
-    return extractJson<T>(res.text);
+    repaired = extractJson<T>(res.text);
   } catch (err) {
     throw new LlmError(
       client.name,
@@ -744,6 +757,12 @@ const repairJson = async <T>(
         `${(err as Error).message}`,
     );
   }
+
+  // Repaired JSON gets the same shape check as any other, and a wrong shape
+  // here earns the ordinary shape retry against the ORIGINAL request rather
+  // than another go at the repair. A repairer that dropped a field will drop it
+  // again; the writer asked to redo the beat properly might not.
+  return checkShape<T>(client, original, repaired, shape, onCost);
 };
 
 /**

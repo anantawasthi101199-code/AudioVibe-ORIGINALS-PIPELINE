@@ -210,6 +210,70 @@ describe('completeJson', () => {
     expect(c.seen).toHaveLength(2);
   });
 
+  /**
+   * Malformed AND the wrong shape - the one combination that reached the
+   * caller unvalidated.
+   *
+   * Every other route through completeJson went via checkShape. Repair did not,
+   * so a reply that needed fixing and came back fixed-but-wrong was returned as
+   * though it were good. It killed a real run on the fifth of six beats, and
+   * the giveaway was the shape of the error: a bare Zod issue array with none
+   * of the labelling this module exists to add, thrown further downstream by a
+   * second parse.
+   */
+  const turnsShape = {
+    parse: (v: unknown) => {
+      const o = v as { turns?: string[] };
+      if (!o.turns) throw new Error('turns: Required');
+      return o as { turns: string[] };
+    },
+    label: 'the "payoff" beat',
+  };
+
+  it('SHAPE-CHECKS a repaired reply, instead of trusting it because it parses', async () => {
+    const c = client([
+      { text: '{"content": "he said "go" and left" }' }, // malformed
+      { text: '{"content": "he said go and left"}' }, // repaired, wrong shape
+      { text: '{"turns": ["a"]}' }, // shape retry
+    ]);
+
+    const out = await completeJson(
+      c.client,
+      { system: 'S', prompt: 'P' },
+      undefined,
+      turnsShape
+    );
+    expect(out.turns).toEqual(['a']);
+    expect(c.seen).toHaveLength(3);
+  });
+
+  it('sends the shape retry to the ORIGINAL task, not back to the repairer', async () => {
+    // A repairer that dropped a field will drop it again. The writer asked to
+    // redo the beat properly might not.
+    const c = client([
+      { text: '{"content": "a "b" c" }' },
+      { text: '{"content": "a b c"}' },
+      { text: '{"turns": ["a"]}' },
+    ]);
+
+    await completeJson(c.client, { system: 'S', prompt: 'ORIGINAL TASK' }, undefined, turnsShape);
+    expect(c.seen[1]!.prompt).toMatch(/PARSER SAID:/);
+    expect(c.seen[2]!.prompt).toContain('ORIGINAL TASK');
+    expect(c.seen[2]!.prompt).toContain('turns: Required');
+  });
+
+  it('reports a repaired-but-still-wrong shape with its label, not a bare Zod path', async () => {
+    const c = client([
+      { text: '{"content": "a "b" c" }' },
+      { text: '{"content": "a b c"}' },
+      { text: '{"still": "wrong"}' },
+    ]);
+
+    await expect(
+      completeJson(c.client, { system: 'S', prompt: 'P' }, undefined, turnsShape)
+    ).rejects.toThrow(/wrong shape for the "payoff" beat twice/);
+  });
+
   it('does not check a shape nobody asked for', async () => {
     const c = client([{ text: '{"anything": true}' }]);
     await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).resolves.toEqual({
