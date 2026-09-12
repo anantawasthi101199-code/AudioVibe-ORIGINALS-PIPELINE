@@ -167,3 +167,59 @@ describe('renderScript', () => {
     ).rejects.toThrow(/could not measure the duration/);
   });
 });
+
+describe('stitching beats into one continuous read', () => {
+  /**
+   * THE SINGLE MOST AUDIBLE FAULT IN A FINISHED EPISODE, and none of it was in
+   * the script. A listener: "it stops and the new voice with weird start kicks
+   * in... was perfect till there."
+   *
+   * Every beat is its own synthesis request, so the voice stopped at each
+   * boundary and a fresh one began from a standing start - different pitch,
+   * different pace, an audible intake. Eleven takes previous_text and next_text
+   * for exactly this: not spoken, only used to condition the delivery.
+   */
+  const capture = () => {
+    const bodies: Array<Record<string, unknown>> = [];
+    const post = async (_url: string, _headers: unknown, body: unknown) => {
+      bodies.push(body as Record<string, unknown>);
+      return { status: 200, buffer: Buffer.alloc(5000), text: '' };
+    };
+    return { bodies, tts: new ElevenLabsTts('k', 'eleven_v3', post as never) };
+  };
+
+  it('sends the neighbouring text as prosody context, not as speech', async () => {
+    const { bodies, tts } = capture();
+    await tts.synthesise({
+      text: 'She went down through the gates.',
+      voice,
+      previousText: 'and so she chose to go somewhere that does not let people leave.',
+      nextText: 'At the first gate they took the crown from her head.',
+    });
+
+    expect(bodies[0]!.text).toBe('She went down through the gates.');
+    expect(bodies[0]!.previous_text).toMatch(/does not let people leave/);
+    expect(bodies[0]!.next_text).toMatch(/took the crown/);
+  });
+
+  it('omits the fields entirely at the ends of an episode', async () => {
+    // A request carrying previous_text: undefined is not the same as one that
+    // omits it, and the first beat genuinely has nothing before it.
+    const { bodies, tts } = capture();
+    await tts.synthesise({ text: 'The first thing.', voice });
+    expect('previous_text' in bodies[0]!).toBe(false);
+    expect('next_text' in bodies[0]!).toBe(false);
+  });
+
+  it('still lets the persona override the voice settings', async () => {
+    // The stitch fields are spread before voice_settings, so adding them must
+    // not have moved the persona out of last place.
+    const { bodies, tts } = capture();
+    await tts.synthesise({
+      text: 'x',
+      voice: { ...voice, settings: { stability: 0.35 } },
+      previousText: 'y',
+    });
+    expect((bodies[0]!.voice_settings as { stability: number }).stability).toBe(0.35);
+  });
+});

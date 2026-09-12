@@ -26,6 +26,28 @@ import { Voice } from '../canon/schema';
 export interface SynthesisRequest {
   text: string;
   voice: Voice;
+  /**
+   * What is spoken immediately before and after this request, for prosody.
+   *
+   * WHY THIS EXISTS, and it is the single most audible fault in a finished
+   * episode. Every beat is synthesised as its own request, so the voice STOPS
+   * at each boundary and a fresh synthesis begins with whatever pitch, pace and
+   * intake the model picks from a standing start. A listener described it
+   * exactly: "it stops and the new voice with weird start kicks in".
+   *
+   * Nothing was wrong with the script - the sentence before the join is
+   * complete and the one after follows from it. The break is entirely a
+   * rendering artifact of splitting one piece of speech into five requests.
+   *
+   * Eleven takes `previous_text` and `next_text` for precisely this: the text
+   * is NOT spoken, it conditions the delivery, so the end of one beat and the
+   * start of the next are voiced as though they were one continuous read.
+   *
+   * Not every provider has an equivalent - OpenAI's does not - so this is
+   * advisory, and a provider that ignores it renders exactly as before.
+   */
+  previousText?: string;
+  nextText?: string;
 }
 
 /** One speaker's line in a multi-voice request. */
@@ -111,7 +133,7 @@ export class ElevenLabsTts implements TtsProvider {
     private post: HttpPostBinary = nodePostBinary
   ) {}
 
-  async synthesise({ text, voice }: SynthesisRequest): Promise<SynthesisResult> {
+  async synthesise({ text, voice, previousText, nextText }: SynthesisRequest): Promise<SynthesisResult> {
     if (voice.voiceId.startsWith('REPLACE_')) {
       // The placeholder that ships in a new persona file. Caught here rather
       // than at the API, where it would be a confusing 404 about a voice id.
@@ -128,6 +150,11 @@ export class ElevenLabsTts implements TtsProvider {
       {
         text,
         model_id: this.model,
+        // NOT SPOKEN. These condition the delivery so that a beat rendered as
+        // its own request is voiced as the continuation it actually is, rather
+        // than from a standing start. See SynthesisRequest.
+        ...(previousText ? { previous_text: previousText } : {}),
+        ...(nextText ? { next_text: nextText } : {}),
         // The persona owns these. Spread last so a show can override anything.
         voice_settings: {
           stability: 0.5,

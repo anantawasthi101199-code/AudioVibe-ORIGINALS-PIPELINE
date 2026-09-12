@@ -219,6 +219,16 @@ export interface RenderableBeat {
  */
 export const TURN_GAP_S = 0.22;
 
+/**
+ * How much of the neighbouring beats to send as prosody context.
+ *
+ * Enough for the model to hear where the sentence before was going and where
+ * the next one starts, and no more: this is never spoken, and on a provider
+ * that bills by character, sending whole beats would roughly double the render
+ * cost while changing nothing a listener hears.
+ */
+export const STITCH_CHARS = 400;
+
 export const renderScript = async (
   input: {
     beats: RenderableBeat[];
@@ -353,9 +363,25 @@ export const renderScript = async (
         costPence: turnCost,
       };
     } else {
+      // THE TAIL OF THE BEAT BEFORE AND THE HEAD OF THE ONE AFTER, neither of
+      // them spoken. They condition the delivery so the voice carries across a
+      // join instead of restarting at each one, which is the single most
+      // audible fault in a finished episode. See SynthesisRequest.
+      //
+      // A few hundred characters is enough - it is prosody context, not
+      // content - and sending more would cost characters on a provider that
+      // bills by them while changing nothing.
+      const before = input.beats[i - 1];
+      const after = input.beats[i + 1];
       result = await tts.synthesise({
         text: forSpeech(beat.turns.map((t) => t.text).join('\n\n')),
         voice: voiceFor(beat.turns[0]!.speaker),
+        previousText: before
+          ? forSpeech(before.turns.map((t) => t.text).join(' ')).slice(-STITCH_CHARS)
+          : undefined,
+        nextText: after
+          ? forSpeech(after.turns.map((t) => t.text).join(' ')).slice(0, STITCH_CHARS)
+          : undefined,
       });
       write(file, result.audio);
     }
