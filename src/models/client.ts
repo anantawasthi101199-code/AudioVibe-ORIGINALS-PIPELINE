@@ -604,6 +604,9 @@ export const completeJson = async <T>(
     try {
       return await checkShape<T>(client, req, extractJson<T>(first.text), shape, onCost);
     } catch (err) {
+      if (err instanceof JsonExtractError && err.kind === 'prose') {
+        return await askAgainForJson<T>(client, req, first.text, onCost, shape);
+      }
       if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
       // MALFORMED IS A DIFFERENT PROBLEM FROM TRUNCATED and needs a different
       // retry. The commonest cause is an unescaped quotation mark inside a
@@ -633,8 +636,62 @@ export const completeJson = async <T>(
   try {
     return await checkShape<T>(client, req, extractJson<T>(second.text), shape, onCost);
   } catch (err) {
+    if (err instanceof JsonExtractError && err.kind === 'prose') {
+      return await askAgainForJson<T>(client, req, second.text, onCost, shape);
+    }
     if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
     return await repairJson<T>(client, req, second.text, (err as Error).message, onCost, shape);
+  }
+};
+
+/**
+ * Ask the same question again, saying that the answer must be JSON.
+ *
+ * WHY THIS IS NOT A REPAIR. The repairer is given a broken document and told to
+ * fix the syntax, which is the wrong instrument when the reply was never JSON:
+ * there is nothing to fix, only prose to translate, and it does that badly.
+ * Re-running the ORIGINAL request instead means the model does the task again
+ * with the format named, which is what it needed the first time.
+ *
+ * Found when a close beat came back as script text opening with an audio tag -
+ * "[quietly] ..." - which the extractor read as the start of a JSON array. The
+ * scan saw a bracket, called the reply malformed, and spent a repair call on a
+ * sentence. See the note in extractJson.
+ *
+ * Exactly one extra call. A model that answers in prose twice is being asked
+ * for something it will not give, and the right response then is to fail
+ * loudly rather than to keep paying.
+ */
+const askAgainForJson = async <T>(
+  client: LlmClient,
+  req: LlmRequest,
+  prose: string,
+  onCost?: (pence: number) => void,
+  shape?: JsonShape<T>,
+): Promise<T> => {
+  const retry = await client.complete({
+    ...req,
+    prompt:
+      `${req.prompt}\n\n` +
+      `YOUR PREVIOUS REPLY WAS NOT JSON. It began: ${prose.trim().slice(0, 120)}\n\n` +
+      `Return a JSON object and nothing else - no prose before it, no prose ` +
+      `after it, no code fence. If the content belongs in a string field, it ` +
+      `goes inside the quotes, including anything in square brackets.`,
+  });
+  onCost?.(retry.costPence);
+
+  try {
+    return await checkShape<T>(client, req, extractJson<T>(retry.text), shape, onCost);
+  } catch (err) {
+    if (err instanceof JsonExtractError && err.repairable) {
+      return await repairJson<T>(client, req, retry.text, err.message, onCost, shape);
+    }
+    throw new LlmError(
+      client.name,
+      null,
+      `answered in prose rather than JSON twice${shape ? ` for ${shape.label}` : ''}. ` +
+        `The second reply began: ${retry.text.trim().slice(0, 200)}`,
+    );
   }
 };
 
@@ -776,16 +833,32 @@ const repairJson = async <T>(
 /**
  * A reply that was meant to be JSON and was not.
  *
- * `repairable` is the distinction that decides whether a second call is worth
- * making. JSON that was FOUND and would not parse is an encoding problem - an
- * unescaped quote, a stray newline - and handing it back with the parser's own
- * complaint fixes it almost every time. A reply with no JSON in it at all is a
- * model that answered in prose, and it will answer in prose again.
+ * THREE FAILURES, THREE RESPONSES, and conflating any two of them wastes a call
+ * or loses a run:
+ *
+ *   'invalid'      JSON was found and will not parse. An encoding problem, and
+ *                  handing it back with the parser's own complaint fixes it
+ *                  almost every time. Repairable.
+ *   'prose'        There is no JSON in the reply at all. A repairer cannot make
+ *                  JSON out of a sentence, so repairing is money for nothing -
+ *                  but ASKING AGAIN for JSON works, because the model can do it
+ *                  and simply did not. Retryable, not repairable.
+ *   'unterminated' The reply was cut off by the token ceiling. Neither repair
+ *                  nor re-asking helps at the same ceiling; the caller has
+ *                  already doubled it by the time this is reached.
+ *
+ * `repairable` used to be the only distinction, which left 'prose' and
+ * 'unterminated' sharing a response: give up. That killed a run on a close beat
+ * that came back as script text rather than JSON - a reply the model would have
+ * got right on a second ask.
  */
+export type JsonFailure = 'invalid' | 'prose' | 'unterminated';
+
 export class JsonExtractError extends Error {
   constructor(
     message: string,
     readonly repairable: boolean,
+    readonly kind: JsonFailure = repairable ? 'invalid' : 'prose',
   ) {
     super(message);
     this.name = 'JsonExtractError';
@@ -815,6 +888,7 @@ export const extractJson = <T>(text: string): T => {
       `unterminated JSON in model output - the reply was almost certainly cut off ` +
         `by the token ceiling rather than malformed. Ends: ...${text.slice(-120)}`,
       false,
+      'unterminated',
     );
   }
 
@@ -845,6 +919,30 @@ export const extractJson = <T>(text: string): T => {
   try {
     return JSON.parse(candidate.slice(start, end + 1)) as T;
   } catch (err) {
+    // A SQUARE BRACKET WITH NO OBJECT ANYWHERE IS PROSE, NOT BROKEN JSON, and
+    // telling those apart matters because they need opposite responses.
+    //
+    // This is the audio tag colliding with JSON array syntax, for the second
+    // time in this codebase and for the same underlying reason: a narration
+    // line legitimately begins "[quietly]", which is indistinguishable from the
+    // start of a JSON array until it fails to parse. A close beat came back as
+    // bare script text, the scan found its opening tag, and the reply was
+    // classified as malformed - so it was sent to the repairer, which was asked
+    // to turn a sentence of prose into JSON, could not, and killed the run.
+    //
+    // Marking it repairable was the expensive half of the mistake: a repair
+    // call cannot fix a reply that never contained JSON, so it spent money to
+    // arrive at a worse error message. What this actually needs is to be asked
+    // again for JSON, which completeJson now does.
+    const hasObject = candidate.includes('{');
+    if (!hasObject && opener === '[') {
+      throw new JsonExtractError(
+        `model answered in prose rather than JSON. It opens with a square ` +
+          `bracket, which is an audio tag and not an array: ${text.slice(0, 160)}`,
+        false,
+      );
+    }
+
     // Found, but will not parse. Almost always an unescaped quotation mark
     // inside a string, which a show that quotes documents out loud produces
     // constantly. Worth exactly one repair.

@@ -6,6 +6,7 @@ import {
   costPenceFor,
   costPenceWithCache,
   extractJson,
+  JsonExtractError,
   LlmError,
   OpenAiClient,
   priceFor,
@@ -102,16 +103,23 @@ describe('completeJson', () => {
     expect(c.seen).toHaveLength(2);
   });
 
-  it('does NOT retry a reply with no JSON in it at all', async () => {
-    // A model that answered in prose answers in prose again. Repairing that is
-    // money for nothing, which is why "repairable" is a property of the error
-    // rather than a blanket retry.
-    const c = client([{ text: 'I am afraid I cannot do that' }]);
+  it('does not REPAIR a reply with no JSON in it at all', async () => {
+    // A repairer is given a broken document and told to fix the syntax, which
+    // is the wrong instrument when there was never any JSON - there is nothing
+    // to fix, only prose to translate, and it does that badly.
+    //
+    // This test used to assert that such a reply was not retried AT ALL, and
+    // that was too strong: it cost a real run on a close beat that came back as
+    // script text, which the model got right the moment it was asked again. So
+    // prose is now re-asked once, against the original question, and only
+    // repair is ruled out. See askAgainForJson.
+    const c = client([{ text: 'I am afraid I cannot do that' }, { text: '{"ok": 1}' }]);
 
-    await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).rejects.toThrow(
-      /no JSON found/
-    );
-    expect(c.seen).toHaveLength(1);
+    await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).resolves.toEqual({ ok: 1 });
+    expect(c.seen).toHaveLength(2);
+    expect(c.seen[1]!.prompt).toContain('WAS NOT JSON');
+    // Not the repairer: that call would carry the repair system prompt.
+    expect(c.seen[1]!.system).toBe('S');
   });
 
   it('REPAIRS JSON that was found but would not parse', async () => {
@@ -272,6 +280,75 @@ describe('completeJson', () => {
     await expect(
       completeJson(c.client, { system: 'S', prompt: 'P' }, undefined, turnsShape)
     ).rejects.toThrow(/wrong shape for the "payoff" beat twice/);
+  });
+
+  /**
+   * The audio tag colliding with JSON array syntax, for the second time.
+   *
+   * A narration line legitimately begins "[quietly]", which is indistinguishable
+   * from the start of a JSON array until it fails to parse. A close beat came
+   * back as bare script text, the extractor found its opening tag, called the
+   * reply malformed, and spent a repair call asking a repairer to turn a
+   * sentence into JSON. It could not, and the run died.
+   */
+  const SCRIPT_TEXT = '[quietly] Danny Jones threw the crowbar in a river. Police found it anyway.';
+
+  it('reads a leading audio tag as prose, not as a broken array', () => {
+    try {
+      extractJson(SCRIPT_TEXT);
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(JsonExtractError);
+      expect((err as JsonExtractError).kind).toBe('prose');
+      // The expensive half of the old mistake: a repair call cannot fix a reply
+      // that never contained JSON.
+      expect((err as JsonExtractError).repairable).toBe(false);
+    }
+  });
+
+  it('still repairs a real object that happens to contain an audio tag', () => {
+    // The tag belongs INSIDE a string here, which is the normal case and must
+    // not be dragged into the new prose branch.
+    expect(extractJson('{"turns": [{"text": "[quietly] he left"}]}')).toEqual({
+      turns: [{ text: '[quietly] he left' }],
+    });
+  });
+
+  it('ASKS AGAIN for JSON when the model answers in prose', async () => {
+    // Nothing retried this before: a prose reply killed the run outright, and
+    // the model would have got it right on a second ask.
+    const c = client([{ text: SCRIPT_TEXT }, { text: '{"turns": ["a"]}' }]);
+
+    const out = await completeJson(c.client, { system: 'S', prompt: 'P' }, undefined, turnsShape);
+    expect(out.turns).toEqual(['a']);
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('re-asks the original question, and says the brackets go inside the quotes', async () => {
+    const c = client([{ text: SCRIPT_TEXT }, { text: '{"turns": ["a"]}' }]);
+    await completeJson(c.client, { system: 'S', prompt: 'ORIGINAL TASK' }, undefined, turnsShape);
+    expect(c.seen[1]!.prompt).toContain('ORIGINAL TASK');
+    expect(c.seen[1]!.prompt).toContain('WAS NOT JSON');
+    expect(c.seen[1]!.prompt).toMatch(/square brackets/);
+  });
+
+  it('gives up after one re-ask, rather than paying to be told prose again', async () => {
+    const c = client([{ text: SCRIPT_TEXT }, { text: '[slowly] and again in prose.' }]);
+    await expect(
+      completeJson(c.client, { system: 'S', prompt: 'P' }, undefined, turnsShape)
+    ).rejects.toThrow(/answered in prose rather than JSON twice for the "payoff" beat/);
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('does not re-ask a TRUNCATED reply, which needs room rather than asking', () => {
+    // Re-asking at the same ceiling would produce the same cut-off reply and
+    // charge for it. The caller has already doubled the ceiling by here.
+    try {
+      extractJson('{"turns": [{"text": "it was a long night and');
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect((err as JsonExtractError).kind).toBe('unterminated');
+    }
   });
 
   it('does not check a shape nobody asked for', async () => {
