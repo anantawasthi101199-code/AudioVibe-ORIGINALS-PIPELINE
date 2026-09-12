@@ -569,17 +569,40 @@ export class OpenAiClient implements LlmClient {
  * Only retries on TRUNCATION. A model that returned prose instead of JSON will
  * return prose again with more room, so retrying that is money for nothing.
  */
+/**
+ * Optional shape check, with its own repair.
+ *
+ * SYNTACTICALLY VALID AND STRUCTURALLY WRONG IS A THIRD FAILURE, distinct from
+ * truncated and from malformed, and until a real run hit it nothing retried it.
+ * A beat came back as perfectly good JSON with no `turns` key in it, and the
+ * only thing anybody saw was a bare Zod path - no sight of what the model
+ * actually returned, and no second attempt.
+ *
+ * It is worth one retry for the same reason malformed JSON is: the model
+ * understood the task and got the container wrong, and handing back the schema
+ * complaint with what it produced fixes it almost every time. It is NOT worth
+ * more than one, because a model that ignores the shape twice is being asked
+ * for something the prompt has not made clear, and a third call will not
+ * discover that.
+ */
+export interface JsonShape<T> {
+  parse: (value: unknown) => T;
+  /** What to call it in the error, so a failure says which call went wrong. */
+  label: string;
+}
+
 export const completeJson = async <T>(
   client: LlmClient,
   req: LlmRequest,
   onCost?: (pence: number) => void,
+  shape?: JsonShape<T>,
 ): Promise<T> => {
   const first = await client.complete(req);
   onCost?.(first.costPence);
 
   if (!first.truncated) {
     try {
-      return extractJson<T>(first.text);
+      return await checkShape<T>(client, req, extractJson<T>(first.text), shape, onCost);
     } catch (err) {
       if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
       // MALFORMED IS A DIFFERENT PROBLEM FROM TRUNCATED and needs a different
@@ -608,10 +631,68 @@ export const completeJson = async <T>(
   }
 
   try {
-    return extractJson<T>(second.text);
+    return await checkShape<T>(client, req, extractJson<T>(second.text), shape, onCost);
   } catch (err) {
     if (!(err instanceof JsonExtractError) || !err.repairable) throw err;
     return await repairJson<T>(client, req, second.text, (err as Error).message, onCost);
+  }
+};
+
+/**
+ * Validate against the caller's schema, and ask again once if the shape is
+ * wrong.
+ *
+ * The retry re-runs the ORIGINAL request with the complaint appended, rather
+ * than asking the model to fix its own output. A wrong shape usually means the
+ * task was misread, and re-reading the task with the mistake named is more
+ * likely to work than editing the mistake.
+ */
+const checkShape = async <T>(
+  client: LlmClient,
+  req: LlmRequest,
+  value: T,
+  shape: JsonShape<T> | undefined,
+  onCost?: (pence: number) => void,
+): Promise<T> => {
+  if (!shape) return value;
+
+  try {
+    return shape.parse(value);
+  } catch (err) {
+    const complaint = (err as Error).message.replace(/\s+/g, ' ').slice(0, 400);
+
+    const retry = await client.complete({
+      ...req,
+      prompt:
+        `${req.prompt}\n\n` +
+        `YOUR PREVIOUS REPLY WAS VALID JSON BUT THE WRONG SHAPE.\n` +
+        `What was wrong: ${complaint}\n` +
+        `What you returned: ${JSON.stringify(value).slice(0, 400)}\n\n` +
+        `Return the same content in the shape the instructions ask for. ` +
+        `Every field named there is required.`,
+    });
+    onCost?.(retry.costPence);
+
+    try {
+      return shape.parse(extractJson<T>(retry.text));
+    } catch (again) {
+      throw new LlmError(
+        client.name,
+        null,
+        `returned the wrong shape for ${shape.label} twice. ` +
+          `${(again as Error).message.replace(/\s+/g, ' ').slice(0, 300)}. ` +
+          `It returned: ${JSON.stringify(extractJsonSafe(retry.text)).slice(0, 300)}`,
+      );
+    }
+  }
+};
+
+/** For an error message. Never throws, because it is reporting one. */
+const extractJsonSafe = (text: string): unknown => {
+  try {
+    return extractJson(text);
+  } catch {
+    return text.slice(0, 300);
   }
 };
 

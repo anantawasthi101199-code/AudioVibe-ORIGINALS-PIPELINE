@@ -155,6 +155,68 @@ describe('completeJson', () => {
     expect(c.seen).toHaveLength(2);
   });
 
+  it('RETRIES a reply that is valid JSON in the wrong shape', async () => {
+    // The third kind of failure: not truncated, not malformed, just missing the
+    // field. A real beat came back as perfectly good JSON with no "turns" key
+    // and nothing retried it - all anybody saw was a bare Zod path.
+    const c = client([{ text: '{"beats": []}' }, { text: '{"turns": ["a"]}' }]);
+    const shape = {
+      parse: (v: unknown) => {
+        const o = v as { turns?: string[] };
+        if (!o.turns) throw new Error('turns: Required');
+        return o as { turns: string[] };
+      },
+      label: 'a beat',
+    };
+
+    const out = await completeJson(c.client, { system: 'S', prompt: 'P' }, undefined, shape);
+    expect(out.turns).toEqual(['a']);
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('re-asks the ORIGINAL question with the complaint, not "fix your output"', async () => {
+    // A wrong shape usually means the task was misread. Re-reading the task
+    // with the mistake named works better than editing the mistake.
+    const c = client([{ text: '{"wrong": 1}' }, { text: '{"turns": ["a"]}' }]);
+    const shape = {
+      parse: (v: unknown) => {
+        const o = v as { turns?: string[] };
+        if (!o.turns) throw new Error('turns: Required');
+        return o as { turns: string[] };
+      },
+      label: 'a beat',
+    };
+
+    await completeJson(c.client, { system: 'S', prompt: 'ORIGINAL TASK' }, undefined, shape);
+    expect(c.seen[1]!.prompt).toContain('ORIGINAL TASK');
+    expect(c.seen[1]!.prompt).toContain('turns: Required');
+    expect(c.seen[1]!.prompt).toContain('{"wrong":1}');
+  });
+
+  it('gives up after one shape retry, and says what it got', async () => {
+    const c = client([{ text: '{"wrong": 1}' }]);
+    const shape = {
+      parse: (v: unknown) => {
+        const o = v as { turns?: string[] };
+        if (!o.turns) throw new Error('turns: Required');
+        return o as { turns: string[] };
+      },
+      label: 'the "before" beat',
+    };
+
+    await expect(
+      completeJson(c.client, { system: 'S', prompt: 'P' }, undefined, shape)
+    ).rejects.toThrow(/wrong shape for the "before" beat twice.*It returned/s);
+    expect(c.seen).toHaveLength(2);
+  });
+
+  it('does not check a shape nobody asked for', async () => {
+    const c = client([{ text: '{"anything": true}' }]);
+    await expect(completeJson(c.client, { system: 'S', prompt: 'P' })).resolves.toEqual({
+      anything: true,
+    });
+  });
+
   it('counts the repair toward the budget', async () => {
     let spent = 0;
     const c = client([{ text: '{"a": "b" "c"}' }, { text: '{"a": "b"}' }]);

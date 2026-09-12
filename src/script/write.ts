@@ -255,10 +255,14 @@ const buildPrompt = (ctx: BeatContext): string => {
     .join('\n\n');
 };
 
+/** The shape a beat must come back in. Shared with completeJson so a wrong one is retried. */
+const beatReplySchema = z.object({
+  turns: z.array(turnSchema).min(1),
+  claimIds: z.array(z.string()).default([]),
+});
+
 const parseTurns = (raw: unknown): { turns: Turn[]; claimIds: string[] } => {
-  const parsed = z
-    .object({ turns: z.array(turnSchema).min(1), claimIds: z.array(z.string()).default([]) })
-    .parse(raw);
+  const parsed = beatReplySchema.parse(raw);
 
   return {
     // Unknown tags are stripped here rather than rejected. The renderer speaks
@@ -401,7 +405,13 @@ export const writeBeat = async (
         effort: 'medium',
         maxTokens: Math.max(4000, wordsForBeat(ctx.beat).max * 6),
       },
-      onCost
+      onCost,
+      // A beat that comes back as valid JSON with no `turns` in it is the
+      // third kind of failure - not truncated, not malformed, just the wrong
+      // shape - and until this it was the only one nothing retried. It happened
+      // on a real run, on the longest beat of the sheet, and all anybody saw
+      // was a bare Zod path with no sight of what the model had returned.
+      { parse: (v) => beatReplySchema.parse(v), label: `the "${ctx.beat.id}" beat` }
     );
 
     current = parseTurns(parsed);
