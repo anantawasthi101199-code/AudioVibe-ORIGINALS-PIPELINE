@@ -19,6 +19,12 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
+import {
+  assertVoiceUnchanged,
+  loadVoiceRegistry,
+  recordVoices,
+  saveVoiceRegistry,
+} from '../canon/voiceRegistry';
 import { loadFormat } from '../formats/load';
 import { episodeBudgetPence } from '../config';
 import { checkLedger, Claim, claimSchema, locateQuote } from '../evidence/claim';
@@ -126,6 +132,12 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
+
+  // BEFORE ANY MODEL CALL. A channel whose voice has changed under it is a
+  // different show to everybody following it, and finding that out after paying
+  // for research, a script and audio is finding it out too late. See
+  // canon/voiceRegistry.ts.
+  assertVoiceUnchanged(persona, deps.tts.name, loadVoiceRegistry());
 
   // --- 1. Brief -----------------------------------------------------------
   let brief: Brief;
@@ -487,6 +499,23 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     run.writeArtifact('render', render);
     run.markComplete('render');
     log(`render: ${Math.round(render.durationS)}s across ${render.beatMap.length} beats`);
+
+    // THE FIRST USE IS THE COMMITMENT. Written after a successful render rather
+    // than before, so a run that fails at synthesis does not pin a show to a
+    // voice nobody has heard. Never overwrites: a later run cannot quietly
+    // re-point what listeners already know.
+    const { registry, recorded } = recordVoices(
+      persona,
+      deps.tts.name,
+      run.id,
+      loadVoiceRegistry()
+    );
+    if (recorded.length) {
+      saveVoiceRegistry(registry);
+      for (const r of recorded) {
+        log(`voice: ${persona.name} speaks as "${r.voiceId}" on ${deps.tts.name} from now on`);
+      }
+    }
   }
 
   // --- 7. Gate ------------------------------------------------------------

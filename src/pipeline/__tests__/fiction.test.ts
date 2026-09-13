@@ -188,6 +188,9 @@ describe('runFiction', () => {
     bibles = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-bibles-'));
     process.env.FOUNDRY_EPISODE_BUDGET_PENCE = '10000';
     process.env.FOUNDRY_RUNS_DIR = root;
+    // The registry is committed, so a suite writing to the real one pins live
+    // shows to a voice called "fake-tts". It did, once.
+    process.env.FOUNDRY_VOICES_FILE = path.join(root, 'voices.json');
     process.env.FOUNDRY_BIBLES_DIR = bibles;
 
     jest.spyOn(assemble, 'probeDuration').mockResolvedValue(95);
@@ -199,6 +202,7 @@ describe('runFiction', () => {
     fs.rmSync(root, { recursive: true, force: true });
     fs.rmSync(bibles, { recursive: true, force: true });
     delete process.env.FOUNDRY_RUNS_DIR;
+    delete process.env.FOUNDRY_VOICES_FILE;
     delete process.env.FOUNDRY_BIBLES_DIR;
   });
 

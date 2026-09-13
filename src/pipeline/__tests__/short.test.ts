@@ -198,6 +198,9 @@ describe('runShort', () => {
     sourceIdRef = { id: sourceIdFor('https://www.sec.gov/a') };
     process.env.FOUNDRY_EPISODE_BUDGET_PENCE = '10000';
     process.env.FOUNDRY_RUNS_DIR = root;
+    // The registry is committed, so a suite writing to the real one pins live
+    // shows to a voice called "fake-tts". It did, once.
+    process.env.FOUNDRY_VOICES_FILE = path.join(root, 'voices.json');
 
     // A short is 60 to 90 seconds; the episode is ten minutes. The stub has to
     // answer differently for each or one of them fails the duration gate.
@@ -210,6 +213,7 @@ describe('runShort', () => {
     jest.restoreAllMocks();
     fs.rmSync(root, { recursive: true, force: true });
     delete process.env.FOUNDRY_RUNS_DIR;
+    delete process.env.FOUNDRY_VOICES_FILE;
   });
 
   /** A finished, gate-passing episode to cut from. */

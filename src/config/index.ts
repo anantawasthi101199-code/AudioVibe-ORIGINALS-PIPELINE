@@ -32,6 +32,19 @@ const required = (name: string): string => {
 
 export const repoRoot = (): string => path.resolve(__dirname, '..', '..');
 
+/**
+ * Where the voice registry lives.
+ *
+ * Configurable for the same reason runs and bibles are: the test suite must not
+ * write to the repo's real one. It did, on the first run after the registry
+ * landed - the suite's fake provider pinned two shows to a voice called
+ * "fake-tts" in a file that is committed.
+ */
+export const voicesFile = (): string => {
+  const configured = process.env.FOUNDRY_VOICES_FILE || 'voices.json';
+  return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
+};
+
 export const runsDir = (): string => {
   const configured = process.env.FOUNDRY_RUNS_DIR || 'runs';
   return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);

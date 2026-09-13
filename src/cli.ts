@@ -28,6 +28,13 @@ import {
 import { loadAllFormats, loadFormat } from './formats/load';
 import { loadAllPersonas, loadPersona } from './canon/load';
 import { Persona } from './canon/schema';
+import {
+  loadVoiceRegistry,
+  retireVoices,
+  saveVoiceRegistry,
+  voiceFor,
+  voiceRegistryPath,
+} from './canon/voiceRegistry';
 import { AnthropicClient, OpenAiClient } from './models/client';
 import { BraveSearch } from './evidence/search';
 import {
@@ -80,6 +87,10 @@ Commands
   library                        Rebuild LIBRARY.md from every run
   gate [--run <id>]              Re-run the gate over an existing run
   script [--run <id>]            Print the script, for reading aloud
+  voices                         Which voice each channel speaks in
+  voice-retire --show <id> [--provider <name>]
+                                 Release a channel's voice so a new one can be
+                                 committed. Deliberate, and two steps on purpose.
   prompts [--show <id>] [--only <id>] [--out <file>]
                                  Every prompt sent to a model, as it is sent
   publish --run <id> [--yes]     Publish a run that passed the gate
@@ -1041,6 +1052,94 @@ const cmdPrompts = (argv: string[]): number => {
   return 0;
 };
 
+/**
+ * Which voice each channel speaks in, and which are still uncommitted.
+ *
+ * The recorded voice is what listeners have actually heard; the persona is what
+ * the next run WOULD use. Showing both together is the point - a disagreement
+ * between them is the failure this registry exists to catch, and seeing it here
+ * beats discovering it when a run refuses to start.
+ */
+const cmdVoices = (): number => {
+  const registry = loadVoiceRegistry();
+  const personas = loadAllPersonas();
+
+  for (const persona of personas) {
+    console.log(`${persona.name}  (${persona.id})`);
+    for (const host of persona.hosts) {
+      const recorded = registry[persona.id]?.[host.id] ?? {};
+      const providers = new Set([
+        ...Object.keys(recorded),
+        host.voice.provider,
+        ...(host.voice.draftVoiceId ? ['openai'] : []),
+      ]);
+
+      for (const provider of providers) {
+        const now = voiceFor(persona, host.id, provider);
+        const then = recorded[provider];
+        const wanted = now?.voiceId ?? '(none set)';
+
+        if (!then) {
+          const pending = wanted.startsWith('REPLACE_') ? 'placeholder, set it before publishing' : 'not committed yet';
+          console.log(`  ${host.name} on ${provider}: ${wanted}  ^ ${pending}`);
+          continue;
+        }
+
+        const agrees = then.voiceId === wanted;
+        console.log(
+          `  ${host.name} on ${provider}: ${then.voiceId}  since ${then.firstUsedAt.slice(0, 10)}` +
+            (agrees ? '' : `  ^ PERSONA NOW SAYS "${wanted}" - runs will refuse`)
+        );
+      }
+    }
+    console.log('');
+  }
+
+  console.log(`Recorded in ${path.relative(process.cwd(), voiceRegistryPath())}, which is committed.`);
+  console.log('A voice is pinned the first time a channel renders audio, and never re-pointed.');
+  return 0;
+};
+
+/**
+ * Release a channel's voice on purpose.
+ *
+ * Separate from everything else so that changing a show's voice is always two
+ * decisions rather than a side effect of editing a persona file. It prints what
+ * it released, because that line is the record of when the show changed.
+ */
+const cmdVoiceRetire = (argv: string[]): number => {
+  const showId = arg(argv, 'show');
+  if (!showId) {
+    console.error('Usage: voice-retire --show <id> [--provider <name>]');
+    return 1;
+  }
+
+  const persona = loadPersona(showId);
+  const provider = arg(argv, 'provider');
+  const registry = loadVoiceRegistry();
+  const before = registry[persona.id];
+
+  if (!before) {
+    console.log(`${persona.name} has no committed voice to release.`);
+    return 0;
+  }
+
+  for (const [hostId, byProvider] of Object.entries(before)) {
+    for (const [p, record] of Object.entries(byProvider)) {
+      if (provider && p !== provider) continue;
+      console.log(
+        `releasing ${persona.name} / ${hostId} on ${p}: "${record.voiceId}", ` +
+          `used since ${record.firstUsedAt.slice(0, 10)} (${record.firstRunId})`
+      );
+    }
+  }
+
+  saveVoiceRegistry(retireVoices(persona.id, registry, provider));
+  console.log('');
+  console.log('The next run commits whatever the persona file says. Commit that change too.');
+  return 0;
+};
+
 const cmdGate = (argv: string[]): number => {
   const gate = readGate(openRun(argv));
   console.log(formatGateReport(gate));
@@ -1258,6 +1357,10 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdLibrary();
       case 'script':
         return cmdScript(rest);
+      case 'voices':
+        return cmdVoices();
+      case 'voice-retire':
+        return cmdVoiceRetire(rest);
       case 'prompts':
         return cmdPrompts(rest);
       case 'gate':

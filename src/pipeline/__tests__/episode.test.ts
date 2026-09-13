@@ -184,11 +184,15 @@ describe('runEpisode', () => {
     sourceIdRef = { id: sourceIdFor('https://www.sec.gov/a') };
     process.env.FOUNDRY_EPISODE_BUDGET_PENCE = '10000';
     process.env.FOUNDRY_RUNS_DIR = root;
+    // The registry is committed, so a suite writing to the real one pins live
+    // shows to a voice called "fake-tts". It did, once.
+    process.env.FOUNDRY_VOICES_FILE = path.join(root, 'voices.json');
   });
 
   afterEach(() => {
     fs.rmSync(root, { recursive: true, force: true });
     delete process.env.FOUNDRY_RUNS_DIR;
+    delete process.env.FOUNDRY_VOICES_FILE;
   });
 
   // Renders are faked, so durations come from a stubbed probe rather than

@@ -38,6 +38,12 @@
  */
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
+import {
+  assertVoiceUnchanged,
+  loadVoiceRegistry,
+  recordVoices,
+  saveVoiceRegistry,
+} from '../canon/voiceRegistry';
 import { loadFormat } from '../formats/load';
 import { episodeBudgetPence } from '../config';
 import { renderResultSchema, renderScript } from '../render/assemble';
@@ -99,6 +105,10 @@ export const runFiction = async (
 
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
+
+  // A SERIAL IS WHERE A CHANGED VOICE HURTS MOST, because listeners follow it
+  // rather than dipping into it. See canon/voiceRegistry.ts.
+  assertVoiceUnchanged(persona, deps.tts.name, loadVoiceRegistry());
 
   if (!persona.fiction) {
     throw new Error(
@@ -229,6 +239,19 @@ export const runFiction = async (
     run.writeArtifact('render', render);
     run.markComplete('render');
     log(`render: ${Math.round(render.durationS)}s across ${render.beatMap.length} beats`);
+
+    const { registry, recorded } = recordVoices(
+      persona,
+      deps.tts.name,
+      run.id,
+      loadVoiceRegistry()
+    );
+    if (recorded.length) {
+      saveVoiceRegistry(registry);
+      for (const r of recorded) {
+        log(`voice: ${persona.name} speaks as "${r.voiceId}" on ${deps.tts.name} from now on`);
+      }
+    }
   }
 
   // --- 5. Gate ------------------------------------------------------------
