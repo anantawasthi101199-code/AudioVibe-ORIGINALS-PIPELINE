@@ -499,7 +499,7 @@ export const runGate = (input: GateInput): GateReport => {
   // It cannot tell living from dead, because nothing in a claim says which. So
   // a show whose whole method is attributing statements to named people in
   // court records - a history show - has to be cleared for `named_person` or it
-  // can never publish anything. Dead Reckoning failed on this with thirty-seven
+  // can never publish anything. An early show failed on this with thirty-seven
   // claims about people who died in 1591.
   //
   // The protection does not disappear, it moves to where it can be expressed:
