@@ -158,8 +158,16 @@ beats:
         Where two mechanisms are proposed for the same effect, describe both
         properly. Do not pick one because the episode needs an answer.
       - >
-        No metaphor that does work the explanation should be doing. A metaphor
-        that replaces the mechanism is the listener leaving without it.
+        GIVE THE LISTENER SOMETHING TO PICTURE. A process at a scale nobody has
+        seen - cells, molecules, milliseconds, pressures - needs one short
+        comparison to something ordinary, in the same breath as the real
+        description. "The gaps between cells widen by about a fifth" is
+        accurate and pictures nothing on its own.
+      - >
+        THE COMPARISON COMES AFTER THE MECHANISM AND NEVER INSTEAD OF IT. A
+        metaphor that replaces the explanation is the listener leaving without
+        it, feeling they understood. One per idea, no chains, and no comparison
+        at all where the thing is already easy to see.
     minClaims: 12
 
   - id: disagreement

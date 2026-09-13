@@ -188,5 +188,14 @@ export const PLAIN_GUIDANCE = [
   'THE FIRST TIME A LISTENER MEETS AN UNFAMILIAR WORD, GIVE IT TO THEM. Anything outside everyday speech gets a few plain words attached the first time it is used, and after that it is just the short name. This covers far more than jargon: a job ("an epidemiologist, one of the people who work out how a disease is spreading"), a place ("Uruk, a city in what is now southern Iraq"), an institution ("the Cullen Inquiry, the public investigation set up afterwards"), a piece of equipment, a title, a rank, a word from another language, a period of history.',
   'ATTACH THE EXPLANATION, DO NOT STOP FOR IT. It belongs in the same breath as the word, as an aside - never as its own sentence beginning "now, a ziggurat is...". Stopping to define something is how a story turns into a lecture, and the listener feels the gear change.',
   'If an unfamiliar word appears once and nothing depends on it, cut the word rather than explaining it. A name the listener will never meet again costs them more to hold than it is worth.',
+  // A DEFINITION IS NOT A PICTURE. The rule above gets the words right and a
+  // listener can still finish the sentence holding nothing: "dynamic
+  // contrast-enhanced MRI, a technique that tracks how a substance spreads
+  // through tissue over time" is accurate, plain, and pictures nothing. A
+  // listener told a health episode was "too technical to be followed" while
+  // liking everything in it, which is this exactly - every term defined, none
+  // of them landed.
+  'WHERE SOMETHING IS HARD TO PICTURE, ANCHOR IT TO SOMETHING ORDINARY. A size, a speed, a distance, a quantity or a physical process the listener has never seen gets one short comparison to something they have: the gaps between cells widening "by about a fifth, the difference between a crowd you can walk through and one you cannot"; a dose "about what is in a strong cup of coffee"; a duration "roughly a working week". One clause, in the same breath, and only where the thing genuinely cannot be pictured without it.',
+  'THE COMPARISON IS A HANDLE, NOT THE EXPLANATION. Give the real mechanism and the real number, then the comparison so the listener can hold it. A comparison that arrives INSTEAD of the mechanism has taken the content away, which is worse than being technical - the listener leaves feeling they understood something and holding nothing they can use. Never more than one per idea, and never a chain of them.',
   'Keep it continuous. One thing leads to the next, and the listener never has to hold something in mind waiting for it to be picked up later.',
 ];
