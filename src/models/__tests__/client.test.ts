@@ -8,8 +8,10 @@ import {
   extractJson,
   JsonExtractError,
   LlmError,
+  nodeHttpPost,
   OpenAiClient,
   priceFor,
+  shouldStream,
   supportsEffort,
   supportsTemperature,
 } from '../client';
@@ -768,5 +770,126 @@ describe('OpenAiClient', () => {
   it('surfaces the provider error message', async () => {
     const client = new OpenAiClient('gpt-5', 'k', post(400, { error: { message: 'bad request' } }));
     await expect(client.complete({ system: 's', prompt: 'p' })).rejects.toThrow(/bad request/);
+  });
+});
+
+/**
+ * The streaming transport.
+ *
+ * WHY THIS IS TESTED AT ALL, given the rest of the suite never touches the
+ * network. A one-pass script call asking for 28,881 tokens at high effort died
+ * with "fetch failed" after five minutes - not a model problem, not a prompt
+ * problem: Node's fetch abandons a response whose headers have not arrived in
+ * three hundred seconds, and a non-streaming request holds the socket silent
+ * for its whole generation. Nothing in the suite could have caught that, and
+ * nothing will catch the next version of it unless the reassembly is pinned.
+ */
+describe('shouldStream', () => {
+  it('streams a long generation', () => {
+    expect(shouldStream({ max_tokens: 28_881 })).toBe(true);
+  });
+
+  it('streams a high-effort call whatever its ceiling', () => {
+    // Thinking tokens are spent before a single visible one, so a modest
+    // max_tokens can still be minutes of silence.
+    expect(shouldStream({ max_tokens: 2_000, output_config: { effort: 'high' } })).toBe(true);
+  });
+
+  it('leaves an ordinary call alone', () => {
+    expect(shouldStream({ max_tokens: 4_096 })).toBe(false);
+    expect(shouldStream({})).toBe(false);
+  });
+});
+
+describe('reassembling a stream', () => {
+  const sse = (events: unknown[]): string =>
+    events.map((e) => `event: x\ndata: ${JSON.stringify(e)}\n\n`).join('');
+
+  /** A Response whose body arrives in pieces, as a real one does. */
+  const streamed = (chunks: string[]): Response =>
+    new Response(
+      new ReadableStream({
+        start(controller) {
+          const encoder = new TextEncoder();
+          for (const chunk of chunks) controller.enqueue(encoder.encode(chunk));
+          controller.close();
+        },
+      }),
+      { status: 200, headers: { 'content-type': 'text/event-stream' } }
+    );
+
+  const post = async (body: unknown, chunks: string[]) => {
+    const spy = jest.spyOn(globalThis, 'fetch').mockResolvedValue(streamed(chunks));
+    try {
+      return await nodeHttpPost('https://example.test', {}, body);
+    } finally {
+      spy.mockRestore();
+    }
+  };
+
+  const EVENTS = [
+    { type: 'message_start', message: { usage: { input_tokens: 1200, output_tokens: 0 } } },
+    { type: 'content_block_start', index: 0 },
+    { type: 'ping' },
+    { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'The trial ' } },
+    { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: 'enrolled 41 adults.' } },
+    { type: 'content_block_stop', index: 0 },
+    { type: 'message_delta', delta: { stop_reason: 'end_turn' }, usage: { output_tokens: 2600 } },
+    { type: 'message_stop' },
+  ];
+
+  it('rebuilds the text, the stop reason and the usage', async () => {
+    const res = await post({ max_tokens: 20_000 }, [sse(EVENTS)]);
+    const body = res.json as {
+      content: Array<{ text: string }>;
+      stop_reason: string;
+      usage: Record<string, number>;
+    };
+
+    expect(res.status).toBe(200);
+    expect(body.content[0]!.text).toBe('The trial enrolled 41 adults.');
+    expect(body.stop_reason).toBe('end_turn');
+    expect(body.usage.input_tokens).toBe(1200);
+    // From message_delta, not message_start, which always reports zero.
+    expect(body.usage.output_tokens).toBe(2600);
+  });
+
+  it('survives a frame split across two network chunks', async () => {
+    // The failure nobody writes a test for and everybody eventually hits: TCP
+    // does not respect JSON boundaries, so a frame arrives in halves.
+    const whole = sse(EVENTS);
+    const cut = Math.floor(whole.length / 2);
+    const res = await post({ max_tokens: 20_000 }, [whole.slice(0, cut), whole.slice(cut)]);
+
+    const body = res.json as { content: Array<{ text: string }> };
+    expect(body.content[0]!.text).toBe('The trial enrolled 41 adults.');
+  });
+
+  it('reports an error the stream carries rather than returning half an answer', async () => {
+    // A stream that fails midway is a 200 with an error event in it. Returning
+    // the text so far would hand a truncated script to the checks as if it
+    // were finished.
+    const events = [
+      EVENTS[0],
+      EVENTS[3],
+      { type: 'error', error: { message: 'overloaded_error' } },
+    ];
+
+    await expect(post({ max_tokens: 20_000 }, [sse(events)])).rejects.toThrow(/overloaded_error/);
+  });
+
+  it('sets stream on the request it sends, and only when it should', async () => {
+    const sent: unknown[] = [];
+    const spy = jest.spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) => {
+      sent.push(JSON.parse(String((init as RequestInit).body)));
+      return streamed([sse(EVENTS)]);
+    });
+    try {
+      await nodeHttpPost('https://example.test', {}, { max_tokens: 20_000 });
+    } finally {
+      spy.mockRestore();
+    }
+
+    expect((sent[0] as { stream?: boolean }).stream).toBe(true);
   });
 });

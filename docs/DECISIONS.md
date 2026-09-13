@@ -315,6 +315,23 @@ work, and the answer now is **not to have one**. The beat is a `disagreement`
 beat: who found what, who reads it differently, and what would settle it. That
 is more interesting than the anecdote was, and it is checkable.
 
+### A long request is streamed, decided by the transport
+
+The first one-pass script call died with `fetch failed` after five minutes. Not
+the model, not the prompt: Node's fetch abandons a response whose headers have
+not arrived in 300 seconds, and a non-streaming request holds the socket silent
+for its entire generation. The call was asking for 28,881 tokens at high effort
+and the answer was still being written when the client hung up.
+
+Streaming keeps bytes arriving so the timer never fires. The choice lives in
+`nodeHttpPost` rather than in any client, because what a client asks for is an
+answer and how many TCP frames it arrives in is not its business - putting it in
+the transport fixed every caller at once and changed none of them. The stream is
+reassembled into exactly the shape a single call returns.
+
+Streamed above 8,000 output tokens, or at `high` effort whatever the ceiling,
+since thinking tokens are spent before a single visible one.
+
 ### "The render artifact means the audio exists"
 
 Every other stage resumes from its JSON because the JSON *is* the output.

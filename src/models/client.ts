@@ -258,12 +258,142 @@ export type HttpPost = (
   headers?: Record<string, string>;
 }>;
 
+/**
+ * Above this many output tokens, a request is sent as a stream.
+ *
+ * WHY THERE IS A THRESHOLD AT ALL. Node's fetch gives up on a response whose
+ * headers have not arrived in five minutes and reports it as the two least
+ * helpful words available, "fetch failed". A non-streaming request holds the
+ * socket silent for its entire generation, so a long one races that timer and
+ * loses - which is exactly what killed a one-pass script call asking for 28,881
+ * tokens at high effort. Nothing had gone wrong with it; the answer was still
+ * being written when the client hung up.
+ *
+ * Streaming keeps bytes arriving, so the timer never fires. The response is
+ * reassembled into the same shape a non-streaming call returns, which is why
+ * this lives in the transport: every client above it is unchanged and none of
+ * them has to know.
+ *
+ * Eight thousand because that is roughly where generation starts taking minutes
+ * rather than seconds. Below it the plain path is simpler and there is nothing
+ * to gain.
+ */
+export const STREAM_ABOVE_TOKENS = 8000;
+
+interface StreamableBody {
+  max_tokens?: number;
+  output_config?: { effort?: string };
+}
+
+/** Whether this request is long enough to be worth streaming. */
+export const shouldStream = (body: unknown): boolean => {
+  const b = (body ?? {}) as StreamableBody;
+  // High effort spends thinking tokens before a single visible one, so a
+  // modest max_tokens can still be minutes of silence.
+  return (b.max_tokens ?? 0) > STREAM_ABOVE_TOKENS || b.output_config?.effort === "high";
+};
+
+/**
+ * Read an Anthropic SSE stream back into the JSON a single call would return.
+ *
+ * Only the events that carry something are handled. `ping`, the content-block
+ * boundaries and anything unrecognised are ignored on purpose: a provider
+ * adding an event type must not be able to break a run, and nothing here needs
+ * to know the shape of an event it does not read.
+ */
+const readAnthropicStream = async (
+  res: Response,
+): Promise<{ json: unknown; text: string }> => {
+  const assembled: {
+    type: string;
+    content: Array<{ type: string; text: string }>;
+    stop_reason: string | null;
+    usage: Record<string, number>;
+  } = { type: "message", content: [], stop_reason: null, usage: {} };
+
+  let parts = "";
+  let buffer = "";
+  let streamError: string | null = null;
+
+  const handle = (raw: string): void => {
+    if (!raw.startsWith("data:")) return;
+    const payload = raw.slice(5).trim();
+    if (!payload || payload === "[DONE]") return;
+
+    let event: Record<string, unknown>;
+    try {
+      event = JSON.parse(payload) as Record<string, unknown>;
+    } catch {
+      // A half-written frame cannot be acted on and the next one will carry
+      // the same information, so dropping it is safer than guessing.
+      return;
+    }
+
+    const type = event.type as string | undefined;
+
+    if (type === "message_start") {
+      const message = event.message as { usage?: Record<string, number> } | undefined;
+      Object.assign(assembled.usage, message?.usage ?? {});
+    } else if (type === "content_block_delta") {
+      const delta = event.delta as { type?: string; text?: string } | undefined;
+      if (delta?.type === "text_delta" && delta.text) parts += delta.text;
+    } else if (type === "message_delta") {
+      const delta = event.delta as { stop_reason?: string } | undefined;
+      if (delta?.stop_reason) assembled.stop_reason = delta.stop_reason;
+      // Output tokens are only final here; message_start reports zero.
+      Object.assign(assembled.usage, (event.usage as Record<string, number>) ?? {});
+    } else if (type === "error") {
+      const err = event.error as { message?: string } | undefined;
+      streamError = err?.message ?? "the stream reported an error";
+    }
+  };
+
+  const decoder = new TextDecoder();
+  const reader = res.body?.getReader();
+  if (!reader) throw new Error("the response had no body to stream");
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    // Frames are separated by a blank line. Keep the trailing partial.
+    const frames = buffer.split(/\r?\n\r?\n/);
+    buffer = frames.pop() ?? "";
+    for (const frame of frames) {
+      for (const line of frame.split(/\r?\n/)) handle(line);
+    }
+  }
+  for (const line of buffer.split(/\r?\n/)) handle(line);
+
+  if (streamError) throw new Error(streamError);
+
+  assembled.content = parts ? [{ type: "text", text: parts }] : [];
+  return { json: assembled, text: JSON.stringify(assembled) };
+};
+
 export const nodeHttpPost: HttpPost = async (url, headers, body) => {
+  // STREAMED WHEN IT IS LONG, and decided here rather than by the caller. What
+  // a client asks for is an answer; how many TCP frames it arrives in is the
+  // transport's business, and putting the choice here means every client got
+  // the fix at once and none of them had to change.
+  const streaming = shouldStream(body);
+
   const res = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json", ...headers },
-    body: JSON.stringify(body),
+    body: JSON.stringify(streaming ? { ...(body as object), stream: true } : body),
   });
+
+  if (streaming && res.status >= 200 && res.status < 300) {
+    const responseHeaders: Record<string, string> = {};
+    res.headers.forEach((value, key) => {
+      responseHeaders[key.toLowerCase()] = value;
+    });
+    const { json, text } = await readAnthropicStream(res);
+    return { status: res.status, json, text, headers: responseHeaders };
+  }
+
   const text = await res.text();
   let json: unknown = null;
   try {
