@@ -39,7 +39,7 @@ import {
   extractClaims,
   gatherCorpus,
   gatherCounterEvidence,
-  DEFAULT_GATHER,
+  gatherFor,
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
 import { Source } from '../evidence/source';
@@ -55,9 +55,10 @@ import { fillGaps, findGaps } from '../evidence/gaps';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
+import { measure } from '../script/style';
 import { writeScriptOnePass } from '../script/onePass';
-import { Script, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
-import { runGate, GateReport } from '../qa/gate';
+import { Script, fullText, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
+import { runGate, GateFinding, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 
 export interface PipelineDeps {
@@ -185,7 +186,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   } else {
     stage = 'corpus';
     log('corpus: searching and fetching');
-    corpus = await gatherCorpus(brief.queries, deps.search, deps.fetchDeps, DEFAULT_GATHER);
+    corpus = await gatherCorpus(brief.queries, deps.search, deps.fetchDeps, gatherFor(format));
     run.writeArtifact('corpus', corpus);
     run.markComplete('corpus');
     log(`corpus: ${corpus.sources.length} sources, ${corpus.rejected.length} rejected`);
@@ -512,6 +513,18 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   // its own, which is where those checks actually mean something.
   if (format.sourceOnly) {
     const stories = script.beats.length;
+
+    // A STORY THAT CITES NOTHING IS NOT A STORY, and this is the only place it
+    // can be caught. A source format never reaches the gate, because the gate
+    // judges an episode - duration, render, self-similarity - and this is not
+    // one. So the two things that matter about a source script are checked here
+    // or nowhere.
+    //
+    // Found on the first real anthology run: seven of ten stories had no
+    // material, so the writer filled them with an honest account of the search
+    // having failed. Better than inventing myths, and still not publishable.
+    const starved = script.beats.filter((b) => b.claimIds.length === 0).map((b) => b.beatId);
+
     log(`script: "${script.title}", ${stories} stories`);
     log('');
     log(`This format is a source: it is never rendered or published whole.`);
@@ -525,17 +538,43 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       pence: run.manifest.spentPence,
     });
 
+    // A REAL REPORT, NOT A CAST. This used to build an object literal and force
+    // it through `as unknown as GateReport` with no `measurement` on it, which
+    // typechecked, ran, and then crashed the command that PRINTS the report
+    // with "Cannot read properties of undefined (reading 'words')" - after the
+    // whole episode had been researched, written and paid for. The cast was the
+    // bug: it told the compiler to stop looking at exactly the thing that was
+    // missing.
+    //
+    // A source script has no audio, so nothing here can speak to duration or
+    // render quality. What it CAN report is the prose, which is measured the
+    // same way every other run measures it.
+    const sourceFindings: GateFinding[] = starved.length
+      ? [
+          {
+            check: 'sourceCoverage',
+            detail:
+              `${starved.length} of ${stories} stories cite no evidence: ` +
+              `${starved.join(', ')}. Cutting these would publish shorts with an ` +
+              `empty Sources sheet. Usually the corpus did not cover them - check ` +
+              `whether the research actually found anything for each story.`,
+            blocking: true,
+          },
+        ]
+      : [];
+
     return {
       run,
       script,
       gate: {
-        passed: true,
-        findings: [],
+        passed: sourceFindings.length === 0,
+        findings: sourceFindings,
+        measurement: measure(fullText(script), persona.styleCard.forbiddenPhrases),
+        needsHumanReview: true,
         humanReviewReasons: [
           `a source script, not an episode. ${stories} stories, none rendered yet.`,
         ],
-        prose: null,
-      } as unknown as GateReport,
+      },
     };
   }
 

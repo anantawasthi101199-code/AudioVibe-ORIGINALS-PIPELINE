@@ -188,6 +188,77 @@ describe('gatherCorpus', () => {
     expect(corpus.sources).toHaveLength(1);
   });
 
+  /**
+   * THE FAILURE THIS EXISTS FOR, measured on a real run rather than imagined.
+   *
+   * A brief asked thirteen good questions about ten different Hindu myths.
+   * Eleven of the fourteen documents that came back were about Ganesha, because
+   * Ganesha outranks every other Puranic subject on a general web search.
+   * Seven of the ten stories fetched nothing at all, and the episode written
+   * from that corpus told the Ganesha story four times and then spent two beats
+   * explaining that the search had not found much.
+   *
+   * Neither the brief nor the writer was at fault. Ranking every query's
+   * results in one pool cannot see which question a document answers, so it
+   * spends the whole budget on the loudest one.
+   */
+  it('answers every query once before answering any of them twice', async () => {
+    const search: SearchProvider = {
+      name: 'lopsided',
+      async search(q) {
+        // The popular subject has six good results; the other two have one each.
+        if (q === 'popular') {
+          return Array.from({ length: 6 }, (_, i) => ({
+            url: `https://www.sec.gov/popular-${i}`,
+            title: 'popular',
+          }));
+        }
+        return [{ url: `https://www.sec.gov/${q}-only`, title: q }];
+      },
+    };
+
+    const corpus = await gatherCorpus(
+      ['popular', 'obscure-a', 'obscure-b'],
+      search,
+      // Echoes the requested URL, because a source's id comes from its FINAL
+      // url and a stub returning one address for everything collapses the
+      // whole corpus into a single deduped source.
+      {
+        httpGet: async (url: string) => ok(url),
+        now: () => new Date('2026-09-08T00:00:00.000Z'),
+      },
+      { targetSources: 4, perQuery: 8 }
+    );
+
+    const urls = corpus.sources.map((s) => s.url);
+    // Pooled and globally ranked, all four would have been the popular subject.
+    expect(urls.some((u) => u.includes('obscure-a'))).toBe(true);
+    expect(urls.some((u) => u.includes('obscure-b'))).toBe(true);
+    expect(urls.filter((u) => u.includes('popular')).length).toBeLessThanOrEqual(2);
+  });
+
+  it('a query whose results are all dead costs only its turn', async () => {
+    const search: SearchProvider = {
+      name: 'mixed',
+      async search(q) {
+        return [{ url: `https://www.sec.gov/${q}`, title: q }];
+      },
+    };
+
+    const corpus = await gatherCorpus(
+      ['dead', 'alive'],
+      search,
+      fetchDeps({
+        'https://www.sec.gov/dead': { status: 404, body: '', finalUrl: 'https://www.sec.gov/dead' },
+        '*': ok('https://www.sec.gov/alive'),
+      }),
+      { targetSources: 3, perQuery: 5 }
+    );
+
+    expect(corpus.sources).toHaveLength(1);
+    expect(corpus.rejected[0]!.url).toContain('dead');
+  });
+
   it('does not add the same source twice', async () => {
     const corpus = await gatherCorpus(
       ['q1', 'q2'],

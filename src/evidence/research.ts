@@ -228,6 +228,22 @@ export interface GatherOptions {
 export const DEFAULT_GATHER: GatherOptions = { targetSources: 14, perQuery: 8 };
 
 /**
+ * How many documents a format needs.
+ *
+ * FOURTEEN WAS SIZED FOR ONE SUBJECT and is simply too few for ten. An
+ * anthology researches ten separate stories in one pass, so fourteen documents
+ * is one and a bit per story before any of them turns out to be a blog post -
+ * and the round-robin above can only spread what it is allowed to fetch.
+ *
+ * Two per story plus a few for the shared background, capped so a long format
+ * cannot quietly commission a hundred fetches.
+ */
+export const gatherFor = (format: EpisodeFormat): GatherOptions =>
+  format.sourceOnly
+    ? { targetSources: Math.min(40, format.beats.length * 2 + 6), perQuery: 8 }
+    : DEFAULT_GATHER;
+
+/**
  * Search, then fetch, until there are enough documents or candidates run out.
  *
  * Fetch failures are recorded rather than swallowed. A corpus that came out
@@ -240,32 +256,58 @@ export const gatherCorpus = async (
   fetchDeps: FetchDeps,
   opts: GatherOptions = DEFAULT_GATHER
 ): Promise<Corpus> => {
-  const candidates = [];
+  // EACH QUERY KEEPS ITS OWN CANDIDATES. Pooling them and ranking the lot
+  // together is what this used to do, and it hands the whole corpus to whichever
+  // subject the internet has written most about.
+  //
+  // Measured, on a real run: a brief asked thirteen good questions about ten
+  // different Hindu myths - Samudra Manthan, Dadhichi's bones, Nandi, Sati,
+  // seven others. Eleven of the fourteen documents that came back were about
+  // Ganesha, because Ganesha outranks everything else on every general web
+  // search. Seven of the ten stories fetched NOTHING, and the episode written
+  // from that corpus told the Ganesha story four times and then spent two beats
+  // explaining that the search had not found much.
+  //
+  // The brief was not at fault and neither was the writer. A ranking that cannot
+  // see which question a document answers will always spend its whole budget on
+  // the loudest one.
+  const perQuery: Array<{ query: string; ranked: ReturnType<typeof rankCandidates> }> = [];
   for (const query of queries) {
     try {
-      candidates.push(...(await search.search(query, opts.perQuery)));
-    } catch (err) {
+      const found = await search.search(query, opts.perQuery);
+      perQuery.push({ query, ranked: rankCandidates(found, tierForUrl) });
+    } catch {
       // One failed query should not lose the other nine.
-      candidates.push();
-      void err;
+      perQuery.push({ query, ranked: [] });
     }
   }
 
-  const ranked = rankCandidates(candidates, tierForUrl);
   const sources: Source[] = [];
   const rejected: Corpus['rejected'] = [];
   const haveIds = new Set<string>();
+  const seenUrls = new Set<string>();
 
-  for (const candidate of ranked) {
-    if (sources.length >= opts.targetSources) break;
-    try {
-      const source = await fetchSource(candidate.url, fetchDeps);
-      if (haveIds.has(source.id)) continue;
-      haveIds.add(source.id);
-      sources.push(source);
-    } catch (err) {
-      rejected.push({ url: candidate.url, reason: (err as Error).message });
+  // ROUND ROBIN, so every question is answered once before any is answered
+  // twice. A query whose results are all dead still costs only its turn.
+  const depth = Math.max(0, ...perQuery.map((q) => q.ranked.length));
+  for (let round = 0; round < depth; round++) {
+    for (const { ranked } of perQuery) {
+      if (sources.length >= opts.targetSources) break;
+
+      const candidate = ranked[round];
+      if (!candidate || seenUrls.has(candidate.url)) continue;
+      seenUrls.add(candidate.url);
+
+      try {
+        const source = await fetchSource(candidate.url, fetchDeps);
+        if (haveIds.has(source.id)) continue;
+        haveIds.add(source.id);
+        sources.push(source);
+      } catch (err) {
+        rejected.push({ url: candidate.url, reason: (err as Error).message });
+      }
     }
+    if (sources.length >= opts.targetSources) break;
   }
 
   return { sources, rejected };
