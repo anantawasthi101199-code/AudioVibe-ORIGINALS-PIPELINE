@@ -108,11 +108,22 @@ beats:
       The rules that make everything after this make sense.
     constraints:
       - >
-        THE RULES COME FIRST AND THEY ARE THE POINT OF THIS BEAT. Who the gods
-        are and what they want, what the dead are owed, what a name or a gift or
-        a debt does in this world. A listener who does not know the rules hears
-        the story as a sequence of arbitrary events, and that is not a writing
-        failure, it is missing knowledge.
+        THE RULES COME FIRST AND THEY ARE THE POINT OF THIS BEAT. A listener who
+        does not know them hears the story as a sequence of arbitrary events,
+        and that is missing knowledge rather than a writing failure.
+      - >
+        THE RULES ARE WHATEVER THE STORY ACTUALLY RESTS ON, which is not always
+        a pantheon. For a myth it is who the gods are and what they want, what
+        the dead are owed, what a name or a gift or a debt does. For something
+        that happened in the world it is who ruled the place and how recently
+        they had taken it, what the last war was and who fought whom over what,
+        what a person's life there was actually like, and what everybody in that
+        village took for granted. Ask what the listener has to believe before the
+        story makes sense, and give them that.
+      - >
+        PLACE IT ON A MAP AND A CALENDAR THEY ALREADY HAVE. Where this is in
+        terms of a country they could find, and when it is in terms of something
+        they can date. A name and a year are not a place and a time.
       - >
         Explain them the way the tellers believed them, without stopping to say
         whether they are true. A myth explained from outside stops being a story

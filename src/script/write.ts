@@ -41,6 +41,7 @@ import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
 import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
 import { PLAIN_GUIDANCE, checkPlainWords } from './plain';
+import { CONTEXT_GUIDANCE } from './context';
 import { PRONOUN_RULE } from '../qa/pronouns';
 import { soundsUncertain } from '../evidence/repair';
 import {
@@ -194,6 +195,9 @@ ${FORWARD_GUIDANCE.map((r) => `- ${r}`).join('\n')}
 
 PLAIN WORDS
 ${PLAIN_GUIDANCE.map((r) => `- ${r}`).join('\n')}
+
+PLACING THINGS FOR A LISTENER
+${CONTEXT_GUIDANCE.map((r) => `- ${r}`).join('\n')}
 ${
   dialogue
     ? `\nWRITING A CONVERSATION\n${DIALOGUE_GUIDANCE.map((r) => `- ${r}`).join('\n')}`
