@@ -40,6 +40,7 @@ import {
   gatherCorpus,
   gatherCounterEvidence,
   gatherFor,
+  storyForBeat,
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
 import { Source } from '../evidence/source';
@@ -466,6 +467,10 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       claims: workingClaims,
       angle: brief.angle,
       isoDate: new Date().toISOString().slice(0, 10),
+      // WHICH OF THE TEN EACH BEAT IS. Only an anthology has these, and
+      // without them ten beats expanded from one definition are
+      // indistinguishable to everything downstream of the brief.
+      subjects: format.beats.map((_, i) => storyForBeat(brief, format, i)),
     };
 
     if (deps.onePass) {
@@ -567,6 +572,58 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
           `${starved.join(', ')}. Cutting these would publish shorts with an ` +
           `empty Sources sheet. Usually the corpus did not cover them - check ` +
           `whether the research actually found anything for each story.`,
+        blocking: true,
+      });
+    }
+
+    // A STORY THE BRIEF CHOSE THAT NEVER GOT TOLD. Narasimha and Kamadhenu were
+    // both picked, both searched for and both in the corpus, and neither
+    // reached the script - because nothing downstream had been told which beat
+    // was which, so two beats were filled with Nandi and Garuda instead. The
+    // binding above makes that unlikely; this makes it visible when it happens
+    // anyway, because a set can otherwise lose two of its ten and look whole.
+    //
+    // CHECKED PER BEAT, NOT ACROSS THE SCRIPT, now that each beat has a story.
+    // Searching the whole script only answers "is this story in here somewhere",
+    // which a set telling story four twice would pass.
+    //
+    // MATCHED ON NAMES, because a phrase does not survive a retelling. The brief
+    // writes "Ganesha's elephant head: Shiva beheads the son Parvati made..."
+    // and the script says "how the god Ganesha, the elephant headed one, got his
+    // head" - the same story, not one shared phrase. Matching literally called
+    // nine of ten stories missing when two were.
+    const namesIn = (text: string): string[] =>
+      [...new Set(text.match(/\b[A-Z][a-z]{3,}\b/g) ?? [])].map((n) => n.toLowerCase());
+
+    // Two conditions, because neither alone separates the real cases. The
+    // headline name absent is the strong signal - the brief leads with the name
+    // the story is known by - but "Samudra Manthan" is told as "the churning of
+    // the ocean of milk" and names it nowhere. The share of the story's other
+    // names carries that one: 13 of its 16 appear.
+    const NAME_SHARE = 0.7;
+
+    const wrongStory = script.beats.flatMap((beat, i) => {
+      const subject = storyForBeat(brief, format, i);
+      if (!subject) return [];
+
+      const names = namesIn(subject);
+      if (!names.length) return [];
+
+      const told = beatText(beat).toLowerCase();
+      const headline = names[0]!;
+      const share = names.filter((n) => told.includes(n)).length / names.length;
+      if (told.includes(headline) || share >= NAME_SHARE) return [];
+
+      return [`${beat.beatId} was researched for "${subject.split(/[:,]/)[0]!.trim()}"`];
+    });
+
+    if (wrongStory.length) {
+      sourceFindings.push({
+        check: 'storiesDropped',
+        detail:
+          `${wrongStory.length} of ${stories} stories are not the story their beat was ` +
+          `researched for: ${wrongStory.join('; ')}. Those stories were chosen, searched ` +
+          `for and paid for. Usually another story has been told twice in their place.`,
         blocking: true,
       });
     }

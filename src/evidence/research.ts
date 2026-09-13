@@ -123,6 +123,38 @@ Be honest in likelyContested. It drives a search for evidence AGAINST the
 episode's reading, and an empty list means that search does not happen.`;
 
 /**
+ * Which story each beat of a source script is supposed to tell.
+ *
+ * THE LINK THAT WAS MISSING, and its absence cost a whole run. `repeats: 10`
+ * expands into ten beats with the same id shape, the same type and the SAME
+ * FUNCTION TEXT - "One complete story: what it was, who it happened to..." -
+ * because that is what the beat sheet says once and the loader copies ten
+ * times. Every stage downstream therefore saw ten indistinguishable jobs.
+ *
+ * The brief had already done the hard part. It chose ten specific stories and
+ * listed them: Ganesha's head, the churning of the ocean, Sudarshana, Nandi,
+ * Ganga's descent, Bhasmasura, Daksha's sacrifice, Narasimha, Kamadhenu,
+ * Garuda. Nothing downstream was ever told. The extractor took whatever the
+ * corpus held most of, which meant Nandi twice and Garuda twice - and
+ * Narasimha and Kamadhenu, chosen by the brief and searched for, never appeared
+ * at all. The silent dropping is the worse half: a set can lose three of the
+ * stories it paid to research and still look complete.
+ *
+ * Pairing them by position is the whole fix, and it is safe because both lists
+ * come from the same format: the brief is told how many stories to choose, and
+ * mustEstablish is documented as one line per story.
+ *
+ * Undefined for a format that is not an anthology, and for any beat the brief
+ * did not name - a short list is a thin brief rather than a reason to stop, and
+ * the starvation check reports what actually went missing.
+ */
+export const storyForBeat = (
+  brief: Brief,
+  format: EpisodeFormat,
+  beatIndex: number
+): string | undefined => (format.sourceOnly ? brief.mustEstablish[beatIndex] : undefined);
+
+/**
  * The brief for a SOURCE format, where the job is the opposite of the usual one.
  *
  * EVERY OTHER FORMAT NARROWS. "The specific thing this episode is about,
@@ -564,11 +596,16 @@ export const extractClaims = async (
     );
 
     const beats = chunk
-      .map(
-        (b) =>
+      .map((b) => {
+        // THE STORY THIS BEAT IS FOR, where there is one. Without it every beat
+        // of an anthology reads as the same job, and the extractor answers them
+        // all with whatever the corpus holds most of.
+        const subject = storyForBeat(brief, format, format.beats.indexOf(b));
+        return (
           `- ${b.id} (${b.type}, needs >= ${b.minClaims} claims, and up to ` +
-          `${claimCeiling(b)}): ${b.function}`
-      )
+          `${claimCeiling(b)}): ${subject ? `THIS BEAT TELLS: ${subject}` : b.function}`
+        );
+      })
       .join('\n');
 
     const raw = await completeJson<unknown>(
@@ -581,7 +618,11 @@ export const extractClaims = async (
           prompt: [
             `ANGLE: ${brief.angle}`,
             `MUST ESTABLISH:\n${brief.mustEstablish.map((m) => `- ${m}`).join('\n')}`,
-            `Extract claims for THESE BEATS ONLY. Ignore every other beat of the episode.`,
+            format.sourceOnly
+              ? `Extract claims for THESE BEATS ONLY. Each one is a SEPARATE story, and ` +
+                `its claims must be about THAT story - not about the subject in general, ` +
+                `and never about a story another beat is telling.`
+              : `Extract claims for THESE BEATS ONLY. Ignore every other beat of the episode.`,
             `BEATS:\n${beats}`,
           ].join('\n\n'),
           temperature: 0.2,

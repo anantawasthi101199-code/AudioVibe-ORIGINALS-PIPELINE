@@ -121,14 +121,23 @@ the sentence that carried the fact - the fact is the reason the episode exists.
 Fix the sentence.`;
 
 /** The beat sheet as the writer sees it: every beat, its job and its budget. */
-const renderBeats = (format: EpisodeFormat, claims: Claim[]): string =>
+const renderBeats = (
+  format: EpisodeFormat,
+  claims: Claim[],
+  subjects?: Array<string | undefined>
+): string =>
   format.beats
-    .map((beat) => {
+    .map((beat, i) => {
       const { min, max } = wordsForBeat(beat);
       const mine = claims.filter((c) => c.beatId === beat.id);
       return [
         `--- ${beat.id} (${beat.type}) ---`,
-        `MUST: ${beat.function.trim()}`,
+        // THE STORY THIS BEAT IS FOR, where there is one. Ten beats expanded
+        // from one definition share a function, so this is the only thing
+        // telling the writer which of the ten it is looking at.
+        subjects?.[i]
+          ? `THIS BEAT TELLS: ${subjects[i]}`
+          : `MUST: ${beat.function.trim()}`,
         beat.constraints.length
           ? `CONSTRAINTS:\n${beat.constraints.map((c) => `- ${c.trim()}`).join('\n')}`
           : '',
@@ -149,6 +158,7 @@ const buildOnePassPrompt = (input: {
   claims: Claim[];
   angle: string;
   plan?: StoryPlan;
+  subjects?: Array<string | undefined>;
 }): string =>
   [
     `EPISODE ANGLE: ${input.angle}`,
@@ -160,7 +170,7 @@ const buildOnePassPrompt = (input: {
     '',
     `THE BEATS, in order:`,
     '',
-    renderBeats(input.format, input.claims),
+    renderBeats(input.format, input.claims, input.subjects),
     '',
     // SAID ONCE MORE AT THE END, because the beat listing above is long and the
     // facts are the last thing read before writing starts. A claim assigned to
@@ -189,6 +199,8 @@ export const writeScriptOnePass = async (
     claims: Claim[];
     angle: string;
     isoDate: string;
+    /** Which story each beat tells, by position. Anthologies only. */
+    subjects?: Array<string | undefined>;
   },
   writer: LlmClient,
   onCost?: (pence: number) => void,
@@ -243,6 +255,7 @@ export const writeScriptOnePass = async (
     claims: input.claims,
     angle: input.angle,
     plan,
+    subjects: input.subjects,
   });
 
   // Room for every beat at its maximum, plus half again. A script that runs out

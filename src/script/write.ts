@@ -278,6 +278,14 @@ export interface BeatContext {
   angle: string;
   isoDate: string;
   /**
+   * Which story this beat tells, for an anthology only.
+   *
+   * Ten beats expanded from one definition share a function, so without this a
+   * writer handed claims for beat four has nothing saying it is the Nandi one.
+   * See storyForBeat.
+   */
+  subject?: string;
+  /**
    * What this beat must leave unanswered, and what it must answer.
    *
    * Handed over as an instruction rather than left to inference. "Do not answer
@@ -327,6 +335,7 @@ export const buildPrompt = (ctx: BeatContext): string => {
   return [
     `EPISODE ANGLE: ${ctx.angle}`,
     `BEAT: ${ctx.beat.id} (${ctx.beat.type})`,
+    ctx.subject ? `THIS BEAT TELLS: ${ctx.subject}` : '',
     `THIS BEAT MUST: ${ctx.beat.function}`,
     ctx.beat.constraints.length
       ? `CONSTRAINTS:\n${ctx.beat.constraints.map((c) => `- ${c}`).join('\n')}`
@@ -750,6 +759,8 @@ export const writeScript = async (
     claims: Claim[];
     angle: string;
     isoDate: string;
+    /** Which story each beat tells, by position. Anthologies only. */
+    subjects?: Array<string | undefined>;
   },
   writer: LlmClient,
   onCost?: (pence: number) => void,
@@ -859,6 +870,7 @@ export const writeScript = async (
         persona: input.persona,
         format: input.format,
         beat,
+        subject: input.subjects?.[index],
         claims: input.claims.filter((c) => c.beatId === beat.id),
         previousTail,
         storySoFar: storySoFar(),
