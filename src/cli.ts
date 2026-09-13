@@ -66,7 +66,7 @@ import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
 import { renderResultSchema } from './render/assemble';
-import { claimSetSchema, corpusSchema } from './evidence/research';
+import { claimCeiling, claimSetSchema, corpusSchema } from './evidence/research';
 import { AudioVibeClient } from './publish/ingest';
 import { buildFictionProvenance, buildProvenance } from './publish/provenance';
 
@@ -426,7 +426,20 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
   // accuracy this is for.
   const beats = format.beats.length;
   const claimFloor = format.beats.reduce((n, b) => n + b.minClaims, 0);
-  const estimatedClaims = Math.max(claimFloor, beats * 3);
+
+  // BETWEEN THE FLOOR AND THE CEILING, because that is where extraction
+  // actually lands and both ends of the range are wrong to quote.
+  //
+  // This used to be `max(floor, beats * 3)`, which was fine while the ceiling
+  // was the floor plus two: the two numbers were never far apart. They are now.
+  // A format can be floored at 36 claims and permitted 94, and verification is
+  // one call per claim - the second largest line on this table - so quoting the
+  // floor under-quotes the run by a third.
+  //
+  // The midpoint is a guess, and it is the softest number here along with the
+  // escalation fraction. It is honest about being one.
+  const claimCeilingTotal = format.beats.reduce((n, b) => n + claimCeiling(b), 0);
+  const estimatedClaims = Math.max(claimFloor, Math.round((claimFloor + claimCeilingTotal) / 2));
 
   const write = (model: string, calls: number, inTok: number, outTok: number) =>
     calls * costPenceFor(model, inTok, outTok);

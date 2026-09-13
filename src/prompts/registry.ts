@@ -30,6 +30,7 @@ import { GAP_SYSTEM } from '../evidence/gaps';
 import { SYSTEM as COMPARE_SYSTEM } from '../qa/compare';
 import { CHECK_SYSTEM, EXTRACT_SYSTEM as FICTION_EXTRACT_SYSTEM } from '../fiction/continuity';
 import { CHOOSE_SYSTEM, GENERATE_SYSTEM } from '../script/hooks';
+import { ONE_PASS_INSTRUCTION, REVISE_SCRIPT } from '../script/onePass';
 import { PLAN_SYSTEM } from '../script/plan';
 import { SELECT_SYSTEM } from '../script/shorts';
 import { REVISE_INSTRUCTION, TITLE_SYSTEM, buildPrompt, buildSystem } from '../script/write';
@@ -182,6 +183,26 @@ export const promptRegistry = (input: {
         'Appended to the beat prompt when a draft fails its deterministic checks, ' +
         'together with the draft itself and the exact failures. Up to two attempts.',
       text: REVISE_INSTRUCTION,
+    },
+    {
+      id: 'writer-one-pass',
+      stage: 'script',
+      source: 'src/script/onePass.ts (ONE_PASS_INSTRUCTION)',
+      note:
+        'Used INSTEAD of the per-beat prompt when a run is made with --one-pass. The ' +
+        'whole beat sheet and every fact follow it in one prompt, so the writer can see ' +
+        'the closing beat while writing the opening. The system prompt above is ' +
+        'unchanged either way.',
+      text: ONE_PASS_INSTRUCTION,
+    },
+    {
+      id: 'writer-one-pass-revise',
+      stage: 'script',
+      source: 'src/script/onePass.ts',
+      note:
+        'Appended when a one-pass draft fails, with the draft and the failures named ' +
+        'per beat. One attempt, against two per beat on the other method.',
+      text: REVISE_SCRIPT,
     },
     {
       id: 'title',

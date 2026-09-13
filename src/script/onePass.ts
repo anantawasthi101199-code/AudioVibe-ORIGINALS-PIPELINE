@@ -110,7 +110,7 @@ One entry per beat, in the order given, using exactly the beat ids given. Every
 claim you actually state goes in that beat's claimIds, or nothing can trace the
 sentence back to a source.`;
 
-const REVISE_SCRIPT = `Your draft failed specific checks. Rewrite the WHOLE script,
+export const REVISE_SCRIPT = `Your draft failed specific checks. Rewrite the WHOLE script,
 keeping everything that was not named as a problem exactly as it is, and fixing
 what was.
 
