@@ -8,8 +8,17 @@
  * anything to do with an invented scene. There is no document that entails a
  * conversation nobody had.
  *
- *   Factual episode  ~ £3.40   (research and verification dominate)
- *   Fiction episode  ~ £0.90   (write, check continuity, render)
+ *   Factual episode   ~80p   MEASURED over six runs, 81p to 93p on a clean
+ *                             one. Research and verification are 43p of it.
+ *   Fiction episode   ~40p   ESTIMATED, because this lane has never been run.
+ *                             It is the factual figure minus the four stages
+ *                             below, plus one continuity call.
+ *
+ * Both were written here as £3.40 and £0.90 when the lane was built, and both
+ * were badly out of date within a fortnight - claim extraction was chunked, the
+ * screener arrived, and the factual lane came down by three quarters. Numbers
+ * in a comment rot; `make --dry-run` computes them from the live price table
+ * and the actual beat count, and is the thing to trust.
  *
  * That makes fiction the cheapest full-length content the studio can make, and
  * it is worth being clear that cheapness is not the argument for it. The
