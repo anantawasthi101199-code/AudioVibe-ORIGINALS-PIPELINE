@@ -203,7 +203,13 @@ export const cutStories = async (
 
     const gate = runGate({
       persona,
-      format,
+      // THE STORY'S OWN LENGTH, NOT THE SET'S. The format targets 900 to 1800
+      // seconds because that is ten stories; one of them is a couple of
+      // minutes, so gating a cut short against the set's total reported every
+      // single one as running at a tenth of its guide. Advisory, so it never
+      // blocked anything - it just made the one length signal in the report
+      // meaningless, which is how a check stops being read.
+      format: { ...format, targetSeconds: format.beats[i]?.seconds ?? format.targetSeconds },
       script: oneStory,
       claims: used,
       ledger: checkLedger(used, sources),

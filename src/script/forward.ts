@@ -53,6 +53,7 @@
  * count is the only thing that comes back and says whether the instruction
  * worked.
  */
+import { vocabularyOverlap } from './style';
 
 export interface ForwardProblem {
   code: string;
@@ -452,6 +453,59 @@ export const checkRepetition = (
  * Phrased as what TO DO wherever possible. "Do not be forced" produces a
  * model's idea of unforced, which is flat.
  */
+/**
+ * How much two stories in one set may share before they are one story.
+ *
+ * MEASURED ON THE PAIRS THAT CAUSED THIS. A ten-story set on Puranic myth came
+ * back with Nandi's birth told twice and Garuda's theft of the nectar told
+ * twice - same sage, same boon, same egg, same ransom, different words. Their
+ * distinctive-vocabulary overlap was 60.6% and 41.7%. The highest genuinely
+ * different pair in the same set was 26.3%, so 0.35 sits in a wide gap rather
+ * than on a guess.
+ *
+ * THE SAME SUBJECT IS FINE AND THE SAME STORY IS NOT, which is the distinction
+ * this number has to carry. Two different stories about Nandi are two stories;
+ * two tellings of how Nandi came to be are one, and the second is a short
+ * somebody has already heard.
+ */
+export const MAX_STORY_OVERLAP = 0.35;
+
+/**
+ * Two stories in one set that are the same story.
+ *
+ * ONLY FOR A SOURCE SCRIPT, where the beats are ten separate pieces rather than
+ * one continuous thing. In an ordinary episode a later beat SHOULD share
+ * vocabulary with an earlier one - it is the same story - and checkRepetition
+ * already handles the case where it repeats a phrase outright.
+ */
+export const checkDistinctStories = (
+  stories: Array<{ id: string; text: string }>
+): ForwardProblem[] => {
+  const problems: ForwardProblem[] = [];
+
+  for (let i = 0; i < stories.length; i++) {
+    for (let j = i + 1; j < stories.length; j++) {
+      const a = stories[i]!;
+      const b = stories[j]!;
+      const shared = vocabularyOverlap(a.text, b.text);
+      if (shared < MAX_STORY_OVERLAP) continue;
+
+      problems.push({
+        code: 'forward:sameStory',
+        detail:
+          `"${a.id}" and "${b.id}" are the same story told twice, sharing ` +
+          `${Math.round(shared * 100)}% of their distinctive words. Each of these is ` +
+          `heard on its own, so the second one is a short somebody has already ` +
+          `heard. Replace it with a DIFFERENT story - the same figure is fine, the ` +
+          `same events are not.`,
+        blocking: true,
+      });
+    }
+  }
+
+  return problems;
+};
+
 export const FORWARD_GUIDANCE = [
   'ALWAYS FORWARD. Never step back to correct an impression the listener never had. In particular: never "Not X. Y." or "This was not X, it was Y." Nobody thought X. Say what was true and let it be surprising on its own.',
   'NEVER PAIR A FACT WITH WHAT IT IS NOT. No "real claims, not folklore". No "a scanner rather than a microscope". No "instead of". No "as opposed to". Say the fact and stop: "real claims", "a scanner". The listener cannot look back at the first half, so the denied half arrives as news, gets held, and is then thrown away - which is work you charged them for nothing.',

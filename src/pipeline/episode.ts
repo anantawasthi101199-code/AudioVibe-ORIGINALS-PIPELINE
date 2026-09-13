@@ -55,9 +55,17 @@ import { fillGaps, findGaps } from '../evidence/gaps';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
+import { checkDistinctStories } from '../script/forward';
 import { measure } from '../script/style';
 import { writeScriptOnePass } from '../script/onePass';
-import { Script, fullText, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
+import {
+  Script,
+  beatText,
+  fullText,
+  scriptProgressSchema,
+  scriptSchema,
+  writeScript,
+} from '../script/write';
 import { runGate, GateFinding, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 
@@ -549,19 +557,31 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // A source script has no audio, so nothing here can speak to duration or
     // render quality. What it CAN report is the prose, which is measured the
     // same way every other run measures it.
-    const sourceFindings: GateFinding[] = starved.length
-      ? [
-          {
-            check: 'sourceCoverage',
-            detail:
-              `${starved.length} of ${stories} stories cite no evidence: ` +
-              `${starved.join(', ')}. Cutting these would publish shorts with an ` +
-              `empty Sources sheet. Usually the corpus did not cover them - check ` +
-              `whether the research actually found anything for each story.`,
-            blocking: true,
-          },
-        ]
-      : [];
+    const sourceFindings: GateFinding[] = [];
+
+    if (starved.length) {
+      sourceFindings.push({
+        check: 'sourceCoverage',
+        detail:
+          `${starved.length} of ${stories} stories cite no evidence: ` +
+          `${starved.join(', ')}. Cutting these would publish shorts with an ` +
+          `empty Sources sheet. Usually the corpus did not cover them - check ` +
+          `whether the research actually found anything for each story.`,
+        blocking: true,
+      });
+    }
+
+    // The writer gets one rewrite to fix this and may not manage it, so it is
+    // reported here too. Cutting anyway publishes two shorts that are one.
+    for (const duplicate of checkDistinctStories(
+      script.beats.map((b) => ({ id: b.beatId, text: beatText(b) }))
+    )) {
+      sourceFindings.push({
+        check: 'sameStory',
+        detail: duplicate.detail,
+        blocking: duplicate.blocking,
+      });
+    }
 
     return {
       run,

@@ -36,10 +36,15 @@ intent: >
   written to be cut apart - each one a complete short with its own opening,
   middle and landing.
 
-# Ten at 90 to 180 seconds, plus the brief that sets up the research. The range
-# is wide on purpose: a story that needs 95 seconds should take 95, and padding
-# it to match its neighbours is the thing that makes a feed of shorts feel
-# manufactured.
+# NO FLOOR AT ALL, on any of them. The range was 90 to 180 and the 90 was doing
+# real harm: a story whose material runs out at sixty seconds was being written
+# to ninety, and the only way to add thirty seconds to a finished story is to
+# say something twice. A short that pads is more obviously manufactured than a
+# short that is simply short.
+#
+# The ceiling stays, because past three minutes it is not a short.
+#
+# This total is never rendered, so it is arithmetic rather than a target.
 targetSeconds: [900, 1800]
 
 serialised: false
@@ -57,7 +62,7 @@ beats:
   - id: story
     type: payoff
     repeats: 10
-    seconds: [90, 180]
+    seconds: [30, 180]
     function: >
       One complete story: what it was, who it happened to, what happened, and
       what it turned out to mean.
@@ -88,9 +93,16 @@ beats:
         No sign-off, no call to action, no naming the show, and nothing about
         what it says about us.
       - >
-        Vary the length honestly. A story that needs ninety-five seconds takes
-        ninety-five; padding it to match its neighbours is what makes a feed of
-        these feel manufactured.
+        THERE IS NO MINIMUM LENGTH. A story that is fully told in forty seconds
+        is forty seconds long. Reaching for a floor means saying something
+        already said, or describing something already described, and both are
+        audible - a short that pads is more obviously manufactured than a short
+        that is simply brief.
+      - >
+        ONE STORY, ONCE. Another story about the same god, the same king or the
+        same object is welcome; the same EVENTS a second time is not. Each of
+        these is heard alone, so a second telling is a short somebody has
+        already heard, and a feed of them is where that gets noticed.
     minClaims: 4
 
 # One entry, expanded to ten alongside the beat it belongs to. Flat, and that is

@@ -39,6 +39,7 @@ import { Claim } from '../evidence/claim';
 import { EpisodeFormat } from '../formats/schema';
 import { LlmClient, completeJson } from '../models/client';
 import { turnSchema } from './dialogue';
+import { checkDistinctStories } from './forward';
 import { StoryPlan, planStory } from './plan';
 import {
   Script,
@@ -373,6 +374,17 @@ const describeFailures = (
   input: { persona: Persona; format: EpisodeFormat; claims: Claim[] }
 ): string => {
   const problems: string[] = [];
+
+  // TEN STORIES THAT ARE EIGHT STORIES. Only a source script can fail this way,
+  // and it is caught here rather than at the gate because the fix is a rewrite
+  // and by the gate the audio has been made.
+  if (input.format.sourceOnly) {
+    for (const p of checkDistinctStories(
+      beats.map((b) => ({ id: b.beatId, text: beatText(b) }))
+    )) {
+      problems.push(`- ${p.detail}`);
+    }
+  }
 
   beats.forEach((written, i) => {
     const beat = input.format.beats[i];

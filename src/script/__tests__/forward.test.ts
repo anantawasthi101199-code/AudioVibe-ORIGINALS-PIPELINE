@@ -8,7 +8,7 @@
  * a model actually produces it has a particular shape, and these are that
  * shape.
  */
-import { checkForward, checkRepetition } from '../forward';
+import { checkDistinctStories, checkForward, checkRepetition } from '../forward';
 
 const codes = (text: string, isOrientation = false) =>
   checkForward(text, { isOrientation }).map((p) => p.code);
@@ -133,6 +133,79 @@ describe('checkForward - pairing a fact with what it is not', () => {
     ).find((p) => p.code === 'forward:contrastiveDefinition');
 
     expect(problem!.detail).toMatch(/^3 sentence/);
+  });
+});
+
+/**
+ * Ten stories that turn out to be eight.
+ *
+ * A set on Puranic myth came back with Nandi's birth told twice and Garuda's
+ * theft of the nectar told twice: same sage, same boon, same egg, same ransom,
+ * different words. Each of these becomes its own short and is heard alone, so
+ * the second telling is a short somebody has already heard.
+ */
+describe('checkDistinctStories', () => {
+  const NANDI_A =
+    'This is how Shiva got Nandi, the bull who stands at his door. The Shiva Purana ' +
+    'traces him to a sage named Shilada, who wanted a child of a particular kind and ' +
+    'undertook a long and severe penance asking for a son who would be immortal and ' +
+    'carry Shiva own blessing. The boon was granted and the son who resulted was Nandi.';
+  const NANDI_B =
+    'This is the story of Nandi, the bull who guards Shiva door and carries him as his ' +
+    'mount, and of the exact wording of the request that brought him into being. A sage ' +
+    'named Shilada performs a long penance in search of a son, and the boon he asks for ' +
+    'is precise, a child who will never die, marked from birth with Shiva own favour.';
+  const GANGA =
+    'The river Ganga came down from the sky to the earth, and the descent is told across ' +
+    'several texts. A king spent his life asking for it, and the weight of the falling ' +
+    'water would have split the ground, so it was caught and slowed in a god matted hair ' +
+    'before it was allowed to reach the plain at all.';
+
+  it('catches the same story told twice', () => {
+    const problems = checkDistinctStories([
+      { id: 'story_04', text: NANDI_A },
+      { id: 'story_08', text: NANDI_B },
+    ]);
+
+    expect(problems).toHaveLength(1);
+    expect(problems[0]!.blocking).toBe(true);
+    expect(problems[0]!.detail).toMatch(/story_04.*story_08/);
+    expect(problems[0]!.detail).toMatch(/same story told twice/);
+  });
+
+  it('leaves two genuinely different stories alone', () => {
+    expect(checkDistinctStories([
+      { id: 'story_04', text: NANDI_A },
+      { id: 'story_05', text: GANGA },
+    ])).toEqual([]);
+  });
+
+  /**
+   * THE DISTINCTION THE THRESHOLD HAS TO CARRY, in the listener's own words:
+   * "the same topic is not a problem, it shouldn't be the same story."
+   */
+  it('allows a second story about the same figure', () => {
+    const nandiElsewhere =
+      'Nandi does not only carry Shiva. He sits at every temple gate facing inward, and ' +
+      'a worshipper whispers a request between his horns rather than saying it aloud at ' +
+      'the shrine, which is a practice the texts never explain and which every visitor ' +
+      'to a Shiva temple in south India is shown how to do within a minute of arriving.';
+
+    expect(checkDistinctStories([
+      { id: 'story_04', text: NANDI_A },
+      { id: 'story_09', text: nandiElsewhere },
+    ])).toEqual([]);
+  });
+
+  it('checks every pair, not just neighbours', () => {
+    const problems = checkDistinctStories([
+      { id: 'story_01', text: NANDI_A },
+      { id: 'story_02', text: GANGA },
+      { id: 'story_03', text: NANDI_B },
+    ]);
+
+    expect(problems).toHaveLength(1);
+    expect(problems[0]!.detail).toMatch(/story_01.*story_03/);
   });
 });
 
