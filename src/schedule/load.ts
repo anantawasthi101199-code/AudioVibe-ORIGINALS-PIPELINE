@@ -59,6 +59,20 @@ export const topicQueueSchema = z.object({
    * anything more structured is the brief, and the brief is generated.
    */
   topics: z.array(z.string().min(1)).default([]),
+
+  /**
+   * Subjects for a SET of shorts, rather than for one episode.
+   *
+   * A SEPARATE QUEUE BECAUSE THEY ARE A DIFFERENT KIND OF THING, and mixing
+   * them would break both. An episode topic names one story told properly -
+   * "Inanna's descent through the seven gates". A set topic names a body of
+   * material to pick ten separate stories out of - "Norse mythology beyond
+   * Ragnarok". Feed the second to an episode format and it produces a survey;
+   * feed the first to an anthology and it produces ten versions of one story.
+   *
+   * Consumed from the top, exactly like `topics`.
+   */
+  sets: z.array(z.string().min(1)).default([]),
 });
 
 export type TopicQueue = z.infer<typeof topicQueueSchema>;
@@ -68,7 +82,7 @@ const queuePath = (personaId: string, dir?: string): string =>
 
 export const loadTopics = (personaId: string, dir?: string): TopicQueue => {
   const file = queuePath(personaId, dir);
-  if (!fs.existsSync(file)) return { topics: [] };
+  if (!fs.existsSync(file)) return { topics: [], sets: [] };
 
   try {
     return topicQueueSchema.parse(YAML.parse(fs.readFileSync(file, 'utf8')) ?? {});
@@ -86,22 +100,40 @@ export const loadTopics = (personaId: string, dir?: string): TopicQueue => {
  * that topic - which is recoverable by putting it back, and is visible in the
  * diff of this file rather than invisible in a loop.
  */
-export const takeTopic = (personaId: string, dir?: string): string | null => {
-  const file = queuePath(personaId, dir);
+export const takeTopic = (
+  personaId: string,
+  dir?: string,
+  /** Which queue to take from. A set topic is not an episode topic. */
+  kind: 'topics' | 'sets' = 'topics'
+): string | null => {
   const queue = loadTopics(personaId, dir);
-  const next = queue.topics[0];
+  const next = queue[kind][0];
   if (!next) return null;
 
-  const rest = queue.topics.slice(1);
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, YAML.stringify({ topics: rest }), 'utf8');
+  // BOTH QUEUES ARE WRITTEN BACK. This used to write `{ topics: rest }`, which
+  // was correct while there was one queue and would have silently deleted the
+  // other the first time a show had both.
+  writeQueue(personaId, { ...queue, [kind]: queue[kind].slice(1) }, dir);
   return next;
 };
 
 /** Put a topic back on the front, for a run that failed before it started. */
-export const returnTopic = (personaId: string, topic: string, dir?: string): void => {
-  const file = queuePath(personaId, dir);
+export const returnTopic = (
+  personaId: string,
+  topic: string,
+  dir?: string,
+  kind: 'topics' | 'sets' = 'topics'
+): void => {
   const queue = loadTopics(personaId, dir);
+  writeQueue(personaId, { ...queue, [kind]: [topic, ...queue[kind]] }, dir);
+};
+
+const writeQueue = (personaId: string, queue: TopicQueue, dir?: string): void => {
+  const file = queuePath(personaId, dir);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, YAML.stringify({ topics: [topic, ...queue.topics] }), 'utf8');
+  // Empty queues are omitted rather than written as `sets: []`, so a show that
+  // never makes sets keeps a file that says only what is true of it.
+  const body: Record<string, string[]> = { topics: queue.topics };
+  if (queue.sets.length) body.sets = queue.sets;
+  fs.writeFileSync(file, YAML.stringify(body), 'utf8');
 };

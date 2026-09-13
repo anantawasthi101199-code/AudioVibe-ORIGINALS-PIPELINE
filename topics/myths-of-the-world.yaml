@@ -103,3 +103,79 @@ topics:
   - The epic of Pabuji, from Rajasthan - a story that is not read but sung
     across a painted cloth by lamplight over a whole night, and what happens to
     a story when the scroll is the book
+
+# ---------------------------------------------------------------------------
+# SETS. Subjects for `ten-stories`, which is a different kind of thing entirely.
+#
+# An entry in `topics:` above names ONE story, told properly for fifteen
+# minutes. An entry here names a BODY OF MATERIAL to pick ten separate stories
+# out of, each of which becomes its own ninety-second short with its own run,
+# its own ledger and its own gate.
+#
+# WHAT MAKES A GOOD SET, and it is almost the opposite of what makes a good
+# episode above:
+#
+#   1. TEN STORIES HAVE TO EXIST IN IT, and be genuinely different from each
+#      other. A tradition, a pantheon, a collection, a category. Not a theme
+#      that forces ten angles on one thing - "ten cultures looking at the same
+#      night sky" sounds good and produces ten versions of one idea.
+#   2. EACH HAS TO STAND ALONE. Somebody meets one of these in a feed having
+#      heard none of the others, so a set built on a single continuous saga is
+#      the wrong shape however good the saga is.
+#   3. TEXTS FOR ALL TEN, not for the famous three. This is where a set fails
+#      in practice: a tradition everybody has heard of whose minor stories were
+#      never translated leaves seven beats with nothing to bind to.
+#   4. THE FAMOUS ONES CAN BE IN IT. A set that avoids them on principle is a
+#      set of things nobody has a reason to care about. The rule is range, not
+#      obscurity.
+#
+# Each of these is one `make --format ten-stories` run of about £1.20, then
+# `shorts` cuts it into ten runs at about 4p each.
+sets:
+  # The obvious first one, and the trap is that the Prose Edda's famous chapters
+  # crowd out everything else. The brief is told to range, which here means
+  # Idunn's apples and Hymir's cauldron alongside Ragnarok.
+  - Norse mythology past the three stories everybody knows - the thefts, the
+    bargains, the disguises and the arguments between gods that the Prose Edda
+    and the Poetic Edda spend most of their pages on
+
+  # Enormous and almost entirely untranslated in popular form, so the range is
+  # real. Ganesha's head and Shiva's dance are the famous ones; the rest are
+  # not, and they are stranger.
+  - Hindu mythology beyond the two epics - the stories in the Puranas about how
+    gods got their bodies, their vehicles, their curses and the objects they
+    carry
+
+  # Budge and Faulkner are both online. Death, judgement, magic and a great deal
+  # of administration, which is the part nobody expects.
+  - Ancient Egyptian myth as the Egyptians actually wrote it down - the
+    coffin texts, the Book of the Dead and the stories of gods arguing over
+    inheritance in what reads like a court transcript
+
+  # The Kojiki and the Nihon Shoki, both translated. Creation, exile, sun gods
+  # hiding in caves, and a striking amount of negotiation.
+  - Japanese myth from the Kojiki and the Nihon Shoki - the oldest written
+    stories in Japan, including how the islands were made and why the sun once
+    had to be tricked out of a cave
+
+  # Popol Vuh plus the Yucatec and Aztec material. Ximenez's manuscript is
+  # online and the provenance is genuinely strange.
+  - Mesoamerican myth from the Popol Vuh and what survived the burnings - the
+    ball games, the twin brothers, the four attempts at making people and what
+    went wrong with each
+
+  # Not a pantheon but a category, which makes standing alone easy.
+  - Ten monsters people genuinely believed were real, and the animal, illness or
+    misread document underneath each one
+
+  # The Irish cycles, translated in full by Lady Gregory and others. Cattle
+  # raids, geasa, and a hero literature with unusually specific rules.
+  - Irish myth from the four cycles - the cattle raid, the taboos that kill the
+    people bound by them, and the invasions that each explain a different part
+    of the landscape
+
+  # Every tradition has one and they disagree completely about what the dead
+  # owe, which gives each short its own shape.
+  - Ten gods of the dead from ten traditions - what each one actually wanted
+    from the living, and what the texts say happens to somebody who does not
+    provide it

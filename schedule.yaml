@@ -47,3 +47,31 @@ shows:
     # sense out of order, and both are worse than not making one.
     shortsPerEpisode: 0
     autoPublish: false
+
+  # Weekly. One myth told properly is the show; the anthology sets are a
+  # separate thing and are not on a clock yet, because ten shorts arriving at
+  # once is a publishing decision rather than a cadence.
+  myths-of-the-world:
+    everyDays: 7
+    # None from an episode. This show's short form comes from `ten-stories`
+    # instead, which writes shorts that were built to stand alone rather than
+    # cutting a minute out of a told story and hoping it survives.
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  # Weekly. The evidence work here is the slowest of any show - a health claim
+  # has to clear T2 sourcing before it can be said at all - and there is no
+  # version of this that is twice as fast without being worse.
+  honest-health:
+    everyDays: 7
+    shortsPerEpisode: 1
+    autoPublish: false
+
+  # NOT SCHEDULED, AND THAT IS THE DECISION RATHER THAN AN OMISSION. Read The
+  # File reads one document in the news, so what it makes depends on what was
+  # published that week, and a queue written a fortnight ahead is a queue of
+  # stories that have moved on. It is run by hand when there is a document
+  # worth reading, which is what `topics/read-the-file.yaml` is for.
+  #
+  # A show absent from this file never comes up as due, so leaving it out is
+  # the off switch rather than a gap.
