@@ -8,6 +8,7 @@ code, the code is right and the document is a bug.
 
 | Document | What it is for |
 |---|---|
+| [COMMANDS.md](COMMANDS.md) | Every command, what it does, what it costs, what the gate findings mean, and every environment variable. The one to open first. |
 | [PIPELINES.md](PIPELINES.md) | The lanes that exist, the shows asked for, what each actually costs to build, and the build order. Read before starting any new kind of show. |
 | [DECISIONS.md](DECISIONS.md) | Load-bearing decisions and, more usefully, the ones that were reversed. Read before re-opening an argument. |
 
