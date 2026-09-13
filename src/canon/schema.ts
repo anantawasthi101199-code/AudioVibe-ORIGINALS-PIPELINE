@@ -234,6 +234,38 @@ export const personaSchema = z.object({
   allowedRiskTiers: z.array(z.enum(['general', 'health', 'finance', 'legal', 'named_person'])),
 
   /**
+   * The weakest source this show will rest a claim on.
+   *
+   * WHY A SHOW NEEDS ITS OWN FLOOR. Tiers are recorded on every claim already,
+   * and until now nothing could refuse one. That is right for most shows: a
+   * myth retelling cites a Victorian translation and a good blog post about a
+   * manuscript, and neither is a problem.
+   *
+   * It is wrong for a health show, and the failure is specific and invisible. A
+   * claim sourced to a news write-up of a press release about a preprint passes
+   * every check there is - the quote occurs, the verifier agrees the quote
+   * supports the claim, the tier is recorded - and is still not evidence about
+   * the world. The only thing that catches it is a show being able to say "a T3
+   * source is not good enough for me".
+   *
+   * Absent means the network floor, which is that any tier may be used and a T4
+   * beat asks for human review.
+   */
+  minSourceTier: z.enum(['T1', 'T2', 'T3', 'T4']).optional(),
+
+  /**
+   * How old a source may be, in days.
+   *
+   * For anything that reports on a moving situation. Nothing in retrieval knows
+   * what "recent" means: a search returns what it returns, and a claim verified
+   * against a two-year-old article passes exactly as happily as one from this
+   * morning. A show about a live subject needs to be able to say how stale is
+   * too stale, and every other show needs this to stay absent - a 1732 army
+   * report is not out of date.
+   */
+  maxSourceAgeDays: z.number().positive().optional(),
+
+  /**
    * Whether this show is fiction.
    *
    * A PROPERTY OF THE SHOW, NEVER OF AN EPISODE. A show that reconstructs cases

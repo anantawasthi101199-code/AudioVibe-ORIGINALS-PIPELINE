@@ -5,7 +5,7 @@ import { VerificationReport } from '../../evidence/verify';
 import { Script } from '../../script/write';
 import { GateInput, MAX_VOCABULARY_OVERLAP, runGate, formatGateReport } from '../gate';
 
-const PERSONA = parsePersona(`
+const PERSONA_YAML = `
 id: t
 handle: t
 name: The Show
@@ -24,7 +24,11 @@ styleCard:
 formats: [f]
 episodeSeconds: [300, 400]
 allowedRiskTiers: [general]
-`);
+`;
+
+const PERSONA = parsePersona(PERSONA_YAML);
+
+
 
 const FORMAT = parseFormat(`
 id: f
@@ -391,5 +395,91 @@ describe('beat openers', () => {
     ).findings;
 
     expect(findings.find((f) => f.check === 'beatOpeners')).toBeDefined();
+  });
+});
+
+describe("a show's own evidence policy", () => {
+  /**
+   * Tiers have been recorded on every claim since the ledger existed, and until
+   * now nothing could refuse one. Right for most shows, wrong for a health
+   * show: a claim sourced to a news write-up of a press release about a
+   * preprint passes every other check and is still not evidence about the
+   * world.
+   */
+  const src = (id: string, over: Partial<Source> = {}): Source =>
+    ({
+      id,
+      url: `https://example.test/${id}`,
+      title: id,
+      retrievedAt: '2026-09-13T00:00:00.000Z',
+      contentHash: id,
+      tier: 'T1',
+      text: 'x'.repeat(500),
+      httpStatus: 200,
+      ...over,
+    }) as unknown as Source;
+
+  const strict = (over: Record<string, unknown>) =>
+    parsePersona(
+      PERSONA_YAML.replace('allowedRiskTiers:', `${Object.entries(over)
+        .map(([k, v]) => `${k}: ${typeof v === 'string' ? v : String(v)}`)
+        .join('\n')}\nallowedRiskTiers:`)
+    );
+
+  it('BLOCKS a source weaker than the show will rest on', () => {
+    const report = runGate(
+      input({
+        persona: strict({ minSourceTier: 'T2' }),
+        claims: [claim({ sourceId: 's1' })],
+        sources: [src('s1', { tier: 'T3' })],
+      })
+    );
+    expect(report.findings.some((f) => f.check === 'sourceTier' && f.blocking)).toBe(true);
+  });
+
+  it('accepts a source at or above the floor', () => {
+    const report = runGate(
+      input({
+        persona: strict({ minSourceTier: 'T2' }),
+        claims: [claim({ sourceId: 's1' })],
+        sources: [src('s1', { tier: 'T1' })],
+      })
+    );
+    expect(report.findings.some((f) => f.check === 'sourceTier')).toBe(false);
+  });
+
+  it('BLOCKS a source older than the show wants', () => {
+    const report = runGate(
+      input({
+        persona: strict({ maxSourceAgeDays: 30 }),
+        claims: [claim({ sourceId: 's1' })],
+        sources: [src('s1', { publishedAt: '2026-01-01T00:00:00.000Z' })],
+        now: new Date('2026-09-13T00:00:00.000Z'),
+      })
+    );
+    expect(report.findings.some((f) => f.check === 'sourceAge' && f.blocking)).toBe(true);
+  });
+
+  it('says nothing about age when the source does not declare one', () => {
+    // An undated document is not a stale one, and guessing would reject most
+    // primary records.
+    const report = runGate(
+      input({
+        persona: strict({ maxSourceAgeDays: 30 }),
+        claims: [claim({ sourceId: 's1' })],
+        sources: [src('s1')],
+        now: new Date('2026-09-13T00:00:00.000Z'),
+      })
+    );
+    expect(report.findings.some((f) => f.check === 'sourceAge')).toBe(false);
+  });
+
+  it('does nothing at all for a show with no policy', () => {
+    // A 1732 army report is not out of date, and a myth retelling citing a
+    // Victorian translation is not badly sourced.
+    const report = runGate(input({ claims: [claim({ sourceId: 's1' })], sources: [src('s1', { tier: 'T4' })] }));
+    expect(report.findings.some((f) => f.check === 'sourceTier' || f.check === 'sourceAge')).toBe(
+      false
+    );
   });
 });

@@ -13,6 +13,7 @@
  * over the script and the ledger. A model is never asked "is this good".
  */
 import { EpisodeFormat } from '../formats/schema';
+import { Source, TIER_RANK } from '../evidence/source';
 import { checkPronouns } from './pronouns';
 import { MAX_UNVERIFIED_SHARE, unhedgedClaims } from '../evidence/repair';
 import { Persona } from '../canon/schema';
@@ -90,6 +91,15 @@ export interface GateInput {
    * mean the pronouns are right.
    */
   corpusText?: string;
+  /**
+   * The sources behind the claims, for a show with its own evidence policy.
+   *
+   * Optional because most shows have none, and requiring it would make every
+   * caller carry the corpus for a check that usually does nothing.
+   */
+  sources?: Source[];
+  /** Injected so an age check is testable without waiting for time to pass. */
+  now?: Date;
   castNames?: string[];
   /**
    * Continuity, for a fiction show. Required when persona.fiction is set.
@@ -375,6 +385,55 @@ export const runGate = (input: GateInput): GateReport => {
         `Worth a look if the gap is large, but length follows the material.`,
       false
     );
+  }
+
+  // --- 6b. The show's own evidence policy. ---
+  //
+  // Tiers have been recorded on every claim since the ledger existed and until
+  // now nothing could refuse one. That is right for most shows and wrong for a
+  // health show, where a claim sourced to a news write-up of a press release
+  // about a preprint passes every other check and is still not evidence about
+  // the world.
+  //
+  // Both rules are opt-in per show, because a network-wide floor would either
+  // be too weak to help health or too strong for a myth retelling citing a
+  // Victorian translation.
+  if (!fiction && (input.persona.minSourceTier || input.persona.maxSourceAgeDays)) {
+    const sourceById = new Map((input.sources ?? []).map((src) => [src.id, src]));
+    const floor = input.persona.minSourceTier;
+    const maxAge = input.persona.maxSourceAgeDays;
+    const now = input.now ?? new Date();
+
+    const tooWeak = new Set<string>();
+    const tooOld = new Set<string>();
+
+    for (const c of input.claims) {
+      const source = sourceById.get(c.sourceId);
+      if (!source) continue;
+
+      if (floor && TIER_RANK[source.tier] > TIER_RANK[floor]) tooWeak.add(source.url);
+
+      // An UNDATED document is not a stale one. Most primary records carry no
+      // publication date at all, and guessing would reject exactly the sources
+      // this studio most wants.
+      if (maxAge && source.publishedAt) {
+        const published = Date.parse(source.publishedAt);
+        if (Number.isFinite(published)) {
+          const ageDays = (now.getTime() - published) / 86_400_000;
+          if (ageDays > maxAge) tooOld.add(source.url);
+        }
+      }
+    }
+
+    for (const url of tooWeak) {
+      add('sourceTier', `${input.persona.name} does not rest claims on sources this weak: ${url}`);
+    }
+    for (const url of tooOld) {
+      add(
+        'sourceAge',
+        `${input.persona.name} wants sources under ${maxAge} days old, and this one is older: ${url}`
+      );
+    }
   }
 
   // --- 7a. Claims the record does not settle. ---
