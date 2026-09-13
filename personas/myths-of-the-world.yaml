@@ -197,7 +197,19 @@ canon:
       Tell it from inside the world of the story. What the tellers believed,
       stated as what they believed, without stopping to rule on it.
 
-formats: [myth-told]
+# TWO FORMATS, AND THE ORDER MATTERS - the first is what `make` uses by default.
+#
+# myth-told is the show: one myth, in full, in order. ten-stories is a SOURCE
+# and never goes out whole - ten short myths from one research pass, cut
+# afterwards into ten standalone shorts.
+#
+# Why a story show gets an anthology at all: the long form needs a myth with
+# enough surviving text to carry fifteen minutes, and most of the world's myths
+# do not have that. A tradition with four surviving paragraphs is not a bad
+# episode, it is a good ninety seconds, and this is where those go.
+formats:
+  - myth-told
+  - ten-stories
 
 episodeSeconds: [840, 1140]
 

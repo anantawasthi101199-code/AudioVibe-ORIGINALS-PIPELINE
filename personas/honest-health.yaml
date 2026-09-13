@@ -196,7 +196,18 @@ canon:
       Numbers a person can picture. "About one in seven" rather than 14.3%, and
       a comparison to something ordinary wherever the scale is hard to hold.
 
-formats: [what-we-know]
+# TWO FORMATS, AND THE ORDER MATTERS - the first is what `make` uses by default.
+#
+# what-we-know is an episode. ten-stories is a SOURCE: ten self-contained
+# stories from one research pass, never rendered or published whole, cut
+# afterwards into ten shorts that each stand alone in a feed.
+#
+# The second exists entirely for cost. Research is roughly half of what an
+# episode costs, so ten standalone shorts pay for it ten times over the same
+# ground; one pass fanned out pays once.
+formats:
+  - what-we-know
+  - ten-stories
 
 episodeSeconds: [720, 960]
 

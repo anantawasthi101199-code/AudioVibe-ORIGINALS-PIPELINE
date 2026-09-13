@@ -230,13 +230,25 @@ describe('the shipped formats', () => {
     }
   );
 
-  it.each(shipped.map((f) => [f.id, f] as const))(
+  it.each(shipped.filter((f) => !f.sourceOnly).map((f) => [f.id, f] as const))(
     '%s does not open at its own peak tension',
     (_id, format) => {
       // Opening hot and staying hot is what most generated audio does, and it
       // reads as hype. The open should earn attention that later beats spend.
+      //
+      // SOURCE FORMATS ARE EXEMPT, because the rule's premise is one continuous
+      // listen. An anthology's beats are heard separately, on different days,
+      // in whatever order a feed offers them - so "the open" is not a position
+      // any of them occupies, and a flat curve is the honest description rather
+      // than a format that forgot to shape itself.
       const peak = Math.max(...format.tensionCurve);
       expect(format.tensionCurve[0]).toBeLessThan(peak);
     }
   );
+
+  it('has at least one source format, so the exemption above is not vacuous', () => {
+    // Without this, marking every format sourceOnly would make the rule pass by
+    // having nothing to run on.
+    expect(shipped.some((f) => f.sourceOnly)).toBe(true);
+  });
 });

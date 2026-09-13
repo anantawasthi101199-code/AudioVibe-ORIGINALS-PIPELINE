@@ -50,6 +50,7 @@ import { onProviderWait } from './models/client';
 import { OpenAiTts } from './render/openaiTts';
 import { runEpisode, PipelineDeps } from './pipeline/episode';
 import { runShort } from './pipeline/short';
+import { cutStories } from './pipeline/anthology';
 import { runFiction } from './pipeline/fiction';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
@@ -81,6 +82,9 @@ Commands
       ... --dry-run              What it would do and cost. Spends nothing.
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
+  shorts --run <id> [--only 1,4,7]
+                                 Cut every story out of a source script into its
+                                 own short. The source is never published.
   resume [--run <id>]            Continue a run (default: the most recent)
   status [--run <id>]            What a run has done and what it cost
   journal [--run <id>]           Minute by minute, and where the money went
@@ -475,7 +479,12 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
   const characters = Math.round((nominal / 60) * 150 * 5.5);
   const voicePence = engine === 'openai' ? (characters / 1_000_000) * 1200 : (characters / 1000) * 20;
 
-  stages.push(['render', voicePence, `~${characters.toLocaleString()} characters on ${engine}`]);
+  // A SOURCE FORMAT NEVER RENDERS, so quoting for one quotes for work the run
+  // will not do. The shorts cut from it pay for their own audio, under their own
+  // command and their own bill.
+  if (!format.sourceOnly) {
+    stages.push(['render', voicePence, `~${characters.toLocaleString()} characters on ${engine}`]);
+  }
 
   const total = stages.reduce((sum, [, pence]) => sum + pence, 0);
 
@@ -496,7 +505,19 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
   console.log(`Budget ceiling is ${episodeBudgetPence()}p. A run that would exceed it stops.`);
   console.log('These are estimates from call counts and list prices, not a quote.');
   console.log('');
-  console.log('It will STOP AT THE GATE and publish nothing. Run without --dry-run to make it.');
+  if (format.sourceOnly) {
+    const stories = format.beats.length;
+    console.log(
+      `This is a SOURCE format: it stops after the script, renders nothing, and is ` +
+        `never published whole.`
+    );
+    console.log(
+      `Cutting it into ${stories} shorts afterwards costs roughly ${stories * 4}p more - ` +
+        `a title and a render each.`
+    );
+  } else {
+    console.log('It will STOP AT THE GATE and publish nothing. Run without --dry-run to make it.');
+  }
   return 0;
 };
 
@@ -542,6 +563,49 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
  * that failed would launder a failure into a format that travels further than
  * the episode ever would.
  */
+/**
+ * Cut every story out of a source script into its own short.
+ *
+ * No gate check on the parent, unlike `short`. A source script is never gated
+ * as an episode - runEpisode stops before the render for one - so there is no
+ * pass to require. Each story is gated on its own instead, which is where the
+ * checks mean something: a flat list of ten unrelated stories fails duration
+ * and self-similarity by design, and each story judged alone does not.
+ */
+const cmdShorts = async (argv: string[]): Promise<number> => {
+  const source = openRun(argv);
+  const only = (arg(argv, 'only') ?? '')
+    .split(/[\s,]+/)
+    .map((n) => Number(n))
+    .filter((n) => Number.isInteger(n) && n > 0);
+
+  if (!source.hasArtifact('script')) {
+    console.error(`run ${source.id} has no script yet. Make it before cutting it up.`);
+    return 1;
+  }
+
+  const persona = loadPersona(source.manifest.personaId);
+  console.log(`cutting ${persona.name} ${source.id}`);
+  console.log('');
+
+  const results = await cutStories({ source, only }, buildDeps());
+
+  const passed = results.filter((r) => r.gate.passed);
+  console.log('');
+  console.log(`${passed.length} of ${results.length} passed the gate.`);
+  for (const r of results.filter((x) => !x.gate.passed)) {
+    console.log(`  story ${r.story} needs work: ${r.run.id}`);
+  }
+  console.log('');
+  console.log('Read one with:  npm run foundry -- script --run <id>');
+  console.log('Publish one with:  npm run foundry -- publish --run <id>');
+
+  // Non-zero only when NOTHING passed. One bad story out of ten is a story to
+  // fix, not a failed cut, and exiting non-zero would make a scheduler treat it
+  // as one.
+  return passed.length ? 0 : 2;
+};
+
 const cmdShort = async (argv: string[]): Promise<number> => {
   const parent = openRun(argv);
 
@@ -1339,6 +1403,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdMake(rest);
       case 'short':
         return await cmdShort(rest);
+      case 'shorts':
+        return await cmdShorts(rest);
       case 'series':
         return cmdSeries(rest);
       case 'series-setup':

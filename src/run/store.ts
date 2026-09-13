@@ -74,6 +74,21 @@ export const runManifestSchema = z.object({
 
   /** Which short of that episode, when it is one. */
   short: z.number().int().positive().optional(),
+
+  /**
+   * Which unit of a source script this run was cut from.
+   *
+   * ONLY ANTHOLOGIES HAVE ONE. A source format writes ten self-contained
+   * stories in one script and each becomes its own run, so "the third story of
+   * that script" is the only durable name the third one has - its short number
+   * is an arrival order, and cutting stories 3 and 7 on their own makes them
+   * s01 and s02.
+   *
+   * Recorded so a second cut can find the run it already made instead of
+   * rendering a duplicate beside it, and so the set can be reassembled in the
+   * order it was written rather than the order somebody cut it.
+   */
+  story: z.number().int().positive().optional(),
 });
 
 export type RunManifest = z.infer<typeof runManifestSchema>;
@@ -234,6 +249,8 @@ export class Run {
       derivedFrom?: string;
       /** Set when this is a short, so it sits beside the episode it came from. */
       parentEpisode?: number;
+      /** Set when this is one story cut out of a source script. */
+      story?: number;
     },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
@@ -262,6 +279,7 @@ export class Run {
       completed: [],
       spentPence: 0,
       derivedFrom: input.derivedFrom,
+      story: input.story,
     });
 
     const run = new Run(dir, manifest);
@@ -321,6 +339,27 @@ export class Run {
     return runs.sort(
       (a, b) => Date.parse(b.manifest.createdAt) - Date.parse(a.manifest.createdAt)
     )[0]!;
+  }
+
+  /**
+   * The runs already cut from one source run, in the order they were written.
+   *
+   * WHAT THIS IS FOR. Cutting ten stories out of a source script is ten renders,
+   * and a cut interrupted at story seven has to be resumable or the second
+   * attempt pays for all ten again AND leaves the first six sitting beside
+   * their own duplicates, indistinguishable in a directory listing.
+   *
+   * Only the source's own channel is searched, because a run derived from
+   * another run is always the same show - a short in a different channel from
+   * its parent would be a different show wearing its facts.
+   */
+  static derivedFrom(sourceId: string, opts: { root?: string } = {}): Run[] {
+    const channel = sourceId.split('/')[0];
+    return Run.list(opts)
+      .filter((id) => id.split('/')[0] === channel)
+      .map((id) => Run.open(id, opts))
+      .filter((run) => run.manifest.derivedFrom === sourceId)
+      .sort((a, b) => (a.manifest.story ?? 0) - (b.manifest.story ?? 0));
   }
 
   /**

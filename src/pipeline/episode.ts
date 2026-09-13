@@ -453,7 +453,45 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     log(`script: "${script.title}", ${script.beats.length} beats`);
   }
 
-  // --- 6. Render ----------------------------------------------------------
+  // --- 5b. A source format stops here. ---------------------------------------
+  //
+  // An anthology exists to be broken up. Rendering it would buy twenty minutes
+  // of audio nobody will hear, and gating it as an episode would judge it as
+  // something it is not trying to be - a flat list of ten unrelated stories
+  // fails self-similarity, duration and half the narrative checks by design.
+  //
+  // The shorts are cut afterwards and each is rendered, gated and published on
+  // its own, which is where those checks actually mean something.
+  if (format.sourceOnly) {
+    const stories = script.beats.length;
+    log(`script: "${script.title}", ${stories} stories`);
+    log('');
+    log(`This format is a source: it is never rendered or published whole.`);
+    log(`Cut the shorts with:`);
+    log(`  npm run foundry -- shorts --run ${run.id}`);
+
+    run.journal({
+      stage: 'pipeline',
+      event: 'source-script-ready',
+      detail: script.title,
+      pence: run.manifest.spentPence,
+    });
+
+    return {
+      run,
+      script,
+      gate: {
+        passed: true,
+        findings: [],
+        humanReviewReasons: [
+          `a source script, not an episode. ${stories} stories, none rendered yet.`,
+        ],
+        prose: null,
+      } as unknown as GateReport,
+    };
+  }
+
+  // --- 6. Render -----------------------------------------------------------
   let render: z.infer<typeof renderResultSchema>;
   // THE ARTIFACT IS NOT THE AUDIO. Every other stage can be resumed from its
   // JSON because the JSON *is* the output; this one describes a file sitting

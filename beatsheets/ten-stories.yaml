@@ -1,0 +1,100 @@
+# Ten self-contained stories from one research pass, to be cut into ten shorts.
+#
+# THIS FORMAT IS SCAFFOLDING AND IS NEVER PUBLISHED WHOLE. `sourceOnly` makes
+# that mechanical rather than a convention: `make` stops after the script, so
+# nothing renders twenty minutes of audio nobody will hear and nothing gates it
+# as an episode it is not trying to be. The shorts are cut afterwards, and each
+# is rendered, gated and published on its own.
+#
+# WHY THIS EXISTS AT ALL, AND IT IS ENTIRELY A COST ARGUMENT. Research is 49p of
+# an 87p episode - more than writing and rendering put together. Ten standalone
+# shorts on one subject pay for that ten times over the same ground, at roughly
+# £5.80. One research pass fanned out into ten comes to about £1.20, and the
+# claims are already verified by the time any short is written.
+#
+# WHAT THAT BUYS AND WHAT IT COSTS. It buys ten properly sourced shorts for the
+# price of one episode. It costs the long version, which would be a list - ten
+# mini-stories in twenty minutes is exactly the shape this network spent a week
+# getting out of its narrative shows. Not publishing it is the honest response
+# to that rather than a compromise.
+#
+# EVERY STORY IS COMPLETE ON ITS OWN, and that is the only structural rule that
+# really matters here. A listener meets one of these in a feed with no idea what
+# came before it. It cannot refer to another story, cannot assume the frame has
+# been set up, and cannot end on "more on that next time". Ten separate small
+# episodes that happen to have been researched together.
+
+id: ten-stories
+name: Ten stories
+kind: long
+
+# Never rendered whole, never published whole. See the note above.
+sourceOnly: true
+
+intent: >
+  Ten self-contained stories on one subject, researched in a single pass and
+  written to be cut apart - each one a complete short with its own opening,
+  middle and landing.
+
+# Ten at 90 to 180 seconds, plus the brief that sets up the research. The range
+# is wide on purpose: a story that needs 95 seconds should take 95, and padding
+# it to match its neighbours is the thing that makes a feed of shorts feel
+# manufactured.
+targetSeconds: [900, 1800]
+
+serialised: false
+
+# NO LOOPS, AND THAT IS HONEST RATHER THAN LAZY. The loop machinery exists to
+# make one episode hold a listener from a question opened early to an answer
+# given late, and it checks that a format does not close its curiosity too soon.
+# An anthology has no such arc: ten stories are heard separately, on different
+# days, in whatever order a feed offers them, and each carries its own small
+# shape entirely. A loop declared here would describe a listening experience
+# nobody is going to have.
+loops: []
+
+beats:
+  - id: story
+    type: payoff
+    repeats: 10
+    seconds: [90, 180]
+    function: >
+      One complete story: what it was, who it happened to, what happened, and
+      what it turned out to mean.
+    constraints:
+      - >
+        COMPLETE ON ITS OWN. A listener meets this in a feed having heard
+        nothing else. It may not refer to another story in the set, may not
+        assume a frame has been established, and may not end on anything
+        pointing elsewhere.
+      - >
+        SAY WHAT IT IS IN THE FIRST TWO SENTENCES. No cold open and no teasing -
+        there is no time to be behind, and ninety seconds of guessing is the
+        whole thing.
+      - >
+        Then the story, in order. One thing leads to the next, and there is room
+        for about four facts. Choose them.
+      - >
+        END ON SOMETHING THAT LANDS. The last line is what somebody remembers or
+        sends on, and a short that trails off has wasted the other eighty
+        seconds. A number, an image, or the thing nobody knew.
+      - >
+        WHERE THE ACCOUNTS DISAGREE, SAY SO IN A CLAUSE AND CARRY ON. Ninety
+        seconds is not a reason to sound more certain than the record is, and a
+        short is where overconfidence travels furthest - it is the format most
+        likely to be heard alone and passed on. "Nobody agrees which of them
+        decided" costs four words.
+      - >
+        No sign-off, no call to action, no naming the show, and nothing about
+        what it says about us.
+      - >
+        Vary the length honestly. A story that needs ninety-five seconds takes
+        ninety-five; padding it to match its neighbours is what makes a feed of
+        these feel manufactured.
+    minClaims: 4
+
+# One entry, expanded to ten alongside the beat it belongs to. Flat, and that is
+# the format rather than an absence of nerve: each story is heard on its own, so
+# a curve rising across the set would describe a listening experience nobody is
+# going to have.
+tensionCurve: [0.8]

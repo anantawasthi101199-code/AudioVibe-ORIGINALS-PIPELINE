@@ -53,9 +53,21 @@ document. About 80p an episode, most of it research.
 document entails an invented scene. Continuity against a series bible replaces
 the evidence ledger. About 40p an episode.
 
-There is also a **derived short lane** (`src/pipeline/short.ts`) which cuts a
-short out of a finished episode rather than researching its own, at about a
-ninth of the cost.
+There is also a **derived short lane** (`src/pipeline/short.ts`) which writes a
+new short about one moment of a finished episode rather than researching its
+own, at about a ninth of the cost.
+
+And an **anthology cut** (`src/pipeline/anthology.ts`), which is the factual
+lane pointed at a `sourceOnly` format. The source writes ten self-contained
+stories from one research pass and is never rendered or published whole; each
+beat then becomes its own run, with its own title, audio, ledger and gate
+report. Ten sourced shorts for about £1.50 against roughly £5.80 for ten
+separate episodes, because research is paid once.
+
+```
+make  --format ten-stories   ->  a script, no audio, never published
+shorts --run <that run>      ->  10 runs, 10 gates, 10 things to publish
+```
 
 So the question for each new idea is only ever: *which lane, and what is missing
 from it.*

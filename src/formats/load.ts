@@ -21,6 +21,56 @@ export class FormatLoadError extends Error {
   }
 }
 
+/**
+ * Turn `repeats: 10` into ten beats, numbered.
+ *
+ * Deliberately before validation and deliberately dumb: it copies the beat,
+ * renames it, and lets the schema judge the result. Anything clever here would
+ * be a second definition of what a beat is.
+ *
+ * The tension curve is expanded alongside, because a curve with one entry for a
+ * repeated beat is saying "flat across all of them", which is exactly right for
+ * an anthology and would otherwise fail the length check.
+ */
+export const expandRepeats = (raw: unknown): unknown => {
+  if (!raw || typeof raw !== 'object') return raw;
+  const format = raw as { beats?: unknown; tensionCurve?: unknown };
+  if (!Array.isArray(format.beats)) return raw;
+
+  const repeated = format.beats.some(
+    (b) => typeof (b as { repeats?: number }).repeats === 'number'
+  );
+
+  // NOTHING TO EXPAND MEANS NOTHING TO TOUCH. An early version rebuilt the
+  // curve for every format, padding a short one out to the beat count - which
+  // silently defeated the check that a curve and its beats are in step, a check
+  // that exists because a mismatched curve is somebody having edited beats and
+  // forgotten the curve.
+  if (!repeated) return raw;
+
+  const beats: unknown[] = [];
+  const curve: number[] = [];
+  const given = Array.isArray(format.tensionCurve) ? (format.tensionCurve as number[]) : [];
+
+  format.beats.forEach((beat, i) => {
+    const b = beat as { id?: string; repeats?: number };
+    const times = typeof b.repeats === 'number' && b.repeats > 1 ? b.repeats : 1;
+
+    for (let n = 1; n <= times; n++) {
+      const copy = { ...(b as Record<string, unknown>) };
+      delete copy.repeats;
+      if (times > 1) copy.id = `${b.id}_${String(n).padStart(2, '0')}`;
+      beats.push(copy);
+
+      // Undefined stays undefined rather than borrowing a neighbour, so a
+      // format that is genuinely missing an entry still fails the length check.
+      if (given[i] !== undefined) curve.push(given[i]!);
+    }
+  });
+
+  return { ...(raw as object), beats, ...(curve.length ? { tensionCurve: curve } : {}) };
+};
+
 export const parseFormat = (source: string, label = '<inline>'): EpisodeFormat => {
   let raw: unknown;
   try {
@@ -29,7 +79,12 @@ export const parseFormat = (source: string, label = '<inline>'): EpisodeFormat =
     throw new FormatLoadError(label, [`invalid YAML: ${(err as Error).message}`]);
   }
 
-  const result = formatSchema.safeParse(raw);
+  // A REPEATED BEAT BECOMES REAL BEATS BEFORE VALIDATION, so every rule that
+  // follows - unique ids, the tension curve matching the beat count, loops
+  // opening and closing - applies to what will actually be written rather than
+  // to the shorthand. See beatSchema.repeats.
+  const expanded = expandRepeats(raw);
+  const result = formatSchema.safeParse(expanded);
   if (!result.success) {
     throw new FormatLoadError(
       label,

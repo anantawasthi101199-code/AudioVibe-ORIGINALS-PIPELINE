@@ -113,6 +113,23 @@ export const beatSchema = z.object({
   /** Unique within the format. Appears in the beat map sent to the platform. */
   id: z.string().regex(/^[a-z0-9_]+$/, 'lowercase, digits and underscores only'),
 
+  /**
+   * How many identical beats this one stands for.
+   *
+   * FOR AN ANTHOLOGY, WHERE EVERY UNIT IS THE SAME SHAPE. Ten self-contained
+   * stories in one source episode means ten beats with the same type, the same
+   * length and the same constraints, and writing them out is two hundred lines
+   * of YAML that differ only in a number - which is not diffable, not
+   * reviewable, and wrong in one place within a month.
+   *
+   * Expanded at load time into `story_01`, `story_02` and so on, so everything
+   * downstream sees ordinary beats and nothing else in the codebase needs to
+   * know this existed.
+   *
+   * Absent means one, which is every other format here.
+   */
+  repeats: z.number().int().positive().max(30).optional(),
+
   type: beatTypeSchema,
 
   /** Target duration range in seconds, spoken. */
@@ -177,6 +194,19 @@ export const formatSchema = z
      * that have already been verified. See script/shorts.ts.
      */
     kind: z.enum(['long', 'short']),
+
+    /**
+     * This format is scaffolding: it is never rendered or published whole.
+     *
+     * An anthology exists to be broken up. Its ten stories are each their own
+     * short, and the long version is a research vehicle nobody hears - so
+     * rendering it would buy twenty minutes of audio to throw away, and gating
+     * it as an episode would judge it as something it is not trying to be.
+     *
+     * `make` stops after the script for one of these, and says so. The shorts
+     * are cut afterwards, and each is rendered, gated and published on its own.
+     */
+    sourceOnly: z.boolean().default(false),
 
     /** One sentence on what this shape is good for. */
     intent: z.string().min(1),

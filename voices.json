@@ -1,0 +1,12 @@
+{
+  "honest-health": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "sage",
+        "firstUsedAt": "2026-09-13T15:41:50.290Z",
+        "firstRunId": "honest-health/e001-20260913-a-bad-nights-sleep-makes-you"
+      }
+    }
+  }
+}

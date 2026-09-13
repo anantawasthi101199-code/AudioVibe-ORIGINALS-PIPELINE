@@ -52,6 +52,42 @@ Rendering the assembled writer prompt for the first time found four faults that
 had been sent on every beat of every episode and were invisible in any single
 source file, including the instruction against repetition appearing twice.
 
+### Shorts come from an anthology written to be cut, not from an episode
+
+There are now two ways to get a short, and they are for different things.
+
+**Derived** (`short`) takes a finished episode and writes new prose about one
+moment in it. That is the only honest way to get a short out of a narrative
+episode, because a minute from the middle of a fifteen-minute story starts in
+the wrong place and ends in the wrong place. It costs a selection call, five
+beats and a render, on top of an episode that already exists.
+
+**Cut** (`shorts`) takes a source script whose ten beats were each written to be
+heard alone, and turns each one into its own run. There is nothing to rewrite
+and nothing to select; the beat *is* the short.
+
+The case is entirely cost. Research is roughly half of an 87p episode, so ten
+standalone shorts on one subject pay for it ten times over the same ground, at
+about £5.80. One research pass fanned out into ten is about £1.50 — a source
+script at £1.11, then a title and a render each.
+
+**The long version is never published.** `sourceOnly` makes that mechanical
+rather than a convention: `make` stops after the script, so nothing renders
+twenty minutes of audio nobody will hear and nothing gates it as an episode it
+is not trying to be. Ten mini-stories in twenty minutes is a list, which is
+exactly the shape the narrative shows spent a week getting out of. Not
+publishing it is the honest response, not a compromise.
+
+**Every story is its own run**, gated and published separately, and that is not
+bookkeeping. A short is what a listener actually meets; it needs a provenance
+trail, a claim ledger and a gate report of its own, and each carries only the
+sources it actually cites — a Sources sheet listing nine documents the audio
+never mentions is worse than none, because it looks like evidence for something
+it is not evidence for.
+
+What would change it: if cut shorts turn out to under-perform derived ones on
+retention badly enough to outweigh a 6x cost difference.
+
 ---
 
 ## Format and writing
