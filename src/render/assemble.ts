@@ -227,7 +227,7 @@ export const concatBeats = async (
  * estimate would be wrong by seconds within a minute or two.
  */
 export const buildBeatMap = (
-  beats: Array<{ id: string; type: string; durationS: number }>,
+  beats: Array<{ id: string; type: string; durationS: number; endsFile?: boolean }>,
   gapSeconds = BEAT_GAP_S
 ): BeatTiming[] => {
   const map: BeatTiming[] = [];
@@ -236,7 +236,18 @@ export const buildBeatMap = (
     const startS = cursor;
     const endS = startS + b.durationS;
     map.push({ id: b.id, type: b.type, startS: Number(startS.toFixed(3)), endS: Number(endS.toFixed(3)) });
-    cursor = endS + (i === beats.length - 1 ? 0 : gapSeconds);
+
+    // THE GAP IS BETWEEN FILES, NOT BETWEEN BEATS, and conflating the two put
+    // every later timestamp out the moment beats began sharing a request.
+    // Silence is inserted by the concatenation, so two beats inside one audio
+    // file have nothing between them - adding 0.45s there describes a pause
+    // that is not in the audio.
+    //
+    // `endsFile` defaults to true, which is the old behaviour: one beat, one
+    // file, a gap after each.
+    const last = i === beats.length - 1;
+    const boundary = b.endsFile !== false;
+    cursor = endS + (last || !boundary ? 0 : gapSeconds);
   });
   return map;
 };
@@ -309,6 +320,86 @@ export const TURN_GAP_S = 0.22;
  */
 export const STITCH_CHARS = 400;
 
+/**
+ * Consecutive beats gathered into as few requests as the engine will take.
+ *
+ * WHY THIS EXISTS. Rendering one beat per request was never a decision, it was
+ * an assumption, and it is the whole cause of the seam a listener described as
+ * "it stops and the new voice with weird start kicks in". Every separate
+ * request is a separate performance - its own pitch, its own pace, its own idea
+ * of how the sentence was going.
+ *
+ * Measured: gpt-4o-mini-tts took 10,000 characters in one request, and a whole
+ * 8,910-character episode rendered in a single call. Most episodes fit in one or
+ * two, so most of the seams were never necessary, and grouping costs nothing
+ * because the engine bills by character either way.
+ *
+ * TWO THINGS STOP A GROUP. The engine's limit, and a change of speaker - a beat
+ * with two voices in it goes down a different path entirely and cannot be
+ * merged with its neighbours. A single over-long beat becomes a group of one
+ * and renders exactly as it used to.
+ */
+export const groupBeats = <T extends { turns: Turnish[] }>(
+  beats: T[],
+  maxChars: number | undefined,
+  sizeOf: (beat: T) => number
+): T[][] => {
+  if (!maxChars) return beats.map((b) => [b]);
+
+  const groups: T[][] = [];
+  let current: T[] = [];
+  let used = 0;
+
+  const soloVoice = (beat: T) =>
+    new Set(beat.turns.map((t) => t.speaker)).size === 1 ? beat.turns[0]!.speaker : null;
+
+  for (const beat of beats) {
+    const size = sizeOf(beat);
+    const speaker = soloVoice(beat);
+    const sameVoice = current.length > 0 && soloVoice(current[0]!) === speaker;
+
+    if (speaker === null || !current.length || !sameVoice || used + size > maxChars) {
+      if (current.length) groups.push(current);
+      current = [beat];
+      used = size;
+      // A multi-voice beat is its own group and nothing joins it.
+      if (speaker === null) {
+        groups.push(current);
+        current = [];
+        used = 0;
+      }
+      continue;
+    }
+
+    current.push(beat);
+    used += size;
+  }
+
+  if (current.length) groups.push(current);
+  return groups;
+};
+
+interface Turnish { speaker: string; text: string }
+
+/**
+ * One measured duration shared out across the beats that produced it.
+ *
+ * APPORTIONED, NOT MEASURED, and that is a real cost of grouping worth being
+ * plain about. When five beats are one audio file there are no per-beat
+ * durations to read, so each beat's share is its share of the characters.
+ *
+ * Acceptable because of what the beat map is actually for: chapter markers on
+ * the platform. It is not used to cut audio - the short lane writes and renders
+ * its own script - so a marker a second or two out costs a listener nothing.
+ * Rendering per beat purely to measure them would spend a seam on precision
+ * nobody consumes.
+ */
+export const apportion = (totalS: number, shares: number[]): number[] => {
+  const sum = shares.reduce((a, b) => a + b, 0);
+  if (sum <= 0) return shares.map(() => totalS / Math.max(shares.length, 1));
+  return shares.map((share) => (share / sum) * totalS);
+};
+
 export const renderScript = async (
   input: {
     beats: RenderableBeat[];
@@ -352,13 +443,31 @@ export const renderScript = async (
   };
 
   const files: string[] = [];
-  const timings: Array<{ id: string; type: string; durationS: number }> = [];
+  const timings: Array<{ id: string; type: string; durationS: number; endsFile: boolean }> = [];
   let costPence = 0;
   let provider = '';
   let model = '';
   const voiceIds = new Set<string>();
 
-  for (const [i, beat] of input.beats.entries()) {
+  // GATHERED INTO AS FEW REQUESTS AS THE ENGINE WILL TAKE. Every separate
+  // request is a separate performance, and that is the seam. See groupBeats.
+  const groups = groupBeats(input.beats, tts.maxInputChars, (b) =>
+    speakable(b.turns.map((t) => t.text).join('\n\n')).length
+  );
+  if (groups.length < input.beats.length) {
+    onProgress?.(
+      `rendering ${input.beats.length} beats in ${groups.length} request(s), so the voice does not restart between them`
+    );
+  }
+
+  for (const [i, group] of groups.entries()) {
+    // The unit being rendered. A group of one IS the old behaviour, and every
+    // path below reads from here rather than from a single beat.
+    const beat = {
+      beatId: group[0]!.beatId,
+      beatType: group[0]!.beatType,
+      turns: group.flatMap((b) => b.turns),
+    };
     const speakers = new Set(beat.turns.map((t) => t.speaker));
     const multiVoice = speakers.size > 1;
 
@@ -382,7 +491,7 @@ export const renderScript = async (
     // process killed mid-write leaves exactly that and it is the one case
     // where trusting the file would silently produce a silent beat.
     if (deps.reuseExisting !== false && fs.existsSync(file) && fs.statSync(file).size > 0) {
-      onProgress?.(`beat ${i + 1}/${input.beats.length}: ${beat.beatId} (already rendered)`);
+      onProgress?.(`${i + 1}/${groups.length}: ${beat.beatId} (already rendered)`);
       files.push(file);
 
       const existing = await probe(file);
@@ -392,11 +501,25 @@ export const renderScript = async (
             `re-run: a beat map built on an estimated duration puts every later timestamp out.`
         );
       }
-      timings.push({ id: beat.beatId, type: beat.beatType, durationS: existing });
+      // Apportioned across the group exactly as a fresh render is, or a
+      // resumed run would map one reused file to a single beat id and silently
+      // drop every other beat that shares it.
+      const reusedShares = group.map(
+        (b) => speakable(b.turns.map((t) => t.text).join('\n\n')).length
+      );
+      const reusedPerBeat = apportion(existing, reusedShares);
+      group.forEach((b, n) => {
+        timings.push({
+          id: b.beatId,
+          type: b.beatType,
+          durationS: reusedPerBeat[n]!,
+          endsFile: n === group.length - 1,
+        });
+      });
       continue;
     }
 
-    onProgress?.(`beat ${i + 1}/${input.beats.length}: ${beat.beatId}`);
+    onProgress?.(`${i + 1}/${groups.length}: ${group.map((b) => b.beatId).join(' + ')}`);
 
     // THREE PATHS, AND THE MIDDLE ONE EXISTS BECAUSE THE OLD FALLBACK WAS
     // WRONG. It joined every turn of a multi-speaker beat into one request in
@@ -469,8 +592,8 @@ export const renderScript = async (
       // A few hundred characters is enough - it is prosody context, not
       // content - and sending more would cost characters on a provider that
       // bills by them while changing nothing.
-      const before = input.beats[i - 1];
-      const after = input.beats[i + 1];
+      const before = groups[i - 1]?.at(-1);
+      const after = groups[i + 1]?.[0];
       const request = {
         text: speakable(beat.turns.map((t) => t.text).join('\n\n')),
         voice: voiceFor(beat.turns[0]!.speaker),
@@ -502,7 +625,7 @@ export const renderScript = async (
 
       if (firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
         onProgress?.(
-          `beat ${i + 1}/${input.beats.length}: ${beat.beatId} ended on ` +
+          `${i + 1}/${groups.length}: ${beat.beatId} ended on ` +
             `${firstTrailing.toFixed(1)}s of silence. Taking it again.`
         );
 
@@ -556,7 +679,20 @@ export const renderScript = async (
           `real durations, and an estimated one would put every later timestamp out.`
       );
     }
-    timings.push({ id: beat.beatId, type: beat.beatType, durationS });
+    // One measured duration, shared out by character count when the group holds
+    // more than one beat. See apportion.
+    const shares = group.map((b) => speakable(b.turns.map((t) => t.text).join('\n\n')).length);
+    const perBeat = apportion(durationS, shares);
+    group.forEach((b, n) => {
+      timings.push({
+        id: b.beatId,
+        type: b.beatType,
+        durationS: perBeat[n]!,
+        // Only the last beat of a group is followed by a file boundary, and
+        // only a file boundary has silence after it.
+        endsFile: n === group.length - 1,
+      });
+    });
   }
 
   await join(files, input.outputPath, BEAT_GAP_S);

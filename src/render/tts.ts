@@ -92,6 +92,26 @@ export interface TtsProvider {
    */
   readonly understandsTags?: boolean;
 
+  /**
+   * How much text this engine will speak in one request.
+   *
+   * WHY THIS MATTERS MORE THAN IT LOOKS. Rendering per beat was never a choice,
+   * it was an assumption - and it is the cause of the seam a listener described
+   * as "a new voice with weird start kicks in". Every separate request is a
+   * separate performance: its own pitch, its own pace, its own idea of how the
+   * sentence should go.
+   *
+   * Measured rather than taken from the documentation, which quotes 4096 for
+   * the older speech models: gpt-4o-mini-tts accepted 10,000 characters in one
+   * request, and a whole 8,910-character episode rendered in a single call. Most
+   * episodes fit in one or two requests, so most of the seams were never
+   * necessary.
+   *
+   * Absent means "one beat at a time", which is the old behaviour and is right
+   * for any engine whose real limit is unknown.
+   */
+  readonly maxInputChars?: number;
+
   readonly name: string;
   synthesise(req: SynthesisRequest): Promise<SynthesisResult>;
   /**
@@ -147,6 +167,15 @@ export const ELEVENLABS_PENCE_PER_1K_CHARS = 12;
 
 export class ElevenLabsTts implements TtsProvider {
   readonly name = 'elevenlabs';
+
+  /**
+   * Left unset deliberately, so Eleven keeps rendering a beat at a time.
+   *
+   * It does not need grouping: previous_text and next_text already make a beat
+   * sound like the continuation it is, and keeping one file per beat keeps the
+   * beat map measured rather than apportioned. Grouping is a workaround for an
+   * engine that cannot be told what came before.
+   */
 
   /**
    * v3 reads the tags as direction. Earlier models speak them.

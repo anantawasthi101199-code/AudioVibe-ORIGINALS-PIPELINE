@@ -1,5 +1,12 @@
 import { Voice } from '../../canon/schema';
-import { buildBeatMap, BEAT_GAP_S, MAX_TRAILING_SILENCE_S, renderScript } from '../assemble';
+import {
+  apportion,
+  buildBeatMap,
+  BEAT_GAP_S,
+  groupBeats,
+  MAX_TRAILING_SILENCE_S,
+  renderScript,
+} from '../assemble';
 import { ElevenLabsTts, forSpeech, TtsError, TtsProvider } from '../tts';
 
 const voice: Voice = { provider: 'elevenlabs', voiceId: 'v123', settings: {} };
@@ -414,5 +421,145 @@ describe('ElevenLabsTts.understandsTags', () => {
     // to an older model for cost would otherwise start announcing its own
     // stage directions with nothing to flag it.
     expect(new ElevenLabsTts('k', 'eleven_multilingual_v2').understandsTags).toBe(false);
+  });
+});
+
+describe('groupBeats', () => {
+  /**
+   * Rendering one beat per request was never a decision, it was an assumption,
+   * and it is the whole cause of the seam a listener described as "it stops and
+   * the new voice with weird start kicks in". Every separate request is a
+   * separate performance.
+   *
+   * Measured: gpt-4o-mini-tts took 10,000 characters in one request, and a
+   * whole 8,910-character episode rendered in a single call.
+   */
+  const beat = (id: string, chars: number, speaker = 'host') => ({
+    beatId: id,
+    beatType: 'x',
+    turns: [{ speaker, text: 'w'.repeat(chars) }],
+  });
+  const size = (b: { turns: { text: string }[] }) => b.turns.map((t) => t.text).join('').length;
+
+  it('puts a whole episode in one request when it fits', () => {
+    const beats = [beat('a', 1000), beat('b', 2000), beat('c', 3000)];
+    expect(groupBeats(beats, 9000, size)).toHaveLength(1);
+  });
+
+  it('starts a new request rather than exceeding the limit', () => {
+    const beats = [beat('a', 4000), beat('b', 4000), beat('c', 4000)];
+    const groups = groupBeats(beats, 9000, size);
+    expect(groups.map((g) => g.map((b) => b.beatId))).toEqual([['a', 'b'], ['c']]);
+  });
+
+  it('renders one beat at a time when the engine declares no limit', () => {
+    // The old behaviour, and the right one for an engine whose real limit is
+    // unknown.
+    const beats = [beat('a', 10), beat('b', 10)];
+    expect(groupBeats(beats, undefined, size)).toHaveLength(2);
+  });
+
+  it('never merges across a change of voice', () => {
+    const beats = [beat('a', 100, 'cal'), beat('b', 100, 'wren'), beat('c', 100, 'wren')];
+    expect(groupBeats(beats, 9000, size).map((g) => g.map((b) => b.beatId))).toEqual([
+      ['a'],
+      ['b', 'c'],
+    ]);
+  });
+
+  it('leaves a two-voice beat entirely alone', () => {
+    // It goes down the dialogue path and cannot be merged with anything.
+    const duo = {
+      beatId: 'duo',
+      beatType: 'x',
+      turns: [
+        { speaker: 'a', text: 'one' },
+        { speaker: 'b', text: 'two' },
+      ],
+    };
+    const groups = groupBeats([beat('a', 100), duo, beat('c', 100)], 9000, size);
+    expect(groups.map((g) => g.map((b) => b.beatId))).toEqual([['a'], ['duo'], ['c']]);
+  });
+
+  it('gives an over-long beat a request of its own rather than dropping it', () => {
+    const beats = [beat('huge', 20000), beat('small', 100)];
+    const groups = groupBeats(beats, 9000, size);
+    expect(groups.map((g) => g.map((b) => b.beatId))).toEqual([['huge'], ['small']]);
+  });
+});
+
+describe('apportion', () => {
+  it('shares one measured duration by character count', () => {
+    expect(apportion(100, [1, 3])).toEqual([25, 75]);
+  });
+
+  it('always adds back up to what was measured', () => {
+    const parts = apportion(166.152, [927, 2910, 2399, 2294, 382]);
+    expect(parts.reduce((a, b) => a + b, 0)).toBeCloseTo(166.152, 6);
+  });
+
+  it('splits evenly rather than dividing by zero', () => {
+    expect(apportion(60, [0, 0])).toEqual([30, 30]);
+  });
+});
+
+describe('rendering an episode as one request', () => {
+  it('sends every beat in a single call and still maps them all', async () => {
+    const sent: string[] = [];
+    const tts = {
+      name: 'fake',
+      maxInputChars: 9000,
+      async synthesise(req: { text: string }) {
+        sent.push(req.text);
+        return { audio: Buffer.alloc(2000), provider: 'fake', model: 'm', voiceId: 'v', costPence: 1 };
+      },
+    } as unknown as TtsProvider;
+
+    const beats = [
+      { beatId: 'opening', beatType: 'orientation', turns: [{ speaker: 'host', text: 'a'.repeat(900) }] },
+      { beatId: 'world', beatType: 'stakes', turns: [{ speaker: 'host', text: 'b'.repeat(2700) }] },
+      { beatId: 'close', beatType: 'outro', turns: [{ speaker: 'host', text: 'c'.repeat(400) }] },
+    ];
+
+    const res = await renderScript(
+      { beats, voices: { host: voice }, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+      tts,
+      { writeFile: () => undefined, probe: async () => 200, trailing: async () => 0.3, concat: async () => undefined }
+    );
+
+    // One request, not three. That is the seam gone.
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toContain('a'.repeat(900));
+    expect(sent[0]).toContain('c'.repeat(400));
+
+    // Every beat still appears on the map, apportioned by character share.
+    expect(res.beatMap.map((b) => b.id)).toEqual(['opening', 'world', 'close']);
+    expect(res.beatMap[2]!.endS).toBeCloseTo(200, 5);
+    expect(res.durationS).toBeCloseTo(200, 5);
+  });
+});
+
+describe('the gap belongs between files, not between beats', () => {
+  it('puts no silence between beats that share one audio file', () => {
+    // CONFLATING THE TWO PUT EVERY LATER TIMESTAMP OUT the moment beats began
+    // sharing a request. Silence is inserted by the concatenation, so two beats
+    // inside one file have nothing between them, and describing a 0.45s pause
+    // there describes a pause that is not in the audio.
+    const map = buildBeatMap([
+      { id: 'a', type: 'x', durationS: 10, endsFile: false },
+      { id: 'b', type: 'x', durationS: 10, endsFile: true },
+      { id: 'c', type: 'x', durationS: 10, endsFile: true },
+    ]);
+    expect(map[1]!.startS).toBe(10);
+    expect(map[2]!.startS).toBeCloseTo(20 + BEAT_GAP_S, 5);
+  });
+
+  it('still gaps every beat when each has its own file', () => {
+    // The old behaviour, and what an engine without a declared limit still does.
+    const map = buildBeatMap([
+      { id: 'a', type: 'x', durationS: 10 },
+      { id: 'b', type: 'x', durationS: 10 },
+    ]);
+    expect(map[1]!.startS).toBeCloseTo(10 + BEAT_GAP_S, 5);
   });
 });

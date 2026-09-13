@@ -116,6 +116,16 @@ export class OpenAiTts implements TtsProvider {
    * change in the obvious place.
    */
   readonly understandsTags = false;
+
+  /**
+   * Measured, not taken from the documentation.
+   *
+   * The docs quote 4096 for the older speech models. This one took 10,000 in a
+   * single request and rendered a whole episode in one call. Set below what was
+   * tested, because the limit is undocumented and a render that 400s halfway
+   * through a run is worse than one extra seam.
+   */
+  readonly maxInputChars = 9000;
   private model: string;
 
   constructor(
