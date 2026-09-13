@@ -202,7 +202,19 @@ canon:
   - kind: catchphrase
     text: "Not tonight."
 
+# TWO SHEETS, AND THE ORDER MATTERS - the first is what `make` uses by default.
+#
+# serial-reversal ends an episode by making something the listener just became
+# certain of untrue, which is what actually brings somebody back. serial-episode
+# ends on an open question, which is easier and weaker: any episode that stops
+# early has one, and a listener feels the withholding.
+#
+# The older sheet is kept rather than deleted because a reversal is not always
+# available - some episodes in a serial genuinely are connective - and an
+# episode that fakes one is worse than an episode that leaves a question open
+# honestly.
 formats:
+  - serial-reversal
   - serial-episode
 
 # A serial without a shelf is a pile of audio that happens to share a voice.

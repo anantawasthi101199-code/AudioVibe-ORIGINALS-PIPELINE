@@ -1,0 +1,73 @@
+# What Read The File explains next.
+#
+# THIS QUEUE IS DIFFERENT FROM EVERY OTHER ONE HERE, and the difference is
+# perishable. A myth is as good a topic in a year as it is today; a bill going
+# through committee is not. Entries here are written as a SHAPE plus a way of
+# finding the current instance of it, rather than as a specific document, and
+# the ones that name a specific document carry the date they were written down.
+#
+# WHAT MAKES A GOOD ENTRY:
+#
+#   1. THERE IS A PRIMARY DOCUMENT, PUBLISHED, FETCHABLE. A bill, a judgment, an
+#      inquiry report, filed accounts, a committee transcript, a regulator's
+#      notice. Without one there is no episode - this show is about the
+#      paperwork, and coverage of paperwork is not paperwork.
+#   2. THE ARGUMENT IS ABOUT WHAT IT SAYS. The best episodes come from a
+#      document most people arguing about it have not read, which is most of
+#      them.
+#   3. SOMETHING IN IT IS ABSENT. Most arguments about a document are about
+#      something that is not in it, and that absence is usually the story.
+#   4. IT IS NOT A HORSE RACE. Who is winning, who is up, who briefed whom: none
+#      of that has a document underneath it and none of it is this show.
+#
+# THE FRESHNESS WINDOW IS NINETY DAYS and it applies to sources, not to
+# subjects. A statute from 1998 is not stale; a comment piece from last year is.
+# That is why the persona sets maxSourceAgeDays rather than the queue doing it.
+#
+# NOT ON THIS LIST, deliberately: anything where the document is a person. A
+# tribunal about an individual, a police matter, an ongoing prosecution. The
+# show reads public records about policy, and a public record about a person is
+# a different kind of exposure with a different answer.
+
+topics:
+  # A recurring shape rather than a specific instance. Every jurisdiction
+  # produces these continuously and the impact assessment is almost never read
+  # by anybody arguing about the bill.
+  - The impact assessment published alongside a bill currently before
+    Parliament - what the government's own analysis says the bill will cost and
+    who it says will bear it, and how that compares with what is being claimed
+    about it in public
+
+  # Judgments are the best-written primary documents in public life and are
+  # routinely reported only through their result.
+  - A Supreme Court judgment handed down in the last three months - what the
+    court actually decided, how narrow the decision is, and which of the things
+    being claimed about it the judgment does not support
+
+  # Regulators publish their reasoning in full and almost nobody reads it.
+  - A regulator's decision notice published in the last three months - what the
+    regulator found, what it fined or ordered and why, and what it explicitly
+    declined to decide
+
+  # Accounts are public, dull, and where the real disagreement usually resolves.
+  - The published accounts of a body that is currently the subject of an
+    argument about money - what the accounts actually show, what the disputed
+    figure is measuring, and why two sides can quote it differently
+
+  # Committee evidence sessions are transcribed in full and are quoted from
+  # selectively by everybody.
+  - A select committee evidence session from the last three months - what the
+    witness actually said under questioning, in order, and which of the
+    circulating quotes are complete
+
+  # Public inquiries publish findings with numbered recommendations, which makes
+  # "what was recommended and what happened to it" a checkable question.
+  - A public inquiry report published within the last year - what it found, what
+    it recommended, and which recommendations have been accepted, rejected or
+    left unanswered since
+
+  # The shape with the longest tail: a law that already passed, and what its own
+  # review says about whether it did what it was for.
+  - The statutory review of an act passed five or more years ago - what the act
+    was supposed to do, what the review found it actually did, and what the
+    review was not asked to look at

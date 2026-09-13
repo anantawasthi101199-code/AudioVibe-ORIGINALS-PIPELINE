@@ -1,0 +1,59 @@
+# What Night Shift does next, in order, taken from the top.
+#
+# A FICTION QUEUE IS NOT A TOPIC QUEUE. Every other file in this folder lists
+# subjects to go and research. This lists EPISODE PREMISES for a continuing
+# story, and they are constrained by something no factual show has: what the
+# series bible already says happened.
+#
+# WHAT MAKES A GOOD ENTRY:
+#
+#   1. IT IS ONE NIGHT. The show's frame is a single overnight shift, and a
+#      premise spanning weeks has to become a night that reveals the weeks.
+#   2. IT HAS SOMETHING TO REVERSE. serial-reversal spends an episode making the
+#      listener certain of something and its last minute making that untrue, so
+#      a premise has to contain a thing worth being certain about. "A difficult
+#      case comes in" is a situation, not an episode.
+#   3. THE REVERSAL IS FAIR FROM WHAT THE EPISODE ITSELF SAYS. Not from the
+#      bible, and not from a thing the listener could not have had. An entry
+#      that needs information from three episodes ago is a plan, not a premise.
+#   4. IT MOVES THE LONG THING. There is one much larger story underneath the
+#      series that nobody has said out loud, and an episode that touches it
+#      nowhere is a good night of television and a bad episode of this.
+#
+# THESE ARE STARTING POINTS, NOT OUTLINES. The bible is the authority on what is
+# already true, and a premise that contradicts it will be caught by the
+# continuity check - which is the check doing its job rather than a problem with
+# the premise.
+
+topics:
+  # Episode one has to establish the frame before it can reverse anything, so
+  # its certainty is about a person rather than a fact: the listener decides who
+  # is reliable, and is wrong.
+  - A patient arrives at two in the morning who nobody can identify, and one
+    member of staff is unusually calm about it. By the end of the shift the
+    listener understands exactly why, and is wrong about what that calm meant.
+
+  - A drug count comes up short. The shift spends the night working out who
+    made the error, reaches an answer everybody including the listener accepts,
+    and then learns what the count was actually measuring.
+
+  - Somebody who was discharged three weeks ago comes back, and the notes from
+    that discharge say something nobody on tonight's shift wrote. The
+    handwriting is the thing the listener is certain about.
+
+  - The lift between the third and fourth floors stops working at midnight, and
+    the workaround everybody adopts is so ordinary that nobody records it. What
+    the workaround costs becomes clear only after the listener has decided it
+    was harmless.
+
+  - A relative sits in the corridor all night waiting for news that the shift
+    keeps almost delivering. The listener learns what the news is long before
+    the relative does, and is holding the wrong version of it.
+
+  - A new member of staff is shadowing, and asks the questions a listener has
+    been wanting to ask since episode one. Every answer is true. The reversal is
+    what nobody thinks to ask.
+
+  - A power cut puts the ward on generators for ninety minutes. The episode is
+    about what runs and what does not, and the reversal is a thing everybody
+    assumed was on the list.

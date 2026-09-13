@@ -1,0 +1,131 @@
+# One episode of a serial, ending on a reversal rather than an open question.
+#
+# WHY THIS EXISTS ALONGSIDE serial-episode. That sheet enforces a cliffhanger as
+# "a loop stays open", which the loop checker can verify and which is not what a
+# serial actually does. An unanswered question is easy and weak: any episode
+# that simply stops early has one, and a listener feels the withholding.
+#
+# WHAT ACTUALLY MAKES SOMEBODY START THE NEXT ONE is a REVERSAL - the episode
+# spends its length establishing something, and the last thirty seconds make it
+# untrue. The question the listener is left with was not withheld from them;
+# they had the answer and it has just been taken away. The difference is the
+# difference between "we will find out next week" and "then everything you have
+# been told is wrong".
+#
+# That is why the middle of this sheet is bigger than the end. A reversal is
+# only worth anything in proportion to how solidly the thing it reverses was
+# built, so `establish` is the longest beat here and its constraints are about
+# making the listener BELIEVE something rather than about making them wonder.
+#
+# EIGHT TO TWELVE MINUTES, NOT SIXTY. The serials this format takes after are
+# television and run an hour because television does. Audio is listened to while
+# walking somewhere, and a reversal lands harder inside one walk than across
+# three.
+
+id: serial-reversal
+name: Serial, reversal
+kind: long
+intent: >
+  One episode of a continuing story, which spends its length making a listener
+  certain of something and its last minute making that thing untrue.
+
+targetSeconds: [480, 720]
+
+# The loop deliberately stays open, which is what this flag exists to permit.
+serialised: true
+
+loops:
+  - id: the_turn
+    question: What is actually going on here?
+
+beats:
+  - id: where_we_are
+    type: orientation
+    seconds: [45, 80]
+    function: >
+      Where this is, who is in it, and what happened last time - for somebody
+      who has not heard an episode in a fortnight.
+    opens: [the_turn]
+    constraints:
+      - >
+        ASSUME THEY HAVE FORGOTTEN. Not that they are new, which would mean
+        explaining the premise every week, but that two weeks have passed and
+        the names have gone. One line each for whoever matters this time.
+      - >
+        Say what was true at the end of last episode in a sentence. A listener
+        who cannot remember where they were cannot feel anything being taken
+        away at the end of this one.
+      - No recap of the whole series, and never a list.
+      - Get out quickly. This beat is a door, not a room.
+
+  - id: ordinary
+    type: stakes
+    seconds: [110, 170]
+    function: >
+      The world of this episode, doing what it normally does, before anything
+      goes wrong in it.
+    constraints:
+      - >
+        Scenes, not summary. Somebody doing something, somewhere specific, for a
+        reason the listener can see.
+      - >
+        Plant what the ending will need, and plant it as something else. A
+        detail that only matters later has to matter a little now, or its return
+        reads as convenient rather than inevitable.
+      - Let it be ordinary. The reversal costs nothing if nothing was settled.
+
+  - id: establish
+    type: escalation
+    seconds: [180, 260]
+    function: >
+      The episode's own story, and the thing the listener ends up certain of.
+    constraints:
+      - >
+        THIS BEAT'S JOB IS BELIEF, NOT TENSION, and it is the one most often
+        got wrong. The listener has to finish it holding a conclusion they
+        reached themselves and would defend. Everything the reversal is worth
+        is built here.
+      - >
+        Let a character say the wrong thing confidently, and be right about
+        everything else they say. Reliability is what makes the reversal cost
+        something.
+      - Chronological. Scenes. Nothing withheld from the listener yet.
+
+  - id: turn
+    type: payoff
+    seconds: [100, 150]
+    function: >
+      The thing that makes what the listener just believed untrue.
+    constraints:
+      - >
+        REVERSE, DO NOT WITHHOLD. The listener does not lose access to an
+        answer; an answer they already had stops being true. "We will find out
+        next week" is the failure this whole sheet exists to avoid.
+      - >
+        It must be FAIR. Everything needed to see it coming was already said,
+        in the ordinary beat or the one before this. A reversal a listener could
+        not have reached is a trick, and they only forgive one.
+      - >
+        Say it plainly and then stop. A reversal explained is a reversal
+        defused; the listener does the work and that is what keeps them.
+      - Do not resolve it. Do not soften it. Do not comment on it.
+
+  - id: out
+    type: outro
+    seconds: [30, 55]
+    function: >
+      One image, and stop.
+    constraints:
+      - >
+        ONE IMAGE OR ONE LINE OF DIALOGUE. Not a summary, not a question to the
+        listener, and nothing that explains what just happened.
+      - >
+        Under a hundred words. The shortest beat in the network, deliberately -
+        anything after a reversal dilutes it.
+      - "No sign-off, no next-time, no naming the show."
+
+# The shape of a reversal, drawn. It climbs slowly and unremarkably because the
+# middle is doing unglamorous work, peaks at the turn, and then drops almost to
+# nothing - the last beat is quiet on purpose, because a listener who has just
+# had the ground moved needs a moment rather than a flourish.
+tensionCurve: [0.35, 0.45, 0.75, 1.0, 0.3]

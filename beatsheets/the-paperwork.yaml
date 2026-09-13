@@ -1,0 +1,146 @@
+# One thing in the news, explained from the documents underneath it.
+#
+# THIS IS AN EXPLAINER AND NOT A BULLETIN, and the distinction decides
+# everything about the format. A bulletin competes on being first, needs a
+# same-day cadence this pipeline cannot meet - a run is twenty-five minutes of
+# wall clock, most of it waiting on a verification rate limit - and is at its
+# weakest exactly where it matters most, because when every sentence is sourced
+# the editorial act is which sourced sentences get said.
+#
+# An explainer competes on being the version somebody reads the file for. It
+# takes one thing already in the news, finds the document underneath it, and
+# says what is actually in it. That is slower by design and it is the only
+# version of this a studio whose whole claim is "somebody went and read the
+# file" should be making.
+#
+# SO THE SUBJECT IS THE DOCUMENT, NOT THE EVENT. A bill, a judgment, a report,
+# a set of accounts, a transcript. The news is why the episode exists; the
+# document is what the episode is about. That framing is what keeps this
+# defensible: the show is not adjudicating a dispute between people, it is
+# reading a public record out loud.
+#
+# WHAT THE FORMAT REFUSES. Predictions, motives nobody wrote down, and anything
+# that reads as a claim about what a living person intended. It reports what a
+# document says and who said it, and stops.
+
+id: the-paperwork
+name: The paperwork
+kind: long
+intent: >
+  One thing in the news, explained from the document underneath it: what the
+  document actually says, what it does not, and what would have to be true for
+  each side of the argument to be right.
+
+targetSeconds: [660, 900]
+
+serialised: false
+
+loops:
+  - id: the_document
+    question: What does the document actually say?
+
+beats:
+  - id: opening
+    type: orientation
+    seconds: [80, 125]
+    function: >
+      What is in the news, what document sits underneath it, and what the
+      episode will settle from that document.
+    opens: [the_document]
+    constraints:
+      - >
+        NAME THE THING AND THE DOCUMENT IN THE FIRST TWO SENTENCES. What is
+        being argued about, and what was actually published - a bill, a
+        judgment, a report, a set of accounts, a transcript.
+      - >
+        Say when the document appeared and how long the argument has been going,
+        so a listener knows whether they are late to it.
+      - Say plainly what this episode will settle and what it will not.
+      - Talk to the listener directly here. This is the one beat that may.
+      - No suspense, no teasing, and no sides taken yet.
+    minClaims: 3
+
+  - id: before
+    type: stakes
+    seconds: [150, 210]
+    function: >
+      How things stood before this document existed, and who the people and
+      bodies in it are.
+    constraints:
+      - >
+        THE ROSTER COMES FIRST. Who is involved, what each body actually does,
+        and which of them has power over what. A listener who does not know
+        whether a committee can compel anything cannot follow a word of it.
+      - >
+        What the rule or the situation WAS before. The change is the story, and
+        a change is unreadable without the thing it changed from.
+      - Chronological, and dated in a way a person can hold.
+    minClaims: 6
+
+  - id: says
+    type: escalation
+    seconds: [190, 260]
+    function: >
+      What the document actually says, in order, in plain words.
+    constraints:
+      - >
+        QUOTE IT AND THEN TRANSLATE IT. The wording matters here more than
+        anywhere else in the network, and so does what the wording means for
+        somebody who does not read legislation.
+      - >
+        SAY WHAT IT DOES NOT SAY, wherever that is the load-bearing part. Most
+        arguments about a document are about something absent from it.
+      - Do not characterise it. Say what is in it and let it be what it is.
+      - No predictions, and no motive that nobody wrote down.
+    minClaims: 8
+
+  - id: argued
+    type: counterpoint
+    seconds: [140, 200]
+    # The question opened at the top is "what does the document actually say",
+    # and it is answered by the beat before this one. Closed HERE rather than
+    # there because the answer is not complete until the readings of it have
+    # been laid out - a document whose meaning is contested has not been
+    # explained by quoting it.
+    closes: [the_document]
+    function: >
+      What each side says this means, and what would have to be true for each of
+      them to be right.
+    constraints:
+      - >
+        NAME WHO IS ARGUING WHAT, and attribute every reading to somebody. "Some
+        say" is exactly the construction this beat exists to prevent.
+      - >
+        GIVE EACH SIDE ITS BEST VERSION, the one they would recognise as their
+        own. A show that only steelmans one side has picked one.
+      - >
+        Say what would settle it - what evidence, what test, what has to happen -
+        and whether that thing exists yet.
+      - >
+        Never describe what a living person intended, wanted or believed unless
+        a document records them saying so. Report what they said, attributed.
+    minClaims: 6
+
+  - id: close
+    type: outro
+    seconds: [55, 85]
+    function: >
+      Land it, and leave the listener holding something.
+    constraints:
+      - >
+        THIS IS AN ENDING, NOT A STOP. Land it by returning to the document, or
+        by saying what happens next procedurally - a date, a vote, a hearing -
+        or by naming what is genuinely unresolved.
+      - >
+        A DATE IS A BETTER ENDING THAN AN OPINION. "The committee reports in
+        March" leaves a listener with something real; "time will tell" leaves
+        them with nothing.
+      - No prediction, no advice, no sign-off, no naming the show.
+    minClaims: 1
+
+# The document beat is the peak, which is the whole argument of the format: the
+# most interesting thing in an explainer is the primary text, not the row about
+# it. The argument beat sits below it deliberately - it is quieter than the
+# document, and a show that peaked on the row would be a bulletin with extra
+# steps.
+tensionCurve: [0.5, 0.6, 1.0, 0.75, 0.45]

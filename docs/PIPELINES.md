@@ -6,7 +6,30 @@ re-read before starting any of it.
 
 Last updated 2026-09-13.
 
+> **Since this was written, most of it got built.** The health, news and serial
+> shows now exist, along with the two mechanisms they needed: a per-show
+> evidence policy and a voice registry. What remains open is at the bottom.
+
 ---
+
+## Channels and voices
+
+A **channel** is a show: a persona file, a topic queue, one or more hosts, and a
+voice per host. There are seven, across three lanes.
+
+**A channel's voice is pinned the first time it renders audio** and cannot drift
+after that. A listener finds a show by its voice long before they read its name,
+so changing it at episode twelve makes it a different show to everybody
+following it. `voices.json` records what was used and when; a run whose persona
+disagrees with it stops before any model call. Changing it on purpose is two
+steps: edit the persona, then `foundry voice-retire --show <id>`.
+
+`foundry voices` shows what each channel speaks in, and which are still
+uncommitted.
+
+Voice ids are per PROVIDER, because they have to be. A show drafted on OpenAI
+and published on ElevenLabs legitimately has two, and neither id means anything
+to the other engine.
 
 ## The thing to understand first
 
