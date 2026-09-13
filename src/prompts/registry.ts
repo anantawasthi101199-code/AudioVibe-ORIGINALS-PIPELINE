@@ -26,6 +26,7 @@ import { EpisodeFormat } from '../formats/schema';
 import { BRIEF_SYSTEM, COUNTER_SYSTEM, EXTRACT_SYSTEM } from '../evidence/research';
 import { SYSTEM as VERIFY_SYSTEM } from '../evidence/verify';
 import { NARROW_SYSTEM } from '../evidence/repair';
+import { GAP_SYSTEM } from '../evidence/gaps';
 import { SYSTEM as COMPARE_SYSTEM } from '../qa/compare';
 import { CHECK_SYSTEM, EXTRACT_SYSTEM as FICTION_EXTRACT_SYSTEM } from '../fiction/continuity';
 import { CHOOSE_SYSTEM, GENERATE_SYSTEM } from '../script/hooks';
@@ -107,6 +108,17 @@ export const promptRegistry = (input: {
         'rebound to another source, and what that cannot save survives as unsettled with a ' +
         'hedge the script must say out loud.',
       text: NARROW_SYSTEM,
+    },
+    {
+      id: 'gap',
+      stage: 'repair',
+      source: 'src/evidence/gaps.ts',
+      note:
+        'Runs after repair, over the corpus already on disk - no search, no fetch. Given a name ' +
+        'the claims use and never introduce, plus the passages that mention it, it writes one ' +
+        'claim saying who or what that name is. Answers to the same quote check and the same ' +
+        'verifier as every other claim.',
+      text: GAP_SYSTEM,
     },
     {
       id: 'plan',

@@ -21,7 +21,7 @@ import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
 import { episodeBudgetPence } from '../config';
-import { checkLedger, Claim, claimSchema } from '../evidence/claim';
+import { checkLedger, Claim, claimSchema, locateQuote } from '../evidence/claim';
 import { FetchDeps } from '../evidence/fetch';
 import {
   Brief,
@@ -45,6 +45,7 @@ import {
   verifyClaim,
 } from '../evidence/verify';
 import { repairAll, repairReportSchema } from '../evidence/repair';
+import { fillGaps, findGaps } from '../evidence/gaps';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
@@ -338,6 +339,59 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     } else {
       run.writeArtifact('repair', { claims, report: { repaired: [], costPence: 0 } });
     }
+    // --- 4d. Go back for the names nobody placed. ---
+    //
+    // Extraction runs once, against a beat sheet, before anyone knows which
+    // names the episode will lean on. It reliably produces a claim saying
+    // Arnold Paole was bothering people at night and none saying who he was,
+    // and by the time that matters the evidence stage is over - leaving the
+    // writer a choice between saying a name it cannot place and dropping him.
+    //
+    // Nearly free, because the corpus is already on disk. No search, no fetch:
+    // BM25 finds the passage that talks about the name, one cheap call reads
+    // it, and the claim it produces is verified exactly like every other.
+    const gaps = findGaps(workingClaims);
+    if (gaps.length) {
+      log(`gaps: ${gaps.length} name(s) the claims use and never introduce`);
+      const found = await fillGaps(
+        gaps,
+        {
+          sources: corpus.sources,
+          // The clerk reads one passage for one fact against a deterministic
+          // quote check and a verifier afterwards, which is exactly the shape
+          // of work the clerk rule allows.
+          model: deps.clerk ?? deps.writer,
+          verify: async (candidate) => {
+            const source = corpus.sources.find((src) => src.id === candidate.sourceId);
+            if (!source) return false;
+            if (!locateQuote(source.text, candidate.quote).found) return false;
+            const { verification: v, costPence } = await verifyClaim(
+              candidate,
+              source,
+              deps.verifier
+            );
+            spend(costPence);
+            return v.verdict === 'entailed';
+          },
+          onCost: spend,
+          onProgress: say('gaps'),
+        },
+        // Attached to the beat that introduces people, so the density floors
+        // see them where a listener would meet them.
+        format.beats[1]?.id ?? format.beats[0]!.id,
+        1
+      );
+
+      if (found.length) {
+        workingClaims = [...workingClaims, ...found];
+        log(`gaps: filled ${found.length} of ${gaps.length}`);
+        run.writeArtifact('repair', {
+          claims: workingClaims,
+          report: { repaired: [], costPence: 0 },
+        });
+      }
+    }
+
     run.markComplete('repair');
   }
 
