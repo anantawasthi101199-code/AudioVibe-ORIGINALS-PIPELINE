@@ -34,7 +34,7 @@ Writes, renders and gates one episode. This is the main command.
 | `--topic "..."` | What it is about. Required. Be specific; the brief is written from this. |
 | `--format <id>` | Which shape. Defaults to the show's first format. |
 | `--dry-run` | Prints what it would do and roughly what it would cost, and spends nothing. |
-| `--one-pass` | Writes the whole script in one call instead of beat by beat. An experiment, see below. |
+| `--beat-by-beat` | Writes one beat at a time instead of the whole script at once. The old default, see below. |
 
 It never publishes. It stops at the gate and tells you what to read.
 
@@ -49,28 +49,35 @@ npm run foundry -- make --show honest-health --topic "Why a bad night's sleep ma
 npm run foundry -- make --show myths-of-the-world --format ten-stories --topic "Vampire beliefs in the Balkans"
 ```
 
-**`--one-pass`**, and why it exists. Beat-by-beat writing has one structural
-weakness no prompt fixes: a beat asked to "answer the question from the opening"
-has only spent material to work with, so it restates. Written in one call, a
-beat cannot repeat what it can see.
+**The script is written in one call**, and `--beat-by-beat` goes back to writing
+one beat at a time. One pass became the default after a comparison on the same
+show, the same topic and the same corpus size:
 
-What it gives up is the per-beat critique loop: one revision of the whole script
-rather than up to two of each beat, and no checkpoint, so a failed write costs
-the whole script rather than one beat. The checks are identical either way, so a
-comparison is a comparison of the writing.
+| | beat by beat | one pass |
+|---|---|---|
+| Facts used of those researched | 38 of 66 (58%) | 47 of 59 (80%) |
+| Information density | one fact per 24s | one fact per 16s |
+| Mean sentence | 29.5 words | 25.8 words |
+| Sentences past one breath | 26%, blocked at the gate | under the limit |
+
+The decisive number is not in that table. Writing beat by beat, the `evidence`
+beat, the longest in the format, cited **none** of the 21 claims researched for
+it: it wrote around its facts and reported nothing, so not a word of it could be
+traced to a source. One pass spread the same job evenly across every beat,
+because a writer producing the whole script at once can see all of it.
+
+What one pass gives up: the per-beat critique loop, one rewrite of the whole
+script instead of up to two of each beat, and any checkpoint inside the write. A
+failed write costs the script rather than one beat. The plan before it IS kept,
+so a resume is not re-planned into a different story.
 
 Which method a run used is recorded on the run, so `resume` continues the way it
-started and a comparison six weeks later still knows which was which.
+started and a comparison later still knows which was which.
 
 ```
-npm run foundry -- make --show honest-health --topic "..." --one-pass
-npm run foundry -- compare --a <beat-by-beat run> --b <one-pass run>
+npm run foundry -- make --show honest-health --topic "..." --beat-by-beat
+npm run foundry -- compare --a <run> --b <run>
 ```
-
-The trigger for making it the default, written down in advance so it is not
-decided by whichever episode was listened to most recently: if the faults in
-one-pass episodes are sentence-level and the faults in beat-by-beat episodes are
-joins, repetition and continuity, one pass wins.
 
 ### `shorts --run <id> [--only 1,4,7]`
 

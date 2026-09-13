@@ -80,8 +80,9 @@ Commands
   make --show <id> --topic "..." Write, render and gate one episode
                                  (fiction shows skip research, see Notes)
       ... --dry-run              What it would do and cost. Spends nothing.
-      ... --one-pass             Write the whole script in one call instead of
-                                 beat by beat. An experiment; see COMMANDS.md.
+      ... --beat-by-beat         Write one beat at a time instead of the whole
+                                 script in one call. Slower, and it starves a
+                                 beat; see COMMANDS.md.
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
   shorts --run <id> [--only 1,4,7]
@@ -390,12 +391,15 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   const formatId = arg(argv, 'format') ?? persona.formats[0]!;
   const format = loadFormat(formatId); // Fail now, not after the first API call.
 
-  if (flag(argv, 'dry-run')) return describeRun(persona, format, topic);
+  if (flag(argv, 'dry-run')) return describeRun(persona, format, topic, !flag(argv, 'beat-by-beat'));
 
-  // AN EXPERIMENT, AND IT IS RECORDED ON THE RUN because a run whose script was
-  // written a different way is not comparable to one that was not, and six
-  // weeks later the only place that fact could live is the manifest.
-  const onePass = flag(argv, 'one-pass');
+  // ONE PASS IS THE DEFAULT. `--beat-by-beat` goes back, and `--one-pass` is
+  // still accepted because it is in the history and in people's shell history.
+  //
+  // RECORDED ON THE RUN either way, because a run whose script was written a
+  // different way is not comparable to one that was not, and six weeks later
+  // the only place that fact could live is the manifest.
+  const onePass = !flag(argv, 'beat-by-beat');
 
   const run = Run.create({ personaId: persona.id, formatId, topic, onePass });
   console.log(`run ${run.id}`);
@@ -416,7 +420,12 @@ const cmdMake = async (argv: string[]): Promise<number> => {
  * to cost fifty pence or fifteen pounds", which is the question somebody has
  * before running this for the first time - not to predict an invoice.
  */
-const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): number => {
+const describeRun = (
+  persona: Persona,
+  format: EpisodeFormat,
+  topic: string,
+  onePass: boolean
+): number => {
   const writer = writerConfig();
   const verifier = verifierConfig();
   const engine = ttsProvider();
@@ -483,14 +492,22 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
     ],
     [
       'script',
-      // The first call is the STORY PLAN, which every format pays for. It used
-      // to be described here as the hook competition, and that description went
-      // stale the moment the long formats dropped their cold opens: writeScript
-      // only runs a hook competition when the first beat is typed `cold_open`,
-      // so an estimate naming it was quoting for work the run would not do.
-      write(writer.model, 1, 2_000, 1_500) + write(writer.model, beats * 1.6, 3_500, 1_200),
-      `story plan${format.beats[0]?.type === 'cold_open' ? ' + hook competition' : ''} + ` +
-        `~${Math.round(beats * 1.6)} beat calls (${beats} beats, some revised)`,
+      // THE STORY PLAN IS PAID FOR EITHER WAY. It used to be described here as
+      // the hook competition, and that went stale the moment the long formats
+      // dropped their cold opens: a hook competition only runs when the first
+      // beat is typed `cold_open`, so an estimate naming it was quoting for
+      // work the run would not do.
+      write(writer.model, 1, 2_000, 1_500) +
+        (onePass
+          ? // One call carrying the whole beat sheet and every claim, and up to
+            // one rewrite of the whole thing. The output is the episode, so it
+            // is large; the input is large too and mostly cached.
+            write(writer.model, 1.5, 16_000, 8_000)
+          : write(writer.model, beats * 1.6, 3_500, 1_200)),
+      onePass
+        ? `story plan + the whole script in 1 call (plus up to 1 rewrite)`
+        : `story plan${format.beats[0]?.type === 'cold_open' ? ' + hook competition' : ''} + ` +
+          `~${Math.round(beats * 1.6)} beat calls (${beats} beats, some revised)`,
     ],
     ['title', write(writer.model, 1, 1_200, 200), '1 call'],
   ];

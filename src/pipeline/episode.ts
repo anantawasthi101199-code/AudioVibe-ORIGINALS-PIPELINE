@@ -87,11 +87,24 @@ export interface PipelineDeps {
   /**
    * Write the whole script in one call instead of a beat at a time.
    *
-   * AN EXPERIMENT WITH A WRITTEN-DOWN TRIGGER, not a setting to leave on by
-   * accident. Beat-by-beat writing repeats itself because a beat asked to
-   * "answer the question from the opening" has only spent material to work
-   * with; one pass cannot repeat what it can see. What it gives up is the
-   * per-beat critique loop. See script/onePass.ts.
+   * THE DEFAULT SINCE THE COMPARISON WAS RUN, and the numbers are worth keeping
+   * because the trigger for switching was written down in advance. Same show,
+   * same topic, same corpus size:
+   *
+   *   beat by beat  38 of 66 facts used (58%), one fact per 24s, mean sentence
+   *                 29.5 words, 26% of sentences past one breath - AND the
+   *                 evidence beat, the longest in the format, cited NONE of the
+   *                 21 claims researched for it.
+   *   one pass      47 of 59 facts used (80%), one fact per 16s, mean sentence
+   *                 25.8 words, evenly spread across every beat.
+   *
+   * The starved beat is the decisive one. Writing a beat at a time, a beat can
+   * write around its facts and report none, and nothing notices until the gate.
+   * A writer producing the whole script at once distributes the material because
+   * it can see all of it.
+   *
+   * What it gives up: the per-beat critique loop, and any checkpoint inside the
+   * write. Set false to go back, which `--beat-by-beat` does.
    */
   onePass?: boolean;
   log?: (message: string) => void;
@@ -448,7 +461,17 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
     if (deps.onePass) {
       log('script: writing the whole script in one pass');
-      script = await writeScriptOnePass(scriptInput, deps.writer, spend, say('script'));
+      script = await writeScriptOnePass(
+        scriptInput,
+        deps.writer,
+        spend,
+        // The plan, and only the plan. See writeScriptOnePass.
+        {
+          progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
+          save: (progress) => run.writeCheckpoint('script', progress),
+        },
+        say('script')
+      );
     } else {
       log('script: writing beats');
       script = await writeScript(

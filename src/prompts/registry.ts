@@ -23,7 +23,7 @@
  */
 import { Persona } from '../canon/schema';
 import { EpisodeFormat } from '../formats/schema';
-import { BRIEF_SYSTEM, COUNTER_SYSTEM, EXTRACT_SYSTEM } from '../evidence/research';
+import { BRIEF_SYSTEM, SOURCE_BRIEF_SYSTEM, COUNTER_SYSTEM, EXTRACT_SYSTEM } from '../evidence/research';
 import { SYSTEM as VERIFY_SYSTEM } from '../evidence/verify';
 import { NARROW_SYSTEM } from '../evidence/repair';
 import { GAP_SYSTEM } from '../evidence/gaps';
@@ -70,6 +70,16 @@ export const promptRegistry = (input: {
       source: 'src/evidence/research.ts',
       note: 'Turns a topic into an angle and a list of questions to go and find sources for.',
       text: BRIEF_SYSTEM,
+    },
+    {
+      id: 'source-brief',
+      stage: 'brief',
+      source: 'src/evidence/research.ts (SOURCE_BRIEF_SYSTEM)',
+      note:
+        'Used INSTEAD of the brief above for a sourceOnly format. Every other format ' +
+        'narrows a topic to one angle; an anthology has to widen it into ten separate ' +
+        'stories, so the two briefs want opposite things and cannot be one prompt.',
+      text: SOURCE_BRIEF_SYSTEM,
     },
     {
       id: 'extract',

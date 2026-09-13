@@ -217,6 +217,33 @@ describe('writeScriptOnePass', () => {
     expect(script.writerModel).toBe('writer-1');
   });
 
+  it('keeps the plan, so a resumed run is not re-planned into a different story', async () => {
+    // The first real one-pass run died after planning and paid for a second
+    // plan on resume. The 6p was the small half: the second plan was a
+    // DIFFERENT plan, so the episode would have been written to a spine its own
+    // journal did not describe.
+    const writer = fakeWriter();
+    const saved: unknown[] = [];
+    const checkpoint = {
+      progress: { beats: [] as never[] },
+      save: (p: unknown) => saved.push(p),
+    };
+
+    await writeScriptOnePass(input, writer, undefined, checkpoint as never);
+    expect((saved[0] as { plan?: unknown }).plan).toBeDefined();
+
+    // Second run, handed back what the first saved.
+    const resumed = fakeWriter();
+    const withPlan = {
+      progress: saved[0] as never,
+      save: () => undefined,
+    };
+    const script = await writeScriptOnePass(input, resumed, undefined, withPlan as never);
+
+    expect(resumed.calls.some((c) => c.system.includes('You plan one episode'))).toBe(false);
+    expect(script.plan?.spine).toMatch(/measured/);
+  });
+
   it('still produces a script when planning fails', async () => {
     // A failed plan must not cost the episode. It is worse without one, but it
     // is not nothing.

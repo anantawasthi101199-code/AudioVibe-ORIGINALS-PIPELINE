@@ -36,7 +36,17 @@ export const briefSchema = z.object({
   /** What the episode will have to establish to work. */
   mustEstablish: z.array(z.string().min(1)).min(1),
   /** Queries for the search engine. */
-  queries: z.array(z.string().min(1)).min(3).max(12),
+  /**
+   * Queries for the search engine.
+   *
+   * THE CEILING IS FOR AN ANTHOLOGY. Twelve was right while every format
+   * researched one subject. A source format researches ten separate stories and
+   * needs one or two aimed at each, plus a few for the shared background, so a
+   * twelve-query cap would have forced it to drop stories or to search for the
+   * tradition in general - which returns overviews, and an overview has one
+   * sentence about each story.
+   */
+  queries: z.array(z.string().min(1)).min(3).max(30),
   /** Claims the writer expects to be contested, driving the counter-evidence pass. */
   likelyContested: z.array(z.string()).default([]),
 });
@@ -112,6 +122,60 @@ that gets forgotten.
 Be honest in likelyContested. It drives a search for evidence AGAINST the
 episode's reading, and an empty list means that search does not happen.`;
 
+/**
+ * The brief for a SOURCE format, where the job is the opposite of the usual one.
+ *
+ * EVERY OTHER FORMAT NARROWS. "The specific thing this episode is about,
+ * narrower than the topic" is right for one story told properly, and it is
+ * exactly wrong for an anthology: ten self-contained stories need ten different
+ * subjects, and a brief that picked one angle would research that angle ten
+ * times over and produce ten versions of one story.
+ *
+ * So a source brief WIDENS. The topic names a body of material - a mythology, a
+ * period, a category of thing - and the brief chooses ten specific stories out
+ * of it and researches each one separately.
+ */
+export const SOURCE_BRIEF_SYSTEM = `You plan the research for a set of SHORT, SELF-CONTAINED stories.
+
+You are NOT writing them. You are choosing WHICH stories to tell and deciding
+what has to be found out about each one.
+
+This is not one episode about one subject. It is a set of separate short pieces,
+each heard on its own by somebody who has heard none of the others. The topic
+names a body of material; your job is to pick specific stories out of it.
+
+Return JSON only:
+{
+  "angle": "the body of material and what these have in common, one line",
+  "mustEstablish": ["one line per story: WHICH story it is, named specifically"],
+  "queries": ["search engine queries"],
+  "likelyContested": ["claims you expect informed people to disagree about"]
+}
+
+CHOOSING THEM IS THE WHOLE JOB, and it is what makes the set worth hearing:
+
+- DIFFERENT STORIES, not different angles on one. If two of them share a main
+  character, an event and an outcome, one of them is wasted.
+- EACH ONE STANDS ALONE. A listener meets it in a feed knowing nothing. A story
+  that only makes sense after another has been heard cannot be in the set.
+- PICK THE ONES WITH SOMETHING SPECIFIC IN THEM: a name, a number, an object, a
+  strange detail somebody wrote down. A story whose whole content is "and then
+  the god was angry" has nothing to say for ninety seconds.
+- RANGE OVER THE MATERIAL. The famous ones earn their place, and a set that is
+  ONLY the famous ones is the set everybody has already heard. Mix what people
+  half-know with what they do not.
+- NAME EACH ONE IN mustEstablish so the research can be pointed at it: "Ymir,
+  and the world made out of his body", not "a creation story".
+
+THE QUERIES ARE PER STORY, NOT PER SET. Aim each one at a named story, plus two
+or three for the shared background. A query about the body of material in
+general returns overviews, and an overview gives one sentence per story, which
+is not enough to tell any of them.
+
+Prefer queries that would surface primary material - translations of the actual
+texts, scholarly editions, collected folklore, published research - over
+commentary about it.`;
+
 export const buildBrief = async (
   topic: string,
   persona: Persona,
@@ -126,14 +190,19 @@ export const buildBrief = async (
     await completeJson(
       writer,
       {
-        system: BRIEF_SYSTEM,
+        // A source format is researched the other way round. See
+        // SOURCE_BRIEF_SYSTEM.
+        system: format.sourceOnly ? SOURCE_BRIEF_SYSTEM : BRIEF_SYSTEM,
         prompt: [
           `SHOW: ${persona.name}`,
           `THESIS: ${persona.thesis}`,
           `AUDIENCE: ${persona.audience}`,
           `FORMAT: ${format.name} - ${format.intent}`,
+          format.sourceOnly ? `HOW MANY STORIES: ${format.beats.length}` : '',
           `TOPIC: ${topic}`,
-        ].join('\n'),
+        ]
+          .filter(Boolean)
+          .join('\n'),
         temperature: 0.7,
         // Medium: choosing an angle and writing searchable queries is a
         // judgement, but a small one.

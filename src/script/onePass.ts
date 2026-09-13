@@ -43,6 +43,7 @@ import { StoryPlan, planStory } from './plan';
 import {
   Script,
   ScriptBeat,
+  ScriptCheckpoint,
   WORDS_PER_SECOND,
   beatText,
   buildSystem,
@@ -190,26 +191,50 @@ export const writeScriptOnePass = async (
   },
   writer: LlmClient,
   onCost?: (pence: number) => void,
+  /**
+   * Holds the PLAN only, which is the one part of this method that can be kept.
+   *
+   * The write is a single call: it either returns a script or it does not, and
+   * a failed one leaves nothing worth saving. The plan before it is a separate
+   * call with a separate answer, and re-making it on a resume costs money and,
+   * worse, produces a different plan - so the second half of a resumed episode
+   * would be written to a spine the first half never had.
+   */
+  checkpoint?: ScriptCheckpoint,
   onProgress?: (message: string) => void
 ): Promise<Script> => {
   const system = buildSystem(input.persona, input.isoDate, input.format.kind);
 
-  let plan: StoryPlan | undefined;
-  try {
-    onProgress?.('planning the whole story before writing any of it');
-    plan = await planStory(
-      {
-        persona: input.persona,
-        format: input.format,
-        claims: input.claims,
-        angle: input.angle,
-      },
-      writer,
-      onCost
-    );
-    onProgress?.(`the story: ${plan.spine}`);
-  } catch (err) {
-    onProgress?.(`planning failed, writing without a plan: ${(err as Error).message}`);
+  // THE PLAN IS KEPT, even though the write itself cannot be. A single call has
+  // nothing to checkpoint inside it, but the plan before it is a separate call
+  // with a separate answer - and the first real one-pass run paid for it twice,
+  // once before it died and once on resume. Worse than the 6p: the second plan
+  // was a DIFFERENT plan, so a resumed run would have been written to a spine
+  // its own journal did not describe.
+  let plan: StoryPlan | undefined = checkpoint?.progress.plan;
+
+  if (plan) {
+    onProgress?.('reusing the story plan this run already made');
+  } else {
+    try {
+      onProgress?.('planning the whole story before writing any of it');
+      plan = await planStory(
+        {
+          persona: input.persona,
+          format: input.format,
+          claims: input.claims,
+          angle: input.angle,
+        },
+        writer,
+        onCost
+      );
+      checkpoint?.save({ beats: [], plan });
+      onProgress?.(`the story: ${plan.spine}`);
+    } catch (err) {
+      // A failed plan must not cost the episode. It is worse without one, and
+      // it is not nothing.
+      onProgress?.(`planning failed, writing without a plan: ${(err as Error).message}`);
+    }
   }
 
   const prompt = buildOnePassPrompt({
@@ -251,11 +276,21 @@ export const writeScriptOnePass = async (
             ].join('\n')
           : prompt,
         temperature: isRevision ? 0.4 : 0.85,
-        // Higher than a beat gets, and this is the one place it is worth it.
-        // Deciding what goes where across a whole episode, and what to leave
-        // out, is the work this method exists to do; a beat is constrained
-        // enough that thinking about it re-derives the beat sheet.
-        effort: 'high',
+        // MEDIUM, AND IT WAS HIGH, WHICH COST DOUBLE FOR NOTHING.
+        //
+        // Thinking tokens count against max_tokens. At high effort this call
+        // spent its entire 28,881-token ceiling reasoning and came back
+        // truncated, so completeJson did the only sensible thing and retried
+        // with the ceiling doubled - which is why every attempt appeared in the
+        // journal as two charges, 37.9p then 53.4p. The script stage came to
+        // 204p of a 312p episode, and roughly half of that bought nothing at
+        // all: the discarded output of calls that ran out of room.
+        //
+        // The reasoning this method needs has already happened. planStory
+        // decided the spine and the shape before a word was written, and the
+        // beat sheet says what each beat must do. What is left is writing,
+        // which is constrained work.
+        effort: 'medium',
         maxTokens,
       },
       onCost,
