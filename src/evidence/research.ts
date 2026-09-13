@@ -94,6 +94,21 @@ document types. Prefer queries that would surface primary documents - filings,
 reports, court records, published research - over queries that would surface
 commentary about them.
 
+SEARCH TWICE OVER: once for what happened, and once for WHO AND WHERE AND WHEN.
+A listener has nothing to look anything up with, so an episode that can say what
+somebody did but not who they were is an episode they cannot follow.
+
+So alongside the queries about events, write queries that would find:
+- who each main person was. Their job, their age, their rank, what they had
+  done before, why they are in this at all.
+- where the places are, and what kind of place they were at the time.
+- what any institution, office, title or treaty named here was actually for.
+- what else was happening then, so the whole thing can be fixed in time.
+
+Put the same things in mustEstablish. "Who Arnold Paole was" belongs there
+exactly as much as "what happened when his grave was opened", and it is the one
+that gets forgotten.
+
 Be honest in likelyContested. It drives a search for evidence AGAINST the
 episode's reading, and an empty list means that search does not happen.`;
 
@@ -274,6 +289,38 @@ RULES, and these are not style preferences:
    is an attribution. "The pamphlet calls it 'the most cruell torment'" is a
    quotation, and only if those exact words are in the quote.
 6. Mark contested: true when informed people would disagree.
+7. EVERY NAME NEEDS A SECOND CLAIM SAYING WHO OR WHAT IT IS. This is the rule
+   that decides whether the episode is followable, and it is the one most often
+   skipped, because a claim about what somebody DID always feels more important
+   than a claim about who they were.
+
+   It is not. A listener has nothing to look anything up with. A name they
+   cannot place is a name they drop, and they drop the sentence with it.
+
+   So for every PERSON named anywhere in your claims, there must also be a
+   claim establishing who they were - their job, their age, their rank, what
+   they had done before, why they are in this story at all:
+
+     "Arnold Paole was bothering people at night"         the event
+     "Arnold Paole was a hajduk, a frontier militiaman"   WHO HE WAS
+
+   For every PLACE, a claim saying where it is and, where the source supports
+   it, what kind of place:
+
+     "Medvegia is a village in Serbia, near the Morava"
+
+   For every INSTITUTION, TITLE, RANK OR OFFICE - an army command, a court, a
+   treaty, a job like Kameralprovisor - a claim saying what it was for.
+
+   And for the WHOLE EPISODE, at least one claim that fixes it in time in a way
+   a listener can hold: a date, a reign, a war, something else that was
+   happening.
+
+   These identity claims follow every other rule here. They need their own
+   quote, the quote must contain the identity, and if the corpus does not
+   support one, it goes in "unsupported" like anything else - which is a useful
+   signal on its own, because a story whose people cannot be identified from the
+   sources is a story this show cannot yet tell.
 
 Return JSON only:
 {
