@@ -88,14 +88,25 @@ export const probeDuration = async (file: string): Promise<number | null> => {
  * per cent of the beat - far inside the normal variation in speaking rate, so
  * no duration ratio could ever separate it from a beat that simply reads fast.
  *
- * The trailing silence CAN separate them, and by a wide margin:
+ * The trailing silence is a usable TRIGGER, and it is only a trigger. On the
+ * first case it looked like a verdict - 0.31s and 0.41s on complete renders
+ * against 1.48s on the truncated one - and treating it as one was wrong, in a
+ * way that made this guard actively harmful.
  *
- *   complete   0.31s and 0.41s of silence after the last word
- *   truncated  1.48s
+ * The same beat rendered three times:
  *
- * Whatever the mechanism - the model appears to emit its end-of-utterance
- * padding after stopping early - the signal is four times clearer than the
- * duration and points the right way.
+ *   speech 173.2s   trailing 0.34s
+ *   speech 168.6s   trailing 2.07s
+ *   speech 165.8s   trailing 0.40s   <- what the guard chose
+ *
+ * A render that truncates and stops cleanly has almost NO trailing silence, so
+ * "least silence wins" picked the shortest take of the three and threw away
+ * seven seconds of speech. The listener noticed the missing sentence; the
+ * guard had preferred it.
+ *
+ * SO THE CHOICE IS MADE ON SPEECH, NOT ON SILENCE. Both takes are of identical
+ * text, so more speech is strictly more of that text spoken, and there is
+ * nothing to trade off. Silence only decides whether to look again.
  */
 export const MAX_TRAILING_SILENCE_S = 0.9;
 
@@ -492,7 +503,7 @@ export const renderScript = async (
       if (firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
         onProgress?.(
           `beat ${i + 1}/${input.beats.length}: ${beat.beatId} ended on ` +
-            `${firstTrailing.toFixed(1)}s of silence, which usually means the tail was dropped. Re-rendering.`
+            `${firstTrailing.toFixed(1)}s of silence. Taking it again.`
         );
 
         const retry = await tts.synthesise(request);
@@ -505,7 +516,21 @@ export const renderScript = async (
         const retryTrailing =
           retryDuration === null ? null : await measureTrailing(retryFile, retryDuration);
 
-        if (retryTrailing !== null && retryTrailing < firstTrailing) {
+        // MORE SPEECH WINS, and choosing on silence instead was a real bug: a
+        // render that truncates and stops cleanly has almost no trailing
+        // silence, so "least silence" preferred the shortest of three takes and
+        // lost seven seconds of a beat. Both takes are the same text, so more
+        // speech is simply more of it spoken and there is nothing to weigh.
+        const speechIn = (total: number | null, trailing: number | null) =>
+          total === null ? null : total - (trailing ?? 0);
+
+        const keptSpeech = speechIn(measured, firstTrailing);
+        const retrySpeech = speechIn(retryDuration, retryTrailing);
+
+        if (keptSpeech !== null && retrySpeech !== null && retrySpeech > keptSpeech) {
+          onProgress?.(
+            `  the second take says ${(retrySpeech - keptSpeech).toFixed(1)}s more. Keeping it.`
+          );
           // Written through the injected writer rather than renamed, because
           // everything else in this function goes through it and a direct fs
           // call here would be the one path that touches the disk regardless.

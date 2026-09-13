@@ -240,7 +240,11 @@ describe('the truncation guard', () => {
    */
   const beats = [{ beatId: 'opening', beatType: 'orientation', turns: [{ speaker: 'host', text: 'A sentence that should finish.' }] }];
 
-  const render = (trailings: Array<number | null>, onProgress?: (m: string) => void) => {
+  const render = (
+    trailings: Array<number | null>,
+    onProgress?: (m: string) => void,
+    durations: number[] = []
+  ) => {
     const calls: string[] = [];
     const tts: TtsProvider = {
       name: 'fake',
@@ -250,6 +254,7 @@ describe('the truncation guard', () => {
       },
     };
     let i = 0;
+    let d = 0;
     return {
       calls,
       done: renderScript(
@@ -262,7 +267,7 @@ describe('the truncation guard', () => {
         tts,
         {
           writeFile: () => undefined,
-          probe: async () => 60,
+          probe: async () => durations[d++] ?? 60,
           trailing: async () => trailings[i++] ?? null,
           concat: async () => undefined,
         },
@@ -278,14 +283,28 @@ describe('the truncation guard', () => {
     expect(calls).toHaveLength(2);
   });
 
-  it('keeps the retry only when it is actually better', async () => {
-    // A beat that genuinely ends on a long deliberate pause must not be made
-    // worse by a second attempt that is no better.
-    const { calls, done } = render([1.4, 1.6]);
+  it('keeps the take with MORE SPEECH, not the one with less silence', async () => {
+    // THE BUG THIS REPLACES. Choosing on trailing silence preferred a render
+    // that truncated and stopped cleanly - almost no silence, seven seconds
+    // less speech - over a complete one. The same beat, three times:
+    //
+    //   speech 173.2s  trailing 0.34s
+    //   speech 168.6s  trailing 2.07s
+    //   speech 165.8s  trailing 0.40s  <- what the old rule chose
+    //
+    // Both takes are the same text, so more speech is more of that text.
+    const { calls, done } = render([1.4, 0.2], undefined, [100, 90]);
     const result = await done;
     expect(calls).toHaveLength(2);
+    // The retry has LESS silence and LESS speech. The old rule took it.
+    expect(result.durationS).toBe(100);
     // Both renders cost, and the budget has to see both whichever is kept.
     expect(result.costPence).toBe(2);
+  });
+
+  it('takes the retry when it genuinely says more', async () => {
+    const { done } = render([1.4, 0.3], undefined, [90, 100]);
+    expect((await done).durationS).toBe(100);
   });
 
   it('does not re-render a beat that ended cleanly', async () => {
@@ -313,7 +332,7 @@ describe('the truncation guard', () => {
     const said: string[] = [];
     const { done } = render([1.48, 0.35], (m) => said.push(m));
     await done;
-    expect(said.join(' ')).toMatch(/1\.5s of silence.*tail was dropped/);
+    expect(said.join(' ')).toMatch(/1\.5s of silence\. Taking it again/);
   });
 });
 
