@@ -136,6 +136,12 @@ export const runShort = async (
       formatId: format.id,
       topic: parent.manifest.topic,
       derivedFrom: parent.id,
+      // A short belongs beside the episode it was cut from, carrying that
+      // episode's number and its own - `e003-s01-...` next to `e003-...`. It is
+      // not an episode and must not take an episode number of its own, or a
+      // channel that cut three shorts from episode one would call the next
+      // episode four.
+      parentEpisode: parent.manifest.episode,
     });
 
   log(existing ? `short: resuming ${run.id}` : `short: ${run.id}, derived from ${parent.id}`);

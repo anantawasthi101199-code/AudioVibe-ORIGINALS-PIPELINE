@@ -34,7 +34,7 @@ const claim = (over: Partial<Claim> = {}): Claim => ({
 
 describe('buildProvenance', () => {
   const base = {
-    personaId: 'the-teardown',
+    personaId: 'business-teardowns',
     counterEvidenceAddressed: false,
     models: { writer: 'w-1', verifier: 'v-1' },
     renderedAt: new Date('2026-09-08T12:00:00.000Z'),
@@ -95,7 +95,7 @@ describe('buildProvenance', () => {
     const p = buildProvenance({ ...base, claims: [claim()], sources: [source()], counterEvidence: [] });
     expect(p.generator_version).toBe(GENERATOR_VERSION);
     expect(p.model_ids).toEqual({ writer: 'w-1', verifier: 'v-1' });
-    expect(p.persona_ref).toBe('the-teardown');
+    expect(p.persona_ref).toBe('business-teardowns');
   });
 });
 
@@ -129,7 +129,7 @@ describe('AudioVibeClient', () => {
     category: 'Business & Finance',
     beatMap: [{ id: 'cold_open', type: 'cold_open', startS: 0, endS: 12 }],
     provenance: buildProvenance({
-      personaId: 'the-teardown',
+      personaId: 'business-teardowns',
       claims: [claim()],
       sources: [source()],
       counterEvidence: [],
@@ -183,7 +183,7 @@ describe('AudioVibeClient', () => {
     );
     await client.publish(input());
     expect(JSON.parse(String(form!.get('beat_map')))[0].id).toBe('cold_open');
-    expect(JSON.parse(String(form!.get('provenance'))).persona_ref).toBe('the-teardown');
+    expect(JSON.parse(String(form!.get('provenance'))).persona_ref).toBe('business-teardowns');
   });
 
   it('posts to /api/audios (PLURAL), which is where the router mounts it', async () => {

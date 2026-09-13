@@ -22,7 +22,7 @@ shows:
   # subject. A studio that picks its own subjects converges on whatever the
   # model finds most available, which is the same handful of stories everyone
   # else is already telling.
-  the-teardown:
+  business-teardowns:
     everyDays: 3
     # Two shorts per episode, cut on the days between episodes. They are cheap,
     # they reach people who have never heard the show, and they are the only
@@ -34,7 +34,7 @@ shows:
 
   # Weekly, and the flagship. A told story lives or dies on the telling, and
   # nothing about that gets better by doing it twice as often.
-  the-long-way-round:
+  true-crime-in-full:
     everyDays: 7
     shortsPerEpisode: 2
     autoPublish: false

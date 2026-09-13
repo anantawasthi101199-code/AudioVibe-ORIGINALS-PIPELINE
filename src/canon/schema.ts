@@ -294,7 +294,7 @@ export const personaSchema = z.object({
    * unnumbered and unordered, and a serial a listener cannot play in order is
    * not a serial - it is a pile of audio that happens to share a voice.
    *
-   * A topic show does not need it and may not want it. The Teardown's episodes
+   * A topic show does not need it and may not want it. Business Teardowns's episodes
    * stand alone, so each one competes on its own subject and gets its own shot
    * at a feed; a shelf would add a follow surface but would also mean somebody
    * arriving at episode nine feels late. That is a real trade and it belongs to

@@ -335,7 +335,7 @@ describe('runFiction', () => {
     // The one that would publish unsourced claims under a show whose entire
     // claim on a listener is that it read the documents.
     const factual = Run.create(
-      { personaId: 'the-teardown', formatId: 'case-study-teardown', topic: 'x' },
+      { personaId: 'business-teardowns', formatId: 'case-study-teardown', topic: 'x' },
       { root }
     );
 

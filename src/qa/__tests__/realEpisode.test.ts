@@ -13,22 +13,31 @@ import fs from 'fs';
 import path from 'path';
 import { checkPronouns } from '../pronouns';
 
-const RUN = path.join(__dirname, '../../../runs/20260912-140607-the-long-way-round');
+// ARCHIVED. Runs moved to runs/<channel>/ and everything made before that is
+// under runs/experiments/, kept because this test is the only thing that proves
+// the pronoun check works on a whole real episode rather than on four
+// hand-picked sentences.
+const RUN = path.join(__dirname, '../../../runs/experiments/20260912-140607-the-long-way-round');
 const present = fs.existsSync(path.join(RUN, 'script.json'));
 
 const maybe = present ? describe : describe.skip;
 
 maybe('the episode that misgendered the sentencing judge', () => {
-  const script = JSON.parse(fs.readFileSync(path.join(RUN, 'script.json'), 'utf8')) as {
-    beats: Array<{ turns: Array<{ text: string }> }>;
+  // READ INSIDE THE TESTS, not in the describe body: describe.skip still
+  // evaluates its body, so a top-level read throws even when the run is gone.
+  const load = () => {
+    const script = JSON.parse(fs.readFileSync(path.join(RUN, 'script.json'), 'utf8')) as {
+      beats: Array<{ turns: Array<{ text: string }> }>;
+    };
+    const corpus = JSON.parse(fs.readFileSync(path.join(RUN, 'corpus.json'), 'utf8')) as
+      | { sources: Array<{ text: string }> }
+      | Array<{ text: string }>;
+    const sources = Array.isArray(corpus) ? corpus : corpus.sources;
+    return {
+      text: script.beats.flatMap((b) => b.turns.map((t) => t.text)).join(' '),
+      corpusText: sources.map((x) => x.text).join('\n'),
+    };
   };
-  const corpus = JSON.parse(fs.readFileSync(path.join(RUN, 'corpus.json'), 'utf8')) as
-    | { sources: Array<{ text: string }> }
-    | Array<{ text: string }>;
-
-  const text = script.beats.flatMap((b) => b.turns.map((t) => t.text)).join(' ');
-  const sources = Array.isArray(corpus) ? corpus : corpus.sources;
-  const corpusText = sources.map((s) => s.text).join('\n');
 
   const CAST = [
     'HHJ Kinch',
@@ -42,6 +51,7 @@ maybe('the episode that misgendered the sentencing judge', () => {
   ];
 
   it('reports the judge, and only the judge', () => {
+    const { text, corpusText } = load();
     const problems = checkPronouns(text, corpusText, CAST);
     expect(problems.map((p) => p.name)).toEqual(['Kinch']);
     expect(problems[0]!.used).toBe('she');
@@ -51,6 +61,7 @@ maybe('the episode that misgendered the sentencing judge', () => {
   it('does not accuse the six men, whom the episode got right', () => {
     // The expensive failure mode for this check is the false positive: one
     // wrong accusation and everybody learns to wave the finding through.
+    const { text, corpusText } = load();
     const problems = checkPronouns(text, corpusText, CAST);
     for (const name of ['Reader', 'Perkins', 'Collins', 'Jones', 'Wood', 'Lincoln', 'Doyle']) {
       expect(problems.map((p) => p.name)).not.toContain(name);

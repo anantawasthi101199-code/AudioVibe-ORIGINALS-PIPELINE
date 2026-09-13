@@ -154,7 +154,7 @@ Building toward the first publishable episode.
 
 - **The pipeline runs end to end** (`src/pipeline`, `src/cli.ts`). Nine stages,
   each persisting its artifact, fully resumable, with a budget ceiling checked
-  after every costed call. `npm run foundry -- make --show the-teardown --topic
+  after every costed call. `npm run foundry -- make --show business-teardowns --topic
   "..."` researches, writes, renders and gates one episode.
 - **Publishing is a separate, deliberate command.** `make` always stops at the
   gate.
@@ -197,7 +197,7 @@ Building toward the first publishable episode.
   start/end timestamps at render - which is what later lets drop-off be
   attributed to a *kind* of beat rather than to an episode.
 - **A show is data, not a prompt** (`src/canon`, `personas/`). Personas are
-  YAML, validated by a Zod schema at load, with the first show `the-teardown`
+  YAML, validated by a Zod schema at load, with the first show `business-teardowns`
   shipped. Canon entries are append-only and effective-dated so a show can
   evolve without retconning what it already said - a callback to episode 3 must
   still refer to what the show thought then.

@@ -6,7 +6,7 @@
 # recorded properly: not guessing, not believing, calculating from what
 # survives.
 #
-# WHY THIS SHOW AND NOT ANOTHER TEARDOWN. The Teardown analyses organisations
+# WHY THIS SHOW AND NOT ANOTHER TEARDOWN. Business Teardowns analyses organisations
 # and its listener comes for the subject. This one comes for the STORY, which is
 # a much stronger reason to come back, and it is available to a documentary show
 # in a way it is not available to an analytical one. The material - witch trials,
@@ -134,7 +134,7 @@ styleCard:
 
   # A ceiling, not a target. The evidence layer already decides how confident a
   # claim may be, and prose adding a second vaguer layer of doubt on top is how
-  # a grounded show turns mushy. Slightly higher than The Teardown because
+  # a grounded show turns mushy. Slightly higher than Business Teardowns because
   # historical records genuinely support less than filings do.
   hedgesPer100WordsMax: 2.0
 

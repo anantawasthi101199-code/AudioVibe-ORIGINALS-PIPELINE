@@ -29,7 +29,7 @@ import { Run } from '../../run/store';
 import { runEpisode, PipelineDeps } from '../episode';
 import { runShort } from '../short';
 
-const PERSONA_ID = 'the-teardown';
+const PERSONA_ID = 'business-teardowns';
 const FORMAT_ID = 'case-study-teardown';
 const SHORT_FORMAT_ID = 'short-teardown';
 

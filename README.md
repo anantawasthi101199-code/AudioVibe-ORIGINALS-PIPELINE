@@ -56,7 +56,7 @@ model versions that made it.
 **The pipeline runs end to end.** 224 tests. What it has not yet done is publish
 a real episode, which needs two things a human has to supply:
 
-1. A real voice for the show. `personas/the-teardown.yaml` ships
+1. A real voice for the show. `personas/business-teardowns.yaml` ships
    `voiceId: REPLACE_BEFORE_FIRST_PUBLISH`. Pick one, set it, and then never
    change it.
 2. The show's account on AudioVibe: a creator with `is_ai = true` and
@@ -72,7 +72,7 @@ npm install
 cp .env.example .env     # then fill it in
 
 npm run foundry -- shows
-npm run foundry -- make --show the-teardown --topic "what the episode is about"
+npm run foundry -- make --show business-teardowns --topic "what the episode is about"
 npm run foundry -- script          # read it before anything else
 npm run foundry -- publish --run <id>
 ```
@@ -143,7 +143,7 @@ found and `npm run foundry -- resume`.
 ## Drafting cheaply
 
 ```bash
-FOUNDRY_TTS=openai npm run foundry -- make --show the-teardown --topic "..."
+FOUNDRY_TTS=openai npm run foundry -- make --show business-teardowns --topic "..."
 ```
 
 About fifteen pence an episode against roughly two pounds, so iterating costs

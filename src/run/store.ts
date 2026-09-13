@@ -62,6 +62,18 @@ export const runManifestSchema = z.object({
    * artifact. A short whose parent is gone cannot answer it.
    */
   derivedFrom: z.string().optional(),
+
+  /**
+   * Which episode of the channel this is.
+   *
+   * Recorded rather than parsed back out of the directory name, because a
+   * short needs its PARENT's number to sit beside it and reading that from a
+   * string is the kind of thing that works until somebody renames a folder.
+   */
+  episode: z.number().int().positive().default(1),
+
+  /** Which short of that episode, when it is one. */
+  short: z.number().int().positive().optional(),
 });
 
 export type RunManifest = z.infer<typeof runManifestSchema>;
@@ -86,20 +98,118 @@ const MANIFEST = 'run.json';
  * The suffix keeps the chronological sort, because it lands between this second
  * and the next one either way.
  */
-export const newRunId = (
-  personaId: string,
-  now = new Date(),
-  exists: (id: string) => boolean = () => false
-): string => {
-  const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\..+$/, '').replace('T', '-');
-  const base = `${stamp}-${personaId}`;
+/**
+ * A run's name, which is also its place on disk.
+ *
+ * WHAT THE OLD ONE COULD NOT TELL YOU. Every run lived directly under runs/ as
+ * `20260913-000745-older-than-writing`, which answers "when" and "which show"
+ * and nothing else. It could not say which episode of that show this was,
+ * what it was about, or - worst - which episode a short had been cut from. Six
+ * episodes in, `ls runs/` was a wall of timestamps and the only way to find one
+ * was to open manifests until the topic matched.
+ *
+ * So the layout is a channel per directory, and a name that says what it is:
+ *
+ *   runs/honest-health/e001-20260913-why-a-bad-night-makes-you-forget/
+ *   runs/honest-health/e001-s01-20260913-the-twenty-minute-gap/
+ *   runs/honest-health/e002-20260920-whether-willpower-runs-out/
+ *
+ * The episode number is per channel and counted from what is already there, so
+ * it matches what a listener sees in a feed. A short carries its PARENT's
+ * number and its own, which is the whole point - a short is not an episode and
+ * belongs beside the one it came from rather than in a sequence of its own.
+ *
+ * SORTING STILL WORKS. Within a channel the episode number leads, so lexical
+ * order is production order and `ls` answers "what did we make most recently"
+ * without a tool. That was the reason the old scheme led with a timestamp, and
+ * it survives.
+ */
+export const slugForTopic = (topic: string, words = 6): string => {
+  const slug = topic
+    .toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    // Leading filler says nothing and eats the budget: "the sinking of the
+    // Marchioness" should slug as "sinking-of-the-marchioness".
+    .filter((w, i) => !(i === 0 && ['the', 'a', 'an', 'how', 'what', 'why', 'whether'].includes(w)))
+    .slice(0, words)
+    .join('-');
 
-  if (!exists(base)) return base;
-  for (let n = 2; n < 100; n++) {
-    const candidate = `${base}-${n}`;
-    if (!exists(candidate)) return candidate;
+  return slug || 'untitled';
+};
+
+const DATE_STAMP = (now: Date) => now.toISOString().slice(0, 10).replace(/-/g, '');
+
+/** Episode directories already in a channel, highest number first. */
+export const episodesIn = (root: string, channelId: string): string[] => {
+  const dir = path.join(root, channelId);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((d) => /^e\d{3}-/.test(d) && fs.existsSync(path.join(dir, d, MANIFEST)))
+    .sort();
+};
+
+/**
+ * The next episode number for a channel.
+ *
+ * Counted from EPISODE directories only, so cutting three shorts from episode
+ * one does not make the next episode number four. A short is not an episode.
+ */
+export const nextEpisodeNumber = (root: string, channelId: string): number => {
+  const numbers = episodesIn(root, channelId)
+    .filter((d) => !/^e\d{3}-s\d{2}-/.test(d))
+    .map((d) => Number(d.slice(1, 4)))
+    .filter((n) => Number.isFinite(n));
+
+  return numbers.length ? Math.max(...numbers) + 1 : 1;
+};
+
+/** Shorts already cut from one episode, so the next gets the next number. */
+const nextShortNumber = (root: string, channelId: string, episode: number): number => {
+  const prefix = `e${String(episode).padStart(3, '0')}-s`;
+  const numbers = episodesIn(root, channelId)
+    .filter((d) => d.startsWith(prefix))
+    .map((d) => Number(d.slice(prefix.length, prefix.length + 2)))
+    .filter((n) => Number.isFinite(n));
+
+  return numbers.length ? Math.max(...numbers) + 1 : 1;
+};
+
+export interface RunName {
+  /** `<channel>/<folder>` - the id, and the path under runs/. */
+  id: string;
+  /** Which episode of the channel this is, or which it was cut from. */
+  episode: number;
+  /** Which short of that episode, when it is one. */
+  short?: number;
+}
+
+export const newRunName = (
+  input: { personaId: string; topic: string; parentEpisode?: number },
+  root: string,
+  now = new Date()
+): RunName => {
+  const slug = slugForTopic(input.topic);
+  const stamp = DATE_STAMP(now);
+
+  if (input.parentEpisode !== undefined) {
+    const n = nextShortNumber(root, input.personaId, input.parentEpisode);
+    const e = String(input.parentEpisode).padStart(3, '0');
+    return {
+      id: `${input.personaId}/e${e}-s${String(n).padStart(2, '0')}-${stamp}-${slug}`,
+      episode: input.parentEpisode,
+      short: n,
+    };
   }
-  throw new Error(`cannot make a run id: ${base} and 98 suffixes are all taken`);
+
+  const episode = nextEpisodeNumber(root, input.personaId);
+  return {
+    id: `${input.personaId}/e${String(episode).padStart(3, '0')}-${stamp}-${slug}`,
+    episode,
+  };
 };
 
 export class Run {
@@ -117,20 +227,34 @@ export class Run {
   }
 
   static create(
-    input: { personaId: string; formatId: string; topic: string; derivedFrom?: string },
+    input: {
+      personaId: string;
+      formatId: string;
+      topic: string;
+      derivedFrom?: string;
+      /** Set when this is a short, so it sits beside the episode it came from. */
+      parentEpisode?: number;
+    },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
     const now = opts.now?.() ?? new Date();
     const root = opts.root ?? runsDir();
-    const id = newRunId(input.personaId, now, (candidate) =>
-      fs.existsSync(path.join(root, candidate, MANIFEST))
+    // ONE CALL. It reads the directory to decide the next number, so calling it
+    // twice invites two different answers for one run.
+    const name = newRunName(
+      { personaId: input.personaId, topic: input.topic, parentEpisode: input.parentEpisode },
+      root,
+      now
     );
-    const dir = path.join(root, id);
+    const { id } = name;
+    const dir = path.join(root, ...id.split('/'));
 
     fs.mkdirSync(dir, { recursive: true });
 
     const manifest = runManifestSchema.parse({
       id,
+      episode: name.episode,
+      short: name.short,
       personaId: input.personaId,
       formatId: input.formatId,
       topic: input.topic,
@@ -145,34 +269,83 @@ export class Run {
     return run;
   }
 
+  /**
+   * Open a run by id, or by just the folder name when that is unambiguous.
+   *
+   * The id is `<channel>/<folder>`, which is what the logs print and what a
+   * person should paste back. The leaf-only form is accepted because somebody
+   * reading a directory listing will type what they see, and refusing that
+   * would be pedantry - but an ambiguous leaf is an error rather than a guess,
+   * since resuming the wrong run spends money on the wrong episode.
+   */
   static open(id: string, opts: { root?: string } = {}): Run {
-    const dir = path.join(opts.root ?? runsDir(), id);
-    const file = path.join(dir, MANIFEST);
-    if (!fs.existsSync(file)) {
-      throw new Error(`no run "${id}" (looked in ${dir})`);
-    }
-    return new Run(dir, runManifestSchema.parse(JSON.parse(fs.readFileSync(file, 'utf8'))));
-  }
-
-  /** Most recent run, which is what a bare `--run` almost always means. */
-  static latest(opts: { root?: string } = {}): Run | null {
     const root = opts.root ?? runsDir();
-    if (!fs.existsSync(root)) return null;
-    const ids = fs
-      .readdirSync(root)
-      .filter((d) => fs.existsSync(path.join(root, d, MANIFEST)))
-      .sort();
-    const last = ids[ids.length - 1];
-    return last ? Run.open(last, opts) : null;
+    const direct = path.join(root, ...id.split('/'));
+
+    if (fs.existsSync(path.join(direct, MANIFEST))) {
+      return new Run(
+        direct,
+        runManifestSchema.parse(JSON.parse(fs.readFileSync(path.join(direct, MANIFEST), 'utf8')))
+      );
+    }
+
+    const matches = Run.list(opts).filter((candidate) => candidate.split('/').pop() === id);
+    if (matches.length === 1) return Run.open(matches[0]!, opts);
+    if (matches.length > 1) {
+      throw new Error(
+        `"${id}" matches ${matches.length} runs. Use the full id:\n  ${matches.join('\n  ')}`
+      );
+    }
+
+    throw new Error(`no run "${id}" (looked in ${direct})`);
   }
 
+  /**
+   * Most recent run, which is what a bare `--run` almost always means.
+   *
+   * BY createdAt, NOT BY NAME, and that changed with the layout. Names used to
+   * lead with a timestamp so lexical order was production order across the
+   * whole studio; now they lead with a channel, so the newest run of the
+   * alphabetically-last channel would win.
+   *
+   * The manifest's own field rather than the file's mtime, for two reasons:
+   * resuming a run rewrites its manifest, so mtime means "last touched" rather
+   * than "most recent", and mtime has millisecond resolution that two runs
+   * created in the same tick share - which made the answer depend on readdir
+   * order.
+   */
+  static latest(opts: { root?: string } = {}): Run | null {
+    const runs = Run.list(opts).map((id) => Run.open(id, opts));
+    if (!runs.length) return null;
+
+    return runs.sort(
+      (a, b) => Date.parse(b.manifest.createdAt) - Date.parse(a.manifest.createdAt)
+    )[0]!;
+  }
+
+  /**
+   * Every run, as `<channel>/<folder>`, in channel then production order.
+   *
+   * One level deep, deliberately. A run directory holds media and checkpoints
+   * and is not somewhere to go looking recursively, and the archive of older
+   * runs lives under its own channel folder like everything else.
+   */
   static list(opts: { root?: string } = {}): string[] {
     const root = opts.root ?? runsDir();
     if (!fs.existsSync(root)) return [];
-    return fs
-      .readdirSync(root)
-      .filter((d) => fs.existsSync(path.join(root, d, MANIFEST)))
-      .sort();
+
+    const ids: string[] = [];
+    for (const channel of fs.readdirSync(root).sort()) {
+      const channelDir = path.join(root, channel);
+      if (!fs.statSync(channelDir).isDirectory()) continue;
+
+      for (const folder of fs.readdirSync(channelDir).sort()) {
+        if (fs.existsSync(path.join(channelDir, folder, MANIFEST))) {
+          ids.push(`${channel}/${folder}`);
+        }
+      }
+    }
+    return ids;
   }
 
   private save(): void {

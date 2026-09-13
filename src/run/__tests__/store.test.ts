@@ -2,37 +2,99 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { z } from 'zod';
-import { newRunId, Run } from '../store';
+import { newRunName, Run, slugForTopic } from '../store';
 
-describe('newRunId', () => {
-  it('sorts chronologically as a string', () => {
-    // A directory listing is the primary interface to runs, so `ls` order has
-    // to be the order they happened. An opaque uuid would make "what did we
-    // make most recently" need a tool.
-    const a = newRunId('show', new Date('2026-09-07T09:00:00Z'));
-    const b = newRunId('show', new Date('2026-09-07T10:00:00Z'));
-    expect([b, a].sort()).toEqual([a, b]);
+describe('slugForTopic', () => {
+  it('turns a topic into something readable in a directory listing', () => {
+    expect(slugForTopic('The sinking of the Marchioness on the Thames in August 1989')).toBe(
+      'sinking-of-the-marchioness-on-the'
+    );
   });
 
-  it('names the show, so a listing is readable', () => {
-    expect(newRunId('the-teardown', new Date('2026-09-07T09:00:00Z'))).toContain('the-teardown');
+  it('drops a leading filler word, which says nothing and eats the budget', () => {
+    expect(slugForTopic('Why a bad night makes you forget things')).toBe(
+      'a-bad-night-makes-you-forget'
+    );
   });
 
-  it('disambiguates two runs of the same show in the same second', () => {
-    // The stamp is only accurate to the second, and two runs of one show inside
-    // a second is not hypothetical: cutting a short right after gating its
-    // parent does it.
-    const at = new Date('2026-09-07T09:00:00Z');
-    const first = newRunId('show', at);
-    expect(newRunId('show', at, (id) => id === first)).not.toBe(first);
+  it('survives punctuation, apostrophes and accents', () => {
+    expect(slugForTopic("HHJ Kinch's sentencing remarks, 2016")).toBe('hhj-kinchs-sentencing-remarks-2016');
   });
 
-  it('keeps the disambiguated id in chronological order', () => {
-    const at = new Date('2026-09-07T09:00:00Z');
-    const first = newRunId('show', at);
-    const second = newRunId('show', at, (id) => id === first);
-    const later = newRunId('show', new Date('2026-09-07T09:00:01Z'));
-    expect([later, second, first].sort()).toEqual([first, second, later]);
+  it('never returns an empty name', () => {
+    expect(slugForTopic('!!! ???')).toBe('untitled');
+  });
+});
+
+describe('newRunName', () => {
+  /**
+   * WHAT THE OLD SCHEME COULD NOT TELL YOU. Every run lived directly under
+   * runs/ as `20260913-000745-older-than-writing`, which answers "when" and
+   * "which show" and nothing else - not which episode, not what about, and
+   * worst, not which episode a short was cut from.
+   */
+  let root: string;
+
+  beforeEach(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-names-'));
+  });
+
+  const make = (personaId: string, topic: string, parentEpisode?: number) => {
+    const name = newRunName({ personaId, topic, parentEpisode }, root, new Date('2026-09-13T10:00:00Z'));
+    fs.mkdirSync(path.join(root, ...name.id.split('/')), { recursive: true });
+    fs.writeFileSync(path.join(root, ...name.id.split('/'), 'run.json'), '{}');
+    return name;
+  };
+
+  it('puts a channel in its own folder, numbered and dated and named', () => {
+    const name = make('honest-health', 'Why a bad night makes you forget things');
+    expect(name.id).toBe('honest-health/e001-20260913-a-bad-night-makes-you-forget');
+    expect(name.episode).toBe(1);
+  });
+
+  it('counts episodes per channel, not across the studio', () => {
+    make('honest-health', 'One');
+    make('read-the-file', 'Two');
+    expect(make('honest-health', 'Three').episode).toBe(2);
+    expect(make('read-the-file', 'Four').episode).toBe(2);
+  });
+
+  it('puts a short beside the episode it came from, carrying its number', () => {
+    make('honest-health', 'The parent episode');
+    const short = make('honest-health', 'The twenty minute gap', 1);
+    expect(short.id).toBe('honest-health/e001-s01-20260913-twenty-minute-gap');
+    expect(short.episode).toBe(1);
+    expect(short.short).toBe(1);
+  });
+
+  it('numbers a second short of the same episode', () => {
+    make('honest-health', 'The parent');
+    make('honest-health', 'First short', 1);
+    expect(make('honest-health', 'Second short', 1).short).toBe(2);
+  });
+
+  it('DOES NOT let shorts advance the episode number', () => {
+    // Three shorts cut from episode one must not make the next episode four. A
+    // short is not an episode.
+    make('honest-health', 'Episode one');
+    make('honest-health', 'a', 1);
+    make('honest-health', 'b', 1);
+    make('honest-health', 'c', 1);
+    expect(make('honest-health', 'Episode two').episode).toBe(2);
+  });
+
+  it('sorts into production order within a channel', () => {
+    // The reason the old scheme led with a timestamp, and it survives: within a
+    // channel the episode number leads, so `ls` answers "what is the latest".
+    const first = make('honest-health', 'One');
+    const second = make('honest-health', 'Two');
+    const short = make('honest-health', 'A short of one', 1);
+    const leaves = [second.id, short.id, first.id].map((id) => id.split('/')[1]!).sort();
+    expect(leaves).toEqual([
+      first.id.split('/')[1],
+      short.id.split('/')[1],
+      second.id.split('/')[1],
+    ]);
   });
 });
 
@@ -40,7 +102,7 @@ describe('Run', () => {
   let root: string;
   const now = () => new Date('2026-09-07T09:00:00Z');
   const create = () =>
-    Run.create({ personaId: 'the-teardown', formatId: 'case-study-teardown', topic: 'A topic' }, { root, now });
+    Run.create({ personaId: 'business-teardowns', formatId: 'case-study-teardown', topic: 'A topic' }, { root, now });
 
   beforeEach(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-runs-'));

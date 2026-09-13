@@ -133,7 +133,7 @@ explainer rather than a bulletin. Decide that before writing any code.
 
 **Lane:** factual. Mostly already built.
 
-`the-teardown` exists as a Business & Finance show with
+`business-teardowns` exists as a Business & Finance show with
 `case-study-teardown.yaml` and `short-teardown.yaml`. A case study is exactly
 what the factual lane is for: filings, judgments, regulator notices and annual
 reports are the best-sourced documents in existence.

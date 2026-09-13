@@ -32,7 +32,7 @@ const CATEGORIES = {
 };
 
 const provenance = {
-  persona_ref: 'the-teardown',
+  persona_ref: 'business-teardowns',
   content_kind: 'reported',
   generator_version: '0.1.0',
   model_ids: {},

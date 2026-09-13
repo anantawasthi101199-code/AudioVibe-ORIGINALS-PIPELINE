@@ -22,10 +22,10 @@ import {
   wrapTitle,
 } from '../cover';
 
-const palette = paletteFor('the-teardown');
+const palette = paletteFor('business-teardowns');
 
 const svg = (over: Partial<Parameters<typeof coverSvg>[0]> = {}, size = AUDIO_COVER_SIZE) =>
-  coverSvg({ showName: 'The Teardown', title: 'The Thursday Column', palette, ...over }, size);
+  coverSvg({ showName: 'Business Teardowns', title: 'The Thursday Column', palette, ...over }, size);
 
 describe('paletteFor', () => {
   it('is deterministic, so a re-publish never changes the artwork', () => {
@@ -33,11 +33,11 @@ describe('paletteFor', () => {
     // cover art the only stage whose output cannot be reproduced, and a
     // re-publish would silently change the cover of something already in
     // somebody's library.
-    expect(paletteFor('the-teardown')).toEqual(paletteFor('the-teardown'));
+    expect(paletteFor('business-teardowns')).toEqual(paletteFor('business-teardowns'));
   });
 
   it('gives different shows different colours', () => {
-    expect(paletteFor('the-teardown').background).not.toBe(paletteFor('night-shift').background);
+    expect(paletteFor('business-teardowns').background).not.toBe(paletteFor('night-shift').background);
   });
 
   it('varies ONLY the hue, so no show lands on an unreadable cover', () => {
@@ -45,7 +45,7 @@ describe('paletteFor', () => {
     // generator eventually produces pale text on a pale field for exactly one
     // show and nobody notices until it is published.
     const lightness = (c: string) => c.match(/,\s*([\d.]+)%\)$/)![1];
-    for (const id of ['a', 'b', 'zzz', 'the-teardown', 'night-shift']) {
+    for (const id of ['a', 'b', 'zzz', 'business-teardowns', 'night-shift']) {
       const p = paletteFor(id);
       expect(lightness(p.background)).toBe('13');
       expect(lightness(p.ink)).toBe('95');
@@ -130,7 +130,7 @@ describe('fitFontSize', () => {
 describe('coverSvg', () => {
   it('draws the show name and the episode title', () => {
     const out = svg();
-    expect(out).toContain('THE TEARDOWN');
+    expect(out).toContain('BUSINESS TEARDOWNS');
     // The title is set across lines, so it is asserted as its words rather
     // than as one string.
     expect(out).toContain('The Thursday');
@@ -150,9 +150,9 @@ describe('coverSvg', () => {
     // A series cover's title IS the show name, so drawing the wordmark as well
     // prints it twice with nothing else on the frame, which reads as a mistake
     // rather than as branding.
-    const out = svg({ title: 'The Teardown' }, SERIES_COVER_SIZE);
-    expect(out).not.toContain('THE TEARDOWN');
-    expect(out).toContain('The Teardown');
+    const out = svg({ title: 'Business Teardowns' }, SERIES_COVER_SIZE);
+    expect(out).not.toContain('BUSINESS TEARDOWNS');
+    expect(out).toContain('Business Teardowns');
   });
 
   it('keeps every line inside the frame', () => {

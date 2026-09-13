@@ -20,7 +20,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const schedule = (over: Partial<Schedule['shows']> = {}): Schedule => ({
   paused: false,
   shows: {
-    'the-teardown': { everyDays: 3, shortsPerEpisode: 2, autoPublish: false },
+    'business-teardowns': { everyDays: 3, shortsPerEpisode: 2, autoPublish: false },
     ...over,
   },
 });
@@ -33,7 +33,7 @@ const plan = (input: {
 }) =>
   buildPlan({
     schedule: input.schedule ?? schedule(),
-    personas: input.personas ?? [persona('the-teardown')],
+    personas: input.personas ?? [persona('business-teardowns')],
     history: (id) => input.history?.[id] ?? { episodes: [] },
     topicsQueued: (id) => input.topics?.[id] ?? 3,
     now: NOW,
@@ -56,26 +56,26 @@ describe('historyFor', () => {
   const runs = [
     {
       id: 'ep1',
-      personaId: 'the-teardown',
+      personaId: 'business-teardowns',
       formatKind: 'long' as const,
       publishedAt: daysAgo(9),
     },
     {
       id: 'ep2',
-      personaId: 'the-teardown',
+      personaId: 'business-teardowns',
       formatKind: 'long' as const,
       publishedAt: daysAgo(2),
     },
     {
       id: 'sh1',
-      personaId: 'the-teardown',
+      personaId: 'business-teardowns',
       formatKind: 'short' as const,
       publishedAt: daysAgo(1),
       derivedFrom: 'ep2',
     },
     {
       id: 'gated',
-      personaId: 'the-teardown',
+      personaId: 'business-teardowns',
       formatKind: 'long' as const,
       publishedAt: null,
     },
@@ -83,21 +83,21 @@ describe('historyFor', () => {
   ];
 
   it('puts the newest episode first', () => {
-    expect(historyFor('the-teardown', runs).episodes[0]!.runId).toBe('ep2');
+    expect(historyFor('business-teardowns', runs).episodes[0]!.runId).toBe('ep2');
   });
 
   it('IGNORES a run that was made but never published', () => {
     // Treating a gated-but-unpublished run as published is how a show goes
     // quiet while the schedule reports it as up to date.
-    expect(historyFor('the-teardown', runs).episodes.map((e) => e.runId)).not.toContain('gated');
+    expect(historyFor('business-teardowns', runs).episodes.map((e) => e.runId)).not.toContain('gated');
   });
 
   it('ignores other shows', () => {
-    expect(historyFor('the-teardown', runs).episodes.map((e) => e.runId)).not.toContain('other');
+    expect(historyFor('business-teardowns', runs).episodes.map((e) => e.runId)).not.toContain('other');
   });
 
   it('counts shorts against the episode they were cut from', () => {
-    const episodes = historyFor('the-teardown', runs).episodes;
+    const episodes = historyFor('business-teardowns', runs).episodes;
     expect(episodes.find((e) => e.runId === 'ep2')!.shortsCut).toBe(1);
     expect(episodes.find((e) => e.runId === 'ep1')!.shortsCut).toBe(0);
   });
@@ -105,16 +105,16 @@ describe('historyFor', () => {
 
 describe('buildPlan', () => {
   it('is due when a show has never published', () => {
-    expect(plan({}).due[0]).toMatchObject({ personaId: 'the-teardown', kind: 'episode' });
+    expect(plan({}).due[0]).toMatchObject({ personaId: 'business-teardowns', kind: 'episode' });
   });
 
   it('is not due before the cadence has elapsed', () => {
-    const history = { 'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(1), shortsCut: 2 }] } };
+    const history = { 'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(1), shortsCut: 2 }] } };
     expect(plan({ history }).due).toEqual([]);
   });
 
   it('is due exactly on the cadence', () => {
-    const history = { 'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(3), shortsCut: 2 }] } };
+    const history = { 'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(3), shortsCut: 2 }] } };
     expect(plan({ history }).due[0]!.kind).toBe('episode');
   });
 
@@ -122,7 +122,7 @@ describe('buildPlan', () => {
     // The reason this is arithmetic and not cron. A show that missed last week
     // is due NOW; cron would silently skip whenever the machine was off, a run
     // failed, or a gate rejected an episode.
-    const history = { 'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(17), shortsCut: 2 }] } };
+    const history = { 'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(17), shortsCut: 2 }] } };
     const item = plan({ history }).due[0]!;
     expect(item.kind).toBe('episode');
     expect(item.overdueDays).toBe(14);
@@ -131,16 +131,16 @@ describe('buildPlan', () => {
   it('puts the most overdue show first', () => {
     // A studio behind on several should catch up on the one that has been
     // waiting longest, not the one that sorts first.
-    const personas = [persona('the-teardown'), persona('other')];
+    const personas = [persona('business-teardowns'), persona('other')];
     const sched: Schedule = {
       paused: false,
       shows: {
-        'the-teardown': { everyDays: 3, shortsPerEpisode: 0, autoPublish: false },
+        'business-teardowns': { everyDays: 3, shortsPerEpisode: 0, autoPublish: false },
         other: { everyDays: 3, shortsPerEpisode: 0, autoPublish: false },
       },
     };
     const history = {
-      'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(4), shortsCut: 0 }] },
+      'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(4), shortsCut: 0 }] },
       other: { episodes: [{ runId: 'b', publishedAt: daysAgo(30), shortsCut: 0 }] },
     };
 
@@ -149,12 +149,12 @@ describe('buildPlan', () => {
 
   describe('shorts', () => {
     it('fills the days between episodes', () => {
-      const history = { 'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(1), shortsCut: 0 }] } };
+      const history = { 'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(1), shortsCut: 0 }] } };
       expect(plan({ history }).due[0]).toMatchObject({ kind: 'short', parentRunId: 'a' });
     });
 
     it("stops once the episode's quota is cut", () => {
-      const history = { 'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(1), shortsCut: 2 }] } };
+      const history = { 'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(1), shortsCut: 2 }] } };
       expect(plan({ history }).due).toEqual([]);
     });
 
@@ -162,7 +162,7 @@ describe('buildPlan', () => {
       // A tick that made both would cut a short from an episode written minutes
       // earlier and publish them together, which wastes the short: its whole
       // job is to arrive on a different day and bring somebody back.
-      const history = { 'the-teardown': { episodes: [{ runId: 'a', publishedAt: daysAgo(5), shortsCut: 0 }] } };
+      const history = { 'business-teardowns': { episodes: [{ runId: 'a', publishedAt: daysAgo(5), shortsCut: 0 }] } };
       expect(plan({ history }).due.map((d) => d.kind)).toEqual(['episode']);
     });
 
@@ -175,7 +175,7 @@ describe('buildPlan', () => {
     it('REPORTS a show with an empty topic queue rather than skipping it', () => {
       // Skipping would let a show quietly stop publishing and report itself as
       // healthy, which is the exact failure this whole file exists to prevent.
-      const result = plan({ topics: { 'the-teardown': 0 } });
+      const result = plan({ topics: { 'business-teardowns': 0 } });
       expect(result.due).toEqual([]);
       expect(result.blocked[0]!.reason).toMatch(/topic queue is empty/);
     });
@@ -207,7 +207,7 @@ describe('buildPlan', () => {
   });
 
   it('plans nothing for a show that is not in the schedule', () => {
-    const personas = [persona('the-teardown'), persona('unscheduled')];
-    expect(plan({ personas }).due.map((d) => d.personaId)).toEqual(['the-teardown']);
+    const personas = [persona('business-teardowns'), persona('unscheduled')];
+    expect(plan({ personas }).due.map((d) => d.personaId)).toEqual(['business-teardowns']);
   });
 });

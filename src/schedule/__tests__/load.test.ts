@@ -38,8 +38,8 @@ describe('loadSchedule', () => {
   });
 
   it('applies the defaults a terse entry leaves out', () => {
-    write({ shows: { 'the-teardown': { everyDays: 7 } } });
-    const cadence = loadSchedule(dir).shows['the-teardown']!;
+    write({ shows: { 'business-teardowns': { everyDays: 7 } } });
+    const cadence = loadSchedule(dir).shows['business-teardowns']!;
     expect(cadence.shortsPerEpisode).toBe(0);
     expect(cadence.autoPublish).toBe(false);
   });

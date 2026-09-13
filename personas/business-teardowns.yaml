@@ -1,4 +1,4 @@
-# The Teardown - the flagship AudioVibe Original.
+# Business Teardowns - the flagship AudioVibe Original.
 #
 # Case studies of things that failed or succeeded, reconstructed from documents
 # rather than from retellings: filings, incident post-mortems, court records,
@@ -10,9 +10,9 @@
 # deploy. Every field under styleCard is measurable on purpose - stage 7 scores
 # a draft against it automatically, and "warm but not chatty" is not a test.
 
-id: the-teardown
-handle: theteardown
-name: The Teardown
+id: business-teardowns
+handle: businessteardowns
+name: Business Teardowns
 category: Business & Finance
 
 thesis: >

@@ -1,4 +1,4 @@
-# Older Than Writing - one myth, told properly, from the oldest version anybody
+# Myths of the World - one myth, told properly, from the oldest version anybody
 # can still read.
 #
 # WHY THIS SHOW IS ON THE FACTUAL LANE AND NOT THE FICTION ONE. The obvious
@@ -30,9 +30,9 @@
 # at the point where the manuscript runs out, it is the best sentence in the
 # episode. The beat sheet requires it in the two beats where it bites.
 
-id: older-than-writing
-handle: olderthanwriting
-name: Older Than Writing
+id: myths-of-the-world
+handle: mythsoftheworld
+name: Myths of the World
 
 # Storytelling, not Spirituality and not Educational. Spirituality is where a
 # show about belief and practice goes, and this show does not ask a listener to
@@ -82,7 +82,7 @@ hosts:
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
       # Used only when FOUNDRY_TTS=openai, for hearing a script before any
       # Eleven credits are bought. Deliberately a different draft voice from
-      # The Long Way Round, so two shows are never confused while drafting.
+      # True Crime, In Full, so two shows are never confused while drafting.
       draftVoiceId: fable
       settings:
         stability: 0.4

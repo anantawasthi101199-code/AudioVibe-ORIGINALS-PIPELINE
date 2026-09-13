@@ -20,7 +20,7 @@ import { runEpisode, PipelineDeps } from '../episode';
 
 // The persona and format used here are the shipped ones, so this also proves
 // the real beat sheet and show bible survive a full run.
-const PERSONA_ID = 'the-teardown';
+const PERSONA_ID = 'business-teardowns';
 const FORMAT_ID = 'case-study-teardown';
 
 const BEATS = [
