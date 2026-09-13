@@ -76,6 +76,17 @@ export const runManifestSchema = z.object({
   short: z.number().int().positive().optional(),
 
   /**
+   * This run's script was written in one call rather than beat by beat.
+   *
+   * RECORDED BECAUSE IT CHANGES WHAT THE RUN IS EVIDENCE OF. The two methods
+   * are being compared on real episodes, and a comparison needs to know which
+   * is which six weeks later, when the only thing left is a directory. It also
+   * means a `resume` continues the way the run started rather than quietly
+   * switching methods halfway through an episode.
+   */
+  onePass: z.boolean().optional(),
+
+  /**
    * Which unit of a source script this run was cut from.
    *
    * ONLY ANTHOLOGIES HAVE ONE. A source format writes ten self-contained
@@ -251,6 +262,8 @@ export class Run {
       parentEpisode?: number;
       /** Set when this is one story cut out of a source script. */
       story?: number;
+      /** Set when the script is to be written in a single call. */
+      onePass?: boolean;
     },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
@@ -280,6 +293,7 @@ export class Run {
       spentPence: 0,
       derivedFrom: input.derivedFrom,
       story: input.story,
+      onePass: input.onePass,
     });
 
     const run = new Run(dir, manifest);

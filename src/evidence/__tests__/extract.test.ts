@@ -14,7 +14,7 @@
 import { EpisodeFormat } from '../../formats/schema';
 import { LlmClient, LlmRequest, LlmResponse } from '../../models/client';
 import { Source } from '../source';
-import { BEATS_PER_EXTRACTION, Brief, Corpus, extractClaims } from '../research';
+import { BEATS_PER_EXTRACTION, Brief, Corpus, claimCeiling, extractClaims } from '../research';
 
 const QUOTE = 'The regulator fined the operator four point two million pounds in March 2024.';
 
@@ -286,12 +286,39 @@ describe('extractClaims', () => {
     });
   });
 
-  it('caps how many claims a beat may return', async () => {
-    // Without a ceiling the model returns fifteen claims for one beat and the
-    // reply runs past the token limit, which is how this whole problem
-    // started.
+  it('caps how many claims a beat may return, by how long the beat is', async () => {
+    // THERE IS STILL A CEILING, because without one the model returns fifteen
+    // claims for one beat and the reply runs past the token limit, which is how
+    // the chunking existed in the first place.
+    //
+    // WHAT CHANGED IS WHERE IT COMES FROM. It used to be `minClaims + 2`, which
+    // made a sourcing floor double as a limit on how much an episode could
+    // know: a health episode fetched 1.1 million characters of primary
+    // literature and was allowed thirty-five facts out of it, then had to fill
+    // eleven minutes with them. How much there is to say is a question about
+    // TIME, not about the floor - see claimCeiling.
     const w = writer();
     await extractClaims(brief, corpus, format(3), w);
-    expect(w.seen[0]!.prompt).toMatch(/no more than 3/);
+
+    // Beats here are 30 to 60 seconds with a floor of one, so the ceiling is
+    // five: the floor plus two, or one claim per twelve seconds, whichever is
+    // larger.
+    expect(w.seen[0]!.prompt).toMatch(/needs >= 1 claims, and up to 5/);
+  });
+});
+
+describe('claimCeiling', () => {
+  it('scales with the length of the beat', () => {
+    // A four-minute beat can carry far more than a one-minute beat, whatever
+    // its sourcing floor happens to be.
+    expect(claimCeiling({ minClaims: 10, seconds: [260, 340] })).toBe(28);
+    expect(claimCeiling({ minClaims: 3, seconds: [60, 90] })).toBe(8);
+  });
+
+  it('never drops below the floor plus two', () => {
+    // Otherwise a short beat carrying a heavy sourcing duty would be quietly
+    // capped under the number it is required to reach, and extraction would be
+    // asked for something impossible.
+    expect(claimCeiling({ minClaims: 12, seconds: [50, 75] })).toBe(14);
   });
 });

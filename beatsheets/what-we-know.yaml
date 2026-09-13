@@ -1,33 +1,54 @@
-# One question about how people work, answered as far as the evidence goes.
+# One question about how people work, answered as far as the research goes.
 #
 # WHY THIS IS NOT THE TOLD-STORY SHEET. A crime has a sequence and a myth has a
 # world; a question about sleep or grief or willpower has neither. What it has
-# is a thing everybody believes, a body of work that partly supports it, and a
-# gap between the two. The shape of the episode is the shape of that gap.
+# is a body of work, a mechanism that partly explains it, and a gap between what
+# is measured and what is claimed. The shape of the episode is the shape of that
+# gap.
 #
-# THE HARDEST PROBLEM THIS FORMAT HAS IS NOT STRUCTURE, IT IS INVENTION. A
-# psychology episode wants a person it happened to, and there usually is not one
-# in the sources. A model asked for a real-life example will produce a
-# plausible, sympathetic, entirely fictional case study, and nothing downstream
-# would catch it: it is not a claim about the world, it is a story, and it
-# sounds exactly like the sourced parts around it.
+# WHAT WAS WRONG WITH THE FIRST VERSION, because it is the reason this one looks
+# the way it does. The first episode made on this sheet was eleven and a half
+# minutes long and stated twenty-nine facts: one every twenty-eight seconds. The
+# other twenty-seven seconds were restatement and a human-interest anecdote, and
+# a listener heard exactly that - an episode working hard to be interesting
+# because it did not have enough to say.
 #
-# So the `people` beat exists and is constrained hard. Either an example comes
-# from the record with a name attached, or it is announced out loud as a
-# composite before it is told. Never a third option.
+# Three things in the sheet caused it, all of them mine:
+#
+#   - The `honest` beat said "answer the question from the opening, in the same
+#     words if you can". It re-cited eleven of the twenty-five facts already
+#     given. That is an instruction to say things twice.
+#   - The `people` beat asked for "what this looks like in a life rather than in
+#     a table". It produced two hundred and fifty words of anecdote citing no
+#     source at all, which is the single easiest thing for a model to invent and
+#     the hardest thing downstream to catch.
+#   - The claim floors were also acting as ceilings in extraction, so a corpus
+#     of 1.1 million characters of primary literature was mined for thirty-odd
+#     facts. That one is fixed in the extractor, not here.
+#
+# SO THE SHAPE NOW PUTS THE WEIGHT WHERE THE INTEREST ACTUALLY IS: what was
+# measured, and what is physically happening. Those two beats are more than half
+# the episode and carry more than half the claims. Nothing is recapped, and
+# nothing is dramatised.
+#
+# THE HARDEST PROBLEM THIS FORMAT HAS IS STILL INVENTION. A psychology episode
+# wants a person it happened to, and there usually is not one in the sources. A
+# model asked for a real-life example produces a plausible, sympathetic,
+# entirely fictional case study, and nothing downstream catches it: it is not a
+# claim about the world, it is a story, and it sounds exactly like the sourced
+# parts around it. The answer here is not to constrain the anecdote beat. It is
+# not to have one.
 #
 # AND IT NEVER TELLS ANYBODY WHAT TO DO. "Here is what the evidence says" and
-# "here is what you should do" are different products with different exposure,
-# and the second one is not what this show is. The close is explicitly barred
-# from advice.
+# "here is what you should do" are different products with different exposure.
 
 id: what-we-know
 name: What we know
 kind: long
 intent: >
-  One question about how people work, taken seriously: what is actually known,
-  how well it is known, and what the honest answer is for somebody living with
-  the question rather than studying it.
+  One question about how people work, taken seriously: what has actually been
+  measured, what is physically happening, how well any of it is known, and where
+  the people who study it still disagree.
 
 targetSeconds: [720, 960]
 
@@ -40,94 +61,148 @@ loops:
 beats:
   - id: opening
     type: orientation
-    seconds: [85, 130]
+    seconds: [60, 90]
     function: >
-      The question, why it is worth a quarter of an hour, and what the episode
-      will settle. Before anything is explained.
+      The question, and how good the evidence for it is. Then straight into the
+      work.
     opens: [the_question]
     constraints:
       - >
         START WITH THE QUESTION IN ORDINARY WORDS, the way somebody would
         actually ask it. Not "the role of sleep architecture in memory
         consolidation" but "why does a bad night make you forget things".
-      - Say plainly what the episode will settle, and what it will not.
       - >
-        Say how good the evidence is, up front and in one sentence. A listener
-        deciding whether to trust fifteen minutes deserves to know whether this
-        rests on forty years of trials or on three small studies.
+        Say how good the evidence is, in one sentence. A listener deciding
+        whether to trust fifteen minutes deserves to know whether this rests on
+        forty years of trials or on three small studies.
+      - >
+        SHORT. This is the only beat that is allowed to be about the episode
+        rather than about the subject, and a minute of it is already generous.
+        Do not preview the findings, do not list what is coming, and do not say
+        what the episode will and will not settle - saying it here means saying
+        it again later, and the listener has to sit through both.
       - Talk to the listener directly here. This is the one beat that may.
-      - No suspense and nothing held back for later.
-    minClaims: 3
+    minClaims: 2
 
   - id: belief
     type: stakes
-    seconds: [130, 190]
+    seconds: [75, 110]
     function: >
-      What almost everybody believes about this, where that belief came from,
-      and why it is believable.
+      What is commonly believed about this, where that belief came from, and
+      what is actually right about it.
     constraints:
       - >
         STEELMAN IT. The common belief is usually common because it explains
         something real, and an episode that opens by being cleverer than the
         listener has lost them. Say why a sensible person holds it.
-      - Where the belief came from, if the record says. A study, a book, a
-        doctor on television, a thing everybody's mother said.
+      - >
+        Where it came from, if the record says. A named study, a named book, a
+        named person. "People say" is not a source and does not belong here.
       - Do not correct it yet.
-    minClaims: 4
+      - >
+        Do not spend long. This beat exists so the research has something to
+        push against, not so the episode can enjoy debunking something.
+    minClaims: 3
 
   - id: evidence
     type: escalation
-    seconds: [200, 280]
+    seconds: [260, 340]
     function: >
-      What the research actually found, in the order it was found, and how
-      strongly it supports anything.
+      What the studies actually did and what they found, in the order they were
+      done.
     constraints:
       - >
         SAY WHAT WAS ACTUALLY DONE before saying what it showed. How many
-        people, over how long, doing what. A finding without its study is a
-        rumour with a number in it.
+        people or animals, over how long, doing what, measured how. A finding
+        without its study is a rumour with a number in it.
       - >
         SIZE BEFORE SIGNIFICANCE. "People slept about twenty minutes longer" is
         worth more to a listener than any p-value, and "statistically
         significant" without a size means nothing out loud.
       - >
+        WHAT WAS IT DONE ON. Rats are not people and eleven undergraduates are
+        not a population. Where a finding comes from animals, say so in the
+        sentence that states it, not later.
+      - >
         Be exactly as certain as the sources are. Where the finding is one
         study, say it is one study. Where it failed to replicate, say so at the
         point it comes up rather than at the end.
+      - >
+        THIS IS THE LONGEST BEAT AND IT SHOULD BE THE DENSEST. You are given
+        more claims than will fit. Choose the ones that carry the most, and
+        state another rather than saying more about one already stated.
       - Chronological where the research has a story. Otherwise strongest first.
-    minClaims: 7
+    minClaims: 10
 
-  - id: people
-    type: counterpoint
-    seconds: [120, 180]
+  - id: mechanism
+    type: mechanism
+    seconds: [150, 210]
     function: >
-      What this looks like in a life rather than in a table.
+      What is physically happening. The parts involved, what each does, and how
+      the effect is produced.
     constraints:
       - >
-        AN EXAMPLE IS EITHER SOURCED OR ANNOUNCED. If the record carries a real
-        case, use it with its name and its source. If it does not, say out loud
-        that what follows is a composite - "nobody in the studies is described
-        this way, so here is what the numbers would look like happening to
-        somebody" - BEFORE telling it.
+        NAME THE PARTS PROPERLY AND THEN EXPLAIN THEM. "The hippocampus, the
+        part buried in each temporal lobe that turns experience into something
+        retrievable" is right. Avoiding the word because it is technical is
+        wrong, and so is using it and moving on. The term, then a clause.
       - >
-        There is no third option. A plausible unnamed person presented as real
-        is the one failure in this format that nothing downstream can catch,
-        because it is not a claim about the world, it is a story, and it sounds
-        exactly like the sourced parts around it.
+        Each term gets explained ONCE, at the point it is first used, and is
+        then used normally like any other word. Re-explaining it is the single
+        commonest way this format wastes a minute.
       - >
-        Where the evidence genuinely disagrees with itself, this is where that
-        goes: name who found what, and do not pretend it is settled.
+        CAUSE, IN ORDER. What happens first, what that does, what follows from
+        it. If the chain has a step nobody has shown, that is the most
+        interesting sentence available and it goes in.
+      - >
+        Where two mechanisms are proposed for the same effect, describe both
+        properly. Do not pick one because the episode needs an answer.
+      - >
+        No metaphor that does work the explanation should be doing. A metaphor
+        that replaces the mechanism is the listener leaving without it.
+    minClaims: 12
+
+  - id: disagreement
+    type: counterpoint
+    seconds: [120, 170]
+    function: >
+      Where the people who study this do not agree, what each side has, and what
+      would settle it.
+    constraints:
+      - >
+        NAME WHO FOUND WHAT. A disagreement with no parties to it reads as the
+        episode hedging. "Nedergaard's group measured X; Stickgold reads the
+        same data as Y" is the sentence.
+      - >
+        GIVE THE OTHER SIDE ITS BEST ARGUMENT, not the version that is easy to
+        answer. Confident one-sidedness is the commonest way a well-sourced
+        episode is false.
+      - >
+        SAY WHAT WOULD SETTLE IT. The experiment nobody has run, the measurement
+        nobody can take yet, the sample that would have to be bigger. This is
+        the most informative thing in the episode and it is almost always
+        missing from popular coverage.
+      - >
+        This is not the place to re-describe the findings. Refer to them in a
+        few words and spend the beat on the argument.
       - Never a symptom list, and never anything that reads as diagnosis.
-    minClaims: 3
+    minClaims: 5
 
   - id: honest
     type: payoff
-    seconds: [140, 200]
+    seconds: [90, 130]
     function: >
       The honest answer, including the size of what is not known.
     closes: [the_question]
     constraints:
-      - Answer the question from the opening, in the same words if you can.
+      - >
+        ANSWER THE QUESTION FROM THE OPENING. Answer it, do not recap the route
+        to it. Everything before this beat has already been said once, and a
+        listener who has heard it does not need it gathered up.
+      - >
+        DO NOT RESTATE A FINDING ALREADY GIVEN. Where one has to be referred to,
+        refer to it in three or four words and add something that was not said
+        before. If this beat has nothing to add to a fact, leave the fact out.
       - >
         SAY WHAT IS STILL OPEN, with the same weight as what is settled. The
         unknown part is not a disclaimer at the end, it is half the answer.
@@ -137,25 +212,28 @@ beats:
         with that is theirs, and the moment it tells them it is a different
         product with different exposure.
       - No moral, and nothing about what it says about people or about us now.
-    minClaims: 5
+    minClaims: 3
 
   - id: close
     type: outro
-    seconds: [55, 85]
+    seconds: [50, 75]
     function: >
       Land it, and leave the listener holding something.
     constraints:
       - >
-        THIS IS AN ENDING, NOT A STOP. Land it by returning to something from
-        earlier so it means something new, or by following it forward to what is
-        being looked into now, or by naming plainly what nobody knows yet.
-      - One sentence of gathering before the landing, at most.
-      - "Still no advice, no call to action, no sign-off, no naming the show."
+        THIS IS AN ENDING, NOT A STOP. Land it on ONE thing: a single fact from
+        earlier that means something different now that the rest is known, or
+        what is being looked into at the moment, or the thing nobody knows yet.
+      - >
+        ONE callback, not a summary. Returning to one specific thing is an
+        ending; returning to several is the recap this format spent an episode
+        avoiding.
+      - "No advice, no call to action, no sign-off, no naming the show."
     minClaims: 1
 
-# Flat and low throughout, and that is the format working rather than a failure
-# of nerve. An episode about how people work does not escalate; it accumulates.
-# The peak is the evidence beat because that is where the actual work is, and
-# the honest answer sits slightly below it on purpose - the truthful ending of
-# one of these is usually quieter than the belief it examined.
-tensionCurve: [0.5, 0.6, 0.9, 0.7, 0.75, 0.45]
+# The peak is the mechanism, because that is where the actual explanation is,
+# and the evidence beat sits just under it. Both are well above the opening,
+# which is doing the least interesting job in the episode and should take the
+# least time. The honest answer is quieter than the belief it examined, which is
+# usually how these actually end.
+tensionCurve: [0.45, 0.55, 0.85, 0.9, 0.7, 0.6, 0.4]

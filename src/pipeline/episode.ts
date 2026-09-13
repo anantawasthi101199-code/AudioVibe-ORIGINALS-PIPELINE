@@ -55,6 +55,7 @@ import { fillGaps, findGaps } from '../evidence/gaps';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
+import { writeScriptOnePass } from '../script/onePass';
 import { Script, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
 import { runGate, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
@@ -83,6 +84,16 @@ export interface PipelineDeps {
   fetchDeps: FetchDeps;
   /** Prior episodes to check self-similarity against. */
   priorTexts?: Array<{ label: string; text: string }>;
+  /**
+   * Write the whole script in one call instead of a beat at a time.
+   *
+   * AN EXPERIMENT WITH A WRITTEN-DOWN TRIGGER, not a setting to leave on by
+   * accident. Beat-by-beat writing repeats itself because a beat asked to
+   * "answer the question from the opening" has only spent material to work
+   * with; one pass cannot repeat what it can see. What it gives up is the
+   * per-beat critique loop. See script/onePass.ts.
+   */
+  onePass?: boolean;
   log?: (message: string) => void;
 }
 
@@ -414,36 +425,50 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     log(`script: reusing "${script.title}"`);
   } else {
     stage = 'script';
-    log('script: writing beats');
-    script = await writeScript(
-      {
-        persona,
-        format,
-        // THE REPAIRED CLAIMS, WHICH IS THE POINT OF THE REPAIR STAGE. This
-        // used to filter out everything the verifier rejected, which is how an
-        // episode lost four of its six sentences: the claim was dropped, and
-        // the fact inside it went too.
+    // THE CLAIMS ARE THE SAME EITHER WAY, and so are the checks. The only thing
+    // that differs between these two is whether the beats are written in one
+    // call or in eleven, which is the whole point of being able to compare them.
+    const scriptInput = {
+      persona,
+      format,
+      // THE REPAIRED CLAIMS, WHICH IS THE POINT OF THE REPAIR STAGE. This used
+      // to filter out everything the verifier rejected, which is how an episode
+      // lost four of its six sentences: the claim was dropped, and the fact
+      // inside it went too.
+      //
+      // What reaches the writer now is the narrowed version where narrowing
+      // worked, the rebound version where the corpus supported it elsewhere,
+      // and the unsettled version - marked, with the words that must be said
+      // about it - where neither did. A contradicted claim is not here at all;
+      // repairAll drops those.
+      claims: workingClaims,
+      angle: brief.angle,
+      isoDate: new Date().toISOString().slice(0, 10),
+    };
+
+    if (deps.onePass) {
+      log('script: writing the whole script in one pass');
+      script = await writeScriptOnePass(scriptInput, deps.writer, spend, say('script'));
+    } else {
+      log('script: writing beats');
+      script = await writeScript(
+        scriptInput,
+        deps.writer,
+        spend,
+        // Beat-level checkpointing. Writing a ten-beat script is thirty model
+        // calls; before this, a failure on beat eight discarded the twenty-one
+        // that had already succeeded, because the whole script is one stage.
         //
-        // What reaches the writer now is the narrowed version where narrowing
-        // worked, the rebound version where the corpus supported it elsewhere,
-        // and the unsettled version - marked, with the words that must be said
-        // about it - where neither did. A contradicted claim is not here at
-        // all; repairAll drops those.
-        claims: workingClaims,
-        angle: brief.angle,
-        isoDate: new Date().toISOString().slice(0, 10),
-      },
-      deps.writer,
-      spend,
-      // Beat-level checkpointing. Writing a ten-beat script is thirty model
-      // calls; before this, a failure on beat eight discarded the twenty-one
-      // that had already succeeded, because the whole script is one stage.
-      {
-        progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
-        save: (progress) => run.writeCheckpoint('script', progress),
-      },
-      say('script')
-    );
+        // One pass has no equivalent and cannot have one: it is a single call,
+        // so there is no partial result to keep. That is a real cost of the
+        // method on a long episode.
+        {
+          progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
+          save: (progress) => run.writeCheckpoint('script', progress),
+        },
+        say('script')
+      );
+    }
     run.writeArtifact('script', script);
     run.markComplete('script');
     // The checkpoint has served its purpose the moment the stage artifact

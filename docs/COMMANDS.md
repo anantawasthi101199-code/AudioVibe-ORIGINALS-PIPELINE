@@ -34,6 +34,7 @@ Writes, renders and gates one episode. This is the main command.
 | `--topic "..."` | What it is about. Required. Be specific; the brief is written from this. |
 | `--format <id>` | Which shape. Defaults to the show's first format. |
 | `--dry-run` | Prints what it would do and roughly what it would cost, and spends nothing. |
+| `--one-pass` | Writes the whole script in one call instead of beat by beat. An experiment, see below. |
 
 It never publishes. It stops at the gate and tells you what to read.
 
@@ -47,6 +48,29 @@ bible instead. That is decided by the show, never by a flag.
 npm run foundry -- make --show honest-health --topic "Why a bad night's sleep makes you forget things"
 npm run foundry -- make --show myths-of-the-world --format ten-stories --topic "Vampire beliefs in the Balkans"
 ```
+
+**`--one-pass`**, and why it exists. Beat-by-beat writing has one structural
+weakness no prompt fixes: a beat asked to "answer the question from the opening"
+has only spent material to work with, so it restates. Written in one call, a
+beat cannot repeat what it can see.
+
+What it gives up is the per-beat critique loop: one revision of the whole script
+rather than up to two of each beat, and no checkpoint, so a failed write costs
+the whole script rather than one beat. The checks are identical either way, so a
+comparison is a comparison of the writing.
+
+Which method a run used is recorded on the run, so `resume` continues the way it
+started and a comparison six weeks later still knows which was which.
+
+```
+npm run foundry -- make --show honest-health --topic "..." --one-pass
+npm run foundry -- compare --a <beat-by-beat run> --b <one-pass run>
+```
+
+The trigger for making it the default, written down in advance so it is not
+decided by whichever episode was listened to most recently: if the faults in
+one-pass episodes are sentence-level and the faults in beat-by-beat episodes are
+joins, repetition and continuity, one pass wins.
 
 ### `shorts --run <id> [--only 1,4,7]`
 

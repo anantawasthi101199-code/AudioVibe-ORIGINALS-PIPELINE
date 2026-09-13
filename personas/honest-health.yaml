@@ -219,6 +219,19 @@ minSourceTier: T2
 # Cleared for health claims, which is what makes the floor above mandatory
 # rather than optional. Not cleared for named_person: this show has no reason to
 # make claims about individuals, and not being cleared means it cannot.
+# NAMED PERSON IS HERE BECAUSE A RESEARCH SHOW CANNOT WORK WITHOUT IT. The first
+# episode was blocked at the gate for saying who Matthew Walker is, and it was
+# right to be blocked given what this list said - but the list was wrong. An
+# episode that says "one researcher argues" where it means "Walker argues, and
+# Stickgold reads the same data differently" has removed the single most useful
+# thing it knows, and it is less honest, not more careful: an unattributed claim
+# cannot be checked by the listener.
+#
+# What it means here is named authors, named labs, named scientists in their
+# professional capacity - the people whose papers are in the corpus. The persona
+# taboos already bar anything about a living private individual's health, which
+# is the thing this tier is actually protecting.
 allowedRiskTiers:
   - general
   - health
+  - named_person

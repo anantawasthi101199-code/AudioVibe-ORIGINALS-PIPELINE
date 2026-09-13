@@ -293,16 +293,23 @@ export interface BeatContext {
   openWith?: string;
 }
 
-export const buildPrompt = (ctx: BeatContext): string => {
-  const { min, max } = wordsForBeat(ctx.beat);
-  // UNVERIFIED CLAIMS ARE MARKED, NOT HIDDEN. They survived extraction, the
-  // deterministic quote check, verification, a narrowing pass and a rebinding
-  // pass, and what is left is a gap the record genuinely does not close.
-  // Dropping them cost real content - one episode named six men and gave
-  // sentences for two - so they are handed over together with the thing that
-  // has to be said about them.
-  const claims = ctx.claims.length
-    ? ctx.claims
+/**
+ * Claims as the writer sees them.
+ *
+ * UNVERIFIED CLAIMS ARE MARKED, NOT HIDDEN. They survived extraction, the
+ * deterministic quote check, verification, a narrowing pass and a rebinding
+ * pass, and what is left is a gap the record genuinely does not close. Dropping
+ * them cost real content - one episode named six men and gave sentences for two
+ * - so they are handed over together with the thing that has to be said about
+ * them.
+ *
+ * Shared with the one-pass writer, so the two ways of writing a script describe
+ * the evidence in exactly the same words. A difference here would show up as a
+ * difference in the output and be read as a difference between the methods.
+ */
+export const renderClaims = (claims: Claim[]): string =>
+  claims.length
+    ? claims
         .map((c) =>
           c.status === 'unverified'
             ? `[${c.id}] (${c.type}, NOT SETTLED) ${c.text}\n` +
@@ -312,6 +319,10 @@ export const buildPrompt = (ctx: BeatContext): string => {
         )
         .join('\n')
     : '(none available - write this beat without stating new facts)';
+
+export const buildPrompt = (ctx: BeatContext): string => {
+  const { min, max } = wordsForBeat(ctx.beat);
+  const claims = renderClaims(ctx.claims);
 
   return [
     `EPISODE ANGLE: ${ctx.angle}`,

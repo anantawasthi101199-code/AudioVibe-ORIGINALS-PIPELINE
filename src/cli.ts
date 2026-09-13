@@ -80,6 +80,8 @@ Commands
   make --show <id> --topic "..." Write, render and gate one episode
                                  (fiction shows skip research, see Notes)
       ... --dry-run              What it would do and cost. Spends nothing.
+      ... --one-pass             Write the whole script in one call instead of
+                                 beat by beat. An experiment; see COMMANDS.md.
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
   shorts --run <id> [--only 1,4,7]
@@ -246,7 +248,7 @@ const buildTts = () => {
   return new ElevenLabsTts(ttsConfig().apiKey);
 };
 
-const buildDeps = (): PipelineDeps => {
+const buildDeps = (over: Partial<PipelineDeps> = {}): PipelineDeps => {
   // A rate limit is a WAIT, not a failure, and a run that goes quiet for two
   // minutes is indistinguishable from a hang. Saying so is the difference
   // between somebody waiting and somebody pressing Ctrl-C on a call that was
@@ -300,6 +302,7 @@ const buildDeps = (): PipelineDeps => {
     // Narrowed per run in finishRun, which knows which run is being gated.
     priorTexts: priorEpisodeTexts(),
     log: (m) => console.log(`  ${m}`),
+    ...over,
   };
 };
 
@@ -389,7 +392,12 @@ const cmdMake = async (argv: string[]): Promise<number> => {
 
   if (flag(argv, 'dry-run')) return describeRun(persona, format, topic);
 
-  const run = Run.create({ personaId: persona.id, formatId, topic });
+  // AN EXPERIMENT, AND IT IS RECORDED ON THE RUN because a run whose script was
+  // written a different way is not comparable to one that was not, and six
+  // weeks later the only place that fact could live is the manifest.
+  const onePass = flag(argv, 'one-pass');
+
+  const run = Run.create({ personaId: persona.id, formatId, topic, onePass });
   console.log(`run ${run.id}`);
   console.log(`  budget ${episodeBudgetPence()}p\n`);
 
@@ -531,7 +539,10 @@ const describeRun = (persona: Persona, format: EpisodeFormat, topic: string): nu
  * in its own file.
  */
 const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
-  const deps = buildDeps();
+  // FROM THE MANIFEST, NOT FROM THE COMMAND LINE, so a resume continues the way
+  // the run started. Resuming a one-pass run without the flag would write the
+  // second half of an episode by a different method from the first.
+  const deps = buildDeps({ onePass: run.manifest.onePass });
   const persona = loadPersona(run.manifest.personaId);
 
   // Self-similarity compares against every OTHER run. buildDeps cannot know

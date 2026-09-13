@@ -68,7 +68,7 @@ and nothing to select; the beat *is* the short.
 
 The case is entirely cost. Research is roughly half of an 87p episode, so ten
 standalone shorts on one subject pay for it ten times over the same ground, at
-about £5.80. One research pass fanned out into ten is about £1.50 — a source
+about £5.80. One research pass fanned out into ten is about £1.50 - a source
 script at £1.11, then a title and a render each.
 
 **The long version is never published.** `sourceOnly` makes that mechanical
@@ -81,12 +81,28 @@ publishing it is the honest response, not a compromise.
 **Every story is its own run**, gated and published separately, and that is not
 bookkeeping. A short is what a listener actually meets; it needs a provenance
 trail, a claim ledger and a gate report of its own, and each carries only the
-sources it actually cites — a Sources sheet listing nine documents the audio
+sources it actually cites - a Sources sheet listing nine documents the audio
 never mentions is worse than none, because it looks like evidence for something
 it is not evidence for.
 
 What would change it: if cut shorts turn out to under-perform derived ones on
 retention badly enough to outweigh a 6x cost difference.
+
+### Claim floors are not claim ceilings
+
+A health episode fetched 1.1 million characters of PubMed Central primary
+literature and was allowed to take thirty-five facts out of it, because
+extraction was told "no more than `minClaims + 2`" per beat. It took
+twenty-nine, then had to fill eleven and a half minutes with them: **one fact
+every twenty-eight seconds**. What filled the other twenty-seven was
+restatement, and a listener heard an episode working hard to be interesting
+because it did not have enough to say.
+
+The floor answers "is this beat sourced at all". How much there is to say is a
+question about TIME, so the ceiling is now one claim per twelve seconds of beat,
+or the floor plus two, whichever is larger. The writer is given more than fits
+and chooses. Choosing the best four of twenty is a different job from stretching
+four across four minutes, and it sounds different.
 
 ---
 
@@ -151,7 +167,7 @@ two, because the claim carrying the other four said "Collins, Jones and Perkins
 each got seven years" against a quote saying "three ringleaders each received
 seven years". The seven years was solid.
 
-**An unverified claim is not an unchecked one** — it has been through
+**An unverified claim is not an unchecked one** - it has been through
 extraction, the quote check, verification, narrowing and rebinding. What makes
 it honest is that the permission and the obligation ship together: a beat using
 one without telling the listener is rejected, and no more than a fifth of an
@@ -167,7 +183,7 @@ plainly otherwise.
 
 Asked to remove what a quote does not support, a model will sometimes remove the
 **specificity** instead of the over-reach. "Some of the men were sentenced" is
-true, checkable, and worth nothing — and worse than the original failure,
+true, checkable, and worth nothing - and worse than the original failure,
 because it passes.
 
 ---
@@ -197,8 +213,8 @@ Recorded because the reasoning that produced each was plausible.
 ### "Say things twice, differently"
 
 Written because a listener cannot rewind. A model implements say-it-twice as
-**say-it-wrong-then-correct-it** — "eleven years old. Not eleven months into a
-criminal career. Eleven years old, full stop" — because that is the shape
+**say-it-wrong-then-correct-it** - "eleven years old. Not eleven months into a
+criminal career. Eleven years old, full stop" - because that is the shape
 restatement takes in written argument.
 
 Softened once to "say it again with more", which was a half measure and was
@@ -216,19 +232,50 @@ picked the shortest of three takes and lost seven seconds of a beat. The
 decision rule was generalised from a single sample that happened to point the
 other way.
 
-Now the choice is **speech duration** — both takes are the same text, so more
+Now the choice is **speech duration** - both takes are the same text, so more
 speech is more of that text, and there is nothing to weigh.
 
 ### A `counterpoint` beat in every evidence-bearing format
 
 The duty is real: confident one-sidedness is the commonest way generated content
 is false while every sentence is sourced. A dedicated beat was the wrong
-instrument — it stopped the episode two thirds through to argue with itself and
+instrument - it stopped the episode two thirds through to argue with itself and
 then resumed.
 
 The duty moved into the payoff: say where the accounts disagree **at the point
 in the story where they disagree**. The format test now accepts either shape and
 insists on one of them.
+
+### "Answer the question from the opening, in the same words if you can"
+
+The `honest` beat of the health format said exactly that, and the `close` beat
+said "land it by returning to something from earlier". The reasoning was sound:
+an episode that never returns to its own question has no ending.
+
+What it produced was **eleven of twenty-five facts stated in two beats**, and a
+last third that was the first two thirds in different words. The instruction did
+not ask for a recap and got one anyway, because a beat told to answer a question
+already answered has nothing else to work with.
+
+Now: answer it, do not recap the route to it, and where an earlier finding must
+be referred to, refer to it in three or four words and add something new. The
+single callback in the close survives, because one specific thing returning is
+an ending and several is a summary.
+
+### A `people` beat: "what this looks like in a life rather than in a table"
+
+Every popular science format has one and they are the best part of the good
+ones. Here it produced two hundred and fifty words citing no source at all: an
+anecdote about two students found with makeup on their faces, carrying a
+specific "twenty four hours" the ledger did not support.
+
+The format's own header had already worried about this - a model asked for a
+real-life example produces a plausible, sympathetic, entirely fictional case
+study, and nothing downstream catches it because it is not a claim about the
+world, it is a story. The answer was to constrain the beat harder. That did not
+work, and the answer now is **not to have one**. The beat is a `disagreement`
+beat: who found what, who reads it differently, and what would settle it. That
+is more interesting than the anecdote was, and it is checkable.
 
 ### "The render artifact means the audio exists"
 
@@ -246,7 +293,8 @@ duration measured from a file that was not there.
 - **Health: is advice ever given.** "What the evidence says" and "what you should
   do" are different products with different exposure.
 - **Serial: continuous story or anthology.** The bible design assumes continuity.
-- **Single-pass script generation.** The per-beat critique loop catches something
-  nearly every run; beat isolation caused the cast, context and seam problems.
-  The trigger to switch: if an episode's faults are joins and continuity rather
-  than sentence-level, single-pass wins.
+- **Single-pass script generation.** BUILT AND UNDECIDED, which is different from
+  where this sat before. `make --one-pass` writes the whole script in one call;
+  the checks are identical, so a comparison is a comparison of the writing. The
+  trigger stands: if one-pass faults are sentence-level and beat-by-beat faults
+  are joins, repetition and continuity, one pass wins.

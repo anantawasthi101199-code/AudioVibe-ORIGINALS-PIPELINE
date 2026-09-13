@@ -358,6 +358,36 @@ export const EXTRACT_CHARS_PER_SOURCE = 6000;
 export const BEATS_PER_EXTRACTION = 3;
 
 /**
+ * How many claims a beat may take from the corpus.
+ *
+ * THIS USED TO BE `minClaims + 2`, AND THAT WAS A CEILING ON HOW MUCH AN
+ * EPISODE COULD KNOW. A health episode fetched 1.1 million characters of
+ * primary sleep literature - meta-analyses, the actual ripple recordings, the
+ * actual glymphatic paper - and was permitted to take thirty-five facts out of
+ * it. It took twenty-nine, and then had to fill eleven and a half minutes with
+ * them, which is one fact every twenty-eight seconds. What fills the other
+ * twenty-seven is restatement, and a listener hears an episode trying hard to
+ * be interesting because it does not have enough to say.
+ *
+ * The floor answers "is this beat sourced at all". It was never meant to answer
+ * "how much is there to say here", and the second question is a question about
+ * TIME: a four-minute beat can carry far more than a one-minute beat, whatever
+ * its floor happens to be.
+ *
+ * One claim per twelve seconds is dense. It is not a target - the writer is
+ * given these and chooses, and having more than it needs is the point, because
+ * choosing the best four of twenty is a different job from stretching four to
+ * fill four minutes.
+ *
+ * The floor still wins where it is higher, so a short beat with a heavy
+ * sourcing duty is not quietly capped below it.
+ */
+export const SECONDS_PER_CLAIM = 12;
+
+export const claimCeiling = (beat: { minClaims: number; seconds: [number, number] }): number =>
+  Math.max(beat.minClaims + 2, Math.round(beat.seconds[1] / SECONDS_PER_CLAIM));
+
+/**
  * Extract the claims an episode needs, a few beats at a time.
  *
  * THE CORPUS IS SENT AS A CACHED SYSTEM PREFIX, which is what stops chunking
@@ -425,8 +455,8 @@ export const extractClaims = async (
     const beats = chunk
       .map(
         (b) =>
-          `- ${b.id} (${b.type}, needs >= ${b.minClaims} claims, and no more than ` +
-          `${b.minClaims + 2}): ${b.function}`
+          `- ${b.id} (${b.type}, needs >= ${b.minClaims} claims, and up to ` +
+          `${claimCeiling(b)}): ${b.function}`
       )
       .join('\n');
 
