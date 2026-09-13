@@ -228,12 +228,37 @@ beats:
 
   - id: close
     type: outro
-    seconds: [35, 60]
+    seconds: [65, 100]
     function: >
-      One last thing worth knowing, and stop.
+      Land the episode. Give it an ending that feels like one, and leave the
+      listener holding something.
     constraints:
-      - "One thing, not a summary, and not something the episode has said."
+      - >
+        THIS IS AN ENDING, NOT A STOP. An episode that runs out of material and
+        halts leaves a listener with nothing to keep, whatever the twelve
+        minutes before it were worth. The last thing said is the thing they walk
+        away with, so it has to be chosen rather than whatever happened to be
+        left over.
+      - >
+        Land it one of these three ways, whichever the story actually earned.
+        RETURN to something from earlier in the episode, so that it means
+        something different now that the listener knows the rest. Or FOLLOW IT
+        FORWARD - what the thing became, what is still standing, who is still
+        alive, what changed because of it. Or NAME WHAT WAS NEVER SETTLED, and
+        leave it open honestly rather than tidying it.
+      - >
+        You may gather the episode in a sentence before you land it, and one
+        sentence is the limit. A beat-by-beat recap is not an ending, it is the
+        episode again in worse words.
+      - >
+        Leave the listener with something to hold. Not a lesson and not a
+        question asked of them - a fact, an image, or a thing left unresolved
+        that sits with them on its own.
+      - No moral, and nothing about what it says about people or about us now.
       - "No sign-off, no call to action, no naming the show, no next-time."
+    # THE ENDING STILL RESTS ON SOMETHING SOURCED. A callback returns to a claim
+    # the episode already used, which counts - what is not allowed is an ending
+    # the writer made up because the beat had to end somehow.
     minClaims: 1
 
 # Opens warm rather than hot, drops through the orientation because that beat is

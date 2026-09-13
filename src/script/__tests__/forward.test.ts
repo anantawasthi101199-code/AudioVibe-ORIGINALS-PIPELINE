@@ -162,3 +162,48 @@ describe('checkForward - talking about the telling', () => {
     expect(codes(meta, true)).toEqual([]);
   });
 });
+
+describe('the closing beat may make one callback', () => {
+  /**
+   * TWO INSTRUCTIONS THAT CONTRADICTED EACH OTHER, and the contradiction was
+   * mine. A listener asked for no repetition, so checkRepetition blocks any
+   * phrase reused across beats. The same listener then asked for "a summary or
+   * a callback and a proper ending" - and a callback is repetition by that
+   * rule.
+   *
+   * Restating is saying a thing again so the listener does not miss it, which
+   * is padding. A callback returns to something they already have so it means
+   * something different now they know the rest, which is what an ending IS.
+   * Nothing mechanical tells those apart, so the close gets a small budget and
+   * every other beat still gets nothing. Counted in matched phrases rather than
+   * in callbacks, because one returned clause overlaps itself into two or three
+   * matches - measured at 2 for a callback against 22 for a recap.
+   */
+  const earlier =
+    'Reader was jailed over the Brinks Mat robbery back in 1983, when thieves took twenty-six million in gold.';
+  const callback =
+    'Sixty-five years later he was jailed over the Brinks Mat robbery of 1983, and then he went down a lift shaft.';
+
+  it('allows a single returned phrase when closing', () => {
+    expect(checkRepetition(callback, earlier, { isClose: true })).toEqual([]);
+  });
+
+  it('still blocks the same phrase anywhere else', () => {
+    expect(checkRepetition(callback, earlier).map((p) => p.code)).toContain(
+      'forward:repeatsEpisode'
+    );
+  });
+
+  it('does not let the close become a recap', () => {
+    // One callback is an ending. Four is the episode again in worse words.
+    const recap =
+      'Reader was jailed over the Brinks Mat robbery back in 1983, when thieves took twenty-six million in gold, ' +
+      'and Perkins was convicted in 1985 over the Security Express job that took close to six million pounds.';
+    const soFar =
+      earlier +
+      ' Perkins was convicted in 1985 over the Security Express job that took close to six million pounds.';
+    expect(checkRepetition(recap, soFar, { isClose: true }).map((p) => p.code)).toContain(
+      'forward:repeatsEpisode'
+    );
+  });
+});

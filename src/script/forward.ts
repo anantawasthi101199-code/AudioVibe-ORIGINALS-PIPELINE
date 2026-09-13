@@ -326,7 +326,37 @@ const properNouns = (text: string): Set<string> => {
   return out;
 };
 
-export const checkRepetition = (text: string, storySoFar = ''): ForwardProblem[] => {
+/**
+ * How many already-used phrases a closing beat may return to.
+ *
+ * A CALLBACK IS NOT A RESTATEMENT, and nothing mechanical can tell them apart,
+ * so this is a budget rather than a rule. Restating is saying a thing again so
+ * the listener does not miss it, which is padding. A callback returns to
+ * something the listener already has in order to make it mean something
+ * different now that they know the rest - and that is what an ending IS.
+ *
+ * COUNTED IN PHRASES, NOT IN CALLBACKS, because they are not the same number
+ * and the first attempt at this set it to one and permitted nothing. A single
+ * returned clause overlaps itself: "jailed over the Brinks Mat robbery of 1983"
+ * is two three-word matches, not one, and a longer one is three or four.
+ *
+ * Measured on real sentences rather than guessed:
+ *
+ *   one callback   2 matches
+ *   a full recap   22
+ *
+ * Four sits well clear of both, which is the whole reason to measure - a
+ * threshold between 2 and 22 does not need to be precise, it needs to be in the
+ * gap. Only the closing beat gets it; everywhere else the answer to "may I say
+ * that again" is still no.
+ */
+export const CALLBACK_ALLOWANCE = 4;
+
+export const checkRepetition = (
+  text: string,
+  storySoFar = '',
+  opts: { isClose?: boolean } = {}
+): ForwardProblem[] => {
   const problems: ForwardProblem[] = [];
   const words = contentWords(text);
   const names = properNouns(`${storySoFar}\n${text}`);
@@ -336,7 +366,8 @@ export const checkRepetition = (text: string, storySoFar = ''): ForwardProblem[]
   const across = [...gramsWithPositions(words, ACROSS_BEATS_GRAM).keys()].filter(
     (g) => already.has(g) && !allNames(g)
   );
-  if (across.length > 0) {
+  const allowance = opts.isClose ? CALLBACK_ALLOWANCE : 0;
+  if (across.length > allowance) {
     problems.push({
       code: 'forward:repeatsEpisode',
       detail:

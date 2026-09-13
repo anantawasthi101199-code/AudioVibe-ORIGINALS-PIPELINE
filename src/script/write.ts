@@ -445,7 +445,9 @@ export const critiqueBeat = (
   // Blocking, and deliberately strict: the listener's instruction was "don't
   // say anything twice", and a check that allowed a little repetition would be
   // back to arguing about how much.
-  for (const p of checkRepetition(text, storySoFar)) {
+  // The closing beat is allowed one callback, because returning to something
+  // the listener already has is what an ending is. See CALLBACK_ALLOWANCE.
+  for (const p of checkRepetition(text, storySoFar, { isClose: beat.type === 'outro' })) {
     (p.blocking ? blocking : advisory).push(p.detail);
   }
 
