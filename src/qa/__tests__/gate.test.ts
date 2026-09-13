@@ -142,11 +142,44 @@ describe('runGate', () => {
     expect(report.findings.some((f) => f.check === 'factuality')).toBe(true);
   });
 
-  it('BLOCKS a beat below its evidence floor', () => {
+  it('BLOCKS a beat that CITES too few claims', () => {
     // A format's claim floors are not advisory.
-    const report = runGate(input({ ledger: ledger({ claimsByBeat: { cold_open: 1, payoff: 1 } }) }));
+    const thin = script();
+    thin.beats = thin.beats.map((b) => ({ ...b, claimIds: [] }));
+    const report = runGate(input({ script: thin }));
     expect(report.passed).toBe(false);
     expect(report.findings.some((f) => f.check === 'evidenceDensity')).toBe(true);
+  });
+
+  it('is not satisfied by claims the research merely ASSIGNED to a beat', () => {
+    // THE DIFFERENCE IS THE WHOLE CHECK. claimsByBeat counts claims whose
+    // beatId says they belong to a beat, which is a fact about the research.
+    // One episode's longest beat reached the gate citing zero claims against a
+    // floor of seven, and the gate was satisfied because the extractor had
+    // assigned it plenty.
+    const thin = script();
+    thin.beats = thin.beats.map((b) => ({ ...b, claimIds: [] }));
+    const report = runGate(
+      input({ script: thin, ledger: ledger({ claimsByBeat: { cold_open: 50, payoff: 50 } }) })
+    );
+    expect(report.findings.some((f) => f.check === 'evidenceDensity')).toBe(true);
+  });
+
+  it('says how much of the paid-for research reached the episode', () => {
+    // Advisory. Over-researching is not a broken run, but an episode using half
+    // of what it paid for is either thin or has lost claims to repair.
+    const thin = script();
+    thin.beats = thin.beats.map((b, i) => ({ ...b, claimIds: i === 0 ? ['c1'] : [] }));
+    const report = runGate(
+      input({
+        script: thin,
+        claims: [claim(), claim({ id: 'c2' }), claim({ id: 'c3' }), claim({ id: 'c4' })],
+      })
+    );
+    const use = report.findings.find((f) => f.check === 'claimUse');
+    expect(use).toBeDefined();
+    expect(use!.blocking).toBe(false);
+    expect(use!.detail).toMatch(/uses 1 of 4/);
   });
 
   it('BLOCKS a contested claim nobody searched against', () => {

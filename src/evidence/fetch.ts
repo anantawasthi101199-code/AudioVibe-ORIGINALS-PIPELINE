@@ -181,6 +181,46 @@ export const extractMetadata = (html: string) => ({
 export const MIN_USABLE_CHARS = 400;
 
 /**
+ * Hosts that describe documents rather than containing them.
+ *
+ * A PAGE THAT SELLS A BOOK IS NOT THE BOOK, and the extractor cannot tell the
+ * difference. One episode drew seven claims from a Yale University Press
+ * catalogue page for "Vampires, Burial and Death" - a blurb, a price and an
+ * ISBN - and every one of them quoted the book rather than the page. All seven
+ * failed the deterministic quote check, which is the system working, but they
+ * cost an extraction call, a verification call and a repair attempt each before
+ * anything noticed.
+ *
+ * The failure is specific and worth naming: the page is ABOUT a source. It is
+ * full of the right proper nouns, the right subject and the right register, so
+ * it survives every relevance filter, and then the only honest thing to quote
+ * from it is marketing copy.
+ *
+ * A list of hosts rather than a clever heuristic, because the clever version -
+ * "does this page contain the thing it describes" - is the whole problem
+ * restated. Short, obvious, and easy to extend when another one shows up.
+ */
+export const NOT_A_SOURCE_HOSTS = [
+  'yalebooks.yale.edu',
+  'amazon.',
+  'goodreads.com',
+  'waterstones.com',
+  'barnesandnoble.com',
+  'bookshop.org',
+  'abebooks.',
+  'bookdepository.com',
+  'worldcat.org',
+  'books.google.',
+  'play.google.com',
+  'apple.com/book',
+];
+
+export const sellsRatherThanContains = (url: string): boolean => {
+  const lower = url.toLowerCase();
+  return NOT_A_SOURCE_HOSTS.some((host) => lower.includes(host));
+};
+
+/**
  * Text out of a PDF.
  *
  * Loaded lazily, and failing softly into a rejected source rather than a thrown
@@ -222,6 +262,17 @@ export const fetchSource = async (
 ): Promise<Source> => {
   if (!z.string().url().safeParse(url).success) {
     throw new SourceFetchError(url, 'not a valid URL');
+  }
+
+  // Refused before the request rather than after, because a catalogue page
+  // fetches perfectly well and that is exactly the problem. See
+  // NOT_A_SOURCE_HOSTS.
+  if (sellsRatherThanContains(url)) {
+    throw new SourceFetchError(
+      url,
+      'is a page that sells or lists a document rather than containing one. ' +
+        'Anything quoted from it would be a blurb.'
+    );
   }
 
   let res: HttpResponse;

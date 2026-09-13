@@ -413,7 +413,9 @@ export const critiqueBeat = (
    * Defaulted to empty rather than required: every other check in here works
    * without claims, and a caller that has none should still get them all.
    */
-  claims: Claim[] = []
+  claims: Claim[] = [],
+  /** What the draft said it used, so a beat with no provenance is caught here. */
+  claimIds: string[] = []
 ): { blocking: string[]; advisory: string[] } => {
   const blocking: string[] = [];
   const advisory: string[] = [];
@@ -456,6 +458,22 @@ export const critiqueBeat = (
   // spends the rest of the beat catching up rather than listening.
   if (plan) {
     for (const problem of checkCast(text, plan, beat.id)) blocking.push(problem);
+  }
+
+  // A BEAT THAT USED ITS CLAIMS AND DID NOT SAY WHICH is a beat with no
+  // provenance, and it reaches the gate looking like a beat with no evidence.
+  // One episode's longest beat - five and a half minutes, full of names and
+  // dates - reported zero claim ids, so the ledger could not trace a word of it
+  // back to a source and the published Sources sheet would have been empty for
+  // it.
+  //
+  // Caught here rather than only at the gate because the fix is one cheap
+  // rewrite, and at the gate it is a whole episode of audio already paid for.
+  if (claims.length && !claimIds.length) {
+    blocking.push(
+      `states facts but lists no claim ids. Every claim you used goes in "claimIds", ` +
+        `or nothing can trace this beat back to a source.`
+    );
   }
 
   // AN UNSETTLED CLAIM SPOKEN FLATLY IS INDISTINGUISHABLE FROM A VERIFIED ONE,
@@ -611,7 +629,8 @@ export const writeBeat = async (
       ctx.beat,
       ctx.storyPlan,
       ctx.storySoFar,
-      ctx.claims
+      ctx.claims,
+      current.claimIds
     );
 
     if (!blocking.length) break;

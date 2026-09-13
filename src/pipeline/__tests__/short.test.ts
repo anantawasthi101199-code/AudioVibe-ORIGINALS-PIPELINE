@@ -114,7 +114,12 @@ const fakeWriter = (sourceId: () => string): LlmClient & { calls: number } => {
             { speaker: 'reporter', text: BEAT_PROSE },
             { speaker: 'sceptic', text: 'Wait. Who signed the Thursday entry?' },
           ],
-          claimIds: [],
+          // A BEAT THAT CITES NOTHING HAS NO PROVENANCE, and the fixture used to
+          // return an empty list, which quietly meant these tests asserted a
+          // short could be produced without a single traceable claim. The gate
+          // now measures what the script CITES rather than what research
+          // assigned, so the stub has to behave like a writer that reports.
+          claimIds: ['c1'],
         });
       }
       return { text, inputTokens: 10, outputTokens: 10, costPence: 0.1, model: 'writer-1' };

@@ -55,6 +55,15 @@ export const MAX_VOCABULARY_OVERLAP = 0.45;
 /** Duration may drift this far from the format target before it is a problem. */
 export const DURATION_TOLERANCE = 0.2;
 
+/**
+ * How much of the verified research an episode should actually use.
+ *
+ * Advisory, because over-researching is not a broken run. But an episode using
+ * half of what it paid for is either thinner than it could be or has quietly
+ * lost claims to the repair stage, and neither was visible before this.
+ */
+export const MIN_CLAIM_USE = 0.6;
+
 export interface GateInput {
   persona: Persona;
   format: EpisodeFormat;
@@ -152,12 +161,47 @@ export const runGate = (input: GateInput): GateReport => {
   }
 
   // --- 3. Evidence density. A format's claim floors are not advisory. ---
+  //
+  // MEASURED ON WHAT THE SCRIPT CITES, NOT ON WHAT RESEARCH ASSIGNED, and the
+  // difference is the whole check. `claimsByBeat` counts claims whose beatId
+  // says they belong to a beat, which is a fact about the research and says
+  // nothing about the episode: a beat could cite none of them and pass.
+  //
+  // It did. One episode's longest beat - five and a half minutes, the one the
+  // whole format is built around - reached the gate citing zero claims against
+  // a floor of seven, and the gate was satisfied because the extractor had
+  // assigned it plenty. Sixteen of twenty-eight claims reached the script at
+  // all, so half the research was paid for and never used.
+  //
+  // An episode is informative because it USES its evidence. Assigning it is
+  // the cheap half.
   const floors = Object.fromEntries(input.format.beats.map((b) => [b.id, b.minClaims]));
   if (!fiction) {
-    for (const beatId of beatsBelowClaimFloor(input.ledger.claimsByBeat, floors)) {
+    const cited: Record<string, number> = {};
+    for (const beat of input.script.beats) {
+      cited[beat.beatId] = new Set(beat.claimIds).size;
+    }
+
+    for (const beatId of beatsBelowClaimFloor(cited, floors)) {
       add(
         'evidenceDensity',
-        `beat "${beatId}" carries ${input.ledger.claimsByBeat[beatId] ?? 0} claims, below its floor of ${floors[beatId]}`
+        `beat "${beatId}" cites ${cited[beatId] ?? 0} claims, below its floor of ${floors[beatId]}` +
+          ` (research assigned it ${input.ledger.claimsByBeat[beatId] ?? 0})`
+      );
+    }
+
+    // How much of the research reached the audio at all. Not blocking - a run
+    // that over-researched is not a broken run - but an episode using half of
+    // what it paid for is either thin or has lost claims to the repair stage,
+    // and both are worth seeing.
+    const available = input.claims.length;
+    const used = new Set(input.script.beats.flatMap((b) => b.claimIds)).size;
+    if (available > 0 && used / available < MIN_CLAIM_USE) {
+      add(
+        'claimUse',
+        `the script uses ${used} of ${available} verified claims. The rest were researched, ` +
+          `verified and paid for, and are not in the episode.`,
+        false
       );
     }
   }

@@ -4,7 +4,15 @@
  * URLs, error pages, paywall stubs - because every one of those, if accepted,
  * puts an unverifiable reference into an episode.
  */
-import { fetchSource, htmlToText, extractMetadata, MIN_USABLE_CHARS, SourceFetchError, HttpResponse } from '../fetch';
+import {
+  fetchSource,
+  htmlToText,
+  extractMetadata,
+  MIN_USABLE_CHARS,
+  sellsRatherThanContains,
+  SourceFetchError,
+  HttpResponse,
+} from '../fetch';
 import { sourceIdFor, tierForUrl, weakestTier, hashText } from '../source';
 import { locateQuote } from '../claim';
 
@@ -279,5 +287,59 @@ describe('citation markers and orphaned spaces', () => {
     expect(locateQuote(withSic, 'The log recorded the valve as closed [sic] on the Wednesday morning shift.').found).toBe(
       true
     );
+  });
+});
+
+describe('pages that sell a document rather than containing one', () => {
+  // A PAGE THAT SELLS A BOOK IS NOT THE BOOK. One episode drew seven claims
+  // from a Yale University Press catalogue page - a blurb, a price and an ISBN
+  // - and every one quoted the book rather than the page. All seven failed the
+  // deterministic quote check, which is the system working, but each had cost
+  // an extraction call, a verification call and a repair attempt first.
+  //
+  // The failure is specific: the page is ABOUT a source, so it carries the
+  // right proper nouns and the right subject and survives every relevance
+  // filter, and then the only honest thing to quote is marketing copy.
+
+  it('recognises the catalogue page that actually caused this', () => {
+    expect(
+      sellsRatherThanContains(
+        'https://yalebooks.yale.edu/book/9780300164817/vampires-burial-and-death/'
+      )
+    ).toBe(true);
+  });
+
+  it('recognises the usual retailers', () => {
+    for (const url of [
+      'https://www.amazon.co.uk/dp/0300164815',
+      'https://www.goodreads.com/book/show/123.Vampires',
+      'https://bookshop.org/p/books/x/9780300164817',
+      'https://books.google.com/books?id=abc',
+    ]) {
+      expect(sellsRatherThanContains(url)).toBe(true);
+    }
+  });
+
+  it('leaves a real document alone', () => {
+    for (const url of [
+      'https://www.judiciary.uk/wp-content/uploads/2016/03/sentencing-remarks.pdf',
+      'https://etcsl.orinst.ox.ac.uk/section1/tr141.htm',
+      'https://www.sacred-texts.com/neu/kveng/kvrune01.htm',
+      'https://www.gutenberg.org/files/5186/5186-h/5186-h.htm',
+    ]) {
+      expect(sellsRatherThanContains(url)).toBe(false);
+    }
+  });
+
+  it('refuses before the request, because a catalogue page fetches perfectly well', async () => {
+    let called = false;
+    const httpGet = async () => {
+      called = true;
+      throw new Error('should never be reached');
+    };
+    await expect(
+      fetchSource('https://www.goodreads.com/book/show/123', { httpGet })
+    ).rejects.toThrow(/sells or lists a document/);
+    expect(called).toBe(false);
   });
 });
