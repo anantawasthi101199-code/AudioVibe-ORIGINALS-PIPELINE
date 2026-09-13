@@ -90,12 +90,32 @@ export const instructionsFor = (voice: Voice): string => {
         ? 'Understated. Interested rather than enthusiastic.'
         : 'Dry and flat. Let the words carry it.';
 
+  // THE SHOW'S OWN SENTENCE WINS. What was here before was a single default
+  // sent for every show in the studio - "one half of a two-person conversation
+  // that is already underway" - which is right for a two-hander and wrong for
+  // one person explaining something they have read properly. A listener heard
+  // it immediately on a health episode and described it as sounding like a
+  // mystery instead of somebody imparting knowledge.
+  const who =
+    voice.direction ??
+    'Speak as one half of a two-person conversation that is already underway.';
+
+  const pace =
+    voice.speed && voice.speed !== 1
+      ? voice.speed > 1
+        ? 'Keep it moving. Do not linger between sentences.'
+        : 'Unhurried. Let each sentence land before the next.'
+      : '';
+
   return [
-    'Speak as one half of a two-person conversation that is already underway.',
+    who,
     steadiness,
     colour,
+    pace,
     'Never sound like an announcer, a narrator, or an advertisement.',
-  ].join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 };
 
 interface OpenAiTtsDeps {
@@ -167,6 +187,12 @@ export class OpenAiTts implements TtsProvider {
         input: req.text,
         instructions: instructionsFor(req.voice),
         response_format: 'mp3',
+        // BOTH THE PARAMETER AND THE WORDS, because the two engines behave
+        // differently: the older speech models take `speed` literally, and
+        // gpt-4o-mini-tts mostly responds to direction in `instructions`.
+        // Sending only one of them works on one model and silently does nothing
+        // on the other.
+        ...(req.voice.speed ? { speed: req.voice.speed } : {}),
       }
     );
 

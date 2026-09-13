@@ -139,6 +139,34 @@ export const voiceSchema = z.object({
   draftVoiceId: z.string().min(1).optional(),
   /** Provider-specific knobs, kept opaque so adding a provider is not a schema change. */
   settings: z.record(z.union([z.string(), z.number(), z.boolean()])).default({}),
+
+  /**
+   * How this person speaks, in plain English, sent to the engine as direction.
+   *
+   * WHY A SHOW SHOULD OWN THIS SENTENCE RATHER THAN HAVE IT DERIVED. It used to
+   * be inferred from two Eleven numbers, `stability` and `style`, mapped onto
+   * three phrases each. That produces a delivery nobody chose: every show in the
+   * studio got "Speak as one half of a two-person conversation that is already
+   * underway", which is right for a two-hander and wrong for a single expert
+   * explaining something - and a listener heard exactly that, a health show
+   * reading its research like a mystery.
+   *
+   * The numbers still set steadiness and colour. This says who is talking, and
+   * it is the line that decides whether a listener trusts the voice.
+   *
+   * Optional, because a show without one gets the derived default it had
+   * before, which is serviceable and generic.
+   */
+  direction: z.string().min(1).optional(),
+
+  /**
+   * Speaking rate, where 1 is the engine's own pace.
+   *
+   * Kept out of `settings` because it is not provider-specific: every engine has
+   * a notion of speed and a show's pace is a property of the show. 1.0 is the
+   * default and the range the engines accept is roughly 0.25 to 2.
+   */
+  speed: z.number().min(0.5).max(2).optional(),
 });
 
 export type Voice = z.infer<typeof voiceSchema>;

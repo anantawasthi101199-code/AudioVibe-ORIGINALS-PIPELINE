@@ -110,6 +110,43 @@ const RULED_OUT_THEN_ANSWERED =
   /\b(no|nothing|not|never|neither)\b[^.!?]{0,70}?\b(just|only|but|simply|merely|instead)\b/i;
 
 /**
+ * Defining something by what it is not, with the true version alongside it.
+ *
+ * "Real scientific claims, not folklore." "A large physical change, not a small
+ * drift in a number." "Human data, not a mouse finding stretched to fit a
+ * person." "In front of a scanner rather than a microscope." "How fast waste
+ * leaves the tissue rather than how far a marker travels."
+ *
+ * TWENTY-FOUR OF NINETY-ONE SENTENCES, one every four, in an episode a listener
+ * otherwise liked. They named it exactly: "it was X, not Y, not Z - I don't
+ * like this kind of talking, just continue with facts."
+ *
+ * It is worth being precise about why this is worse out loud than on a page. A
+ * reader whose eye lands on "not folklore" can look back at "real scientific
+ * claims" for nothing. A listener cannot, so the negated half arrives as new
+ * information, is held, and then has to be discarded once the sentence
+ * resolves. Every one of these costs a listener a small piece of work whose
+ * only product is a thing that was never true.
+ *
+ * DISTINCT FROM A NEGATIVE FACT, and the difference is the whole check.
+ * "Nobody has built that mouse", "the record does not say who raised it",
+ * "Franks does not back down" are findings - the absence IS the fact, and there
+ * is no true alternative being withheld. Those are left alone. What is caught
+ * is a positive assertion carrying a denied alternative in the same breath.
+ */
+const CONTRASTIVE_DEFINITION = [
+  // "X, not Y" - the commonest by far, and the one the listener quoted.
+  /,\s*(not|never|nor)\b/i,
+  /\band not\b/i,
+  // "X rather than Y", "X instead of Y", "X as opposed to Y".
+  /\brather than\b/i,
+  /\binstead of\b/i,
+  /\bas opposed to\b/i,
+  // "not X but Y", "not X, just Y" - the same move with the halves swapped.
+  /\bnot\b[^.!?]{0,60}?\b(but|just|simply|merely)\b/i,
+];
+
+/**
  * Sentences about the telling rather than about the events.
  *
  * Phrases, not a grammar, because the failure is idiomatic. Each one here was
@@ -190,6 +227,21 @@ export const checkForward = (
         `${denials.length} sentence(s) define something by what it is not: ` +
         `"${denials[0]!.slice(0, 60)}". A listener has to hold the false ` +
         `version in mind while the true one arrives. State the true one.`,
+      blocking: true,
+    });
+  }
+
+  const contrastive = sentences.filter((s) => CONTRASTIVE_DEFINITION.some((re) => re.test(s)));
+  if (contrastive.length > 0) {
+    problems.push({
+      code: 'forward:contrastiveDefinition',
+      detail:
+        `${contrastive.length} sentence(s) say what something is by pairing it with ` +
+        `what it is not: "${contrastive[0]!.slice(0, 80)}". Delete the negated half ` +
+        `and keep the fact. A listener cannot glance back, so the false version ` +
+        `arrives as news, gets held, and then has to be thrown away. A negative ` +
+        `FACT is fine - "nobody has run that study", "the record does not say who" ` +
+        `- because there the absence is the finding.`,
       blocking: true,
     });
   }
@@ -402,6 +454,9 @@ export const checkRepetition = (
  */
 export const FORWARD_GUIDANCE = [
   'ALWAYS FORWARD. Never step back to correct an impression the listener never had. In particular: never "Not X. Y." or "This was not X, it was Y." Nobody thought X. Say what was true and let it be surprising on its own.',
+  'NEVER PAIR A FACT WITH WHAT IT IS NOT. No "real claims, not folklore". No "a scanner rather than a microscope". No "instead of". No "as opposed to". Say the fact and stop: "real claims", "a scanner". The listener cannot look back at the first half, so the denied half arrives as news, gets held, and is then thrown away - which is work you charged them for nothing.',
+  'A NEGATIVE FACT IS A DIFFERENT THING AND IS WELCOME. "Nobody has run that study", "the record does not say who", "it has never been measured in a person" are findings, and the absence is the point. What is banned is the contrast, not the word.',
+  'GO IN ORDER. What happened first, then what followed from it. A sentence that reaches back to qualify something already said stops the episode; put the qualification in the sentence that needed it the first time.',
   'SAY EACH THING ONCE, across the whole episode and not just this beat. A phrase, a figure or a line from a document that has been used is spent. A listener told everything twice learns that missing a sentence costs nothing, and then stops listening properly.',
   'THAT INCLUDES DESCRIBING SOMETHING AGAIN IN DIFFERENT WORDS. If an earlier beat said the drill was built for grinding through concrete and steel, this beat says "the drill" and moves on. A second description is not a reminder, it is the episode standing still.',
   'TELL THE EVENTS, DO NOT DISCUSS THE EPISODE. No "here is where the story turns", no "you would be forgiven for thinking". Perform the turn by telling what happened next.',

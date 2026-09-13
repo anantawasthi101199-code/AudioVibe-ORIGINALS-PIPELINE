@@ -14,11 +14,13 @@
 #   and is still not evidence about the world. This is the only thing that
 #   catches it.
 #
-#   The `people` beat is constrained harder than any beat in any other format.
-#   A psychology episode wants a person it happened to and there usually is not
-#   one in the sources, so a model will produce a plausible, sympathetic,
-#   entirely fictional case study that nothing downstream can catch - it is not
-#   a claim about the world, it is a story.
+#   THERE IS NO ANECDOTE BEAT, and there used to be. A psychology episode wants
+#   a person it happened to and there usually is not one in the sources, so a
+#   model produces a plausible, sympathetic, entirely fictional case study that
+#   nothing downstream can catch - it is not a claim about the world, it is a
+#   story. Constraining the beat harder was tried and did not work. The beat is
+#   now `disagreement`: who found what, who reads it differently, and what would
+#   settle it.
 #
 #   NO ADVICE, ever, and it is a taboo rather than a style note. "Here is what
 #   the evidence says" and "here is what you should do" are different products
@@ -54,12 +56,30 @@ audience: >
   to. Assume they have already read the confident version and did not believe
   it.
 
+# THE VOICE OF SOMEBODY EXPLAINING THEIR FIELD, not somebody telling a story
+# about it. A listener heard the first episodes as "talking about a mystery"
+# rather than "how a doctor or an advisor speaks", and they were right - the
+# prose kept reaching for a fight, a turn, a thing that did not last.
+#
+# The material here does not need any of that. Somebody who genuinely knows a
+# subject does not build suspense in it; they tell you what is established, how
+# well, and where it runs out, in the order it makes sense. The authority comes
+# from the order and the precision, and it is undermined by every sentence that
+# reaches for drama.
 register: >
-  One person telling you what is actually known, at the pace of somebody who
-  respects both the question and the listener. Calm, unhurried, never
-  reassuring for the sake of it. Interested in the work rather than impressed by
-  it, and completely free of the brightness that everything else in this genre
-  has.
+  Somebody who knows this field well, explaining it to one person who asked.
+  The register of a good clinician or a good teacher: clear, direct, in order,
+  and entirely unhurried by any need to keep you interested. States what is
+  established and how well it is established, gives the number before the
+  interpretation, and says plainly where the knowledge runs out.
+
+  Never builds suspense and never withholds. If something is settled it is
+  said at once. If something is argued about, the argument is described as a
+  professional would describe it, which is as two reasonable readings of the
+  same data and never as a fight, a collapse, a bombshell or a twist.
+
+  The trust comes from precision and from admitting the limits, so nothing is
+  dramatised and nothing is softened.
 
 hosts:
   - id: narrator
@@ -83,12 +103,30 @@ hosts:
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
       # A third draft voice, so three shows are never confused while drafting.
       draftVoiceId: sage
+      # SENT TO THE ENGINE AS SPOKEN DIRECTION, and it is the single biggest
+      # lever on whether a listener trusts the voice. Without it every show in
+      # the studio was told to speak as "one half of a two-person conversation
+      # that is already underway", which is right for a two-hander and wrong for
+      # one person who has read the studies and is telling you what they say.
+      direction: >
+        Speak as an experienced clinician explaining findings to one person who
+        asked a real question. Assured, plain, and in order. The authority is in
+        the precision, so state things once, cleanly, without building to
+        anything and without reassurance. This is somebody imparting knowledge,
+        not narrating a story.
+      # A fraction quicker than the engine's own pace. At 1.0 this voice reads
+      # findings slowly enough to sound portentous, which is the wrong signal
+      # from somebody who simply knows the answer.
+      speed: 1.08
       settings:
         # Steadier than the storytelling shows. This one is not performing, and
         # a voice that moves too much reads as reassurance rather than care.
-        stability: 0.5
+        stability: 0.55
         similarity_boost: 0.75
-        style: 0.35
+        # Lowered, but not to flat. Colour on a clinical explanation reads as
+        # selling; NO colour reads as indifference, and a listener trusts
+        # neither. This lands on "interested rather than enthusiastic".
+        style: 0.32
 
 styleCard:
   # Slightly shorter than the narrative shows. A listener holding a number and a

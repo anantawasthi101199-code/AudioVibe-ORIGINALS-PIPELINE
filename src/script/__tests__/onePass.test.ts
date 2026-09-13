@@ -49,7 +49,7 @@ const OPENERS = [
 ];
 const BODIES = [
   'Volunteers arrived on a Tuesday evening, gave up their phones, and slept under observation for six consecutive nights while a technician wrote down every change in a paper log.',
-  'Funding ran out before the second cohort finished, so the numbers everybody quotes today come from forty-one participants rather than the three hundred originally planned.',
+  'Funding ran out before the second cohort finished, so the numbers everybody quotes today come from the forty-one participants who stayed, against a protocol written for three hundred.',
   'Each recording ran for eight hours and produced roughly nine metres of paper, which had to be read by eye because no software existed that could do it.',
   'The animals were kept on a reversed light cycle so that the interesting hours fell during the working day, which is a detail almost never mentioned and changes how the timings should be read.',
   'A second group repeated the protocol in Melbourne and got a smaller effect, and the argument about why has been running ever since.',

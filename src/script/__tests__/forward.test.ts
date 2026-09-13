@@ -59,6 +59,83 @@ describe('checkForward - the negation tic', () => {
   });
 });
 
+/**
+ * The form the tic actually takes in a finished episode.
+ *
+ * Twenty-four of ninety-one sentences in a health episode paired a fact with a
+ * denied alternative, and a listener named it without being asked: "it was X,
+ * not Y, not Z - I don't like this kind of talking, just continue with facts."
+ * None of the earlier patterns caught any of them, because every one of those
+ * looked for a negation at the START of a clause and this one trails.
+ */
+describe('checkForward - pairing a fact with what it is not', () => {
+  const caught = (text: string) =>
+    checkForward(text).some((p) => p.code === 'forward:contrastiveDefinition' && p.blocking);
+
+  it.each([
+    ['a trailing comma denial', 'All three are real scientific claims, not folklore.'],
+    ['the same with a scale', 'That is a large, physical change, not a small drift in a number.'],
+    ['rather than', 'They put it in front of a scanner rather than a microscope.'],
+    ['instead of', 'Instead of confirming it, the tissue approach pointed the other way.'],
+    ['as opposed to', 'The scan shows shape as opposed to movement.'],
+    ['and not', 'It came from mice and not from a living human head.'],
+    ['not X but Y', 'It is not a theory but a measurement.'],
+  ])('catches %s', (_label, text) => {
+    expect(caught(text)).toBe(true);
+  });
+
+  it('leaves the older rule-out-then-answer form to the older check', () => {
+    // "No door forced, no glass broken, just a lift shaft" is the same move and
+    // is already blocked by ruledOutThenAnswered. Pinning which check owns it
+    // keeps the two from drifting into overlapping, differently-worded advice
+    // for one sentence.
+    const codes = checkForward('No door forced, no glass broken, just a lift shaft.')
+      .filter((p) => p.blocking)
+      .map((p) => p.code);
+
+    expect(codes).toContain('forward:ruledOutThenAnswered');
+    expect(codes).not.toContain('forward:contrastiveDefinition');
+  });
+
+  /**
+   * THE HALF THAT MUST SURVIVE, and the reason this is not simply a ban on the
+   * word "not".
+   *
+   * "Nobody has run that study" is a finding. The absence IS the fact, there is
+   * no true alternative being withheld, and a show whose whole claim is that it
+   * says how well something is known needs to be able to say it. Banning the
+   * word would have made this show unable to state its own subject.
+   */
+  it.each([
+    'Nobody has built that mouse.',
+    'The record does not say who first raised it.',
+    'Franks does not back down from that.',
+    'That agreement did not last.',
+    'It has never been measured in a living person.',
+    'No study has followed them for longer than a year.',
+  ])('leaves a negative FACT alone: %s', (text) => {
+    expect(caught(text)).toBe(false);
+  });
+
+  it('is quiet on plain chronological reporting', () => {
+    expect(
+      caught(
+        'The trial enrolled forty-one adults and ran for six months. ' +
+          'Each of them recorded four measures every evening. The effect held at eleven weeks.'
+      )
+    ).toBe(false);
+  });
+
+  it('counts them, so a beat full of the tic says how full', () => {
+    const problem = checkForward(
+      'It is data, not folklore. They used a scanner rather than a microscope. ' +
+        'It measures shape as opposed to movement.'
+    ).find((p) => p.code === 'forward:contrastiveDefinition');
+
+    expect(problem!.detail).toMatch(/^3 sentence/);
+  });
+});
+
 describe('checkRepetition', () => {
   const codesOf = (text: string, soFar = '') => checkRepetition(text, soFar).map((p) => p.code);
 

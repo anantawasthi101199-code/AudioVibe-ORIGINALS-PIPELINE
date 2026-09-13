@@ -142,6 +142,44 @@ The budget is counted in **matched phrases, not callbacks**, because one
 returned clause overlaps itself into two or three matches. Measured: 2 for a
 callback, 22 for a recap.
 
+### Never pair a fact with what it is not
+
+"Real scientific claims, not folklore." "A large physical change, not a small
+drift in a number." "In front of a scanner rather than a microscope."
+**Twenty-four of ninety-one sentences** in an episode a listener otherwise
+liked, one every four. They named it: "it was X, not Y, not Z - I don't like
+this kind of talking, just continue with facts."
+
+Every earlier negation check looked for a denial at the START of a clause. This
+one trails, so none of them caught a single instance.
+
+Why it is worse out loud than on a page: a reader whose eye lands on "not
+folklore" can glance back at "real scientific claims" for free. A listener
+cannot, so the negated half arrives as new information, is held, and is then
+discarded once the sentence resolves. The only product of that work is a thing
+that was never true.
+
+**A negative FACT is a different thing and survives.** "Nobody has run that
+study", "the record does not say who", "it has never been measured in a person"
+are findings, and the absence is the point. A show whose whole claim is that it
+says how well something is known has to be able to say that. The ban is on the
+contrast, never on the word.
+
+### A show owns the sentence its voice is spoken with
+
+The delivery direction sent to the engine was derived from two ElevenLabs
+numbers, `stability` and `style`, mapped onto three phrases each. Every show in
+the studio therefore opened with the same line: *"Speak as one half of a
+two-person conversation that is already underway."*
+
+That is right for a two-hander and wrong for one person explaining their field.
+A listener heard it on the health show immediately: the voice "talks like it's
+talking about a mystery, not like how a doctor or an advisor speaks". The
+numbers still set steadiness and colour; `direction` says who is talking, and it
+is the line that decides whether a listener trusts what they hear. `speed` moved
+out of provider settings for the same reason: pace is a property of a show, not
+of an engine.
+
 ### Explaining a word is not the same as placing it
 
 An episode defined "hajduk" correctly and the listener still came away not
