@@ -117,7 +117,22 @@ export interface PipelineDeps {
    * write. Set false to go back, which `--beat-by-beat` does.
    */
   onePass?: boolean;
-  log?: (message: string) => void;
+  /**
+   * Where a message goes.
+   *
+   * The stage is passed alongside because the terminal wants to group by it and
+   * the pipeline is the only thing that knows. It was already being recorded on
+   * the journal entry and thrown away on the way to the screen, which is why
+   * every line arrived with its stage spelled out in the text instead.
+   */
+  log?: (message: string, stage?: string) => void;
+  /**
+   * What to run next, printed outside any stage.
+   *
+   * A command somebody is meant to type is not something that happened during
+   * the script stage, and printing it inside that stage's box said it was.
+   */
+  next?: (lines: string[]) => void;
 }
 
 const counterEvidenceSchema = z.array(
@@ -149,10 +164,14 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   // most useful artifact for working out what happened - and it is readable
   // with `tail -f` while the run is still going.
   const say = (stage: string) => (message: string) => {
-    (deps.log ?? (() => undefined))(message);
+    (deps.log ?? (() => undefined))(message, stage);
     run.journal({ stage, event: message });
   };
   const log = say('pipeline');
+
+  // A message and the stage it belongs to, so the terminal can group them and
+  // the journal records the stage rather than repeating it inside the text.
+  const report = (stage: string, message: string) => say(stage)(message);
 
   // Spend is journalled per call rather than only totalled, so "where did the
   // money go" is answerable after the fact rather than only in aggregate.
@@ -177,28 +196,28 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   let brief: Brief;
   if (run.hasArtifact('brief')) {
     brief = run.readArtifact('brief', briefSchema);
-    log(`brief: reusing "${brief.angle}"`);
+    report('brief', `reusing "${brief.angle}"`);
   } else {
     stage = 'brief';
     log('brief: planning the research');
     brief = await buildBrief(run.manifest.topic, persona, format, deps.writer, spend);
     run.writeArtifact('brief', brief);
     run.markComplete('brief');
-    log(`brief: "${brief.angle}" with ${brief.queries.length} queries`);
+    report('brief', `"${brief.angle}" with ${brief.queries.length} queries`);
   }
 
   // --- 2. Corpus ----------------------------------------------------------
   let corpus: { sources: Source[]; rejected: Array<{ url: string; reason: string }> };
   if (run.hasArtifact('corpus')) {
     corpus = run.readArtifact('corpus', corpusSchema);
-    log(`corpus: reusing ${corpus.sources.length} sources`);
+    report('corpus', `reusing ${corpus.sources.length} documents already fetched`);
   } else {
     stage = 'corpus';
     log('corpus: searching and fetching');
     corpus = await gatherCorpus(brief.queries, deps.search, deps.fetchDeps, gatherFor(format));
     run.writeArtifact('corpus', corpus);
     run.markComplete('corpus');
-    log(`corpus: ${corpus.sources.length} sources, ${corpus.rejected.length} rejected`);
+    report('corpus', `${corpus.sources.length} sources, ${corpus.rejected.length} rejected`);
   }
 
   // A corpus this thin cannot support an episode, and going on would produce a
@@ -216,7 +235,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   let claimSet: ClaimSet;
   if (run.hasArtifact('claims')) {
     claimSet = run.readArtifact('claims', claimSetSchema);
-    log(`claims: reusing ${claimSet.claims.length}`);
+    report('claims', `reusing ${claimSet.claims.length} claims already bound`);
   } else {
     stage = 'claims';
     log('claims: extracting and binding to quotes');
@@ -239,7 +258,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     run.writeArtifact('claims', claimSet);
     run.markComplete('claims');
     run.clearCheckpoint('claims');
-    log(`claims: ${claimSet.claims.length} bound, ${claimSet.unsupported.length} unsupported`);
+    report('claims', `${claimSet.claims.length} bound, ${claimSet.unsupported.length} unsupported`);
   }
 
   const claims: Claim[] = claimSet.claims.map((c) => claimSchema.parse(c));
@@ -255,7 +274,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     );
     verification = stored.verification;
     counterEvidence = stored.counterEvidence;
-    log(`verification: reusing (${verification.blocking.length} blocking)`);
+    report('verification', `reusing, ${verification.blocking.length} claim(s) still blocking`);
   } else {
     stage = 'verification';
     log('verification: checking every claim against its quote');
@@ -317,7 +336,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       z.object({ claims: z.array(claimSchema), report: repairReportSchema })
     );
     workingClaims = stored.claims;
-    log(`repair: reusing (${stored.report.repaired.length} claims repaired)`);
+    report('repair', `reusing, ${stored.report.repaired.length} claim(s) repaired`);
   } else {
     stage = 'repair';
     // BOTH KINDS OF FAILURE GO THROUGH THE SAME REPAIR, which is the point of
@@ -346,7 +365,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     const failing = [...semantic, ...structural.filter((v) => !seen.has(v.claimId))];
 
     if (failing.length) {
-      log(`repair: ${failing.length} claims say more than their quotes`);
+      report('repair', `${failing.length} claims say more than their quotes`);
       const repaired = await repairAll(claims, failing, {
         sources: corpus.sources,
         // The CLERK narrows. It is subtraction against a complaint that has
@@ -398,7 +417,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // it, and the claim it produces is verified exactly like every other.
     const gaps = findGaps(workingClaims);
     if (gaps.length) {
-      log(`gaps: ${gaps.length} name(s) the claims use and never introduce`);
+      report('gaps', `${gaps.length} name(s) the claims use and never introduce`);
       const found = await fillGaps(
         gaps,
         {
@@ -430,7 +449,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
       if (found.length) {
         workingClaims = [...workingClaims, ...found];
-        log(`gaps: filled ${found.length} of ${gaps.length}`);
+        report('gaps', `filled ${found.length} of ${gaps.length}`);
         run.writeArtifact('repair', {
           claims: workingClaims,
           report: { repaired: [], costPence: 0 },
@@ -445,7 +464,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   let script: Script;
   if (run.hasArtifact('script')) {
     script = run.readArtifact('script', scriptSchema);
-    log(`script: reusing "${script.title}"`);
+    report('script', `reusing "${script.title}"`);
   } else {
     stage = 'script';
     // THE CLAIMS ARE THE SAME EITHER WAY, and so are the checks. The only thing
@@ -512,7 +531,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // exists, and leaving it would mean a re-run reads partial work in
     // preference to a finished script.
     run.clearCheckpoint('script');
-    log(`script: "${script.title}", ${script.beats.length} beats`);
+    report('script', `"${script.title}", ${script.beats.length} beats`);
   }
 
   // --- 5b. A source format stops here. ---------------------------------------
@@ -538,11 +557,13 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // having failed. Better than inventing myths, and still not publishable.
     const starved = script.beats.filter((b) => b.claimIds.length === 0).map((b) => b.beatId);
 
-    log(`script: "${script.title}", ${stories} stories`);
+    report('script', `"${script.title}", ${stories} stories`);
     log('');
-    log(`This format is a source: it is never rendered or published whole.`);
-    log(`Cut the shorts with:`);
-    log(`  npm run foundry -- shorts --run ${run.id}`);
+    deps.next?.([
+      'This format is a SOURCE. It is never rendered or published whole.',
+      `Cut it into ${stories} shorts with:`,
+      `  npm run foundry -- shorts --run ${run.id}`,
+    ]);
 
     run.journal({
       stage: 'pipeline',
@@ -669,7 +690,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
   if (renderedAudio && fs.existsSync(renderedAudio)) {
     render = run.readArtifact('render', renderResultSchema);
-    log(`render: reusing ${Math.round(render.durationS)}s of audio`);
+    report('render', `reusing ${Math.round(render.durationS)}s of audio`);
   } else {
     if (renderedAudio) {
       log('render: the previous audio is gone, so it is being made again');
@@ -692,7 +713,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     );
     run.writeArtifact('render', render);
     run.markComplete('render');
-    log(`render: ${Math.round(render.durationS)}s across ${render.beatMap.length} beats`);
+    report('render', `${Math.round(render.durationS)}s across ${render.beatMap.length} beats`);
 
     // THE FIRST USE IS THE COMMITMENT. Written after a successful render rather
     // than before, so a run that fails at synthesis does not pin a show to a
@@ -707,7 +728,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     if (recorded.length) {
       saveVoiceRegistry(registry);
       for (const r of recorded) {
-        log(`voice: ${persona.name} speaks as "${r.voiceId}" on ${deps.tts.name} from now on`);
+        report('voice', `${persona.name} speaks as "${r.voiceId}" on ${deps.tts.name} from now on`);
       }
     }
   }

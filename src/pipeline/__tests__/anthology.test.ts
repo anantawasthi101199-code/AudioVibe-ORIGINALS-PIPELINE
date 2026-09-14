@@ -428,6 +428,30 @@ describe('cutStories', () => {
     expect(second[0]!.script.beats[0]!.turns[0]!.text).toMatch(/different lake/);
   });
 
+  it('does not compare a story against itself or against the set it came from', async () => {
+    // A cut story IS a beat of the source, word for word, so comparing the two
+    // reports 100% overlap with something that is never published. And a second
+    // cut compares a short against the copy of itself the first cut left on
+    // disk, which reports 100% overlap with itself. Both were blocking every
+    // short in a real set.
+    const source = await makeSource();
+    await cutStories({ source, only: [1] }, buildDeps());
+
+    // Second cut, with the whole studio offered as prior work - which is what
+    // the CLI hands it.
+    const priors = Run.list({ root }).map((id) => ({
+      label: id,
+      text: 'unrelated words about a different subject entirely',
+    }));
+    const again = await cutStories({ source, only: [1] }, buildDeps({ priorTexts: priors }));
+
+    const similarity = again[0]!.gate.findings.filter((f) => f.check === 'selfSimilarity');
+    for (const finding of similarity) {
+      expect(finding.detail).not.toContain(source.id);
+      expect(finding.detail).not.toContain(again[0]!.run.id);
+    }
+  });
+
   it('REFUSES to cut a format that is not a source', async () => {
     // The long lane's shorts are DERIVED - a minute out of the middle of a
     // fifteen-minute story starts in the wrong place and ends in the wrong

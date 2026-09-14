@@ -61,7 +61,8 @@ import { costPenceFor } from './models/client';
 import { EpisodeFormat } from './formats/schema';
 import { COMPOSED_INTO_WRITER, promptRegistry } from './prompts/registry';
 import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/load';
-import { Run } from './run/store';
+import { Run, STAGES } from './run/store';
+import { Reporter } from './cli/ui';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
@@ -69,6 +70,15 @@ import { renderResultSchema } from './render/assemble';
 import { claimCeiling, claimSetSchema, corpusSchema } from './evidence/research';
 import { AudioVibeClient } from './publish/ingest';
 import { buildFictionProvenance, buildProvenance } from './publish/provenance';
+
+/**
+ * The stages a run passes through, for "3 of 8" in the terminal.
+ *
+ * `publish` is deliberately absent: it is a separate command a person runs
+ * after reading the gate, so counting it would make every finished run look
+ * like it had stopped one short.
+ */
+const PIPELINE_STAGES = STAGES.filter((s) => s !== 'publish');
 
 const USAGE = `
 AudioVibe Foundry
@@ -241,11 +251,9 @@ const httpGet = async (url: string): Promise<HttpResponse> => {
 const buildTts = () => {
   if (ttsProvider() === 'openai') {
     const cfg = openAiTtsConfig();
-    console.log(`  voices: ${cfg.model} (drafting - turns are spliced, not a real exchange)`);
     return new OpenAiTts(cfg.apiKey, { post: nodePostBinary, model: cfg.model });
   }
 
-  console.log('  voices: elevenlabs (the exchange is rendered in one request)');
   return new ElevenLabsTts(ttsConfig().apiKey);
 };
 
@@ -280,17 +288,7 @@ const buildDeps = (over: Partial<PipelineDeps> = {}): PipelineDeps => {
   // to the plain fetcher per URL, so being out of credit costs documents rather
   // than the run.
   const get = keys.firecrawl ? firecrawlGet(keys.firecrawl, httpGet) : httpGet;
-
-  console.log(`  retrieval: ${describeRetrieval(keys)}`);
-
-  console.log(
-    `  models: ${writer.model} writing, ${verifier.model} verifying, ${clerk.model} clerking`
-  );
-
   const screener = screenerConfig();
-  if (screener) {
-    console.log(`  screening: ${screener.model} first, escalating anything unclear`);
-  }
 
   return {
     writer: new AnthropicClient(writer.model, writer.apiKey),
@@ -401,10 +399,9 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   // the only place that fact could live is the manifest.
   const onePass = !flag(argv, 'beat-by-beat');
 
+  // The header is printed by finishRun, which also prints it on a resume, so
+  // the two commands look the same and neither repeats the other.
   const run = Run.create({ personaId: persona.id, formatId, topic, onePass });
-  console.log(`run ${run.id}`);
-  console.log(`  budget ${episodeBudgetPence()}p\n`);
-
   return finishRun(run, argv);
 };
 
@@ -569,11 +566,46 @@ const describeRun = (
  * in its own file.
  */
 const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
+  const persona = loadPersona(run.manifest.personaId);
+  const format = loadFormat(run.manifest.formatId);
+
+  // The stages this run will ACTUALLY pass through, so a section can say
+  // "3 of 7" truthfully. A fiction run does no research and a source format
+  // never renders; numbering either against the full list would count stages
+  // that are not going to happen and leave every finished run looking short.
+  const skip = new Set<string>(
+    persona.fiction ? ['corpus', 'claims', 'verification', 'repair'] : []
+  );
+  if (format.sourceOnly) skip.add('render');
+
+  const ui = new Reporter({
+    spentPence: () => run.manifest.spentPence,
+    stages: PIPELINE_STAGES.filter((st) => !skip.has(st)),
+  });
+
+  ui.header(`${persona.name} · ${format.name}`, [
+    ['run', run.id],
+    ['topic', run.manifest.topic],
+    ['budget', `${episodeBudgetPence()}p`],
+    ['writing', run.manifest.onePass === false ? `${writerConfig().model}, beat by beat` : writerConfig().model],
+    ['checking', screenerConfig()
+      ? `${screenerConfig()!.model}, escalating to ${verifierConfig().model}`
+      : verifierConfig().model],
+    ['research', describeRetrieval(retrievalKeys())],
+    ['voice', ttsProvider() === 'openai' ? 'openai, drafting only' : ttsProvider()],
+  ]);
+
   // FROM THE MANIFEST, NOT FROM THE COMMAND LINE, so a resume continues the way
   // the run started. Resuming a one-pass run without the flag would write the
   // second half of an episode by a different method from the first.
-  const deps = buildDeps({ onePass: run.manifest.onePass });
-  const persona = loadPersona(run.manifest.personaId);
+  const deps = buildDeps({
+    onePass: run.manifest.onePass,
+    log: (message, stage) => {
+      if (stage && stage !== 'pipeline') ui.section(stage);
+      ui.line(message);
+    },
+    next: (lines) => ui.next(lines),
+  });
 
   // Self-similarity compares against every OTHER run. buildDeps cannot know
   // which run is being gated, so it is narrowed here, where that is known.
@@ -583,11 +615,13 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
     ? await runFiction({ run }, deps)
     : await runEpisode(run, deps);
 
-  console.log('');
+  ui.finish([
+    ['spent', `${run.manifest.spentPence.toFixed(1)}p`],
+    ['artifacts', run.dir],
+  ]);
+
   console.log(formatGateReport(gate));
   console.log('');
-  console.log(`spent ${run.manifest.spentPence.toFixed(1)}p`);
-  console.log(`artifacts in ${run.dir}`);
 
   if (gate.passed) {
     console.log(`\nRead it first:  npm run foundry -- script --run ${run.id}`);
@@ -626,25 +660,60 @@ const cmdShorts = async (argv: string[]): Promise<number> => {
   }
 
   const persona = loadPersona(source.manifest.personaId);
-  console.log(`cutting ${persona.name} ${source.id}`);
-  console.log('');
+  const script = source.readArtifact('script', scriptSchema);
 
-  const results = await cutStories({ source, only }, buildDeps());
+  // EACH STORY IS A STAGE HERE, which is what a cut actually is: ten small runs
+  // rather than one run with ten steps. Numbering them against the set makes
+  // "story 7 of 10" true, and a `--only` cut says how many it is doing rather
+  // than leaving somebody counting.
+  const cutting = only.length ? only : script.beats.map((_, i) => i + 1);
+  const ui = new Reporter({
+    spentPence: () => cutting.reduce((sum, n) => sum + (spentOnStory(source, n) ?? 0), 0),
+    stages: cutting.map((n) => `story ${n}`),
+  });
+
+  ui.header(`${persona.name} · cutting ${cutting.length} shorts`, [
+    ['source', source.id],
+    ['topic', source.manifest.topic],
+    ['stories', only.length ? `${only.join(', ')} of ${script.beats.length}` : `all ${script.beats.length}`],
+    ['voice', ttsProvider() === 'openai' ? 'openai, drafting only' : ttsProvider()],
+  ]);
+
+  const results = await cutStories({ source, only }, buildDeps({
+    log: (message, stage) => {
+      if (stage) ui.section(stage);
+      ui.line(message);
+    },
+  }));
 
   const passed = results.filter((r) => r.gate.passed);
-  console.log('');
-  console.log(`${passed.length} of ${results.length} passed the gate.`);
+  ui.finish([
+    ['made', `${results.length} shorts`],
+    ['passed', `${passed.length} of ${results.length}`],
+    ['spent', `${results.reduce((n, r) => n + r.run.manifest.spentPence, 0).toFixed(1)}p`],
+  ]);
+
   for (const r of results.filter((x) => !x.gate.passed)) {
+    const blocking = r.gate.findings.filter((f) => f.blocking);
     console.log(`  story ${r.story} needs work: ${r.run.id}`);
+    for (const f of blocking.slice(0, 3)) console.log(`      [${f.check}] ${f.detail.slice(0, 96)}`);
+    if (blocking.length > 3) console.log(`      and ${blocking.length - 3} more`);
   }
-  console.log('');
-  console.log('Read one with:  npm run foundry -- script --run <id>');
-  console.log('Publish one with:  npm run foundry -- publish --run <id>');
+  if (results.some((x) => !x.gate.passed)) console.log('');
+
+  console.log('  Read one with:     npm run foundry -- script --run <id>');
+  console.log('  Publish one with:  npm run foundry -- publish --run <id>');
 
   // Non-zero only when NOTHING passed. One bad story out of ten is a story to
   // fix, not a failed cut, and exiting non-zero would make a scheduler treat it
   // as one.
   return passed.length ? 0 : 2;
+};
+
+/** What one already-cut story has cost so far, for the running total. */
+const spentOnStory = (source: Run, story: number): number | null => {
+  const run = Run.derivedFrom(source.id).find((r) => r.manifest.story === story);
+  return run ? run.manifest.spentPence : null;
 };
 
 const cmdShort = async (argv: string[]): Promise<number> => {

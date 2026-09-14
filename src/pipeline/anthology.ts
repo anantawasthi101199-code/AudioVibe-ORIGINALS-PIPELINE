@@ -118,9 +118,12 @@ export const cutStories = async (
 
     const budget = episodeBudgetPence();
     const spend = (pence: number) => run.spend(pence, budget);
+    // The stage IS the story, so the terminal can group ten cuts into ten
+    // sections instead of forty indistinguishable indented lines.
+    const stage = `story ${story}`;
     const say = (message: string) => {
-      log(`  ${message}`);
-      run.journal({ stage: 'short', event: message });
+      log(message, stage);
+      run.journal({ stage, event: message });
     };
 
     // ONLY THE CLAIMS THIS STORY STATES. A short carrying the whole set's
@@ -195,9 +198,9 @@ export const cutStories = async (
     run.markComplete('script');
 
     const already = run.isComplete('render') && !stale;
-    log(
-      `story ${story}/${script.beats.length}: "${title}" -> ${run.id}${already ? ' (already rendered)' : ''}`
-    );
+    say(`"${title}"`);
+    say(`${run.id}`);
+    if (already) say('audio already rendered, reusing it');
 
     // THE ONLY OTHER THING THAT COSTS ANYTHING. A cut interrupted at story
     // seven is resumed by running the same command again, and re-rendering six
@@ -258,13 +261,26 @@ export const cutStories = async (
       sources,
       corpusText: sources.map((s) => s.text).join('\n'),
       castNames: script.plan?.cast.map((c) => c.name) ?? [],
-      priorTexts: deps.priorTexts,
+      // NEITHER ITSELF NOR THE SET IT CAME OUT OF.
+      //
+      // A cut story IS a beat of the source, word for word, so comparing the
+      // two reports a hundred percent overlap with something that is never
+      // published - and a rerun compares a short against the copy of itself
+      // the previous cut left on disk, which reports a hundred percent overlap
+      // with itself. Both were blocking every short in the set, and both are
+      // the same mistake the episode lane made once and fixed: the check is
+      // for covering ground somebody ELSE has covered.
+      priorTexts: (deps.priorTexts ?? []).filter(
+        (prior) => prior.label !== input.source.id && prior.label !== run.id
+      ),
+
     });
 
     run.writeArtifact('qa', gate);
     run.markComplete('qa');
-    log(
-      `  ${Math.round(render.durationS)}s, gate ${gate.passed ? 'passed' : `FAILED (${gate.findings.filter((f) => f.blocking).length} blocking)`}`
+    const blocking = gate.findings.filter((f) => f.blocking).length;
+    say(
+      `${Math.round(render.durationS)}s of audio, gate ${gate.passed ? 'PASSED' : `FAILED with ${blocking} blocking`}`
     );
 
     results.push({ run, gate, script: oneStory, story });
