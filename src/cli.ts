@@ -49,6 +49,7 @@ import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/loa
 import { Run, STAGES } from './run/store';
 import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
+import { serve } from './server/index';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
@@ -83,6 +84,10 @@ Commands
                                  away. Spends without anybody reading it first.
   approve --run <id>             Release a held run, then render and gate it.
                                  Nothing is voiced until this.
+  studio                         Start the web interface, on loopback. Everything
+                                 the commands below do, with progress you can
+                                 watch and a script you can edit before it is
+                                 voiced. Needs FOUNDRY_ADMIN_PASSWORD.
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
   shorts --run <id> [--only 1,4,7]
@@ -1423,6 +1428,11 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdDue();
       case 'tick':
         return await cmdTick(rest);
+      case 'studio':
+        await serve();
+        // The server owns the process from here. Returning a code would set
+        // process.exitCode and the entry point would tidy up underneath it.
+        return await new Promise<number>(() => undefined);
       case 'approve':
         return await cmdApprove(rest);
       case 'resume':

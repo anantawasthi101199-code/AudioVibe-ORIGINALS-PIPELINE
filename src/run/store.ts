@@ -487,6 +487,23 @@ export class Run {
     }
   }
 
+  /**
+   * Mark a stage as not done, because what it produced is no longer true.
+   *
+   * THE ONE CASE THIS EXISTS FOR: a script edited after it was voiced. The audio
+   * is about different words now, and a run that still reports `render` complete
+   * would carry a duration measured from a file nobody is going to hear and a
+   * gate report about prose that has changed underneath it.
+   *
+   * Deliberately narrow. This is not an undo - it does not delete artifacts or
+   * refund anything - it is a statement that a stage has to happen again.
+   */
+  uncomplete(stage: Stage): void {
+    const before = this.manifestData.completed.length;
+    this.manifestData.completed = this.manifestData.completed.filter((s) => s !== stage);
+    if (this.manifestData.completed.length !== before) this.save();
+  }
+
   isComplete(stage: Stage): boolean {
     return this.manifestData.completed.includes(stage);
   }
