@@ -58,6 +58,20 @@ const format = (beatCount: number): EpisodeFormat =>
     tensionCurve: Array.from({ length: beatCount }, () => 0.5),
   }) as unknown as EpisodeFormat;
 
+/** A writer that returns one fixed reply, for pinning how a bad one is handled. */
+const writerReturning = (text: string): LlmClient & { seen: LlmRequest[] } => {
+  const seen: LlmRequest[] = [];
+  return {
+    name: 'fake',
+    model: 'test-model',
+    seen,
+    async complete(req: LlmRequest): Promise<LlmResponse> {
+      seen.push(req);
+      return { text, inputTokens: 10, outputTokens: 10, costPence: 0.1, model: 'test-model' };
+    },
+  };
+};
+
 /** Returns two claims per call, always numbered from c1 as a real one would. */
 const writer = (): LlmClient & { seen: LlmRequest[] } => {
   const seen: LlmRequest[] = [];
@@ -283,6 +297,66 @@ describe('extractClaims', () => {
       });
 
       expect(w.seen).toHaveLength(0);
+    });
+  });
+
+  /**
+   * ONE BAD CLAIM OUT OF EIGHTEEN, which killed a real run.
+   *
+   * A chunk came back with claim nine missing its `quote` field. The whole
+   * reply was parsed as a unit, so seventeen good claims went in the bin along
+   * with it, after thirty-six documents and an extraction call had been paid
+   * for - and a rerun would pay for the call again.
+   *
+   * Claims are independent. A malformed one is dropped and named; the floors
+   * are checked at the gate over what actually survived, so tolerating it here
+   * cannot quietly produce an under-sourced beat.
+   */
+  it('keeps the good claims when one of them is malformed', async () => {
+    const w = writerReturning(
+      JSON.stringify({
+        claims: [
+          { id: 'c1', beatId: 'b0', text: 'A fact.', type: 'chronology', sourceId: 's1', quote: QUOTE },
+          // No quote. Exactly what came back on the run that died.
+          { id: 'c2', beatId: 'b0', text: 'Another fact.', type: 'chronology', sourceId: 's1' },
+          { id: 'c3', beatId: 'b1', text: 'A third.', type: 'chronology', sourceId: 's1', quote: QUOTE },
+        ],
+        unsupported: [],
+      })
+    );
+
+    const out = await extractClaims(brief, corpus, format(3), w);
+
+    expect(out.claims.map((c) => c.text)).toEqual(
+      expect.arrayContaining(['A fact.', 'A third.'])
+    );
+    expect(out.claims.some((c) => c.text === 'Another fact.')).toBe(false);
+  });
+
+  it('still fails when EVERY claim is malformed, rather than carrying on empty', async () => {
+    // Eighteen broken claims means the call did not do the work. Carrying on
+    // would hand the gate three empty beats and make it look like the beat
+    // sheet's fault.
+    const w = writerReturning(
+      JSON.stringify({
+        claims: [
+          { id: 'c1', beatId: 'b0', text: 'A fact.', type: 'chronology', sourceId: 's1' },
+          { id: 'c2', beatId: 'b1', text: 'Another.', type: 'chronology', sourceId: 's1' },
+        ],
+      })
+    );
+
+    await expect(extractClaims(brief, corpus, format(3), w)).rejects.toThrow(
+      /all 2 claims were malformed/
+    );
+  });
+
+  it('treats an EMPTY claims array as a real answer, not a failure', async () => {
+    // "The corpus holds nothing for these three beats" is a true and useful
+    // reply. The gate's claim floors catch the consequence.
+    const w = writerReturning(JSON.stringify({ claims: [], unsupported: [] }));
+    await expect(extractClaims(brief, corpus, format(3), w)).resolves.toMatchObject({
+      claims: [],
     });
   });
 

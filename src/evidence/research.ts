@@ -641,22 +641,83 @@ export const extractClaims = async (
           // rates to be less likely to finish - which is exactly how this stage
           // died, returning content blocks with no text among them.
         effort: 'low',
-        maxTokens: 12000,
+        // ROOM FOR WHAT THE CEILING NOW ALLOWS. Three beats at up to fifteen
+        // claims each, every one carrying a verbatim quote, is a far larger
+        // reply than when this number was chosen and the ceiling was six.
+        // A truncated reply comes back as JSON that repairs into valid objects
+        // with fields missing, which is how a claim arrived without its quote.
+        maxTokens: 24000,
       },
       onCost
     );
 
-    const result = claimSetSchema.safeParse(raw);
-    if (!result.success) {
-      // Named, so the message says which chunk and what came back rather than
-      // printing a bare Zod path with no context at all.
+    // ONE BAD CLAIM MUST NOT COST THE CHUNK. This parsed the whole reply and
+    // threw on any failure, so a single claim missing its `quote` field - one
+    // of eighteen - killed a run that had already paid for thirty-six documents
+    // and one extraction call, and would have to pay for the call again.
+    //
+    // Claims are independent of each other. A malformed one is dropped and
+    // named; the rest are kept. The floors are checked at the gate over what
+    // actually survived, deterministically, so tolerating a bad claim here
+    // cannot quietly produce an under-sourced beat.
+    const reply = (raw ?? {}) as { claims?: unknown; unsupported?: unknown };
+    const candidates = Array.isArray(reply.claims) ? reply.claims : null;
+
+    // NOT AN ARRAY AT ALL means the reply is not a claim set, which is the
+    // failure the old message was written for and is still worth naming.
+    if (!candidates) {
       throw new Error(
         `the extractor returned something unusable for beats ` +
-          `${chunk.map((b) => b.id).join(', ')}: ` +
-          `${result.error.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}\n` +
+          `${chunk.map((b) => b.id).join(', ')}: no claims array
+` +
           `It returned: ${JSON.stringify(raw).slice(0, 300)}`
       );
     }
+
+    const usable: Claim[] = [];
+    const malformed: string[] = [];
+
+    for (const [index, candidate] of candidates.entries()) {
+      const one = claimSchema.safeParse(candidate);
+      if (one.success) {
+        usable.push(one.data);
+        continue;
+      }
+      const id = (candidate as { id?: string })?.id ?? `#${index}`;
+      malformed.push(`${id} (${one.error.issues.map((i) => i.path.join('.')).join(', ')})`);
+    }
+
+    if (malformed.length) {
+      onProgress?.(
+        `dropped ${malformed.length} malformed claim(s): ${malformed.slice(0, 4).join('; ')}`
+      );
+    }
+
+    // AN EMPTY SET IS A LEGITIMATE ANSWER and a set that was entirely malformed
+    // is not. "The corpus holds nothing for these three beats" is a real and
+    // useful reply - it is what `unsupported` is for, and the gate's claim
+    // floors catch the consequence. Eighteen broken claims means the call did
+    // not do the work, and carrying on would hand the gate three empty beats
+    // and make it look like the beat sheet's fault.
+    if (!usable.length && malformed.length) {
+      throw new Error(
+        `the extractor returned nothing usable for beats ` +
+          `${chunk.map((b) => b.id).join(', ')}: all ${malformed.length} claims were ` +
+          `malformed, starting with ${malformed[0]}
+` +
+          `It returned: ${JSON.stringify(raw).slice(0, 300)}`
+      );
+    }
+
+    // The notes about what could NOT be supported, which are as much a part of
+    // the answer as the claims. Absent means empty, and a malformed set of them
+    // is dropped rather than thrown for, exactly like a malformed claim.
+    const notes = unsupportedClaimSchema.array().safeParse(reply.unsupported ?? []);
+
+    const result = {
+      success: true as const,
+      data: { claims: usable, unsupported: notes.success ? notes.data : [] },
+    };
 
     done.push(result.data);
     // Saved after EVERY chunk. Each is thousands of tokens over a corpus that
