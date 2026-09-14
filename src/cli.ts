@@ -15,12 +15,9 @@ import os from 'os';
 import path from 'path';
 import { z } from 'zod';
 import {
-  clerkConfig,
   screenerConfig,
   episodeBudgetPence,
   platformConfig,
-  openAiTtsConfig,
-  ttsConfig,
   ttsProvider,
   verifierConfig,
   writerConfig,
@@ -35,20 +32,8 @@ import {
   voiceFor,
   voiceRegistryPath,
 } from './canon/voiceRegistry';
-import { AnthropicClient, OpenAiClient } from './models/client';
-import { BraveSearch } from './evidence/search';
-import {
-  buildSearch,
-  describeRetrieval,
-  ExaSearch,
-  firecrawlGet,
-  retrievalKeys,
-} from './evidence/providers';
-import { HttpResponse } from './evidence/fetch';
-import { ElevenLabsTts, nodePostBinary } from './render/tts';
-import { onProviderWait } from './models/client';
-import { OpenAiTts } from './render/openaiTts';
-import { runEpisode, PipelineDeps } from './pipeline/episode';
+import { describeRetrieval, retrievalKeys } from './evidence/providers';
+import { runEpisode } from './pipeline/episode';
 import { runShort } from './pipeline/short';
 import { cutStories } from './pipeline/anthology';
 import { runFiction } from './pipeline/fiction';
@@ -57,11 +42,12 @@ import { environmentKey, findSeries, recordSeries } from './publish/seriesRegist
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
 import { buildPlan, historyFor, runSummary } from './schedule/plan';
 import { writeLibrary } from './run/library';
-import { costPenceFor } from './models/client';
+import { costPenceFor, OpenAiClient } from './models/client';
 import { EpisodeFormat } from './formats/schema';
 import { COMPOSED_INTO_WRITER, promptRegistry } from './prompts/registry';
 import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/load';
 import { Run, STAGES } from './run/store';
+import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
 import { formatGateReport, GateReport } from './qa/gate';
 import { compare, formatComparison } from './qa/compare';
@@ -201,136 +187,6 @@ const openRun = (argv: string[]): Run => {
 };
 
 /** Real HTTP for source fetching, with a browser-ish UA and a timeout. */
-const httpGet = async (url: string): Promise<HttpResponse> => {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25000);
-  try {
-    const res = await fetch(url, {
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        // Plenty of publishers serve a stub to an unrecognised client, which
-        // then reads as a paywall. Identifying honestly as a bot gets fewer
-        // documents than this does.
-        'user-agent':
-          'Mozilla/5.0 (compatible; AudioVibeFoundry/0.1; +https://audiovibe.co) research fetcher',
-        // PDFs are named explicitly because a great deal of the best primary
-        // material is one: sentencing remarks, inquest findings, regulator
-        // notices. A server that content-negotiates will otherwise hand back an
-        // HTML landing page about the document instead of the document.
-        accept:
-          'text/html,application/xhtml+xml,application/pdf,text/plain;q=0.9,*/*;q=0.8',
-      },
-    });
-
-    // READ THE BODY ONCE, AS BYTES, then decode. A response can only be
-    // consumed once, so reading text() first would leave nothing for a PDF -
-    // and reading arrayBuffer() first costs nothing for HTML.
-    const bytes = Buffer.from(await res.arrayBuffer());
-    const contentType = res.headers.get('content-type') ?? undefined;
-    const isPdf = /pdf/i.test(contentType ?? '') || /\.pdf($|\?)/i.test(res.url || url);
-
-    return {
-      status: res.status,
-      // A PDF decoded as utf-8 is binary noise. It is never read in that form -
-      // fetch.ts takes the bytes - but leaving the field empty keeps the noise
-      // out of any error message that quotes the body.
-      body: isPdf ? '' : bytes.toString('utf8'),
-      bytes,
-      finalUrl: res.url || url,
-      contentType,
-    };
-  } finally {
-    clearTimeout(timer);
-  }
-};
-
-/**
- * The voice engine, chosen by FOUNDRY_TTS.
- *
- * Loud about which one it picked, because the two sound different enough that
- * listening to a draft and forgetting which engine made it is a real way to
- * reach a wrong conclusion about the writing.
- */
-const buildTts = () => {
-  if (ttsProvider() === 'openai') {
-    const cfg = openAiTtsConfig();
-    return new OpenAiTts(cfg.apiKey, { post: nodePostBinary, model: cfg.model });
-  }
-
-  return new ElevenLabsTts(ttsConfig().apiKey);
-};
-
-const buildDeps = (over: Partial<PipelineDeps> = {}): PipelineDeps => {
-  // A rate limit is a WAIT, not a failure, and a run that goes quiet for two
-  // minutes is indistinguishable from a hang. Saying so is the difference
-  // between somebody waiting and somebody pressing Ctrl-C on a call that was
-  // about to succeed.
-  onProviderWait((message) => console.log(`  ${message}`));
-
-  const writer = writerConfig();
-  const verifier = verifierConfig();
-  const clerk = clerkConfig();
-  const keys = retrievalKeys();
-
-  if (writer.model === verifier.model) {
-    // The check exists because collapsing these is easy, silent, and destroys
-    // the point of verification.
-    throw new Error(
-      `the writer and verifier are both "${writer.model}". A verifier sharing the ` +
-        `writer's priors reconstructs its justification instead of checking the text.`
-    );
-  }
-
-  const search = buildSearch(keys, {
-    brave: (k) => new BraveSearch(k),
-    exa: (k) => new ExaSearch(k),
-  });
-
-  // Firecrawl renders JavaScript, which is the difference between a corpus and
-  // a pile of "paywall or a JS shell" rejections on some topics. It falls back
-  // to the plain fetcher per URL, so being out of credit costs documents rather
-  // than the run.
-  const get = keys.firecrawl ? firecrawlGet(keys.firecrawl, httpGet) : httpGet;
-  const screener = screenerConfig();
-
-  return {
-    writer: new AnthropicClient(writer.model, writer.apiKey),
-    verifier: new OpenAiClient(verifier.model, verifier.apiKey),
-    clerk: new AnthropicClient(clerk.model, clerk.apiKey),
-    screener: screener ? new OpenAiClient(screener.model, screener.apiKey) : undefined,
-    search,
-    tts: buildTts(),
-    fetchDeps: { httpGet: get },
-    // Narrowed per run in finishRun, which knows which run is being gated.
-    priorTexts: priorEpisodeTexts(),
-    log: (m) => console.log(`  ${m}`),
-    ...over,
-  };
-};
-
-/** Earlier episodes from this repo's runs, for the self-similarity check. */
-const priorEpisodeTexts = (exclude?: string): Array<{ label: string; text: string }> => {
-  const out: Array<{ label: string; text: string }> = [];
-  for (const id of Run.list()) {
-    // NEVER THE RUN BEING GATED. Every script shares one hundred percent of its
-    // vocabulary with itself, so including it made self-similarity fail on
-    // every episode this studio has ever produced - loudly, with a message
-    // naming the run as its own plagiarism source, which at least made it
-    // obvious once somebody read it.
-    if (id === exclude) continue;
-
-    try {
-      const run = Run.open(id);
-      if (!run.hasArtifact('script')) continue;
-      out.push({ label: id, text: fullText(run.readArtifact('script', scriptSchema)) });
-    } catch {
-      // A malformed old run should not stop a new one.
-    }
-  }
-  return out;
-};
-
 const cmdShows = (): number => {
   const personas = loadAllPersonas();
   const formats = loadAllFormats();
