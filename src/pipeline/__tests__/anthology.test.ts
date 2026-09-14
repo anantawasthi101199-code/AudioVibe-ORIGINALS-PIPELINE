@@ -256,8 +256,16 @@ describe('cutStories', () => {
 
     expect(source.isComplete('script')).toBe(true);
     expect(source.hasArtifact('render')).toBe(false);
-    expect(source.isComplete('qa')).toBe(false);
     expect(tts.calls).toBe(0);
+
+    // IT IS STILL CHECKED, AND THE REPORT IS STILL KEPT. A source script is not
+    // an episode and cannot be judged as one - there is no audio to time and no
+    // render to fault - but the two things that matter about it are checked
+    // here or nowhere: that no story is starved of evidence, and that no story
+    // cites another story's claims. Written like any other run's report, so
+    // `gate --run` has something to read.
+    expect(source.isComplete('qa')).toBe(true);
+    expect(source.hasArtifact('qa')).toBe(true);
 
     const script = source.readArtifact('script', scriptSchema);
     expect(script.beats).toHaveLength(STORIES);

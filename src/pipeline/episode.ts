@@ -576,54 +576,41 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       });
     }
 
-    // A STORY THE BRIEF CHOSE THAT NEVER GOT TOLD. Narasimha and Kamadhenu were
-    // both picked, both searched for and both in the corpus, and neither
-    // reached the script - because nothing downstream had been told which beat
-    // was which, so two beats were filled with Nandi and Garuda instead. The
-    // binding above makes that unlikely; this makes it visible when it happens
-    // anyway, because a set can otherwise lose two of its ten and look whole.
+    // A BEAT TELLING A DIFFERENT STORY FROM THE ONE IT WAS RESEARCHED FOR.
     //
-    // CHECKED PER BEAT, NOT ACROSS THE SCRIPT, now that each beat has a story.
-    // Searching the whole script only answers "is this story in here somewhere",
-    // which a set telling story four twice would pass.
+    // ASKED OF THE LEDGER, NOT OF THE PROSE, and the first version asked the
+    // prose. It compared the names in the brief's story line against the names
+    // in the beat, and blocked a perfectly good set because the brief wrote
+    // "Samudra Manthan" and the script told it as "the churning of the Ocean of
+    // Milk" - the same story, in the right beat, sharing not one word of its
+    // name. Two spellings of one myth is not a defect, and a check that cannot
+    // tell that from a real fault is a check that gets ignored.
     //
-    // MATCHED ON NAMES, because a phrase does not survive a retelling. The brief
-    // writes "Ganesha's elephant head: Shiva beheads the son Parvati made..."
-    // and the script says "how the god Ganesha, the elephant headed one, got his
-    // head" - the same story, not one shared phrase. Matching literally called
-    // nine of ten stories missing when two were.
-    const namesIn = (text: string): string[] =>
-      [...new Set(text.match(/\b[A-Z][a-z]{3,}\b/g) ?? [])].map((n) => n.toLowerCase());
+    // The question that actually matters is provenance: does this beat cite the
+    // claims researched for it? A beat telling another story has to draw on
+    // another story's claims, and that is exact rather than a heuristic - no
+    // threshold, no name matching, and it is also the thing that would hurt a
+    // listener, because a short citing another story's sources publishes a
+    // Sources sheet for a story it does not tell.
+    const ownerOf = new Map(workingClaims.map((c) => [c.id, c.beatId]));
 
-    // Two conditions, because neither alone separates the real cases. The
-    // headline name absent is the strong signal - the brief leads with the name
-    // the story is known by - but "Samudra Manthan" is told as "the churning of
-    // the ocean of milk" and names it nowhere. The share of the story's other
-    // names carries that one: 13 of its 16 appear.
-    const NAME_SHARE = 0.7;
-
-    const wrongStory = script.beats.flatMap((beat, i) => {
-      const subject = storyForBeat(brief, format, i);
-      if (!subject) return [];
-
-      const names = namesIn(subject);
-      if (!names.length) return [];
-
-      const told = beatText(beat).toLowerCase();
-      const headline = names[0]!;
-      const share = names.filter((n) => told.includes(n)).length / names.length;
-      if (told.includes(headline) || share >= NAME_SHARE) return [];
-
-      return [`${beat.beatId} was researched for "${subject.split(/[:,]/)[0]!.trim()}"`];
+    const borrowed = script.beats.flatMap((beat) => {
+      const wrong = [
+        ...new Set(
+          beat.claimIds.map((id) => ownerOf.get(id)).filter((owner) => owner && owner !== beat.beatId)
+        ),
+      ];
+      return wrong.length ? [`${beat.beatId} cites claims researched for ${wrong.join(', ')}`] : [];
     });
 
-    if (wrongStory.length) {
+    if (borrowed.length) {
       sourceFindings.push({
-        check: 'storiesDropped',
+        check: 'storiesCrossed',
         detail:
-          `${wrongStory.length} of ${stories} stories are not the story their beat was ` +
-          `researched for: ${wrongStory.join('; ')}. Those stories were chosen, searched ` +
-          `for and paid for. Usually another story has been told twice in their place.`,
+          `${borrowed.length} of ${stories} stories are not the story their beat was ` +
+          `researched for: ${borrowed.join('; ')}. Each of these becomes a short with its ` +
+          `own Sources sheet, so cutting them would publish one story's documents under ` +
+          `another story's audio.`,
         blocking: true,
       });
     }
@@ -640,19 +627,24 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       });
     }
 
-    return {
-      run,
-      script,
-      gate: {
-        passed: sourceFindings.length === 0,
-        findings: sourceFindings,
-        measurement: measure(fullText(script), persona.styleCard.forbiddenPhrases),
-        needsHumanReview: true,
-        humanReviewReasons: [
-          `a source script, not an episode. ${stories} stories, none rendered yet.`,
-        ],
-      },
+    const sourceGate: GateReport = {
+      passed: sourceFindings.length === 0,
+      findings: sourceFindings,
+      measurement: measure(fullText(script), persona.styleCard.forbiddenPhrases),
+      needsHumanReview: true,
+      humanReviewReasons: [
+        `a source script, not an episode. ${stories} stories, none rendered yet.`,
+      ],
     };
+
+    // WRITTEN LIKE ANY OTHER RUN'S. It was returned and not saved, so a source
+    // run was the only kind whose report existed once, on a terminal, and then
+    // nowhere - `gate --run` answered with ENOENT and there was no record of
+    // what had been checked before the shorts were cut from it.
+    run.writeArtifact('qa', sourceGate);
+    run.markComplete('qa');
+
+    return { run, script, gate: sourceGate };
   }
 
   // --- 6. Render -----------------------------------------------------------
