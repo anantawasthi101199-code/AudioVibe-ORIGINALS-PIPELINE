@@ -15,7 +15,6 @@
 import { EpisodeFormat } from '../formats/schema';
 import { Source, TIER_RANK } from '../evidence/source';
 import { checkPronouns } from './pronouns';
-import { MAX_UNVERIFIED_SHARE } from '../evidence/repair';
 import { Persona } from '../canon/schema';
 import { beatsBelowClaimFloor, Claim, LedgerReport } from '../evidence/claim';
 import { VerificationReport } from '../evidence/verify';
@@ -438,39 +437,17 @@ export const runGate = (input: GateInput): GateReport => {
 
   // --- 7a. Claims the record does not settle. ---
   //
-  // NOT A GATE FAILURE, AND NO LONGER A PROSE OBLIGATION EITHER.
+  // GONE, BECAUSE NOTHING PRODUCES ONE ANY MORE.
   //
-  // These have been through extraction, the deterministic quote check,
-  // verification, a narrowing pass and a rebinding pass, and what is left is a
-  // gap the record genuinely does not close. They used to be handed to the
-  // writer marked NOT SETTLED with a hedge it was required to speak, and this
-  // check blocked the beat if it did not.
+  // A claim used to survive verification marked unverified, with a hedge the
+  // script was required to speak; this checked that it did, and that an episode
+  // did not carry too many. Both are now unreachable: repair either rebinds a
+  // failing claim to a source that supports it as written, or drops it.
   //
-  // That produced stories about what the sources say instead of stories. A set
-  // of ten Hindu myths came back with story seven reading "the sources do not
-  // settle why that substitution happened" and "the record does not name her,
-  // does not confirm which text the story properly belongs to" - three
-  // unverified claims, three sentences of epistemics, and a listener who never
-  // met Shani.
-  //
-  // So the writer is no longer offered them at all, and there is nothing here
-  // left to police. What survives below is the share check: a show whose facts
-  // are mostly unverifiable is not reporting, whatever the prose does about it.
-  if (!fiction) {
-    // A SHOW WHOSE FACTS ARE MOSTLY HEDGED IS NOT A FACTUAL SHOW, however
-    // honestly each hedge is worded. This is the line between "the record does
-    // not say which of them, and that is interesting" and an episode narrating
-    // its own ignorance - and it is also the thing that stops the repair stage
-    // quietly becoming a way to pass anything.
-    const unverified = input.claims.filter((c) => c.status === 'unverified').length;
-    if (input.claims.length && unverified / input.claims.length > MAX_UNVERIFIED_SHARE) {
-      add(
-        'unverifiedShare',
-        `${unverified} of ${input.claims.length} claims are unsettled, over the ` +
-          `${Math.round(MAX_UNVERIFIED_SHARE * 100)}% an episode may carry. The research is too thin for this story.`
-      );
-    }
-  }
+  // What replaced the share check is `evidenceDensity` above, which catches the
+  // consequence rather than the cause. A run that drops half its claims shows
+  // up as beats below their floor, which is the thing somebody can act on -
+  // the research was too thin for this story - rather than a ratio.
 
   // --- 7b. Pronouns for real people. ---
   //

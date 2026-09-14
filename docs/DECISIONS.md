@@ -196,35 +196,53 @@ timeline?
 
 ### A failing claim is repaired, not deleted
 
-Narrow it to what its quote supports; failing that, rebind it to a source that
-does support it; failing that, keep it marked unsettled with a hedge the script
-must say out loud.
+**REVERSED.** It is now dropped, unless the corpus already holds a passage that
+supports it as written.
 
-Deleting cost whole sections. One episode named six men and gave sentences for
-two, because the claim carrying the other four said "Collins, Jones and Perkins
-each got seven years" against a quote saying "three ringleaders each received
-seven years". The seven years was solid.
+Narrowing rewrote a failing claim down to what its quote strictly supported, and
+over one ten-story set it did this twenty-nine times:
 
-**An unverified claim is not an unchecked one** - it has been through
-extraction, the quote check, verification, narrowing and rebinding. What makes
-it honest is that the permission and the obligation ship together: a beat using
-one without telling the listener is rejected, and no more than a fifth of an
-episode's claims may be unsettled.
+| was | became |
+|---|---|
+| **Airavata** was a four-tusked white elephant which became Indra's mount | A four-tusked white elephant became Indra's mount |
+| Shiva's throat turned blue **after consuming the poison** | Shiva's throat turned blue **and** from then onwards |
+| **Kamadhenu**, one of the treasures that emerged from the churning | **Surabhi** is a cow claimed by the sages for Vedic sacrifices |
+
+A lost name, a lost cause, and a different claim. One was a pure reword with no
+information change at all, at a model call each.
+
+The reason narrowing existed was scarcity: an episode once named six men and
+gave sentences for two, because dropping the claim took the fact with it. That
+scarcity is gone - the claim ceiling is fifteen a story and the corpus is three
+documents a story - and dropping every failure on a real set still left 67
+claims across ten stories.
+
+**Rebinding survives**, because it mangles nothing: it looks for a passage
+elsewhere in the corpus that supports the claim AS WRITTEN and changes only
+which document it points at. Not for a contradicted claim, where going looking
+for a friendlier source is cherry-picking with extra steps.
+
+### Only two verdicts block, and neither is about wording
+
+`contradicted` (the document says the opposite) and `unsourced` (there is no
+document). `partially_entailed` and `not_entailed` no longer block.
+
+The distinction is what a person can catch. Every script goes in front of
+somebody before a word of it is voiced, with each claim beside its quote, and
+"this says a little more than its source does" is exactly the judgement a reader
+makes well and a rewriting model makes badly. A fabricated quote is the
+opposite: it produces a sentence that reads exactly like a true one, and no
+amount of reading finds it.
+
+`unsourced` got its own verdict for that reason. It used to be recorded as
+`not_entailed`, which was fine while that blocked - and would have quietly
+ridden out on the same relaxation.
 
 ### A contradicted claim is dropped outright
 
 The hedge route is for what the record does not decide. That is the record
 deciding against you, and hedging it would be a lie about a document that says
 plainly otherwise.
-
-### Narrowing must not drain the claim
-
-Asked to remove what a quote does not support, a model will sometimes remove the
-**specificity** instead of the over-reach. "Some of the men were sentenced" is
-true, checkable, and worth nothing - and worse than the original failure,
-because it passes.
-
----
 
 ## Rendering
 

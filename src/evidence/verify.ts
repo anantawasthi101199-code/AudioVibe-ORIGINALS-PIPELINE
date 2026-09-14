@@ -32,6 +32,20 @@ export const verdictSchema = z.enum([
   'not_entailed',
   /** Says the opposite. */
   'contradicted',
+  /**
+   * The claim cites a source that is not in the corpus.
+   *
+   * ITS OWN VERDICT BECAUSE IT IS NOT AN ENTAILMENT JUDGEMENT AT ALL. This used
+   * to be recorded as `not_entailed`, which was fine while that verdict
+   * blocked. It no longer does - a quote that supports less than the claim says
+   * is now allowed through to a human reader - and a claim pointing at a source
+   * nobody fetched would have ridden out on the same relaxation.
+   *
+   * That is the fabrication case, not the over-reach case: there is no
+   * document, so there is nothing for anybody to read and disagree with. It
+   * blocks whatever else is relaxed.
+   */
+  'unsourced',
 ]);
 
 export type Verdict = z.infer<typeof verdictSchema>;
@@ -39,13 +53,34 @@ export type Verdict = z.infer<typeof verdictSchema>;
 /**
  * Verdicts that stop an episode.
  *
- * `partially_entailed` blocks too, and that is deliberate rather than strict:
- * "supports it more weakly than stated" is precisely how a sourced episode ends
- * up overclaiming, and it is the single most common way this pipeline could be
- * wrong while every individual citation checks out. The fix is to soften the
- * claim to what the source actually says, which is a rewrite, not a warning.
+ * TWO, AND THEY ARE BOTH ABOUT THE DOCUMENT RATHER THAN THE WORDING.
+ * `contradicted` is the record deciding against you. `unsourced` is there being
+ * no record at all. Neither is something a person reading the script could
+ * catch, because both produce a sentence that reads exactly like a true one.
+ *
+ * `partially_entailed` AND `not_entailed` USED TO BLOCK, and removing them is
+ * deliberate rather than a relaxation of standards.
+ *
+ * "Supports it more weakly than stated" is a real category, and the machinery
+ * built to handle it did more damage than the thing it was handling. Twenty-nine
+ * claims on one ten-story set were rewritten to what their quote strictly
+ * supported, and the rewrites lost a proper noun ("Airavata was a four-tusked
+ * white elephant" became "a four-tusked white elephant"), lost a causal link
+ * ("turned blue AFTER consuming the poison" became "turned blue and"), and in
+ * one case produced a different claim altogether. The listener lost the
+ * elephant's name to protect them from a quote that was slightly narrower than
+ * the sentence.
+ *
+ * What replaced it is a person. Every script goes in front of somebody before a
+ * word of it is voiced, with each claim beside its quote, and "this says a
+ * little more than its source does" is exactly the judgement a reader makes
+ * well and a rewriting model makes badly.
+ *
+ * `FOUNDRY_VERIFY=all` still puts every claim to the verifier; what changed is
+ * what a soft verdict DOES, not whether it is recorded. Both verdicts are still
+ * on the claim and still on the run's page.
  */
-export const BLOCKING_VERDICTS: Verdict[] = ['partially_entailed', 'not_entailed', 'contradicted'];
+export const BLOCKING_VERDICTS: Verdict[] = ['contradicted', 'unsourced'];
 
 export const verificationSchema = z.object({
   claimId: z.string(),
@@ -282,7 +317,7 @@ export const verifyAll = async (
     if (!source) {
       results.push({
         claimId: claim.id,
-        verdict: 'not_entailed',
+        verdict: 'unsourced',
         reason: 'cites a source that is not in the corpus',
       });
       continue;

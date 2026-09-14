@@ -97,13 +97,27 @@ describe('verifyClaim', () => {
 });
 
 describe('blocking verdicts', () => {
-  it('BLOCKS partial entailment, not just outright failure', async () => {
-    // "supports it more weakly than stated" is exactly how a sourced episode
-    // ends up overclaiming, and it is the most likely way this pipeline is
-    // wrong while every citation checks out.
-    expect(BLOCKING_VERDICTS).toContain('partially_entailed');
-    expect(BLOCKING_VERDICTS).toContain('not_entailed');
+  /**
+   * PARTIAL ENTAILMENT USED TO BLOCK, and this test used to insist on it.
+   *
+   * The reasoning was sound - "supports it more weakly than stated" is how a
+   * sourced episode ends up overclaiming - and the machinery built to handle it
+   * cost more than the problem. The narrower rewrote twenty-nine claims on one
+   * ten-story set and lost a proper noun, lost a causal link, and produced one
+   * claim about a different subject. A listener lost an elephant's name to be
+   * protected from a quote that was slightly narrower than its sentence.
+   *
+   * What blocks now is only what a reader cannot catch: a document that says
+   * the opposite, and a document that does not exist.
+   */
+  it('blocks only what a person reading the script could not catch', () => {
     expect(BLOCKING_VERDICTS).toContain('contradicted');
+    expect(BLOCKING_VERDICTS).toContain('unsourced');
+
+    // Both still RECORDED, and both still on the run's page. What changed is
+    // what they do, not whether anybody can see them.
+    expect(BLOCKING_VERDICTS).not.toContain('partially_entailed');
+    expect(BLOCKING_VERDICTS).not.toContain('not_entailed');
     expect(BLOCKING_VERDICTS).not.toContain('entailed');
   });
 });
@@ -112,7 +126,7 @@ describe('verifyAll', () => {
   it('collects blocking results separately', async () => {
     const v = fakeVerifier((req) =>
       req.prompt.includes('caused')
-        ? '{"verdict":"partially_entailed","reason":"only an association"}'
+        ? '{"verdict":"contradicted","reason":"the document says the opposite"}'
         : '{"verdict":"entailed","reason":"yes"}'
     );
     const other: Claim = { ...claim, id: 'c2', text: 'Incidents fell.', type: 'chronology' };

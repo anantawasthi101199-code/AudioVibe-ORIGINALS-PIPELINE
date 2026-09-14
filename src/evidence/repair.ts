@@ -42,11 +42,11 @@
  * the hedge to appear in the script and caps how many an episode may carry.
  */
 import { z } from 'zod';
-import { Claim, claimSchema, claimTypeSchema } from './claim';
+import { Claim, claimSchema } from './claim';
 import { Source } from './source';
 import { Verification } from './verify';
 import { scorePassages, splitPassages } from './passages';
-import { completeJson, LlmClient } from '../models/client';
+import { LlmClient } from '../models/client';
 
 export const repairedClaimSchema = z.object({
   /** The claim as it now stands, narrowed, rebound, or unchanged. */
@@ -76,131 +76,6 @@ export type RepairReport = z.infer<typeof repairReportSchema>;
  * says to err low.
  */
 export const MIN_REBIND_SCORE = 1.5;
-
-export const NARROW_SYSTEM = `You repair a factual claim that says more than its source
-supports.
-
-You are given a CLAIM, the QUOTE it was bound to, and exactly what a verifier
-said was missing. Your job is to rewrite the claim so that it says everything
-the quote DOES establish and nothing it does not.
-
-This is a rescue, not a rejection. The claim is about to be thrown away, and
-with it whatever the quote genuinely supports. Keep as much as the quote earns.
-
-Rules:
-- SAY NO MORE THAN THE QUOTE ESTABLISHES. If the quote says "three ringleaders
-  each received seven years" and the claim names them, the names go and
-  everything else stays: "three of the ringleaders were each sentenced to seven
-  years in prison".
-- DO NOT RESOLVE WHAT THE QUOTE LEAVES OPEN. If the quote says "you" or "TP",
-  the narrowed claim may not say "Perkins" - not even when you are sure. That
-  resolution is exactly the failure being repaired.
-- DO NOT ADD ANYTHING. No dates, causes, names or figures that are not in the
-  quote, however well you know them.
-- KEEP IT USEFUL. A claim narrowed to nothing is worse than no claim, because
-  it costs a beat a fact and gives back a sentence not worth saying. If what
-  survives is not worth a listener's time, say so with "keep": false.
-- NARROWING MEANS REMOVING WHAT IS UNSUPPORTED, NOT RETREATING INTO VAGUENESS.
-  This is the difference between a narrowed claim that still carries the
-  episode and one that quietly drains it. When you take something out, replace
-  it with the MOST specific thing the quote does support, never with a general
-  word.
-
-  Say "three of the six ringleaders were each sentenced to seven years in
-  prison", not "three people received seven years", and not "some of the men
-  were sentenced". The names had to go. The count, the group they are counted
-  out of, the length, and the fact that it is a prison sentence all stayed,
-  because the quote carries every one of them.
-
-  Keep the units, the nouns and the figures that make a fact plain out loud.
-  "Fourteen million pounds' worth of jewellery" rather than "a large amount".
-  "Seven years in prison" rather than "seven years". A listener cannot look
-  anything up, so a fact stripped to an abstraction has not been made safer,
-  it has been made useless.
-- ANCHOR A COUNT TO THE WHOLE IT COMES OUT OF, where the quote gives you one.
-  "Three of the six" is worth far more to a listener than "three", because it
-  tells them how much of the group is still unaccounted for. Never invent the
-  whole - only use it when the quote establishes it.
-- DO NOT MAKE THE CLAIM RELATIVE TO THE EPISODE. "The other three" is a true
-  sentence only in an episode that has already named the first three, and this
-  claim does not know what has been said. Write it true on its own, and let the
-  script connect it.
-- GLOSSES ARE ADDITIONS. "his age at sentencing" from a quote that says "is 67"
-  adds both the possessive and the occasion. Say "is 67".
-- CHECK THE TYPE. A claim typed "statistic" must state a number. One typed
-  "quotation" must use the quote's own wording. If the narrowed claim no longer
-  fits its type, change the type to one it does fit.
-
-Return JSON only:
-{"keep": true, "text": "the narrowed claim", "type": "statistic|causal|quotation|chronology|attribution|definition",
- "lost": "what the quote could not support, in a few words"}`;
-
-const narrowReplySchema = z.object({
-  keep: z.boolean(),
-  text: z.string().default(''),
-  type: claimTypeSchema.optional(),
-  lost: z.string().default(''),
-});
-
-/**
- * A hedge the narration has to say out loud, built from what was lost.
- *
- * PHRASED AS SPEECH, NOT AS A FLAG. "unverified: attribution to Perkins" is a
- * note to an engineer; "the record does not put a name to him" is a sentence a
- * narrator can say, and the whole point is that it reaches the listener. The
- * writer is free to reword it - the gate checks that the uncertainty is voiced,
- * not that these exact words appear.
- */
-export const hedgeFor = (lost: string): string => {
-  const what = lost.trim().replace(/\s+/g, ' ').replace(/\.$/, '');
-  return what
-    ? `the record does not settle ${what}, and the script must say so`
-    : `the record does not settle this, and the script must say so`;
-};
-
-/**
- * Narrow one claim to what its quote supports.
- *
- * One call. A second attempt would be asking the same model the same question
- * with the same information, and the honest answer to a failed narrowing is
- * that the quote does not support the claim, which is what step 2 and step 3
- * are for.
- */
-export const narrowClaim = async (
-  claim: Claim,
-  reason: string,
-  model: LlmClient,
-  onCost?: (pence: number) => void
-): Promise<{ keep: boolean; text: string; type: Claim['type']; lost: string }> => {
-  const reply = await completeJson<unknown>(
-    model,
-    {
-      system: NARROW_SYSTEM,
-      prompt: [
-        `CLAIM: ${claim.text}`,
-        `TYPE: ${claim.type}`,
-        `QUOTE: "${claim.quote}"`,
-        `WHAT THE VERIFIER SAID WAS MISSING: ${reason}`,
-      ].join('\n\n'),
-      temperature: 0,
-      // Low: this is a subtraction, not a judgement. The verifier has already
-      // said what is wrong, and thinking at length about it mostly produces a
-      // longer way of saying the same narrowed sentence.
-      effort: 'low',
-      maxTokens: 1200,
-    },
-    onCost,
-    { parse: (v) => narrowReplySchema.parse(v), label: `the narrowing of ${claim.id}` }
-  );
-
-  const parsed = narrowReplySchema.parse(reply);
-  return {
-    keep: parsed.keep && parsed.text.trim().length > 0,
-    text: parsed.text.trim(),
-    type: parsed.type ?? claim.type,
-    lost: parsed.lost,
-  };
-};
 
 /**
  * A passage elsewhere in the corpus that might support the claim as it stands.
@@ -256,16 +131,6 @@ export interface RepairDeps {
   onProgress?: (message: string) => void;
 }
 
-/**
- * How much of an episode may rest on claims the record does not settle.
- *
- * A SHOW WHOSE FACTS ARE MOSTLY HEDGED IS NOT A FACTUAL SHOW, however honestly
- * each hedge is worded. This is the line between "the record does not say which
- * of them, and that is interesting" and an episode narrating its own ignorance.
- * The gate enforces it; the number lives here because it is a property of the
- * repair policy rather than of the gate.
- */
-export const MAX_UNVERIFIED_SHARE = 0.2;
 
 /**
  * Try to save every failing claim, in the order narrow, rebind, hedge.
@@ -296,100 +161,58 @@ export const repairAll = async (
     const wasText = claim.text;
     const wasReason = failure.reason;
 
-    // --- 1. Narrow to what the quote establishes. ---
-    let narrowed: Awaited<ReturnType<typeof narrowClaim>>;
-    try {
-      narrowed = await narrowClaim(claim, wasReason, deps.narrower, spend);
-    } catch {
-      // A narrowing that will not come back is not a reason to lose the claim.
-      // Fall through to the hedge, which is the honest description of a claim
-      // nothing could confirm.
-      narrowed = { keep: false, text: '', type: claim.type, lost: '' };
-    }
+    // --- 1. A claim with no source may still have one. ---
+    //
+    // THE ONLY SAVE LEFT, AND IT MANGLES NOTHING. Rebinding does not touch the
+    // claim; it looks for a passage elsewhere in the corpus that supports it AS
+    // WRITTEN. A claim citing a source nobody fetched is usually a real fact
+    // with a bad citation - "Matthew Walker is a professor at Berkeley" citing
+    // source "10" - and the document that does say it is often already on disk.
+    //
+    // NOT FOR A CONTRADICTED CLAIM. Going looking for a source that agrees,
+    // when one you already have says the opposite, is cherry-picking with extra
+    // steps.
+    if (failure.verdict !== 'contradicted') {
+      const better = findBetterQuote(claim, deps.sources);
+      if (better) {
+        const candidate = claimSchema.parse({
+          ...claim,
+          sourceId: better.sourceId,
+          quote: better.quote,
+          reboundFrom: claim.sourceId,
+          status: 'verified',
+        });
 
-    // A NARROWING THAT DRAINED THE CLAIM IS REFUSED HERE, before it is
-    // verified, because it would PASS. "Some of the men were sentenced" is
-    // perfectly true and perfectly checkable and worth nothing to a listener
-    // who cannot look anything up - which makes it worse than the original
-    // failure, since the rejected claim at least announced itself.
-    if (narrowed.keep && wasDrained(wasText, narrowed.text)) {
-      deps.onProgress?.(`refused a narrowing of ${claim.id} that removed the facts, not the over-reach`);
-      narrowed = { ...narrowed, keep: false };
-    }
-
-    if (narrowed.keep) {
-      const candidate = claimSchema.parse({
-        ...claim,
-        text: narrowed.text,
-        type: narrowed.type,
-        narrowedFrom: wasText,
-        status: 'verified',
-      });
-
-      const verdict = await deps.reverify(candidate);
-      if (verdict.verdict === 'entailed') {
-        out.set(claim.id, candidate);
-        repaired.push({ claim: candidate, method: 'narrowed', wasText, wasReason });
-        deps.onProgress?.(`narrowed ${claim.id} to what its quote supports`);
-        continue;
+        const verdict = await deps.reverify(candidate);
+        spend(0);
+        if (verdict.verdict === 'entailed') {
+          out.set(claim.id, candidate);
+          repaired.push({ claim: candidate, method: 'rebound', wasText, wasReason });
+          deps.onProgress?.(`rebound ${claim.id} to a source that does support it`);
+          continue;
+        }
       }
     }
 
-    // --- 2. Rebind to a passage that supports the claim as it stands. ---
+    // --- 2. Otherwise it goes. ---
     //
-    // The ORIGINAL claim, not the narrowed one. The point of this route is to
-    // recover the detail narrowing had to drop, so testing the narrowed version
-    // against a new source would be answering a question nobody asked.
-    const better = findBetterQuote(claim, deps.sources);
-    if (better) {
-      const candidate = claimSchema.parse({
-        ...claim,
-        sourceId: better.sourceId,
-        quote: better.quote,
-        reboundFrom: claim.sourceId,
-        status: 'verified',
-      });
-
-      const verdict = await deps.reverify(candidate);
-      if (verdict.verdict === 'entailed') {
-        out.set(claim.id, candidate);
-        repaired.push({ claim: candidate, method: 'rebound', wasText, wasReason });
-        deps.onProgress?.(`rebound ${claim.id} to a source that supports it`);
-        continue;
-      }
-    }
-
-    // --- 2b. A CONTRADICTED CLAIM IS NOT AN UNSETTLED ONE. ---
+    // THE NARROWER IS GONE, AND THIS IS WHAT REPLACED IT. It used to rewrite a
+    // failing claim down to what its quote strictly supported, and the rewrites
+    // cost more than they saved: a lost proper noun, a lost causal link, and on
+    // one occasion a claim about a different subject entirely. A claim that
+    // cannot be supported is simply left out, which is what somebody who knew
+    // the subject would do.
     //
-    // The hedge route exists for things the record does not decide. This is the
-    // record deciding against you, and "the record does not settle whether the
-    // alarm was answered" would be a lie about a document that says plainly it
-    // was not. Dropped, and the drop is reported so it is visible rather than
-    // silent.
-    if (failure.verdict === 'contradicted') {
-      out.delete(claim.id);
-      repaired.push({ claim, method: 'abandoned', wasText, wasReason });
-      deps.onProgress?.(`dropped ${claim.id}: its source says the opposite`);
-      continue;
-    }
-
-    // --- 3. Keep it, and make the script say what is not settled. ---
-    //
-    // Narrowed text where there is some, because a claim trimmed to what its
-    // quote supports is still the better sentence even when the trim was not
-    // enough to pass. The hedge then covers what came off.
-    const kept = claimSchema.parse({
-      ...claim,
-      text: narrowed.keep ? narrowed.text : claim.text,
-      type: narrowed.keep ? narrowed.type : claim.type,
-      narrowedFrom: narrowed.keep ? wasText : undefined,
-      status: 'unverified',
-      hedge: hedgeFor(narrowed.lost || wasReason),
-    });
-
-    out.set(claim.id, kept);
-    repaired.push({ claim: kept, method: 'unverified', wasText, wasReason });
-    deps.onProgress?.(`kept ${claim.id} as unverified, with a hedge the script must say`);
+    // Only two verdicts reach here now - contradicted, and unsourced - because
+    // a quote that supports slightly less than its claim no longer fails at
+    // all. That judgement belongs to the person who reads the script.
+    out.delete(claim.id);
+    repaired.push({ claim, method: 'abandoned', wasText, wasReason });
+    deps.onProgress?.(
+      failure.verdict === 'contradicted'
+        ? `dropped ${claim.id}: its source says the opposite`
+        : `dropped ${claim.id}: ${wasReason}`
+    );
   }
 
   return {
@@ -398,116 +221,4 @@ export const repairAll = async (
   };
 };
 
-/**
- * Language that tells a listener something is not settled.
- *
- * DELIBERATELY BROAD, because the writer is free to word the hedge its own way
- * and should be. What is being checked is that the uncertainty REACHED THE
- * LISTENER, not that a particular sentence was copied out - a gate that
- * demanded exact wording would turn an honest admission into a formula, and
- * the formula would stop meaning anything by the third episode.
- */
-const UNCERTAINTY = [
-  /\bnobody (wrote|recorded|knows|said|put)\b/i,
-  /\bno (record|document|note|name|way of knowing)\b/i,
-  /\bnot (known|clear|recorded|established|settled|say)\b/i,
-  /\bnever (identified|named|established|explained|found out)\b/i,
-  /\bthe record (does not|doesn't|never)\b/i,
-  /\bdoes not say\b/i,
-  /\bdoesn'?t say\b/i,
-  /\bwe do ?n[o']t know\b/i,
-  /\bunclear\b/i,
-  /\bat least\b/i,
-  /\bthought to\b/i,
-  /\bbelieved to\b/i,
-  /\breportedly\b/i,
-  /\bsome of\b/i,
-];
 
-export const soundsUncertain = (text: string): boolean =>
-  UNCERTAINTY.some((re) => re.test(text));
-
-/**
- * Unverified claims a beat used without telling the listener they are unsettled.
- *
- * THE ONE THING THAT MAKES KEEPING THEM HONEST. An unverified claim spoken
- * flatly is indistinguishable from a verified one, and the whole argument for
- * keeping it - that an honest "we do not know" beats a silence - collapses if
- * the "we do not know" never gets said. So the permission and the obligation
- * are enforced together, or neither is real.
- *
- * Checked per BEAT rather than per sentence, because the hedge often belongs a
- * sentence or two away from the fact it qualifies, and demanding adjacency
- * would push the writer into stilted constructions to satisfy a regex.
- */
-export const unhedgedClaims = (
-  beats: Array<{ beatId: string; claimIds: string[]; text: string }>,
-  claims: Claim[]
-): Array<{ claimId: string; beatId: string; hedge: string }> => {
-  const unverified = new Map(
-    claims.filter((c) => c.status === 'unverified').map((c) => [c.id, c])
-  );
-
-  const problems: Array<{ claimId: string; beatId: string; hedge: string }> = [];
-  for (const beat of beats) {
-    if (soundsUncertain(beat.text)) continue;
-    for (const id of beat.claimIds) {
-      const claim = unverified.get(id);
-      if (claim) {
-        problems.push({ claimId: id, beatId: beat.beatId, hedge: claim.hedge ?? '' });
-      }
-    }
-  }
-  return problems;
-};
-
-/**
- * Words a claim retreats into when narrowing goes wrong.
- *
- * NARROWING HAS A FAILURE MODE OF ITS OWN, and it is quiet. Asked to remove
- * what a quote does not support, a model will sometimes remove the specificity
- * instead of the over-reach: "Collins, Jones and Perkins were each sentenced to
- * seven years" becomes "some of the men were sentenced", which is now perfectly
- * true, perfectly verifiable, and worth nothing to a listener who cannot look
- * anything up.
- *
- * That is worse than the original failure, because it passes. The rejected
- * claim at least announced itself; this one sails through verification and
- * drains the episode a sentence at a time.
- */
-const VAGUE = [
-  /\bsome (of|people|men|women|others)\b/i,
-  /\bseveral\b/i,
-  /\ba number of\b/i,
-  /\bvarious\b/i,
-  /\bcertain (people|men|individuals|others)\b/i,
-  /\ba large (amount|sum|number)\b/i,
-  /\ba significant\b/i,
-  /\bmany of\b/i,
-  /\bat one point\b/i,
-  /\bsomeone\b/i,
-  /\bsomething happened\b/i,
-];
-
-/** Numbers as digits or as the words a claim is likely to use. */
-const CONCRETE =
-  /\b(\d|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|hundred|thousand|million|billion)\b/i;
-
-/**
- * Whether a narrowing kept the fact or only kept the truth.
- *
- * The test is deliberately crude: a claim that lost every number and every
- * proper noun, and reached for a hedging quantifier instead, has almost
- * certainly been drained rather than narrowed. Reported so the narrowing can be
- * refused, not so it can be silently patched - a vague claim is better replaced
- * by the unsettled original, which at least still says something.
- */
-export const wasDrained = (before: string, after: string): boolean => {
-  if (!VAGUE.some((re) => re.test(after))) return false;
-
-  const lostNumbers = CONCRETE.test(before) && !CONCRETE.test(after);
-  const properNouns = (text: string) => (text.match(/\b[A-Z][a-z]{2,}/g) ?? []).length;
-  const lostNames = properNouns(before) > 0 && properNouns(after) === 0;
-
-  return lostNumbers || lostNames;
-};
