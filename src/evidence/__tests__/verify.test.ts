@@ -6,7 +6,10 @@
 import { LlmClient, LlmRequest, LlmResponse } from '../../models/client';
 import { Claim } from '../claim';
 import { Source } from '../source';
-import { BLOCKING_VERDICTS, verifyAll, verifyClaim } from '../verify';
+import { BLOCKING_VERDICTS, verifyAll, verifyClaim ,
+  shouldVerify,
+  verifyMode,
+} from '../verify';
 
 const fakeVerifier = (reply: string | ((r: LlmRequest) => string)): LlmClient & { seen: LlmRequest[] } => {
   const seen: LlmRequest[] = [];
@@ -134,5 +137,62 @@ describe('verifyAll', () => {
     const report = await verifyAll([{ ...claim, sourceId: 'ghost' }], [source], v);
     expect(report.blocking).toHaveLength(1);
     expect(v.seen).toHaveLength(0);
+  });
+});
+
+/**
+ * Sampling the model check.
+ *
+ * The deterministic quote check runs on every claim and costs nothing; it is
+ * the anti-fabrication guarantee. Asking a model whether that quote ENTAILS the
+ * claim is a call per claim and the largest line on a run's bill - and every
+ * script now goes in front of a person before a word of it is voiced, with the
+ * claims sitting next to their quotes.
+ */
+describe('shouldVerify', () => {
+  const claim = (id: string, contested = false) =>
+    ({ id, contested }) as never;
+
+  afterEach(() => {
+    delete process.env.FOUNDRY_VERIFY;
+  });
+
+  it('checks everything when asked to', () => {
+    const ids = ['c1', 'c2', 'c3', 'c17', 'c93'];
+    expect(ids.every((id) => shouldVerify(claim(id), 'all'))).toBe(true);
+  });
+
+  it('ALWAYS checks a contested claim, whatever the mode', () => {
+    // Contested is where being wrong is both likely and costly, so it is the
+    // one thing sampling may never skip.
+    expect(shouldVerify(claim('c1', true), 'sample')).toBe(true);
+    expect(shouldVerify(claim('c99', true), 'sample')).toBe(true);
+  });
+
+  it('samples roughly a quarter of the rest', () => {
+    const ids = Array.from({ length: 400 }, (_, i) => `c${i}`);
+    const checked = ids.filter((id) => shouldVerify(claim(id), 'sample')).length;
+
+    expect(checked).toBeGreaterThan(400 * 0.15);
+    expect(checked).toBeLessThan(400 * 0.4);
+  });
+
+  it('is DETERMINISTIC, so a resume checks the same quarter', () => {
+    // Math.random would give a different answer on a resume, so an interrupted
+    // run would check a different sample and its checkpoint would disagree with
+    // itself about what had been done.
+    const ids = Array.from({ length: 50 }, (_, i) => `c${i}`);
+    const once = ids.map((id) => shouldVerify(claim(id), 'sample'));
+    const twice = ids.map((id) => shouldVerify(claim(id), 'sample'));
+
+    expect(once).toEqual(twice);
+  });
+
+  it('reads the mode from the environment, defaulting to sampling', () => {
+    process.env.FOUNDRY_VERIFY = 'all';
+    expect(verifyMode()).toBe('all');
+
+    delete process.env.FOUNDRY_VERIFY;
+    expect(verifyMode()).toBe('sample');
   });
 });

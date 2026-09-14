@@ -312,6 +312,12 @@ describe('runEpisode', () => {
   });
 
   it('does not let the writer see a claim the verifier rejected', async () => {
+    // EVERY CLAIM CHECKED, because this pins the mechanism - a rejected claim
+    // must not reach the writer - and not the sampling policy. Under the
+    // default, three quarters of claims are never put to the verifier at all,
+    // so a fixture whose verifier rejects everything would still see most of
+    // them arrive. The sampling itself is pinned separately below.
+    process.env.FOUNDRY_VERIFY = 'all';
     // Otherwise the gate becomes the only thing between a bad claim and an
     // episode, and a single gate bug ships it.
     renderStubs();

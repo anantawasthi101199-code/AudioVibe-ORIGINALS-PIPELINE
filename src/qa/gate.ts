@@ -15,12 +15,12 @@
 import { EpisodeFormat } from '../formats/schema';
 import { Source, TIER_RANK } from '../evidence/source';
 import { checkPronouns } from './pronouns';
-import { MAX_UNVERIFIED_SHARE, unhedgedClaims } from '../evidence/repair';
+import { MAX_UNVERIFIED_SHARE } from '../evidence/repair';
 import { Persona } from '../canon/schema';
 import { beatsBelowClaimFloor, Claim, LedgerReport } from '../evidence/claim';
 import { VerificationReport } from '../evidence/verify';
 import { CounterEvidence } from '../evidence/research';
-import { Script, beatText, fullText } from '../script/write';
+import { Script, fullText } from '../script/write';
 import { checkStyle, StyleMeasurement, vocabularyOverlap } from '../script/style';
 import { ContinuityReport } from '../fiction/continuity';
 import { checkSpeakability } from '../script/speakable';
@@ -438,30 +438,25 @@ export const runGate = (input: GateInput): GateReport => {
 
   // --- 7a. Claims the record does not settle. ---
   //
-  // These are NOT gate failures. They have been through extraction, the
-  // deterministic quote check, verification, a narrowing pass and a rebinding
-  // pass, and what is left is a gap the record genuinely does not close. The
-  // old pipeline deleted them, and deleting them cost real content: one episode
-  // named six men and gave sentences for two, because the claim carrying the
-  // other four said more than its quote and went in the bin with the fact.
+  // NOT A GATE FAILURE, AND NO LONGER A PROSE OBLIGATION EITHER.
   //
-  // What IS a failure is using one silently. An unsettled claim spoken flatly
-  // is indistinguishable from a verified one, so the permission and the
-  // obligation are enforced together or neither is real.
+  // These have been through extraction, the deterministic quote check,
+  // verification, a narrowing pass and a rebinding pass, and what is left is a
+  // gap the record genuinely does not close. They used to be handed to the
+  // writer marked NOT SETTLED with a hedge it was required to speak, and this
+  // check blocked the beat if it did not.
+  //
+  // That produced stories about what the sources say instead of stories. A set
+  // of ten Hindu myths came back with story seven reading "the sources do not
+  // settle why that substitution happened" and "the record does not name her,
+  // does not confirm which text the story properly belongs to" - three
+  // unverified claims, three sentences of epistemics, and a listener who never
+  // met Shani.
+  //
+  // So the writer is no longer offered them at all, and there is nothing here
+  // left to police. What survives below is the share check: a show whose facts
+  // are mostly unverifiable is not reporting, whatever the prose does about it.
   if (!fiction) {
-    const beats = input.script.beats.map((b) => ({
-      beatId: b.beatId,
-      claimIds: b.claimIds,
-      text: beatText(b),
-    }));
-
-    for (const problem of unhedgedClaims(beats, input.claims)) {
-      add(
-        'unhedged',
-        `beat "${problem.beatId}" states ${problem.claimId} as settled fact, but ${problem.hedge}`
-      );
-    }
-
     // A SHOW WHOSE FACTS ARE MOSTLY HEDGED IS NOT A FACTUAL SHOW, however
     // honestly each hedge is worded. This is the line between "the record does
     // not say which of them, and that is interesting" and an episode narrating

@@ -193,6 +193,53 @@ export interface VerificationCheckpoint {
   save: (done: Record<string, Verification>) => void;
 }
 
+/**
+ * How much of the evidence a model is asked to judge.
+ *
+ * WHAT IS FREE AND WHAT IS NOT. `locateQuote` proves, deterministically and at
+ * no cost, that the quote a claim cites occurs verbatim in a document that was
+ * actually fetched. That is the anti-fabrication guarantee and it runs on every
+ * claim, always. What costs money is the second question - does that quote
+ * entail this claim - which is a model call per claim, plus an escalation for
+ * anything unclear, and on a ten-story set it is ninety-three of them and the
+ * largest line on the bill.
+ *
+ * WHY THAT SECOND QUESTION CAN BE SAMPLED NOW. Every script goes in front of a
+ * person before a word of it is voiced, and the claims are one sentence each
+ * sitting next to their quotes on the run's page. A human reading a short with
+ * seven facts in it is a better entailment check than a model is, and the
+ * pipeline is paying for the model check on the assumption that nobody will
+ * look. Somebody looks now.
+ *
+ * WHAT IS STILL ALWAYS CHECKED, whatever this is set to: anything the extractor
+ * marked contested, and anything the deterministic pass could not confirm. Those
+ * are the two places where being wrong is both likely and costly.
+ *
+ * `all` is the old behaviour and is what a show publishing without review should
+ * use. `FOUNDRY_VERIFY=all` restores it.
+ */
+export const VERIFY_SAMPLE = 0.25;
+
+export const verifyMode = (): 'all' | 'sample' =>
+  (process.env.FOUNDRY_VERIFY ?? 'sample') === 'all' ? 'all' : 'sample';
+
+/**
+ * Whether this particular claim gets a model call.
+ *
+ * DETERMINISTIC, NOT RANDOM. A sample chosen with Math.random gives a different
+ * answer on a resume, so a run interrupted and restarted would check a
+ * different quarter and the checkpoint would disagree with itself. Hashing the
+ * claim id gives the same quarter every time, on any machine.
+ */
+export const shouldVerify = (claim: Claim, mode: 'all' | 'sample' = verifyMode()): boolean => {
+  if (mode === 'all') return true;
+  if (claim.contested) return true;
+
+  let hash = 0;
+  for (const ch of claim.id) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+  return hash % 100 < VERIFY_SAMPLE * 100;
+};
+
 export const verifyAll = async (
   claims: Claim[],
   sources: Source[],
@@ -206,6 +253,7 @@ export const verifyAll = async (
   const results: Verification[] = [];
   let costPence = 0;
   let escalated = 0;
+  let skipped = 0;
 
   // KEYED BY CLAIM ID, NOT BY POSITION, unlike the beat and chunk checkpoints.
   // Those resume an ordered sequence where position IS identity; a verdict
@@ -237,6 +285,21 @@ export const verifyAll = async (
         verdict: 'not_entailed',
         reason: 'cites a source that is not in the corpus',
       });
+      continue;
+    }
+
+    // NOT SAMPLED IN: the quote was already proved to occur in the document by
+    // the deterministic pass, the extractor did not mark it contested, and a
+    // person will read the sentence next to its quote before it is voiced.
+    if (!shouldVerify(claim)) {
+      const assumed: Verification = {
+        claimId: claim.id,
+        verdict: 'entailed',
+        reason: 'quote located in the source; not sampled for model review',
+      };
+      results.push(assumed);
+      done[claim.id] = assumed;
+      skipped++;
       continue;
     }
 
@@ -276,7 +339,11 @@ export const verifyAll = async (
   }
 
   onProgress?.(
-    `checked ${claims.length} claims, ${escalated} escalated to ${verifier.model}`
+    skipped
+      ? `checked ${claims.length - skipped} of ${claims.length} claims, ` +
+        `${escalated} escalated to ${verifier.model}. The other ${skipped} had their ` +
+        `quotes located in the source and go to the human reader.`
+      : `checked ${claims.length} claims, ${escalated} escalated to ${verifier.model}`
   );
 
   return {

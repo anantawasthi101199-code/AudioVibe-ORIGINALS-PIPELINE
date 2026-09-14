@@ -31,6 +31,7 @@ import { SYSTEM as COMPARE_SYSTEM } from '../qa/compare';
 import { CHECK_SYSTEM, EXTRACT_SYSTEM as FICTION_EXTRACT_SYSTEM } from '../fiction/continuity';
 import { CHOOSE_SYSTEM, GENERATE_SYSTEM } from '../script/hooks';
 import { ONE_PASS_INSTRUCTION, REVISE_SCRIPT } from '../script/onePass';
+import { EPISODE_SUGGEST_SYSTEM, SET_SUGGEST_SYSTEM } from '../server/suggest';
 import { PLAN_SYSTEM } from '../script/plan';
 import { SELECT_SYSTEM } from '../script/shorts';
 import { REVISE_INSTRUCTION, TITLE_SYSTEM, buildPrompt, buildSystem } from '../script/write';
@@ -220,6 +221,25 @@ export const promptRegistry = (input: {
       source: 'src/script/write.ts',
       note: 'Title and description, written after the script so it can see what the episode actually became.',
       text: TITLE_SYSTEM,
+    },
+    {
+      id: 'suggest-episode',
+      stage: 'brief',
+      source: 'src/server/suggest.ts (EPISODE_SUGGEST_SYSTEM)',
+      note:
+        'The studio only. Proposes subjects for one episode, and is told what the ' +
+        'channel already has queued and already made - which is the difference between ' +
+        'a usable list and ten near-misses. It suggests; it never writes to a queue.',
+      text: EPISODE_SUGGEST_SYSTEM,
+    },
+    {
+      id: 'suggest-set',
+      stage: 'brief',
+      source: 'src/server/suggest.ts (SET_SUGGEST_SYSTEM)',
+      note:
+        'The same, for a set of shorts, and the test is almost the opposite: a body of ' +
+        'material with ten genuinely different stories in it, rather than one subject.',
+      text: SET_SUGGEST_SYSTEM,
     },
     {
       id: 'short-select',

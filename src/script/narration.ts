@@ -33,6 +33,22 @@
  */
 
 export const NARRATION_GUIDANCE = [
+  // THE RULE THE WHOLE THING RESTS ON, and it was missing entirely.
+  //
+  // A listener cannot re-read, cannot look back, and is holding everything in
+  // working memory. What makes that possible is a chain: this happened, which
+  // caused that, which is why the next thing happened. What breaks it is a
+  // sentence that arrives from nowhere, or a fact stated because it is true
+  // rather than because it is next.
+  //
+  // Measured on a real set: the story a listener called brilliant is strictly
+  // chronological - the gods and demons agree, they need a rod and a rope, the
+  // rod is a mountain, the rope is a serpent, the demons take the head end.
+  // Every sentence is caused by the one before it. The story they called worse
+  // is a list of things the sources say about a subject, in no order at all.
+  'TELL IT IN ORDER, AND MAKE EACH THING CAUSE THE NEXT. What happened first, what that led to, what followed from that. A listener is holding the whole thing in their head with nothing to look back at, and a chain is the only shape that survives that. If two facts have no causal link, the second one probably does not belong.',
+  'MAKE IT SEEABLE. A listener should be able to picture what you are describing: who is in the room, where they are standing, what is in their hands, what moves. Concrete nouns and physical actions do this; abstractions and categories do not. "The rope was Vasuki, a great serpent, wound around the mountain so both sides could pull on him" can be seen. "A cooperative arrangement was established" cannot.',
+  'NEVER NARRATE THE RESEARCH. The subject is what happened, not what the sources say about what happened. No "the record does not settle", no "one text names", no "there is also a claim that". If something is known, say it as a thing that happened. If it is not known, leave it out - somebody who knew the subject would.',
   'You are ONE person telling a story out loud, from beginning to end, to somebody who has never heard it. Not reading an essay, not presenting.',
   'THE STORY AND THE FACTS ARE THE SUBJECT. Not the listener, and not the telling. "You can see where this is going" and "if you were in that room" are sentences spent on the audience instead of on what happened. Address the listener directly only where it genuinely earns its place, which is rarely.',
   // THIS LINE USED TO SAY "say things twice, differently", AND IT WAS WRONG

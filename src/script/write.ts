@@ -43,7 +43,6 @@ import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
 import { PLAIN_GUIDANCE, checkPlainWords } from './plain';
 import { CONTEXT_GUIDANCE } from './context';
 import { PRONOUN_RULE } from '../qa/pronouns';
-import { soundsUncertain } from '../evidence/repair';
 import {
   checkDialogue,
   DIALOGUE_GUIDANCE,
@@ -315,18 +314,36 @@ export interface BeatContext {
  * the evidence in exactly the same words. A difference here would show up as a
  * difference in the output and be read as a difference between the methods.
  */
-export const renderClaims = (claims: Claim[]): string =>
-  claims.length
-    ? claims
-        .map((c) =>
-          c.status === 'unverified'
-            ? `[${c.id}] (${c.type}, NOT SETTLED) ${c.text}\n` +
-              `      -> Use it if it belongs here, but ${c.hedge ?? 'the record does not settle it and the script must say so'}. ` +
-              `Say that in your own words, as part of the story.`
-            : `[${c.id}] (${c.type}) ${c.text}`
-        )
-        .join('\n')
+export const renderClaims = (claims: Claim[]): string => {
+  // AN UNVERIFIED CLAIM IS NOT OFFERED AT ALL, and this reverses an earlier
+  // decision that turned out to cost far more than it saved.
+  //
+  // They used to be handed over marked NOT SETTLED, with a hedge the script was
+  // required to say and a gate check that blocked the beat if it did not. The
+  // reasoning was that dropping them cost real content - and it had, once, when
+  // every failing claim was dropped outright and an episode named six men and
+  // gave sentences for two.
+  //
+  // What changed is that narrowing and rebinding now save most of them, so what
+  // is left unverified is genuinely unsupported. And the cost of keeping them
+  // is visible in the prose. A set of ten Hindu myths came back with story one
+  // as a story and story seven as a literature review about a story: "one line
+  // in the record names his mother as Chhaya", "the sources do not settle why
+  // that substitution happened", "the record does not name her, does not
+  // confirm which text the story properly belongs to". Three unverified claims,
+  // three sentences of epistemics, and a listener who never met Shani.
+  //
+  // So: if the record does not support it, do not say it. That is simpler than
+  // saying it and then saying you cannot support it, and it is what a person
+  // who knew the subject would do. The claims are still in the ledger and still
+  // on the run's page, where the human reading the script before it is voiced
+  // can see exactly what did not survive.
+  const usable = claims.filter((c) => c.status !== 'unverified');
+
+  return usable.length
+    ? usable.map((c) => `[${c.id}] (${c.type}) ${c.text}`).join('\n')
     : '(none available - write this beat without stating new facts)';
+};
 
 export const buildPrompt = (ctx: BeatContext): string => {
   const { min, max } = wordsForBeat(ctx.beat);
@@ -496,22 +513,13 @@ export const critiqueBeat = (
     );
   }
 
-  // AN UNSETTLED CLAIM SPOKEN FLATLY IS INDISTINGUISHABLE FROM A VERIFIED ONE,
-  // and the whole argument for keeping these - that an honest "we do not know"
-  // beats a silence - collapses if the "we do not know" never gets said. So the
-  // permission and the obligation are enforced together, or neither is real.
+  // THE UNSETTLED-CLAIM RULE IS GONE, with the thing it policed.
   //
-  // Caught here rather than only at the gate so the writer gets one rewrite to
-  // fix it, instead of the episode failing after the audio has been paid for.
-  const unsettled = claims.filter((c) => c.status === 'unverified');
-  if (unsettled.length && !soundsUncertain(text)) {
-    blocking.push(
-      `uses ${unsettled.length} claim(s) the record does not settle (${unsettled
-        .map((c) => c.id)
-        .join(', ')}) without telling the listener so. ` +
-        `Say what is not established, in your own words, where it belongs.`
-    );
-  }
+  // It required a beat using an unverified claim to say out loud that the
+  // record did not settle it, and blocked the beat otherwise. That was coherent
+  // while unverified claims were handed over WITH a hedge to speak; it produced
+  // stories about what the sources say rather than stories. The writer is no
+  // longer offered them (see renderClaims), so there is nothing left to hedge.
 
   // Vocabulary, which no other check looks at. Mostly advisory: there are
   // already ten blocking checks on the writing, and every rejection pushes

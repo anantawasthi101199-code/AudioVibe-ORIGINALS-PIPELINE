@@ -55,6 +55,7 @@ import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
 import { renderResultSchema } from './render/assemble';
 import { claimCeiling, claimSetSchema, corpusSchema } from './evidence/research';
+import { VERIFY_SAMPLE, verifyMode } from './evidence/verify';
 import { AudioVibeClient } from './publish/ingest';
 import { buildFictionProvenance, buildProvenance } from './publish/provenance';
 
@@ -346,17 +347,23 @@ const describeRun = (
       'verification',
       (() => {
         const screener = screenerConfig();
-        if (!screener) return write(verifier.model, estimatedClaims, 1_400, 200);
-        // Every claim is screened; roughly a fifth need the strong model. That
-        // fraction is a guess and the only soft number in this table.
+        // SAMPLED, unless somebody asked for all of them. The deterministic
+        // quote check runs on every claim and costs nothing; this is the model
+        // being asked whether that quote entails the claim, and it is the
+        // largest line here when it runs on everything.
+        const asked =
+          verifyMode() === 'all' ? estimatedClaims : Math.ceil(estimatedClaims * VERIFY_SAMPLE);
+
+        if (!screener) return write(verifier.model, asked, 1_400, 200);
         return (
-          write(screener.model, estimatedClaims, 1_400, 200) +
-          write(verifier.model, Math.ceil(estimatedClaims * 0.2), 1_400, 200)
+          write(screener.model, asked, 1_400, 200) +
+          write(verifier.model, Math.ceil(asked * 0.2), 1_400, 200)
         );
       })(),
-      screenerConfig()
-        ? `~${estimatedClaims} screened on ${screenerConfig()!.model}, ~${Math.ceil(estimatedClaims * 0.2)} escalated`
-        : `~${estimatedClaims} calls, one per claim`,
+      verifyMode() === 'all'
+        ? `every one of ~${estimatedClaims} claims put to a model`
+        : `~${Math.ceil(estimatedClaims * VERIFY_SAMPLE)} of ~${estimatedClaims} claims put to a ` +
+          `model; the rest have their quotes located and go to the human reader`,
     ],
     [
       'script',
