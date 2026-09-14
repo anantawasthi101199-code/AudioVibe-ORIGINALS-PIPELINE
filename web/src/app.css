@@ -1,0 +1,887 @@
+/*
+ * The studio's look.
+ *
+ * WHAT THIS IS TRYING TO BE. A control room for something expensive: a desk you
+ * sit at to decide whether to spend money, not a dashboard that reports numbers
+ * after the fact. That means the things that cost money are the loudest things
+ * on the page, evidence is always one click from the claim it supports, and
+ * nothing important is a colour alone.
+ *
+ * WHY DARK. Two reasons rather than taste. Audio work happens at night, and the
+ * one genuinely bright thing on these pages should be the waveform and the
+ * amber of a running job - both of which need a dark ground to read as light
+ * rather than as decoration.
+ *
+ * NO FRAMEWORK. Plain CSS with custom properties, because the whole surface is
+ * four pages and one design language, and a utility framework here would trade
+ * a build step and a config file for class names that say less than these
+ * selectors do.
+ */
+
+:root {
+  /* GROUND. Blue-black rather than neutral: a true grey next to the amber
+     reads as dirty, and the slight blue keeps the accent warm by contrast. */
+  --ink-900: #0a0d14;
+  --ink-850: #0e131c;
+  --ink-800: #131926;
+  --ink-750: #182034;
+  --ink-700: #1e2740;
+  --ink-600: #2a3554;
+
+  --line: #1f2940;
+  --line-soft: #172032;
+
+  /* TEXT. Three weights of presence, and no more - a fourth always ends up
+     being used for something that should have been one of the other three. */
+  --text: #e8ecf5;
+  --text-dim: #93a0bd;
+  --text-faint: #5d6b8c;
+
+  /* MONEY AND MOTION. Amber is spend, and only spend: a running job, a cost,
+     an estimate. Using it for anything else costs it its meaning. */
+  --amber: #f0a831;
+  --amber-dim: #8a6320;
+  --amber-glow: rgba(240, 168, 49, 0.14);
+
+  /* VERDICTS. Each is paired with a word everywhere it is used, because a
+     colour alone fails for a tenth of the people who will ever read it. */
+  --pass: #3fb98a;
+  --pass-dim: #1d5b45;
+  --fail: #e8615f;
+  --fail-dim: #6d2b2f;
+  --hold: #6f9ef0;
+  --hold-dim: #2a4272;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink-900);
+  color: var(--text);
+  font: 400 15px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A faint grain on the ground, so a large dark page does not band on an
+   ordinary monitor. Cheap, static, and invisible until it is missing. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background:
+    radial-gradient(60rem 40rem at 82% -8%, rgba(111, 158, 240, 0.07), transparent 60%),
+    radial-gradient(50rem 36rem at 8% 102%, rgba(240, 168, 49, 0.05), transparent 60%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  line-height: 1.1;
+}
+h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+h3 {
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Shell ---------------------------------------------------------------- */
+
+.shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.85rem 1.6rem;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ink-850) 88%, transparent);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.brand span {
+  color: var(--amber);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-faint);
+  min-width: 0;
+}
+
+.crumbs a:hover {
+  color: var(--text);
+}
+
+.crumbs .sep {
+  opacity: 0.4;
+}
+
+.crumbs .here {
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2.2rem 1.6rem 5rem;
+}
+
+.page-head {
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.55rem;
+}
+
+.lede {
+  max-width: 62ch;
+  color: var(--text-dim);
+  margin: 0.7rem 0 0;
+}
+
+/* --- Surfaces ------------------------------------------------------------- */
+
+.panel {
+  background: var(--ink-850);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.15rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.panel-body {
+  padding: 1.15rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid.three {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* --- Lanes ---------------------------------------------------------------- */
+
+.lane {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--ink-850), var(--ink-900) 70%);
+  overflow: hidden;
+}
+
+.lane-head {
+  padding: 1.3rem 1.4rem;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.lane-basis {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  max-width: 58ch;
+  margin-top: 0.4rem;
+}
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+}
+
+.channel {
+  display: block;
+  background: var(--ink-850);
+  padding: 1.2rem 1.3rem;
+  transition:
+    background 140ms ease,
+    transform 140ms ease;
+}
+
+.channel:hover {
+  background: var(--ink-800);
+}
+
+.channel-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.channel-thesis {
+  color: var(--text-dim);
+  font-size: 0.87rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0.9rem;
+}
+
+.channel-foot {
+  display: flex;
+  gap: 1.1rem;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+/* --- Routes: the fork that decides everything ----------------------------- */
+
+.routes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1rem;
+}
+
+.route {
+  position: relative;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  background: var(--ink-850);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.25rem;
+  transition:
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.route:hover {
+  border-color: var(--ink-600);
+  background: var(--ink-800);
+}
+
+.route[aria-pressed='true'] {
+  border-color: var(--amber-dim);
+  background: linear-gradient(180deg, var(--amber-glow), transparent 55%), var(--ink-800);
+}
+
+.route-kind {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+
+.route-intent {
+  color: var(--text-dim);
+  font-size: 0.86rem;
+  margin: 0.45rem 0 0.9rem;
+}
+
+.route-facts {
+  display: flex;
+  gap: 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+/* --- Controls ------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.05rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--ink-750);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition:
+    background 130ms ease,
+    border-color 130ms ease,
+    opacity 130ms ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--ink-700);
+  border-color: var(--ink-600);
+}
+
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+/* SPEND IS AMBER AND NOTHING ELSE IS. Every button wearing this colour is
+   about to cost money, which is the one thing the interface must never be
+   ambiguous about. */
+.btn.spend {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #17130a;
+  font-weight: 600;
+}
+
+.btn.spend:hover:not(:disabled) {
+  background: #ffbc4a;
+  border-color: #ffbc4a;
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.btn.small {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+.field {
+  width: 100%;
+  background: var(--ink-900);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+  resize: vertical;
+}
+
+.field:focus-visible,
+.btn:focus-visible,
+.route:focus-visible,
+.channel:focus-visible {
+  outline: 2px solid var(--hold);
+  outline-offset: 2px;
+}
+
+.field::placeholder {
+  color: var(--text-faint);
+}
+
+label.lbl {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.45rem;
+}
+
+/* --- Pills ---------------------------------------------------------------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.pill.pass {
+  color: var(--pass);
+  border-color: var(--pass-dim);
+  background: color-mix(in srgb, var(--pass) 8%, transparent);
+}
+.pill.fail {
+  color: var(--fail);
+  border-color: var(--fail-dim);
+  background: color-mix(in srgb, var(--fail) 8%, transparent);
+}
+.pill.hold {
+  color: var(--hold);
+  border-color: var(--hold-dim);
+  background: color-mix(in srgb, var(--hold) 8%, transparent);
+}
+.pill.live {
+  color: var(--amber);
+  border-color: var(--amber-dim);
+  background: var(--amber-glow);
+}
+
+.pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pill.live .dot {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* --- The stage rail: where a run is, at a glance --------------------------- */
+
+.rail {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.rail-stage {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.65rem 0.7rem;
+  background: var(--ink-800);
+  border-top: 2px solid var(--ink-700);
+  transition: background 200ms ease;
+}
+
+.rail-stage.done {
+  border-top-color: var(--pass);
+}
+.rail-stage.live {
+  border-top-color: var(--amber);
+  background: linear-gradient(180deg, var(--amber-glow), transparent 70%), var(--ink-800);
+}
+.rail-stage.pending {
+  opacity: 0.45;
+}
+
+.rail-name {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rail-note {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Live log ------------------------------------------------------------- */
+
+.log {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.75;
+  max-height: 20rem;
+  overflow-y: auto;
+  background: var(--ink-900);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem;
+}
+
+.log-line {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr auto;
+  gap: 0.9rem;
+  color: var(--text-dim);
+}
+
+.log-line .stage {
+  color: var(--text-faint);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  padding-top: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.log-line .spend {
+  color: var(--amber-dim);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+/* --- Script --------------------------------------------------------------- */
+
+.beat {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-850);
+  overflow: hidden;
+}
+
+.beat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--ink-800);
+}
+
+.beat-id {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.beat-body {
+  padding: 1.05rem 1.2rem;
+}
+
+/* Reading prose, not reading a form. Wider leading and a real measure, because
+   this is the one place somebody is judging writing rather than scanning. */
+.prose {
+  font-size: 1.02rem;
+  line-height: 1.78;
+  max-width: 68ch;
+  white-space: pre-wrap;
+}
+
+.prose .tag {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--amber-dim);
+}
+
+textarea.beat-edit {
+  width: 100%;
+  min-height: 9rem;
+  background: var(--ink-900);
+  border: 1px solid var(--ink-600);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1rem;
+  font-size: 0.97rem;
+  line-height: 1.75;
+}
+
+/* --- Findings ------------------------------------------------------------- */
+
+.finding {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 0.89rem;
+}
+
+.finding:last-child {
+  border-bottom: 0;
+}
+
+.finding .check {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+/* --- Numbers -------------------------------------------------------------- */
+
+.stat {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-850);
+}
+
+.stat-value {
+  font-family: var(--display);
+  font-size: 1.85rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-top: 0.45rem;
+}
+
+.stat.money .stat-value {
+  color: var(--amber);
+}
+
+/* --- Cost bar: what a run has spent, by stage ----------------------------- */
+
+.costbar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--ink-750);
+}
+
+.costbar span {
+  display: block;
+  min-width: 2px;
+}
+
+.costkey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+.costkey i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: baseline;
+}
+
+/* --- Tables --------------------------------------------------------------- */
+
+table.runs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+table.runs th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 400;
+  padding: 0 0.7rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+table.runs td {
+  padding: 0.7rem;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+}
+
+table.runs tr:hover td {
+  background: var(--ink-800);
+}
+
+table.runs .num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* --- Audio ---------------------------------------------------------------- */
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--ink-800), var(--ink-850));
+}
+
+.player audio {
+  width: 100%;
+  height: 36px;
+}
+
+/* --- Login ---------------------------------------------------------------- */
+
+.gate-screen {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.gate-card {
+  width: min(24rem, 100%);
+  text-align: center;
+}
+
+/* --- Small helpers -------------------------------------------------------- */
+
+.muted {
+  color: var(--text-dim);
+}
+.faint {
+  color: var(--text-faint);
+}
+.right {
+  text-align: right;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.mt {
+  margin-top: 1rem;
+}
+.mt2 {
+  margin-top: 2rem;
+}
+
+.empty {
+  padding: 2.4rem 1.2rem;
+  text-align: center;
+  color: var(--text-faint);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.error {
+  border: 1px solid var(--fail-dim);
+  background: color-mix(in srgb, var(--fail) 8%, transparent);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.95rem;
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

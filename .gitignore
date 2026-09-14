@@ -34,3 +34,7 @@ library.json
 # Scratch audio
 *.wav
 *.mp3
+
+# The built interface. Rebuilt with `npm --prefix web run build`.
+web/dist/
+web/node_modules/

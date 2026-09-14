@@ -129,6 +129,12 @@ export const getRun = (id: string) => {
     render: read('render', loose),
     // The shorts cut from this run, so a source run's page can list its output.
     cuts: Run.derivedFrom(run.id).map((r) => runSummary(r, jobs.liveRunIds())),
+    // WHETHER THIS IS A SOURCE, decided here rather than guessed in the
+    // browser. A cut short carries its source's formatId, so anything matching
+    // on the format alone calls every short a source and offers to cut it into
+    // ten more. What separates them is `story`: a source has none, and every
+    // run cut out of one has its own.
+    isSource: loadFormat(run.manifest.formatId).sourceOnly && run.manifest.story === undefined,
     job: job ?? null,
     hasAudio: fs.existsSync(path.join(run.dir, 'media', 'episode.wav')),
   };
