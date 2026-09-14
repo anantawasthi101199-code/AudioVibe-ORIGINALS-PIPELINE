@@ -174,7 +174,31 @@ export const checkVoices = (turns: Turn[], hosts: Host[]): {
   const problems: VoiceProblem[] = [];
   const measurements = hosts.map((h) => measureHost(h.id, turns, hosts));
 
-  // Single-host shows have nothing to diverge from.
+  // A SPEAKER NOBODY HAS. Checked before anything else and for every show,
+  // including one-host shows, because it is not about voices diverging - it is
+  // about a turn that cannot be spoken at all.
+  //
+  // The renderer catches it and by then the script is written and paid for. A
+  // real run died there with `no voice for speaker "grim voice, unmarked"`: the
+  // writer had put a delivery direction in the speaker field instead of a
+  // [grim] tag in the text, once, on turn four of ten stories. Everything up to
+  // the render had succeeded.
+  const known = new Set(hosts.map((h) => h.id));
+  const strangers = [...new Set(turns.map((t) => t.speaker).filter((id) => !known.has(id)))];
+
+  if (strangers.length) {
+    problems.push({
+      rule: 'unknownSpeaker',
+      detail:
+        `${strangers.map((s) => `"${s}"`).join(', ')} ${strangers.length === 1 ? 'is not a' : 'are not'} ` +
+        `speaker on this show. Every turn belongs to ${[...known].map((k) => `"${k}"`).join(' or ')}. ` +
+        `A direction like "grim" goes in the text as a [grim] tag, never in the speaker field.`,
+      blocking: true,
+    });
+  }
+
+  // Single-host shows have nothing to diverge from, so everything below this is
+  // about two voices staying two.
   if (hosts.length < 2) return { measurements, problems };
 
   // A host using another host's signature phrase actively merges the voices,

@@ -226,6 +226,55 @@ allowedRiskTiers: [general]
     { speaker: 'presser', text: 'Mm.' },
   ];
 
+  /**
+   * A SPEAKER THE SHOW DOES NOT HAVE.
+   *
+   * A real run died at the RENDERER with `no voice for speaker "grim voice,
+   * unmarked"`: the writer had put a delivery direction in the speaker field
+   * instead of a [grim] tag in the text, once, on turn four of a ten-story set.
+   * Every stage before the render had succeeded and been paid for.
+   *
+   * Nothing looked for it on a single-host show, because every other check in
+   * this function is about two voices staying two and returns early when there
+   * is only one.
+   */
+  describe('a speaker nobody has', () => {
+    const solo = [show.hosts[0]!];
+
+    it('is caught on a single-host show, where nothing used to look', () => {
+      const { problems } = checkVoices(
+        [
+          { speaker: solo[0]!.id, text: long(20) },
+          { speaker: 'grim voice, unmarked', text: long(20) },
+        ],
+        solo
+      );
+
+      const stranger = problems.find((p) => p.rule === 'unknownSpeaker');
+      expect(stranger).toBeDefined();
+      expect(stranger!.blocking).toBe(true);
+      expect(stranger!.detail).toMatch(/grim voice, unmarked/);
+    });
+
+    it('is quiet when every turn belongs to a real host', () => {
+      const { problems } = checkVoices([{ speaker: solo[0]!.id, text: long(20) }], solo);
+      expect(problems.filter((p) => p.rule === 'unknownSpeaker')).toEqual([]);
+    });
+
+    it('names each stranger once, however many turns it took', () => {
+      const { problems } = checkVoices(
+        [
+          { speaker: 'ghost', text: long(20) },
+          { speaker: 'ghost', text: long(20) },
+          { speaker: solo[0]!.id, text: long(20) },
+        ],
+        solo
+      );
+      const detail = problems.find((p) => p.rule === 'unknownSpeaker')!.detail;
+      expect(detail.match(/ghost/g)).toHaveLength(1);
+    });
+  });
+
   it('accepts a conversation where the two sound different', () => {
     const { problems } = checkVoices(natural, show.hosts);
     expect(problems.filter((p) => p.blocking)).toEqual([]);
