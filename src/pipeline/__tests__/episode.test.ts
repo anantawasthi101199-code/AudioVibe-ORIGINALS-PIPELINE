@@ -392,3 +392,103 @@ describe('runEpisode', () => {
     });
 
 });
+
+describe('the approval break', () => {
+  let root: string;
+  let sourceIdRef: { id: string };
+
+  const buildDeps = (over: Partial<PipelineDeps> = {}): PipelineDeps => ({
+    writer: fakeWriter(() => sourceIdRef.id),
+    verifier: fakeVerifier(),
+    search: fakeSearch,
+    tts: fakeTts(),
+    fetchDeps: { httpGet, now: () => new Date('2026-09-08T00:00:00.000Z') },
+    ...over,
+  });
+
+  beforeEach(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-approval-'));
+    sourceIdRef = { id: sourceIdFor('https://www.sec.gov/a') };
+    process.env.FOUNDRY_EPISODE_BUDGET_PENCE = '10000';
+    process.env.FOUNDRY_RUNS_DIR = root;
+    process.env.FOUNDRY_VOICES_FILE = path.join(root, 'voices.json');
+    jest.spyOn(assemble, 'probeDuration').mockResolvedValue(65);
+    jest.spyOn(assemble, 'concatBeats').mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+    fs.rmSync(root, { recursive: true, force: true });
+    delete process.env.FOUNDRY_RUNS_DIR;
+    delete process.env.FOUNDRY_VOICES_FILE;
+  });
+
+  const held = () =>
+    Run.create(
+      { personaId: PERSONA_ID, formatId: FORMAT_ID, topic: 'A fine', holdForApproval: true },
+      { root }
+    );
+
+  it('writes the script and stops before spending a penny on audio', async () => {
+    // Rendering is the only irreversible spend in the pipeline. Everything
+    // before it produces text somebody can read and throw away.
+    const tts = fakeTts();
+    const run = held();
+    const { gate, script } = await runEpisode(run, buildDeps({ tts }));
+
+    expect(run.isComplete('script')).toBe(true);
+    expect(run.hasArtifact('render')).toBe(false);
+    expect(tts.calls).toBe(0);
+    expect(script.title).toBeTruthy();
+
+    // Not a failure. The run did what it was asked to do.
+    expect(gate.passed).toBe(true);
+    expect(gate.needsHumanReview).toBe(true);
+    expect(gate.humanReviewReasons.join(' ')).toMatch(/held before the render/);
+  });
+
+  it('renders once approved, without re-paying for the script', async () => {
+    const tts = fakeTts();
+    const run = held();
+    await runEpisode(run, buildDeps({ tts }));
+    const spentOnScript = run.manifest.spentPence;
+
+    run.approve();
+    const { gate } = await runEpisode(run, buildDeps({ tts }));
+
+    expect(tts.calls).toBeGreaterThan(0);
+    expect(run.isComplete('render')).toBe(true);
+    expect(run.manifest.spentPence).toBeGreaterThan(spentOnScript);
+    expect(gate.measurement.words).toBeGreaterThan(0);
+  });
+
+  it('stays held across a resume until somebody approves it', async () => {
+    // The whole point. A held run that quietly rendered on the next resume
+    // would be a break nobody could rely on.
+    const tts = fakeTts();
+    const run = held();
+    await runEpisode(run, buildDeps({ tts }));
+    await runEpisode(run, buildDeps({ tts }));
+
+    expect(tts.calls).toBe(0);
+    expect(run.awaitingApproval).toBe(true);
+  });
+
+  it('records WHEN it was approved, not merely that it was', async () => {
+    // "Who let this through and when" is the question somebody asks about a
+    // published episode six weeks later.
+    const run = held();
+    run.approve(new Date('2026-09-14T11:00:00.000Z'));
+
+    expect(run.manifest.approvedAt).toBe('2026-09-14T11:00:00.000Z');
+    expect(run.awaitingApproval).toBe(false);
+  });
+
+  it('leaves an unheld run alone', async () => {
+    const tts = fakeTts();
+    const run = Run.create({ personaId: PERSONA_ID, formatId: FORMAT_ID, topic: 'A fine' }, { root });
+    await runEpisode(run, buildDeps({ tts }));
+
+    expect(run.isComplete('render')).toBe(true);
+  });
+});

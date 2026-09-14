@@ -76,6 +76,22 @@ export const runManifestSchema = z.object({
   short: z.number().int().positive().optional(),
 
   /**
+   * Nobody may spend on audio for this run until a person has read the script.
+   *
+   * THE BREAK IS THE POINT. Rendering is the only irreversible spend in the
+   * pipeline - research and writing produce text somebody can read and throw
+   * away, audio produces a file and a bill. Stopping between them means a
+   * script that is wrong costs pennies instead of pounds, and it is the one
+   * place a person can still change the outcome cheaply.
+   *
+   * Set at creation. `approvedAt` releases it, and is a timestamp rather than a
+   * flag because "who let this through and when" is the question somebody asks
+   * about a published episode six weeks later.
+   */
+  holdForApproval: z.boolean().default(false),
+  approvedAt: z.string().datetime().optional(),
+
+  /**
    * This run's script was written in one call rather than beat by beat.
    *
    * RECORDED BECAUSE IT CHANGES WHAT THE RUN IS EVIDENCE OF. The two methods
@@ -264,6 +280,8 @@ export class Run {
       story?: number;
       /** Set when the script is to be written in a single call. */
       onePass?: boolean;
+      /** Stop before rendering and wait for a person to read the script. */
+      holdForApproval?: boolean;
     },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
@@ -294,6 +312,7 @@ export class Run {
       derivedFrom: input.derivedFrom,
       story: input.story,
       onePass: input.onePass,
+      holdForApproval: input.holdForApproval ?? false,
     });
 
     const run = new Run(dir, manifest);
@@ -442,6 +461,23 @@ export class Run {
     const dir = path.join(this.dir, 'media');
     fs.mkdirSync(dir, { recursive: true });
     return path.join(dir, name);
+  }
+
+  /**
+   * Release the hold, so the next resume renders.
+   *
+   * Recorded on the manifest rather than done by deleting a file, because the
+   * approval is a fact about the run that outlives the moment: a published
+   * episode should be able to say when somebody read it.
+   */
+  approve(now = new Date()): void {
+    this.manifestData.approvedAt = now.toISOString();
+    this.save();
+  }
+
+  /** Waiting on a person, rather than on work. */
+  get awaitingApproval(): boolean {
+    return this.manifestData.holdForApproval && !this.manifestData.approvedAt;
   }
 
   markComplete(stage: Stage): void {

@@ -93,6 +93,10 @@ Commands
       ... --beat-by-beat         Write one beat at a time instead of the whole
                                  script in one call. Slower, and it starves a
                                  beat; see COMMANDS.md.
+      ... --render-now           Skip the approval break and voice it straight
+                                 away. Spends without anybody reading it first.
+  approve --run <id>             Release a held run, then render and gate it.
+                                 Nothing is voiced until this.
   short --run <id> [--format <id>]
                                  Cut a short out of an episode that passed
   shorts --run <id> [--only 1,4,7]
@@ -401,7 +405,13 @@ const cmdMake = async (argv: string[]): Promise<number> => {
 
   // The header is printed by finishRun, which also prints it on a resume, so
   // the two commands look the same and neither repeats the other.
-  const run = Run.create({ personaId: persona.id, formatId, topic, onePass });
+  // HELD BY DEFAULT, because rendering is the only irreversible spend and a
+  // script is cheapest to fix before it has been voiced. `--render-now` skips
+  // the break for somebody who knows what they are doing; a source format is
+  // never held, because it stops before the render anyway.
+  const holdForApproval = !flag(argv, 'render-now') && !format.sourceOnly;
+
+  const run = Run.create({ personaId: persona.id, formatId, topic, onePass, holdForApproval });
   return finishRun(run, argv);
 };
 
@@ -647,6 +657,40 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
  * checks mean something: a flat list of ten unrelated stories fails duration
  * and self-similarity by design, and each story judged alone does not.
  */
+/**
+ * Release a held run and let it render.
+ *
+ * ITS OWN COMMAND, not a flag on resume, because this is the one moment in the
+ * pipeline where a person takes responsibility for what happens next. A run
+ * approved by accident spends money on audio nobody read; a flag buried in
+ * another command is exactly how that happens.
+ */
+const cmdApprove = async (argv: string[]): Promise<number> => {
+  const run = openRun(argv);
+
+  if (!run.manifest.holdForApproval) {
+    console.error(`run ${run.id} was not held, so there is nothing to approve.`);
+    return 1;
+  }
+  if (!run.hasArtifact('script')) {
+    console.error(`run ${run.id} has no script yet. There is nothing to read.`);
+    return 1;
+  }
+  if (run.manifest.approvedAt) {
+    console.log(`already approved at ${run.manifest.approvedAt}. Continuing it.`);
+    return finishRun(run, argv);
+  }
+
+  const script = run.readArtifact('script', scriptSchema);
+  console.log(`approving "${script.title}" (${run.id})`);
+  console.log('');
+
+  run.approve();
+  run.journal({ stage: 'pipeline', event: 'approved', detail: script.title });
+
+  return finishRun(run, argv);
+};
+
 const cmdShorts = async (argv: string[]): Promise<number> => {
   const source = openRun(argv);
   const only = (arg(argv, 'only') ?? '')
@@ -1523,6 +1567,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdDue();
       case 'tick':
         return await cmdTick(rest);
+      case 'approve':
+        return await cmdApprove(rest);
       case 'resume':
         return await finishRun(openRun(rest), rest);
       case 'status':

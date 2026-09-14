@@ -668,6 +668,50 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     return { run, script, gate: sourceGate };
   }
 
+  // --- 5c. The approval break. ------------------------------------------------
+  //
+  // RENDERING IS THE ONLY IRREVERSIBLE SPEND. Everything before it produces text
+  // somebody can read and throw away for pennies; audio produces a file and a
+  // bill, and a script that is wrong is cheapest to catch here. So a held run
+  // stops with its script written and gated as far as a script can be gated,
+  // and waits.
+  //
+  // Not a failure and not an error. It is the run doing exactly what it was
+  // asked to do, so it returns a passing report that says what it is waiting
+  // for.
+  if (run.awaitingApproval) {
+    report('script', `"${script.title}", ${script.beats.length} beats`);
+    log('');
+    deps.next?.([
+      'This run is HELD before the render, which is the only step that costs real money.',
+      'Read it, change it if it needs changing, then release it:',
+      `  npm run foundry -- script  --run ${run.id}`,
+      `  npm run foundry -- approve --run ${run.id}`,
+    ]);
+
+    run.journal({
+      stage: 'pipeline',
+      event: 'awaiting-approval',
+      detail: script.title,
+      pence: run.manifest.spentPence,
+    });
+
+    return {
+      run,
+      script,
+      gate: {
+        passed: true,
+        findings: [],
+        measurement: measure(fullText(script), persona.styleCard.forbiddenPhrases),
+        needsHumanReview: true,
+        humanReviewReasons: [
+          `held before the render. Nothing has been voiced and nothing has been ` +
+            `published; approve the run to spend on audio.`,
+        ],
+      },
+    };
+  }
+
   // --- 6. Render -----------------------------------------------------------
   let render: z.infer<typeof renderResultSchema>;
   // THE ARTIFACT IS NOT THE AUDIO. Every other stage can be resumed from its
