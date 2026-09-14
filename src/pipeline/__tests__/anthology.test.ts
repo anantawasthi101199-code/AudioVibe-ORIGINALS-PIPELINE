@@ -387,6 +387,47 @@ describe('cutStories', () => {
     expect(Run.derivedFrom(source.id, { root })).toHaveLength(STORIES);
   });
 
+  it('gates each story as a ONE-BEAT format, not against all ten', async () => {
+    // Passing the whole ten-beat format to gate a one-beat script made the gate
+    // ask after nine beats that were never meant to be there - "beat story_02
+    // cites 0 claims, below its floor of 6", and the same for story_03 through
+    // story_10. Every short failed with ten to seventeen blocking findings,
+    // almost all of them about beats belonging to other shorts.
+    const source = await makeSource();
+    const cuts = await cutStories({ source, only: [1] }, buildDeps());
+
+    const density = cuts[0]!.gate.findings.filter((f) => f.check === 'evidenceDensity');
+    for (const finding of density) {
+      expect(finding.detail).not.toMatch(/story_(0[2-9]|10)/);
+    }
+  });
+
+  it('re-renders when the source was remade under the same id', async () => {
+    // A run id is deterministic - channel, episode, date, slug - so deleting a
+    // source and remaking it the same day on the same topic produces the SAME
+    // id. The shorts cut from the first one survive the deletion, are found by
+    // that id, and their audio gets reused for a script they were never made
+    // from. It happened: shorts timestamped 10:01 reused for a source created
+    // at 12:41, every one with new words and old audio.
+    const source = await makeSource();
+    const first = await cutStories({ source, only: [1] }, buildDeps());
+    const rendersAfterFirst = tts.calls;
+
+    // The same run, its script replaced with different words - which is what a
+    // remade source looks like from here.
+    const script = source.readArtifact('script', scriptSchema);
+    script.beats[0]!.turns = [
+      { speaker: 'narrator', text: 'A completely different story about a different lake.' },
+    ];
+    source.writeArtifact('script', script);
+
+    const second = await cutStories({ source, only: [1] }, buildDeps());
+
+    expect(second[0]!.run.id).toBe(first[0]!.run.id);
+    expect(tts.calls).toBeGreaterThan(rendersAfterFirst);
+    expect(second[0]!.script.beats[0]!.turns[0]!.text).toMatch(/different lake/);
+  });
+
   it('REFUSES to cut a format that is not a source', async () => {
     // The long lane's shorts are DERIVED - a minute out of the middle of a
     // fifteen-minute story starts in the wrong place and ends in the wrong

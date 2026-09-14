@@ -32,7 +32,7 @@ import { Claim, checkLedger, claimSchema } from '../evidence/claim';
 import { corpusSchema } from '../evidence/research';
 import { verificationReportSchema } from '../evidence/verify';
 import { renderResultSchema, renderScript } from '../render/assemble';
-import { Script, scriptSchema, writeTitle } from '../script/write';
+import { Script, beatText, scriptSchema, writeTitle } from '../script/write';
 import { GateReport, runGate } from '../qa/gate';
 import { Run } from '../run/store';
 import { PipelineDeps } from './episode';
@@ -142,8 +142,28 @@ export const cutStories = async (
     // and the only model call a cut story makes - so a resumed cut reads the
     // one it already paid for rather than buying a second, different title for
     // audio that has already been rendered under the first.
-    const titled = run.hasArtifact('script')
+    // IS WHAT IS ON DISK STILL THIS STORY? A run id is deterministic - channel,
+    // episode number, date, slug - so deleting a source and remaking it the
+    // same day on the same topic produces the SAME id. The shorts cut from the
+    // first one survive the deletion, this loop finds them by that id, and
+    // reuses their titles and their audio for a script they were never made
+    // from. It happened: shorts timestamped 10:01 were reused for a source
+    // created at 12:41, so every one of them had new words and old audio.
+    //
+    // Comparing the stored beat against the one being cut is exact and cheap.
+    // Matching on the id alone was the bug.
+    const storedScript = run.hasArtifact('script')
       ? run.readArtifact('script', scriptSchema)
+      : null;
+    const stale =
+      storedScript !== null && beatText(storedScript.beats[0] ?? { turns: [] }) !== beatText(beat);
+
+    if (stale) {
+      say('the story changed since this was cut; re-titling and re-rendering');
+    }
+
+    const titled = storedScript && !stale
+      ? storedScript
       : await (async () => {
           const { title, description } = await writeTitle(
             persona,
@@ -174,7 +194,7 @@ export const cutStories = async (
     run.writeArtifact('script', oneStory);
     run.markComplete('script');
 
-    const already = run.isComplete('render');
+    const already = run.isComplete('render') && !stale;
     log(
       `story ${story}/${script.beats.length}: "${title}" -> ${run.id}${already ? ' (already rendered)' : ''}`
     );
@@ -192,7 +212,11 @@ export const cutStories = async (
             outputPath: run.mediaPath('episode.wav'),
           },
           deps.tts,
-          {},
+          // A CHANGED SCRIPT IS THE CASE reuseExisting exists for. Without it
+          // the renderer finds the beat's wav already on disk and keeps it, so
+          // forcing a re-render at this level still produced the old audio -
+          // the same stale-reuse fault one layer down.
+          stale ? { reuseExisting: false } : {},
           spend,
           say
         );
@@ -203,13 +227,24 @@ export const cutStories = async (
 
     const gate = runGate({
       persona,
-      // THE STORY'S OWN LENGTH, NOT THE SET'S. The format targets 900 to 1800
-      // seconds because that is ten stories; one of them is a couple of
-      // minutes, so gating a cut short against the set's total reported every
-      // single one as running at a tenth of its guide. Advisory, so it never
-      // blocked anything - it just made the one length signal in the report
-      // meaningless, which is how a check stops being read.
-      format: { ...format, targetSeconds: format.beats[i]?.seconds ?? format.targetSeconds },
+      // THE STORY'S OWN FORMAT, WHICH IS ONE BEAT LONG.
+      //
+      // Passing the whole ten-beat format to gate a one-beat script made the
+      // gate ask after nine beats that were never meant to be there: "beat
+      // story_02 cites 0 claims, below its floor of 6" and the same for
+      // story_03 through story_10. Every short failed with ten to seventeen
+      // blocking findings, almost all of them about beats belonging to other
+      // shorts.
+      //
+      // A cut story IS a format of one beat: that beat's job, that beat's claim
+      // floor, that beat's length. The set's 900 to 1800 second target belongs
+      // to the source, which is never rendered and never gated as audio.
+      format: {
+        ...format,
+        beats: format.beats[i] ? [format.beats[i]!] : format.beats,
+        tensionCurve: format.tensionCurve[i] !== undefined ? [format.tensionCurve[i]!] : format.tensionCurve,
+        targetSeconds: format.beats[i]?.seconds ?? format.targetSeconds,
+      },
       script: oneStory,
       claims: used,
       ledger: checkLedger(used, sources),
