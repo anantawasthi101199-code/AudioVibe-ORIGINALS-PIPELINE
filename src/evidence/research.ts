@@ -28,7 +28,7 @@ import { Claim, claimSchema, checkLedger, UnsupportedClaim, unsupportedClaimSche
 import { FetchDeps, fetchSource } from './fetch';
 import { selectPassages } from './passages';
 import { rankCandidates, SearchProvider } from './search';
-import { Source, tierForUrl } from './source';
+import { Source, SourceTier, TIER_RANK, tierForUrl } from './source';
 
 export const briefSchema = z.object({
   /** The specific angle, narrower than the topic. */
@@ -270,6 +270,75 @@ export const DEFAULT_GATHER: GatherOptions = { targetSources: 14, perQuery: 8 };
  * Two per story plus a few for the shared background, capped so a long format
  * cannot quietly commission a hundred fetches.
  */
+/**
+ * How many documents one SHORT may draw on.
+ *
+ * TWO, AND THIS IS ABOUT FLOW RATHER THAN ABOUT EVIDENCE. A ninety-second story
+ * stitched from four documents is a compilation: four writers' emphases, four
+ * sets of names for the same people, four points at which the telling changes
+ * register. A listener hears that as the thing jumping around, and it is the
+ * difference a listener actually named on a real set - the story drawing on two
+ * sources was the best one in it, and the story drawing on four was the worst.
+ *
+ * A LONG EPISODE IS THE OPPOSITE CASE and is deliberately untouched. Fifteen
+ * minutes assembling what fourteen documents separately establish is the whole
+ * point of the factual lane; breadth there is the product.
+ */
+export const MAX_SOURCES_PER_SHORT = 2;
+
+/**
+ * Keep each story to the documents that actually carry it.
+ *
+ * RANKED BY HOW MUCH OF THE STORY EACH SOURCE HOLDS, then by tier. The document
+ * a story is mostly built from is the one that tells it; a document
+ * contributing a single claim is a footnote, and a footnote read aloud in a
+ * ninety-second story is a seam.
+ *
+ * DETERMINISTIC AND FREE. No model decides this, and it runs on what is already
+ * on disk, so it costs nothing and gives the same answer twice.
+ *
+ * WHAT IT COSTS, said plainly: facts. A story trimmed from four sources to two
+ * loses whatever only the other two carried, and can fall below its claim
+ * floor - at which point the gate reports it as thin, which is true and is the
+ * thing somebody can act on.
+ */
+export const concentrateSources = (
+  claims: Claim[],
+  sources: Source[],
+  maxPerBeat = MAX_SOURCES_PER_SHORT
+): { claims: Claim[]; dropped: Array<{ beatId: string; sourceId: string; claims: number }> } => {
+  const tierOf = new Map(sources.map((src) => [src.id, src.tier]));
+  const byBeat = new Map<string, Claim[]>();
+  for (const claim of claims) {
+    byBeat.set(claim.beatId, [...(byBeat.get(claim.beatId) ?? []), claim]);
+  }
+
+  const keep: Claim[] = [];
+  const dropped: Array<{ beatId: string; sourceId: string; claims: number }> = [];
+
+  for (const [beatId, beatClaims] of byBeat) {
+    const counts = new Map<string, number>();
+    for (const claim of beatClaims) {
+      counts.set(claim.sourceId, (counts.get(claim.sourceId) ?? 0) + 1);
+    }
+
+    const ranked = [...counts.entries()].sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      const ta = TIER_RANK[tierOf.get(a[0]) as SourceTier] ?? 9;
+      const tb = TIER_RANK[tierOf.get(b[0]) as SourceTier] ?? 9;
+      if (ta !== tb) return ta - tb;
+      // A stable last resort, so the same corpus gives the same answer twice.
+      return a[0].localeCompare(b[0]);
+    });
+
+    const kept = new Set(ranked.slice(0, maxPerBeat).map(([id]) => id));
+    for (const [id, n] of ranked.slice(maxPerBeat)) dropped.push({ beatId, sourceId: id, claims: n });
+    keep.push(...beatClaims.filter((c) => kept.has(c.sourceId)));
+  }
+
+  return { claims: keep, dropped };
+};
+
 export const gatherFor = (format: EpisodeFormat): GatherOptions =>
   format.sourceOnly
     ? // THREE PER STORY, AND IT WAS TWO. Two documents is one telling plus a

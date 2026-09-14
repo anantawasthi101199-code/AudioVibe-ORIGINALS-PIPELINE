@@ -222,6 +222,29 @@ elsewhere in the corpus that supports the claim AS WRITTEN and changes only
 which document it points at. Not for a contradicted claim, where going looking
 for a friendlier source is cherry-picking with extra steps.
 
+### A short draws on two documents at most
+
+Not an evidence rule. A ninety-second story stitched from four documents is a
+compilation: four writers' emphases, four sets of names for the same people,
+four points where the register changes. A listener hears that as the thing
+jumping around.
+
+Measured on a real ten-story set, and by a listener rather than by a check: the
+story built from **two** sources was the best in it, the story built from
+**four** was the worst, and they named both without knowing which was which.
+
+Each story keeps the documents that carry most of it, tie-broken by tier and
+then by id so one corpus always gives one answer. Deterministic, free, and it
+touches only two or three stories in a typical set.
+
+**Long episodes are untouched**, and the case is the opposite there: assembling
+what fourteen documents separately establish is the whole point of the factual
+lane, and breadth is the product rather than a seam.
+
+What it costs is facts. A story trimmed from four sources to two loses whatever
+only the other two carried, and can fall below its claim floor - at which point
+the gate reports it as thin, which is true.
+
 ### Only two verdicts block, and neither is about wording
 
 `contradicted` (the document says the opposite) and `unsourced` (there is no

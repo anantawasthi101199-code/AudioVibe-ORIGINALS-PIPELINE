@@ -1,7 +1,7 @@
 import { LlmClient, LlmRequest, LlmResponse } from '../../models/client';
 import { parseFormat } from '../../formats/load';
 import { parsePersona } from '../../canon/load';
-import { buildBrief, gatherCorpus, gatherCounterEvidence } from '../research';
+import { buildBrief, concentrateSources, gatherCorpus, gatherCounterEvidence } from '../research';
 import { rankCandidates, SearchProvider, SearchResult, BraveSearch } from '../search';
 import { tierForUrl } from '../source';
 import { HttpResponse } from '../fetch';
@@ -343,5 +343,85 @@ describe('BraveSearch', () => {
   it('returns nothing rather than throwing on an unexpected body', async () => {
     const search = new BraveSearch('k', async () => ({ status: 200, json: { unexpected: true }, text: '' }));
     expect(await search.search('q', 5)).toEqual([]);
+  });
+});
+
+/**
+ * One story, one or two documents.
+ *
+ * A listener called the story built from two sources the best in a ten-story
+ * set, and the story built from four the worst. A ninety-second piece stitched
+ * from four documents carries four writers' emphases and four sets of names for
+ * the same people, and that is heard as the thing jumping around.
+ */
+describe('concentrateSources', () => {
+  const claim = (id: string, beatId: string, sourceId: string) =>
+    ({ id, beatId, sourceId, text: id, type: 'chronology', quote: id, contested: false }) as never;
+
+  const src = (id: string, tier: string) => ({ id, tier }) as never;
+
+  it('keeps the two documents that carry most of the story', () => {
+    const claims = [
+      claim('c1', 'story_01', 'a'),
+      claim('c2', 'story_01', 'a'),
+      claim('c3', 'story_01', 'a'),
+      claim('c4', 'story_01', 'b'),
+      claim('c5', 'story_01', 'b'),
+      claim('c6', 'story_01', 'c'),
+    ];
+
+    const out = concentrateSources(claims, [src('a', 'T1'), src('b', 'T1'), src('c', 'T1')]);
+
+    expect(out.claims.map((c) => c.id)).toEqual(['c1', 'c2', 'c3', 'c4', 'c5']);
+    expect(out.dropped).toEqual([{ beatId: 'story_01', sourceId: 'c', claims: 1 }]);
+  });
+
+  it('breaks a tie on tier, because the better document tells it better', () => {
+    const claims = [
+      claim('c1', 'story_01', 'a'),
+      claim('c2', 'story_01', 'b'),
+      claim('c3', 'story_01', 'c'),
+    ];
+
+    const out = concentrateSources(claims, [src('a', 'T3'), src('b', 'T1'), src('c', 'T2')]);
+    expect(out.claims.map((c) => c.sourceId).sort()).toEqual(['b', 'c']);
+  });
+
+  it('treats each story separately, which is the whole point', () => {
+    // Ten stories share one corpus. The two documents that carry story one are
+    // not the two that carry story seven.
+    const claims = [
+      claim('c1', 'story_01', 'a'),
+      claim('c2', 'story_01', 'b'),
+      claim('c3', 'story_02', 'c'),
+      claim('c4', 'story_02', 'd'),
+    ];
+
+    const out = concentrateSources(claims, [src('a', 'T1'), src('b', 'T1'), src('c', 'T1'), src('d', 'T1')]);
+    expect(out.claims).toHaveLength(4);
+    expect(out.dropped).toEqual([]);
+  });
+
+  it('leaves a story alone when it already draws on two or fewer', () => {
+    const claims = [claim('c1', 'story_01', 'a'), claim('c2', 'story_01', 'b')];
+    const out = concentrateSources(claims, [src('a', 'T1'), src('b', 'T1')]);
+
+    expect(out.claims).toHaveLength(2);
+    expect(out.dropped).toEqual([]);
+  });
+
+  it('gives the same answer twice on the same corpus', () => {
+    // Sources tied on both count and tier are ordered by id, so a rerun cannot
+    // keep a different pair and produce a different script from one corpus.
+    const claims = [
+      claim('c1', 'story_01', 'b'),
+      claim('c2', 'story_01', 'c'),
+      claim('c3', 'story_01', 'a'),
+    ];
+    const sources = [src('a', 'T1'), src('b', 'T1'), src('c', 'T1')];
+
+    const once = concentrateSources(claims, sources).claims.map((c) => c.id);
+    const twice = concentrateSources(claims, sources).claims.map((c) => c.id);
+    expect(once).toEqual(twice);
   });
 });

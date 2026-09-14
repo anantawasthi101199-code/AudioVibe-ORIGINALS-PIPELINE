@@ -41,6 +41,8 @@ import {
   gatherCounterEvidence,
   gatherFor,
   storyForBeat,
+  concentrateSources,
+  MAX_SOURCES_PER_SHORT,
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
 import { Source } from '../evidence/source';
@@ -458,6 +460,33 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     }
 
     run.markComplete('repair');
+  }
+
+  // --- 4c. One story, one or two documents. ---------------------------------
+  //
+  // SHORT FORMATS ONLY, and it is about flow rather than about evidence. A
+  // ninety-second story stitched from four documents is a compilation - four
+  // writers' emphases, four sets of names for the same people, four points
+  // where the register changes - and a listener hears that as the thing jumping
+  // around. On a real ten-story set the story built from two sources was the
+  // best in it and the story built from four was the worst, and a listener
+  // named both without being told which was which.
+  //
+  // A long episode is the opposite case and is untouched: assembling what
+  // fourteen documents separately establish is the whole point of the factual
+  // lane, and breadth there is the product rather than a seam.
+  if (format.sourceOnly || format.kind === 'short') {
+    const concentrated = concentrateSources(workingClaims, corpus.sources);
+
+    if (concentrated.dropped.length) {
+      const facts = concentrated.dropped.reduce((n, d) => n + d.claims, 0);
+      report(
+        'repair',
+        `kept each story to its ${MAX_SOURCES_PER_SHORT} main sources, which cost ${facts} fact(s) ` +
+          `from ${concentrated.dropped.length} further document(s)`
+      );
+    }
+    workingClaims = concentrated.claims;
   }
 
   // --- 5. Script ----------------------------------------------------------
