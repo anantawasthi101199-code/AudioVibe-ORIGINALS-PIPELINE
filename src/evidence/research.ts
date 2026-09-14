@@ -272,7 +272,16 @@ export const DEFAULT_GATHER: GatherOptions = { targetSources: 14, perQuery: 8 };
  */
 export const gatherFor = (format: EpisodeFormat): GatherOptions =>
   format.sourceOnly
-    ? { targetSources: Math.min(40, format.beats.length * 2 + 6), perQuery: 8 }
+    ? // THREE PER STORY, AND IT WAS TWO. Two documents is one telling plus a
+      // fragment, which is enough to say a story happened and not enough to
+      // tell it to the end: the first real set stopped Garuda's story at the
+      // theft of the nectar, because what Vishnu made of him afterwards was in
+      // none of the two documents that story got.
+      //
+      // A myth is retold constantly and no two retellings carry the same
+      // details, so depth here is what makes a story complete rather than
+      // merely sourced.
+      { targetSources: Math.min(45, format.beats.length * 3 + 6), perQuery: 10 }
     : DEFAULT_GATHER;
 
 /**

@@ -73,19 +73,29 @@ beats:
         assume a frame has been established, and may not end on anything
         pointing elsewhere.
       - >
-        SAY WHAT IT IS IN THE FIRST TWO SENTENCES. No cold open and no teasing -
-        there is no time to be behind, and ninety seconds of guessing is the
-        whole thing.
+        SAY WHAT IT IS IN THE FIRST TWO SENTENCES. No cold open and no teasing.
+        A listener who does not know what they are listening to spends the whole
+        thing guessing instead of following.
       - >
-        Then the story, in order. One thing leads to the next, and there is room
-        for about four facts. Choose them.
+        TELL IT TO THE END. The whole story: what set it off, what happened, how
+        it finished, and what it left behind. If Garuda steals the nectar to
+        free his mother, the story is not over until we learn what Vishnu made
+        of him for it - stopping at the theft is stopping in the middle.
+      - >
+        A STORY THAT STOPS WHEN THE FACTS RUN OUT IS A STORY THAT STOPS IN THE
+        MIDDLE. Use everything you are given. If the ending is genuinely not in
+        the material, say what the record does and does not carry rather than
+        trailing off as though the story simply ended there.
+      - >
+        In order. One thing leads to the next, and nothing is held back to be
+        explained later.
       - >
         END ON SOMETHING THAT LANDS. The last line is what somebody remembers or
-        sends on, and a short that trails off has wasted the other eighty
-        seconds. A number, an image, or the thing nobody knew.
+        sends on. A number, an image, or the thing nobody knew - and it comes
+        AFTER the story has finished, not instead of the finish.
       - >
-        WHERE THE ACCOUNTS DISAGREE, SAY SO IN A CLAUSE AND CARRY ON. Ninety
-        seconds is not a reason to sound more certain than the record is, and a
+        WHERE THE ACCOUNTS DISAGREE, SAY SO IN A CLAUSE AND CARRY ON. Being
+        short is not a reason to sound more certain than the record is, and a
         short is where overconfidence travels furthest - it is the format most
         likely to be heard alone and passed on. "Nobody agrees which of them
         decided" costs four words.
@@ -103,7 +113,16 @@ beats:
         same object is welcome; the same EVENTS a second time is not. Each of
         these is heard alone, so a second telling is a short somebody has
         already heard, and a feed of them is where that gets noticed.
-    minClaims: 4
+    # SIX, AND IT WAS FOUR, AND FOUR WAS THE REASON THE STORIES STOPPED HALFWAY.
+    #
+    # Extraction is told "needs >= N claims, and up to M", and a model reads the
+    # floor as the target: with N of 4 it returned four to nine claims per story
+    # when the ceiling allowed fifteen. The writer then used EVERY claim it was
+    # given - 6 of 6, 8 of 8, 9 of 9, ten beats at a hundred percent - so the
+    # shortness was never compression. There was nothing left to say.
+    #
+    # A myth with a beginning, a turn and an ending does not fit in four facts.
+    minClaims: 6
 
 # One entry, expanded to ten alongside the beat it belongs to. Flat, and that is
 # the format rather than an absence of nerve: each story is heard on its own, so
