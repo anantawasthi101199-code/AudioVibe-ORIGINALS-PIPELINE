@@ -822,6 +822,21 @@ findings. Do not propose queries that would confirm it.
 
 Return JSON only: {"queries": ["...", "..."]}`;
 
+/**
+ * The disconfirming searches a run made, as stored on disk.
+ *
+ * Exported because two things read it back: the pipeline resuming a run, and
+ * the re-gate. A private copy in each is how a re-gate ends up passing an empty
+ * list and reporting that twelve searches never happened.
+ */
+export const counterEvidenceSchema = z.array(
+  z.object({
+    claimId: z.string(),
+    sources: z.array(z.custom<Source>()),
+    queries: z.array(z.string()),
+  })
+);
+
 export interface CounterEvidence {
   claimId: string;
   /** Sources found that argue against the claim. */

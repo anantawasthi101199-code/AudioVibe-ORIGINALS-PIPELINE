@@ -29,11 +29,7 @@ import { buildDeps, priorEpisodeTexts } from '../deps';
 import { runEpisode } from '../pipeline/episode';
 import { runFiction } from '../pipeline/fiction';
 import { cutStories } from '../pipeline/anthology';
-import { Claim, checkLedger, claimSchema } from '../evidence/claim';
-import { corpusSchema } from '../evidence/research';
-import { verificationReportSchema } from '../evidence/verify';
-import { renderResultSchema } from '../render/assemble';
-import { runGate, GateReport } from '../qa/gate';
+import { regate } from '../qa/regate';
 import { Run } from '../run/store';
 import { loadTopics } from '../schedule/load';
 import { Script, scriptBeatSchema, scriptSchema } from '../script/write';
@@ -335,58 +331,6 @@ export const saveScript = (id: string, body: unknown) => {
  * verification behind it has no ledger to check - rather than inventing a
  * passing report, which would be the most dangerous possible default.
  */
-const regate = (run: Run, script: Script): GateReport | null => {
-  try {
-    const persona = loadPersona(run.manifest.personaId);
-    const format = loadFormat(run.manifest.formatId);
-
-    // The repaired claims where there are any, because those are what the
-    // script was written from - narrowed, rebound and hedged.
-    const claims: Claim[] = run.hasArtifact('repair')
-      ? run.readArtifact('repair', z.object({ claims: z.array(claimSchema) })).claims
-      : run.hasArtifact('claims')
-        ? run.readArtifact('claims', z.object({ claims: z.array(claimSchema) })).claims
-        : [];
-
-    if (!claims.length || !run.hasArtifact('verification')) return null;
-
-    const corpus = run.readArtifact('corpus', corpusSchema);
-    const stored = run.readArtifact(
-      'verification',
-      z.object({
-        verification: verificationReportSchema,
-        counterEvidence: z.array(z.unknown()).default([]),
-      })
-    );
-    const render = run.hasArtifact('render')
-      ? run.readArtifact('render', renderResultSchema)
-      : null;
-
-    return runGate({
-      persona,
-      format,
-      script,
-      claims,
-      // RE-CHECKED, NOT REMEMBERED. An edited script can drop the sentence a
-      // claim was carrying, and the ledger is the thing that notices.
-      ledger: checkLedger(claims, corpus.sources),
-      verification: stored.verification,
-      counterEvidence: [],
-      // Zero duration where there is no audio, which reads as a large miss
-      // against the format target - correctly, since there is nothing to hear.
-      durationS: render?.durationS ?? 0,
-      sources: corpus.sources,
-      corpusText: corpus.sources.map((src) => src.text).join('\n'),
-      castNames: script.plan?.cast.map((c) => c.name) ?? [],
-      priorTexts: priorEpisodeTexts(run.id),
-    });
-  } catch {
-    // A gate that cannot run is reported as ABSENT rather than as passing,
-    // which would be the most dangerous default available here.
-    return null;
-  }
-};
-
 export const suggest = async (channelId: string, body: unknown) => {
   const input = z
     .object({ formatId: z.string().min(1), count: z.number().int().min(1).max(10).default(6) })

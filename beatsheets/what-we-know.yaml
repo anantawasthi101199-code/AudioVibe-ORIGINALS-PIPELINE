@@ -168,7 +168,19 @@ beats:
         metaphor that replaces the explanation is the listener leaving without
         it, feeling they understood. One per idea, no chains, and no comparison
         at all where the thing is already easy to see.
-    minClaims: 12
+    # EIGHT, AND IT WAS TWELVE, WHICH WAS NEVER REACHABLE.
+    #
+    # Twelve facts in a beat of 150 to 210 seconds is one every fifteen seconds,
+    # and it was MORE than the evidence beat asked for over nearly twice the
+    # time. A real fever episode - a subject whose physiology is exhaustively
+    # documented - extracted five for this beat and eighteen for evidence, then
+    # failed at the gate on a floor nothing could have met.
+    #
+    # The number was inflated to satisfy a format rule saying the mechanism must
+    # be the most heavily sourced beat. That rule is right and was being
+    # measured wrongly: it compares DENSITY now, so a mechanism beat earns the
+    # title by being dense rather than by being long-winded.
+    minClaims: 8
 
   - id: disagreement
     type: counterpoint

@@ -219,14 +219,36 @@ describe('the shipped formats', () => {
   );
 
   it.each(shipped.map((f) => [f.id, f] as const))(
-    '%s puts its highest claim floor on the mechanism',
+    '%s sources its mechanism most heavily of any beat',
     (_id, format) => {
       // If some other beat demands more sourcing than the causal explanation
       // does, the format is decorating rather than explaining.
+      //
+      // MEASURED AS DENSITY, NOT AS A RAW COUNT, and the difference is not
+      // pedantry. Comparing counts made a format satisfy this rule by inflating
+      // the mechanism's floor rather than by keeping the other beats honest,
+      // and what-we-know ended up demanding twelve facts from a three-minute
+      // beat while its five-minute evidence beat demanded ten. A real fever
+      // episode produced five, and the run failed at the gate on a floor that
+      // was never reachable.
+      //
+      // Facts per second of a beat is what "most heavily sourced" actually
+      // means, and it cannot be gamed by making a beat shorter.
       const mechanism = format.beats.find((b) => b.type === 'mechanism');
       if (!mechanism) return;
-      const heaviest = Math.max(...format.beats.map((b) => b.minClaims));
-      expect(mechanism.minClaims).toBe(heaviest);
+
+      const length = (b: (typeof format.beats)[number]) => (b.seconds[0] + b.seconds[1]) / 2;
+      const density = (b: (typeof format.beats)[number]) => b.minClaims / length(b);
+
+      // ONLY BEATS LONG ENOUGH TO COMPETE. An eleven-second cold open carrying
+      // one fact is denser than any mechanism can be, and that is arithmetic
+      // rather than a fault in the format: a beat too short to hold two facts
+      // wins a density comparison by being short.
+      const SUBSTANTIAL_SECONDS = 60;
+
+      for (const beat of format.beats.filter((b) => length(b) >= SUBSTANTIAL_SECONDS)) {
+        expect(density(mechanism)).toBeGreaterThanOrEqual(density(beat));
+      }
     }
   );
 

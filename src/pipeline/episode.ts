@@ -39,6 +39,7 @@ import {
   extractClaims,
   gatherCorpus,
   gatherCounterEvidence,
+  counterEvidenceSchema,
   gatherFor,
   storyForBeat,
   concentrateSources,
@@ -136,14 +137,6 @@ export interface PipelineDeps {
    */
   next?: (lines: string[]) => void;
 }
-
-const counterEvidenceSchema = z.array(
-  z.object({
-    claimId: z.string(),
-    sources: z.array(z.custom<Source>()),
-    queries: z.array(z.string()),
-  })
-);
 
 export interface EpisodeResult {
   run: Run;
@@ -352,11 +345,26 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // corrected text, so the one pass fixes both - and a run that fixed the
     // semantics while still failing the shape would have gained nothing.
     const semantic = verification.results.filter((v) => BLOCKING_VERDICTS.includes(v.verdict));
+
+    // THE FREE CHECK, FED IN HERE RATHER THAN LEFT TO THE GATE.
+    //
+    // `checkLedger` proves deterministically that a cited quote occurs in the
+    // document it names. That is the anti-fabrication guarantee, it costs
+    // nothing, and it was only being consulted at the gate - which is AFTER the
+    // render. A fever episode paid 29p to voice a script containing three
+    // claims whose quotes appear in no document, and the first anybody heard of
+    // it was a gate report about audio that already existed.
+    //
+    // A missing quote and a missing source are both `unsourced`: there is no
+    // passage to read, so rebind if the corpus holds one and otherwise drop.
+    // Shape problems - typed as a statistic with no number in it - are the
+    // wording category and no longer block anything, so they are not sent here
+    // at all; they surface at the gate for the person reading the script.
     const structural = checkLedger(claims, corpus.sources)
-      .problems.filter((p) => p.kind === 'shape')
+      .problems.filter((p) => p.kind === 'quote_not_in_source' || p.kind === 'missing_source')
       .map((p) => ({
         claimId: p.claimId,
-        verdict: 'partially_entailed' as const,
+        verdict: 'unsourced' as const,
         reason: p.detail,
       }));
 
@@ -367,7 +375,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     const failing = [...semantic, ...structural.filter((v) => !seen.has(v.claimId))];
 
     if (failing.length) {
-      report('repair', `${failing.length} claims say more than their quotes`);
+      report('repair', `${failing.length} claim(s) their sources will not carry`);
       const repaired = await repairAll(claims, failing, {
         sources: corpus.sources,
         // The CLERK narrows. It is subtraction against a complaint that has

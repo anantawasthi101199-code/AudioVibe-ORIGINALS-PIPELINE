@@ -85,7 +85,11 @@ beats:
       - Every causal step sourced.
       - State study design or document type when a claim rests on one.
       - Never upgrade a correlation to a cause.
-    minClaims: 4
+    # SIX, AND IT WAS FOUR. The context beat carried three facts in 78 seconds and
+    # the mechanism four in 143 - so this format was sourcing its background more
+    # heavily than its explanation, which is the definition of decorating rather
+    # than explaining. Found by measuring density instead of raw counts.
+    minClaims: 6
 
   - id: turn_2
     type: turn

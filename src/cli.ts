@@ -51,6 +51,7 @@ import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
 import { serve } from './server/index';
 import { formatGateReport, GateReport } from './qa/gate';
+import { regate } from './qa/regate';
 import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
 import { renderResultSchema } from './render/assemble';
@@ -1226,10 +1227,43 @@ const cmdVoiceRetire = (argv: string[]): number => {
   return 0;
 };
 
+/**
+ * Run the gate again, over what is on disk now.
+ *
+ * IT USED TO PRINT THE STORED REPORT, while its usage text said "re-run the
+ * gate over an existing run". So a check changed this morning stayed invisible
+ * until the next full run paid for research and a script to reveal it, and a
+ * fever episode was re-gated against a claim floor that had already been
+ * lowered - showing the old number twice, convincingly.
+ *
+ * Costs nothing: every check is deterministic arithmetic over things already on
+ * disk. The recomputed report is written back, so the run's own record is the
+ * current one rather than a stale artifact somebody reads later.
+ */
 const cmdGate = (argv: string[]): number => {
-  const gate = readGate(openRun(argv));
-  console.log(formatGateReport(gate));
-  return gate.passed ? 0 : 2;
+  const run = openRun(argv);
+
+  if (!run.hasArtifact('script')) {
+    console.error(`run ${run.id} has no script yet, so there is nothing to gate.`);
+    return 1;
+  }
+
+  const fresh = regate(run, run.readArtifact('script', scriptSchema));
+  if (!fresh) {
+    // A script with no verification behind it has no ledger to check. Saying so
+    // beats inventing a passing report, which is the most dangerous default
+    // available here.
+    console.error(
+      `run ${run.id} cannot be gated: it has no verified claims behind its script.`
+    );
+    return 1;
+  }
+
+  run.writeArtifact('qa', fresh);
+  run.markComplete('qa');
+
+  console.log(formatGateReport(fresh));
+  return fresh.passed ? 0 : 2;
 };
 
 /**
