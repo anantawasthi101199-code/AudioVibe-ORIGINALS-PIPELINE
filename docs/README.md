@@ -12,6 +12,16 @@ code, the code is right and the document is a bug.
 | [PIPELINES.md](PIPELINES.md) | The lanes that exist, the shows asked for, what each actually costs to build, and the build order. Read before starting any new kind of show. |
 | [DECISIONS.md](DECISIONS.md) | Load-bearing decisions and, more usefully, the ones that were reversed. Read before re-opening an argument. |
 
+## The studio
+
+`npm run studio` serves a web interface on loopback: lanes, channels, and a run
+you can watch, read, edit and approve before anything is voiced. It is the same
+pipeline the commands drive, which is why the approval break lives in the
+pipeline rather than in the interface - the rule holds however a run is started.
+
+Built from `web/` with Vite. `npm --prefix web run build` once, then it is served
+by the same process as the API.
+
 ## The pipeline ledger
 
 A visual version of PIPELINES.md, with each stage drawn at the width of what it

@@ -22,6 +22,36 @@ Last updated 2026-09-13.
 
 ---
 
+## The studio
+
+```
+npm run studio
+```
+
+The web interface, on http://127.0.0.1:4317. Everything the commands below do,
+with progress you can watch, a script you can read and edit before it is voiced,
+and the audio playable in the page.
+
+Needs `FOUNDRY_ADMIN_PASSWORD` in `.env`. One account, because the Foundry has
+one operator and every button in it spends money.
+
+Build it once before first use:
+
+```
+npm --prefix web install
+npm --prefix web run build
+```
+
+**Bound to loopback.** `FOUNDRY_HOST` will move it, and the startup banner says
+what that means: anybody who can reach the port can start a run, and one
+password is the only thing in the way.
+
+The shape of it is lanes, then channels, then runs. A channel offers two routes
+out - one episode, or a set of shorts - and they are different enough that the
+page asks which rather than hiding it in a dropdown.
+
+---
+
 ## Making things
 
 ### `make --show <id> --topic "..."`
@@ -34,6 +64,7 @@ Writes, renders and gates one episode. This is the main command.
 | `--topic "..."` | What it is about. Required. Be specific; the brief is written from this. |
 | `--format <id>` | Which shape. Defaults to the show's first format. |
 | `--dry-run` | Prints what it would do and roughly what it would cost, and spends nothing. |
+| `--render-now` | Skips the approval break and voices it straight away, without anybody reading it. |
 | `--beat-by-beat` | Writes one beat at a time instead of the whole script at once. The old default, see below. |
 
 It never publishes. It stops at the gate and tells you what to read.
@@ -116,6 +147,18 @@ About 9p.
 
 Makes the next thing the schedule says is due, then stops. One item, not a
 queue. `--dry-run` says what it would make without making it.
+
+### `approve --run <id>`
+
+Releases a run that is held before its render, then voices and gates it.
+
+**Every run is held by default**, because rendering is the only irreversible
+spend: everything before it produces text you can read and throw away for
+pennies, audio produces a file and a bill. A held run stays held across a
+resume, since a break that releases itself is not a break.
+
+`make --render-now` skips it. A source format is never held, because it stops
+before the render anyway.
 
 ### `resume [--run <id>]`
 
