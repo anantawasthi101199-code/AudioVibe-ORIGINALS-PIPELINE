@@ -17,7 +17,7 @@
  * an outlined one is going to be, a faint one has a date nobody approved.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { api, clock, type CalendarView, type CalendarEntry } from '../api';
+import { api, clock, until, when, type CalendarView, type CalendarEntry } from '../api';
 import { ErrorNote } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
 
@@ -99,6 +99,24 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
   const [view, setView] = useState<CalendarView | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<CalendarEntry | null>(null);
+  const [acting, setActing] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState<string | null>(null);
+
+  /** Something that changes the queue, then reloads the month. */
+  const run = async (runId: string, fn: () => Promise<unknown>) => {
+    setActing(runId);
+    setError(null);
+    try {
+      await fn();
+      setOpen(null);
+      setConfirming(null);
+      await load(month);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setActing(null);
+    }
+  };
 
   const load = useCallback(
     (m: string) =>
@@ -134,7 +152,6 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
   const counts = {
     out: all.filter((e) => e.state === 'published').length,
     approved: all.filter((e) => e.state === 'approved').length,
-    planned: all.filter((e) => e.state === 'planned').length,
   };
 
   const [y, m] = month.split('-').map(Number);
@@ -162,9 +179,9 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
       </div>
 
       <div className="counts" style={{ margin: '1.2rem 0 1.1rem' }}>
-        <Count n={counts.out} label="published" tone="pass" />
-        <Count n={counts.approved} label="approved" />
-        <Count n={counts.planned} label="not approved" tone={counts.planned ? 'hold' : undefined} />
+        <Count n={counts.out} label="out this month" tone="pass" />
+        <Count n={counts.approved} label="going out" />
+        <Count n={view.queue.length} label="in the queue" />
       </div>
 
       <ErrorNote>{error}</ErrorNote>
@@ -189,8 +206,9 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
         )}{' '}
         <Info label="What the boxes mean">
           Colour is the channel. A solid box has been published; an outlined one is approved and
-          will go out at that time; a faint one has a date but nobody approved it, so it will not.
-          Shorts are narrower than episodes. Times are {view.timezone}.
+          will go out at that time. Nothing else appears here: a calendar of things that are going
+          to happen must not draw things nobody agreed to. Shorts are narrower than episodes. Times
+          are {view.timezone}.
         </Info>
       </p>
 
@@ -206,6 +224,51 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
           ))}
         </div>
       )}
+
+      <div className="cal-layout">
+        {/*
+          THE STACK. The grid shows the shape of a month; this shows the order,
+          which is the thing you act on - and it is the only place something can
+          be taken back out, or pushed out early.
+        */}
+        <aside className="stack-panel">
+          <div className="row between" style={{ marginBottom: '0.6rem' }}>
+            <h2 style={{ fontSize: '0.95rem' }}>Queue</h2>
+            <span className="pill">{view.queue.length}</span>
+          </div>
+
+          {view.queue.length === 0 ? (
+            <p className="faint tiny">
+              Nothing approved. Approve episodes on a channel&apos;s publishing page and they
+              appear here in the order they go out.
+            </p>
+          ) : (
+            <ol className="stack-list">
+              {view.queue.map((q) => (
+                <li key={q.runId}>
+                  <button
+                    className={`stack-item${acting === q.runId ? ' busy' : ''}`}
+                    style={{ '--ch': colourFor(q.channelId) } as React.CSSProperties}
+                    onClick={() => setOpen(q)}
+                  >
+                    <span className="stack-n">{q.position}</span>
+                    <span className="stack-body">
+                      <span className="stack-title">{q.title}</span>
+                      {/* Which channel it goes out as, on every row. */}
+                      <span className="stack-meta">
+                        <span className="cal-dot" />
+                        {q.channelName} · {q.kind}
+                      </span>
+                      <span className="stack-when">
+                        {when(q.at, view.timezone)} · {until(q.at)}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          )}
+        </aside>
 
       <div className="cal">
         {WEEKDAYS.map((d) => (
@@ -230,6 +293,7 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
             </div>
           );
         })}
+      </div>
       </div>
 
       {/* What is on that day, in full. */}
@@ -260,14 +324,8 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
               <span className="pill">{open.kind}</span>
               {open.short !== null && <span className="pill">short {open.short}</span>}
               {open.durationS !== null && <span className="pill">{clock(open.durationS)}</span>}
-              <span
-                className={`pill ${open.state === 'published' ? 'pass' : open.state === 'planned' ? 'hold' : ''}`}
-              >
-                {open.state === 'published'
-                  ? 'published'
-                  : open.state === 'approved'
-                    ? 'approved'
-                    : 'not approved'}
+              <span className={`pill ${open.state === 'published' ? 'pass' : ''}`}>
+                {open.state === 'published' ? 'published' : 'approved'}
               </span>
             </div>
 
@@ -283,6 +341,8 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
               <span className="faint tiny">{view.timezone}</span>
             </p>
 
+            <ErrorNote>{error}</ErrorNote>
+
             <div className="row">
               <PlayButton id={open.runId} src={api.audioUrl(open.runId)} />
               <button className="btn ghost small" onClick={() => go(`/r/${open.runId}`)}>
@@ -292,9 +352,55 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
                 className="btn ghost small"
                 onClick={() => go(`/c/${open.channelId}/publish`)}
               >
-                {open.channelName} publishing
+                {open.channelName}
               </button>
             </div>
+
+            {/*
+              THE TWO WAYS OUT OF THE QUEUE, and both live here rather than on
+              the publishing page: cancelling and jumping the queue are both
+              decisions you make while looking at what else is around it.
+            */}
+            {open.state === 'approved' && (
+              <div className="row" style={{ borderTop: '1px solid var(--line-soft)', paddingTop: '0.85rem' }}>
+                <button
+                  className="btn ghost small"
+                  disabled={acting !== null}
+                  onClick={() => void run(open.runId, () => api.cancelRelease(open.runId))}
+                >
+                  Cancel
+                </button>
+                <span className="faint tiny">Back to its channel, undecided.</span>
+                <span className="spacer" />
+
+                {confirming === open.runId ? (
+                  <>
+                    <button className="btn ghost small" onClick={() => setConfirming(null)}>
+                      No
+                    </button>
+                    <button
+                      className="btn spend small"
+                      disabled={acting !== null}
+                      onClick={() =>
+                        void run(open.runId, () => api.publish(open.runId, true))
+                      }
+                    >
+                      {acting === open.runId
+                        ? 'Publishing...'
+                        : `Yes, publish to ${view.releasing ? 'production' : 'production'} now`}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="btn small"
+                    disabled={acting !== null}
+                    onClick={() => setConfirming(open.runId)}
+                  >
+                    Publish now
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

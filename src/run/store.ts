@@ -147,6 +147,21 @@ export const runManifestSchema = z.object({
    * `--yes` means on the command line: a person looked and meant it.
    */
   releaseApprovedAt: z.string().optional(),
+
+  /**
+   * When somebody parked this rather than publishing it.
+   *
+   * A THIRD STATE, AND IT IS NOT A FAILURE. An episode can pass every check and
+   * still not be one you want out this week: the subject has gone cold, two of
+   * them cover the same ground, you want to rewrite the open. Without somewhere
+   * to put those, the only choices are publish it or leave it cluttering the
+   * list you are trying to decide from - and both are how a good episode gets
+   * published by accident.
+   *
+   * Nothing is lost by holding. It comes back the moment somebody takes it off
+   * hold, in the state it was in.
+   */
+  heldAt: z.string().optional(),
 });
 
 export type RunManifest = z.infer<typeof runManifestSchema>;
@@ -533,12 +548,33 @@ export class Run {
     if (when) {
       this.manifestData.releaseAt = when.toISOString();
       if (approvedAt) this.manifestData.releaseApprovedAt = approvedAt.toISOString();
+      // Approving takes it off the shelf, for the same reason holding
+      // withdraws an approval: the two states are exclusive.
+      delete this.manifestData.heldAt;
     } else {
       // CLEARING THE DATE CLEARS THE APPROVAL. An approval that outlived the
       // plan it was given for would let a run somebody took off the schedule
       // go out the next time it was put back on, without being asked again.
       delete this.manifestData.releaseAt;
       delete this.manifestData.releaseApprovedAt;
+    }
+    this.save();
+  }
+
+  /**
+   * Park this, or take it off the shelf.
+   *
+   * HOLDING WITHDRAWS AN APPROVAL. The two cannot both be true: something
+   * somebody deliberately set aside must not then publish itself on Thursday
+   * because it still had a date from before.
+   */
+  setHeld(held: boolean, at = new Date()): void {
+    if (held) {
+      this.manifestData.heldAt = at.toISOString();
+      delete this.manifestData.releaseAt;
+      delete this.manifestData.releaseApprovedAt;
+    } else {
+      delete this.manifestData.heldAt;
     }
     this.save();
   }

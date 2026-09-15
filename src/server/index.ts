@@ -53,12 +53,13 @@ import {
   getPlatform,
   nextDue,
   publishRunJob,
+  approveForRelease,
+  cancelRelease,
   recheckChannel,
   recordToken,
   releaseNow,
   releaseStatus,
-  scheduleRelease,
-  setPublishQueue,
+  setHold,
   setUpChannelJob,
 } from './operate';
 
@@ -308,11 +309,14 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/channel/recheck' && req.method === 'POST') {
         return send(res, 200, recheckChannel(id ?? ''));
       }
-      if (pathname === '/api/schedule/order' && req.method === 'POST') {
-        return send(res, 200, setPublishQueue(id ?? '', await readBody(req)));
+      if (pathname === '/api/channel/approve' && req.method === 'POST') {
+        return send(res, 200, approveForRelease(id ?? '', await readBody(req)));
       }
-      if (pathname === '/api/run/schedule' && req.method === 'POST') {
-        return send(res, 200, scheduleRelease(id ?? '', await readBody(req)));
+      if (pathname === '/api/run/cancel' && req.method === 'POST') {
+        return send(res, 200, cancelRelease(id ?? ''));
+      }
+      if (pathname === '/api/run/hold' && req.method === 'POST') {
+        return send(res, 200, setHold(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/publish' && req.method === 'POST') {
         return send(res, 200, publishRunJob(id ?? '', await readBody(req)));

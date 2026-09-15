@@ -261,8 +261,12 @@ export interface RunSummary {
   derivedFrom: string | null;
   durationS: number | null;
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
-  /** When this is meant to go out, for a run that was given a time. */
+  /** When this is meant to go out, for a run that was approved. */
   releaseAt: string | null;
+  /** When somebody approved it. Without this, a date is only a plan. */
+  releaseApprovedAt: string | null;
+  /** When somebody parked it. Passed every check, not wanted this week. */
+  heldAt: string | null;
   /**
    * A script that is cut into shorts and never published whole.
    *
@@ -387,6 +391,8 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     durationS,
     gate,
     releaseAt: m.releaseAt ?? null,
+    releaseApprovedAt: m.releaseApprovedAt ?? null,
+    heldAt: m.heldAt ?? null,
     isSource,
     hasAudio: fs.existsSync(path.join(run.dir, 'media', 'episode.wav')),
   };

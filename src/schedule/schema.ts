@@ -68,6 +68,27 @@ export const cadenceSchema = z.object({
    * week's work arrives spread across the week instead of in one lump.
    */
   slot: slotSchema.optional(),
+
+  /**
+   * What this channel can put out in one week.
+   *
+   * A CEILING, NOT A TARGET. Nothing fills it; it only stops approvals piling
+   * onto the same fortnight. Approving twelve shorts for a show that does three
+   * a week fills the next four weeks rather than publishing twelve in twelve
+   * days - because a cadence is a promise to somebody who follows the show, and
+   * a studio that published everything the moment it was ready would have its
+   * output decided by how fast the pipeline runs rather than by anybody.
+   *
+   * Zero for a kind means the channel does not publish that kind at all, and an
+   * approval of one is left unscheduled rather than given a day it should not
+   * have.
+   */
+  perWeek: z
+    .object({
+      episodes: z.number().int().nonnegative().default(1),
+      shorts: z.number().int().nonnegative().default(3),
+    })
+    .default({ episodes: 1, shorts: 3 }),
 });
 
 export type Cadence = z.infer<typeof cadenceSchema>;

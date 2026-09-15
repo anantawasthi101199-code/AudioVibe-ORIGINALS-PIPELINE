@@ -38,7 +38,7 @@ import { currentPlan } from '../schedule/current';
 import { dueForRelease, releaseDue } from '../publish/release';
 import { releasingEnabled } from './calendar';
 import { loadSchedule } from '../schedule/load';
-import { planRelease } from '../schedule/slots';
+import { allocate, type ItemKind, type Taken } from '../schedule/allocate';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
@@ -269,145 +269,107 @@ export const nextDue = () => {
 };
 
 /**
- * Give a batch of finished runs their release times.
+ * Approve runs to go out, and give them days within what the channel can hold.
  *
- * WHAT IT IS FOR. Ten shorts cut in one afternoon are all finished and all
- * publishable, and publishing them together is what makes a feed look like
- * somebody emptied a bucket into it. This spreads them one a day, at a
- * different hour each day, starting tomorrow.
+ * APPROVING IS A DECISION, NOT A SCHEDULE. It says "this may go out"; when is
+ * arithmetic, done here, and the answer is often "in three weeks" - because a
+ * channel that publishes three shorts a week publishes three shorts a week
+ * however many are approved at once.
  *
- * IDEMPOTENT AND REVERSIBLE. Running it again reassigns the same times, because
- * the hours are derived rather than random; clearing them puts everything back
- * to publishable-now. Neither is destructive, which is why this is a button
- * rather than something the cut does silently.
+ * PER CHANNEL, AND IT REFUSES ANYTHING ELSE. Approving one show must never
+ * reach into another's schedule, which an earlier version did by clearing
+ * "everything not in this list" across every channel at once.
+ *
+ * ALREADY-APPROVED RUNS KEEP THEIR DAYS. They are counted as capacity already
+ * spent, so approving two more adds two to the end rather than reshuffling a
+ * fortnight somebody has already read.
  */
-export const scheduleRelease = (runId: string, body: unknown) => {
-  const input = z.object({ clear: z.boolean().default(false) }).parse(body ?? {});
-
-  const source = Run.open(runId);
-  // Already sorted by story number, which is the order they were written in
-  // rather than the order somebody happened to cut them.
-  const cuts = Run.derivedFrom(runId);
-  if (!cuts.length) throw new HttpError(400, `run "${runId}" has no cuts to schedule`);
-
-  if (input.clear) {
-    for (const cut of cuts) cut.setReleaseAt(null);
-    return { scheduled: 0, cleared: cuts.length };
-  }
-
-  const schedule = loadSchedule();
-  const cadence = schedule.shows[source.manifest.personaId];
-
-  /**
-   * Which cuts get a day.
-   *
-   * ONLY THE ONES THAT COULD ACTUALLY GO OUT. A cut that is already published
-   * has nothing to wait for, and one the gate rejected can never use the day it
-   * was given - so including either leaves a hole in the rotation, and the
-   * channel is silent on a day the schedule says it published. Seven of ten
-   * stories in the first real set were gate failures, which would have been
-   * seven empty days out of ten.
-   */
-  const publishable = (cut: Run): boolean => {
-    if (cut.isComplete('publish')) return false;
-    try {
-      return cut.readArtifact('qa', z.object({ passed: z.boolean() }).passthrough()).passed;
-    } catch {
-      // No gate report yet means it has not been rendered. It is not ready to
-      // be given a day, and a later re-run of this will pick it up.
-      return false;
-    }
-  };
-
-  const pending = cuts.filter(publishable);
-  const skipped = cuts.length - pending.length;
-
-  const times = planRelease({
-    count: pending.length,
-    from: new Date(),
-    slotHour: cadence?.slot?.hour,
-    timezone: schedule.timezone,
-  });
-
-  pending.forEach((cut, i) => cut.setReleaseAt(times[i]!));
-
-  return {
-    scheduled: pending.length,
-    // NAMED RATHER THAN SILENT. "Scheduled 3" out of a set of ten is a
-    // surprise worth explaining at the moment it happens.
-    skipped,
-    first: times[0]?.toISOString() ?? null,
-    last: times[times.length - 1]?.toISOString() ?? null,
-    timezone: schedule.timezone,
-  };
-};
-
-/**
- * Set one channel's publish queue: what goes out, and in what order.
- *
- * PER CHANNEL, AND IT WAS GLOBAL, WHICH WAS WRONG. One list across every show
- * sounded tidier and is not how anybody works: you set a channel up, you look
- * at what that channel has made, you decide what that channel puts out. A list
- * mixing five shows means the three rows at the top belong to a show you are
- * not thinking about, and ticking one of them publishes to an account you did
- * not have in mind.
- *
- * IT ALSO MADE THE SCOPING WRONG IN A WAY THAT MATTERED. Clearing "everything
- * not in this list" across every channel meant arranging one show silently
- * unscheduled every other show.
- *
- * THE LIST IS THE QUEUE. A run in it gets a day; a run of this channel left out
- * has its time cleared and goes back to publishable-whenever. Other channels
- * are not touched.
- *
- * PUBLISHED RUNS FALL OUT BY THEMSELVES. Nothing here removes them: a published
- * run is no longer `ready`, so it stops being offered and stops being counted.
- * The order that remains is still the order.
- */
-export const setPublishQueue = (channelId: string, body: unknown) => {
-  const { runIds } = z.object({ runIds: z.array(z.string()) }).parse(body ?? {});
+export const approveForRelease = (channelId: string, body: unknown) => {
+  const { runIds } = z.object({ runIds: z.array(z.string()).min(1) }).parse(body ?? {});
 
   const persona = loadPersona(channelId);
   const schedule = loadSchedule();
-  const wanted = new Set(runIds);
+  const cadence = schedule.shows[channelId];
 
-  // EVERY ID MUST BELONG TO THIS CHANNEL. Otherwise arranging one show could
-  // reach into another's, which is the whole fault being fixed.
+  if (!cadence) {
+    throw new HttpError(400, `${persona.name} is not in schedule.yaml, so it has no cadence`);
+  }
+
   const foreign = runIds.filter((id) => id.split('/')[0] !== channelId);
   if (foreign.length) {
     throw new HttpError(400, `not ${persona.name}'s runs: ${foreign.join(', ')}`);
   }
 
-  // This channel's candidates only, so anything dropped from the list gets its
-  // time cleared without touching anybody else's.
-  const candidates = runs({ channelId, limit: 400 }).filter(
-    (r) => !r.isSource && (r.state === 'ready' || r.state === 'awaiting-approval')
-  );
+  const mine = runs({ channelId, limit: 400 });
+  const kindOf = (runId: string): ItemKind => {
+    const summary = mine.find((r) => r.id === runId);
+    return summary && summary.short !== null ? 'short' : 'episode';
+  };
 
-  for (const summary of candidates) {
-    if (!wanted.has(summary.id)) Run.open(summary.id).setReleaseAt(null);
-  }
+  // Weeks already spoken for stay spoken for.
+  const taken: Taken[] = mine
+    .filter((r) => r.releaseAt && !runIds.includes(r.id) && r.state !== 'published')
+    .map((r) => ({ kind: kindOf(r.id), at: new Date(r.releaseAt!) }));
 
-  const cadence = schedule.shows[channelId];
-  const times = planRelease({
-    count: runIds.length,
+  const placed = allocate({
+    cadence,
+    items: runIds.map((runId) => ({ runId, kind: kindOf(runId) })),
+    taken,
     from: new Date(),
-    slotHour: cadence?.slot?.hour,
     timezone: schedule.timezone,
   });
 
-  // SAVING IS THE APPROVAL. A person picked these, put them in this order and
-  // pressed the button, which is the same act `--yes` is on the command line -
-  // so it is recorded as a decision with a time on it, not just a date.
   const approvedAt = new Date();
-  const queued: Array<{ runId: string; releaseAt: string }> = [];
+  for (const p of placed) Run.open(p.runId).setReleaseAt(p.at, approvedAt);
 
-  runIds.forEach((runId, i) => {
-    Run.open(runId).setReleaseAt(times[i]!, approvedAt);
-    queued.push({ runId, releaseAt: times[i]!.toISOString() });
-  });
+  // A kind the channel has no capacity for gets no day at all, and saying so
+  // beats leaving somebody to wonder why it never reached the calendar.
+  const unscheduled = runIds.filter((id) => !placed.some((p) => p.runId === id));
 
-  return { queued, timezone: schedule.timezone, approvedAt: approvedAt.toISOString() };
+  return {
+    approved: placed.map((p) => ({ runId: p.runId, releaseAt: p.at.toISOString(), kind: p.kind })),
+    unscheduled,
+    perWeek: cadence.perWeek,
+    timezone: schedule.timezone,
+  };
+};
+
+/**
+ * Take something off the schedule.
+ *
+ * FROM THE CALENDAR, AND ONLY THERE. Approving is a decision made while reading
+ * one episode; cancelling is one made while looking at a month. Putting both on
+ * the same control would make a tick box mean two different things depending on
+ * which way it was going.
+ */
+export const cancelRelease = (runId: string) => {
+  const run = Run.open(runId);
+
+  if (run.isComplete('publish')) {
+    throw new HttpError(400, 'that is already published, so there is nothing to cancel');
+  }
+  if (!run.manifest.releaseAt) throw new HttpError(400, 'that is not scheduled');
+
+  run.setReleaseAt(null);
+  return { ok: true as const, runId };
+};
+
+/**
+ * Park something, or take it off the shelf.
+ *
+ * An episode can pass every check and still not be one to publish this week.
+ * Without somewhere to put those, the only choices are publish it or leave it
+ * cluttering the list you are deciding from - and both are how something goes
+ * out by accident.
+ */
+export const setHold = (runId: string, body: unknown) => {
+  const { held } = z.object({ held: z.boolean() }).parse(body ?? {});
+  const run = Run.open(runId);
+
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
+
+  run.setHeld(held);
+  return { ok: true as const, runId, held };
 };
 
 /**

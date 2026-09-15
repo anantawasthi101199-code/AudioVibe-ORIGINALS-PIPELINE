@@ -1821,3 +1821,199 @@ table.runs .num {
     margin-left: 0.3rem;
   }
 }
+
+/* --- Sub-tabs, for the states within one channel -------------------------- */
+
+.subtabs {
+  display: flex;
+  gap: 0.2rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.subtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-faint);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.subtab:hover {
+  color: var(--text-dim);
+}
+
+.subtab.on {
+  color: var(--text);
+  border-bottom-color: var(--text-dim);
+}
+
+.subtab-n {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+/* --- Rows on the publishing page ------------------------------------------ */
+
+.pub-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-left: 0.9rem;
+  border-top: 1px solid var(--line-soft);
+  background: var(--ink-850);
+}
+
+.order > div:first-child .pub-line,
+.order > div:first-child .pub-row {
+  border-top: 0;
+}
+
+.pub-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.9rem;
+  border-top: 1px solid var(--line-soft);
+  background: var(--ink-850);
+}
+
+.pub-line .pub-row {
+  border-top: 0;
+  padding-left: 0;
+}
+
+/* DECIDED ALREADY. Approved and held rows are readable and visibly not the
+   thing you are being asked about. */
+.pub-row.dim .queue-title {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.pub-row.dim {
+  background: var(--ink-900);
+}
+
+/* The bar that appears when something is chosen. */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 0.7rem;
+  border: 1px solid var(--pass-dim);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--pass) 7%, var(--ink-850));
+  font-size: 0.85rem;
+}
+
+/* --- The calendar and its stack ------------------------------------------- */
+
+.cal-layout {
+  display: grid;
+  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.stack-panel {
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-850);
+  max-height: 44rem;
+  overflow-y: auto;
+}
+
+.stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stack-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--ch);
+  border-radius: var(--radius-sm);
+  background: var(--ink-900);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.stack-item:hover {
+  border-color: var(--line);
+  border-left-color: var(--ch);
+  background: var(--ink-800);
+}
+
+.stack-item.busy {
+  opacity: 0.5;
+}
+
+.stack-n {
+  flex: none;
+  width: 1.3rem;
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.stack-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.stack-title {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* WHICH CHANNEL, ON EVERY ROW. A queue across five shows where you cannot tell
+   whose is whose is a queue you have to open one at a time. */
+.stack-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-dim);
+  font-size: 0.73rem;
+}
+
+.stack-when {
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+@media (max-width: 900px) {
+  .cal-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stack-panel {
+    max-height: 18rem;
+  }
+}

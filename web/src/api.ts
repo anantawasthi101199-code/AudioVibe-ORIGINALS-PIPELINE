@@ -78,6 +78,8 @@ export interface RunSummary {
   durationS: number | null;
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
   releaseAt: string | null;
+  releaseApprovedAt: string | null;
+  heldAt: string | null;
   isSource: boolean;
   hasAudio: boolean;
 }
@@ -170,16 +172,21 @@ export interface CalendarEntry {
   channelName: string;
   title: string;
   kind: 'episode' | 'short';
-  state: 'published' | 'approved' | 'planned';
+  state: 'published' | 'approved';
   at: string;
   durationS: number | null;
   short: number | null;
+}
+
+export interface QueuedItem extends CalendarEntry {
+  position: number;
 }
 
 export interface CalendarView {
   month: string;
   timezone: string;
   days: Array<{ date: string; entries: CalendarEntry[] }>;
+  queue: QueuedItem[];
   channels: Array<{ id: string; name: string; slot: string | null }>;
   releasing: boolean;
 }
@@ -329,30 +336,33 @@ export const api = {
   createSeries: (id: string) =>
     call<{ jobId: string }>(`/api/channel/series?id=${encodeURIComponent(id)}`, { method: 'POST' }),
 
-  scheduleRelease: (id: string, clear = false) =>
-    call<{
-      scheduled: number;
-      skipped?: number;
-      cleared?: number;
-      first?: string | null;
-      last?: string | null;
-      timezone?: string;
-    }>(
-      `/api/run/schedule?id=${encodeURIComponent(id)}`,
-      { method: 'POST', body: JSON.stringify({ clear }) }
-    ),
-
   recheck: (channelId: string) =>
     call<{ rechecked: true; changed: Array<{ runId: string; from: boolean; to: boolean }> }>(
       `/api/channel/recheck?id=${encodeURIComponent(channelId)}`,
       { method: 'POST' }
     ),
 
-  setPublishQueue: (channelId: string, runIds: string[]) =>
-    call<{ queued: Array<{ runId: string; releaseAt: string }>; timezone: string }>(
-      `/api/schedule/order?id=${encodeURIComponent(channelId)}`,
-      { method: 'POST', body: JSON.stringify({ runIds }) }
-    ),
+  // NOT `approve`: that already means releasing a held run so it can be
+  // rendered. This one approves finished episodes to go out.
+  approveForRelease: (channelId: string, runIds: string[]) =>
+    call<{
+      approved: Array<{ runId: string; releaseAt: string; kind: 'episode' | 'short' }>;
+      unscheduled: string[];
+      perWeek: { episodes: number; shorts: number };
+      timezone: string;
+    }>(`/api/channel/approve?id=${encodeURIComponent(channelId)}`, {
+      method: 'POST',
+      body: JSON.stringify({ runIds }),
+    }),
+
+  cancelRelease: (runId: string) =>
+    call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
+
+  setHold: (runId: string, held: boolean) =>
+    call<{ ok: true; held: boolean }>(`/api/run/hold?id=${encodeURIComponent(runId)}`, {
+      method: 'POST',
+      body: JSON.stringify({ held }),
+    }),
 
   discard: (id: string) =>
     call<{ ok: true }>(`/api/run?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),

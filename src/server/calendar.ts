@@ -23,7 +23,7 @@ import { loadSchedule } from '../schedule/load';
 import { describeSlot } from '../schedule/slots';
 
 export type EntryKind = 'episode' | 'short';
-export type EntryState = 'published' | 'approved' | 'planned';
+export type EntryState = 'published' | 'approved';
 
 export interface CalendarEntry {
   runId: string;
@@ -31,10 +31,7 @@ export interface CalendarEntry {
   channelName: string;
   title: string;
   kind: EntryKind;
-  /**
-   * `published` is out. `approved` will go out by itself at this time.
-   * `planned` has a date but nobody has said yes, so it will not.
-   */
+  /** `published` is out; `approved` is going out at this time. Nothing else. */
   state: EntryState;
   at: string;
   durationS: number | null;
@@ -47,11 +44,26 @@ export interface CalendarDay {
   entries: CalendarEntry[];
 }
 
+/**
+ * The queue, as a stack: what goes out next, and next, and next.
+ *
+ * ORDERED ACROSS EVERY CHANNEL, because the question it answers is "what is
+ * about to happen" and that has one answer for the whole studio. The grid shows
+ * the shape of a month; this shows the order, which is the thing you act on -
+ * and it is the only place something can be taken back out.
+ */
+export interface QueuedItem extends CalendarEntry {
+  /** 1 is next. */
+  position: number;
+}
+
 export interface CalendarView {
   /** `YYYY-MM`, the month this covers. */
   month: string;
   timezone: string;
   days: CalendarDay[];
+  /** Everything approved and not yet out, soonest first, across all channels. */
+  queue: QueuedItem[];
   /** Every channel that appears, so the interface can colour them. */
   channels: Array<{ id: string; name: string; slot: string | null }>;
   /** Whether anything is actually going to publish on its own. */
@@ -70,6 +82,8 @@ export const getCalendar = (month?: string): CalendarView => {
   const target = month ?? now.toLocaleDateString('en-CA', { timeZone: tz }).slice(0, 7);
 
   const entries: CalendarEntry[] = [];
+  /** Approved and not yet out, whatever month it falls in. */
+  const allApproved: CalendarEntry[] = [];
   const channels = new Map<string, { id: string; name: string; slot: string | null }>();
 
   for (const id of Run.list()) {
@@ -79,7 +93,7 @@ export const getCalendar = (month?: string): CalendarView => {
     // WHEN IT HAPPENED, OR WHEN IT WILL. A published run's own timestamp is the
     // truth about it; anything else has only a plan.
     let at: string | null = null;
-    let state: EntryState = 'planned';
+    let state: EntryState = 'approved';
 
     if (run.isComplete('publish')) {
       try {
@@ -89,12 +103,15 @@ export const getCalendar = (month?: string): CalendarView => {
         // An unreadable publish artifact means the publish cannot be dated. It
         // is left off the grid rather than guessed onto a day.
       }
-    } else if (m.releaseAt) {
+    } else if (m.releaseAt && m.releaseApprovedAt) {
+      // APPROVED ONLY. A date without a decision behind it is not something
+      // anybody said would happen, and drawing it on a calendar of things that
+      // are going to happen is the calendar lying.
       at = m.releaseAt;
-      state = m.releaseApprovedAt ? 'approved' : 'planned';
+      state = 'approved';
     }
 
-    if (!at || dayIn(at, tz).slice(0, 7) !== target) continue;
+    if (!at) continue;
 
     let kind: EntryKind = 'episode';
     let isSource = false;
@@ -141,7 +158,7 @@ export const getCalendar = (month?: string): CalendarView => {
       /* no audio yet */
     }
 
-    entries.push({
+    const entry: CalendarEntry = {
       runId: id,
       channelId: m.personaId,
       channelName,
@@ -151,7 +168,10 @@ export const getCalendar = (month?: string): CalendarView => {
       at,
       durationS,
       short: m.short ?? null,
-    });
+    };
+
+    if (state === 'approved') allApproved.push(entry);
+    if (dayIn(at, tz).slice(0, 7) === target) entries.push(entry);
   }
 
   // Grouped by day, each day's entries in time order.
@@ -168,10 +188,22 @@ export const getCalendar = (month?: string): CalendarView => {
     }))
     .sort((a, b) => a.date.localeCompare(b.date));
 
+  /**
+   * The stack, which is NOT limited to the month on screen.
+   *
+   * "What goes out next" does not stop being the answer because you paged
+   * forward to look at October, and a queue that emptied when you changed
+   * month would be a queue you could not trust.
+   */
+  const queue: QueuedItem[] = allApproved
+    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
+    .map((entry, i) => ({ ...entry, position: i + 1 }));
+
   return {
     month: target,
     timezone: tz,
     days,
+    queue,
     channels: [...channels.values()].sort((a, b) => a.name.localeCompare(b.name)),
     releasing: releasingEnabled(),
   };

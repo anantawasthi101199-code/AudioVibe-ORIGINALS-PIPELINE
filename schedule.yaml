@@ -31,6 +31,9 @@ shows:
     everyDays: 3
     # Monday morning, on the way to work, for a show about companies.
     slot: { day: mon, hour: 7 }
+    # A ceiling, not a target. Approving twenty shorts fills the next seven
+    # weeks rather than putting twenty out in twenty days.
+    perWeek: { episodes: 2, shorts: 3 }
     # Two shorts per episode, cut on the days between episodes. They are cheap,
     # they reach people who have never heard the show, and they are the only
     # thing here that can publish on a day no episode does.
@@ -45,6 +48,7 @@ shows:
     everyDays: 7
     # Friday evening. A told story is what somebody puts on when the week ends.
     slot: { day: fri, hour: 18 }
+    perWeek: { episodes: 1, shorts: 2 }
     shortsPerEpisode: 2
     autoPublish: false
 
@@ -54,6 +58,10 @@ shows:
     everyDays: 7
     # Late, which is the point of the show.
     slot: { day: wed, hour: 21 }
+    # No shorts at all: a short cut from a serial either spoils it or makes no
+    # sense out of order. Zero means an approval of one is left unscheduled
+    # rather than given a day it should not have.
+    perWeek: { episodes: 1, shorts: 0 }
     # None. A short cut from a serial episode either spoils it or makes no
     # sense out of order, and both are worse than not making one.
     shortsPerEpisode: 0
@@ -65,6 +73,8 @@ shows:
   myths-of-the-world:
     everyDays: 7
     slot: { day: sun, hour: 10 }
+    # One myth told properly on Sunday, three anthology shorts in the week.
+    perWeek: { episodes: 1, shorts: 3 }
     # None from an episode. This show's short form comes from `ten-stories`
     # instead, which writes shorts that were built to stand alone rather than
     # cutting a minute out of a told story and hoping it survives.
@@ -78,6 +88,9 @@ shows:
     everyDays: 7
     # Tuesday morning. Nothing symbolic; it is the day nothing else goes out.
     slot: { day: tue, hour: 8 }
+    # The evidence work here is the slowest in the studio, so three a week is
+    # already ambitious. Eight approved shorts become just under three weeks.
+    perWeek: { episodes: 1, shorts: 3 }
     shortsPerEpisode: 1
     autoPublish: false
 
