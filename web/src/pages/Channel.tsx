@@ -66,11 +66,11 @@ const Setup = ({
     });
   };
 
-  const create = async () => {
+  const create = async (redraw = false) => {
     setError(null);
     try {
-      const { jobId } = await api.setUpChannel(channel.id, email, password);
-      watch(jobId, 'account');
+      const { jobId } = await api.setUpChannel(channel.id, email, password, redraw);
+      watch(jobId, redraw ? 'artwork' : 'account');
     } catch (e) {
       setError((e as Error).message);
     }
@@ -144,9 +144,44 @@ const Setup = ({
           <span className={`step-n${account.exists ? ' done' : ''}`}>1</span>
           <div className="stack" style={{ gap: '0.5rem', flex: 1, minWidth: 0 }}>
             {account.exists ? (
-              <span className="muted">
-                Account <strong>@{account.handle}</strong>
-              </span>
+              <div className="stack" style={{ gap: '0.5rem' }}>
+                <span className="muted">
+                  Account <strong>@{account.handle}</strong>
+                </span>
+
+                {/*
+                  A CHANNEL'S FACE HAS TO BE CHANGEABLE. Reuse is the default
+                  and should be - it must not change because somebody re-ran a
+                  command - but deleting two files by hand is not a way to
+                  change it deliberately, it is a thing you have to know.
+                */}
+                <div className="row" style={{ gap: '0.5rem' }}>
+                  <input
+                    className="field"
+                    style={{ maxWidth: '14rem' }}
+                    placeholder="Admin email"
+                    autoComplete="off"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <input
+                    className="field"
+                    style={{ maxWidth: '11rem' }}
+                    type="password"
+                    placeholder="Admin password"
+                    autoComplete="off"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    className="btn small"
+                    disabled={!email || !password || busy !== null}
+                    onClick={() => void create(true)}
+                  >
+                    {busy === 'artwork' ? 'Redrawing...' : 'Redraw and re-upload artwork'}
+                  </button>
+                </div>
+              </div>
             ) : (
               <>
                 <div className="row" style={{ gap: '0.5rem' }}>
@@ -170,7 +205,7 @@ const Setup = ({
                   <button
                     className="btn spend"
                     disabled={!email || !password || busy !== null}
-                    onClick={create}
+                    onClick={() => void create()}
                   >
                     {busy === 'account' ? 'Creating...' : 'Create account'}
                   </button>

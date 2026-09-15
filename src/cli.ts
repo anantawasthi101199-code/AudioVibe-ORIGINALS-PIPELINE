@@ -94,9 +94,12 @@ Commands
                                  away. Spends without anybody reading it first.
   approve --run <id>             Release a held run, then render and gate it.
                                  Nothing is voiced until this.
-  channel-setup --show <id>      Create this channel on the platform, once:
+  channel-setup --show <id> [--redraw]
+                                 Create this channel on the platform, once:
                                  account, profile, avatar, cover. Needs
-                                 AUDIOVIBE_ADMIN_EMAIL and _PASSWORD.
+                                 AUDIOVIBE_ADMIN_EMAIL and _PASSWORD. Safe to
+                                 re-run; --redraw replaces the artwork rather
+                                 than reusing what is on disk.
   channel-token --show <id> --token <jwt>
                                  Record the publishing credential a person
                                  minted on the API server. A channel cannot
@@ -579,6 +582,7 @@ const cmdChannelSetup = async (argv: string[]): Promise<number> => {
 
   try {
     const result = await setUpChannel(showId, email, password, {
+      redraw: flag(argv, 'redraw'),
       log: (message, stage) => {
         if (stage) ui.section(stage);
         ui.line(message);

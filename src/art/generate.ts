@@ -30,7 +30,8 @@ import fs from 'fs';
 import path from 'path';
 import { Persona } from '../canon/schema';
 import { openAiConfig } from '../config';
-import { paletteFor, renderCover } from './cover';
+import { paletteFor } from './cover';
+import { renderAvatar, renderChannelCover } from './channel';
 
 /** Square, because every surface that shows an avatar crops to one. */
 export const AVATAR_SIZE = 1024;
@@ -220,27 +221,20 @@ export const artworkFor = async (
   const generated: ArtKind[] = [];
 
   /**
-   * The drawn version: the show's wordmark on its own colour.
+   * The drawn version: a monogram, and a banner that stays out of the way.
    *
-   * A perfectly good profile mark, and the same renderer every episode cover
-   * uses - so a channel wearing it is consistent with its own catalogue rather
-   * than visibly degraded.
+   * IT USED TO REUSE THE EPISODE RENDERER, and produced two things that
+   * shipped: an avatar that was a plain coloured square, because an avatar has
+   * no episode title and that layout draws nothing else large; and a banner
+   * with the show's name along the bottom left, which is exactly where the app
+   * overlays the profile picture and handle. art/channel.ts is the layout these
+   * two actually need.
    */
   const draw = (kind: ArtKind, out: string): string => {
-    renderCover(
-      {
-        showName: persona.name,
-        // No title on an avatar. Unreadable at 64 pixels, and the app prints
-        // the channel's name beside it regardless.
-        title: kind === 'avatar' ? '' : persona.name,
-        palette: paletteFor(persona.id),
-      },
-      out,
-      kind === 'avatar'
-        ? { width: AVATAR_SIZE, height: AVATAR_SIZE }
-        : { width: COVER_SIZE.width, height: COVER_SIZE.height }
-    );
-    return out;
+    const input = { name: persona.name, palette: paletteFor(persona.id) };
+    return kind === 'avatar'
+      ? renderAvatar(input, out, AVATAR_SIZE)
+      : renderChannelCover(input, out, COVER_SIZE);
   };
 
   const make = async (kind: ArtKind): Promise<string> => {

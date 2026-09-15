@@ -36,6 +36,15 @@ export interface SetupDeps {
   log?: (message: string, stage?: string) => void;
   /** Where the channel's artwork is kept, so a rerun reuses rather than remakes. */
   artDir?: string;
+  /**
+   * Draw the artwork again even though it is already on disk.
+   *
+   * REUSE IS THE DEFAULT AND SHOULD BE: a channel's face must not change
+   * because somebody re-ran a setup command. But there has to be a way to
+   * change it deliberately, and deleting two files by hand is not a way - it is
+   * a thing you have to know.
+   */
+  redraw?: boolean;
 }
 
 export interface SetupResult {
@@ -150,7 +159,7 @@ export const setUpChannel = async (
   const haveBoth = fs.existsSync(avatarPath) && fs.existsSync(coverPath);
 
   let generated: string[] = [];
-  if (haveBoth) {
+  if (haveBoth && !deps.redraw) {
     log('reusing the artwork already on disk', 'artwork');
   } else {
     const art = await artworkFor(persona, artDir, {

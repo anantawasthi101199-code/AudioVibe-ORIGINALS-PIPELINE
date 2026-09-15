@@ -69,7 +69,11 @@ export const getPlatform = () => {
  */
 export const setUpChannelJob = (channelId: string, body: unknown) => {
   const input = z
-    .object({ adminEmail: z.string().min(1), adminPassword: z.string().min(1) })
+    .object({
+      adminEmail: z.string().min(1),
+      adminPassword: z.string().min(1),
+      redraw: z.boolean().default(false),
+    })
     .parse(body ?? {});
 
   const persona = loadPersona(channelId);
@@ -83,6 +87,7 @@ export const setUpChannelJob = (channelId: string, body: unknown) => {
     runId: channelId,
     work: async (report) => {
       const result = await setUpChannel(channelId, input.adminEmail, input.adminPassword, {
+        redraw: input.redraw,
         log: (message, stage) => report(stage ?? 'account', message),
       });
 

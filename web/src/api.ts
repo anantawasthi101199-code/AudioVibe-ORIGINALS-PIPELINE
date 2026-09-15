@@ -321,10 +321,10 @@ export const api = {
       body: JSON.stringify({ confirmed }),
     }),
 
-  setUpChannel: (id: string, adminEmail: string, adminPassword: string) =>
+  setUpChannel: (id: string, adminEmail: string, adminPassword: string, redraw = false) =>
     call<{ jobId: string }>(`/api/channel/setup?id=${encodeURIComponent(id)}`, {
       method: 'POST',
-      body: JSON.stringify({ adminEmail, adminPassword }),
+      body: JSON.stringify({ adminEmail, adminPassword, redraw }),
     }),
 
   recordToken: (id: string, token: string) =>
