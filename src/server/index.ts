@@ -61,6 +61,7 @@ import {
   releaseStatus,
   setHold,
   setUpChannelJob,
+  verifyPublished,
 } from './operate';
 
 /** Where the built interface lives, when it has been built. */
@@ -274,6 +275,7 @@ export const createServer = (): http.Server =>
         return send(res, 200, getCalendar(url.searchParams.get('month') ?? undefined));
       }
       if (pathname === '/api/release') return send(res, 200, releaseStatus());
+      if (pathname === '/api/run/verify') return send(res, 200, await verifyPublished(id ?? ''));
       if (pathname === '/api/next') return send(res, 200, nextDue());
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
       if (pathname === '/api/runs') return send(res, 200, getRuns(url.searchParams.get('channel')));

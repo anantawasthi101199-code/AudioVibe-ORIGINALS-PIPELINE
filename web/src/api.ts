@@ -355,6 +355,19 @@ export const api = {
       body: JSON.stringify({ runIds }),
     }),
 
+  verifyPublished: (runId: string) =>
+    call<{
+      published: boolean;
+      checked?: boolean;
+      live?: boolean;
+      audioId?: string;
+      publishedAt?: string | null;
+      title?: string | null;
+      isAi?: boolean;
+      status?: string | null;
+      reason?: string;
+    }>(`/api/run/verify?id=${encodeURIComponent(runId)}`),
+
   cancelRelease: (runId: string) =>
     call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
 

@@ -17,7 +17,15 @@
  * an outlined one is going to be, a faint one has a date nobody approved.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { api, clock, until, when, type CalendarView, type CalendarEntry } from '../api';
+import {
+  api,
+  clock,
+  until,
+  watchJob,
+  when,
+  type CalendarView,
+  type CalendarEntry,
+} from '../api';
 import { ErrorNote } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
 
@@ -89,7 +97,15 @@ const Entry = ({
     }}
     title={`${entry.channelName} · ${entry.kind} · ${entry.title}`}
   >
-    <span className="cal-dot" />
+    {/* A tick, not a dot, once it is out: the one state that is a fact rather
+        than an intention should say so without needing the colour read. */}
+    {entry.state === 'published' ? (
+      <span className="cal-tick" aria-label="published">
+        ✓
+      </span>
+    ) : (
+      <span className="cal-dot" />
+    )}
     <span className="cal-entry-text">{entry.title}</span>
   </button>
 );
@@ -101,8 +117,13 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
   const [open, setOpen] = useState<CalendarEntry | null>(null);
   const [acting, setActing] = useState<string | null>(null);
   const [confirming, setConfirming] = useState<string | null>(null);
+  /** What the publish is doing right now, so the button is never silent. */
+  const [step, setStep] = useState<string | null>(null);
+  const [checked, setChecked] = useState<Awaited<ReturnType<typeof api.verifyPublished>> | null>(
+    null
+  );
 
-  /** Something that changes the queue, then reloads the month. */
+  /** Something that finishes at once: cancelling. */
   const run = async (runId: string, fn: () => Promise<unknown>) => {
     setActing(runId);
     setError(null);
@@ -116,6 +137,47 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
     } finally {
       setActing(null);
     }
+  };
+
+  /**
+   * Publish, and wait for it to actually happen.
+   *
+   * PUBLISHING IS A JOB, NOT A REQUEST. The call returns a job id the moment
+   * the upload starts, so awaiting it and reloading showed the calendar exactly
+   * as it was - the episode was still mid-transcode - and the button looked
+   * broken. It watches the job through and reloads when it is done, so the
+   * entry moves to today and turns solid where you can see it.
+   */
+  const publishNow = (runId: string) => {
+    setActing(runId);
+    setError(null);
+    setStep('starting');
+
+    api
+      .publish(runId, true)
+      .then(({ jobId }) =>
+        watchJob(jobId, {
+          onEvent: (e) => setStep(e.message),
+          onDone: async (r) => {
+            setStep(null);
+            setActing(null);
+            setConfirming(null);
+
+            if (r.error) {
+              setError(r.error);
+              return;
+            }
+
+            setOpen(null);
+            await load(month);
+          },
+        })
+      )
+      .catch((e: Error) => {
+        setError(e.message);
+        setActing(null);
+        setStep(null);
+      });
   };
 
   const load = useCallback(
@@ -132,6 +194,19 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
 
   useEffect(() => {
     void load(month);
+
+    /*
+     * RE-READ ON A TIMER, because the other way something reaches this grid is
+     * the releaser publishing it on its own at eight in the morning. Without
+     * this, a calendar left open all day would still be showing yesterday's
+     * answer, and the entry that went out at 08:00 would sit there outlined as
+     * though it were still to come.
+     *
+     * A minute: nothing here changes faster than that, and the whole month is
+     * a few file reads.
+     */
+    const timer = window.setInterval(() => void load(month), 60_000);
+    return () => window.clearInterval(timer);
   }, [load, month]);
 
   if (!view) {
@@ -249,7 +324,10 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
                   <button
                     className={`stack-item${acting === q.runId ? ' busy' : ''}`}
                     style={{ '--ch': colourFor(q.channelId) } as React.CSSProperties}
-                    onClick={() => setOpen(q)}
+                    onClick={() => {
+                      setChecked(null);
+                      setOpen(q);
+                    }}
                   >
                     <span className="stack-n">{q.position}</span>
                     <span className="stack-body">
@@ -288,7 +366,14 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
             >
               <span className="cal-date">{Number(date.slice(8))}</span>
               {entries.map((e) => (
-                <Entry key={e.runId} entry={e} onOpen={setOpen} />
+                <Entry
+                  key={e.runId}
+                  entry={e}
+                  onOpen={(entry) => {
+                    setChecked(null);
+                    setOpen(entry);
+                  }}
+                />
               ))}
             </div>
           );
@@ -343,6 +428,56 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
 
             <ErrorNote>{error}</ErrorNote>
 
+            {step && (
+              <p className="muted tiny">
+                <span className="pill live">
+                  <span className="dot" />
+                  {step}
+                </span>
+              </p>
+            )}
+
+            {/*
+              ASK THE PLATFORM, rather than believing this studio's own note.
+              Between the upload and a playable card are a transcode, a safety
+              check and a fan-out, any of which can leave a row that exists and
+              is not playable - and the studio would report it as published
+              forever, because its own file says so.
+            */}
+            {open.state === 'published' && (
+              <div className="row" style={{ gap: '0.5rem' }}>
+                <button
+                  className="btn ghost small"
+                  onClick={() =>
+                    void api
+                      .verifyPublished(open.runId)
+                      .then(setChecked)
+                      .catch((e: Error) => setError(e.message))
+                  }
+                >
+                  Check it is live
+                </button>
+
+                {checked?.live && (
+                  <>
+                    <span className="pill pass">live on the platform</span>
+                    {checked.isAi ? (
+                      <span className="pill pass">AI label on</span>
+                    ) : (
+                      <span className="pill fail">no AI label</span>
+                    )}
+                    {checked.status && <span className="pill">{checked.status}</span>}
+                  </>
+                )}
+                {checked && checked.checked && !checked.live && (
+                  <span className="pill fail">{checked.reason}</span>
+                )}
+                {checked && checked.checked === false && (
+                  <span className="pill hold">could not check: {checked.reason}</span>
+                )}
+              </div>
+            )}
+
             <div className="row">
               <PlayButton id={open.runId} src={api.audioUrl(open.runId)} />
               <button className="btn ghost small" onClick={() => go(`/r/${open.runId}`)}>
@@ -381,13 +516,9 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
                     <button
                       className="btn spend small"
                       disabled={acting !== null}
-                      onClick={() =>
-                        void run(open.runId, () => api.publish(open.runId, true))
-                      }
+                      onClick={() => publishNow(open.runId)}
                     >
-                      {acting === open.runId
-                        ? 'Publishing...'
-                        : `Yes, publish to ${view.releasing ? 'production' : 'production'} now`}
+                      {acting === open.runId ? 'Publishing...' : 'Yes, publish it now'}
                     </button>
                   </>
                 ) : (

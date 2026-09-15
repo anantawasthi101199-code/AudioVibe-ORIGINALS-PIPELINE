@@ -355,6 +355,86 @@ export const cancelRelease = (runId: string) => {
 };
 
 /**
+ * Ask the platform whether an episode is really there.
+ *
+ * WHY NOT TRUST THE PUBLISH. The publish returns an id and this studio writes
+ * it down, and that is one system's word for what another system did. Between
+ * them are an upload, a transcode, a safety check and a fan-out, any of which
+ * can leave a row that exists and is not playable - and the studio would go on
+ * reporting it as published forever, because its own file says so.
+ *
+ * SO IT ASKS. One GET against the public endpoint a listener would hit, which
+ * is the same question a listener asks by tapping the card.
+ */
+export const verifyPublished = async (runId: string) => {
+  const run = Run.open(runId);
+
+  if (!run.isComplete('publish')) {
+    return { published: false as const, reason: 'this studio has not published it' };
+  }
+
+  const artifact = run.readArtifact(
+    'publish',
+    z.object({ audioId: z.string(), publishedAt: z.string().optional() }).passthrough()
+  );
+
+  const platform = getPlatform();
+  if (!platform.configured) {
+    return { published: true as const, checked: false as const, audioId: artifact.audioId };
+  }
+
+  try {
+    const res = await fetch(`${platform.url}/api/audio/${artifact.audioId}`);
+    const body = (await res.json().catch(() => null)) as {
+      data?: { audio?: Record<string, unknown> } | Record<string, unknown>;
+    } | null;
+
+    if (res.status === 404) {
+      return {
+        published: true as const,
+        checked: true as const,
+        live: false as const,
+        audioId: artifact.audioId,
+        reason: 'the platform has no such audio',
+      };
+    }
+    if (!res.ok) {
+      return {
+        published: true as const,
+        checked: true as const,
+        live: false as const,
+        audioId: artifact.audioId,
+        reason: `the platform answered ${res.status}`,
+      };
+    }
+
+    const audio = ((body?.data as { audio?: Record<string, unknown> })?.audio ??
+      body?.data ??
+      {}) as Record<string, unknown>;
+
+    return {
+      published: true as const,
+      checked: true as const,
+      live: true as const,
+      audioId: artifact.audioId,
+      publishedAt: artifact.publishedAt ?? null,
+      title: typeof audio.title === 'string' ? audio.title : null,
+      // The label a listener sees. Worth confirming from the platform rather
+      // than assuming, since it is the one claim this studio makes to everybody.
+      isAi: audio.is_ai_generated === true,
+      status: typeof audio.status === 'string' ? audio.status : null,
+    };
+  } catch (err) {
+    return {
+      published: true as const,
+      checked: false as const,
+      audioId: artifact.audioId,
+      reason: (err as Error).message,
+    };
+  }
+};
+
+/**
  * Park something, or take it off the shelf.
  *
  * An episode can pass every check and still not be one to publish this week.

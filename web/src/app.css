@@ -2017,3 +2017,17 @@ table.runs .num {
     max-height: 18rem;
   }
 }
+
+/* A published entry is a fact, not an intention, and says so without colour. */
+.cal-tick {
+  flex: none;
+  width: 8px;
+  color: var(--ch);
+  font-size: 0.72rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.cal-entry.published .cal-entry-text {
+  font-weight: 500;
+}
