@@ -215,6 +215,18 @@ export const clerkConfig = () => ({
  * Set FOUNDRY_SCREENER_MODEL to an empty string to turn it off and send every
  * claim straight to the strong model.
  */
+/**
+ * The OpenAI key on its own, for things that are not a chat model.
+ *
+ * Image generation needs the key and nothing else - no model default, no
+ * temperature rules, none of what verifierConfig carries - and reaching for
+ * verifierConfig to get at its apiKey would tie a channel's artwork to the
+ * verification model's configuration for no reason.
+ */
+export const openAiConfig = (): { apiKey: string } => ({
+  apiKey: required('OPENAI_API_KEY'),
+});
+
 export const screenerConfig = (): { apiKey: string; model: string } | null => {
   const model = process.env.FOUNDRY_SCREENER_MODEL ?? 'gpt-5-mini';
   if (!model.trim()) return null;
