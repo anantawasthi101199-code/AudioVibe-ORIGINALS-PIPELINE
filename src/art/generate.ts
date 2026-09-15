@@ -46,6 +46,28 @@ export const COVER_SIZE = { width: 1536, height: 1024 };
 
 export type ArtKind = 'avatar' | 'cover';
 
+/**
+ * Which image model, and how hard it should try.
+ *
+ * THE FREE OPTION IS ALREADY HERE AND IS THE FALLBACK. `FOUNDRY_IMAGE=off`
+ * skips generation entirely and draws every channel's artwork with the same
+ * renderer that makes episode covers - deterministic, instant, and costing
+ * nothing. That is a real choice rather than a degraded one: the drawn art is
+ * what every episode cover in this studio already looks like, so a channel
+ * using it is consistent with its own catalogue.
+ *
+ * Between the two: `low` on gpt-image-1 is a few pence for a whole studio and
+ * is genuinely usable for a mark seen at 64 pixels. `high` costs roughly an
+ * order of magnitude more and is worth it for a channel somebody has decided
+ * deserves it, not as a default nobody chose.
+ */
+export const imageModel = (): string => process.env.FOUNDRY_IMAGE_MODEL ?? 'gpt-image-1';
+
+export const imageQuality = (): string => process.env.FOUNDRY_IMAGE_QUALITY ?? 'medium';
+
+/** Whether to generate at all, or draw everything and spend nothing. */
+export const imagesEnabled = (): boolean => (process.env.FOUNDRY_IMAGE ?? 'on') !== 'off';
+
 export class ImageError extends Error {
   constructor(message: string) {
     super(message);
@@ -144,14 +166,21 @@ export const generateArt = async (
     'https://api.openai.com/v1/images/generations',
     { authorization: `Bearer ${cfg.apiKey}` },
     {
-      model: 'gpt-image-1',
+      model: imageModel(),
       prompt: promptFor(persona, kind),
       size,
       n: 1,
-      // A channel's face is looked at more than any single episode's cover, and
-      // it is generated once. This is the one place in the studio where the
-      // expensive setting is the cheap decision.
-      quality: 'high',
+      // MEDIUM, AND IT WAS HIGH, WHICH WAS AN OVER-REACH WITH A COMMENT ON IT.
+      //
+      // High is roughly an order of magnitude dearer than low on this model,
+      // and the thing being bought is a mark seen at 64 pixels in a feed. What
+      // makes an avatar work at that size is a bold silhouette and high
+      // contrast, which the prompt asks for and which no quality tier supplies.
+      //
+      // FOUNDRY_IMAGE_QUALITY moves it. `low` is a few pence for a whole studio
+      // and is genuinely usable; `high` is there for a channel somebody has
+      // decided is worth it.
+      quality: imageQuality(),
     }
   );
 
@@ -190,35 +219,46 @@ export const artworkFor = async (
 ): Promise<{ avatar: string; cover: string; generated: ArtKind[] }> => {
   const generated: ArtKind[] = [];
 
+  /**
+   * The drawn version: the show's wordmark on its own colour.
+   *
+   * A perfectly good profile mark, and the same renderer every episode cover
+   * uses - so a channel wearing it is consistent with its own catalogue rather
+   * than visibly degraded.
+   */
+  const draw = (kind: ArtKind, out: string): string => {
+    renderCover(
+      {
+        showName: persona.name,
+        // No title on an avatar. Unreadable at 64 pixels, and the app prints
+        // the channel's name beside it regardless.
+        title: kind === 'avatar' ? '' : persona.name,
+        palette: paletteFor(persona.id),
+      },
+      out,
+      kind === 'avatar'
+        ? { width: AVATAR_SIZE, height: AVATAR_SIZE }
+        : { width: COVER_SIZE.width, height: COVER_SIZE.height }
+    );
+    return out;
+  };
+
   const make = async (kind: ArtKind): Promise<string> => {
     const out = path.join(dir, `${kind}.png`);
 
+    if (!imagesEnabled()) {
+      deps.onProgress?.(`drawing the ${kind} (FOUNDRY_IMAGE=off)`);
+      return draw(kind, out);
+    }
+
     try {
-      deps.onProgress?.(`generating the ${kind}`);
+      deps.onProgress?.(`generating the ${kind} on ${imageModel()} at ${imageQuality()} quality`);
       await generateArt(persona, kind, out, deps);
       generated.push(kind);
       return out;
     } catch (err) {
       deps.onProgress?.(`generation failed, drawing the ${kind} instead: ${(err as Error).message}`);
-
-      // THE DRAWN FALLBACK. For an avatar this is the show's wordmark on its own
-      // colour, which is a perfectly good profile mark and is what every episode
-      // cover already looks like.
-      renderCover(
-        {
-          showName: persona.name,
-          // An avatar is the wordmark on the show's own colour and nothing
-          // else. A title on a 64-pixel profile mark is unreadable, and the
-          // app prints the channel's name beside it regardless.
-          title: kind === 'avatar' ? '' : persona.name,
-          palette: paletteFor(persona.id),
-        },
-        out,
-        kind === 'avatar'
-          ? { width: AVATAR_SIZE, height: AVATAR_SIZE }
-          : { width: COVER_SIZE.width, height: COVER_SIZE.height }
-      );
-      return out;
+      return draw(kind, out);
     }
   };
 

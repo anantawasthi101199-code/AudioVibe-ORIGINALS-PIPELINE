@@ -10,7 +10,15 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { loadPersona } from '../../canon/load';
-import { artworkFor, generateArt, promptFor, ImageError } from '../generate';
+import {
+  artworkFor,
+  generateArt,
+  imageModel,
+  imageQuality,
+  imagesEnabled,
+  promptFor,
+  ImageError,
+} from '../generate';
 
 const persona = loadPersona('honest-health');
 
@@ -149,5 +157,62 @@ describe('artworkFor', () => {
     const art = await artworkFor(persona, dir, { post });
     expect(art.generated).toEqual(['avatar']);
     expect(fs.existsSync(art.cover)).toBe(true);
+  });
+});
+
+describe('what it costs, which is a choice', () => {
+  let dir: string;
+  beforeEach(() => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-art-'));
+    process.env.OPENAI_API_KEY = 'test-key';
+  });
+  afterEach(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+    delete process.env.FOUNDRY_IMAGE;
+    delete process.env.FOUNDRY_IMAGE_QUALITY;
+    delete process.env.FOUNDRY_IMAGE_MODEL;
+  });
+
+  it('defaults to medium, not high', () => {
+    // High is roughly an order of magnitude dearer and the thing being bought
+    // is a mark seen at 64 pixels. What makes an avatar work at that size is a
+    // bold silhouette, which the prompt asks for and no quality tier supplies.
+    expect(imageQuality()).toBe('medium');
+    expect(imageModel()).toBe('gpt-image-1');
+    expect(imagesEnabled()).toBe(true);
+  });
+
+  it('sends the quality and model it was told to', async () => {
+    process.env.FOUNDRY_IMAGE_QUALITY = 'low';
+    process.env.FOUNDRY_IMAGE_MODEL = 'dall-e-3';
+
+    const sent: Array<Record<string, unknown>> = [];
+    const post = async (_u: string, _h: Record<string, string>, body: unknown) => {
+      sent.push(body as Record<string, unknown>);
+      return ok();
+    };
+
+    await generateArt(persona, 'avatar', path.join(dir, 'a.png'), { post });
+    expect(sent[0]!.quality).toBe('low');
+    expect(sent[0]!.model).toBe('dall-e-3');
+  });
+
+  it('SPENDS NOTHING when generation is switched off, and still makes the art', async () => {
+    // The free option is the drawn renderer, which is what every episode cover
+    // already uses - so a studio running this way is consistent rather than
+    // degraded.
+    process.env.FOUNDRY_IMAGE = 'off';
+    let called = false;
+    const post = async () => {
+      called = true;
+      return ok();
+    };
+
+    const art = await artworkFor(persona, dir, { post });
+
+    expect(called).toBe(false);
+    expect(fs.existsSync(art.avatar)).toBe(true);
+    expect(fs.existsSync(art.cover)).toBe(true);
+    expect(art.generated).toEqual([]);
   });
 });
