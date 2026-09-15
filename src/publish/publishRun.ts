@@ -223,13 +223,24 @@ export const publishRun = async (
     run.mediaPath('cover.png')
   );
 
+  // WHERE THE AUDIO IS, not where the record says it was. A renamed run
+  // directory leaves the stored path pointing at a folder that no longer
+  // exists, and publishing is the last place that should discover it.
+  const audioPath = run.audioFile(render.audioFile);
+  if (!audioPath) {
+    throw new PublishRefused(
+      `no audio in ${run.dir}`,
+      'Render it first, or check the run was not moved while it was being made.'
+    );
+  }
+
   say(`publishing to ${platform.url} as @${persona.handle}`);
 
   const client = new AudioVibeClient(platform.url, publishTokenFor(persona.id));
   const result = await client.publish({
     title: script.title,
     description: script.description,
-    audioPath: render.audioFile,
+    audioPath,
     category: persona.category,
     beatMap: render.beatMap,
     provenance,

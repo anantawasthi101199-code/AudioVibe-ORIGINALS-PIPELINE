@@ -30,7 +30,16 @@ export const beatTimingSchema = z.object({
 export type BeatTiming = z.infer<typeof beatTimingSchema>;
 
 export const renderResultSchema = z.object({
-  /** Path to the finished audio, relative to the run directory. */
+  /**
+   * Where the finished audio was written.
+   *
+   * ADVISORY, AND NOT THE PLACE TO LOOK. `Run.audioFile` answers that, by
+   * looking in the run's own media directory first: this field held an absolute
+   * path for as long as it existed, despite being documented as relative, and
+   * an absolute path stops being true the moment a run directory is renamed.
+   * Renumbering a catalogue did exactly that and the failure surfaced at the
+   * last possible moment, on a publish.
+   */
   audioFile: z.string(),
   durationS: z.number().positive(),
   beatMap: z.array(beatTimingSchema),

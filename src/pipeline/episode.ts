@@ -15,8 +15,6 @@
  * without anyone reading the first episodes is the failure mode this whole
  * design exists to avoid.
  */
-import fs from 'fs';
-import path from 'path';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import {
@@ -781,16 +779,16 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   // without ever saying what was wrong.
   //
   // So the audio has to be there before the record of it is believed.
-  // RESOLVE RATHER THAN JOIN. The schema calls audioFile "relative to the run
-  // directory" and renderScript stores the absolute path it was given, so the
-  // two disagree and have since the field existed. resolve is correct for both
-  // readings; join silently mangles the absolute one into a path that never
-  // exists, which would make this check re-render every single time.
+  // ASK THE RUN WHERE ITS AUDIO IS. The schema calls audioFile "relative to the
+  // run directory" and renderScript stores the absolute path it was given, so
+  // the two disagree and have since the field existed - and an absolute path
+  // stops being true the moment a run is renamed. run.audioFile covers all
+  // three readings and is the one place that knows.
   const renderedAudio = run.hasArtifact('render')
-    ? path.resolve(run.dir, run.readArtifact('render', renderResultSchema).audioFile)
+    ? run.audioFile(run.readArtifact('render', renderResultSchema).audioFile)
     : null;
 
-  if (renderedAudio && fs.existsSync(renderedAudio)) {
+  if (renderedAudio) {
     render = run.readArtifact('render', renderResultSchema);
     report('render', `reusing ${Math.round(render.durationS)}s of audio`);
   } else {

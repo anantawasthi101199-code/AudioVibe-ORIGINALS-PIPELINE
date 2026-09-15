@@ -249,3 +249,53 @@ describe('a run that has been moved', () => {
     fs.rmSync(root, { recursive: true, force: true });
   });
 });
+
+describe('finding a run audio after it has moved', () => {
+  /**
+   * render.json stores the path the renderer was given, which is absolute,
+   * while the schema calls the field relative. Renaming a run directory makes
+   * the stored path a lie, and the first thing to notice was a publish: "no
+   * audio at ...e006-s05..." for a file sitting in e001-s04 under a different
+   * name. Same lesson as the app's downloads: never trust a persisted absolute
+   * path.
+   */
+  const withAudio = (root: string): Run => {
+    const run = Run.create(
+      { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+      { root }
+    );
+    fs.writeFileSync(run.mediaPath('episode.wav'), 'RIFF');
+    return run;
+  };
+
+  it('looks in its own directory before believing the record', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'runs-'));
+    const run = withAudio(root);
+
+    // A path from before a rename: absolute, and pointing nowhere.
+    const stale = path.join(root, 'honest-health', 'e006-gone', 'media', 'episode.wav');
+
+    expect(run.audioFile(stale)).toBe(path.join(run.dir, 'media', 'episode.wav'));
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  it('accepts the relative path the schema always described', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'runs-'));
+    const run = withAudio(root);
+
+    expect(run.audioFile(path.join('media', 'episode.wav'))).toContain('episode.wav');
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  it('is null when there is genuinely no audio, rather than a path that is not there', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'runs-'));
+    const run = Run.create(
+      { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+      { root }
+    );
+
+    expect(run.audioFile('media/episode.wav')).toBeNull();
+    expect(run.audioFile()).toBeNull();
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+});

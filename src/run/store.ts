@@ -518,6 +518,33 @@ export class Run {
   }
 
   /** Somewhere to put audio, which does not belong in JSON. */
+  /**
+   * Where this run's audio actually is, or null.
+   *
+   * THE DIRECTORY IS THE TRUTH, NOT THE RECORD OF IT. render.json stores the
+   * path the renderer was given, which is absolute, while the schema calls the
+   * field "relative to the run directory" - so the two have disagreed since the
+   * field existed, and an absolute path stops being true the moment a run
+   * directory is renamed. Renumbering a catalogue did exactly that, and the
+   * failure surfaced at the last possible moment: "no audio at ...e006-s05..."
+   * for a file sitting in e001-s04 with a different name on the door.
+   *
+   * So this looks in the run's own media directory first and falls back to the
+   * stored value, which covers a relative path, a still-valid absolute one and
+   * a stale one. Same lesson as the app's downloads: never trust a persisted
+   * absolute path.
+   */
+  audioFile(stored?: string): string | null {
+    const own = path.join(this.dir, 'media', 'episode.wav');
+    if (fs.existsSync(own)) return own;
+
+    if (stored) {
+      const resolved = path.resolve(this.dir, stored);
+      if (fs.existsSync(resolved)) return resolved;
+    }
+    return null;
+  }
+
   mediaPath(name: string): string {
     const dir = path.join(this.dir, 'media');
     fs.mkdirSync(dir, { recursive: true });
