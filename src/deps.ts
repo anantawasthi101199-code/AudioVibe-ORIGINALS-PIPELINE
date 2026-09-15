@@ -131,20 +131,51 @@ export const buildDeps = (over: Partial<PipelineDeps> = {}): PipelineDeps => {
   };
 };
 
-/** Earlier episodes from this repo's runs, for the self-similarity check. */
+/**
+ * Earlier episodes from this repo's runs, for the self-similarity check.
+ *
+ * THE CHECK IS FOR COVERING GROUND SOMEBODY ELSE COVERED, so three things are
+ * never in the list:
+ *
+ * ITSELF. Every script shares a hundred percent of its vocabulary with itself,
+ * and including it made self-similarity fail on every episode this studio ever
+ * produced - naming the run as its own plagiarism source, which at least made
+ * it obvious once somebody read it.
+ *
+ * THE SCRIPT IT WAS CUT FROM. A cut story IS a beat of its source, word for
+ * word, so the overlap is total and the source is never published anyway.
+ *
+ * ITS SIBLINGS. Ten stories cut from one set are one body of work, published as
+ * a set, about one subject by design. Comparing them to each other guarantees
+ * failures and says nothing: story seven is not plagiarising story three, they
+ * are chapters. This was the half of the rule that was missing, and it was
+ * failing the whole myths set and half the health set.
+ */
 export const priorEpisodeTexts = (exclude?: string): Array<{ label: string; text: string }> => {
   const out: Array<{ label: string; text: string }> = [];
+
+  /** The set this run belongs to: its source if it is a cut, itself if it is one. */
+  let set: string | undefined;
+  if (exclude) {
+    try {
+      const run = Run.open(exclude);
+      set = run.manifest.derivedFrom ?? exclude;
+    } catch {
+      // Gone or unreadable. Excluding only the id is the old behaviour and is
+      // still correct, just less generous.
+    }
+  }
+
   for (const id of Run.list()) {
-    // NEVER THE RUN BEING GATED. Every script shares one hundred percent of its
-    // vocabulary with itself, so including it made self-similarity fail on
-    // every episode this studio has ever produced - loudly, with a message
-    // naming the run as its own plagiarism source, which at least made it
-    // obvious once somebody read it.
     if (id === exclude) continue;
 
     try {
       const run = Run.open(id);
       if (!run.hasArtifact('script')) continue;
+
+      // The set, whichever side of it this run is on.
+      if (set && (id === set || run.manifest.derivedFrom === set)) continue;
+
       out.push({ label: id, text: fullText(run.readArtifact('script', scriptSchema)) });
     } catch {
       // A malformed old run should not stop a new one.

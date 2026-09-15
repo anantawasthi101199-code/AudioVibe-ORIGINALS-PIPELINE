@@ -275,18 +275,21 @@ export const cutStories = async (
       sources,
       corpusText: sources.map((s) => s.text).join('\n'),
       castNames: script.plan?.cast.map((c) => c.name) ?? [],
-      // NEITHER ITSELF NOR THE SET IT CAME OUT OF.
+      // NEITHER ITSELF, NOR THE SET IT CAME OUT OF, NOR ITS SIBLINGS.
       //
-      // A cut story IS a beat of the source, word for word, so comparing the
-      // two reports a hundred percent overlap with something that is never
-      // published - and a rerun compares a short against the copy of itself
-      // the previous cut left on disk, which reports a hundred percent overlap
-      // with itself. Both were blocking every short in the set, and both are
-      // the same mistake the episode lane made once and fixed: the check is
+      // A cut story IS a beat of the source, word for word; a rerun compares a
+      // short against the copy of itself the previous cut left on disk; and ten
+      // stories from one set are one body of work about one subject, so story
+      // seven is not plagiarising story three, they are chapters. The check is
       // for covering ground somebody ELSE has covered.
-      priorTexts: (deps.priorTexts ?? []).filter(
-        (prior) => prior.label !== input.source.id && prior.label !== run.id
-      ),
+      priorTexts: (deps.priorTexts ?? []).filter((prior) => {
+        if (prior.label === input.source.id || prior.label === run.id) return false;
+        try {
+          return Run.open(prior.label).manifest.derivedFrom !== input.source.id;
+        } catch {
+          return true;
+        }
+      }),
 
     });
 

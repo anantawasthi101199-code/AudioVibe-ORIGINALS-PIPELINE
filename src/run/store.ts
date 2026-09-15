@@ -352,10 +352,25 @@ export class Run {
     const direct = path.join(root, ...id.split('/'));
 
     if (fs.existsSync(path.join(direct, MANIFEST))) {
-      return new Run(
-        direct,
-        runManifestSchema.parse(JSON.parse(fs.readFileSync(path.join(direct, MANIFEST), 'utf8')))
+      const manifest = runManifestSchema.parse(
+        JSON.parse(fs.readFileSync(path.join(direct, MANIFEST), 'utf8'))
       );
+
+      // THE DIRECTORY IS THE TRUTH ABOUT WHICH RUN THIS IS.
+      //
+      // The id is stored in the manifest as well, and the two can disagree -
+      // renaming a run directory is enough to do it. When they do, everything
+      // that compares an id against `Run.list()` silently stops matching, and
+      // nothing reports an error: the self-similarity check stopped excluding
+      // the run being gated and every short reported a hundred percent overlap
+      // with itself, naming itself as the source.
+      //
+      // Corrected on the way in rather than treated as an error, because the
+      // folder is how this run was found and there is nothing to decide.
+      const fromDir = path.relative(root, direct).split(path.sep).join('/');
+      if (manifest.id !== fromDir) manifest.id = fromDir;
+
+      return new Run(direct, manifest);
     }
 
     const matches = Run.list(opts).filter((candidate) => candidate.split('/').pop() === id);

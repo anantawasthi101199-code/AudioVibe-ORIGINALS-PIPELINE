@@ -217,3 +217,35 @@ describe('Run', () => {
     expect(fs.existsSync(path.dirname(p))).toBe(true);
   });
 });
+
+describe('a run that has been moved', () => {
+  /**
+   * A renamed run directory leaves the id inside run.json pointing at the old
+   * name. Nothing errors: everything that compares an id against Run.list()
+   * just stops matching. It showed up as every short in a set reporting a
+   * hundred percent vocabulary overlap with itself, naming itself as the
+   * source, because the self-exclusion in the similarity check never fired.
+   */
+  it('takes its id from the folder it is in, not from the manifest', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'runs-'));
+
+    const made = Run.create(
+      { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+      { root }
+    );
+    const before = made.id;
+
+    // Move it, exactly as renumbering a catalogue does.
+    const from = made.dir;
+    const to = path.join(path.dirname(from), 'e009-renamed');
+    fs.renameSync(from, to);
+
+    const after = Run.open('honest-health/e009-renamed', { root });
+
+    expect(after.id).toBe('honest-health/e009-renamed');
+    expect(after.id).not.toBe(before);
+    expect(Run.list({ root })).toContain(after.id);
+
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+});
