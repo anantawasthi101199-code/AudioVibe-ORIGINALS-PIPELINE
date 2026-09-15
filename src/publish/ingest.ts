@@ -80,7 +80,12 @@ export class PublishError extends Error {
     readonly status: number | null,
     message: string
   ) {
-    super(`publish failed: ${message}`);
+    // THE STATUS IS PART OF THE MESSAGE, because the message on its own is
+    // often the platform's generic handler saying "An unexpected error
+    // occurred" - which tells somebody staring at a failed publish nothing at
+    // all, not even whether it was their request or the server. 500 and 413
+    // are different problems with the same sentence attached.
+    super(`publish failed${status ? ` (${status})` : ''}: ${message}`);
     this.name = 'PublishError';
   }
 }
@@ -303,10 +308,42 @@ export class AudioVibeClient {
     const res = await this.post(url, { authorization: `Bearer ${this.token}` }, form);
 
     if (res.status < 200 || res.status >= 300) {
-      const body = res.json as { message?: string } | null;
-      throw new PublishError(res.status, body?.message ?? res.text.slice(0, 300));
+      throw new PublishError(res.status, describeFailure(res));
     }
 
     return AudioVibeClient.readResult(res);
   }
 }
+
+/**
+ * What went wrong, from a response that would rather not say.
+ *
+ * The platform's error handler answers a 500 with `{ message: "An unexpected
+ * error occurred" }` and nothing else, which is correct of it - a public API
+ * should not leak stack traces - and useless to the one person who needs to
+ * know. So this takes whatever structure it can find, and when it finds only
+ * that sentence it says where the real answer is instead of repeating it.
+ */
+export const describeFailure = (res: { status: number; json: unknown; text: string }): string => {
+  const body = res.json as {
+    message?: string;
+    error?: { message?: string; code?: string; details?: unknown };
+    errors?: unknown;
+  } | null;
+
+  const parts = [
+    body?.error?.message ?? body?.message,
+    body?.error?.code,
+    body?.errors ? JSON.stringify(body.errors).slice(0, 200) : null,
+  ].filter(Boolean);
+
+  const said = parts.join(' | ') || res.text.slice(0, 300) || 'no message';
+
+  // A 500 with the generic sentence means the detail is only in the server's
+  // own log, and saying so beats leaving somebody to re-read their own request.
+  if (res.status >= 500 && /unexpected error/i.test(said)) {
+    return `${said} - the platform hit an error it did not describe. The reason is in the API service log on Railway, at the moment of this request.`;
+  }
+
+  return said;
+};
