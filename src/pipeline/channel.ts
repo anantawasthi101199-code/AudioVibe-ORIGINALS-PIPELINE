@@ -68,10 +68,19 @@ export interface SetupResult {
  */
 export const emailFor = (username: string): string => `${username}@originals.audiovibe.co`;
 
+/**
+ * The studio operator, needed only to bring an account into existence.
+ *
+ * OPTIONAL, BECAUSE EVERYTHING AFTER THE FIRST RUN SIGNS IN AS THE CHANNEL.
+ * Once the account exists this command reuses its recorded password and never
+ * touches admin at all - so demanding admin credentials to redraw a picture was
+ * asking for a key to a door already open, and the practical effect was that
+ * fixing the artwork meant going and finding the production admin password.
+ */
 export const setUpChannel = async (
   channelId: string,
-  adminEmail: string,
-  adminPassword: string,
+  adminEmail: string | undefined,
+  adminPassword: string | undefined,
   deps: SetupDeps = {}
 ): Promise<SetupResult> => {
   const log = deps.log ?? (() => undefined);
@@ -89,6 +98,13 @@ export const setUpChannel = async (
     log(`reusing the account recorded for @${existing.username}`, 'account');
     account = existing;
   } else {
+    if (!adminEmail || !adminPassword) {
+      throw new Error(
+        `${persona.name} has no account yet, and creating one needs the studio operator. ` +
+          `Set AUDIOVIBE_ADMIN_EMAIL and AUDIOVIBE_ADMIN_PASSWORD, or give them in the studio.`
+      );
+    }
+
     log('signing in as the studio operator', 'account');
     await api.signInAsAdmin(adminEmail, adminPassword);
 

@@ -70,8 +70,10 @@ export const getPlatform = () => {
 export const setUpChannelJob = (channelId: string, body: unknown) => {
   const input = z
     .object({
-      adminEmail: z.string().min(1),
-      adminPassword: z.string().min(1),
+      // Optional: needed only to create the account. A redraw signs in as the
+      // channel with the password this studio already holds.
+      adminEmail: z.string().optional(),
+      adminPassword: z.string().optional(),
       redraw: z.boolean().default(false),
     })
     .parse(body ?? {});

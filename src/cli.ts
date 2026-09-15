@@ -553,15 +553,13 @@ const cmdChannelSetup = async (argv: string[]): Promise<number> => {
   const persona = loadPersona(showId);
   const platform = platformUrl();
 
+  // NOT REQUIRED HERE. setUpChannel needs them only when the account does not
+  // exist yet; after that it signs in as the channel with the password it
+  // recorded, and refuses with a clear message if it turns out it does need
+  // them. Demanding them up front made redrawing a picture need the production
+  // admin password.
   const email = process.env.AUDIOVIBE_ADMIN_EMAIL;
   const password = process.env.AUDIOVIBE_ADMIN_PASSWORD;
-  if (!email || !password) {
-    console.error(
-      'AUDIOVIBE_ADMIN_EMAIL and AUDIOVIBE_ADMIN_PASSWORD must be set. Creating a channel ' +
-        'needs the studio operator, and only for this one command.'
-    );
-    return 1;
-  }
 
   const ui = new Reporter({ stages: ['account', 'profile', 'artwork'] });
   ui.header(`Setting up ${persona.name}`, [

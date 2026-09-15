@@ -154,32 +154,20 @@ const Setup = ({
                   and should be - it must not change because somebody re-ran a
                   command - but deleting two files by hand is not a way to
                   change it deliberately, it is a thing you have to know.
+
+                  NO CREDENTIALS. The account exists, so this signs in as the
+                  channel with the password this studio already recorded; admin
+                  is only ever needed to bring an account into existence.
                 */}
                 <div className="row" style={{ gap: '0.5rem' }}>
-                  <input
-                    className="field"
-                    style={{ maxWidth: '14rem' }}
-                    placeholder="Admin email"
-                    autoComplete="off"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <input
-                    className="field"
-                    style={{ maxWidth: '11rem' }}
-                    type="password"
-                    placeholder="Admin password"
-                    autoComplete="off"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
                   <button
                     className="btn small"
-                    disabled={!email || !password || busy !== null}
+                    disabled={busy !== null}
                     onClick={() => void create(true)}
                   >
                     {busy === 'artwork' ? 'Redrawing...' : 'Redraw and re-upload artwork'}
                   </button>
+                  <span className="faint tiny">Replaces the avatar and cover on the platform.</span>
                 </div>
               </div>
             ) : (
