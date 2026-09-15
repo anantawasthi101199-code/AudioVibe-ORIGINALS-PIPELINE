@@ -27,6 +27,9 @@ import { EpisodeFormat, minClaimsFor, nominalSeconds } from '../formats/schema';
 import { loadTopics } from '../schedule/load';
 import { Run } from '../run/store';
 import { loadVoiceRegistry } from '../canon/voiceRegistry';
+import { loadAccounts } from '../publish/account';
+import { findSeries } from '../publish/seriesRegistry';
+import { platformUrl } from '../config';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -63,6 +66,22 @@ export interface ChannelSummary {
   /** Queued subjects, for the two queues a channel can have. */
   queued: { topics: number; sets: number };
   runs: { total: number; awaitingApproval: number; lastAt: string | null };
+  /**
+   * How far this channel is from being able to publish.
+   *
+   * SHOWN BECAUSE THE MIDDLE STATE IS INVISIBLE OTHERWISE. A channel with an
+   * account but no publishing credential looks finished everywhere else in the
+   * interface, and the first anybody learns is a failed publish at the end of a
+   * run that has already been paid for.
+   */
+  account: {
+    exists: boolean;
+    handle: string | null;
+    /** Whether a person has minted and recorded its credential. */
+    canPublish: boolean;
+    /** Whether it has a series on this platform to publish into. */
+    hasSeries: boolean;
+  };
 }
 
 const routesFor = (persona: Persona): RouteSummary[] =>
@@ -115,6 +134,35 @@ const runsFor = (channelId: string): ChannelSummary['runs'] => {
   return { total: ids.length, awaitingApproval: awaiting, lastAt };
 };
 
+/**
+ * What exists on the platform for this channel.
+ *
+ * READ FROM DISK, NEVER FROM THE PLATFORM. This is called for every channel on
+ * every load of the front page, and five HTTP round trips to answer a question
+ * whose answer is in two local files would make the page slow for nothing.
+ * Both files are written by the commands that do the real work, so they are
+ * only ever stale in the direction of saying a channel is less ready than it
+ * is - which is the safe direction.
+ */
+const accountState = (persona: Persona): ChannelSummary['account'] => {
+  const account = loadAccounts()[persona.id];
+  let hasSeries = false;
+
+  try {
+    hasSeries = Boolean(findSeries(persona.id, platformUrl().url));
+  } catch {
+    // No AUDIOVIBE_API_URL set, which is the normal state of a machine that
+    // only writes scripts. Not knowing is reported as not having one.
+  }
+
+  return {
+    exists: Boolean(account),
+    handle: account?.username ?? null,
+    canPublish: Boolean(account?.ingestToken ?? process.env.AUDIOVIBE_INGEST_TOKEN),
+    hasSeries,
+  };
+};
+
 export const channelSummary = (persona: Persona): ChannelSummary => {
   const queue = loadTopics(persona.id);
   // THE VOICE THIS CHANNEL IS COMMITTED TO, read from the registry rather than
@@ -139,6 +187,7 @@ export const channelSummary = (persona: Persona): ChannelSummary => {
     routes: routesFor(persona),
     queued: { topics: queue.topics.length, sets: queue.sets.length },
     runs: runsFor(persona.id),
+    account: accountState(persona),
   };
 };
 

@@ -36,6 +36,12 @@ export interface Channel {
   routes: Route[];
   queued: { topics: number; sets: number };
   runs: { total: number; awaitingApproval: number; lastAt: string | null };
+  account: {
+    exists: boolean;
+    handle: string | null;
+    canPublish: boolean;
+    hasSeries: boolean;
+  };
 }
 
 export interface Lane {

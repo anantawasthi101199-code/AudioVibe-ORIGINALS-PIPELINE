@@ -98,6 +98,18 @@ export const Lanes = ({ go }: { go: (path: string) => void }) => {
                           {c.runs.awaitingApproval} held
                         </span>
                       )}
+                      {/*
+                        THE ONE STATE THAT IS OTHERWISE INVISIBLE. A channel
+                        with an account but no publishing credential looks
+                        finished everywhere else, and the first anybody learns
+                        is a failed publish at the end of a run already paid
+                        for. Said once, on the card, before anything is spent.
+                      */}
+                      {!c.account.exists ? (
+                        <span className="pill">no account</span>
+                      ) : (
+                        !c.account.canPublish && <span className="pill fail">cannot publish</span>
+                      )}
                     </div>
                     <div className="faint mono" style={{ fontSize: '0.72rem', marginBottom: '0.6rem' }}>
                       @{c.handle} · {c.category}
