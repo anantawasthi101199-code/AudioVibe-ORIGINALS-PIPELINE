@@ -132,10 +132,12 @@ export const getQueue = (now = new Date()): QueueView => {
     // WHOSE TURN IT IS. A run with no release time is ready the moment it
     // passes, which is what an episode is; one with a time in the future is
     // finished and waiting, which is what a story in a cut set is.
-    ready: inState('ready').filter((r) => !r.releaseAt || Date.parse(r.releaseAt) <= now.getTime()),
+    ready: inState('ready').filter(
+      (r) => !r.isSource && (!r.releaseAt || Date.parse(r.releaseAt) <= now.getTime())
+    ),
     scheduled: inState('ready')
       .filter((r): r is RunSummary & { releaseAt: string } =>
-        Boolean(r.releaseAt && Date.parse(r.releaseAt) > now.getTime())
+        Boolean(!r.isSource && r.releaseAt && Date.parse(r.releaseAt) > now.getTime())
       )
       .sort((a, b) => Date.parse(a.releaseAt) - Date.parse(b.releaseAt)),
     failed: inState('failed').slice(0, RECENT),

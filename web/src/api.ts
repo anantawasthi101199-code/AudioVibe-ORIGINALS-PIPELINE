@@ -78,6 +78,7 @@ export interface RunSummary {
   durationS: number | null;
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
   releaseAt: string | null;
+  isSource: boolean;
 }
 
 export interface QueueItem {

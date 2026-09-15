@@ -1312,3 +1312,84 @@ table.runs .num {
   flex: 1;
   min-width: 0;
 }
+
+/* --- Primary navigation ---------------------------------------------------
+   Two tabs, always visible, current one marked. Channels used to be a ghost
+   button in the corner with the same weight as Sign out, so the front page
+   read as a status board with no way into anything. */
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+.tab {
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition:
+    color 120ms ease,
+    background 120ms ease;
+}
+
+.tab:hover {
+  color: var(--text-dim);
+  background: var(--ink-800);
+}
+
+.tab.on {
+  color: var(--text);
+  background: var(--ink-750);
+}
+
+/* --- The headline ---------------------------------------------------------
+   What the studio wants, in the words somebody would use. "All clear" while
+   twenty-one runs sat rejected was the old one, and a headline that is wrong
+   teaches you to stop reading headlines. */
+
+.headline {
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.headline.hold {
+  color: var(--hold);
+}
+.headline.pass {
+  color: var(--pass);
+}
+.headline.fail {
+  color: var(--fail);
+}
+
+/* --- Rows lead somewhere, and say so -------------------------------------- */
+
+.queue-row .go {
+  flex: none;
+  color: var(--text-faint);
+  font-size: 1.1rem;
+  line-height: 1;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition:
+    opacity 130ms ease,
+    transform 130ms ease;
+}
+
+.queue-row:hover .go {
+  opacity: 1;
+  transform: none;
+}
+
+.empty a {
+  color: var(--amber);
+}
+
+@media (max-width: 640px) {
+  .queue-row .go {
+    display: none;
+  }
+}

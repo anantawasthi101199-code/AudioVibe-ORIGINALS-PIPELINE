@@ -12,7 +12,7 @@
  * idea of an error.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { api, whenSignedOut } from './api';
+import { api, whenSignedOut, type Platform } from './api';
 import { Channel } from './pages/Channel';
 import { Lanes } from './pages/Lanes';
 import { Queue } from './pages/Queue';
@@ -76,6 +76,7 @@ const SignIn = ({ onIn }: { onIn: () => void }) => {
 export const App = () => {
   const [route, setRoute] = useState(path());
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [platform, setPlatform] = useState<Platform | null>(null);
 
   const go = useCallback((to: string) => {
     window.location.hash = to;
@@ -92,7 +93,10 @@ export const App = () => {
     whenSignedOut(() => setSignedIn(false));
     api
       .me()
-      .then(() => setSignedIn(true))
+      .then(() => {
+        setSignedIn(true);
+        return api.platform().then(setPlatform);
+      })
       .catch(() => setSignedIn(false));
   }, []);
 
@@ -105,12 +109,17 @@ export const App = () => {
 
   // THE QUEUE IS HOME. The question asked of this studio most often is "does
   // anything need me", and the answer should be the thing that loads.
-  const crumbs: Array<[string, string]> = [['/', 'Queue']];
-  if (onChannels) crumbs.push(['/channels', 'Channels']);
-  if (channelMatch) {
-    crumbs.push(['/channels', 'Channels']);
-    crumbs.push([route, channelMatch[1]!]);
-  }
+  //
+  // TABS RATHER THAN A HIDDEN BUTTON. Channels used to be a ghost button in the
+  // corner with the same weight as Sign out, so the front page looked like a
+  // status board with no way into anything. Two tabs, always visible, with the
+  // current one marked.
+  const tab = channelMatch || runMatch || onChannels ? 'channels' : 'queue';
+
+  // Breadcrumbs only once you are deeper than a tab, where they earn their
+  // space by being the way back up.
+  const crumbs: Array<[string, string]> = [];
+  if (channelMatch) crumbs.push([route, channelMatch[1]!]);
   if (runMatch) {
     const runId = runMatch[1]!;
     crumbs.push([`/c/${runId.split('/')[0]}`, runId.split('/')[0]!]);
@@ -124,38 +133,63 @@ export const App = () => {
           Foundry<span>.</span>
         </a>
 
-        <nav className="crumbs">
-          {crumbs.map(([to, label], i) => (
-            <span key={to} className="row" style={{ gap: '0.5rem', minWidth: 0 }}>
-              {i > 0 && <span className="sep">/</span>}
-              {i === crumbs.length - 1 ? (
-                <span className="here">{label}</span>
-              ) : (
-                <a
-                  href={`#${to}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    go(to);
-                  }}
-                >
-                  {label}
-                </a>
-              )}
-            </span>
-          ))}
+        <nav className="tabs">
+          <a
+            className={`tab${tab === 'queue' ? ' on' : ''}`}
+            href="#/"
+            onClick={(e) => {
+              e.preventDefault();
+              go('/');
+            }}
+          >
+            Queue
+          </a>
+          <a
+            className={`tab${tab === 'channels' ? ' on' : ''}`}
+            href="#/channels"
+            onClick={(e) => {
+              e.preventDefault();
+              go('/channels');
+            }}
+          >
+            Channels
+          </a>
         </nav>
 
+        {crumbs.length > 0 && (
+          <nav className="crumbs">
+            {crumbs.map(([to, label], i) => (
+              <span key={to} className="row" style={{ gap: '0.5rem', minWidth: 0 }}>
+                <span className="sep">/</span>
+                {i === crumbs.length - 1 ? (
+                  <span className="here">{label}</span>
+                ) : (
+                  <a
+                    href={`#${to}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      go(to);
+                    }}
+                  >
+                    {label}
+                  </a>
+                )}
+              </span>
+            ))}
+          </nav>
+        )}
+
         <span className="spacer" />
-        <a
-          className={`btn ghost small${onChannels ? ' on' : ''}`}
-          href="#/channels"
-          onClick={(e) => {
-            e.preventDefault();
-            go('/channels');
-          }}
-        >
-          Channels
-        </a>
+
+        {/* WHERE THIS IS POINTED, ON EVERY SCREEN. Publishing somewhere you did
+            not mean to is the one mistake here that cannot be taken back. */}
+        {platform?.configured && (
+          <span className={`where${platform.isProduction ? ' live' : ''}`}>
+            <span className="dot" />
+            {platform.isProduction ? 'production' : new URL(platform.url!).hostname}
+          </span>
+        )}
+
         <button
           className="btn ghost small"
           onClick={() => {

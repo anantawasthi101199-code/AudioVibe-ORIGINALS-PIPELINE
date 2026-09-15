@@ -261,6 +261,15 @@ export interface RunSummary {
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
   /** When this is meant to go out, for a run that was given a time. */
   releaseAt: string | null;
+  /**
+   * A script that is cut into shorts and never published whole.
+   *
+   * CARRIED SO THE QUEUE CAN KEEP IT OUT OF "READY". A ten-story source passes
+   * its gate like anything else, so it sat in the publish list looking exactly
+   * like the shorts cut out of it - and publishing one would put a
+   * twenty-minute script nobody voiced in front of listeners.
+   */
+  isSource: boolean;
 }
 
 /**
@@ -292,6 +301,18 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
       return null;
     }
   };
+
+  // A CUT CARRIES ITS SOURCE'S FORMAT ID, so `sourceOnly` alone marks all ten
+  // shorts as unpublishable too. What tells them apart is `story`: a cut is the
+  // nth story of a script and says so, the script itself has no number.
+  let isSource = false;
+  try {
+    isSource = Boolean(loadFormat(m.formatId).sourceOnly) && m.story === undefined;
+  } catch {
+    // A run whose format has since been deleted. Treating it as publishable is
+    // the wrong direction here, but it is also the pre-existing behaviour and a
+    // deleted format is already a louder problem elsewhere.
+  }
 
   const title = read('script', z.object({ title: z.string() }).passthrough())?.title ?? null;
   const durationS = read('render', z.object({ durationS: z.number() }).passthrough())?.durationS ?? null;
@@ -354,6 +375,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     durationS,
     gate,
     releaseAt: m.releaseAt ?? null,
+    isSource,
   };
 };
 

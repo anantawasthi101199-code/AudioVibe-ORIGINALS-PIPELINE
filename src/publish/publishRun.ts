@@ -108,6 +108,20 @@ export const publishRun = async (
 
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
+
+  // A SOURCE SCRIPT IS NOT A THING TO PUBLISH. It is ten self-contained
+  // stories written to be cut apart, it was never voiced, and it passes its
+  // gate like anything else - so without this it looks publishable right up
+  // until it fails reading a render artifact that was never made.
+  // `story` is what tells the script from the stories cut out of it: a cut
+  // carries its source's format id, so sourceOnly alone would refuse all ten.
+  if (format.sourceOnly && run.manifest.story === undefined) {
+    throw new PublishRefused(
+      `"${format.id}" is a source script, which is cut into shorts and never published whole`,
+      'Cut it, then publish the shorts.'
+    );
+  }
+
   const script = run.readArtifact('script', scriptSchema);
   const render = run.readArtifact('render', renderResultSchema);
 

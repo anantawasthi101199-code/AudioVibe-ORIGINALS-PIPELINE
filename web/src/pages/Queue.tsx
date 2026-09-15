@@ -1,18 +1,20 @@
 /**
- * Is the studio all right, and does it need me.
+ * Is the studio all right, does it need me, and what do I do next.
  *
- * ONE SCREEN, AND THE TOP ROW ANSWERS IT. Seven numbers. If "held" and "stuck"
- * are both nought, nothing needs you and you can close the tab; that judgement
- * should take under a second and should not require reading a sentence.
+ * THE THIRD QUESTION IS WHY THIS WAS REBUILT. The first version answered the
+ * first two with seven collapsed bars and nothing else, five of them empty and
+ * all seven identical. It was a status board with no way into anything: there
+ * was nothing to select, because everything that could be done lived behind a
+ * ghost button in the corner.
  *
- * THE SECTIONS ARE SHUT UNLESS THEY MATTER. Held and stuck open by themselves
- * when they have anything in them, because those are work. The rest open when
- * you tap their number. A page showing all seven lists at once is a page where
- * the two that need you are somewhere in the middle of it.
+ * SO: SECTIONS THAT HAVE SOMETHING IN THEM ARE OPEN AND FULL OF IT. A section
+ * with nothing in it is not a panel at all - it is a word in one quiet line at
+ * the bottom, because "nothing is held" is worth knowing and is not worth a box
+ * the same size as the thing that needs you.
  *
- * THE REASONS ARE BEHIND THE MARKS. Every rule in this studio has one and none
- * of them are guessable, but they are not what somebody wants ninety-nine times
- * out of a hundred.
+ * AND THE NEXT STEP IS ON THE PAGE. Whatever the studio is waiting for, the
+ * button for it is here: read the held one, publish the ready one, line up the
+ * cut set, or go and make something.
  */
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -22,7 +24,6 @@ import {
   money,
   until,
   when,
-  type Platform,
   type QueueView,
   type RunSummary,
 } from '../api';
@@ -31,7 +32,7 @@ import { Count, Info } from '../components/Info';
 
 const REFRESH_MS = 20_000;
 
-type Panel = 'held' | 'stuck' | 'due' | 'soon' | 'ready' | 'lined' | 'out';
+type Key = 'held' | 'stuck' | 'due' | 'soon' | 'ready' | 'lined' | 'out';
 
 const Row = ({
   title,
@@ -50,6 +51,7 @@ const Row = ({
       <span className="muted">{detail}</span>
     </span>
     <span className="row nowrap">{right}</span>
+    <span className="go">›</span>
   </button>
 );
 
@@ -69,56 +71,16 @@ const RunRow = ({ run, go }: { run: RunSummary; go: (path: string) => void }) =>
   />
 );
 
-const Panel = ({
-  id,
-  title,
-  count,
-  tone,
-  open,
-  toggle,
-  why,
-  children,
-}: {
-  id: Panel;
-  title: string;
-  count: number;
-  tone?: 'hold' | 'fail' | 'pass';
-  open: Set<Panel>;
-  toggle: (p: Panel) => void;
-  why: React.ReactNode;
-  children: React.ReactNode;
-}) => {
-  const isOpen = open.has(id);
-
-  return (
-    <section className="panel">
-      <div className="panel-head">
-        <button className="panel-tap" onClick={() => toggle(id)}>
-          <span className={`caret${isOpen ? ' open' : ''}`}>›</span>
-          <h2>{title}</h2>
-          <span className={`pill${count && tone ? ` ${tone}` : ''}`}>{count}</span>
-        </button>
-        <span className="spacer" />
-        <span className="right-edge">
-          <Info label={`Why ${title.toLowerCase()} works this way`}>{why}</Info>
-        </span>
-      </div>
-      {isOpen && (count > 0 ? <div className="queue-list">{children}</div> : <p className="panel-body faint">Nothing.</p>)}
-    </section>
-  );
-};
-
 export const Queue = ({ go }: { go: (path: string) => void }) => {
   const [queue, setQueue] = useState<QueueView | null>(null);
-  const [platform, setPlatform] = useState<Platform | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [open, setOpen] = useState<Set<Panel>>(new Set());
+  const [shut, setShut] = useState<Set<Key>>(new Set());
 
-  const toggle = useCallback((p: Panel) => {
-    setOpen((was) => {
+  const toggle = useCallback((k: Key) => {
+    setShut((was) => {
       const next = new Set(was);
-      if (next.has(p)) next.delete(p);
-      else next.add(p);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
       return next;
     });
   }, []);
@@ -130,24 +92,10 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
         .then((q) => {
           setQueue(q);
           setError(null);
-          // WORK OPENS ITSELF. You should never have to tap to discover that
-          // something is waiting on you.
-          setOpen((was) => {
-            if (!q.held.length && !q.failedTotal) return was;
-            const next = new Set(was);
-            if (q.held.length) next.add('held');
-            if (q.failedTotal) next.add('stuck');
-            return next;
-          });
         })
         .catch((e: Error) => setError(e.message));
 
     void load();
-    void api
-      .platform()
-      .then(setPlatform)
-      .catch(() => undefined);
-
     const timer = window.setInterval(load, REFRESH_MS);
     return () => window.clearInterval(timer);
   }, []);
@@ -161,189 +109,214 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
     );
   }
 
-  const needsMe = queue.held.length + queue.blocked.length;
+  /**
+   * What to say at the top, in the order somebody would care.
+   *
+   * "All clear" while twenty-one runs sit rejected was the old headline, and it
+   * was wrong in a way that teaches you to ignore headlines.
+   */
+  const headline =
+    queue.paused
+      ? { text: 'Paused', tone: 'fail' as const }
+      : queue.held.length
+        ? { text: `${queue.held.length} to read`, tone: 'hold' as const }
+        : queue.blocked.length
+          ? { text: `${queue.blocked.length} waiting on you`, tone: 'hold' as const }
+          : queue.ready.length
+            ? { text: `${queue.ready.length} ready to publish`, tone: 'pass' as const }
+            : queue.due.length
+              ? { text: `${queue.due.length} due to make`, tone: undefined }
+              : { text: 'Nothing to do', tone: undefined };
+
+  // Sections, in the order somebody acts on them. Each carries its own rows.
+  const sections: Array<{
+    key: Key;
+    title: string;
+    tone?: 'hold' | 'fail' | 'pass';
+    count: number;
+    why: string;
+    rows: React.ReactNode;
+  }> = [
+    {
+      key: 'held',
+      title: 'To read',
+      tone: 'hold',
+      count: queue.held.length,
+      why: 'Written and gated, waiting for somebody to read it. Nothing here publishes on its own and nothing ever will: the two things the gate hands to a person are whether the script acknowledges its counter-evidence and whether the weakest source is framed as one account. Neither is settled by arithmetic.',
+      rows: queue.held.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+    {
+      key: 'due',
+      title: 'Waiting on you',
+      tone: 'hold',
+      count: queue.blocked.length,
+      why: 'Due, but something has to be done first, almost always an empty topic queue. A factual show with nothing to cover is reported rather than skipped, so it cannot quietly stop publishing and still look healthy.',
+      rows: queue.blocked.map((b) => (
+        <Row
+          key={b.channelId}
+          title={b.channelName}
+          detail={b.reason}
+          onClick={() => go(`/c/${b.channelId}`)}
+          right={<span className="pill hold">blocked</span>}
+        />
+      )),
+    },
+    {
+      key: 'ready',
+      title: 'Ready to publish',
+      tone: 'pass',
+      count: queue.ready.length,
+      why: 'Gate passed clean and nothing is waiting on a person. Open one to hear it and publish it.',
+      rows: queue.ready.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+    {
+      key: 'lined',
+      title: 'Lined up',
+      count: queue.scheduled.length,
+      why: `Finished, with a release time that has not come. Ten shorts cut in one afternoon are all publishable at once, and publishing them together is what makes a feed look like somebody emptied a bucket into it. They go out one a day at a different hour each day. Nothing stops you publishing one now. Times are ${queue.timezone}.`,
+      rows: queue.scheduled.map((r) => (
+        <Row
+          key={r.id}
+          title={r.title ?? r.topic}
+          detail={`${r.channelName}${r.short !== null ? ` · short ${r.short}` : ''}`}
+          onClick={() => go(`/r/${r.id}`)}
+          right={
+            <>
+              <span className="muted mono tiny">{when(r.releaseAt, queue.timezone)}</span>
+              <span className="pill">{until(r.releaseAt)}</span>
+            </>
+          }
+        />
+      )),
+    },
+    {
+      key: 'due',
+      title: 'Due to make',
+      count: queue.due.length,
+      why: 'What the schedule says should be made now. Nothing starts by itself.',
+      rows: queue.due.map((d) => (
+        <Row
+          key={`${d.channelId}-${d.kind}`}
+          title={
+            <>
+              {d.channelName} <span className="muted">{d.kind}</span>
+            </>
+          }
+          detail={d.reason}
+          onClick={() => go(`/c/${d.channelId}`)}
+          right={
+            d.overdueDays ? (
+              <span className="pill fail">{d.overdueDays}d late</span>
+            ) : (
+              <span className="pill">due</span>
+            )
+          }
+        />
+      )),
+    },
+    {
+      key: 'soon',
+      title: 'Coming up',
+      count: queue.waiting.length,
+      why: `Ready, but not yet its turn. Each show has a day and an hour so a week's work arrives spread across the week rather than in one lump. A slot that passes while nothing is running leaves the show overdue now, never pushed to next week. Times are ${queue.timezone}.`,
+      rows: queue.waiting.map((w) => (
+        <Row
+          key={`${w.channelId}-${w.kind}-${w.at}`}
+          title={
+            <>
+              {w.channelName} <span className="muted">{w.kind}</span>
+            </>
+          }
+          detail={w.reason}
+          onClick={() => go(`/c/${w.channelId}`)}
+          right={
+            <>
+              <span className="muted mono tiny">{when(w.at!, queue.timezone)}</span>
+              <span className="pill">{until(w.at!)}</span>
+            </>
+          }
+        />
+      )),
+    },
+    {
+      key: 'stuck',
+      title: 'Gate rejected',
+      tone: 'fail',
+      count: queue.failedTotal,
+      why: 'The gate found something blocking. Most were superseded by a later episode and are only here because nothing deletes them, so the newest dozen are listed and the count is the true one. Open one to see which check failed.',
+      rows: queue.failed.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+    {
+      key: 'out',
+      title: 'Published',
+      count: queue.publishedTotal,
+      why: 'Out in the world. The most recent dozen are listed.',
+      rows: queue.published.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+  ];
+
+  const live = sections.filter((s) => s.count > 0);
+  const empty = sections.filter((s) => s.count === 0);
 
   return (
     <div className="page">
-      <div className="row between" style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.5rem' }}>
-          {queue.paused ? 'Paused' : needsMe === 0 ? 'All clear' : 'Needs you'}
-        </h1>
-
-        {platform?.configured && (
-          <span className={`where${platform.isProduction ? ' live' : ''}`}>
-            <span className="dot" />
-            {platform.isProduction ? 'production' : new URL(platform.url!).hostname}
-          </span>
-        )}
+      <div className="row between" style={{ marginBottom: '0.3rem' }}>
+        <h1 className={`headline ${headline.tone ?? ''}`}>{headline.text}</h1>
+        <button className="btn" onClick={() => go('/channels')}>
+          Make something
+        </button>
       </div>
 
       <ErrorNote>{error}</ErrorNote>
 
-      <div className="counts" style={{ marginBottom: '1.7rem' }}>
-        <Count n={queue.held.length} label="held" tone="hold" onClick={() => toggle('held')} />
-        <Count n={queue.failedTotal} label="stuck" tone="fail" onClick={() => toggle('stuck')} />
-        <Count
-          n={queue.due.length + queue.blocked.length}
-          label="due"
-          tone={queue.blocked.length ? 'hold' : undefined}
-          onClick={() => toggle('due')}
-        />
-        <Count n={queue.waiting.length} label="soon" onClick={() => toggle('soon')} />
-        <Count n={queue.ready.length} label="ready" tone="pass" onClick={() => toggle('ready')} />
-        <Count n={queue.scheduled.length} label="lined up" onClick={() => toggle('lined')} />
-        <Count n={queue.publishedTotal} label="out" onClick={() => toggle('out')} />
+      <div className="counts" style={{ margin: '1.4rem 0 1.6rem' }}>
+        <Count n={queue.held.length} label="to read" tone="hold" />
+        <Count n={queue.ready.length} label="ready" tone="pass" />
+        <Count n={queue.scheduled.length} label="lined up" />
+        <Count n={queue.due.length + queue.blocked.length} label="due" />
+        <Count n={queue.publishedTotal} label="out" />
+        <Count n={queue.failedTotal} label="rejected" tone="fail" />
       </div>
 
       <div className="stack tight">
-        <Panel
-          id="held"
-          title="Held"
-          count={queue.held.length}
-          tone="hold"
-          open={open}
-          toggle={toggle}
-          why="Written and gated, waiting for somebody to read it. Nothing here publishes on its own and nothing ever will: the two things the gate hands to a person are whether the script acknowledges its counter-evidence and whether the weakest source is framed as one account. Neither is settled by arithmetic."
-        >
-          {queue.held.map((r) => (
-            <RunRow key={r.id} run={r} go={go} />
-          ))}
-        </Panel>
+        {live.map((s) => {
+          const open = !shut.has(s.key);
+          return (
+            <section className="panel" key={`${s.key}-${s.title}`}>
+              <div className="panel-head">
+                <button className="panel-tap" onClick={() => toggle(s.key)}>
+                  <span className={`caret${open ? ' open' : ''}`}>›</span>
+                  <h2>{s.title}</h2>
+                  <span className={`pill${s.tone ? ` ${s.tone}` : ''}`}>{s.count}</span>
+                </button>
+                <span className="spacer" />
+                <span className="right-edge">
+                  <Info label={`Why ${s.title.toLowerCase()} works this way`}>{s.why}</Info>
+                </span>
+              </div>
+              {open && <div className="queue-list">{s.rows}</div>}
+            </section>
+          );
+        })}
 
-        <Panel
-          id="stuck"
-          title="Stuck"
-          count={queue.failedTotal}
-          tone="fail"
-          open={open}
-          toggle={toggle}
-          why="The gate found something blocking. Most were superseded by a later episode and are only here because nothing deletes them, so the newest dozen are listed and the count is the true one. Open one to see which check failed."
-        >
-          {queue.failed.map((r) => (
-            <RunRow key={r.id} run={r} go={go} />
-          ))}
-        </Panel>
-
-        <Panel
-          id="due"
-          title="Due"
-          count={queue.due.length + queue.blocked.length}
-          open={open}
-          toggle={toggle}
-          why="What the schedule says should be made now. Nothing starts by itself. A blocked show is due but waiting on you, almost always for topics: a factual show with nothing to cover is reported rather than skipped, so it cannot quietly stop publishing and still look healthy."
-        >
-          {queue.blocked.map((b) => (
-            <Row
-              key={b.channelId}
-              title={b.channelName}
-              detail={b.reason}
-              onClick={() => go(`/c/${b.channelId}`)}
-              right={<span className="pill hold">blocked</span>}
-            />
-          ))}
-          {queue.due.map((d) => (
-            <Row
-              key={`${d.channelId}-${d.kind}`}
-              title={
-                <>
-                  {d.channelName} <span className="muted">{d.kind}</span>
-                </>
-              }
-              detail={d.reason}
-              onClick={() => go(`/c/${d.channelId}`)}
-              right={
-                d.overdueDays ? (
-                  <span className="pill fail">{d.overdueDays}d late</span>
-                ) : (
-                  <span className="pill">due</span>
-                )
-              }
-            />
-          ))}
-        </Panel>
-
-        <Panel
-          id="soon"
-          title="Soon"
-          count={queue.waiting.length}
-          open={open}
-          toggle={toggle}
-          why={`Ready, but not yet its turn. Each show has a day and an hour so a week's work arrives spread across the week rather than in one lump. A slot that passes while nothing is running leaves the show overdue now, never pushed to next week. Times are ${queue.timezone}.`}
-        >
-          {queue.waiting.map((w) => (
-            <Row
-              key={`${w.channelId}-${w.kind}-${w.at}`}
-              title={
-                <>
-                  {w.channelName} <span className="muted">{w.kind}</span>
-                </>
-              }
-              detail={w.reason}
-              onClick={() => go(`/c/${w.channelId}`)}
-              right={
-                <>
-                  <span className="muted mono tiny">{when(w.at!, queue.timezone)}</span>
-                  <span className="pill">{until(w.at!)}</span>
-                </>
-              }
-            />
-          ))}
-        </Panel>
-
-        <Panel
-          id="ready"
-          title="Ready"
-          count={queue.ready.length}
-          tone="pass"
-          open={open}
-          toggle={toggle}
-          why="Gate passed clean and nothing is waiting on a person. Open one to hear it and publish it."
-        >
-          {queue.ready.map((r) => (
-            <RunRow key={r.id} run={r} go={go} />
-          ))}
-        </Panel>
-
-        <Panel
-          id="lined"
-          title="Lined up"
-          count={queue.scheduled.length}
-          open={open}
-          toggle={toggle}
-          why={`Finished, with a release time that has not come. Ten shorts cut in one afternoon are all publishable at once, and publishing them together is what makes a feed look like somebody emptied a bucket into it. They go out one a day at a different hour each day. Nothing stops you publishing one now. Times are ${queue.timezone}.`}
-        >
-          {queue.scheduled.map((r) => (
-            <Row
-              key={r.id}
-              title={r.title ?? r.topic}
-              detail={`${r.channelName}${r.short !== null ? ` · short ${r.short}` : ''}`}
-              onClick={() => go(`/r/${r.id}`)}
-              right={
-                <>
-                  <span className="muted mono tiny">{when(r.releaseAt, queue.timezone)}</span>
-                  <span className="pill">{until(r.releaseAt)}</span>
-                </>
-              }
-            />
-          ))}
-        </Panel>
-
-        <Panel
-          id="out"
-          title="Out"
-          count={queue.publishedTotal}
-          open={open}
-          toggle={toggle}
-          why="Published. The most recent dozen are listed."
-        >
-          {queue.published.map((r) => (
-            <RunRow key={r.id} run={r} go={go} />
-          ))}
-        </Panel>
+        {live.length === 0 && (
+          <div className="empty">
+            Nothing in the studio yet. <a href="#/channels">Pick a channel</a> and make something.
+          </div>
+        )}
       </div>
 
-      {/* The week, one line per show. Not a calendar: the only question asked
-          of it is whether two shows go out on the same day. */}
+      {/*
+        THE EMPTY ONES, AS A SENTENCE. "Nothing held" is worth knowing and is
+        not worth a panel the same size as the thing that needs you.
+      */}
+      {empty.length > 0 && live.length > 0 && (
+        <p className="faint" style={{ marginTop: '1.2rem', fontSize: '0.82rem' }}>
+          Nothing {empty.map((s) => s.title.toLowerCase()).join(', ')}.
+        </p>
+      )}
+
+      {/* The week, one line per show. */}
       <div className="week">
         {queue.slots.map((s) => (
           <button key={s.channelId} className="week-row" onClick={() => go(`/c/${s.channelId}`)}>

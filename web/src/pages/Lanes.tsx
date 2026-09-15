@@ -35,6 +35,11 @@ export const Lanes = ({ go }: { go: (path: string) => void }) => {
 
   return (
     <div className="page">
+      <div className="row between" style={{ marginBottom: '0.3rem' }}>
+        <h1 className="headline">Channels</h1>
+        <span className="muted tiny">Pick one to make something, or to set it up</span>
+      </div>
+
       <ErrorNote>{error}</ErrorNote>
       {!lanes && !error && <p className="faint">...</p>}
 
@@ -48,7 +53,7 @@ export const Lanes = ({ go }: { go: (path: string) => void }) => {
             tone={held ? 'hold' : undefined}
             onClick={() => go('/queue')}
           />
-          <Count n={unready} label="not set up" tone={unready ? 'fail' : undefined} />
+          <Count n={unready} label="to set up" tone={unready ? 'fail' : undefined} />
         </div>
       )}
 
@@ -80,7 +85,7 @@ export const Lanes = ({ go }: { go: (path: string) => void }) => {
 
                     <span className="row nowrap">
                       {c.runs.awaitingApproval > 0 && (
-                        <span className="pill hold">{c.runs.awaitingApproval} held</span>
+                        <span className="pill hold">{c.runs.awaitingApproval} to read</span>
                       )}
                       {/*
                         THE STATE THAT IS OTHERWISE INVISIBLE. A channel with an
@@ -96,7 +101,11 @@ export const Lanes = ({ go }: { go: (path: string) => void }) => {
                       {!c.fiction && c.queued.topics + c.queued.sets === 0 && (
                         <span className="pill">no topics</span>
                       )}
+                      {c.account.exists && c.account.canPublish && (
+                        <span className="pill pass">ready</span>
+                      )}
                     </span>
+                    <span className="go">›</span>
                   </button>
                 ))}
               </div>
