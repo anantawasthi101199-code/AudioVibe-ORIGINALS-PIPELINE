@@ -28,7 +28,7 @@ import {
   type RunSummary,
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
-import { Count, Info } from '../components/Info';
+import { Count, Info, PlayButton } from '../components/Info';
 
 const REFRESH_MS = 20_000;
 
@@ -39,13 +39,17 @@ const Row = ({
   detail,
   right,
   onClick,
+  play,
 }: {
   title: React.ReactNode;
   detail: string;
   right: React.ReactNode;
   onClick: () => void;
+  /** A run id, when there is something to listen to. */
+  play?: string;
 }) => (
   <button className="queue-row" onClick={onClick}>
+    {play ? <PlayButton id={play} src={api.audioUrl(play)} /> : null}
     <span className="queue-main">
       <span className="queue-title">{title}</span>
       <span className="muted">{detail}</span>
@@ -60,6 +64,7 @@ const RunRow = ({ run, go }: { run: RunSummary; go: (path: string) => void }) =>
     title={run.title ?? run.topic}
     detail={`${run.channelName}${run.short !== null ? ` · short ${run.short}` : ''} · ${ago(run.createdAt)}`}
     onClick={() => go(`/r/${run.id}`)}
+    play={run.hasAudio ? run.id : undefined}
     right={
       <>
         {run.gate && run.gate.blocking > 0 && <span className="pill fail">{run.gate.blocking}</span>}
@@ -180,6 +185,7 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
           title={r.title ?? r.topic}
           detail={`${r.channelName}${r.short !== null ? ` · short ${r.short}` : ''}`}
           onClick={() => go(`/r/${r.id}`)}
+          play={r.hasAudio ? r.id : undefined}
           right={
             <>
               <span className="muted mono tiny">{when(r.releaseAt, queue.timezone)}</span>

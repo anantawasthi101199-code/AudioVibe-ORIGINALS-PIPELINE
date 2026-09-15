@@ -91,3 +91,72 @@ export const Count = ({
     <span className="count">{body}</span>
   );
 };
+
+/**
+ * Listen to a run without leaving the list.
+ *
+ * ONE PLAYER ACROSS THE WHOLE APP, held in a module-level element rather than
+ * in any page's state. Two episodes talking over each other is useless, and a
+ * page that only stops its own players lets a second one start the moment you
+ * navigate. There is exactly one, and starting anything stops whatever it was
+ * doing.
+ */
+let current: HTMLAudioElement | null = null;
+let currentId: string | null = null;
+const listeners = new Set<(id: string | null) => void>();
+
+const announce = (id: string | null) => {
+  currentId = id;
+  listeners.forEach((fn) => fn(id));
+};
+
+export const stopAudio = (): void => {
+  current?.pause();
+  current = null;
+  announce(null);
+};
+
+export const playAudio = (id: string, src: string): void => {
+  if (currentId === id) return stopAudio();
+  stopAudio();
+
+  const el = new Audio(src);
+  el.addEventListener('ended', () => announce(null));
+  el.addEventListener('error', () => announce(null));
+  void el.play();
+
+  current = el;
+  announce(id);
+};
+
+/** Which run is playing, for any component that wants to show it. */
+export const useNowPlaying = (): string | null => {
+  const [id, setId] = useState<string | null>(currentId);
+
+  useEffect(() => {
+    listeners.add(setId);
+    return () => {
+      listeners.delete(setId);
+    };
+  }, []);
+
+  return id;
+};
+
+export const PlayButton = ({ id, src }: { id: string; src: string }) => {
+  const nowPlaying = useNowPlaying();
+  const on = nowPlaying === id;
+
+  return (
+    <button
+      className={`play${on ? ' on' : ''}`}
+      aria-label={on ? 'Stop' : 'Listen'}
+      onClick={(e) => {
+        e.stopPropagation();
+        playAudio(id, src);
+      }}
+    >
+      {on ? '■' : '▶'}
+    </button>
+  );
+};

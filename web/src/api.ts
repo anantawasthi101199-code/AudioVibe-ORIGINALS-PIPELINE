@@ -79,6 +79,7 @@ export interface RunSummary {
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
   releaseAt: string | null;
   isSource: boolean;
+  hasAudio: boolean;
 }
 
 export interface QueueItem {
@@ -302,6 +303,12 @@ export const api = {
     }>(
       `/api/run/schedule?id=${encodeURIComponent(id)}`,
       { method: 'POST', body: JSON.stringify({ clear }) }
+    ),
+
+  setPublishQueue: (runIds: string[]) =>
+    call<{ queued: Array<{ runId: string; releaseAt: string }>; timezone: string }>(
+      '/api/schedule/order',
+      { method: 'POST', body: JSON.stringify({ runIds }) }
     ),
 
   discard: (id: string) =>

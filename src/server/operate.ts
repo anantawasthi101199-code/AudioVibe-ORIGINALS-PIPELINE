@@ -36,12 +36,13 @@ import { findSeries, recordSeries } from '../publish/seriesRegistry';
 import { paletteFor, renderCover, SERIES_COVER_SIZE } from '../art/cover';
 import { currentPlan } from '../schedule/current';
 import { loadSchedule } from '../schedule/load';
-import { planRelease } from '../schedule/slots';
+import { atHourOn, planRelease } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
 import { scriptSchema } from '../script/write';
 import { HttpError } from './routes';
+import { runs } from './catalog';
 import { jobs } from './jobs';
 
 /** Where this studio is pointed, and whether that is the real thing. */
@@ -337,6 +338,66 @@ export const scheduleRelease = (runId: string, body: unknown) => {
     last: times[times.length - 1]?.toISOString() ?? null,
     timezone: schedule.timezone,
   };
+};
+
+/**
+ * Set the publish queue: what goes out, and in what order.
+ *
+ * ONE ORDERED LIST ACROSS EVERY CHANNEL, which is what makes it useful. The
+ * question somebody actually has is "what does this studio put out over the
+ * next fortnight, in what order" - and that is a single sequence, not five
+ * per-channel ones you have to hold in your head at the same time.
+ *
+ * THE LIST IS THE QUEUE. A run in it gets a day; a run left out has its time
+ * cleared and goes back to publishable-whenever. So removing something from the
+ * queue is dropping it from the list rather than a separate act, and there is
+ * no way for a run to be both queued and not queued.
+ *
+ * THE HOUR COMES FROM THE CHANNEL. Position decides the day, the channel's own
+ * slot decides the hour, so two shows on consecutive days still go out at their
+ * own times rather than both at nine in the morning.
+ *
+ * PUBLISHED RUNS FALL OUT BY THEMSELVES. Nothing here removes them: a published
+ * run is no longer `ready`, so it stops being offered and stops being counted.
+ * The order that remains is still the order.
+ */
+export const setPublishQueue = (body: unknown) => {
+  const { runIds } = z.object({ runIds: z.array(z.string()) }).parse(body ?? {});
+
+  const schedule = loadSchedule();
+  const wanted = new Set(runIds);
+
+  // Everything that could be queued, so anything dropped from the list gets
+  // its time cleared in the same pass.
+  const candidates = runs({ limit: 400 }).filter(
+    (r) => !r.isSource && (r.state === 'ready' || r.state === 'awaiting-approval')
+  );
+
+  for (const summary of candidates) {
+    if (!wanted.has(summary.id)) Run.open(summary.id).setReleaseAt(null);
+  }
+
+  const times = planRelease({
+    count: runIds.length,
+    from: new Date(),
+    timezone: schedule.timezone,
+  });
+
+  const queued: Array<{ runId: string; releaseAt: string }> = [];
+
+  runIds.forEach((runId, i) => {
+    const run = Run.open(runId);
+    const cadence = schedule.shows[run.manifest.personaId];
+
+    // The day from the position, the hour from the channel.
+    const day = times[i]!;
+    const at = cadence?.slot ? atHourOn(day, cadence.slot.hour, schedule.timezone) : day;
+
+    run.setReleaseAt(at);
+    queued.push({ runId, releaseAt: at.toISOString() });
+  });
+
+  return { queued, timezone: schedule.timezone };
 };
 
 /** Delete a run and everything in it. Local only: it touches no platform. */

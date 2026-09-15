@@ -16,6 +16,7 @@ import { api, whenSignedOut, type Platform } from './api';
 import { Channel } from './pages/Channel';
 import { Lanes } from './pages/Lanes';
 import { Queue } from './pages/Queue';
+import { Schedule } from './pages/Schedule';
 import { Run } from './pages/Run';
 import { ErrorNote } from './components/bits';
 import './app.css';
@@ -106,6 +107,7 @@ export const App = () => {
   const channelMatch = /^\/c\/(.+)$/.exec(route);
   const runMatch = /^\/r\/(.+)$/.exec(route);
   const onChannels = route === '/channels';
+  const onSchedule = route === '/schedule';
 
   // THE QUEUE IS HOME. The question asked of this studio most often is "does
   // anything need me", and the answer should be the thing that loads.
@@ -114,7 +116,11 @@ export const App = () => {
   // corner with the same weight as Sign out, so the front page looked like a
   // status board with no way into anything. Two tabs, always visible, with the
   // current one marked.
-  const tab = channelMatch || runMatch || onChannels ? 'channels' : 'queue';
+  const tab = onSchedule
+    ? 'schedule'
+    : channelMatch || runMatch || onChannels
+      ? 'channels'
+      : 'queue';
 
   // Breadcrumbs only once you are deeper than a tab, where they earn their
   // space by being the way back up.
@@ -143,6 +149,16 @@ export const App = () => {
             }}
           >
             Queue
+          </a>
+          <a
+            className={`tab${tab === 'schedule' ? ' on' : ''}`}
+            href="#/schedule"
+            onClick={(e) => {
+              e.preventDefault();
+              go('/schedule');
+            }}
+          >
+            Publishing
           </a>
           <a
             className={`tab${tab === 'channels' ? ' on' : ''}`}
@@ -200,7 +216,9 @@ export const App = () => {
         </button>
       </header>
 
-      {runMatch ? (
+      {onSchedule ? (
+        <Schedule go={go} />
+      ) : runMatch ? (
         <Run id={runMatch[1]!} go={go} />
       ) : channelMatch ? (
         <Channel id={channelMatch[1]!} go={go} />

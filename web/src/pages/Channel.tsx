@@ -27,7 +27,7 @@ import {
   type RunSummary,
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
-import { Count, Info } from '../components/Info';
+import { Count, Info, PlayButton } from '../components/Info';
 
 /** The once-per-channel jobs, which is where everything platform-facing lives. */
 const Setup = ({
@@ -480,6 +480,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             <div className="queue-list">
               {runs.map((r) => (
                 <button key={r.id} className="queue-row" onClick={() => go(`/r/${r.id}`)}>
+                  {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id)} /> : null}
                   <span className="queue-main">
                     <span className="queue-title">{r.title ?? r.topic}</span>
                     <span className="muted">

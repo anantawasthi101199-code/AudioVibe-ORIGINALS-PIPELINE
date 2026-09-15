@@ -1393,3 +1393,168 @@ table.runs .num {
     display: none;
   }
 }
+
+/* --- The publishing order -------------------------------------------------
+   One ordered list across every channel. Drag to arrange, tick what goes out,
+   press play to hear it before you commit to any of that. */
+
+.order {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0.9rem;
+  border-top: 1px solid var(--line-soft);
+  background: var(--ink-850);
+  cursor: grab;
+  transition: background 120ms ease;
+}
+
+.order-row:first-child {
+  border-top: 0;
+}
+
+.order-row:hover {
+  background: var(--ink-800);
+}
+
+/* Queued rows carry a green edge, so what is going out reads at a glance from
+   the shape of the list rather than from the checkboxes one at a time. */
+.order-row.on {
+  box-shadow: inset 3px 0 0 var(--pass);
+}
+
+.order-row.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.grip {
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  letter-spacing: -1px;
+  user-select: none;
+}
+
+.tick {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--pass);
+  cursor: pointer;
+}
+
+.order-n {
+  width: 1.4rem;
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.order-main .muted {
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-when {
+  flex: none;
+}
+
+/* --- Listening ------------------------------------------------------------
+   The one check a person can make that no gate can. Making it require opening
+   each run separately meant it mostly did not happen. */
+
+.play {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease;
+}
+
+.play:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.play.on {
+  color: var(--amber);
+  border-color: var(--amber-dim);
+  background: var(--amber-glow);
+}
+
+/* A row with no audio keeps the space, so the titles stay in one column. */
+.play.empty {
+  border-color: transparent;
+  cursor: default;
+}
+
+/* --- Nudge, because dragging is neither keyboard nor touch ---------------- */
+
+.nudge {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nudge button {
+  width: 20px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 0.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nudge button:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.nudge button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (max-width: 720px) {
+  .order-when,
+  .nudge {
+    display: none;
+  }
+}

@@ -19,6 +19,8 @@
  * Read-only and derived. Nothing here is stored; it is the persona files, the
  * beat sheets and the runs directory, arranged.
  */
+import fs from 'fs';
+import path from 'path';
 import { z } from 'zod';
 import { loadAllPersonas, loadPersona } from '../canon/load';
 import { Persona } from '../canon/schema';
@@ -270,6 +272,16 @@ export interface RunSummary {
    * twenty-minute script nobody voiced in front of listeners.
    */
   isSource: boolean;
+  /**
+   * Whether there is something to listen to.
+   *
+   * CARRIED ON THE SUMMARY so a list can offer a play button without opening
+   * every run to find out. Checked as a file on disk rather than inferred from
+   * the render artifact, because a run whose script was edited keeps its media
+   * file while the artifact is dropped, and the question here is only "is there
+   * audio", not "is it current".
+   */
+  hasAudio: boolean;
 }
 
 /**
@@ -376,6 +388,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     gate,
     releaseAt: m.releaseAt ?? null,
     isSource,
+    hasAudio: fs.existsSync(path.join(run.dir, 'media', 'episode.wav')),
   };
 };
 
