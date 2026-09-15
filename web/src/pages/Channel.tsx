@@ -360,7 +360,10 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           label="held"
           tone={runs.some((r) => r.state === 'awaiting-approval') ? 'hold' : undefined}
         />
-        <Count n={data.topics.length + data.sets.length} label="queued" />
+        {/* "topics", not "queued": queued means waiting for a release date on
+            the publishing page, and one word meaning two things on adjacent
+            screens is how somebody reads the wrong number. */}
+        <Count n={data.topics.length + data.sets.length} label="topics" />
         <Count n={money(budgetPence)} label="budget" />
       </div>
 
@@ -368,6 +371,34 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
 
       <div className="stack tight">
         <Setup channel={channel} platform={platform} onDone={() => void load()} />
+
+        {/*
+          --- Publishing -------------------------------------------------
+          A STEP, NOT A TAB. Set the channel up, then decide what goes out, for
+          one show, on one page. The studio-wide list this replaced put three
+          rows of another show's work above yours, where ticking one published
+          to the wrong account.
+
+          ABOVE `Make` rather than below it, so `Make` sits against the runs
+          list it fills: what you asked for and what came of it read as one
+          pair. It also puts the thing with work waiting above the thing that
+          starts more of it.
+        */}
+        {ready > 0 && (
+          <button className="panel step-on" onClick={() => go(`/c/${channel.id}/publish`)}>
+            {/* The count, not a step number: this no longer sits third in a
+                numbered sequence, and a stale "3" above `Make` would imply
+                making something is step four. */}
+            <span className="step-n done">{ready}</span>
+            <span className="stack" style={{ gap: '0.15rem', flex: 1, minWidth: 0 }}>
+              <span className="queue-title">
+                {ready} ready to publish as @{channel.account.handle ?? channel.handle}
+              </span>
+              <span className="muted tiny">Read them, listen, order them, publish</span>
+            </span>
+            <span className="caret">›</span>
+          </button>
+        )}
 
         {/* --- Make something ------------------------------------------- */}
         <section className="panel">
@@ -467,26 +498,6 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             )}
           </div>
         </section>
-
-        {/*
-          --- Publishing -------------------------------------------------
-          A STEP, NOT A TAB. Set the channel up, make something, then decide
-          what goes out - in that order, on one page, for one show. The
-          studio-wide list this replaced put three rows of another show's work
-          above yours, where ticking one published to the wrong account.
-        */}
-        {ready > 0 && (
-          <button className="panel step-on" onClick={() => go(`/c/${channel.id}/publish`)}>
-            <span className="step-n done">3</span>
-            <span className="stack" style={{ gap: '0.15rem', flex: 1, minWidth: 0 }}>
-              <span className="queue-title">
-                {ready} ready to publish as @{channel.account.handle ?? channel.handle}
-              </span>
-              <span className="muted tiny">Read them, listen, order them, publish</span>
-            </span>
-            <span className="caret">›</span>
-          </button>
-        )}
 
         {/* --- What it has made ----------------------------------------- */}
         <section className="panel">
