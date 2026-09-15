@@ -6,25 +6,19 @@
  * script in a way four sentences cannot show. This test is the reason that was
  * found, and it stays so the next refinement has to survive the real input too.
  *
- * It is skipped rather than failed when the run is not on disk, so a fresh
- * clone does not fail a suite over a directory it was never given.
+ * IT IS A FIXTURE NOW, NOT A LIVE RUN. It used to read out of runs/, which
+ * meant the one test proving this works on a real episode went quietly green by
+ * skipping the moment that run was archived - which is exactly what happened.
+ * The script and its corpus are committed here instead, 190KB, and the test
+ * cannot skip.
  */
 import fs from 'fs';
 import path from 'path';
 import { checkPronouns } from '../pronouns';
 
-// ARCHIVED. Runs moved to runs/<channel>/ and everything made before that is
-// under runs/experiments/, kept because this test is the only thing that proves
-// the pronoun check works on a whole real episode rather than on four
-// hand-picked sentences.
-const RUN = path.join(__dirname, '../../../runs/experiments/20260912-140607-the-long-way-round');
-const present = fs.existsSync(path.join(RUN, 'script.json'));
+const RUN = path.join(__dirname, 'fixtures', 'the-long-way-round');
 
-const maybe = present ? describe : describe.skip;
-
-maybe('the episode that misgendered the sentencing judge', () => {
-  // READ INSIDE THE TESTS, not in the describe body: describe.skip still
-  // evaluates its body, so a top-level read throws even when the run is gone.
+describe('the episode that misgendered the sentencing judge', () => {
   const load = () => {
     const script = JSON.parse(fs.readFileSync(path.join(RUN, 'script.json'), 'utf8')) as {
       beats: Array<{ turns: Array<{ text: string }> }>;

@@ -1,0 +1,172 @@
+{
+  "personaId": "the-long-way-round",
+  "formatId": "told-story",
+  "title": "The Cabinet They Didn't Plan For",
+  "description": "This episode reconstructs the Hatton Garden vault job entirely through HHJ Kinch's sentencing remarks, from the condemned drill and the blocked wall to the six ageing men who came back two nights later anyway. It follows the case to its conclusion, the sentences handed down one by one, and the more than nine million pounds that has never been recovered.",
+  "beats": [
+    {
+      "beatId": "cold_open",
+      "beatType": "cold_open",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "The equipment log shows the drill was condemned at 9:40pm, hours before it was used again."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[slowly] They are standing in a basement in the middle of London, in the dark, having already done the hard part, already down the lift shaft, already past the door nobody was meant to get past, drill still warm from cutting a hole clean through a wall that was supposed to open onto the vault. It does not. On the other side sits a metal cabinet, bolted in, blocking the way through as if somebody had built it there for exactly this purpose. The drill is useless against it. Nobody down there is young."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[curious] And nobody down there had planned on doing this twice. Two nights later, different kit, same six men, back in that basement."
+        }
+      ],
+      "claimIds": [
+        "c1",
+        "c2"
+      ],
+      "revisions": 1
+    },
+    {
+      "beatId": "orientation",
+      "beatType": "orientation",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "[serious] All of that comes to us in one voice, because everything in this story is drawn from the sentencing remarks of a judge called HHJ Kinch, delivered in court after it was all over, laying out exactly what happened and exactly what it cost."
+        },
+        {
+          "speaker": "narrator",
+          "text": "This is the Hatton Garden Safe Deposit burglary, London, Easter weekend of 2015. A real building, a real vault, and a real judge standing up afterward to say, on the record, who did what and when."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[curious] What her remarks work out, piece by piece, is the question sitting underneath everything you just heard. Why six men, most of them well past the age anybody plans a job like this, walked away from a basement after the drill had failed them, and then chose to come back and finish it anyway."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[warmly] And what it cost each of them, once the courtroom doors closed and the sentences were read out one by one. That is the shape of what follows, start to finish, the long way."
+        }
+      ],
+      "claimIds": [],
+      "revisions": 1
+    },
+    {
+      "beatId": "before",
+      "beatType": "stakes",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "Six of them. That is where her remarks start, because you cannot understand why anybody went back into that basement without knowing who was standing in it the first time."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[serious] The first is Brian Reader. The eldest of the six, the one the others called the Guvnor, or sometimes just Master, and he had earned both names the hard way. Reader was jailed over the Brink's-Mat robbery back in 1983, twenty-six million pounds in gold, one of the biggest thefts this country had seen, and by the time Hatton Garden came around he was an old man with an old reputation, the kind other thieves still deferred to."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The second is Terry Perkins. Convicted in 1985 over the Security Express job, close to six million pounds taken from the vaults that time, and Perkins had gone away for twenty-two years for it. He turned sixty-seven on the Saturday of this burglary, working through his own birthday."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Third, Kenny Collins. Seventy-five years old, from Islington. Fourth, Daniel Jones, sixty-one, from Enfield. And then two more, Carl Wood and William Lincoln, the ones who'd complete the group waiting in that basement when the torchlight found nothing but a locked metal cabinet where the vault should have opened up."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[quietly] Here is the part that gets me. Reader had done Brink's-Mat. Perkins had done Security Express. Between them and the record behind the others there was a lifetime of this kind of work, most of it long finished, the sort of men who by rights should have retired from basements and drills and lift shafts years before Easter weekend of 2015 ever came around."
+        },
+        {
+          "speaker": "narrator",
+          "text": "But there they were. Into the building, down through the lift shaft they'd already forced, past the door that was never meant to open, drill in hand, cutting through brick that was supposed to lead them straight into the vault."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[slowly] And that is where it stops making sense on the first attempt. The wall came through fine. What waited behind it did not."
+        }
+      ],
+      "claimIds": [],
+      "revisions": 2
+    },
+    {
+      "beatId": "wrong",
+      "beatType": "escalation",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "There is a man Kinch's remarks call Basil, and nobody in that basement is him, because Basil never went near the lift shaft at all. He came in through the front door, in a red-haired wig, and the CCTV caught him doing it. Whoever he was, he knew enough about that building to get to the alarm system and disable it, and once that was done the whole calculation changed for the six of them. The blocked cabinet was still there. The drill that had failed against it was still useless. But the building itself was no longer watching them the way it had been on the first night."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[quietly] Nobody wrote down what was said between the two nights, whether it was Reader who decided, or Perkins, or all six of them talking it through somewhere that wasn't a basement. What the record shows is what happened next. Two nights later, the same six men went back in, this time with a Hilti DD350, a heavy duty drill built for exactly the kind of wall that had beaten them before."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[rushed] This time it worked. The drill went through the cabinet and through to the vault behind it, and the vault opened the way it was supposed to on the first night, and they were in among the deposit boxes with nobody watching and nothing left standing between them and what they'd come for."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[serious] By any measure that mattered to the six of them, the job was done. What they didn't know, couldn't have known standing in that vault, was that a white Mercedes had already been picked up on CCTV somewhere along their route, distinctive enough that detectives would trace it straight to Kenny Collins. And they didn't know that some of their own cars already had listening devices fitted inside them, quietly recording, so that when the men later sat and talked through how to move what they'd taken, the conversation went somewhere other than just between them."
+        }
+      ],
+      "claimIds": [
+        "c15",
+        "c17",
+        "c18",
+        "c19",
+        "c20",
+        "c21"
+      ],
+      "revisions": 1
+    },
+    {
+      "beatId": "payoff",
+      "beatType": "payoff",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "Kinch's remarks turn there, from what the men did in that vault to what the police already had on them before they'd finished counting the money. One of the six was carrying something else in his record besides the two big jobs already mentioned, a six year sentence going back to 1982 for burgling Ratners Jewellers, so that by the time this vault finally opened there wasn't a man standing in it who was new to any part of this life. Old-school professionals, Kinch called them, and she meant it plainly, not as praise and not as an excuse, just as a description of who these six actually were once you laid the whole record out."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[serious] The building itself belonged to somebody else, and that is where Hugh Doyle comes into it. Doyle wasn't down that lift shaft and wasn't one of the six who'd planned any of it. His premises were used by the gang in the course of what they did, and that alone was enough to bring him in front of Kinch alongside the others, though what she had to say about him and what she had to say about the men who did the drilling were never going to land the same way, and they didn't."
+        },
+        {
+          "speaker": "narrator",
+          "text": "The white Mercedes led detectives straight to Kenny Collins. The listening devices already fitted in the cars picked up the rest, the men sitting and working through how to move what they'd taken, and between those two threads the case largely built itself without needing a great deal more."
+        },
+        {
+          "speaker": "narrator",
+          "text": "[quietly] Then the sentences, one at a time, the way Kinch read them out in that courtroom. Brian Reader, the Guvnor, got six years and three months. Terry Perkins, sixty-seven years old that same weekend and already carrying twenty-two years from the Security Express job behind him, stood in front of her with all of that history in the room. Carl Wood got six years. William Lincoln got seven. Hugh Doyle got twenty-one months, suspended for two years, the court drawing its own line between a man who let his premises be used and men who went down that lift shaft themselves."
+        },
+        {
+          "speaker": "narrator",
+          "text": "And more than nine million pounds of what came out of that vault has stayed missing ever since, carried out in bags over Easter weekend of 2015 and gone out of anywhere the record can follow it to."
+        }
+      ],
+      "claimIds": [
+        "c22",
+        "c24",
+        "c25",
+        "c27",
+        "c28",
+        "c29"
+      ],
+      "revisions": 2
+    },
+    {
+      "beatId": "close",
+      "beatType": "outro",
+      "turns": [
+        {
+          "speaker": "narrator",
+          "text": "[quietly] Basil was never in that courtroom. Kinch's remarks name six men and account for every year each of them got, but the man in the red wig who walked in through the front door and switched off the alarm was never sitting among them. [serious] He has remained the main target of investigators for years now, still unnamed, still not found, still somewhere outside the reach of everything that caught the other six. The one man who made going back possible has never paid for anything at all."
+        }
+      ],
+      "claimIds": [
+        "c30"
+      ],
+      "revisions": 1
+    }
+  ],
+  "writerModel": "claude-sonnet-5"
+}
