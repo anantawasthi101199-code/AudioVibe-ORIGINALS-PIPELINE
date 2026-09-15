@@ -29,6 +29,7 @@ import path from 'path';
 import { z } from 'zod';
 import { Persona } from '../canon/schema';
 import { repoRoot } from '../config';
+import { describeFailure } from './ingest';
 import { fileBlob } from './mime';
 
 export class AccountError extends Error {
@@ -236,11 +237,11 @@ export class PlatformAccounts {
     );
 
     if (res.status < 200 || res.status >= 300) {
-      const message =
-        (res.json as { message?: string; error?: { message?: string } } | null)?.message ??
-        (res.json as { error?: { message?: string } } | null)?.error?.message ??
-        res.text.slice(0, 200);
-      throw new AccountError(res.status, `${method} ${path}: ${message}`);
+      // THE SAME TREATMENT THE PUBLISH PATH GETS. A 500 answered with the
+      // platform's generic sentence tells somebody nothing, and this path
+      // creates accounts and deletes audio - the two places where an opaque
+      // failure is most expensive.
+      throw new AccountError(res.status, `${method} ${path} (${res.status}): ${describeFailure(res)}`);
     }
     return (res.json as { data?: Record<string, unknown> } | null)?.data ?? {};
   }
@@ -307,6 +308,18 @@ export class PlatformAccounts {
       bio: bioFor(persona),
       is_private: false,
     });
+  }
+
+  /**
+   * Delete one of this channel's own audios.
+   *
+   * THROUGH THE ENDPOINT A CREATOR USES ON THEIR OWN WORK, signed in as the
+   * channel. There is deliberately no admin path: a studio that can delete
+   * anything is a different and much more dangerous thing than one that can
+   * delete its own.
+   */
+  async deleteAudio(audioId: string): Promise<void> {
+    await this.call('DELETE', `/api/audios/${encodeURIComponent(audioId)}`);
   }
 
   async uploadAvatar(file: string): Promise<void> {

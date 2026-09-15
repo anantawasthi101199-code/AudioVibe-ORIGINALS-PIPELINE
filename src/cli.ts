@@ -51,6 +51,7 @@ import { Reporter } from './cli/ui';
 import { setUpChannel } from './pipeline/channel';
 import { PublishRefused, publishRun } from './publish/publishRun';
 import { dueForRelease, releaseDue } from './publish/release';
+import { unpublish } from './publish/unpublish';
 import {
   accountsPath,
   loadAccounts,
@@ -129,6 +130,10 @@ Commands
   release [--dry-run]            Publish whatever was approved and is due, one
                                  per run. For cron or Task Scheduler; the
                                  studio does the same on a timer while open.
+  unpublish --run <id> [--yes]   Delete a published run from the platform and
+                                 make it publishable again here. For the first
+                                 few of a channel, where publishing is really
+                                 looking at the result.
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
   series --show <id>             What a fiction show has established so far
@@ -721,6 +726,34 @@ const cmdRelease = async (argv: string[]): Promise<number> => {
   if (result.remaining > 0) console.log(`${result.remaining} more due; run again to continue.`);
 
   return result.failed.length ? 1 : 0;
+};
+
+/**
+ * Take a published run back off the platform.
+ *
+ * FOR THE FIRST FEW EPISODES OF A CHANNEL, which are not really publishing so
+ * much as looking at the result. Without this the only ways to remove a bad
+ * card are to leave it in the catalogue or to wipe the database, and wiping
+ * would take the account, its artwork and its credential with it.
+ */
+const cmdUnpublish = async (argv: string[]): Promise<number> => {
+  const run = openRun(argv);
+  const platform = platformUrl();
+
+  if (platform.isProduction && !flag(argv, 'yes')) {
+    console.error(`AUDIOVIBE_API_URL points at PRODUCTION (${platform.url}).`);
+    console.error('Re-run with --yes if that is what you meant.');
+    return 1;
+  }
+
+  const result = await unpublish(run.id, { log: (m) => console.log(`  ${m}`) });
+
+  console.log(
+    result.removed
+      ? `removed ${result.audioId} from ${platform.url}`
+      : `${result.audioId}: ${result.note}`
+  );
+  return 0;
 };
 
 const cmdApprove = async (argv: string[]): Promise<number> => {
@@ -1524,6 +1557,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdChannelToken(rest);
       case 'release':
         return await cmdRelease(rest);
+      case 'unpublish':
+        return await cmdUnpublish(rest);
       case 'approve':
         return await cmdApprove(rest);
       case 'resume':
