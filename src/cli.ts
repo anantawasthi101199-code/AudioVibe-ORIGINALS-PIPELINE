@@ -50,6 +50,7 @@ import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
 import { setUpChannel } from './pipeline/channel';
 import { PublishRefused, publishRun } from './publish/publishRun';
+import { dueForRelease, releaseDue } from './publish/release';
 import {
   accountsPath,
   loadAccounts,
@@ -122,6 +123,9 @@ Commands
                                  committed. Deliberate, and two steps on purpose.
   prompts [--show <id>] [--only <id>] [--out <file>]
                                  Every prompt sent to a model, as it is sent
+  release [--dry-run]            Publish whatever was approved and is due, one
+                                 per run. For cron or Task Scheduler; the
+                                 studio does the same on a timer while open.
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
   series --show <id>             What a fiction show has established so far
@@ -674,6 +678,47 @@ const cmdChannelToken = (argv: string[]): number => {
 
   console.log(`@${account.username} can publish. Recorded in ${accountsPath()}.`);
   return 0;
+};
+
+/**
+ * Publish whatever a person approved and whose time has come.
+ *
+ * FOR A TRIGGER, NOT FOR A PERSON. Point Task Scheduler or cron at this as
+ * often as you like: what is due is computed from what is on disk, so firing
+ * twice in a minute publishes nothing the second time, and not firing for a
+ * week leaves a backlog that drains one per firing rather than all at once.
+ *
+ * The studio runs the same code on a timer while it is open. This is for a
+ * studio that publishes whether or not somebody's laptop is on.
+ */
+const cmdRelease = async (argv: string[]): Promise<number> => {
+  const plan = dueForRelease();
+
+  for (const held of plan.held) {
+    console.log(`holding ${held.runId}: ${held.reason}`);
+  }
+
+  if (!plan.due.length) {
+    console.log('Nothing due.');
+    return 0;
+  }
+
+  if (flag(argv, 'dry-run')) {
+    console.log(`${plan.due.length} due:`);
+    for (const d of plan.due) {
+      console.log(`  ${d.releaseAt.toISOString()}  ${d.channelName}  "${d.title}"`);
+    }
+    console.log('\nNothing published. Drop --dry-run to release the first one.');
+    return 0;
+  }
+
+  const result = await releaseDue(new Date(), { report: (m) => console.log(`  ${m}`) });
+
+  for (const r of result.released) console.log(`published ${r.audioId} to ${r.url}`);
+  for (const f of result.failed) console.error(`failed ${f.runId}: ${f.reason}`);
+  if (result.remaining > 0) console.log(`${result.remaining} more due; run again to continue.`);
+
+  return result.failed.length ? 1 : 0;
 };
 
 const cmdApprove = async (argv: string[]): Promise<number> => {
@@ -1475,6 +1520,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdChannelSetup(rest);
       case 'channel-token':
         return cmdChannelToken(rest);
+      case 'release':
+        return await cmdRelease(rest);
       case 'approve':
         return await cmdApprove(rest);
       case 'resume':

@@ -1,0 +1,303 @@
+/**
+ * A month of the studio, as a grid.
+ *
+ * WHY A GRID AND NOT ANOTHER LIST. The questions this answers are about shape:
+ * do two shows land on the same day, is there a week with nothing in it, has a
+ * channel gone quiet. Every one of those is obvious in a calendar and invisible
+ * in a list sorted by date, which is why this is a separate view rather than
+ * one more sort order on the publishing page.
+ *
+ * PAST AND FUTURE IN ONE GRID. What went out is the same kind of fact as what
+ * is going to, and splitting them would make "did anything go out last week" a
+ * different screen from "is anything going out next week".
+ *
+ * COLOUR IS THE CHANNEL, SHAPE IS THE KIND, FILL IS WHETHER IT IS REAL. Three
+ * things to read off a box four millimetres tall, so each uses a different
+ * channel of perception and none of them is colour alone - a solid box is out,
+ * an outlined one is going to be, a faint one has a date nobody approved.
+ */
+import { useCallback, useEffect, useState } from 'react';
+import { api, clock, type CalendarView, type CalendarEntry } from '../api';
+import { ErrorNote } from '../components/bits';
+import { Count, Info, PlayButton } from '../components/Info';
+
+/**
+ * A colour per channel, from its id.
+ *
+ * DERIVED RATHER THAN CONFIGURED, so a new channel has one the first time it
+ * appears and nobody has to pick. Spread around the wheel at a fixed
+ * saturation, so two channels are never nearly the same and none of them
+ * competes with the amber that means spend.
+ */
+const hueFor = (channelId: string): number => {
+  let h = 0;
+  for (const c of channelId) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return h;
+};
+
+const colourFor = (channelId: string): string => `hsl(${hueFor(channelId)} 58% 62%)`;
+
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+/** Monday-first, because the studio's week is a working week. */
+const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+const shift = (month: string, by: number): string => {
+  const [y, m] = month.split('-').map(Number);
+  const d = new Date(Date.UTC(y!, m! - 1 + by, 1));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+};
+
+/**
+ * The days to draw: the whole month, padded to whole weeks.
+ *
+ * The padding days are shown greyed rather than blank, because a grid that
+ * starts mid-row with empty cells reads as missing data.
+ */
+const gridFor = (month: string): string[] => {
+  const [y, m] = month.split('-').map(Number);
+  const first = new Date(Date.UTC(y!, m! - 1, 1));
+  const last = new Date(Date.UTC(y!, m!, 0));
+
+  // getUTCDay is Sunday-0; this week starts on Monday.
+  const lead = (first.getUTCDay() + 6) % 7;
+  const out: string[] = [];
+
+  for (let i = -lead; out.length < Math.ceil((lead + last.getUTCDate()) / 7) * 7; i++) {
+    const d = new Date(Date.UTC(y!, m! - 1, 1 + i));
+    out.push(d.toISOString().slice(0, 10));
+  }
+  return out;
+};
+
+const Entry = ({
+  entry,
+  onOpen,
+}: {
+  entry: CalendarEntry;
+  onOpen: (e: CalendarEntry) => void;
+}) => (
+  <button
+    className={`cal-entry ${entry.state} ${entry.kind}`}
+    style={{ '--ch': colourFor(entry.channelId) } as React.CSSProperties}
+    onClick={(e) => {
+      e.stopPropagation();
+      onOpen(entry);
+    }}
+    title={`${entry.channelName} · ${entry.kind} · ${entry.title}`}
+  >
+    <span className="cal-dot" />
+    <span className="cal-entry-text">{entry.title}</span>
+  </button>
+);
+
+export const Calendar = ({ go }: { go: (path: string) => void }) => {
+  const [month, setMonth] = useState<string>(() => new Date().toISOString().slice(0, 7));
+  const [view, setView] = useState<CalendarView | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState<CalendarEntry | null>(null);
+
+  const load = useCallback(
+    (m: string) =>
+      api
+        .calendar(m)
+        .then((v) => {
+          setView(v);
+          setError(null);
+        })
+        .catch((e: Error) => setError(e.message)),
+    []
+  );
+
+  useEffect(() => {
+    void load(month);
+  }, [load, month]);
+
+  if (!view) {
+    return (
+      <div className="page">
+        <ErrorNote>{error}</ErrorNote>
+        {!error && <p className="faint">...</p>}
+      </div>
+    );
+  }
+
+  const byDay = new Map(view.days.map((d) => [d.date, d.entries]));
+  const days = gridFor(month);
+  const inMonth = (date: string) => date.slice(0, 7) === month;
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: view.timezone });
+
+  const all = view.days.flatMap((d) => d.entries);
+  const counts = {
+    out: all.filter((e) => e.state === 'published').length,
+    approved: all.filter((e) => e.state === 'approved').length,
+    planned: all.filter((e) => e.state === 'planned').length,
+  };
+
+  const [y, m] = month.split('-').map(Number);
+
+  return (
+    <div className="page">
+      <div className="row between" style={{ marginBottom: '0.3rem' }}>
+        <h1 className="headline">
+          {MONTHS[m! - 1]} <span className="faint">{y}</span>
+        </h1>
+        <div className="row nowrap">
+          <button className="btn ghost small" onClick={() => setMonth(shift(month, -1))}>
+            ‹
+          </button>
+          <button
+            className="btn ghost small"
+            onClick={() => setMonth(new Date().toISOString().slice(0, 7))}
+          >
+            Today
+          </button>
+          <button className="btn ghost small" onClick={() => setMonth(shift(month, 1))}>
+            ›
+          </button>
+        </div>
+      </div>
+
+      <div className="counts" style={{ margin: '1.2rem 0 1.1rem' }}>
+        <Count n={counts.out} label="published" tone="pass" />
+        <Count n={counts.approved} label="approved" />
+        <Count n={counts.planned} label="not approved" tone={counts.planned ? 'hold' : undefined} />
+      </div>
+
+      <ErrorNote>{error}</ErrorNote>
+
+      {/*
+        WHETHER THE GRID IS A PROMISE OR A WISH. A month of future dates means
+        nothing if nothing acts on them, so it says which at the top rather
+        than letting somebody assume.
+      */}
+      <p className="muted" style={{ marginBottom: '1rem', fontSize: '0.85rem' }}>
+        {view.releasing ? (
+          <>
+            <span className="pill pass">releasing on</span> Approved episodes publish themselves at
+            these times, while the studio is running.
+          </>
+        ) : (
+          <>
+            <span className="pill hold">releasing off</span> Nothing publishes by itself. These are
+            dates you approved; press publish on a card, or start the studio with{' '}
+            <code className="mono tiny">FOUNDRY_RELEASE=on</code>.
+          </>
+        )}{' '}
+        <Info label="What the boxes mean">
+          Colour is the channel. A solid box has been published; an outlined one is approved and
+          will go out at that time; a faint one has a date but nobody approved it, so it will not.
+          Shorts are narrower than episodes. Times are {view.timezone}.
+        </Info>
+      </p>
+
+      {/* Which colour is which show. */}
+      {view.channels.length > 0 && (
+        <div className="cal-key">
+          {view.channels.map((c) => (
+            <button key={c.id} className="cal-key-item" onClick={() => go(`/c/${c.id}/publish`)}>
+              <span className="cal-dot" style={{ '--ch': colourFor(c.id) } as React.CSSProperties} />
+              {c.name}
+              {c.slot && <span className="faint tiny">{c.slot}</span>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="cal">
+        {WEEKDAYS.map((d) => (
+          <div className="cal-head" key={d}>
+            {d}
+          </div>
+        ))}
+
+        {days.map((date) => {
+          const entries = byDay.get(date) ?? [];
+          return (
+            <div
+              key={date}
+              className={`cal-day${inMonth(date) ? '' : ' outside'}${date === today ? ' today' : ''}${
+                entries.length ? ' has' : ''
+              }`}
+            >
+              <span className="cal-date">{Number(date.slice(8))}</span>
+              {entries.map((e) => (
+                <Entry key={e.runId} entry={e} onOpen={setOpen} />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* What is on that day, in full. */}
+      {open && (
+        <div className="cal-detail" onClick={() => setOpen(null)}>
+          <div className="cal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="row between">
+              <span
+                className="pill"
+                style={
+                  {
+                    '--ch': colourFor(open.channelId),
+                    color: colourFor(open.channelId),
+                    borderColor: colourFor(open.channelId),
+                  } as React.CSSProperties
+                }
+              >
+                {open.channelName}
+              </span>
+              <button className="btn ghost small" onClick={() => setOpen(null)}>
+                Close
+              </button>
+            </div>
+
+            <h2 style={{ fontSize: '1.15rem' }}>{open.title}</h2>
+
+            <div className="row" style={{ gap: '0.5rem' }}>
+              <span className="pill">{open.kind}</span>
+              {open.short !== null && <span className="pill">short {open.short}</span>}
+              {open.durationS !== null && <span className="pill">{clock(open.durationS)}</span>}
+              <span
+                className={`pill ${open.state === 'published' ? 'pass' : open.state === 'planned' ? 'hold' : ''}`}
+              >
+                {open.state === 'published'
+                  ? 'published'
+                  : open.state === 'approved'
+                    ? 'approved'
+                    : 'not approved'}
+              </span>
+            </div>
+
+            <p className="muted">
+              {new Date(open.at).toLocaleString('en-GB', {
+                timeZone: view.timezone,
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}{' '}
+              <span className="faint tiny">{view.timezone}</span>
+            </p>
+
+            <div className="row">
+              <PlayButton id={open.runId} src={api.audioUrl(open.runId)} />
+              <button className="btn ghost small" onClick={() => go(`/r/${open.runId}`)}>
+                Open the run
+              </button>
+              <button
+                className="btn ghost small"
+                onClick={() => go(`/c/${open.channelId}/publish`)}
+              >
+                {open.channelName} publishing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

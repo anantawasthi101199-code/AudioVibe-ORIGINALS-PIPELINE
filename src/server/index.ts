@@ -45,6 +45,8 @@ import {
   suggest,
 } from './routes';
 import { getQueue } from './queue';
+import { getCalendar, releasingEnabled } from './calendar';
+import { releaseDue } from '../publish/release';
 import {
   createSeriesJob,
   discardRun,
@@ -53,6 +55,8 @@ import {
   publishRunJob,
   recheckChannel,
   recordToken,
+  releaseNow,
+  releaseStatus,
   scheduleRelease,
   setPublishQueue,
   setUpChannelJob,
@@ -265,6 +269,10 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/catalogue') return send(res, 200, getCatalogue());
       if (pathname === '/api/queue') return send(res, 200, getQueue());
       if (pathname === '/api/platform') return send(res, 200, getPlatform());
+      if (pathname === '/api/calendar') {
+        return send(res, 200, getCalendar(url.searchParams.get('month') ?? undefined));
+      }
+      if (pathname === '/api/release') return send(res, 200, releaseStatus());
       if (pathname === '/api/next') return send(res, 200, nextDue());
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
       if (pathname === '/api/runs') return send(res, 200, getRuns(url.searchParams.get('channel')));
@@ -293,6 +301,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/shorts' && req.method === 'POST') {
         return send(res, 202, cutShorts(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/release/now' && req.method === 'POST') {
+        return send(res, 200, await releaseNow());
       }
       if (pathname === '/api/channel/recheck' && req.method === 'POST') {
         return send(res, 200, recheckChannel(id ?? ''));
@@ -359,6 +370,73 @@ export const serve = async (opts: ServeOptions = {}): Promise<http.Server> => {
     console.log('  and every button in it spends money. One password is the only thing');
     console.log('  between them and a run.');
   }
+  if (releasingEnabled()) {
+    startReleasing();
+    console.log(`  Releasing is ON. Approved episodes publish themselves at their time,`);
+    console.log(`  checked every ${RELEASE_EVERY_MS / 60000} minutes, while this is running.`);
+  } else {
+    console.log('  Releasing is off. Nothing publishes unless you press publish.');
+    console.log('  FOUNDRY_RELEASE=on turns it on.');
+  }
+
   console.log('');
   return server;
+};
+
+/**
+ * How often to look for something due.
+ *
+ * FIVE MINUTES, because the thing being scheduled is an episode on a given
+ * morning and nobody can tell 08:00 from 08:04. Polling a handful of files
+ * more often than that buys nothing.
+ */
+const RELEASE_EVERY_MS = 5 * 60_000;
+
+/**
+ * The clock that publishes approved episodes.
+ *
+ * IT ONLY RUNS WHILE THE STUDIO IS OPEN, and that is a real limitation rather
+ * than a detail: close the terminal and nothing goes out. A backlog is not
+ * lost - a run stays due until it is published, so the next time the studio is
+ * open it catches up, one per tick, oldest first. For a studio that publishes
+ * whether or not somebody's laptop is on, point Task Scheduler or cron at
+ * `foundry release` instead; it is the same code.
+ *
+ * ONE AT A TIME, so a week of backlog does not arrive in one minute - which is
+ * the burst the whole scheduling design exists to prevent.
+ */
+const startReleasing = (): void => {
+  let working = false;
+
+  const tick = async (): Promise<void> => {
+    // A slow publish must not overlap the next tick and send the same episode
+    // twice.
+    if (working) return;
+    working = true;
+
+    try {
+      const result = await releaseDue(new Date(), {
+        report: (m) => console.log(`  [release] ${m}`),
+      });
+
+      for (const held of result.held) {
+        console.log(`  [release] holding ${held.runId}: ${held.reason}`);
+      }
+      if (result.remaining > 0) {
+        console.log(`  [release] ${result.remaining} more due, next in ${RELEASE_EVERY_MS / 60000}m`);
+      }
+    } catch (err) {
+      // A failure here must not stop the timer: the next tick tries again, and
+      // a studio that silently stopped releasing is worse than a noisy one.
+      console.error(`  [release] ${(err as Error).message}`);
+    } finally {
+      working = false;
+    }
+  };
+
+  void tick();
+  const timer = setInterval(() => void tick(), RELEASE_EVERY_MS);
+
+  // Never hold the process open on its own account.
+  timer.unref?.();
 };

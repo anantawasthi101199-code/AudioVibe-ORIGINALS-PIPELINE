@@ -134,6 +134,19 @@ export const runManifestSchema = z.object({
    * Absent means "whenever somebody says", which is what an episode is.
    */
   releaseAt: z.string().optional(),
+
+  /**
+   * When a person approved this to go out by itself, at `releaseAt`.
+   *
+   * SEPARATE FROM `releaseAt` ON PURPOSE. A date is a plan; this is a decision.
+   * Something that publishes on its own must be able to say who allowed it and
+   * when, and "it had a date on it" is not that - a date could be left over
+   * from an arrangement somebody changed their mind about.
+   *
+   * It is also what the releaser passes as `confirmed`, which is the same thing
+   * `--yes` means on the command line: a person looked and meant it.
+   */
+  releaseApprovedAt: z.string().optional(),
 });
 
 export type RunManifest = z.infer<typeof runManifestSchema>;
@@ -516,9 +529,17 @@ export class Run {
    * say when it is due. A schedule that stopped a person publishing would be a
    * schedule somebody works around.
    */
-  setReleaseAt(when: Date | null): void {
-    if (when) this.manifestData.releaseAt = when.toISOString();
-    else delete this.manifestData.releaseAt;
+  setReleaseAt(when: Date | null, approvedAt?: Date): void {
+    if (when) {
+      this.manifestData.releaseAt = when.toISOString();
+      if (approvedAt) this.manifestData.releaseApprovedAt = approvedAt.toISOString();
+    } else {
+      // CLEARING THE DATE CLEARS THE APPROVAL. An approval that outlived the
+      // plan it was given for would let a run somebody took off the schedule
+      // go out the next time it was put back on, without being asked again.
+      delete this.manifestData.releaseAt;
+      delete this.manifestData.releaseApprovedAt;
+    }
     this.save();
   }
 

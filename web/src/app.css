@@ -1633,3 +1633,191 @@ table.runs .num {
 .is-live {
   color: var(--fail);
 }
+
+/* --- The calendar ---------------------------------------------------------
+   Colour is the channel, shape is the kind, fill is whether it is real.
+   Three things to read off a box a few millimetres tall, so each uses a
+   different channel of perception and none of them is colour alone. */
+
+.cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.cal-head {
+  padding: 0.5rem 0.6rem;
+  background: var(--ink-800);
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cal-day {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 6.5rem;
+  padding: 0.35rem;
+  background: var(--ink-850);
+}
+
+/* Days either side of the month are shown rather than blanked: a grid that
+   starts mid-row with empty cells reads as missing data. */
+.cal-day.outside {
+  background: var(--ink-900);
+}
+
+.cal-day.outside .cal-date {
+  opacity: 0.3;
+}
+
+.cal-day.today {
+  box-shadow: inset 0 0 0 1px var(--amber-dim);
+}
+
+.cal-date {
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-align: right;
+  padding: 0 0.15rem;
+}
+
+.cal-day.today .cal-date {
+  color: var(--amber);
+}
+
+.cal-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ch) 18%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.72rem;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.cal-entry:hover {
+  background: color-mix(in srgb, var(--ch) 32%, transparent);
+}
+
+/* PUBLISHED IS SOLID. It happened. */
+.cal-entry.published {
+  background: color-mix(in srgb, var(--ch) 34%, transparent);
+  border-color: color-mix(in srgb, var(--ch) 55%, transparent);
+}
+
+/* APPROVED IS OUTLINED. It is going to happen by itself. */
+.cal-entry.approved {
+  border-color: color-mix(in srgb, var(--ch) 45%, transparent);
+  border-style: solid;
+}
+
+/* PLANNED IS FAINT AND DASHED. It has a date and nobody said yes, so it will
+   not happen - and it should not look like it will. */
+.cal-entry.planned {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--ch) 30%, transparent);
+  border-style: dashed;
+  color: var(--text-dim);
+}
+
+/* A short is narrower than an episode, so the kind reads without colour. */
+.cal-entry.short {
+  margin-left: 0.55rem;
+}
+
+.cal-entry-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ch);
+}
+
+.cal-entry.short .cal-dot {
+  border-radius: 1px;
+}
+
+/* --- Which colour is which show ------------------------------------------ */
+
+.cal-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.cal-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.cal-key-item:hover {
+  color: var(--text);
+}
+
+/* --- One entry, in full --------------------------------------------------- */
+
+.cal-detail {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.cal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: min(32rem, 100%);
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-850);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 720px) {
+  .cal-day {
+    min-height: 4.5rem;
+  }
+  .cal-entry-text {
+    display: none;
+  }
+  .cal-entry.short {
+    margin-left: 0.3rem;
+  }
+}

@@ -35,6 +35,8 @@ import {
 import { findSeries, recordSeries } from '../publish/seriesRegistry';
 import { paletteFor, renderCover, SERIES_COVER_SIZE } from '../art/cover';
 import { currentPlan } from '../schedule/current';
+import { dueForRelease, releaseDue } from '../publish/release';
+import { releasingEnabled } from './calendar';
 import { loadSchedule } from '../schedule/load';
 import { planRelease } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
@@ -394,14 +396,39 @@ export const setPublishQueue = (channelId: string, body: unknown) => {
     timezone: schedule.timezone,
   });
 
+  // SAVING IS THE APPROVAL. A person picked these, put them in this order and
+  // pressed the button, which is the same act `--yes` is on the command line -
+  // so it is recorded as a decision with a time on it, not just a date.
+  const approvedAt = new Date();
   const queued: Array<{ runId: string; releaseAt: string }> = [];
 
   runIds.forEach((runId, i) => {
-    Run.open(runId).setReleaseAt(times[i]!);
+    Run.open(runId).setReleaseAt(times[i]!, approvedAt);
     queued.push({ runId, releaseAt: times[i]!.toISOString() });
   });
 
-  return { queued, timezone: schedule.timezone };
+  return { queued, timezone: schedule.timezone, approvedAt: approvedAt.toISOString() };
+};
+
+/**
+ * Publish whatever is due right now, by hand.
+ *
+ * The same code the timer runs, so "why did nothing go out" can be answered by
+ * pressing a button and reading the reasons rather than by reading a log.
+ */
+export const releaseNow = async () => {
+  const result = await releaseDue(new Date());
+  return result;
+};
+
+/** What is due and what is held back, costing nothing. */
+export const releaseStatus = () => {
+  const plan = dueForRelease();
+  return {
+    enabled: releasingEnabled(),
+    due: plan.due.map((d) => ({ ...d, releaseAt: d.releaseAt.toISOString(), approvedAt: d.approvedAt.toISOString() })),
+    held: plan.held,
+  };
 };
 
 /**

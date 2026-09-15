@@ -147,6 +147,8 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
   const [dragging, setDragging] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  /** Whether anything acts on an approval, so the page can say so. */
+  const [releasing, setReleasing] = useState<boolean | null>(null);
 
   useEffect(() => stopAudio, []);
 
@@ -199,6 +201,11 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
     void api
       .platform()
       .then(setPlatform)
+      .catch(() => undefined);
+
+    void api
+      .calendar()
+      .then((c) => setReleasing(c.releasing))
       .catch(() => undefined);
   }, [id, load]);
 
@@ -259,7 +266,11 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
           )}
           {items.length > 0 && (
             <button className="btn spend" onClick={save} disabled={!dirty || saving}>
-              {saving ? 'Saving...' : dirty ? `Save order (${chosen.length})` : 'Order saved'}
+              {saving
+                ? 'Approving...'
+                : dirty
+                  ? `Approve ${chosen.length} for release`
+                  : 'Approved'}
             </button>
           )}
         </div>
@@ -297,18 +308,47 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
           <span className={platform?.isProduction ? 'is-live' : ''}>
             {platform?.isProduction ? 'production' : 'staging'}
           </span>
-          . Open a card to read it, listen, and publish.{' '}
-          <Info label="What the order does, and what it does not">
-            Tick what goes out and drag to order it. Position gives each one a date, one a day
-            starting tomorrow, at {channel.name}&apos;s own slot hour.
+          .{' '}
+          <Info label="The two ways something goes out">
+            <strong>Now</strong> is a card at a time: open it, read it, listen, press publish.
             <br />
             <br />
-            <strong>Nothing publishes by itself.</strong> The dates are a plan, not a trigger:
-            there is no timer in this studio and nothing reads them except this page, so an
-            episode goes out when somebody presses publish and at no other time. Arranging the
-            order is how you decide what to press next, and in what order, without holding it in
-            your head.
+            <strong>At a set time</strong> is this list: tick what goes out, drag it into order,
+            and save. Position gives each one a date, one a day starting tomorrow at{' '}
+            {channel.name}&apos;s own slot hour, and saving records that you approved them -
+            which is what lets them go out without you.
+            <br />
+            <br />
+            Approving is the same act as pressing publish, made in advance. The gate is checked
+            again at the moment each one goes, so a script edited after approval is re-read on
+            the way out and skipped if it no longer passes.
           </Info>
+        </p>
+      )}
+
+      {releasing !== null && chosen.length > 0 && (
+        <p className="muted" style={{ marginBottom: '0.9rem', fontSize: '0.85rem' }}>
+          {releasing ? (
+            <>
+              <span className="pill pass">releasing on</span> These publish themselves at their
+              times, while the studio is running.
+            </>
+          ) : (
+            <>
+              <span className="pill hold">releasing off</span> Approved, but nothing acts on it
+              yet. Start the studio with <code className="mono tiny">FOUNDRY_RELEASE=on</code>, or
+              publish each from its card.
+            </>
+          )}{' '}
+          <a
+            href="#/calendar"
+            onClick={(e) => {
+              e.preventDefault();
+              go('/calendar');
+            }}
+          >
+            See the month
+          </a>
         </p>
       )}
 

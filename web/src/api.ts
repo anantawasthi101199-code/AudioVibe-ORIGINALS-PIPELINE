@@ -164,6 +164,26 @@ export interface JobEvent {
   spentPence: number;
 }
 
+export interface CalendarEntry {
+  runId: string;
+  channelId: string;
+  channelName: string;
+  title: string;
+  kind: 'episode' | 'short';
+  state: 'published' | 'approved' | 'planned';
+  at: string;
+  durationS: number | null;
+  short: number | null;
+}
+
+export interface CalendarView {
+  month: string;
+  timezone: string;
+  days: Array<{ date: string; entries: CalendarEntry[] }>;
+  channels: Array<{ id: string; name: string; slot: string | null }>;
+  releasing: boolean;
+}
+
 export interface Platform {
   url: string | null;
   isProduction: boolean;
@@ -268,6 +288,23 @@ export const api = {
   queue: () => call<QueueView>('/api/queue'),
 
   platform: () => call<Platform>('/api/platform'),
+
+  calendar: (month?: string) =>
+    call<CalendarView>(`/api/calendar${month ? `?month=${encodeURIComponent(month)}` : ''}`),
+
+  releaseStatus: () =>
+    call<{
+      enabled: boolean;
+      due: Array<{ runId: string; channelName: string; title: string; releaseAt: string }>;
+      held: Array<{ runId: string; reason: string }>;
+    }>('/api/release'),
+
+  releaseNow: () =>
+    call<{
+      released: Array<{ runId: string; audioId: string; url: string }>;
+      failed: Array<{ runId: string; reason: string }>;
+      remaining: number;
+    }>('/api/release/now', { method: 'POST' }),
 
   /* --- The things that reach the platform ------------------------------- */
 
