@@ -187,8 +187,23 @@ export const coverSvg = (
 ): string => {
   const { width, height } = size;
   const p = input.palette;
-  const margin = Math.round(width * 0.08);
   const landscape = width > height;
+
+  /*
+   * MARGINS, AND WHY THE SQUARE ONE IS BIGGER.
+   *
+   * This layout was drawn when an audio card was a 3.4:1 letterbox with its
+   * text painted across the artwork - a banner, where a wordmark pinned near
+   * the top edge and a title pinned near the bottom is exactly right. The card
+   * is a square tile now, and the same arrangement leaves an empty middle with
+   * everything crowded against two opposite edges: the first thing any rounded
+   * corner, any container inset, any rescaling takes is the show's name.
+   *
+   * On a real published card the wordmark was cut off the top. So the square
+   * frame keeps its content well inside itself and the wide one, which is read
+   * at a distance and is not cropped, is left as it was.
+   */
+  const margin = Math.round(width * (landscape ? 0.08 : 0.11));
 
   // Fewer, larger characters on the square frame; the 16:9 series cover is
   // wider and read at a distance, so it takes a longer line. These are line
@@ -200,15 +215,18 @@ export const coverSvg = (
   const lines = wrapTitle(input.title, maxChars, maxLines);
 
   const usableWidth = width - margin * 2;
-  const titleSize = fitFontSize(lines, usableWidth, Math.round(height * (landscape ? 0.13 : 0.105)));
+  const titleSize = fitFontSize(lines, usableWidth, Math.round(height * (landscape ? 0.13 : 0.1)));
   const lineHeight = Math.round(titleSize * 1.16);
-  const wordmarkSize = Math.round(height * 0.038);
 
-  // The title block sits on the lower half and grows upward, so a one-line
-  // title and a four-line title share the same baseline. Anchoring at the top
-  // instead would make short titles float in the middle of the frame.
-  const lastBaseline = height - margin - Math.round(height * (landscape ? 0.06 : 0.09));
-  const firstBaseline = lastBaseline - lineHeight * (lines.length - 1);
+  /*
+   * THE WORDMARK HAS TO BE READABLE AT THE SIZE IT IS ACTUALLY SEEN.
+   *
+   * A card pulls the 360px variant. At the old 3.8% of the frame that is a
+   * thirteen pixel line of letterspaced capitals, which is a grey smudge. Five
+   * per cent is small and legible; the title is still four times its size, so
+   * nothing about the hierarchy changes.
+   */
+  const wordmarkSize = Math.round(height * (landscape ? 0.038 : 0.05));
 
   // A SERIES COVER SAYS THE SHOW'S NAME ONCE. Its title IS the show name, so
   // drawing the wordmark as well prints it twice with nothing else on the
@@ -222,6 +240,46 @@ export const coverSvg = (
         ? 'SHORT'
         : '';
 
+  const ruleHeight = Math.max(3, Math.round(height * 0.008));
+
+  /*
+   * WHERE THE BLOCK SITS.
+   *
+   * Landscape keeps the old arrangement: rule and wordmark at the top, title
+   * anchored to the bottom so a one-line and a four-line title share a
+   * baseline.
+   *
+   * The square frame stacks rule, wordmark and title as ONE block and centres
+   * it. That is what stops a short title floating and a long one crowding, it
+   * puts the whole thing in the middle of the tile where nothing can crop it,
+   * and it reads as composed rather than as two things pushed apart.
+   */
+  let ruleY: number;
+  let wordmarkBaseline: number;
+  let firstBaseline: number;
+
+  if (landscape) {
+    ruleY = margin;
+    wordmarkBaseline = margin + Math.round(height * 0.075);
+    const lastBaseline = height - margin - Math.round(height * 0.06);
+    firstBaseline = lastBaseline - lineHeight * (lines.length - 1);
+  } else {
+    const gapAfterRule = Math.round(height * 0.035);
+    const gapAfterWordmark = Math.round(height * 0.055);
+
+    const blockHeight =
+      ruleHeight +
+      (showWordmark ? gapAfterRule + wordmarkSize + gapAfterWordmark : gapAfterRule) +
+      lineHeight * lines.length;
+
+    // Nudged above centre: optically centred text sits slightly high, and the
+    // label lives in the bottom margin on the frames that have one.
+    ruleY = Math.round((height - blockHeight) / 2 - height * 0.02);
+    wordmarkBaseline = ruleY + ruleHeight + gapAfterRule + wordmarkSize;
+    firstBaseline =
+      (showWordmark ? wordmarkBaseline + gapAfterWordmark : ruleY + gapAfterRule) + titleSize;
+  }
+
   const titleTspans = lines
     .map(
       (line, i) =>
@@ -233,10 +291,10 @@ export const coverSvg = (
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
   <rect width="${width}" height="${height}" fill="${p.background}"/>
-  <rect x="${margin}" y="${margin}" width="${Math.round(width * 0.09)}" height="${Math.round(height * 0.008)}" fill="${p.accent}"/>
+  <rect x="${margin}" y="${ruleY}" width="${Math.round(width * 0.09)}" height="${ruleHeight}" fill="${p.accent}"/>
   ${
     showWordmark
-      ? `<text x="${margin}" y="${margin + Math.round(height * 0.075)}" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="${wordmarkSize}" font-weight="600" letter-spacing="${Math.round(wordmarkSize * 0.18)}" fill="${p.accent}">${escapeXml(input.showName.toUpperCase())}</text>`
+      ? `<text x="${margin}" y="${wordmarkBaseline}" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="${wordmarkSize}" font-weight="600" letter-spacing="${Math.round(wordmarkSize * 0.18)}" fill="${p.accent}">${escapeXml(input.showName.toUpperCase())}</text>`
       : ''
   }
   ${titleTspans}

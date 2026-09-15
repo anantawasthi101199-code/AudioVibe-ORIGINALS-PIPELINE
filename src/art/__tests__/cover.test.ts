@@ -171,6 +171,50 @@ describe('coverSvg', () => {
     }
   });
 
+  it('KEEPS EVERYTHING CLEAR OF THE EDGES on a square card', () => {
+    /*
+     * The failure that shipped. This layout was drawn for a 3.4:1 letterbox,
+     * where a wordmark near the top edge and a title near the bottom is right.
+     * The card is a square tile now, and on a real published one the show's
+     * name was cut off the top: it sat at eight per cent of the frame, which is
+     * the first thing any rounded corner or container inset takes.
+     *
+     * So nothing may sit within a margin of any edge, whatever the title does.
+     */
+    const { height } = AUDIO_COVER_SIZE;
+    const margin = Math.round(AUDIO_COVER_SIZE.width * 0.11);
+
+    for (const title of [
+      'Why Yawns Are Contagious',
+      'Should You Actually Treat a Fever',
+      "The Runner's High Was Never About Endorphins",
+      'Fever',
+    ]) {
+      const out = svg({ title });
+
+      const ys = [
+        ...[...out.matchAll(/<text[^>]*\sy="(\d+)"/g)].map((m) => Number(m[1])),
+        ...[...out.matchAll(/<rect[^>]*\sy="(\d+)"/g)].map((m) => Number(m[1])),
+      ];
+
+      expect(ys.length).toBeGreaterThan(1);
+      for (const y of ys) {
+        expect(y).toBeGreaterThanOrEqual(margin);
+        expect(y).toBeLessThanOrEqual(height - margin);
+      }
+    }
+  });
+
+  it('centres the block rather than pushing it to the top', () => {
+    // A short title used to leave the top third full and the rest empty. The
+    // block is one thing now and it sits in the middle of the tile.
+    const out = svg({ title: 'Fever' });
+    const first = Number(/<rect[^>]*\sy="(\d+)"/.exec(out.replace(/<rect width=[^>]*>/, ''))![1]);
+
+    // Comfortably below the top quarter, which is where it used to start.
+    expect(first).toBeGreaterThan(AUDIO_COVER_SIZE.height * 0.25);
+  });
+
   it('is valid XML for the awkward cases', () => {
     expect(() => svg({ title: 'A & B <C>', showName: "Ruth's Show" })).not.toThrow();
     expect(svg({ title: 'A & B' })).toContain('A &amp; B');
