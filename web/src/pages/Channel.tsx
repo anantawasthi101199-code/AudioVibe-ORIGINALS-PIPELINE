@@ -472,6 +472,12 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           <div className="panel-head">
             <h2>Runs</h2>
             <span className="pill">{runs.length}</span>
+            <span className="spacer" />
+            {runs.some((r) => r.state === 'ready') && (
+              <button className="btn ghost small" onClick={() => go('/schedule')}>
+                Arrange publishing
+              </button>
+            )}
           </div>
 
           {runs.length === 0 ? (

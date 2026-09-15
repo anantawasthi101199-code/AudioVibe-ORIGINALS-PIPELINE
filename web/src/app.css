@@ -925,7 +925,13 @@ table.runs .num {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  /* TAKES THE SLACK, so titles start in one column down the list. Without it
+     the row's space-between pushed the text into the middle of whatever gap
+     was left, and adding the play button made every title start somewhere
+     different depending on how wide its own metadata was. */
+  flex: 1;
   min-width: 0;
+  text-align: left;
 }
 
 /* One line, clipped. A wrapped title pushes every row out of alignment and

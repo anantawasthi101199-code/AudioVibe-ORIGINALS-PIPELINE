@@ -152,11 +152,26 @@ const streamJob = (req: http.IncomingMessage, res: http.ServerResponse, id: stri
   });
 };
 
+/**
+ * How long the browser may keep a file.
+ *
+ * THE BUILD HASHES ITS ASSETS, so `index-D4nK2p.js` can never change meaning
+ * and is safe to keep forever. `index.html` is the file that names them, so it
+ * must never be kept: a cached one points at the previous build's assets, and
+ * a rebuild appears to do nothing until somebody thinks to hard-reload. That
+ * happened, and the first guess was that the change had not been saved.
+ */
+const cacheFor = (file: string): string =>
+  /[.-][A-Za-z0-9_-]{8,}\.(js|css|woff2?)$/.test(file)
+    ? 'public, max-age=31536000, immutable'
+    : 'no-store';
+
 const serveFile = (res: http.ServerResponse, file: string, download?: string): void => {
   const stat = fs.statSync(file);
   res.writeHead(200, {
     'content-type': MIME[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
     'content-length': stat.size,
+    'cache-control': cacheFor(file),
     ...(download ? { 'content-disposition': `inline; filename="${download}"` } : {}),
   });
   fs.createReadStream(file).pipe(res);

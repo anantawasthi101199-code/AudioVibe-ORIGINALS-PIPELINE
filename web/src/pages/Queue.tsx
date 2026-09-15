@@ -268,9 +268,26 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
     <div className="page">
       <div className="row between" style={{ marginBottom: '0.3rem' }}>
         <h1 className={`headline ${headline.tone ?? ''}`}>{headline.text}</h1>
-        <button className="btn" onClick={() => go('/channels')}>
-          Make something
-        </button>
+
+        {/*
+          THE NEXT STEP, NOT A MENU. Whatever the studio is waiting for, the
+          button beside the headline does that thing. A page that always
+          offered the same action regardless of state made you work out what
+          to do from the numbers.
+        */}
+        <div className="row nowrap">
+          {queue.ready.length > 0 && (
+            <button className="btn" onClick={() => go('/schedule')}>
+              Arrange {queue.ready.length}
+            </button>
+          )}
+          <button
+            className={queue.ready.length > 0 ? 'btn ghost' : 'btn'}
+            onClick={() => go('/channels')}
+          >
+            Make something
+          </button>
+        </div>
       </div>
 
       <ErrorNote>{error}</ErrorNote>
