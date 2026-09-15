@@ -52,6 +52,7 @@ import {
   nextDue,
   publishRunJob,
   recordToken,
+  scheduleRelease,
   setUpChannelJob,
 } from './operate';
 
@@ -275,6 +276,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/shorts' && req.method === 'POST') {
         return send(res, 202, cutShorts(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run/schedule' && req.method === 'POST') {
+        return send(res, 200, scheduleRelease(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/publish' && req.method === 'POST') {
         return send(res, 200, publishRunJob(id ?? '', await readBody(req)));

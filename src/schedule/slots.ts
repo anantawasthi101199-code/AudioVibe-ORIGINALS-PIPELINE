@@ -122,3 +122,66 @@ export const shortDueAfterDays = (index: number, count: number, everyDays: numbe
 /** "Tue 08:00", for a person reading a plan. */
 export const describeSlot = (slot: Slot): string =>
   `${slot.day[0]!.toUpperCase()}${slot.day.slice(1)} ${String(slot.hour).padStart(2, '0')}:00`;
+
+/**
+ * Release times for a batch of finished shorts.
+ *
+ * THE PROBLEM. Cadence answers "is this SHOW behind", which is right for an
+ * episode and wrong for ten shorts cut in one afternoon. All ten are finished,
+ * all ten are due by any cadence you like, and publishing them together is
+ * exactly what makes a feed look like somebody emptied a bucket into it.
+ *
+ * ONE A DAY, AT A DIFFERENT HOUR EACH DAY. Spreading by day is the part that
+ * matters: a listener sees the show once a day rather than ten times in a
+ * minute. Varying the hour is the part that stops it reading as a cron job -
+ * a channel that posts at exactly 08:00 every day for ten days looks like
+ * automation even when the writing does not.
+ *
+ * THE HOURS ARE DERIVED, NOT RANDOM. A random schedule cannot be reproduced,
+ * so re-running the planner would move everything and a person who had checked
+ * the dates would find different ones. These step through a small spread of
+ * civilised hours, starting from the channel's own slot, so two channels
+ * planned on the same day get different times for the same reason their
+ * episodes do.
+ *
+ * NOTHING HERE ENFORCES ANYTHING. A person can always publish something now.
+ * This decides what the queue offers, not what it permits.
+ */
+export const HOUR_SPREAD = [0, 5, 2, 8, 3, 6, 1, 9, 4, 7] as const;
+
+/** The earliest civilised hour to publish at, and the span above it. */
+const FIRST_HOUR = 8;
+const HOUR_RANGE = 10;
+
+export interface ReleasePlanInput {
+  /** How many shorts there are. */
+  count: number;
+  /** When the batch becomes releasable. Usually now. */
+  from: Date;
+  /** Days between each. One a day unless the batch is bigger than the gap. */
+  everyDays?: number;
+  /** The channel's own slot hour, so its shorts sit near its episodes. */
+  slotHour?: number;
+  timezone: string;
+}
+
+export const planRelease = (input: ReleasePlanInput): Date[] => {
+  const { count, from, timezone } = input;
+  if (count <= 0) return [];
+
+  const gap = Math.max(1, input.everyDays ?? 1);
+  const base = input.slotHour ?? FIRST_HOUR;
+
+  return Array.from({ length: count }, (_, i) => {
+    // The first one goes out tomorrow, not today. A batch cut this afternoon
+    // publishing its first story ten minutes later is the same burst in
+    // miniature, and the person cutting it has not listened to any of them yet.
+    const day = new Date(from.getTime() + (i * gap + 1) * 86_400_000);
+
+    // Stepping by a coprime-ish offset rather than sequentially, so
+    // consecutive days are not a visible ramp up the clock.
+    const hour = FIRST_HOUR + ((base - FIRST_HOUR + HOUR_SPREAD[i % HOUR_SPREAD.length]!) % HOUR_RANGE);
+
+    return atHourOn(day, hour, timezone);
+  });
+};

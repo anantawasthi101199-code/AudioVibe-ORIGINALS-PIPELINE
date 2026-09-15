@@ -17,6 +17,7 @@ import {
   api,
   clock,
   money,
+  until,
   watchJob,
   type Beat,
   type JobEvent,
@@ -56,6 +57,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [platform, setPlatform] = useState<Platform | null>(null);
   /** The second press. Publishing is the one thing here that cannot be undone. */
   const [confirming, setConfirming] = useState(false);
+  /** What the last scheduling said, so "3 of 10" is not a silent surprise. */
+  const [scheduled, setScheduled] = useState<string | null>(null);
 
   useEffect(() => {
     void api
@@ -117,6 +120,25 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       follow((await fn()).jobId);
     } catch (e) {
       setError((e as Error).message);
+      setBusy(null);
+    }
+  };
+
+  /**
+   * Something that finishes at once, rather than starting a job to watch.
+   *
+   * Scheduling writes a date onto each cut and returns. Routing it through
+   * `act` would leave the page waiting for a job id that is never coming.
+   */
+  const now = async (what: string, fn: () => Promise<unknown>) => {
+    setBusy(what);
+    setError(null);
+    try {
+      await fn();
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
       setBusy(null);
     }
   };
@@ -236,12 +258,55 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           </div>
 
           {cuts.length > 0 && (
+            <div className="panel-body row" style={{ paddingTop: 0 }}>
+              <button
+                className="btn small"
+                disabled={busy !== null}
+                onClick={() =>
+                  now('schedule', async () => {
+                    const r = await api.scheduleRelease(id);
+                    setScheduled(
+                      r.skipped
+                        ? `${r.scheduled} lined up, ${r.skipped} skipped: published already or the gate rejected them`
+                        : `${r.scheduled} lined up, one a day`
+                    );
+                  })
+                }
+              >
+                {busy === 'schedule' ? 'Scheduling...' : 'Line them up'}
+              </button>
+              <Info label="What lining them up does">
+                Gives each story a release time, one a day starting tomorrow, at a different hour
+                each day. Ten shorts published together is what makes a feed look like somebody
+                emptied a bucket into it. The times are derived rather than random, so running
+                this again gives the same answer, and nothing stops you publishing one now.
+              </Info>
+              {scheduled && <span className="faint tiny">{scheduled}</span>}
+              {cuts.some((c) => c.releaseAt) && (
+                <button
+                  className="btn ghost small"
+                  disabled={busy !== null}
+                  onClick={() =>
+                    now('unschedule', async () => {
+                      await api.scheduleRelease(id, true);
+                      setScheduled(null);
+                    })
+                  }
+                >
+                  Clear times
+                </button>
+              )}
+            </div>
+          )}
+
+          {cuts.length > 0 && (
             <div className="panel-body" style={{ paddingTop: 0 }}>
               <table className="runs">
                 <thead>
                   <tr>
                     <th>Story</th>
                     <th>State</th>
+                    <th className="right">Goes out</th>
                     <th className="right">Length</th>
                     <th className="right">Spent</th>
                   </tr>
@@ -257,6 +322,13 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       </td>
                       <td>
                         <StatePill state={c.state} />
+                      </td>
+                      <td className="right num">
+                        {c.releaseAt ? (
+                          <span title={c.releaseAt}>{until(c.releaseAt)}</span>
+                        ) : (
+                          <span className="faint">-</span>
+                        )}
                       </td>
                       <td className="right num">{clock(c.durationS)}</td>
                       <td className="right num">{money(c.spentPence)}</td>

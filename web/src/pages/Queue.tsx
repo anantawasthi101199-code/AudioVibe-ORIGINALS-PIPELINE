@@ -31,7 +31,7 @@ import { Count, Info } from '../components/Info';
 
 const REFRESH_MS = 20_000;
 
-type Panel = 'held' | 'stuck' | 'due' | 'soon' | 'ready' | 'out';
+type Panel = 'held' | 'stuck' | 'due' | 'soon' | 'ready' | 'lined' | 'out';
 
 const Row = ({
   title,
@@ -191,6 +191,7 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
         />
         <Count n={queue.waiting.length} label="soon" onClick={() => toggle('soon')} />
         <Count n={queue.ready.length} label="ready" tone="pass" onClick={() => toggle('ready')} />
+        <Count n={queue.scheduled.length} label="lined up" onClick={() => toggle('lined')} />
         <Count n={queue.publishedTotal} label="out" onClick={() => toggle('out')} />
       </div>
 
@@ -300,6 +301,30 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
         >
           {queue.ready.map((r) => (
             <RunRow key={r.id} run={r} go={go} />
+          ))}
+        </Panel>
+
+        <Panel
+          id="lined"
+          title="Lined up"
+          count={queue.scheduled.length}
+          open={open}
+          toggle={toggle}
+          why={`Finished, with a release time that has not come. Ten shorts cut in one afternoon are all publishable at once, and publishing them together is what makes a feed look like somebody emptied a bucket into it. They go out one a day at a different hour each day. Nothing stops you publishing one now. Times are ${queue.timezone}.`}
+        >
+          {queue.scheduled.map((r) => (
+            <Row
+              key={r.id}
+              title={r.title ?? r.topic}
+              detail={`${r.channelName}${r.short !== null ? ` · short ${r.short}` : ''}`}
+              onClick={() => go(`/r/${r.id}`)}
+              right={
+                <>
+                  <span className="muted mono tiny">{when(r.releaseAt, queue.timezone)}</span>
+                  <span className="pill">{until(r.releaseAt)}</span>
+                </>
+              }
+            />
           ))}
         </Panel>
 

@@ -603,7 +603,7 @@ const cmdChannelSetup = async (argv: string[]): Promise<number> => {
     if (!result.account.ingestToken) {
       console.log('');
       console.log('  It cannot publish yet. On the API server:');
-      console.log(`    npx ts-node src/scripts/mintIngestToken.ts --username ${result.account.username}`);
+      console.log(`    node dist/scripts/mintIngestToken.js --username ${result.account.username}`);
       console.log('  then bring the token back here:');
       console.log(`    npm run foundry -- channel-token --show ${showId} --token <jwt>`);
     }

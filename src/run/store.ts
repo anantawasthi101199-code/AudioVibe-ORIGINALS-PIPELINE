@@ -116,6 +116,24 @@ export const runManifestSchema = z.object({
    * order it was written rather than the order somebody cut it.
    */
   story: z.number().int().positive().optional(),
+
+  /**
+   * When this is meant to go out.
+   *
+   * WHY A RUN CARRIES ITS OWN TIME. Cadence in schedule.yaml answers "is this
+   * SHOW behind", which is the right question for an episode and the wrong one
+   * for ten shorts cut in an afternoon. Those ten are finished, they are all
+   * due by any cadence you like, and publishing them together is exactly the
+   * thing that makes a feed look like a machine emptied a bucket into it.
+   *
+   * So a batch is given release times when it is cut, one per story, spread
+   * across the days between episodes. Nothing enforces it: a person can always
+   * publish something now, and this is what the queue reads to decide whether
+   * to offer that or to say when it is due.
+   *
+   * Absent means "whenever somebody says", which is what an episode is.
+   */
+  releaseAt: z.string().optional(),
 });
 
 export type RunManifest = z.infer<typeof runManifestSchema>;
@@ -472,6 +490,20 @@ export class Run {
    */
   approve(now = new Date()): void {
     this.manifestData.approvedAt = now.toISOString();
+    this.save();
+  }
+
+  /**
+   * Say when this is meant to go out, or clear it.
+   *
+   * ADVISORY, NEVER A LOCK. Nothing refuses to publish something early; this is
+   * what the queue reads to decide whether to offer a publish button now or to
+   * say when it is due. A schedule that stopped a person publishing would be a
+   * schedule somebody works around.
+   */
+  setReleaseAt(when: Date | null): void {
+    if (when) this.manifestData.releaseAt = when.toISOString();
+    else delete this.manifestData.releaseAt;
     this.save();
   }
 

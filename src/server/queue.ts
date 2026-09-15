@@ -52,8 +52,17 @@ export interface QueueView {
   blocked: QueueBlocker[];
   /** Made, gated, and waiting for somebody to say yes. THE IMPORTANT ONE. */
   held: RunSummary[];
-  /** Gate passed clean, not published. */
+  /**
+   * Gate passed clean and its release time has come, or it has none.
+   *
+   * SPLIT FROM `scheduled` so the page can tell you what you could publish now
+   * from what is finished but not yet its turn. Ten shorts cut in one afternoon
+   * are all in the second list on the day they are cut and move into the first
+   * one a day at a time.
+   */
   ready: RunSummary[];
+  /** Gate passed, waiting for a release time that has not arrived. */
+  scheduled: Array<RunSummary & { releaseAt: string }>;
   /**
    * The gate found something blocking. NEWEST FEW, WITH THE REAL COUNT beside
    * them, because a studio accumulates these and a list of every episode ever
@@ -119,7 +128,16 @@ export const getQueue = (now = new Date()): QueueView => {
     })),
 
     held: inState('awaiting-approval'),
-    ready: inState('ready'),
+
+    // WHOSE TURN IT IS. A run with no release time is ready the moment it
+    // passes, which is what an episode is; one with a time in the future is
+    // finished and waiting, which is what a story in a cut set is.
+    ready: inState('ready').filter((r) => !r.releaseAt || Date.parse(r.releaseAt) <= now.getTime()),
+    scheduled: inState('ready')
+      .filter((r): r is RunSummary & { releaseAt: string } =>
+        Boolean(r.releaseAt && Date.parse(r.releaseAt) > now.getTime())
+      )
+      .sort((a, b) => Date.parse(a.releaseAt) - Date.parse(b.releaseAt)),
     failed: inState('failed').slice(0, RECENT),
     failedTotal: inState('failed').length,
     published: inState('published').slice(0, RECENT),

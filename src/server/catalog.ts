@@ -259,6 +259,8 @@ export interface RunSummary {
   derivedFrom: string | null;
   durationS: number | null;
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
+  /** When this is meant to go out, for a run that was given a time. */
+  releaseAt: string | null;
 }
 
 /**
@@ -351,6 +353,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     derivedFrom: m.derivedFrom ?? null,
     durationS,
     gate,
+    releaseAt: m.releaseAt ?? null,
   };
 };
 

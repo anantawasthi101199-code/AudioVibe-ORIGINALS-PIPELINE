@@ -7,6 +7,7 @@
  */
 import {
   atHourOn,
+  planRelease,
   describeSlot,
   instantOfWallClock,
   nextSlotAfter,
@@ -135,5 +136,79 @@ describe('describeSlot', () => {
   it('reads as a time somebody would say', () => {
     expect(describeSlot({ day: 'tue', hour: 8 })).toBe('Tue 08:00');
     expect(describeSlot({ day: 'fri', hour: 18 })).toBe('Fri 18:00');
+  });
+});
+
+describe('planRelease', () => {
+  const from = new Date('2026-09-15T14:00:00Z');
+
+  it('gives every short its own day', () => {
+    // THE WHOLE POINT. Ten shorts cut in one afternoon published together is
+    // what makes a feed look like somebody emptied a bucket into it.
+    const times = planRelease({ count: 10, from, timezone: TZ });
+    const days = times.map((t) => t.toISOString().slice(0, 10));
+
+    expect(new Set(days).size).toBe(10);
+    expect(days).toEqual([...days].sort());
+  });
+
+  it('starts tomorrow, not ten minutes from now', () => {
+    // A batch cut this afternoon publishing its first story immediately is the
+    // same burst in miniature, and nobody has listened to any of them yet.
+    const times = planRelease({ count: 3, from, timezone: TZ });
+    const day = (d: Date) => d.toLocaleDateString('en-CA', { timeZone: TZ });
+
+    expect(day(times[0]!)).not.toBe(day(from));
+    expect(times[0]!.getTime()).toBeGreaterThan(from.getTime());
+  });
+
+  it('moves the hour around instead of posting at the same time daily', () => {
+    // A channel posting at exactly 08:00 for ten days reads as a cron job even
+    // when the writing does not.
+    const hours = planRelease({ count: 10, from, timezone: TZ }).map((t) =>
+      Number(t.toLocaleString('en-GB', { timeZone: TZ, hour: '2-digit', hour12: false }))
+    );
+
+    expect(new Set(hours).size).toBeGreaterThan(5);
+    // Never at 3am.
+    for (const h of hours) {
+      expect(h).toBeGreaterThanOrEqual(8);
+      expect(h).toBeLessThan(18);
+    }
+  });
+
+  it('is reproducible, so re-planning does not move everything', () => {
+    // A random schedule cannot be checked: somebody who read the dates would
+    // find different ones the next time anybody looked.
+    const a = planRelease({ count: 6, from, timezone: TZ });
+    const b = planRelease({ count: 6, from, timezone: TZ });
+    expect(a.map((d) => d.toISOString())).toEqual(b.map((d) => d.toISOString()));
+  });
+
+  it('starts near the channel own slot hour', () => {
+    // A show's shorts should sit near its episodes rather than at some hour
+    // nothing else about the channel uses.
+    const at21 = planRelease({ count: 1, from, slotHour: 15, timezone: TZ })[0]!;
+    const hour = Number(
+      at21.toLocaleString('en-GB', { timeZone: TZ, hour: '2-digit', hour12: false })
+    );
+    expect(hour).toBe(15);
+  });
+
+  it('handles an empty batch and a single one', () => {
+    expect(planRelease({ count: 0, from, timezone: TZ })).toEqual([]);
+    expect(planRelease({ count: 1, from, timezone: TZ })).toHaveLength(1);
+  });
+
+  it('keeps the hours right across a clock change', () => {
+    // A ten day batch starting before the spring change crosses it.
+    const times = planRelease({ count: 10, from: new Date('2026-03-25T14:00:00Z'), timezone: TZ });
+    for (const t of times) {
+      const hour = Number(
+        t.toLocaleString('en-GB', { timeZone: TZ, hour: '2-digit', hour12: false })
+      );
+      expect(hour).toBeGreaterThanOrEqual(8);
+      expect(hour).toBeLessThan(18);
+    }
   });
 });

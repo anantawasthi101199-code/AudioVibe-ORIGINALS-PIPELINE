@@ -192,9 +192,13 @@ const Setup = ({
             ) : (
               <>
                 <code className="mint">
-                  npx ts-node src/scripts/mintIngestToken.ts --username{' '}
+                  node dist/scripts/mintIngestToken.js --username{' '}
                   {account.handle ?? channel.handle}
                 </code>
+                <span className="faint tiny">
+                  In the Railway shell for the API service. The deployed image ships compiled
+                  JavaScript only, so the ts-node form fails there.
+                </span>
                 <div className="row" style={{ gap: '0.5rem' }}>
                   <input
                     className="field"
@@ -208,7 +212,8 @@ const Setup = ({
                   </button>
                 </div>
                 <span className="faint tiny">
-                  Run that on the API server. This studio cannot mint one.
+                  This studio cannot mint one: the platform has no endpoint that issues machine
+                  credentials.
                 </span>
               </>
             )}

@@ -209,7 +209,7 @@ export const publishTokenFor = (channelId: string, file = accountsPath()): strin
     401,
     `no publishing credential for ${channelId}. Mint one on the API server:
 ` +
-      `  npx ts-node src/scripts/mintIngestToken.ts --username <handle>
+      `  node dist/scripts/mintIngestToken.js --username <handle>
 ` +
       `then record it:
 ` +

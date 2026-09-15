@@ -35,6 +35,8 @@ import {
 import { findSeries, recordSeries } from '../publish/seriesRegistry';
 import { paletteFor, renderCover, SERIES_COVER_SIZE } from '../art/cover';
 import { currentPlan } from '../schedule/current';
+import { loadSchedule } from '../schedule/load';
+import { planRelease } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
@@ -89,7 +91,7 @@ export const setUpChannelJob = (channelId: string, body: unknown) => {
         report(
           'account',
           `it cannot publish yet: mint a token on the API server with ` +
-            `"npx ts-node src/scripts/mintIngestToken.ts --username ${result.account.username}"`
+            `"node dist/scripts/mintIngestToken.js --username ${result.account.username}"`
         );
       }
       return [channelId];
@@ -260,6 +262,80 @@ export const nextDue = () => {
     next: plan.due[0] ?? null,
     blocked: plan.blocked,
     waiting: plan.waiting.map((w) => ({ ...w, at: w.at.toISOString() })),
+  };
+};
+
+/**
+ * Give a batch of finished runs their release times.
+ *
+ * WHAT IT IS FOR. Ten shorts cut in one afternoon are all finished and all
+ * publishable, and publishing them together is what makes a feed look like
+ * somebody emptied a bucket into it. This spreads them one a day, at a
+ * different hour each day, starting tomorrow.
+ *
+ * IDEMPOTENT AND REVERSIBLE. Running it again reassigns the same times, because
+ * the hours are derived rather than random; clearing them puts everything back
+ * to publishable-now. Neither is destructive, which is why this is a button
+ * rather than something the cut does silently.
+ */
+export const scheduleRelease = (runId: string, body: unknown) => {
+  const input = z.object({ clear: z.boolean().default(false) }).parse(body ?? {});
+
+  const source = Run.open(runId);
+  // Already sorted by story number, which is the order they were written in
+  // rather than the order somebody happened to cut them.
+  const cuts = Run.derivedFrom(runId);
+  if (!cuts.length) throw new HttpError(400, `run "${runId}" has no cuts to schedule`);
+
+  if (input.clear) {
+    for (const cut of cuts) cut.setReleaseAt(null);
+    return { scheduled: 0, cleared: cuts.length };
+  }
+
+  const schedule = loadSchedule();
+  const cadence = schedule.shows[source.manifest.personaId];
+
+  /**
+   * Which cuts get a day.
+   *
+   * ONLY THE ONES THAT COULD ACTUALLY GO OUT. A cut that is already published
+   * has nothing to wait for, and one the gate rejected can never use the day it
+   * was given - so including either leaves a hole in the rotation, and the
+   * channel is silent on a day the schedule says it published. Seven of ten
+   * stories in the first real set were gate failures, which would have been
+   * seven empty days out of ten.
+   */
+  const publishable = (cut: Run): boolean => {
+    if (cut.isComplete('publish')) return false;
+    try {
+      return cut.readArtifact('qa', z.object({ passed: z.boolean() }).passthrough()).passed;
+    } catch {
+      // No gate report yet means it has not been rendered. It is not ready to
+      // be given a day, and a later re-run of this will pick it up.
+      return false;
+    }
+  };
+
+  const pending = cuts.filter(publishable);
+  const skipped = cuts.length - pending.length;
+
+  const times = planRelease({
+    count: pending.length,
+    from: new Date(),
+    slotHour: cadence?.slot?.hour,
+    timezone: schedule.timezone,
+  });
+
+  pending.forEach((cut, i) => cut.setReleaseAt(times[i]!));
+
+  return {
+    scheduled: pending.length,
+    // NAMED RATHER THAN SILENT. "Scheduled 3" out of a set of ten is a
+    // surprise worth explaining at the moment it happens.
+    skipped,
+    first: times[0]?.toISOString() ?? null,
+    last: times[times.length - 1]?.toISOString() ?? null,
+    timezone: schedule.timezone,
   };
 };
 

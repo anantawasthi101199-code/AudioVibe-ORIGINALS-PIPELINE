@@ -265,11 +265,15 @@ the only copy.
 
 Records the publishing credential. **A channel cannot publish until this is
 done**, and this studio cannot produce the token: the platform has no endpoint
-that issues machine credentials, deliberately. Mint it on the API server:
+that issues machine credentials, deliberately. Mint it in the Railway shell for the API service, which is the only place with
+`DATABASE_URL` and `INGEST_TOKEN_SECRET`:
 
 ```bash
-npx ts-node src/scripts/mintIngestToken.ts --username <handle>
+node dist/scripts/mintIngestToken.js --username <handle>
 ```
+
+The deployed image ships compiled JavaScript and production dependencies only,
+so `npx ts-node src/scripts/...` fails there with "Cannot find module".
 
 Then bring it back here. The command checks the user id inside the token matches
 the channel, because pasting the wrong show's token otherwise shows up as a

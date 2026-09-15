@@ -77,6 +77,7 @@ export interface RunSummary {
   derivedFrom: string | null;
   durationS: number | null;
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
+  releaseAt: string | null;
 }
 
 export interface QueueItem {
@@ -103,6 +104,7 @@ export interface QueueView {
   blocked: QueueBlocker[];
   held: RunSummary[];
   ready: RunSummary[];
+  scheduled: Array<RunSummary & { releaseAt: string }>;
   failed: RunSummary[];
   failedTotal: number;
   published: RunSummary[];
@@ -287,6 +289,19 @@ export const api = {
 
   createSeries: (id: string) =>
     call<{ jobId: string }>(`/api/channel/series?id=${encodeURIComponent(id)}`, { method: 'POST' }),
+
+  scheduleRelease: (id: string, clear = false) =>
+    call<{
+      scheduled: number;
+      skipped?: number;
+      cleared?: number;
+      first?: string | null;
+      last?: string | null;
+      timezone?: string;
+    }>(
+      `/api/run/schedule?id=${encodeURIComponent(id)}`,
+      { method: 'POST', body: JSON.stringify({ clear }) }
+    ),
 
   discard: (id: string) =>
     call<{ ok: true }>(`/api/run?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
