@@ -248,14 +248,44 @@ had been going out on every beat of every episode.
 
 ## Publishing
 
+### `channel-setup --show <id>`
+
+Creates the channel on the platform: account, profile, avatar, cover. Run once
+per channel, ever. Needs `AUDIOVIBE_ADMIN_EMAIL` and `AUDIOVIBE_ADMIN_PASSWORD`.
+
+Every step resumes separately, so a run that creates the account and dies before
+the avatar picks up at the avatar. It refuses two things: an account the API
+created without the AI label, and an account that already exists but whose
+password this studio does not hold.
+
+The password it generates goes in `accounts.json`, which is gitignored and is
+the only copy.
+
+### `channel-token --show <id> --token <jwt>`
+
+Records the publishing credential. **A channel cannot publish until this is
+done**, and this studio cannot produce the token: the platform has no endpoint
+that issues machine credentials, deliberately. Mint it on the API server:
+
+```bash
+npx ts-node src/scripts/mintIngestToken.ts --username <handle>
+```
+
+Then bring it back here. The command checks the user id inside the token matches
+the channel, because pasting the wrong show's token otherwise shows up as a
+month of episodes under the wrong account.
+
 ### `due`
 
-What the schedule says should be made now, and what is blocked and why.
+What the schedule says should be made now, what is blocked and why, and what is
+coming up in the week ahead with the day and hour each show goes out.
 
 ### `publish --run <id> [--yes]`
 
 Publishes a run that passed its gate. `--yes` is required for production, and
-again if the gate asked for a human.
+again if the gate asked for a human. It publishes with the channel's own
+credential, so the AI label is carried by how the request authenticated rather
+than by anything the upload claims about itself.
 
 ---
 
@@ -301,7 +331,13 @@ the command that needs it rather than at startup.
 | Variable | What for |
 |---|---|
 | `AUDIOVIBE_API_URL` | Which platform environment. |
-| `AUDIOVIBE_INGEST_TOKEN` | The show's upload credential. |
+| `AUDIOVIBE_INGEST_TOKEN` | Fallback upload credential, for a studio with one show. Per-channel tokens in `accounts.json` win over it. |
+
+**Needed to create a channel, and only then**
+
+| Variable | What for |
+|---|---|
+| `AUDIOVIBE_ADMIN_EMAIL`, `AUDIOVIBE_ADMIN_PASSWORD` | The studio operator. Used by `channel-setup` to provision the account and by nothing else. |
 
 **Optional**
 
@@ -318,6 +354,9 @@ the command that needs it rather than at startup.
 | `FOUNDRY_RUNS_DIR` | Where runs are written. |
 | `FOUNDRY_VOICES_FILE` | Where the voice registry lives. Tests point this away from the committed one. |
 | `FOUNDRY_BIBLES_DIR` | Where series bibles live. |
+| `FOUNDRY_ACCOUNTS_FILE` | Where channel credentials live. Tests point this away from the real one. |
+| `FOUNDRY_IMAGE` | `off` draws channel artwork instead of generating it, and costs nothing. |
+| `FOUNDRY_IMAGE_MODEL`, `FOUNDRY_IMAGE_QUALITY` | Which image model, and how hard it tries. Default `gpt-image-1` at `medium`. |
 | `EXA_API_KEY`, `FIRECRAWL_API_KEY` | Better retrieval when present, plain fetch when not. |
 | `FFMPEG_PATH`, `FFPROBE_PATH` | When they are not on PATH. |
 

@@ -118,3 +118,36 @@ export const loadAllFormats = (dir = beatsheetsDir()): EpisodeFormat[] => {
     .sort()
     .map((id) => loadFormat(id, dir));
 };
+
+/**
+ * One story's format, cut out of the set it belongs to.
+ *
+ * A CUT STORY IS A FORMAT OF ONE BEAT: that beat's job, that beat's claim
+ * floor, that beat's length. Passing the whole ten-beat format to gate a
+ * one-beat script makes the gate ask after nine beats that were never meant to
+ * be there - "beat story_02 cites 0 claims, below its floor of 6", and the same
+ * for story_03 through story_10 - and measures a two-minute story against the
+ * set's thirty-minute target.
+ *
+ * SHARED BECAUSE TWO THINGS NARROW IT. The cut does it when it gates each story
+ * as it is made, and `gate --run` does it when somebody asks the same question
+ * later. Those two must agree: a re-gate that reports nine findings the real
+ * gate never saw looks like news and is noise.
+ *
+ * An index outside the format's beats returns it unchanged, which is what a run
+ * that is not one story of a set should see.
+ */
+export const oneBeatFormat = (format: EpisodeFormat, index: number): EpisodeFormat => {
+  const beat = format.beats[index];
+  if (!beat) return format;
+
+  return {
+    ...format,
+    beats: [beat],
+    tensionCurve:
+      format.tensionCurve[index] !== undefined ? [format.tensionCurve[index]!] : format.tensionCurve,
+    // The set's target belongs to the source, which is never rendered and never
+    // gated as audio.
+    targetSeconds: beat.seconds,
+  };
+};

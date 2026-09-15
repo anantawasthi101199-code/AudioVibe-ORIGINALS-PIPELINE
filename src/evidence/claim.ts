@@ -216,6 +216,38 @@ export interface ShapeProblem {
  * type promises, which is what stops a "statistic" that carries no number and a
  * "quotation" that is a summary.
  */
+/**
+ * Fix a claim whose type the extractor guessed wrong.
+ *
+ * RETYPED, NOT REJECTED, and that is the whole argument. A claim bound to a
+ * verbatim quote that says what the claim says is a good claim; what kind of
+ * assertion it is, is a label the extractor chose, and the extractor is not
+ * especially good at choosing it. Three claims in one set were filed as
+ * statistics - "those who had deja vu more frequently also had jamais vu more
+ * frequently" - and blocked for stating no number. They state no number because
+ * they are not statistics. Nothing about the evidence was wrong.
+ *
+ * ONLY DOWNWARD, AND ONLY WHERE THE EVIDENCE IS UNAMBIGUOUS. It never promotes
+ * a claim into a stricter type, because that would be this function inventing a
+ * promise the extractor never made. A statistic with no number anywhere becomes
+ * an attribution: the weakest type, carrying no structural promise beyond being
+ * bound to its quote, which is exactly what such a claim is.
+ *
+ * THE NUMBER RULE STILL BITES WHERE IT MATTERS. A claim stating a figure its
+ * quote does not contain keeps its type and still fails - that is a number
+ * somebody remembered rather than read, and it is the failure the rule was
+ * written for.
+ */
+export const retypeClaim = (claim: Claim): Claim => {
+  if (claim.type !== 'statistic') return claim;
+
+  // Only when NEITHER side has a number. A claim with a figure the quote lacks
+  // is the fault the statistic rule exists to catch, and must keep its type.
+  if (HAS_NUMBER.test(claim.text) || HAS_NUMBER.test(claim.quote)) return claim;
+
+  return { ...claim, type: 'attribution' };
+};
+
 export const checkClaimShape = (claim: Claim, source: Source): ShapeProblem[] => {
   const problems: ShapeProblem[] = [];
   const add = (problem: string) => problems.push({ claimId: claim.id, problem });

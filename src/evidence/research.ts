@@ -24,7 +24,14 @@ import { z } from 'zod';
 import { Persona } from '../canon/schema';
 import { EpisodeFormat } from '../formats/schema';
 import { completeJson, extractJson, LlmClient } from '../models/client';
-import { Claim, claimSchema, checkLedger, UnsupportedClaim, unsupportedClaimSchema } from './claim';
+import {
+  Claim,
+  claimSchema,
+  checkLedger,
+  retypeClaim,
+  UnsupportedClaim,
+  unsupportedClaimSchema,
+} from './claim';
 import { FetchDeps, fetchSource } from './fetch';
 import { selectPassages } from './passages';
 import { rankCandidates, SearchProvider } from './search';
@@ -844,7 +851,11 @@ export const extractClaims = async (
 
   for (const chunkResult of done) {
     for (const claim of chunkResult.claims) {
-      claims.push({ ...claim, id: `c${claims.length + 1}` });
+      // RETYPED HERE, WHERE THE CLAIM IS STILL FREE. The extractor labels a
+      // claim as it writes it, and it is not especially good at the labelling;
+      // catching a wrong label now costs nothing, whereas catching it at the
+      // gate throws away a claim that was researched, verified and paid for.
+      claims.push(retypeClaim({ ...claim, id: `c${claims.length + 1}` }));
     }
     unsupported.push(...chunkResult.unsupported);
   }

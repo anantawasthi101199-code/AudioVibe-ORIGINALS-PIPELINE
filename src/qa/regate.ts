@@ -19,7 +19,7 @@
  */
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
-import { loadFormat } from '../formats/load';
+import { loadFormat, oneBeatFormat } from '../formats/load';
 import { Claim, checkLedger, claimSchema } from '../evidence/claim';
 import { corpusSchema, counterEvidenceSchema } from '../evidence/research';
 import { verificationReportSchema } from '../evidence/verify';
@@ -32,7 +32,16 @@ import { GateReport, runGate } from './gate';
 export const regate = (run: Run, script: Script): GateReport | null => {
   try {
     const persona = loadPersona(run.manifest.personaId);
-    const format = loadFormat(run.manifest.formatId);
+
+    // ONE STORY IS GATED AS ONE BEAT, exactly as the cut gated it when it was
+    // made. Without this a re-gate reads the source's whole beat sheet and
+    // reports nine beats that belong to nine other shorts, plus a half-hour
+    // duration guide for a two-minute story. That disagreed with the report the
+    // run was actually given, which is the one thing a re-gate must not do.
+    const stored = loadFormat(run.manifest.formatId);
+    const format = run.manifest.story
+      ? oneBeatFormat(stored, run.manifest.story - 1)
+      : stored;
 
     // The repaired claims where there are any, because those are what the
     // script was written from - narrowed, rebound and hedged.
@@ -45,7 +54,7 @@ export const regate = (run: Run, script: Script): GateReport | null => {
     if (!claims.length || !run.hasArtifact('verification')) return null;
 
     const corpus = run.readArtifact('corpus', corpusSchema);
-    const stored = run.readArtifact(
+    const verification = run.readArtifact(
       'verification',
       z.object({
         verification: verificationReportSchema,
@@ -64,12 +73,12 @@ export const regate = (run: Run, script: Script): GateReport | null => {
       // RE-CHECKED, NOT REMEMBERED. An edited script can drop the sentence a
       // claim was carrying, and the ledger is the thing that notices.
       ledger: checkLedger(claims, corpus.sources),
-      verification: stored.verification,
+      verification: verification.verification,
       // THE STORED SEARCHES, NOT AN EMPTY LIST. Passing none made every
       // contested claim report "no disconfirming search was run for it" - on a
       // run that had done twelve of them. A re-gate that invents failures is
       // worse than one that prints a stale report, because it looks like news.
-      counterEvidence: stored.counterEvidence,
+      counterEvidence: verification.counterEvidence,
       // Zero duration where there is no audio, which reads as a large miss
       // against the format target - correctly, since there is nothing to hear.
       durationS: render?.durationS ?? 0,

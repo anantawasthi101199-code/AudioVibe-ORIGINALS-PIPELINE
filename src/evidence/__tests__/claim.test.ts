@@ -16,6 +16,7 @@ import {
   locateQuote,
   MIN_QUOTE_CHARS,
   normaliseForMatch,
+  retypeClaim,
 } from '../claim';
 
 const SOURCE_TEXT = [
@@ -209,5 +210,61 @@ describe('beatsBelowClaimFloor', () => {
 
   it('ignores beats with no floor', () => {
     expect(beatsBelowClaimFloor({}, { cold_open: 0 })).toEqual([]);
+  });
+});
+
+describe('retypeClaim', () => {
+  const claim = (over: Partial<Claim>): Claim =>
+    ({
+      id: 'c1',
+      beatId: 'b1',
+      type: 'statistic',
+      text: 'x',
+      quote: 'y',
+      sourceId: 's1',
+      contested: false,
+      ...over,
+    }) as Claim;
+
+  it('retypes a statistic that is not one', () => {
+    // "Those who had deja vu more frequently also had jamais vu more
+    // frequently" is a finding, not a figure. It was blocked for stating no
+    // number, which is true and beside the point: the evidence is sound and
+    // only the label was wrong.
+    const out = retypeClaim(
+      claim({
+        text: 'People who had deja vu more often also had jamais vu more often.',
+        quote: 'those people who had deja vu more frequently also had jamais vu more frequently',
+      })
+    );
+
+    expect(out.type).toBe('attribution');
+  });
+
+  it('leaves a real statistic alone', () => {
+    const out = retypeClaim(
+      claim({ text: '37 per cent of adults report it.', quote: 'reported by 37% of adults' })
+    );
+    expect(out.type).toBe('statistic');
+  });
+
+  it('KEEPS the type when the claim states a figure its quote does not', () => {
+    // The failure the number rule was written for: a figure somebody
+    // remembered rather than read. Retyping this would hide it.
+    const out = retypeClaim(
+      claim({ text: '37 per cent of adults report it.', quote: 'many adults report it' })
+    );
+
+    expect(out.type).toBe('statistic');
+  });
+
+  it('never promotes a claim into a stricter type', () => {
+    // Retyping upward would be this function inventing a promise the
+    // extractor never made.
+    for (const type of ['causal', 'quotation', 'chronology', 'attribution', 'definition'] as const) {
+      expect(retypeClaim(claim({ type, text: 'no numbers here', quote: 'nor here' })).type).toBe(
+        type
+      );
+    }
   });
 });

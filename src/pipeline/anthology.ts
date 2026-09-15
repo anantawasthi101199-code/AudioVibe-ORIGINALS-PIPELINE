@@ -26,10 +26,10 @@
  */
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
-import { loadFormat } from '../formats/load';
+import { loadFormat, oneBeatFormat } from '../formats/load';
 import { episodeBudgetPence } from '../config';
 import { Claim, checkLedger, claimSchema } from '../evidence/claim';
-import { corpusSchema } from '../evidence/research';
+import { corpusSchema, counterEvidenceSchema } from '../evidence/research';
 import { verificationReportSchema } from '../evidence/verify';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { Script, beatText, scriptSchema, writeTitle } from '../script/write';
@@ -72,11 +72,30 @@ export const cutStories = async (
     );
   }
 
+  /**
+   * The disconfirming searches that belong to one story.
+   *
+   * Filtered by claim exactly as the verification results are: a cut story
+   * carries its own beat's evidence and no other beat's, so its report says
+   * what was checked for the claims it actually states.
+   */
+  const counterEvidenceFor = (claimIds: readonly string[]) =>
+    stored.counterEvidence.filter((c) => claimIds.includes(c.claimId));
+
   const script = input.source.readArtifact('script', scriptSchema);
   const corpus = input.source.readArtifact('corpus', corpusSchema);
   const stored = input.source.readArtifact(
     'verification',
-    z.object({ verification: verificationReportSchema, counterEvidence: z.array(z.unknown()) })
+    z.object({
+      verification: verificationReportSchema,
+      // PARSED, NOT DISCARDED, AND IT WAS DISCARDED. This was read as
+      // `z.array(z.unknown())` and then every cut wrote `counterEvidence: []`,
+      // so the disconfirming searches the source ran - fourteen of them on the
+      // set that found this - reached nothing. The gate then blocked six of ten
+      // stories for "marked contested but no disconfirming search was run",
+      // about claims that had been searched properly hours earlier.
+      counterEvidence: counterEvidenceSchema.default([]),
+    })
   );
 
   // The repaired claims where the source has them, because those are what the
@@ -191,7 +210,7 @@ export const cutStories = async (
         results: stored.verification.results.filter((v) => beat.claimIds.includes(v.claimId)),
         blocking: stored.verification.blocking.filter((v) => beat.claimIds.includes(v.claimId)),
       },
-      counterEvidence: [],
+      counterEvidence: counterEvidenceFor(beat.claimIds),
     });
     run.markComplete('verification');
     run.writeArtifact('script', oneStory);
@@ -242,12 +261,7 @@ export const cutStories = async (
       // A cut story IS a format of one beat: that beat's job, that beat's claim
       // floor, that beat's length. The set's 900 to 1800 second target belongs
       // to the source, which is never rendered and never gated as audio.
-      format: {
-        ...format,
-        beats: format.beats[i] ? [format.beats[i]!] : format.beats,
-        tensionCurve: format.tensionCurve[i] !== undefined ? [format.tensionCurve[i]!] : format.tensionCurve,
-        targetSeconds: format.beats[i]?.seconds ?? format.targetSeconds,
-      },
+      format: oneBeatFormat(format, i),
       script: oneStory,
       claims: used,
       ledger: checkLedger(used, sources),
@@ -256,7 +270,7 @@ export const cutStories = async (
         results: stored.verification.results.filter((v) => beat.claimIds.includes(v.claimId)),
         blocking: stored.verification.blocking.filter((v) => beat.claimIds.includes(v.claimId)),
       },
-      counterEvidence: [],
+      counterEvidence: counterEvidenceFor(beat.claimIds),
       durationS: render.durationS,
       sources,
       corpusText: sources.map((s) => s.text).join('\n'),
