@@ -14,6 +14,7 @@ import {
   bioFor,
   loadAccounts,
   makePassword,
+  publishTokenFor,
   saveAccounts,
   type HttpDeps,
 } from '../account';
@@ -238,5 +239,60 @@ describe('the credentials file', () => {
 
   it('is empty rather than an error before any channel exists', () => {
     expect(loadAccounts(path.join(os.tmpdir(), 'no-such-dir', 'accounts.json'))).toEqual({});
+  });
+});
+
+describe('publishTokenFor', () => {
+  let file: string;
+
+  const record = (channelId: string, ingestToken?: string) =>
+    saveAccounts(
+      {
+        [channelId]: {
+          username: channelId,
+          email: `${channelId}@originals.audiovibe.co`,
+          password: 'Passw0rd_aa',
+          userId: 'u1',
+          createdAt: '2026-09-15T00:00:00.000Z',
+          isAi: true,
+          profile: { avatar: true, cover: true },
+          ...(ingestToken ? { ingestToken } : {}),
+        },
+      },
+      file
+    );
+
+  beforeEach(() => {
+    file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'acct-')), 'accounts.json');
+    delete process.env.AUDIOVIBE_INGEST_TOKEN;
+  });
+
+  afterEach(() => {
+    delete process.env.AUDIOVIBE_INGEST_TOKEN;
+  });
+
+  it('prefers the channel credential over the studio-wide one', () => {
+    // The token carries a user id, so the wrong one publishes as the wrong
+    // show - and there is no moving an episode between accounts afterwards.
+    record('honest-health', 'channel-token');
+    process.env.AUDIOVIBE_INGEST_TOKEN = 'studio-wide';
+
+    expect(publishTokenFor('honest-health', file)).toBe('channel-token');
+  });
+
+  it('falls back to the environment, which is what one show always used', () => {
+    record('honest-health');
+    process.env.AUDIOVIBE_INGEST_TOKEN = 'studio-wide';
+
+    expect(publishTokenFor('honest-health', file)).toBe('studio-wide');
+  });
+
+  it('says how to get one rather than reporting a missing variable', () => {
+    // The token cannot be made from here: the platform has no endpoint that
+    // issues machine credentials, deliberately. So the error is the recipe.
+    record('honest-health');
+
+    expect(() => publishTokenFor('honest-health', file)).toThrow(/mintIngestToken/);
+    expect(() => publishTokenFor('honest-health', file)).toThrow(/channel-token --show/);
   });
 });

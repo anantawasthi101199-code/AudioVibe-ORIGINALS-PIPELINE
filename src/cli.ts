@@ -17,7 +17,7 @@ import { z } from 'zod';
 import {
   screenerConfig,
   episodeBudgetPence,
-  platformConfig,
+  platformUrl,
   ttsProvider,
   verifierConfig,
   writerConfig,
@@ -50,6 +50,12 @@ import { Run, STAGES } from './run/store';
 import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
 import { setUpChannel } from './pipeline/channel';
+import {
+  accountsPath,
+  loadAccounts,
+  publishTokenFor,
+  saveAccounts,
+} from './publish/account';
 import { imageModel, imageQuality, imagesEnabled } from './art/generate';
 import { serve } from './server/index';
 import { formatGateReport, GateReport } from './qa/gate';
@@ -91,6 +97,11 @@ Commands
   channel-setup --show <id>      Create this channel on the platform, once:
                                  account, profile, avatar, cover. Needs
                                  AUDIOVIBE_ADMIN_EMAIL and _PASSWORD.
+  channel-token --show <id> --token <jwt>
+                                 Record the publishing credential a person
+                                 minted on the API server. A channel cannot
+                                 publish until this is done; the platform has
+                                 no endpoint that issues these, on purpose.
   studio                         Start the web interface, on loopback. Everything
                                  the commands below do, with progress you can
                                  watch and a script you can edit before it is
@@ -554,7 +565,7 @@ const cmdChannelSetup = async (argv: string[]): Promise<number> => {
   }
 
   const persona = loadPersona(showId);
-  const platform = platformConfig();
+  const platform = platformUrl();
 
   const email = process.env.AUDIOVIBE_ADMIN_EMAIL;
   const password = process.env.AUDIOVIBE_ADMIN_PASSWORD;
@@ -604,6 +615,20 @@ const cmdChannelSetup = async (argv: string[]): Promise<number> => {
         ? '  The account was already there; its profile and artwork were refreshed.'
         : '  Created. Its password is in accounts.json and nowhere else.'
     );
+
+    // THE ONE STEP THIS COMMAND CANNOT DO. The platform has no endpoint that
+    // issues publishing credentials, deliberately: utils/ingestToken.ts calls
+    // one "a privilege escalation waiting for its first authorisation bug".
+    // So the token is minted on the server by a person, and the useful thing
+    // to print is exactly what to type.
+    if (!result.account.ingestToken) {
+      console.log('');
+      console.log('  It cannot publish yet. On the API server:');
+      console.log(`    npx ts-node src/scripts/mintIngestToken.ts --username ${result.account.username}`);
+      console.log('  then bring the token back here:');
+      console.log(`    npm run foundry -- channel-token --show ${showId} --token <jwt>`);
+    }
+
     console.log('');
     return 0;
   } catch (err) {
@@ -612,6 +637,64 @@ const cmdChannelSetup = async (argv: string[]): Promise<number> => {
     console.error('');
     return 1;
   }
+};
+
+/**
+ * Record the publishing credential a person minted on the server.
+ *
+ * A COMMAND RATHER THAN "EDIT THE JSON", because the file holds passwords and
+ * the thing most likely to go wrong while hand-editing it is losing one. This
+ * reads, changes one field, and writes.
+ *
+ * IT CHECKS THE TOKEN IS FOR THIS CHANNEL. An ingest token carries the user id
+ * it publishes as, so pasting the wrong show's token is a mistake that
+ * otherwise surfaces as a month of episodes appearing under the wrong account.
+ */
+const cmdChannelToken = (argv: string[]): number => {
+  const showId = arg(argv, 'show');
+  const token = arg(argv, 'token');
+
+  if (!showId || !token) {
+    console.error('Usage: channel-token --show <id> --token <jwt>');
+    return 1;
+  }
+
+  const accounts = loadAccounts();
+  const account = accounts[showId];
+  if (!account) {
+    console.error(`no account recorded for ${showId}. Run channel-setup --show ${showId} first.`);
+    return 1;
+  }
+
+  // The payload is read, not verified: the signing secret lives on the server
+  // and this machine has no business holding it. Reading the id is enough to
+  // catch the mistake this check exists for.
+  let claimedUserId: string | null = null;
+  try {
+    const [, payload] = token.split('.');
+    const decoded = JSON.parse(Buffer.from(payload ?? '', 'base64url').toString('utf8'));
+    claimedUserId = typeof decoded.userId === 'string' ? decoded.userId : null;
+    if (decoded.scope !== 'ingest') {
+      console.error(`that token's scope is "${decoded.scope}", not "ingest".`);
+      return 1;
+    }
+  } catch {
+    console.error('that does not look like a token. Expected the jwt mintIngestToken printed.');
+    return 1;
+  }
+
+  if (claimedUserId && claimedUserId !== account.userId) {
+    console.error(`that token publishes as ${claimedUserId}, but ${showId} is ${account.userId}.`);
+    console.error('Minting it for the wrong show puts its episodes in the wrong account.');
+    return 1;
+  }
+
+  account.ingestToken = token;
+  accounts[showId] = account;
+  saveAccounts(accounts);
+
+  console.log(`@${account.username} can publish. Recorded in ${accountsPath()}.`);
+  return 0;
 };
 
 const cmdApprove = async (argv: string[]): Promise<number> => {
@@ -850,7 +933,7 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
     return 1;
   }
 
-  const platform = platformConfig();
+  const platform = platformUrl();
   const env = environmentKey(platform.url);
 
   const existing = findSeries(persona.id, platform.url);
@@ -877,7 +960,10 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
     SERIES_COVER_SIZE
   );
 
-  const client = new AudioVibeClient(platform.url, platform.token);
+  // THE CHANNEL'S OWN CREDENTIAL, not a studio-wide one. The token carries a
+  // user id, so a series made with the wrong one belongs to the wrong show and
+  // there is no moving it afterwards.
+  const client = new AudioVibeClient(platform.url, publishTokenFor(persona.id));
   const created = await client.createSeries({
     title: persona.name,
     description: persona.thesis.trim().replace(/\s+/g, ' '),
@@ -1397,7 +1483,7 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
     return 1;
   }
 
-  const platform = platformConfig();
+  const platform = platformUrl();
   if (platform.isProduction && !flag(argv, 'yes')) {
     // Publishing to production notifies followers, warms feed caches and writes
     // the seen ledger. None of that can be taken back.
@@ -1458,7 +1544,7 @@ const cmdPublish = async (argv: string[]): Promise<number> => {
         });
       })();
 
-  const client = new AudioVibeClient(platform.url, platform.token);
+  const client = new AudioVibeClient(platform.url, publishTokenFor(persona.id));
 
   // WHICH SHELF, IF ANY.
   //
@@ -1556,6 +1642,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await new Promise<number>(() => undefined);
       case 'channel-setup':
         return await cmdChannelSetup(rest);
+      case 'channel-token':
+        return cmdChannelToken(rest);
       case 'approve':
         return await cmdApprove(rest);
       case 'resume':

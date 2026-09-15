@@ -121,6 +121,29 @@ export const accountSchema = z.object({
   createdAt: z.string(),
   /** Whether the API accepted the AI declaration, checked rather than assumed. */
   isAi: z.boolean(),
+
+  /**
+   * The channel's publishing credential, once somebody has minted one.
+   *
+   * NOT CREATED BY THIS STUDIO, AND THAT IS THE PLATFORM'S DECISION RATHER THAN
+   * AN OVERSIGHT. utils/ingestToken.ts says it in as many words: there is no
+   * endpoint that issues these, because an endpoint that issues machine
+   * credentials is a privilege escalation waiting for its first authorisation
+   * bug. So a token is minted on the server, by a person, with a script, and
+   * pasted in here.
+   *
+   * ONE PER CHANNEL, because the token carries a user id: a token minted for
+   * one show publishes as that show and no other. A single studio-wide token in
+   * the environment would put every channel's episodes in one account.
+   *
+   * WHY NOT JUST PUBLISH WITH THE CHANNEL'S PASSWORD, which this file already
+   * holds. Because the AI label is a consequence of HOW a request authenticated
+   * and never of what it claims: services/studioIngest.ts keys it off the
+   * ingest credential, so an upload made with an ordinary session would produce
+   * a perfectly good episode with no label on it. The password is for the
+   * profile; the token is for publishing.
+   */
+  ingestToken: z.string().optional(),
   profile: z.object({ avatar: z.boolean(), cover: z.boolean() }).default({
     avatar: false,
     cover: false,
@@ -162,6 +185,35 @@ export const makePassword = (random = () => Math.random()): string => {
     pick('23456789', 4) +
     '_' +
     pick('abcdefghijkmnopqrstuvwxyz', 6)
+  );
+};
+
+/**
+ * The credential a channel publishes with.
+ *
+ * Per channel first, then the environment. The environment fallback is what a
+ * single-show studio has always used and still works; the per-channel token is
+ * what makes five shows possible.
+ */
+export const publishTokenFor = (channelId: string, file = accountsPath()): string => {
+  const recorded = loadAccounts(file)[channelId]?.ingestToken;
+  if (recorded) return recorded;
+
+  const fromEnv = process.env.AUDIOVIBE_INGEST_TOKEN;
+  if (fromEnv) return fromEnv;
+
+  // The message is the whole point of this branch: the token cannot be made
+  // from here, so saying so beats a missing-variable error somebody has to
+  // trace back to a design decision in another repo.
+  throw new AccountError(
+    401,
+    `no publishing credential for ${channelId}. Mint one on the API server:
+` +
+      `  npx ts-node src/scripts/mintIngestToken.ts --username <handle>
+` +
+      `then record it:
+` +
+      `  npm run foundry -- channel-token --show ${channelId} --token <jwt>`
   );
 };
 
