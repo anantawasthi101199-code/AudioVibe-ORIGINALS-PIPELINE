@@ -40,6 +40,7 @@ export interface Channel {
     exists: boolean;
     handle: string | null;
     canPublish: boolean;
+    needsSeries: boolean;
     hasSeries: boolean;
   };
 }
@@ -159,9 +160,15 @@ export interface JobEvent {
   spentPence: number;
 }
 
+export interface Platform {
+  url: string | null;
+  isProduction: boolean;
+  configured: boolean;
+}
+
 export interface Job {
   id: string;
-  kind: 'run' | 'shorts';
+  kind: 'run' | 'shorts' | 'channel' | 'series' | 'publish';
   runId: string;
   startedAt: string;
   finishedAt: string | null;
@@ -255,6 +262,34 @@ export const api = {
   catalogue: () => call<{ lanes: Lane[] }>('/api/catalogue'),
 
   queue: () => call<QueueView>('/api/queue'),
+
+  platform: () => call<Platform>('/api/platform'),
+
+  /* --- The things that reach the platform ------------------------------- */
+
+  publish: (id: string, confirmed: boolean) =>
+    call<{ jobId: string }>(`/api/run/publish?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+      body: JSON.stringify({ confirmed }),
+    }),
+
+  setUpChannel: (id: string, adminEmail: string, adminPassword: string) =>
+    call<{ jobId: string }>(`/api/channel/setup?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+      body: JSON.stringify({ adminEmail, adminPassword }),
+    }),
+
+  recordToken: (id: string, token: string) =>
+    call<{ ok: true; handle: string; file: string }>(
+      `/api/channel/token?id=${encodeURIComponent(id)}`,
+      { method: 'POST', body: JSON.stringify({ token }) }
+    ),
+
+  createSeries: (id: string) =>
+    call<{ jobId: string }>(`/api/channel/series?id=${encodeURIComponent(id)}`, { method: 'POST' }),
+
+  discard: (id: string) =>
+    call<{ ok: true }>(`/api/run?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
   channel: (id: string) =>
     call<{

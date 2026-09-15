@@ -101,11 +101,16 @@ export const App = () => {
 
   const channelMatch = /^\/c\/(.+)$/.exec(route);
   const runMatch = /^\/r\/(.+)$/.exec(route);
-  const onQueue = route === '/queue';
+  const onChannels = route === '/channels';
 
-  const crumbs: Array<[string, string]> = [['/', 'Lanes']];
-  if (onQueue) crumbs.push(['/queue', 'Queue']);
-  if (channelMatch) crumbs.push([route, channelMatch[1]!]);
+  // THE QUEUE IS HOME. The question asked of this studio most often is "does
+  // anything need me", and the answer should be the thing that loads.
+  const crumbs: Array<[string, string]> = [['/', 'Queue']];
+  if (onChannels) crumbs.push(['/channels', 'Channels']);
+  if (channelMatch) {
+    crumbs.push(['/channels', 'Channels']);
+    crumbs.push([route, channelMatch[1]!]);
+  }
   if (runMatch) {
     const runId = runMatch[1]!;
     crumbs.push([`/c/${runId.split('/')[0]}`, runId.split('/')[0]!]);
@@ -142,14 +147,14 @@ export const App = () => {
 
         <span className="spacer" />
         <a
-          className={`btn ghost small${onQueue ? ' on' : ''}`}
-          href="#/queue"
+          className={`btn ghost small${onChannels ? ' on' : ''}`}
+          href="#/channels"
           onClick={(e) => {
             e.preventDefault();
-            go('/queue');
+            go('/channels');
           }}
         >
-          Queue
+          Channels
         </a>
         <button
           className="btn ghost small"
@@ -161,14 +166,14 @@ export const App = () => {
         </button>
       </header>
 
-      {onQueue ? (
-        <Queue go={go} />
-      ) : runMatch ? (
+      {runMatch ? (
         <Run id={runMatch[1]!} go={go} />
       ) : channelMatch ? (
         <Channel id={channelMatch[1]!} go={go} />
-      ) : (
+      ) : onChannels ? (
         <Lanes go={go} />
+      ) : (
+        <Queue go={go} />
       )}
     </div>
   );

@@ -1,111 +1,127 @@
 /**
- * The publish queue: is the studio all right, and does it need me.
+ * Is the studio all right, and does it need me.
  *
- * ORDERED BY WHO HAS TO ACT, NOT BY WHAT HAPPENS FIRST. Held runs are at the
- * top because a run waiting for approval is the studio asking a person a
- * question, and a question nobody sees is the failure this whole interface
- * exists to prevent. Then what the gate rejected, then what is due, then the
- * week ahead, then what went out. The first sections are work; everything below
- * them is reassurance.
+ * ONE SCREEN, AND THE TOP ROW ANSWERS IT. Seven numbers. If "held" and "stuck"
+ * are both nought, nothing needs you and you can close the tab; that judgement
+ * should take under a second and should not require reading a sentence.
  *
- * A QUIET SECTION IS STILL SHOWN. An empty "held" reads as "nothing is waiting
- * on me", which is information. Sections that vanish when empty make the page a
- * different shape every time, and then you cannot tell at a glance whether
- * anything is wrong.
+ * THE SECTIONS ARE SHUT UNLESS THEY MATTER. Held and stuck open by themselves
+ * when they have anything in them, because those are work. The rest open when
+ * you tap their number. A page showing all seven lists at once is a page where
+ * the two that need you are somewhere in the middle of it.
  *
- * NOTHING HERE SPENDS. Every row is a link to where the decision is actually
- * made. A page that both reported the state of the studio and started runs
- * would be one misclick away from being expensive.
+ * THE REASONS ARE BEHIND THE MARKS. Every rule in this studio has one and none
+ * of them are guessable, but they are not what somebody wants ninety-nine times
+ * out of a hundred.
  */
-import { useEffect, useState } from 'react';
-import { ago, api, clock, money, until, when, type QueueView, type RunSummary } from '../api';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  ago,
+  api,
+  clock,
+  money,
+  until,
+  when,
+  type Platform,
+  type QueueView,
+  type RunSummary,
+} from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
+import { Count, Info } from '../components/Info';
 
-/** How often the page re-reads itself. The only thing that moves is the clock. */
-const REFRESH_MS = 60_000;
+const REFRESH_MS = 20_000;
 
-const Section = ({
-  title,
-  note,
-  count,
-  tone,
-  shown,
-  children,
-}: {
-  title: string;
-  note: string;
-  count: number;
-  tone?: 'hold' | 'fail';
-  /** How many are actually listed, when the count is larger than the list. */
-  shown?: number;
-  children: React.ReactNode;
-}) => (
-  <section className="panel">
-    <div className="panel-head">
-      <h2 style={{ fontSize: '1.05rem' }}>{title}</h2>
-      <span className={`pill${count > 0 && tone ? ` ${tone}` : ''}`}>{count}</span>
-      {shown !== undefined && shown < count && (
-        <span className="faint" style={{ fontSize: '0.78rem' }}>
-          newest {shown}
-        </span>
-      )}
-      <span className="spacer" />
-      <span className="muted nowrap" style={{ fontSize: '0.8rem' }}>
-        {note}
-      </span>
-    </div>
-
-    {count > 0 ? (
-      <div className="queue-list">{children}</div>
-    ) : (
-      <div className="panel-body faint">Nothing.</div>
-    )}
-  </section>
-);
+type Panel = 'held' | 'stuck' | 'due' | 'soon' | 'ready' | 'out';
 
 const Row = ({
   title,
   detail,
+  right,
   onClick,
-  children,
 }: {
   title: React.ReactNode;
   detail: string;
+  right: React.ReactNode;
   onClick: () => void;
-  children?: React.ReactNode;
 }) => (
   <button className="queue-row" onClick={onClick}>
     <span className="queue-main">
       <span className="queue-title">{title}</span>
       <span className="muted">{detail}</span>
     </span>
-    <span className="row nowrap">{children}</span>
+    <span className="row nowrap">{right}</span>
   </button>
 );
 
 const RunRow = ({ run, go }: { run: RunSummary; go: (path: string) => void }) => (
   <Row
     title={run.title ?? run.topic}
-    detail={`${run.channelName}${run.short !== null ? ` - short ${run.short}` : ''} - ${ago(run.createdAt)}`}
+    detail={`${run.channelName}${run.short !== null ? ` · short ${run.short}` : ''} · ${ago(run.createdAt)}`}
     onClick={() => go(`/r/${run.id}`)}
-  >
-    {run.gate?.needsHumanReview && <span className="pill hold">needs a read</span>}
-    {run.gate && run.gate.blocking > 0 && (
-      <span className="pill fail">{run.gate.blocking} blocking</span>
-    )}
-    <span className="muted mono" style={{ fontSize: '0.78rem' }}>
-      {clock(run.durationS)}
-    </span>
-    <span className="muted mono" style={{ fontSize: '0.78rem' }}>
-      {money(run.spentPence)}
-    </span>
-    <StatePill state={run.state} />
-  </Row>
+    right={
+      <>
+        {run.gate && run.gate.blocking > 0 && <span className="pill fail">{run.gate.blocking}</span>}
+        <span className="muted mono tiny">{clock(run.durationS)}</span>
+        <span className="muted mono tiny">{money(run.spentPence)}</span>
+        <StatePill state={run.state} />
+      </>
+    }
+  />
 );
+
+const Panel = ({
+  id,
+  title,
+  count,
+  tone,
+  open,
+  toggle,
+  why,
+  children,
+}: {
+  id: Panel;
+  title: string;
+  count: number;
+  tone?: 'hold' | 'fail' | 'pass';
+  open: Set<Panel>;
+  toggle: (p: Panel) => void;
+  why: React.ReactNode;
+  children: React.ReactNode;
+}) => {
+  const isOpen = open.has(id);
+
+  return (
+    <section className="panel">
+      <div className="panel-head">
+        <button className="panel-tap" onClick={() => toggle(id)}>
+          <span className={`caret${isOpen ? ' open' : ''}`}>›</span>
+          <h2>{title}</h2>
+          <span className={`pill${count && tone ? ` ${tone}` : ''}`}>{count}</span>
+        </button>
+        <span className="spacer" />
+        <span className="right-edge">
+          <Info label={`Why ${title.toLowerCase()} works this way`}>{why}</Info>
+        </span>
+      </div>
+      {isOpen && (count > 0 ? <div className="queue-list">{children}</div> : <p className="panel-body faint">Nothing.</p>)}
+    </section>
+  );
+};
 
 export const Queue = ({ go }: { go: (path: string) => void }) => {
   const [queue, setQueue] = useState<QueueView | null>(null);
+  const [platform, setPlatform] = useState<Platform | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState<Set<Panel>>(new Set());
+
+  const toggle = useCallback((p: Panel) => {
+    setOpen((was) => {
+      const next = new Set(was);
+      if (next.has(p)) next.delete(p);
+      else next.add(p);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     const load = () =>
@@ -114,10 +130,24 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
         .then((q) => {
           setQueue(q);
           setError(null);
+          // WORK OPENS ITSELF. You should never have to tap to discover that
+          // something is waiting on you.
+          setOpen((was) => {
+            if (!q.held.length && !q.failedTotal) return was;
+            const next = new Set(was);
+            if (q.held.length) next.add('held');
+            if (q.failedTotal) next.add('stuck');
+            return next;
+          });
         })
         .catch((e: Error) => setError(e.message));
 
     void load();
+    void api
+      .platform()
+      .then(setPlatform)
+      .catch(() => undefined);
+
     const timer = window.setInterval(load, REFRESH_MS);
     return () => window.clearInterval(timer);
   }, []);
@@ -131,70 +161,75 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
     );
   }
 
-  // WHAT ACTUALLY NEEDS A PERSON. Held runs and blocked shows, and not the
-  // gate-failure tail: those accumulate, most of them were superseded by a
-  // later episode, and counting them here would make the page permanently say
-  // twenty-odd things need you until nobody read the number at all.
   const needsMe = queue.held.length + queue.blocked.length;
 
   return (
     <div className="page">
-      <div className="page-head">
-        <div className="eyebrow">Publishing</div>
-        <h1>The queue</h1>
-        <p className="lede">
-          {queue.paused ? (
-            <>
-              The schedule is <strong>paused</strong>, so nothing comes up as due. Held runs below
-              are still waiting to be read.
-            </>
-          ) : needsMe === 0 ? (
-            <>
-              Nothing is waiting on you.{' '}
-              {queue.waiting.length > 0
-                ? `${queue.waiting.length} on the way.`
-                : 'Nothing scheduled either.'}
-            </>
-          ) : (
-            <>
-              {needsMe} {needsMe === 1 ? 'thing needs' : 'things need'} you. Everything else is on
-              its own clock.
-            </>
-          )}
-        </p>
+      <div className="row between" style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.5rem' }}>
+          {queue.paused ? 'Paused' : needsMe === 0 ? 'All clear' : 'Needs you'}
+        </h1>
+
+        {platform?.configured && (
+          <span className={`where${platform.isProduction ? ' live' : ''}`}>
+            <span className="dot" />
+            {platform.isProduction ? 'production' : new URL(platform.url!).hostname}
+          </span>
+        )}
       </div>
 
       <ErrorNote>{error}</ErrorNote>
 
-      <div className="stack">
-        <Section
+      <div className="counts" style={{ marginBottom: '1.7rem' }}>
+        <Count n={queue.held.length} label="held" tone="hold" onClick={() => toggle('held')} />
+        <Count n={queue.failedTotal} label="stuck" tone="fail" onClick={() => toggle('stuck')} />
+        <Count
+          n={queue.due.length + queue.blocked.length}
+          label="due"
+          tone={queue.blocked.length ? 'hold' : undefined}
+          onClick={() => toggle('due')}
+        />
+        <Count n={queue.waiting.length} label="soon" onClick={() => toggle('soon')} />
+        <Count n={queue.ready.length} label="ready" tone="pass" onClick={() => toggle('ready')} />
+        <Count n={queue.publishedTotal} label="out" onClick={() => toggle('out')} />
+      </div>
+
+      <div className="stack tight">
+        <Panel
+          id="held"
           title="Held"
-          note="Written and gated, waiting to be read"
           count={queue.held.length}
           tone="hold"
+          open={open}
+          toggle={toggle}
+          why="Written and gated, waiting for somebody to read it. Nothing here publishes on its own and nothing ever will: the two things the gate hands to a person are whether the script acknowledges its counter-evidence and whether the weakest source is framed as one account. Neither is settled by arithmetic."
         >
           {queue.held.map((r) => (
             <RunRow key={r.id} run={r} go={go} />
           ))}
-        </Section>
+        </Panel>
 
-        <Section
-          title="Gate rejected"
-          note="Blocking findings; the run page says which"
+        <Panel
+          id="stuck"
+          title="Stuck"
           count={queue.failedTotal}
-          shown={queue.failed.length}
           tone="fail"
+          open={open}
+          toggle={toggle}
+          why="The gate found something blocking. Most were superseded by a later episode and are only here because nothing deletes them, so the newest dozen are listed and the count is the true one. Open one to see which check failed."
         >
           {queue.failed.map((r) => (
             <RunRow key={r.id} run={r} go={go} />
           ))}
-        </Section>
+        </Panel>
 
-        <Section
-          title="Waiting on you"
-          note="Due, but something has to be done first"
-          count={queue.blocked.length}
-          tone="hold"
+        <Panel
+          id="due"
+          title="Due"
+          count={queue.due.length + queue.blocked.length}
+          open={open}
+          toggle={toggle}
+          why="What the schedule says should be made now. Nothing starts by itself. A blocked show is due but waiting on you, almost always for topics: a factual show with nothing to cover is reported rather than skipped, so it cannot quietly stop publishing and still look healthy."
         >
           {queue.blocked.map((b) => (
             <Row
@@ -202,17 +237,9 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
               title={b.channelName}
               detail={b.reason}
               onClick={() => go(`/c/${b.channelId}`)}
-            >
-              <span className="pill hold">blocked</span>
-            </Row>
+              right={<span className="pill hold">blocked</span>}
+            />
           ))}
-        </Section>
-
-        <Section
-          title="Due now"
-          note="The schedule says make these; nothing starts by itself"
-          count={queue.due.length}
-        >
           {queue.due.map((d) => (
             <Row
               key={`${d.channelId}-${d.kind}`}
@@ -223,20 +250,24 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
               }
               detail={d.reason}
               onClick={() => go(`/c/${d.channelId}`)}
-            >
-              {d.overdueDays ? (
-                <span className="pill fail">{d.overdueDays}d late</span>
-              ) : (
-                <span className="pill">due</span>
-              )}
-            </Row>
+              right={
+                d.overdueDays ? (
+                  <span className="pill fail">{d.overdueDays}d late</span>
+                ) : (
+                  <span className="pill">due</span>
+                )
+              }
+            />
           ))}
-        </Section>
+        </Panel>
 
-        <Section
-          title="Coming up"
-          note={`Ready, not yet its turn - ${queue.timezone}`}
+        <Panel
+          id="soon"
+          title="Soon"
           count={queue.waiting.length}
+          open={open}
+          toggle={toggle}
+          why={`Ready, but not yet its turn. Each show has a day and an hour so a week's work arrives spread across the week rather than in one lump. A slot that passes while nothing is running leaves the show overdue now, never pushed to next week. Times are ${queue.timezone}.`}
         >
           {queue.waiting.map((w) => (
             <Row
@@ -248,62 +279,53 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
               }
               detail={w.reason}
               onClick={() => go(`/c/${w.channelId}`)}
-            >
-              <span className="muted mono" style={{ fontSize: '0.78rem' }}>
-                {when(w.at!, queue.timezone)}
-              </span>
-              <span className="pill">{until(w.at!)}</span>
-            </Row>
+              right={
+                <>
+                  <span className="muted mono tiny">{when(w.at!, queue.timezone)}</span>
+                  <span className="pill">{until(w.at!)}</span>
+                </>
+              }
+            />
           ))}
-        </Section>
+        </Panel>
 
-        <Section title="Ready" note="Gate passed clean, not published" count={queue.ready.length}>
+        <Panel
+          id="ready"
+          title="Ready"
+          count={queue.ready.length}
+          tone="pass"
+          open={open}
+          toggle={toggle}
+          why="Gate passed clean and nothing is waiting on a person. Open one to hear it and publish it."
+        >
           {queue.ready.map((r) => (
             <RunRow key={r.id} run={r} go={go} />
           ))}
-        </Section>
+        </Panel>
 
-        <Section
-          title="Published"
-          note="Out in the world, most recent first"
+        <Panel
+          id="out"
+          title="Out"
           count={queue.publishedTotal}
-          shown={queue.published.length}
+          open={open}
+          toggle={toggle}
+          why="Published. The most recent dozen are listed."
         >
           {queue.published.map((r) => (
             <RunRow key={r.id} run={r} go={go} />
           ))}
-        </Section>
+        </Panel>
+      </div>
 
-        {/*
-          THE WEEK, AS ONE LINE PER SHOW. Not a calendar: the only question
-          anybody asks of it is "do two shows go out on the same day", and a
-          list answers that faster than a grid with five things in it.
-        */}
-        <section className="panel">
-          <div className="panel-head">
-            <h2 style={{ fontSize: '1.05rem' }}>The week</h2>
-            <span className="spacer" />
-            <span className="muted nowrap" style={{ fontSize: '0.8rem' }}>
-              When each show goes out, {queue.timezone}
-            </span>
-          </div>
-          <div className="queue-list">
-            {queue.slots.map((s) => (
-              <Row
-                key={s.channelId}
-                title={s.channelName}
-                detail={s.slot ? '' : 'publishes as soon as its cadence says so'}
-                onClick={() => go(`/c/${s.channelId}`)}
-              >
-                {s.slot ? (
-                  <span className="pill">{s.slot}</span>
-                ) : (
-                  <span className="muted">no slot</span>
-                )}
-              </Row>
-            ))}
-          </div>
-        </section>
+      {/* The week, one line per show. Not a calendar: the only question asked
+          of it is whether two shows go out on the same day. */}
+      <div className="week">
+        {queue.slots.map((s) => (
+          <button key={s.channelId} className="week-row" onClick={() => go(`/c/${s.channelId}`)}>
+            <span className="mono tiny">{s.slot ?? '—'}</span>
+            <span className="muted">{s.channelName}</span>
+          </button>
+        ))}
       </div>
     </div>
   );

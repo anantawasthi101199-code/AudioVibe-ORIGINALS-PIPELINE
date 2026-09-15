@@ -45,6 +45,15 @@ import {
   suggest,
 } from './routes';
 import { getQueue } from './queue';
+import {
+  createSeriesJob,
+  discardRun,
+  getPlatform,
+  nextDue,
+  publishRunJob,
+  recordToken,
+  setUpChannelJob,
+} from './operate';
 
 /** Where the built interface lives, when it has been built. */
 const webRoot = (): string => path.join(__dirname, '..', '..', 'web', 'dist');
@@ -237,6 +246,8 @@ export const createServer = (): http.Server =>
       // --- Reading ----------------------------------------------------------
       if (pathname === '/api/catalogue') return send(res, 200, getCatalogue());
       if (pathname === '/api/queue') return send(res, 200, getQueue());
+      if (pathname === '/api/platform') return send(res, 200, getPlatform());
+      if (pathname === '/api/next') return send(res, 200, nextDue());
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
       if (pathname === '/api/runs') return send(res, 200, getRuns(url.searchParams.get('channel')));
       if (pathname === '/api/run') return send(res, 200, getRun(id ?? ''));
@@ -264,6 +275,21 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/shorts' && req.method === 'POST') {
         return send(res, 202, cutShorts(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run/publish' && req.method === 'POST') {
+        return send(res, 200, publishRunJob(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run' && req.method === 'DELETE') {
+        return send(res, 200, discardRun(id ?? ''));
+      }
+      if (pathname === '/api/channel/setup' && req.method === 'POST') {
+        return send(res, 200, setUpChannelJob(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/channel/token' && req.method === 'POST') {
+        return send(res, 200, recordToken(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/channel/series' && req.method === 'POST') {
+        return send(res, 200, createSeriesJob(id ?? ''));
       }
       if (pathname === '/api/channel/suggest' && req.method === 'POST') {
         return send(res, 200, await suggest(id ?? '', await readBody(req)));

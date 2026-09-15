@@ -20,9 +20,11 @@ import {
   watchJob,
   type Beat,
   type JobEvent,
+  type Platform,
   type RunDetail,
 } from '../api';
-import { CostBar, ErrorNote, LiveLog, StageRail, StatePill, Stat } from '../components/bits';
+import { CostBar, ErrorNote, LiveLog, StageRail, StatePill } from '../components/bits';
+import { Count, Info } from '../components/Info';
 
 /** Delivery tags are part of the script and are not part of the sentence. */
 const Prose = ({ turns }: { turns: Beat['turns'] }) => (
@@ -51,6 +53,16 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<Beat[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
+  const [platform, setPlatform] = useState<Platform | null>(null);
+  /** The second press. Publishing is the one thing here that cannot be undone. */
+  const [confirming, setConfirming] = useState(false);
+
+  useEffect(() => {
+    void api
+      .platform()
+      .then(setPlatform)
+      .catch(() => undefined);
+  }, []);
   const stop = useRef<(() => void) | null>(null);
 
   const load = useCallback(async () => {
@@ -133,18 +145,17 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
   return (
     <div className="page">
-      <div className="page-head">
-        <div className="eyebrow">
-          {run.channelName} · e{String(run.episode).padStart(3, '0')}
-          {run.short ? `-s${String(run.short).padStart(2, '0')}` : ''}
-        </div>
-        <h1>{script?.title ?? run.topic}</h1>
-        <p className="lede">{run.topic}</p>
-        <div className="row mt">
+      <div className="row between" style={{ marginBottom: '0.9rem' }}>
+        <h1 style={{ fontSize: '1.4rem' }}>{script?.title ?? run.topic}</h1>
+        <div className="row nowrap">
           <StatePill state={live ? 'running' : run.state} />
-          <span className="pill">{run.formatId}</span>
-          {run.durationS !== null && <span className="pill">{clock(run.durationS)} of audio</span>}
-          <span className="pill">{money(run.spentPence)} spent</span>
+          <Info label="What this run was asked for">
+            {run.channelName} · e{String(run.episode).padStart(3, '0')}
+            {run.short ? `-s${String(run.short).padStart(2, '0')}` : ''} · {run.formatId}
+            <br />
+            <br />
+            {run.topic}
+          </Info>
         </div>
       </div>
 
@@ -181,20 +192,19 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         <section className="panel mt2" style={{ borderColor: 'var(--hold-dim)' }}>
           <div className="panel-body">
             <div className="row">
-              <div style={{ flex: 1, minWidth: '20rem' }}>
-                <h2>Held before the render</h2>
-                <p className="muted" style={{ marginTop: '0.4rem', maxWidth: '58ch' }}>
-                  Nothing has been voiced. Read it below, change anything that needs changing, and
-                  approve it when you are happy. Approving is the only step here that spends real
-                  money.
-                </p>
-              </div>
+              <h2 style={{ fontSize: '1.05rem' }}>Held</h2>
+              <Info label="What held means">
+                Nothing has been voiced. Read it below, change anything that needs changing, and
+                approve it when you are happy. Approving is the only step here that spends real
+                money, and it is the last point at which the words are free to change.
+              </Info>
+              <span className="spacer" />
               <button
                 className="btn spend"
                 disabled={busy !== null}
                 onClick={() => act('approve', () => api.approve(id))}
               >
-                {busy === 'approve' ? 'Voicing...' : 'Approve and voice it'}
+                {busy === 'approve' ? 'Voicing...' : 'Approve and voice'}
               </button>
             </div>
           </div>
@@ -204,13 +214,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {isSource && script && !live && (
         <section className="panel mt2">
           <div className="panel-body row">
-            <div style={{ flex: 1, minWidth: '20rem' }}>
-              <h2>{cuts.length > 0 ? `${cuts.length} shorts cut` : 'Not cut yet'}</h2>
-              <p className="muted" style={{ marginTop: '0.4rem', maxWidth: '58ch' }}>
-                This is a source script. It is never voiced or published whole; each story becomes
-                its own short, with its own audio, ledger and gate.
-              </p>
-            </div>
+            <h2 style={{ fontSize: '1.05rem' }}>
+              {cuts.length > 0 ? `${cuts.length} cut` : 'Not cut yet'}
+            </h2>
+            <Info label="What a source script is">
+              This is a source script. It is never voiced or published whole; each story becomes
+              its own short, with its own audio, its own ledger and its own gate.
+            </Info>
+            <span className="spacer" />
             <button
               className="btn spend"
               disabled={busy !== null}
@@ -270,28 +281,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       )}
 
       {/* --- Numbers ------------------------------------------------------- */}
-      <section className="mt2">
-        <div className="grid three">
-          <Stat value={money(run.spentPence)} label="spent" money />
-          <Stat
-            value={claims?.claims.length ?? 0}
-            label={claims?.claims.length === 1 ? 'fact bound to a quote' : 'facts bound to quotes'}
-          />
-          <Stat
-            value={corpus?.sources.length ?? 0}
-            label={corpus?.sources.length === 1 ? 'document read' : 'documents read'}
-          />
-          <Stat
-            value={script?.beats.length ?? 0}
-            label={isSource ? 'stories' : script?.beats.length === 1 ? 'beat' : 'beats'}
-          />
-          <Stat value={gate?.measurement?.words ?? 0} label="words" />
-          <Stat
-            value={gate?.measurement ? gate.measurement.sentenceWordsMean.toFixed(1) : '-'}
-            label="mean sentence"
-          />
-        </div>
-      </section>
+      <div className="counts" style={{ margin: '1.5rem 0' }}>
+        <Count n={money(run.spentPence)} label="spent" />
+        <Count n={clock(run.durationS)} label="length" />
+        <Count n={claims?.claims.length ?? 0} label="facts" />
+        <Count n={corpus?.sources.length ?? 0} label="sources" />
+        <Count n={script?.beats.length ?? 0} label={isSource ? 'stories' : 'beats'} />
+        <Count n={gate?.measurement?.words ?? 0} label="words" />
+      </div>
 
       {/* --- The gate ------------------------------------------------------ */}
       {gate && (
@@ -332,6 +329,83 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 <span className="muted">{r}</span>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* --- THE LAST IRREVERSIBLE ACT -------------------------------------
+          Two presses, and the second one names the platform. Everything else
+          in this studio can be redone; a publish notifies followers, warms
+          feed caches and writes the seen ledger, and none of that comes back.
+      */}
+      {gate?.passed && !isSource && run.state !== 'published' && !live && (
+        <section className="panel mt2" style={{ borderColor: 'var(--line)' }}>
+          <div className="panel-body row">
+            <h2 style={{ fontSize: '1.05rem' }}>Publish</h2>
+            <Info label="What publishing does">
+              It goes out as the channel&apos;s own account, through the same upload the platform
+              gives every creator, carrying the AI label and the list of what it read. Followers
+              are notified, feeds cache it and the seen ledger records it. None of that can be
+              taken back.
+            </Info>
+            <span className="spacer" />
+
+            {platform?.configured && (
+              <span className={`where${platform.isProduction ? ' live' : ''}`}>
+                <span className="dot" />
+                {platform.isProduction ? 'production' : new URL(platform.url!).hostname}
+              </span>
+            )}
+
+            {confirming ? (
+              <>
+                <button className="btn ghost" onClick={() => setConfirming(false)}>
+                  Cancel
+                </button>
+                <button
+                  className="btn spend"
+                  disabled={busy !== null}
+                  onClick={() => {
+                    setConfirming(false);
+                    void act('publish', () => api.publish(id, true));
+                  }}
+                >
+                  {busy === 'publish'
+                    ? 'Publishing...'
+                    : `Yes, publish to ${platform?.isProduction ? 'production' : 'staging'}`}
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn"
+                disabled={busy !== null || !platform?.configured}
+                onClick={() => setConfirming(true)}
+              >
+                Publish
+              </button>
+            )}
+          </div>
+
+          {gate.needsHumanReview && (
+            <div className="panel-body" style={{ paddingTop: 0 }}>
+              {gate.humanReviewReasons.map((r, i) => (
+                <div className="finding" key={i}>
+                  <span className="check" style={{ color: 'var(--hold)' }}>
+                    read first
+                  </span>
+                  <span className="muted">{r}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {run.state === 'published' && (
+        <section className="panel mt2">
+          <div className="panel-body row">
+            <span className="pill pass">published</span>
+            <span className="muted">This is out in the world.</span>
           </div>
         </section>
       )}

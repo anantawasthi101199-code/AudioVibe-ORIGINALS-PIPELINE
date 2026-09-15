@@ -13,7 +13,6 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { z } from 'zod';
 import {
   screenerConfig,
   episodeBudgetPence,
@@ -50,6 +49,7 @@ import { Run, STAGES } from './run/store';
 import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
 import { setUpChannel } from './pipeline/channel';
+import { PublishRefused, publishRun } from './publish/publishRun';
 import {
   accountsPath,
   loadAccounts,
@@ -66,7 +66,6 @@ import { renderResultSchema } from './render/assemble';
 import { claimCeiling, claimSetSchema, corpusSchema } from './evidence/research';
 import { VERIFY_SAMPLE, verifyMode } from './evidence/verify';
 import { AudioVibeClient } from './publish/ingest';
-import { buildFictionProvenance, buildProvenance } from './publish/provenance';
 
 /**
  * The stages a run passes through, for "3 of 8" in the terminal.
@@ -179,28 +178,8 @@ const flag = (argv: string[], name: string): boolean => argv.includes(`--${name}
  * every field of the gate report would be a second definition to keep in step
  * with the first for no safety it does not already have.
  */
-/**
- * The parts of a fiction run's continuity report the Sources sheet needs.
- *
- * Narrow on purpose. The full report carries a verdict and a reason per fact,
- * and none of that belongs on a listener's screen - what the sheet says is how
- * many established facts this episode was held against and who held it.
- */
-const continuityArtifactSchema = z.object({
-  findings: z.array(z.unknown()),
-  checkerModel: z.string(),
-});
-
 const readGate = (run: Run): GateReport =>
   JSON.parse(fs.readFileSync(path.join(run.dir, 'qa.json'), 'utf8')) as GateReport;
-
-interface StoredVerification {
-  verification?: { verifierModel?: string };
-  counterEvidence?: Array<{ claimId: string; sources: unknown[]; queries: string[] }>;
-}
-
-const readVerification = (run: Run): StoredVerification =>
-  JSON.parse(fs.readFileSync(path.join(run.dir, 'verification.json'), 'utf8')) as StoredVerification;
 
 const openRun = (argv: string[]): Run => {
   const id = arg(argv, 'run');
@@ -883,29 +862,6 @@ const cmdSeries = (argv: string[]): number => {
   return 0;
 };
 
-/**
- * Which episode of the series this is, for the cover.
- *
- * READ FROM THE SERIES BIBLE, not from a count of runs. Runs include the ones
- * that failed the gate and the ones abandoned halfway, and numbering from those
- * would skip numbers in the listener's view for reasons only this repo knows
- * about. The bible records exactly the episodes that were published, in the
- * order they were published, which is the same list a listener sees.
- *
- * The platform assigns its OWN episode number on upload, from the series'
- * episode count. This is the cover's copy of the same fact, and it is off by
- * one only if a publish fails after the platform has counted it - visible as a
- * cover that disagrees with the shelf, which is exactly the kind of thing that
- * should be visible.
- */
-const episodeNumberFor = (run: Run, persona: Persona): number | undefined => {
-  if (!persona.fiction) return undefined;
-  const bible = loadBible(persona.id);
-  const index = bible.episodes.findIndex((e) => e.id === run.id);
-  // Already recorded (the gate passed and the bible was written) means this is
-  // its position; not yet recorded means it is the next one.
-  return index >= 0 ? index + 1 : bible.episodes.length + 1;
-};
 
 /**
  * Create the platform series a show publishes its episodes into.
@@ -1468,145 +1424,20 @@ const cmdCompare = async (argv: string[]): Promise<number> => {
 const cmdPublish = async (argv: string[]): Promise<number> => {
   const run = openRun(argv);
   const gate = readGate(run);
+  const confirmed = flag(argv, 'yes');
 
-  if (!gate.passed) {
-    console.error('This run did not pass the gate. Publishing it is not available.');
-    console.error(formatGateReport(gate));
+  try {
+    await publishRun(run, gate, { confirmed, report: (m) => console.log(m) });
+    return 0;
+  } catch (err) {
+    if (!(err instanceof PublishRefused)) throw err;
+
+    console.error(err.reason);
+    if (!gate.passed) console.error(formatGateReport(gate));
+    if (err.remedy) console.error(err.remedy);
+    if (!confirmed) console.error('Re-run with --yes if that is what you meant.');
     return 1;
   }
-
-  if (gate.needsHumanReview && !flag(argv, 'yes')) {
-    console.error('This run needs a human before it goes out:\n');
-    for (const r of gate.humanReviewReasons) console.error(`  - ${r}`);
-    console.error(`\nRead it:  npm run foundry -- script --run ${run.id}`);
-    console.error('Then re-run this command with --yes to confirm you have.');
-    return 1;
-  }
-
-  const platform = platformUrl();
-  if (platform.isProduction && !flag(argv, 'yes')) {
-    // Publishing to production notifies followers, warms feed caches and writes
-    // the seen ledger. None of that can be taken back.
-    console.error(`AUDIOVIBE_API_URL points at PRODUCTION (${platform.url}).`);
-    console.error('Re-run with --yes if that is what you meant.');
-    return 1;
-  }
-
-  const persona = loadPersona(run.manifest.personaId);
-  const script = run.readArtifact('script', scriptSchema);
-  const render = run.readArtifact('render', renderResultSchema);
-
-  // WHICH RECEIPTS THIS EPISODE CARRIES.
-  //
-  // A fiction run has no corpus and its `claims` artifact holds established
-  // facts rather than sourced claims, so reading it through the reported path
-  // fails outright. It used to, and nothing in the fiction pipeline would ever
-  // have noticed: the break was here, at the last command.
-  //
-  // The two are kept apart rather than merged behind empty arrays because a
-  // fiction episode with no sources needs none, while a reported episode with
-  // no sources has failed - and the Sources sheet must not render those two the
-  // same way. See publish/provenance.ts.
-  const provenance = persona.fiction
-    ? (() => {
-        const continuity = run.readArtifact('verification', continuityArtifactSchema);
-        return buildFictionProvenance({
-          personaId: persona.id,
-          factsChecked: continuity.findings.length,
-          priorEpisodes: loadBible(persona.id).episodes.length,
-          models: {
-            writer: script.writerModel,
-            continuityChecker: continuity.checkerModel,
-            tts: `${render.provider}/${render.model}`,
-            voice: render.voiceId,
-          },
-          renderedAt: new Date(),
-        });
-      })()
-    : (() => {
-        const corpus = run.readArtifact('corpus', corpusSchema);
-        const claims = run.readArtifact('claims', claimSetSchema);
-        const verification = readVerification(run);
-        return buildProvenance({
-          personaId: persona.id,
-          claims: claims.claims,
-          sources: corpus.sources,
-          counterEvidence: (verification.counterEvidence ?? []) as never,
-          // The human confirmed it by passing --yes past the review gate above.
-          counterEvidenceAddressed: flag(argv, 'yes'),
-          models: {
-            writer: script.writerModel,
-            verifier: verification.verification?.verifierModel ?? 'unknown',
-            tts: `${render.provider}/${render.model}`,
-            voice: render.voiceId,
-          },
-          renderedAt: new Date(),
-        });
-      })();
-
-  const client = new AudioVibeClient(platform.url, publishTokenFor(persona.id));
-
-  // WHICH SHELF, IF ANY.
-  //
-  // A short always publishes as a loose card, whatever the show does with its
-  // long episodes: a short's job is to be found by somebody who has never heard
-  // of the show, and burying it inside a series shelf is the opposite of that.
-  //
-  // For everything else, a show that publishes as a series MUST have one
-  // already. Creating it here would mean a publish silently making a second
-  // shelf whenever the registry was missing, and the registry going missing is
-  // exactly the situation where you least want that.
-  const format = loadFormat(run.manifest.formatId);
-  const wantsSeries = persona.publishesAsSeries && format.kind !== 'short';
-
-  let seriesId: string | undefined;
-  if (wantsSeries) {
-    const record = findSeries(persona.id, platform.url);
-    if (!record) {
-      console.error(
-        `${persona.name} publishes as a series and has none on ${environmentKey(platform.url)} yet.`
-      );
-      console.error(`Make it once:  npm run foundry -- series-setup --show ${persona.id}`);
-      return 1;
-    }
-    seriesId = record.seriesId;
-    console.log(`publishing into "${record.title}" (${seriesId})`);
-  }
-
-  // COVER ART IS DRAWN HERE, NOT AT RENDER TIME, because it depends on the
-  // title and on nothing expensive. Drawing it costs nothing and is
-  // deterministic, so re-publishing never quietly changes the artwork of
-  // something already in a listener's library. See art/cover.ts for why this
-  // is typography rather than a generated image.
-  const coverPath = renderCover(
-    {
-      showName: persona.name,
-      title: script.title,
-      palette: paletteFor(persona.id),
-      episodeNumber: seriesId ? episodeNumberFor(run, persona) : undefined,
-      kind: format.kind === 'short' ? 'short' : 'episode',
-    },
-    run.mediaPath('cover.png')
-  );
-
-  console.log(`publishing to ${platform.url} as @${persona.handle}...`);
-
-  const result = await client.publish({
-    title: script.title,
-    description: script.description,
-    audioPath: render.audioFile,
-    category: persona.category,
-    beatMap: render.beatMap,
-    provenance,
-    seriesId,
-    coverPath,
-  });
-
-  run.writeArtifact('publish', { ...result, publishedAt: new Date().toISOString(), url: platform.url });
-  run.markComplete('publish');
-
-  console.log(`published: audio ${result.audioId} (${result.status})`);
-  return 0;
 };
 
 export const run = async (argv: string[]): Promise<number> => {

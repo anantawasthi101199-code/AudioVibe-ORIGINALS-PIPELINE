@@ -79,7 +79,9 @@ export interface ChannelSummary {
     handle: string | null;
     /** Whether a person has minted and recorded its credential. */
     canPublish: boolean;
-    /** Whether it has a series on this platform to publish into. */
+    /** Whether this show publishes into a series at all. Most do not. */
+    needsSeries: boolean;
+    /** Whether it has one on this platform. Meaningless when needsSeries is false. */
     hasSeries: boolean;
   };
 }
@@ -159,6 +161,7 @@ const accountState = (persona: Persona): ChannelSummary['account'] => {
     exists: Boolean(account),
     handle: account?.username ?? null,
     canPublish: Boolean(account?.ingestToken ?? process.env.AUDIOVIBE_INGEST_TOKEN),
+    needsSeries: Boolean(persona.publishesAsSeries),
     hasSeries,
   };
 };

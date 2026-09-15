@@ -957,3 +957,358 @@ table.runs .num {
     gap: 0.4rem;
   }
 }
+
+/* --- The reasoning, on request -------------------------------------------
+   Everything this studio does has a reason and the reasons are not guessable.
+   They are also not what somebody wants ninety-nine times out of a hundred, so
+   they live behind a mark rather than on the page. */
+
+.info {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.info-mark {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--ink-600);
+  background: transparent;
+  color: var(--text-faint);
+  font-family: var(--display);
+  font-size: 10px;
+  font-style: italic;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+.info-mark:hover,
+.info-mark.on {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.info-note {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  z-index: 40;
+  width: max-content;
+  max-width: min(30rem, 78vw);
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ink-850);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  cursor: default;
+}
+
+/* Near the right edge it would open off-screen. */
+.right-edge .info-note {
+  left: auto;
+  right: 0;
+}
+
+/* --- Counts ---------------------------------------------------------------
+   Most of this interface is a number and the word for what it counts. The
+   number is the answer; the word is only there so you know what was asked. */
+
+.count {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  align-items: flex-start;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+}
+
+.count.tap {
+  cursor: pointer;
+}
+
+.count.tap:hover .count-n {
+  color: var(--text);
+}
+
+.count-n {
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  transition: color 120ms ease;
+}
+
+.count-n.hold {
+  color: var(--hold);
+}
+.count-n.fail {
+  color: var(--fail);
+}
+.count-n.pass {
+  color: var(--pass);
+}
+
+.count-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* A row of counts, which is what the top of most pages is now. */
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  align-items: flex-start;
+}
+
+/* --- Where this studio is pointed -----------------------------------------
+   Named on every screen, because publishing somewhere you did not mean to is
+   the one mistake here that cannot be taken back. */
+
+.where {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+.where.live {
+  color: var(--fail);
+  border-color: var(--fail-dim);
+  background: color-mix(in srgb, var(--fail) 10%, transparent);
+}
+
+.where .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* --- Collapsible panels ---------------------------------------------------
+   The head is a button. A section that needs you opens itself; the rest open
+   when you tap the number. */
+
+.panel-head h2 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.panel-tap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.7rem;
+  color: var(--text-faint);
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 140ms ease;
+}
+
+.caret.open {
+  transform: rotate(90deg);
+}
+
+.stack.tight {
+  gap: 0.5rem;
+}
+
+.tiny {
+  font-size: 0.74rem;
+}
+
+.row.between {
+  justify-content: space-between;
+}
+
+/* --- The week -------------------------------------------------------------
+   One line per show. Not a calendar: the only question anybody asks of it is
+   whether two shows go out on the same day, and a list answers that faster
+   than a grid with five things in it. */
+
+.week {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line-soft);
+}
+
+.week-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.week-row:hover .muted {
+  color: var(--text);
+}
+
+.week-row .mono {
+  color: var(--text-faint);
+}
+
+/* --- Setting up a channel -------------------------------------------------
+   Three things, each done once ever. Loud while any is missing, because
+   everything else on the page will fail at the last step without them; one
+   line once they are all there. */
+
+.setup-done {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-850);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.setup-done:hover {
+  border-color: var(--ink-600);
+}
+
+.panel.setup {
+  border-color: var(--ink-600);
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.step-n {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.15rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 18px;
+  text-align: center;
+}
+
+.step-n.done {
+  color: var(--pass);
+  border-color: var(--pass-dim);
+  background: color-mix(in srgb, var(--pass) 10%, transparent);
+}
+
+/* The command to run elsewhere. Selectable, because it exists to be copied. */
+.mint {
+  display: block;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: var(--ink-900);
+  border: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  overflow-x: auto;
+  white-space: nowrap;
+  user-select: all;
+}
+
+/* --- Chips, for a choice between two or three things ---------------------- */
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.chip:hover {
+  border-color: var(--ink-600);
+}
+
+.chip.on {
+  color: var(--text);
+  border-color: var(--text-dim);
+  background: var(--ink-750);
+}
+
+.idea {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 0.87rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.idea:hover {
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.idea > span:first-child {
+  flex: 1;
+  min-width: 0;
+}

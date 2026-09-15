@@ -20,7 +20,15 @@
 import { EventEmitter } from 'events';
 import { Run } from '../run/store';
 
-export type JobKind = 'run' | 'shorts';
+/**
+ * What a job is doing.
+ *
+ * `channel`, `series` and `publish` touch the platform rather than this
+ * machine, which is why they are named separately: the interface colours them
+ * differently and the person watching should be able to tell at a glance
+ * whether something is being made or being sent.
+ */
+export type JobKind = 'run' | 'shorts' | 'channel' | 'series' | 'publish';
 
 export interface JobEvent {
   at: string;
