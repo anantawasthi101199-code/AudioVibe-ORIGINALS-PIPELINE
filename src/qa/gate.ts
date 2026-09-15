@@ -191,11 +191,25 @@ export const runGate = (input: GateInput): GateReport => {
       cited[beat.beatId] = new Set(beat.claimIds).size;
     }
 
+    // ADVISORY, AND IT USED TO BLOCK.
+    //
+    // A claim floor's real job is upstream: extraction is told "needs >= N" and
+    // finds that much material for the beat. As a gate check it has now failed
+    // three episodes for reasons that were not the script's fault - a floor of
+    // twelve nothing could reach, a corpus that put the physiology under a
+    // different beat, sources dropped for being below the show's tier - and in
+    // every case the script was fine and the run was already paid for.
+    //
+    // Still reported, because a beat carrying two facts where six were found is
+    // worth seeing before it goes out. But the person reading the script can
+    // tell a thin beat from a beat whose material was filed next door, and a
+    // check that cannot is a check that blocks good episodes.
     for (const beatId of beatsBelowClaimFloor(cited, floors)) {
       add(
         'evidenceDensity',
         `beat "${beatId}" cites ${cited[beatId] ?? 0} claims, below its floor of ${floors[beatId]}` +
-          ` (research assigned it ${input.ledger.claimsByBeat[beatId] ?? 0})`
+          ` (research assigned it ${input.ledger.claimsByBeat[beatId] ?? 0})`,
+        false
       );
     }
 

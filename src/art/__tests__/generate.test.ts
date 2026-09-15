@@ -65,8 +65,15 @@ describe('generateArt', () => {
   beforeEach(() => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-art-'));
     process.env.OPENAI_API_KEY = 'test-key';
+    // EXPLICIT, because .env may switch generation off for the whole studio and
+    // a test that reads the operator's config passes or fails depending on
+    // whose machine it runs on.
+    process.env.FOUNDRY_IMAGE = 'on';
   });
-  afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
+  afterEach(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+    delete process.env.FOUNDRY_IMAGE;
+  });
 
   it('writes the image to disk and returns its path', async () => {
     const out = path.join(dir, 'avatar.png');
@@ -114,8 +121,15 @@ describe('artworkFor', () => {
   beforeEach(() => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-art-'));
     process.env.OPENAI_API_KEY = 'test-key';
+    // EXPLICIT, because .env may switch generation off for the whole studio and
+    // a test that reads the operator's config passes or fails depending on
+    // whose machine it runs on.
+    process.env.FOUNDRY_IMAGE = 'on';
   });
-  afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
+  afterEach(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+    delete process.env.FOUNDRY_IMAGE;
+  });
 
   it('produces both images and says which were generated', async () => {
     const art = await artworkFor(persona, dir, { post: ok });
@@ -165,6 +179,10 @@ describe('what it costs, which is a choice', () => {
   beforeEach(() => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-art-'));
     process.env.OPENAI_API_KEY = 'test-key';
+    // EXPLICIT, because .env may switch generation off for the whole studio and
+    // a test that reads the operator's config passes or fails depending on
+    // whose machine it runs on.
+    process.env.FOUNDRY_IMAGE = 'on';
   });
   afterEach(() => {
     fs.rmSync(dir, { recursive: true, force: true });

@@ -146,13 +146,27 @@ describe('runGate', () => {
     expect(report.findings.some((f) => f.check === 'factuality')).toBe(true);
   });
 
-  it('BLOCKS a beat that CITES too few claims', () => {
-    // A format's claim floors are not advisory.
+  /**
+   * REPORTS a thin beat. It used to block one.
+   *
+   * A claim floor's real job is upstream: extraction is told "needs >= N" and
+   * finds that much material. As a gate check it failed three episodes for
+   * reasons that were not the script's fault - a floor of twelve nothing could
+   * reach, a corpus that filed the physiology under a different beat, sources
+   * dropped for being below the show's tier - and in every case the script was
+   * fine and the run had already been paid for.
+   *
+   * The person reading it before it is voiced can tell a thin beat from a beat
+   * whose material was filed next door. The check cannot.
+   */
+  it('REPORTS a beat that cites too few claims, without blocking it', () => {
     const thin = script();
     thin.beats = thin.beats.map((b) => ({ ...b, claimIds: [] }));
     const report = runGate(input({ script: thin }));
-    expect(report.passed).toBe(false);
-    expect(report.findings.some((f) => f.check === 'evidenceDensity')).toBe(true);
+
+    const density = report.findings.find((f) => f.check === 'evidenceDensity');
+    expect(density).toBeDefined();
+    expect(density!.blocking).toBe(false);
   });
 
   it('is not satisfied by claims the research merely ASSIGNED to a beat', () => {
