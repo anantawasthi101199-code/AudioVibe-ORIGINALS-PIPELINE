@@ -43,6 +43,7 @@ import {
   gatherFor,
   storyForBeat,
   concentrateSources,
+  enforceSourceTier,
   MAX_SOURCES_PER_SHORT,
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
@@ -468,6 +469,26 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     }
 
     run.markComplete('repair');
+  }
+
+  // --- 4b2. The show's own evidence policy, applied before the writer. ---
+  //
+  // Honest Health will not rest a claim on a source weaker than T2, and that
+  // was only checked at the gate - after the script and after the audio. A
+  // fever episode was written around a Wikipedia article, voiced, and then told
+  // it could not be. The rule is free to apply and was being applied too late
+  // to save anything.
+  if (persona.minSourceTier) {
+    const allowed = enforceSourceTier(workingClaims, corpus.sources, persona.minSourceTier);
+
+    if (allowed.dropped.length) {
+      report(
+        'repair',
+        `dropped ${allowed.dropped.length} claim(s) resting on sources below ` +
+          `${persona.minSourceTier}, which ${persona.name} will not stand behind`
+      );
+    }
+    workingClaims = allowed.claims;
   }
 
   // --- 4c. One story, one or two documents. ---------------------------------

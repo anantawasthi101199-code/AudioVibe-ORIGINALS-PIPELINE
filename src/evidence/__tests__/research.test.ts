@@ -1,7 +1,13 @@
 import { LlmClient, LlmRequest, LlmResponse } from '../../models/client';
 import { parseFormat } from '../../formats/load';
 import { parsePersona } from '../../canon/load';
-import { buildBrief, concentrateSources, gatherCorpus, gatherCounterEvidence } from '../research';
+import {
+  buildBrief,
+  concentrateSources,
+  enforceSourceTier,
+  gatherCorpus,
+  gatherCounterEvidence,
+} from '../research';
 import { rankCandidates, SearchProvider, SearchResult, BraveSearch } from '../search';
 import { tierForUrl } from '../source';
 import { HttpResponse } from '../fetch';
@@ -423,5 +429,57 @@ describe('concentrateSources', () => {
     const once = concentrateSources(claims, sources).claims.map((c) => c.id);
     const twice = concentrateSources(claims, sources).claims.map((c) => c.id);
     expect(once).toEqual(twice);
+  });
+});
+
+/**
+ * A show's evidence policy, applied before the writer.
+ *
+ * Honest Health declares minSourceTier T2 because a health claim sourced to a
+ * news write-up of a press release about a preprint passes every other check
+ * here and is still not evidence about the world. It was only checked at the
+ * gate - which is after the script and after the audio - so a fever episode was
+ * written around a Wikipedia article, voiced, and then told it could not be.
+ */
+describe('enforceSourceTier', () => {
+  const claim = (id: string, sourceId: string) =>
+    ({ id, sourceId, beatId: 'b', text: id, type: 'chronology', quote: id, contested: false }) as never;
+  const src = (id: string, tier: string, url: string) => ({ id, tier, url }) as never;
+
+  const SOURCES = [
+    src('good', 'T1', 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1'),
+    src('ok', 'T2', 'https://www.gov.uk/report'),
+    src('weak', 'T3', 'https://en.wikipedia.org/wiki/Hyperthermia'),
+    src('worst', 'T4', 'https://example.blog/post'),
+  ];
+
+  it('keeps what the show will stand behind and drops what it will not', () => {
+    const out = enforceSourceTier(
+      [claim('c1', 'good'), claim('c2', 'ok'), claim('c3', 'weak'), claim('c4', 'worst')],
+      SOURCES,
+      'T2'
+    );
+
+    expect(out.claims.map((c) => c.id)).toEqual(['c1', 'c2']);
+    expect(out.dropped.map((d) => d.claimId)).toEqual(['c3', 'c4']);
+  });
+
+  it('says WHICH source, because a beat arriving short needs a reason', () => {
+    const out = enforceSourceTier([claim('c3', 'weak')], SOURCES, 'T2');
+    expect(out.dropped[0]!.url).toContain('wikipedia');
+    expect(out.dropped[0]!.tier).toBe('T3');
+  });
+
+  it('leaves a claim whose source is not in the corpus to repair', () => {
+    // That one is `unsourced` and is dropped there with a reason. Binning it
+    // here too would report the same claim lost for the wrong cause.
+    const out = enforceSourceTier([claim('c9', 'missing')], SOURCES, 'T1');
+    expect(out.claims).toHaveLength(1);
+    expect(out.dropped).toEqual([]);
+  });
+
+  it('a show with no policy keeps everything', () => {
+    const out = enforceSourceTier([claim('c4', 'worst')], SOURCES, 'T4');
+    expect(out.claims).toHaveLength(1);
   });
 });

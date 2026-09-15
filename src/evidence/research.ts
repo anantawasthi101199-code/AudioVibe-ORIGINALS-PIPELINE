@@ -339,6 +339,48 @@ export const concentrateSources = (
   return { claims: keep, dropped };
 };
 
+/**
+ * Drop claims resting on sources the show will not stand behind.
+ *
+ * A SHOW'S EVIDENCE POLICY, ENFORCED BEFORE THE WRITER RATHER THAN AT THE GATE.
+ * Honest Health declares `minSourceTier: T2` because a health claim sourced to a
+ * news write-up of a press release about a preprint passes every other check in
+ * this pipeline and is still not evidence about the world.
+ *
+ * It was only checked at the gate, which is after the script and after the
+ * audio. A fever episode was written around a Wikipedia article, voiced, and
+ * then told at the gate that the show does not rest claims on sources that weak
+ * - at which point the only fix is to write it again.
+ *
+ * The same shape of fault as the quote check running after the render: a rule
+ * that can be applied for free, applied too late to save anything.
+ *
+ * Returns what was dropped so the run can say so, rather than a beat quietly
+ * arriving short of its floor with no explanation.
+ */
+export const enforceSourceTier = (
+  claims: Claim[],
+  sources: Source[],
+  minTier: SourceTier
+): { claims: Claim[]; dropped: Array<{ claimId: string; url: string; tier: string }> } => {
+  const floor = TIER_RANK[minTier];
+  const byId = new Map(sources.map((src) => [src.id, src]));
+  const dropped: Array<{ claimId: string; url: string; tier: string }> = [];
+
+  const keep = claims.filter((claim) => {
+    const src = byId.get(claim.sourceId);
+    // A claim whose source is not in the corpus is somebody else's problem -
+    // repair drops it as `unsourced` - and is not silently binned here too.
+    if (!src) return true;
+
+    if (TIER_RANK[src.tier] <= floor) return true;
+    dropped.push({ claimId: claim.id, url: src.url, tier: src.tier });
+    return false;
+  });
+
+  return { claims: keep, dropped };
+};
+
 export const gatherFor = (format: EpisodeFormat): GatherOptions =>
   format.sourceOnly
     ? // THREE PER STORY, AND IT WAS TWO. Two documents is one telling plus a
