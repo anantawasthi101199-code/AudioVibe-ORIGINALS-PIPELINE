@@ -29,6 +29,7 @@ import path from 'path';
 import { z } from 'zod';
 import { Persona } from '../canon/schema';
 import { repoRoot } from '../config';
+import { fileBlob } from './mime';
 
 export class AccountError extends Error {
   constructor(
@@ -55,13 +56,6 @@ export interface HttpDeps {
   ) => Promise<{ status: number; json: unknown; text: string }>;
 }
 
-const MIME: Record<string, string> = {
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-};
-
 export const nodeHttp: HttpDeps = {
   json: async (method, url, headers, body) => {
     const res = await fetch(url, {
@@ -83,9 +77,7 @@ export const nodeHttp: HttpDeps = {
     const form = new FormData();
     form.append(
       field,
-      new Blob([fs.readFileSync(filePath)], {
-        type: MIME[path.extname(filePath).toLowerCase()] ?? 'application/octet-stream',
-      }),
+      fileBlob(fs.readFileSync(filePath), filePath),
       path.basename(filePath)
     );
     const res = await fetch(url, { method: 'POST', headers, body: form });

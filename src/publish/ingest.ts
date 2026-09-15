@@ -18,6 +18,7 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { fileBlob } from './mime';
 import { z } from 'zod';
 import { BeatTiming } from '../render/assemble';
 import { ProvenancePayload } from './provenance';
@@ -209,9 +210,13 @@ export class AudioVibeClient {
     form.append('content_rating', input.contentRating ?? 'general');
 
     if (input.coverPath && fs.existsSync(input.coverPath)) {
+      // TYPED, because a blob without one is sent as application/octet-stream
+      // and the platform's image filter rejects exactly that - while its audio
+      // filter allows it, so the cover failed and the audio in the same request
+      // did not.
       form.append(
         'cover',
-        new Blob([fs.readFileSync(input.coverPath)]),
+        fileBlob(fs.readFileSync(input.coverPath), input.coverPath),
         path.basename(input.coverPath)
       );
     }
@@ -283,7 +288,7 @@ export class AudioVibeClient {
     const form = await this.baseForm(input);
     form.append(
       'audio',
-      new Blob([fs.readFileSync(input.audioPath)]),
+      fileBlob(fs.readFileSync(input.audioPath), input.audioPath),
       path.basename(input.audioPath)
     );
 
