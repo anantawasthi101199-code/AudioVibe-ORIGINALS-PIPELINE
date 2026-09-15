@@ -19,6 +19,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 const schedule = (over: Partial<Schedule['shows']> = {}): Schedule => ({
   paused: false,
+  timezone: 'Europe/London',
   shows: {
     'business-teardowns': { everyDays: 3, shortsPerEpisode: 2, autoPublish: false },
     ...over,
@@ -38,6 +39,14 @@ const plan = (input: {
     topicsQueued: (id) => input.topics?.[id] ?? 3,
     now: NOW,
   });
+
+
+/** A published episode, with however many shorts have been cut from it. */
+const ep = (publishedAt: Date, shortsCut = 0) => ({
+  runId: 'ep1',
+  publishedAt,
+  shortsCut,
+});
 
 describe('daysBetween', () => {
   it('floors to whole days', () => {
@@ -203,11 +212,152 @@ describe('buildPlan', () => {
   });
 
   it('plans nothing at all when paused', () => {
-    expect(plan({ schedule: { ...schedule(), paused: true } })).toEqual({ due: [], blocked: [] });
+    expect(plan({ schedule: { ...schedule(), paused: true } })).toEqual({ due: [], blocked: [], waiting: [] });
   });
 
   it('plans nothing for a show that is not in the schedule', () => {
     const personas = [persona('business-teardowns'), persona('unscheduled')];
     expect(plan({ personas }).due.map((d) => d.personaId)).toEqual(['business-teardowns']);
+  });
+});
+
+/**
+ * Slots, which exist so a week's work does not arrive as one lump.
+ *
+ * NOW is Friday 11 September 2026, 10:00 UTC (11:00 in London).
+ */
+describe('publish slots', () => {
+  const slotted = (over = {}) =>
+    schedule({
+      'business-teardowns': {
+        everyDays: 7,
+        shortsPerEpisode: 2,
+        autoPublish: false,
+        slot: { day: 'tue', hour: 8 },
+        ...over,
+      },
+    });
+
+  it('holds a show that is due until its slot comes round', () => {
+    // Due by the arithmetic, but Tuesday has not arrived. Waiting, not blocked:
+    // nothing is wrong and nobody has to do anything.
+    const result = plan({
+      schedule: slotted(),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(8))] } },
+    });
+
+    expect(result.due).toEqual([]);
+    expect(result.blocked).toEqual([]);
+    expect(result.waiting).toHaveLength(1);
+    expect(result.waiting[0]!.kind).toBe('episode');
+    expect(result.waiting[0]!.reason).toContain('Tue 08:00');
+    expect(result.waiting[0]!.at.toISOString()).toBe('2026-09-15T07:00:00.000Z');
+  });
+
+  it('does NOT push a missed slot into next week', () => {
+    // THE FAILURE THE WHOLE FILE EXISTS TO PREVENT. This show came due last
+    // Saturday, so its Tuesday slot passed three days ago while nothing was
+    // running. It is overdue now, not due next Tuesday.
+    const result = plan({
+      schedule: slotted(),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(13))] } },
+    });
+
+    expect(result.waiting).toEqual([]);
+    expect(result.due).toHaveLength(1);
+    expect(result.due[0]!.kind).toBe('episode');
+    expect(result.due[0]!.overdueDays).toBe(3);
+  });
+
+  it('holds a show that has never published until its first slot', () => {
+    // Launching five shows at once is exactly the batch a slot is for, so a
+    // brand new show waits for its turn like every other.
+    const result = plan({ schedule: slotted() });
+
+    expect(result.due).toEqual([]);
+    expect(result.waiting[0]!.at.toISOString()).toBe('2026-09-15T07:00:00.000Z');
+  });
+
+  it('leaves a show without a slot exactly as it was', () => {
+    // Slots are optional, and adding the feature must not change a schedule
+    // that did not ask for it.
+    const result = plan({
+      schedule: schedule({
+        'business-teardowns': { everyDays: 7, shortsPerEpisode: 2, autoPublish: false },
+      }),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(8))] } },
+    });
+
+    expect(result.waiting).toEqual([]);
+    expect(result.due[0]!.kind).toBe('episode');
+    expect(result.due[0]!.overdueDays).toBe(1);
+  });
+
+  it('spreads shorts across the gap instead of cutting both at once', () => {
+    // One day after the episode, neither short is due yet: they belong on day
+    // 2 and day 5. Publishing both the morning after wastes the second.
+    const dayAfter = plan({
+      schedule: slotted(),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(1), 0)] } },
+    });
+    expect(dayAfter.due).toEqual([]);
+    expect(dayAfter.waiting[0]!.kind).toBe('short');
+    expect(dayAfter.waiting[0]!.reason).toContain('day 2 after the episode');
+
+    // On day 3, the first is due and the second is not.
+    const first = plan({
+      schedule: slotted(),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(3), 0)] } },
+    });
+    expect(first.due).toHaveLength(1);
+    expect(first.due[0]!.kind).toBe('short');
+    expect(first.due[0]!.reason).toContain('short 1 of 2');
+
+    // With the first already cut, the second still waits for day 5.
+    const second = plan({
+      schedule: slotted(),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(3), 1)] } },
+    });
+    expect(second.due).toEqual([]);
+    expect(second.waiting[0]!.reason).toContain('short 2 of 2');
+  });
+
+  it('never cuts a short on the day its own episode went out', () => {
+    const sameDay = plan({
+      schedule: slotted(),
+      history: { 'business-teardowns': { episodes: [ep(daysAgo(0), 0)] } },
+    });
+
+    expect(sameDay.due).toEqual([]);
+    expect(sameDay.waiting).toHaveLength(1);
+  });
+
+  it('orders what is coming up by when it happens', () => {
+    const result = plan({
+      schedule: {
+        paused: false,
+        timezone: 'Europe/London',
+        shows: {
+          'business-teardowns': {
+            everyDays: 7,
+            shortsPerEpisode: 0,
+            autoPublish: false,
+            slot: { day: 'sun', hour: 10 },
+          },
+          'honest-health': {
+            everyDays: 7,
+            shortsPerEpisode: 0,
+            autoPublish: false,
+            slot: { day: 'sat', hour: 9 },
+          },
+        },
+      },
+      personas: [persona('business-teardowns'), persona('honest-health')],
+    });
+
+    expect(result.waiting.map((w) => w.personaId)).toEqual([
+      'honest-health',
+      'business-teardowns',
+    ]);
   });
 });

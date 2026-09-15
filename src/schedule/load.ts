@@ -40,7 +40,7 @@ const schedulePath = (dir?: string): string => path.join(dir ?? repoRoot(), 'sch
  */
 export const loadSchedule = (dir?: string): Schedule => {
   const file = schedulePath(dir);
-  if (!fs.existsSync(file)) return { shows: {}, paused: false };
+  if (!fs.existsSync(file)) return scheduleSchema.parse({});
 
   try {
     return scheduleSchema.parse(YAML.parse(fs.readFileSync(file, 'utf8')) ?? {});

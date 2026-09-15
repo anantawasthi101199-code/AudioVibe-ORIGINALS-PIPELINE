@@ -21,6 +21,7 @@
 import { Persona } from '../canon/schema';
 import { Run } from '../run/store';
 import { Cadence, Schedule } from './schema';
+import { atHourOn, describeSlot, nextSlotAfter, shortDueAfterDays } from './slots';
 
 export interface PlanItem {
   personaId: string;
@@ -39,10 +40,27 @@ export interface PlanBlocker {
   reason: string;
 }
 
+/**
+ * Ready, but not yet its turn.
+ *
+ * DISTINCT FROM BLOCKED, because nothing is wrong. A blocked show needs a
+ * person to do something; a waiting one needs the clock to advance, and
+ * reporting the two the same way would train everybody to ignore both.
+ */
+export interface PlanWaiting {
+  personaId: string;
+  kind: 'episode' | 'short';
+  /** When it goes out. */
+  at: Date;
+  reason: string;
+}
+
 export interface Plan {
   due: PlanItem[];
   /** Shows that are due but cannot proceed, and what they are waiting on. */
   blocked: PlanBlocker[];
+  /** Shows whose turn has not come round yet, and when it does. */
+  waiting: PlanWaiting[];
 }
 
 const DAY_MS = 86_400_000;
@@ -112,13 +130,12 @@ export interface PlanInput {
  * whole point of a short is to arrive on a different day, in a different feed,
  * and bring somebody back to the episode.
  */
-const planShow = (
-  persona: Persona,
-  cadence: Cadence,
-  input: PlanInput
-): { due: PlanItem[]; blocked: PlanBlocker[] } => {
+type ShowPlan = { due: PlanItem[]; blocked: PlanBlocker[]; waiting: PlanWaiting[] };
+
+const planShow = (persona: Persona, cadence: Cadence, input: PlanInput): ShowPlan => {
   const history = input.history(persona.id);
   const latest = history.episodes[0];
+  const tz = input.schedule.timezone;
 
   const daysSince = latest ? daysBetween(latest.publishedAt, input.now) : Infinity;
   const episodeDue = daysSince >= cadence.everyDays;
@@ -132,6 +149,7 @@ const planShow = (
     if (!persona.fiction && input.topicsQueued(persona.id) === 0) {
       return {
         due: [],
+        waiting: [],
         blocked: [
           {
             personaId: persona.id,
@@ -140,6 +158,47 @@ const planShow = (
               `but its topic queue is empty`,
           },
         ],
+      };
+    }
+
+    // WAITING FOR ITS SLOT, if it has one and the slot has not come round since
+    // the show came due. Measured from the moment it came due rather than from
+    // now, so a slot that passed while nothing was running is already behind
+    // rather than pushed a week into the future.
+    if (cadence.slot) {
+      const cameDue = latest
+        ? new Date(latest.publishedAt.getTime() + cadence.everyDays * DAY_MS)
+        : input.now;
+      const slotAt = nextSlotAfter(cameDue, cadence.slot, tz);
+
+      if (input.now.getTime() < slotAt.getTime()) {
+        return {
+          due: [],
+          blocked: [],
+          waiting: [
+            {
+              personaId: persona.id,
+              kind: 'episode',
+              at: slotAt,
+              reason: `ready, goes out ${describeSlot(cadence.slot)}`,
+            },
+          ],
+        };
+      }
+
+      return {
+        due: [
+          {
+            personaId: persona.id,
+            kind: 'episode',
+            overdueDays: daysBetween(slotAt, input.now),
+            reason: latest
+              ? `${daysSince} days since "${latest.runId}", ${describeSlot(cadence.slot)} slot passed`
+              : `has never published, ${describeSlot(cadence.slot)} slot passed`,
+          },
+        ],
+        blocked: [],
+        waiting: [],
       };
     }
 
@@ -155,6 +214,7 @@ const planShow = (
         },
       ],
       blocked: [],
+      waiting: [],
     };
   }
 
@@ -162,30 +222,58 @@ const planShow = (
   // they are cheap, they reach people who have never heard the show, and they
   // are the only thing here that can publish on a day no episode does.
   if (latest && latest.shortsCut < cadence.shortsPerEpisode) {
+    // SPREAD ACROSS THE GAP RATHER THAN CUT ALL AT ONCE. Two shorts from a
+    // weekly episode belong on day 2 and day 5; publishing both the morning
+    // after wastes the second entirely, because the point of a short is to
+    // arrive on a day the show is otherwise silent.
+    const after = shortDueAfterDays(
+      latest.shortsCut,
+      cadence.shortsPerEpisode,
+      cadence.everyDays
+    );
+    const on = new Date(latest.publishedAt.getTime() + after * DAY_MS);
+    const readyAt = cadence.slot ? atHourOn(on, cadence.slot.hour, tz) : on;
+    const nth = `short ${latest.shortsCut + 1} of ${cadence.shortsPerEpisode}`;
+
+    if (input.now.getTime() < readyAt.getTime()) {
+      return {
+        due: [],
+        blocked: [],
+        waiting: [
+          {
+            personaId: persona.id,
+            kind: 'short',
+            at: readyAt,
+            reason: `${nth} from "${latest.runId}", day ${after} after the episode`,
+          },
+        ],
+      };
+    }
+
     return {
       due: [
         {
           personaId: persona.id,
           kind: 'short',
-          overdueDays: 0,
+          overdueDays: daysBetween(readyAt, input.now),
           parentRunId: latest.runId,
-          reason:
-            `${latest.shortsCut} of ${cadence.shortsPerEpisode} shorts cut from ` +
-            `"${latest.runId}"`,
+          reason: `${nth} from "${latest.runId}"`,
         },
       ],
       blocked: [],
+      waiting: [],
     };
   }
 
-  return { due: [], blocked: [] };
+  return { due: [], blocked: [], waiting: [] };
 };
 
 export const buildPlan = (input: PlanInput): Plan => {
-  if (input.schedule.paused) return { due: [], blocked: [] };
+  if (input.schedule.paused) return { due: [], blocked: [], waiting: [] };
 
   const due: PlanItem[] = [];
   const blocked: PlanBlocker[] = [];
+  const waiting: PlanWaiting[] = [];
   const byId = new Map(input.personas.map((p) => [p.id, p]));
 
   for (const [personaId, cadence] of Object.entries(input.schedule.shows)) {
@@ -203,13 +291,18 @@ export const buildPlan = (input: PlanInput): Plan => {
     const result = planShow(persona, cadence, input);
     due.push(...result.due);
     blocked.push(...result.blocked);
+    waiting.push(...result.waiting);
   }
 
   // Most overdue first. A studio behind on three shows should catch up on the
   // one that has been waiting longest, not the one that sorts first.
   due.sort((a, b) => b.overdueDays - a.overdueDays);
 
-  return { due, blocked };
+  // Soonest first, because the only question anybody asks of this list is what
+  // happens next.
+  waiting.sort((a, b) => a.at.getTime() - b.at.getTime());
+
+  return { due, blocked, waiting };
 };
 
 /** Read a run directory into the shape `historyFor` wants. */

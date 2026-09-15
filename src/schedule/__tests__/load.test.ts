@@ -34,7 +34,7 @@ describe('loadSchedule', () => {
     // The safe direction. A studio that publishes nothing is a problem somebody
     // notices; a studio that publishes something nobody asked for is a problem
     // somebody's followers notice.
-    expect(loadSchedule(dir)).toEqual({ shows: {}, paused: false });
+    expect(loadSchedule(dir)).toEqual({ shows: {}, paused: false, timezone: 'Europe/London' });
   });
 
   it('applies the defaults a terse entry leaves out', () => {

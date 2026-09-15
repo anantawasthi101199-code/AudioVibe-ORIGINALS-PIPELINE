@@ -21,6 +21,7 @@
  * in writing.
  */
 import { z } from 'zod';
+import { slotSchema } from './slots';
 
 /**
  * How often a show publishes, in days between episodes.
@@ -53,6 +54,20 @@ export const cadenceSchema = z.object({
    * episode needing review waits for a person however this is set.
    */
   autoPublish: z.boolean().default(false),
+
+  /**
+   * When in the week this show goes out.
+   *
+   * A PREFERENCE, NOT A DEADLINE. Cadence still decides whether a show is due;
+   * the slot only decides when within that window it goes. A show whose slot
+   * passed while the machine was off is due NOW rather than next week, which is
+   * the failure the whole file exists to avoid.
+   *
+   * Optional, and a show without one behaves exactly as it always did: due the
+   * moment the arithmetic says so. Give every show a different slot and a
+   * week's work arrives spread across the week instead of in one lump.
+   */
+  slot: slotSchema.optional(),
 });
 
 export type Cadence = z.infer<typeof cadenceSchema>;
@@ -68,6 +83,15 @@ export const scheduleSchema = z.object({
    * you need it you are usually looking at something going wrong.
    */
   paused: z.boolean().default(false),
+
+  /**
+   * The zone every slot is read in.
+   *
+   * An 8am slot means 8am where the listeners are. Naming the zone rather than
+   * an offset means the platform's own database handles daylight saving, so the
+   * studio does not publish an hour early for half the year.
+   */
+  timezone: z.string().default('Europe/London'),
 });
 
 export type Schedule = z.infer<typeof scheduleSchema>;

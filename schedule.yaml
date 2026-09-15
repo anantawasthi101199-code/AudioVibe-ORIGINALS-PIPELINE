@@ -15,6 +15,11 @@
 
 paused: false
 
+# The zone every slot below is read in. Naming the zone rather than an offset
+# means British Summer Time is handled by the platform's own database, so the
+# studio does not publish an hour early for half the year.
+timezone: Europe/London
+
 shows:
   # Twice a week is deliberately ambitious for a show that reads primary
   # documents, and the topic queue is what keeps it honest: if nobody has
@@ -24,6 +29,8 @@ shows:
   # else is already telling.
   business-teardowns:
     everyDays: 3
+    # Monday morning, on the way to work, for a show about companies.
+    slot: { day: mon, hour: 7 }
     # Two shorts per episode, cut on the days between episodes. They are cheap,
     # they reach people who have never heard the show, and they are the only
     # thing here that can publish on a day no episode does.
@@ -36,6 +43,8 @@ shows:
   # nothing about that gets better by doing it twice as often.
   true-crime-in-full:
     everyDays: 7
+    # Friday evening. A told story is what somebody puts on when the week ends.
+    slot: { day: fri, hour: 18 }
     shortsPerEpisode: 2
     autoPublish: false
 
@@ -43,6 +52,8 @@ shows:
   # drama that arrives whenever it is ready is one a listener stops waiting for.
   night-shift:
     everyDays: 7
+    # Late, which is the point of the show.
+    slot: { day: wed, hour: 21 }
     # None. A short cut from a serial episode either spoils it or makes no
     # sense out of order, and both are worse than not making one.
     shortsPerEpisode: 0
@@ -53,6 +64,7 @@ shows:
   # once is a publishing decision rather than a cadence.
   myths-of-the-world:
     everyDays: 7
+    slot: { day: sun, hour: 10 }
     # None from an episode. This show's short form comes from `ten-stories`
     # instead, which writes shorts that were built to stand alone rather than
     # cutting a minute out of a told story and hoping it survives.
@@ -64,6 +76,8 @@ shows:
   # version of this that is twice as fast without being worse.
   honest-health:
     everyDays: 7
+    # Tuesday morning. Nothing symbolic; it is the day nothing else goes out.
+    slot: { day: tue, hour: 8 }
     shortsPerEpisode: 1
     autoPublish: false
 

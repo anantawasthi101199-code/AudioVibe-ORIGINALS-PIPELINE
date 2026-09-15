@@ -934,7 +934,7 @@ const readPlan = (now = new Date()) => {
 const cmdDue = (): number => {
   const plan = readPlan();
 
-  if (!plan.due.length && !plan.blocked.length) {
+  if (!plan.due.length && !plan.blocked.length && !plan.waiting.length) {
     console.log('Nothing due.');
     return 0;
   }
@@ -955,6 +955,28 @@ const cmdDue = (): number => {
     if (plan.due.length) console.log('');
     console.log('Waiting on you:');
     for (const b of plan.blocked) console.log(`  ${b.personaId} ${b.reason}`);
+  }
+
+  if (plan.waiting.length) {
+    // Quieter than the other two, because nothing is wrong. This is the week
+    // ahead, and the only reason to print it is so somebody can see that the
+    // studio is spread across the week rather than silent.
+    if (plan.due.length || plan.blocked.length) console.log('');
+    console.log('Coming up:');
+
+    const tz = loadSchedule().timezone;
+    for (const w of plan.waiting) {
+      const when = w.at.toLocaleString('en-GB', {
+        timeZone: tz,
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      console.log(`  ${when}  ${w.personaId} ${w.kind}`);
+      console.log(`    ${w.reason}`);
+    }
   }
 
   return 0;
@@ -981,6 +1003,10 @@ const cmdTick = async (argv: string[]): Promise<number> => {
 
   if (!item) {
     for (const b of plan.blocked) console.log(`waiting: ${b.personaId} ${b.reason}`);
+    const next = plan.waiting[0];
+    if (next) {
+      console.log(`next: ${next.personaId} ${next.kind}, ${next.reason}`);
+    }
     console.log('Nothing due.');
     return 0;
   }
