@@ -885,3 +885,75 @@ table.runs .num {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* --- The publish queue ----------------------------------------------------
+   Rows rather than cards. The page is a list of things in states, and the
+   question it answers is "how many, and does anything need me" - which a
+   scannable column of one-line rows answers and a grid of cards does not. */
+
+.queue-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.queue-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.7rem 1.15rem;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.queue-list > .queue-row:first-child {
+  border-top: 0;
+}
+
+.queue-row:hover {
+  background: var(--ink-800);
+}
+
+.queue-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+/* One line, clipped. A wrapped title pushes every row out of alignment and
+   the column stops being scannable, which is the only thing it is for. */
+.queue-title {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-main .muted {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Which page you are on, in the top bar. */
+.btn.ghost.on {
+  border-color: var(--ink-600);
+  background: var(--ink-750);
+}
+
+@media (max-width: 640px) {
+  .queue-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}

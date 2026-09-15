@@ -40,12 +40,12 @@ import { runFiction } from './pipeline/fiction';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
-import { buildPlan, historyFor, runSummary } from './schedule/plan';
+import { currentPlan } from './schedule/current';
 import { writeLibrary } from './run/library';
 import { costPenceFor, OpenAiClient } from './models/client';
 import { EpisodeFormat } from './formats/schema';
 import { COMPOSED_INTO_WRITER, promptRegistry } from './prompts/registry';
-import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/load';
+import { loadSchedule, returnTopic, takeTopic } from './schedule/load';
 import { Run, STAGES } from './run/store';
 import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
@@ -903,33 +903,7 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
  * READ-ONLY AND FREE. Separated from `tick` on purpose: a schedule you cannot
  * inspect before it spends money is a schedule nobody trusts enough to turn on.
  */
-const readPlan = (now = new Date()) => {
-  const personas = loadAllPersonas();
-  const kindOf = new Map(personas.map((p) => [p.id, p]));
-
-  const summaries = Run.list().map((id) => {
-    const run = Run.open(id);
-    // The format decides whether a run was an episode or a short. Reading it
-    // from the format rather than from the run's own manifest keeps one
-    // definition of what a short is.
-    let kind: 'long' | 'short' = 'long';
-    try {
-      kind = loadFormat(run.manifest.formatId).kind === 'short' ? 'short' : 'long';
-    } catch {
-      // A run whose format has since been deleted still counts as published;
-      // guessing long is the direction that does not invent a missing episode.
-    }
-    return runSummary(run, kind);
-  });
-
-  return buildPlan({
-    schedule: loadSchedule(),
-    personas: personas.filter((p) => kindOf.has(p.id)),
-    history: (personaId) => historyFor(personaId, summaries),
-    topicsQueued: (personaId) => loadTopics(personaId).topics.length,
-    now,
-  });
-};
+const readPlan = (now = new Date()) => currentPlan(now);
 
 const cmdDue = (): number => {
   const plan = readPlan();

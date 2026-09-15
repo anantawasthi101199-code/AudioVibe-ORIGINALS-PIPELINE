@@ -72,6 +72,37 @@ export interface RunSummary {
   gate: { passed: boolean; blocking: number; needsHumanReview: boolean } | null;
 }
 
+export interface QueueItem {
+  channelId: string;
+  channelName: string;
+  kind: 'episode' | 'short';
+  reason: string;
+  overdueDays?: number;
+  at?: string;
+  parentRunId?: string;
+}
+
+export interface QueueBlocker {
+  channelId: string;
+  channelName: string;
+  reason: string;
+}
+
+export interface QueueView {
+  paused: boolean;
+  timezone: string;
+  due: QueueItem[];
+  waiting: QueueItem[];
+  blocked: QueueBlocker[];
+  held: RunSummary[];
+  ready: RunSummary[];
+  failed: RunSummary[];
+  failedTotal: number;
+  published: RunSummary[];
+  publishedTotal: number;
+  slots: Array<{ channelId: string; channelName: string; slot: string | null }>;
+}
+
 export interface Turn {
   speaker: string;
   text: string;
@@ -217,6 +248,8 @@ export const api = {
 
   catalogue: () => call<{ lanes: Lane[] }>('/api/catalogue'),
 
+  queue: () => call<QueueView>('/api/queue'),
+
   channel: (id: string) =>
     call<{
       channel: Channel;
@@ -305,4 +338,31 @@ export const ago = (iso: string): string => {
   const hours = Math.round(mins / 60);
   if (hours < 24) return `${hours}h ago`;
   return `${Math.round(hours / 24)}d ago`;
+};
+
+/**
+ * A date and time, in the schedule's own zone.
+ *
+ * The zone comes from the server rather than the browser, because a slot is a
+ * promise to listeners in one place and reading it in whatever zone the laptop
+ * happens to be in would quietly show the wrong hour.
+ */
+export const when = (iso: string, timeZone: string): string =>
+  new Date(iso).toLocaleString('en-GB', {
+    timeZone,
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+/** "in 3 days", "in 4 hours", for something that has not happened yet. */
+export const until = (iso: string): string => {
+  const mins = Math.round((Date.parse(iso) - Date.now()) / 60000);
+  if (mins <= 0) return 'now';
+  if (mins < 60) return `in ${mins}m`;
+  const hours = Math.round(mins / 60);
+  if (hours < 36) return `in ${hours}h`;
+  return `in ${Math.round(hours / 24)}d`;
 };

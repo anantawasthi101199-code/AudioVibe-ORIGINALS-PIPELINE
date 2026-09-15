@@ -44,6 +44,7 @@ import {
   startRun,
   suggest,
 } from './routes';
+import { getQueue } from './queue';
 
 /** Where the built interface lives, when it has been built. */
 const webRoot = (): string => path.join(__dirname, '..', '..', 'web', 'dist');
@@ -235,6 +236,7 @@ export const createServer = (): http.Server =>
 
       // --- Reading ----------------------------------------------------------
       if (pathname === '/api/catalogue') return send(res, 200, getCatalogue());
+      if (pathname === '/api/queue') return send(res, 200, getQueue());
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
       if (pathname === '/api/runs') return send(res, 200, getRuns(url.searchParams.get('channel')));
       if (pathname === '/api/run') return send(res, 200, getRun(id ?? ''));

@@ -15,6 +15,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, whenSignedOut } from './api';
 import { Channel } from './pages/Channel';
 import { Lanes } from './pages/Lanes';
+import { Queue } from './pages/Queue';
 import { Run } from './pages/Run';
 import { ErrorNote } from './components/bits';
 import './app.css';
@@ -100,8 +101,10 @@ export const App = () => {
 
   const channelMatch = /^\/c\/(.+)$/.exec(route);
   const runMatch = /^\/r\/(.+)$/.exec(route);
+  const onQueue = route === '/queue';
 
   const crumbs: Array<[string, string]> = [['/', 'Lanes']];
+  if (onQueue) crumbs.push(['/queue', 'Queue']);
   if (channelMatch) crumbs.push([route, channelMatch[1]!]);
   if (runMatch) {
     const runId = runMatch[1]!;
@@ -138,6 +141,16 @@ export const App = () => {
         </nav>
 
         <span className="spacer" />
+        <a
+          className={`btn ghost small${onQueue ? ' on' : ''}`}
+          href="#/queue"
+          onClick={(e) => {
+            e.preventDefault();
+            go('/queue');
+          }}
+        >
+          Queue
+        </a>
         <button
           className="btn ghost small"
           onClick={() => {
@@ -148,7 +161,9 @@ export const App = () => {
         </button>
       </header>
 
-      {runMatch ? (
+      {onQueue ? (
+        <Queue go={go} />
+      ) : runMatch ? (
         <Run id={runMatch[1]!} go={go} />
       ) : channelMatch ? (
         <Channel id={channelMatch[1]!} go={go} />
