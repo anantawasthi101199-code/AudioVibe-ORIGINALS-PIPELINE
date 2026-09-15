@@ -1564,3 +1564,72 @@ table.runs .num {
     display: none;
   }
 }
+
+/* --- A step you click through ---------------------------------------------
+   The publishing step on a channel page: a panel that behaves as a button,
+   because it is one. */
+
+.step-on {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1.15rem;
+  border: 1px solid var(--pass-dim);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--pass) 6%, transparent), transparent 60%),
+    var(--ink-850);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 130ms ease;
+}
+
+.step-on:hover {
+  border-color: var(--pass);
+}
+
+.step-on .caret {
+  font-size: 1.2rem;
+}
+
+/* --- A card opened to read ------------------------------------------------
+   What it will say, what the gate thought, and the two things you can do
+   about it. All of it on the card, because making any of it a separate page
+   meant it was skipped. */
+
+.card-open {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem 1.15rem 1.15rem;
+  border-top: 1px solid var(--line-soft);
+  background: var(--ink-900);
+}
+
+.script-read {
+  max-height: 22rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+
+.script-read p {
+  margin: 0 0 0.85rem;
+}
+
+.script-read p:last-child {
+  margin-bottom: 0;
+}
+
+.btn.spend.small {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+/* Where it is going, when that is the real thing. */
+.is-live {
+  color: var(--fail);
+}

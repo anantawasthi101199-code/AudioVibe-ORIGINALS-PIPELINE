@@ -282,8 +282,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 this again gives the same answer, and nothing stops you publishing one now.
               </Info>
               {scheduled && <span className="faint tiny">{scheduled}</span>}
-              <button className="btn ghost small" onClick={() => go('/schedule')}>
-                Arrange all
+              <button
+                className="btn ghost small"
+                onClick={() => go(`/c/${run.channelId}/publish`)}
+              >
+                Publishing
               </button>
               {cuts.some((c) => c.releaseAt) && (
                 <button
@@ -483,7 +486,10 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             <span className="muted">Out in the world.</span>
             <span className="spacer" />
             {/* Somewhere to go next, rather than a dead end. */}
-            <button className="btn ghost small" onClick={() => go('/schedule')}>
+            <button
+              className="btn ghost small"
+              onClick={() => go(`/c/${run.channelId}/publish`)}
+            >
               What is next
             </button>
             <button className="btn ghost small" onClick={() => go(`/c/${run.channelId}`)}>

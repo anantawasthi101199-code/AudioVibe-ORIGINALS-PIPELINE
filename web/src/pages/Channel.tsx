@@ -310,6 +310,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
 
   const { channel, runs, budgetPence } = data;
   const queue = route?.kind === 'shorts' ? data.sets : data.topics;
+  const ready = runs.filter((r) => r.state === 'ready' && !r.isSource).length;
 
   const start = async () => {
     if (!route || !topic.trim()) return;
@@ -467,6 +468,26 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </div>
         </section>
 
+        {/*
+          --- Publishing -------------------------------------------------
+          A STEP, NOT A TAB. Set the channel up, make something, then decide
+          what goes out - in that order, on one page, for one show. The
+          studio-wide list this replaced put three rows of another show's work
+          above yours, where ticking one published to the wrong account.
+        */}
+        {ready > 0 && (
+          <button className="panel step-on" onClick={() => go(`/c/${channel.id}/publish`)}>
+            <span className="step-n done">3</span>
+            <span className="stack" style={{ gap: '0.15rem', flex: 1, minWidth: 0 }}>
+              <span className="queue-title">
+                {ready} ready to publish as @{channel.account.handle ?? channel.handle}
+              </span>
+              <span className="muted tiny">Read them, listen, order them, publish</span>
+            </span>
+            <span className="caret">›</span>
+          </button>
+        )}
+
         {/* --- What it has made ----------------------------------------- */}
         <section className="panel">
           <div className="panel-head">
@@ -474,8 +495,8 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             <span className="pill">{runs.length}</span>
             <span className="spacer" />
             {runs.some((r) => r.state === 'ready') && (
-              <button className="btn ghost small" onClick={() => go('/schedule')}>
-                Arrange publishing
+              <button className="btn ghost small" onClick={() => go(`/c/${channel.id}/publish`)}>
+                Publishing
               </button>
             )}
           </div>

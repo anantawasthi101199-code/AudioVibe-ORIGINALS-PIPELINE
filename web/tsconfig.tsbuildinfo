@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/components/info.tsx","./src/components/bits.tsx","./src/pages/channel.tsx","./src/pages/lanes.tsx","./src/pages/queue.tsx","./src/pages/run.tsx","./src/pages/schedule.tsx"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/components/info.tsx","./src/components/bits.tsx","./src/pages/channel.tsx","./src/pages/lanes.tsx","./src/pages/publish.tsx","./src/pages/queue.tsx","./src/pages/run.tsx"],"version":"5.9.3"}

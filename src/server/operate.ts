@@ -36,7 +36,7 @@ import { findSeries, recordSeries } from '../publish/seriesRegistry';
 import { paletteFor, renderCover, SERIES_COVER_SIZE } from '../art/cover';
 import { currentPlan } from '../schedule/current';
 import { loadSchedule } from '../schedule/load';
-import { atHourOn, planRelease } from '../schedule/slots';
+import { planRelease } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
@@ -341,35 +341,44 @@ export const scheduleRelease = (runId: string, body: unknown) => {
 };
 
 /**
- * Set the publish queue: what goes out, and in what order.
+ * Set one channel's publish queue: what goes out, and in what order.
  *
- * ONE ORDERED LIST ACROSS EVERY CHANNEL, which is what makes it useful. The
- * question somebody actually has is "what does this studio put out over the
- * next fortnight, in what order" - and that is a single sequence, not five
- * per-channel ones you have to hold in your head at the same time.
+ * PER CHANNEL, AND IT WAS GLOBAL, WHICH WAS WRONG. One list across every show
+ * sounded tidier and is not how anybody works: you set a channel up, you look
+ * at what that channel has made, you decide what that channel puts out. A list
+ * mixing five shows means the three rows at the top belong to a show you are
+ * not thinking about, and ticking one of them publishes to an account you did
+ * not have in mind.
  *
- * THE LIST IS THE QUEUE. A run in it gets a day; a run left out has its time
- * cleared and goes back to publishable-whenever. So removing something from the
- * queue is dropping it from the list rather than a separate act, and there is
- * no way for a run to be both queued and not queued.
+ * IT ALSO MADE THE SCOPING WRONG IN A WAY THAT MATTERED. Clearing "everything
+ * not in this list" across every channel meant arranging one show silently
+ * unscheduled every other show.
  *
- * THE HOUR COMES FROM THE CHANNEL. Position decides the day, the channel's own
- * slot decides the hour, so two shows on consecutive days still go out at their
- * own times rather than both at nine in the morning.
+ * THE LIST IS THE QUEUE. A run in it gets a day; a run of this channel left out
+ * has its time cleared and goes back to publishable-whenever. Other channels
+ * are not touched.
  *
  * PUBLISHED RUNS FALL OUT BY THEMSELVES. Nothing here removes them: a published
  * run is no longer `ready`, so it stops being offered and stops being counted.
  * The order that remains is still the order.
  */
-export const setPublishQueue = (body: unknown) => {
+export const setPublishQueue = (channelId: string, body: unknown) => {
   const { runIds } = z.object({ runIds: z.array(z.string()) }).parse(body ?? {});
 
+  const persona = loadPersona(channelId);
   const schedule = loadSchedule();
   const wanted = new Set(runIds);
 
-  // Everything that could be queued, so anything dropped from the list gets
-  // its time cleared in the same pass.
-  const candidates = runs({ limit: 400 }).filter(
+  // EVERY ID MUST BELONG TO THIS CHANNEL. Otherwise arranging one show could
+  // reach into another's, which is the whole fault being fixed.
+  const foreign = runIds.filter((id) => id.split('/')[0] !== channelId);
+  if (foreign.length) {
+    throw new HttpError(400, `not ${persona.name}'s runs: ${foreign.join(', ')}`);
+  }
+
+  // This channel's candidates only, so anything dropped from the list gets its
+  // time cleared without touching anybody else's.
+  const candidates = runs({ channelId, limit: 400 }).filter(
     (r) => !r.isSource && (r.state === 'ready' || r.state === 'awaiting-approval')
   );
 
@@ -377,27 +386,59 @@ export const setPublishQueue = (body: unknown) => {
     if (!wanted.has(summary.id)) Run.open(summary.id).setReleaseAt(null);
   }
 
+  const cadence = schedule.shows[channelId];
   const times = planRelease({
     count: runIds.length,
     from: new Date(),
+    slotHour: cadence?.slot?.hour,
     timezone: schedule.timezone,
   });
 
   const queued: Array<{ runId: string; releaseAt: string }> = [];
 
   runIds.forEach((runId, i) => {
-    const run = Run.open(runId);
-    const cadence = schedule.shows[run.manifest.personaId];
-
-    // The day from the position, the hour from the channel.
-    const day = times[i]!;
-    const at = cadence?.slot ? atHourOn(day, cadence.slot.hour, schedule.timezone) : day;
-
-    run.setReleaseAt(at);
-    queued.push({ runId, releaseAt: at.toISOString() });
+    Run.open(runId).setReleaseAt(times[i]!);
+    queued.push({ runId, releaseAt: times[i]!.toISOString() });
   });
 
   return { queued, timezone: schedule.timezone };
+};
+
+/**
+ * Re-gate one channel's runs and keep the answer.
+ *
+ * WHY THIS IS NEEDED AT ALL. A run's state comes from the gate report stored
+ * beside it, which was written the day it was made. Every time a check changes,
+ * every stored report is a little more out of date - and the direction that
+ * hurts is a run that passes today still reading as rejected, because nothing
+ * will ever look at it again. One short sat as `failed` through the whole
+ * clean-up for exactly that reason, invisible among real failures.
+ *
+ * SAFE TO RUN ON EVERY PAGE LOAD. The gate is deterministic arithmetic over the
+ * script and the ledger with no model calls, so re-checking a channel costs
+ * nothing but a few file reads. Only reports that actually changed are written.
+ *
+ * IT NEVER RE-RENDERS OR RE-WRITES. This settles what the current checks think
+ * of what is already on disk, and nothing else.
+ */
+export const recheckChannel = (channelId: string) => {
+  const changed: Array<{ runId: string; from: boolean; to: boolean }> = [];
+
+  for (const summary of runs({ channelId, limit: 400 })) {
+    const run = Run.open(summary.id);
+    if (!run.hasArtifact('script') || !run.hasArtifact('qa')) continue;
+
+    const before = summary.gate?.passed ?? false;
+    const fresh = regate(run, run.readArtifact('script', scriptSchema));
+    if (!fresh) continue;
+
+    if (fresh.passed !== before) {
+      run.writeArtifact('qa', fresh);
+      changed.push({ runId: summary.id, from: before, to: fresh.passed });
+    }
+  }
+
+  return { rechecked: true as const, changed };
 };
 
 /** Delete a run and everything in it. Local only: it touches no platform. */

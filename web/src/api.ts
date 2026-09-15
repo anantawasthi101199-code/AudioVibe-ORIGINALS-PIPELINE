@@ -305,9 +305,15 @@ export const api = {
       { method: 'POST', body: JSON.stringify({ clear }) }
     ),
 
-  setPublishQueue: (runIds: string[]) =>
+  recheck: (channelId: string) =>
+    call<{ rechecked: true; changed: Array<{ runId: string; from: boolean; to: boolean }> }>(
+      `/api/channel/recheck?id=${encodeURIComponent(channelId)}`,
+      { method: 'POST' }
+    ),
+
+  setPublishQueue: (channelId: string, runIds: string[]) =>
     call<{ queued: Array<{ runId: string; releaseAt: string }>; timezone: string }>(
-      '/api/schedule/order',
+      `/api/schedule/order?id=${encodeURIComponent(channelId)}`,
       { method: 'POST', body: JSON.stringify({ runIds }) }
     ),
 

@@ -16,7 +16,7 @@ import { api, whenSignedOut, type Platform } from './api';
 import { Channel } from './pages/Channel';
 import { Lanes } from './pages/Lanes';
 import { Queue } from './pages/Queue';
-import { Schedule } from './pages/Schedule';
+import { Publish } from './pages/Publish';
 import { Run } from './pages/Run';
 import { ErrorNote } from './components/bits';
 import './app.css';
@@ -104,10 +104,12 @@ export const App = () => {
   if (signedIn === null) return <div className="gate-screen faint">...</div>;
   if (!signedIn) return <SignIn onIn={() => setSignedIn(true)} />;
 
-  const channelMatch = /^\/c\/(.+)$/.exec(route);
+  // A channel id has no slash in it; a run id does, which is why the run route
+  // takes everything and the channel routes do not.
+  const publishMatch = /^\/c\/([^/]+)\/publish$/.exec(route);
+  const channelMatch = /^\/c\/([^/]+)$/.exec(route);
   const runMatch = /^\/r\/(.+)$/.exec(route);
   const onChannels = route === '/channels';
-  const onSchedule = route === '/schedule';
 
   // THE QUEUE IS HOME. The question asked of this studio most often is "does
   // anything need me", and the answer should be the thing that loads.
@@ -116,16 +118,19 @@ export const App = () => {
   // corner with the same weight as Sign out, so the front page looked like a
   // status board with no way into anything. Two tabs, always visible, with the
   // current one marked.
-  const tab = onSchedule
-    ? 'schedule'
-    : channelMatch || runMatch || onChannels
-      ? 'channels'
-      : 'queue';
+  const tab = channelMatch || publishMatch || runMatch || onChannels ? 'channels' : 'queue';
 
   // Breadcrumbs only once you are deeper than a tab, where they earn their
   // space by being the way back up.
+  // PUBLISHING IS A STEP UNDER A CHANNEL, so the trail says so and the way
+  // back up is one click. It used to be a tab of its own listing every show at
+  // once, which put three rows of somebody else's work above yours.
   const crumbs: Array<[string, string]> = [];
   if (channelMatch) crumbs.push([route, channelMatch[1]!]);
+  if (publishMatch) {
+    crumbs.push([`/c/${publishMatch[1]!}`, publishMatch[1]!]);
+    crumbs.push([route, 'publishing']);
+  }
   if (runMatch) {
     const runId = runMatch[1]!;
     crumbs.push([`/c/${runId.split('/')[0]}`, runId.split('/')[0]!]);
@@ -149,16 +154,6 @@ export const App = () => {
             }}
           >
             Queue
-          </a>
-          <a
-            className={`tab${tab === 'schedule' ? ' on' : ''}`}
-            href="#/schedule"
-            onClick={(e) => {
-              e.preventDefault();
-              go('/schedule');
-            }}
-          >
-            Publishing
           </a>
           <a
             className={`tab${tab === 'channels' ? ' on' : ''}`}
@@ -216,8 +211,8 @@ export const App = () => {
         </button>
       </header>
 
-      {onSchedule ? (
-        <Schedule go={go} />
+      {publishMatch ? (
+        <Publish id={publishMatch[1]!} go={go} />
       ) : runMatch ? (
         <Run id={runMatch[1]!} go={go} />
       ) : channelMatch ? (

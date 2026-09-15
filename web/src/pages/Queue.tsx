@@ -276,9 +276,21 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
           to do from the numbers.
         */}
         <div className="row nowrap">
+          {/* Straight to the channel with the most waiting, because
+              publishing belongs to one show at a time. */}
           {queue.ready.length > 0 && (
-            <button className="btn" onClick={() => go('/schedule')}>
-              Arrange {queue.ready.length}
+            <button
+              className="btn"
+              onClick={() => {
+                const counts = new Map<string, number>();
+                for (const r of queue.ready) {
+                  counts.set(r.channelId, (counts.get(r.channelId) ?? 0) + 1);
+                }
+                const busiest = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
+                go(busiest ? `/c/${busiest[0]}/publish` : '/channels');
+              }}
+            >
+              Publish {queue.ready.length}
             </button>
           )}
           <button
