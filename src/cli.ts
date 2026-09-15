@@ -49,6 +49,8 @@ import { loadSchedule, loadTopics, returnTopic, takeTopic } from './schedule/loa
 import { Run, STAGES } from './run/store';
 import { buildDeps, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
+import { setUpChannel } from './pipeline/channel';
+import { imageModel, imageQuality, imagesEnabled } from './art/generate';
 import { serve } from './server/index';
 import { formatGateReport, GateReport } from './qa/gate';
 import { regate } from './qa/regate';
@@ -86,6 +88,9 @@ Commands
                                  away. Spends without anybody reading it first.
   approve --run <id>             Release a held run, then render and gate it.
                                  Nothing is voiced until this.
+  channel-setup --show <id>      Create this channel on the platform, once:
+                                 account, profile, avatar, cover. Needs
+                                 AUDIOVIBE_ADMIN_EMAIL and _PASSWORD.
   studio                         Start the web interface, on loopback. Everything
                                  the commands below do, with progress you can
                                  watch and a script you can edit before it is
@@ -534,6 +539,81 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
  * approved by accident spends money on audio nobody read; a flag buried in
  * another command is exactly how that happens.
  */
+/**
+ * Bring a channel into existence on the platform.
+ *
+ * ITS OWN COMMAND AND NOT PART OF `make`, because it happens once per channel
+ * ever and it touches production. Folding it into the weekly path would mean
+ * every run carrying code that can create accounts.
+ */
+const cmdChannelSetup = async (argv: string[]): Promise<number> => {
+  const showId = arg(argv, 'show');
+  if (!showId) {
+    console.error('Usage: channel-setup --show <id>');
+    return 1;
+  }
+
+  const persona = loadPersona(showId);
+  const platform = platformConfig();
+
+  const email = process.env.AUDIOVIBE_ADMIN_EMAIL;
+  const password = process.env.AUDIOVIBE_ADMIN_PASSWORD;
+  if (!email || !password) {
+    console.error(
+      'AUDIOVIBE_ADMIN_EMAIL and AUDIOVIBE_ADMIN_PASSWORD must be set. Creating a channel ' +
+        'needs the studio operator, and only for this one command.'
+    );
+    return 1;
+  }
+
+  const ui = new Reporter({ stages: ['account', 'profile', 'artwork'] });
+  ui.header(`Setting up ${persona.name}`, [
+    ['channel', persona.id],
+    ['handle', `@${persona.handle}`],
+    ['platform', platform.url],
+    ['label', 'declared as an AI show, which renders on every card'],
+    ['artwork', imagesEnabled() ? `${imageModel()} at ${imageQuality()}` : 'drawn (FOUNDRY_IMAGE=off)'],
+  ]);
+
+  // LOUD, BECAUSE THIS ONE CANNOT BE TAKEN BACK. An account on production is
+  // visible, followable and indexed; there is no delete in this pipeline.
+  if (platform.isProduction && !flag(argv, 'yes')) {
+    console.log('  This creates a REAL account on production. Re-run with --yes to do it.');
+    console.log('');
+    return 1;
+  }
+
+  try {
+    const result = await setUpChannel(showId, email, password, {
+      log: (message, stage) => {
+        if (stage) ui.section(stage);
+        ui.line(message);
+      },
+    });
+
+    ui.finish([
+      ['account', `@${result.account.username}`],
+      ['id', result.account.userId],
+      ['email', result.account.email],
+      ['artwork', result.generated.length ? `generated ${result.generated.join(' and ')}` : 'drawn'],
+      ['recorded', 'accounts.json'],
+    ]);
+
+    console.log(
+      result.existed
+        ? '  The account was already there; its profile and artwork were refreshed.'
+        : '  Created. Its password is in accounts.json and nowhere else.'
+    );
+    console.log('');
+    return 0;
+  } catch (err) {
+    ui.finish();
+    console.error(`  ${(err as Error).message}`);
+    console.error('');
+    return 1;
+  }
+};
+
 const cmdApprove = async (argv: string[]): Promise<number> => {
   const run = openRun(argv);
 
@@ -1474,6 +1554,8 @@ export const run = async (argv: string[]): Promise<number> => {
         // The server owns the process from here. Returning a code would set
         // process.exitCode and the entry point would tidy up underneath it.
         return await new Promise<number>(() => undefined);
+      case 'channel-setup':
+        return await cmdChannelSetup(rest);
       case 'approve':
         return await cmdApprove(rest);
       case 'resume':

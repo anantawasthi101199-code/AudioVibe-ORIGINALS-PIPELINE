@@ -76,20 +76,29 @@ export const episodeBudgetPence = (): number => {
   return Number.isFinite(n) && n > 0 ? n : 500;
 };
 
-export const platformConfig = () => {
+/**
+ * Which platform, and whether it is the real one.
+ *
+ * SEPARATE FROM THE INGEST TOKEN, because not everything that talks to the
+ * platform publishes. Channel setup signs in with a password and never touches
+ * the ingest credential, and demanding one anyway would be a prerequisite that
+ * is not true - which is the kind of thing somebody satisfies by pasting in a
+ * token that then sits in the environment of a command that had no business
+ * holding it.
+ */
+export const platformUrl = (): { url: string; isProduction: boolean } => {
   const url = required('AUDIOVIBE_API_URL').replace(/\/+$/, '');
 
   // Loud, because publishing to the wrong environment is not something you can
   // take back: followers get notified, feeds cache, and the seen ledger records
   // it. Cheap to state, expensive to discover afterwards.
-  const isProduction = /api\.audiovibe\.co/i.test(url);
-
-  return {
-    url,
-    token: required('AUDIOVIBE_INGEST_TOKEN'),
-    isProduction,
-  };
+  return { url, isProduction: /api\.audiovibe\.co/i.test(url) };
 };
+
+export const platformConfig = () => ({
+  ...platformUrl(),
+  token: required('AUDIOVIBE_INGEST_TOKEN'),
+});
 
 /**
  * The writer, and the single biggest cost decision in the studio.

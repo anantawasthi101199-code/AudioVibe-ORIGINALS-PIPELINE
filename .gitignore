@@ -38,3 +38,10 @@ library.json
 # The built interface. Rebuilt with `npm --prefix web run build`.
 web/dist/
 web/node_modules/
+
+# Real credentials for real accounts on production. See src/publish/account.ts.
+# This repo has no remote, and this line is what keeps it that way if it ever gets one.
+accounts.json
+
+# Generated channel artwork. Rebuilt by `channel-setup`.
+art/
