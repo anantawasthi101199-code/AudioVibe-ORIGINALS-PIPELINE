@@ -298,11 +298,16 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
             {platform?.isProduction ? 'production' : 'staging'}
           </span>
           . Open a card to read it, listen, and publish.{' '}
-          <Info label="How the order becomes dates">
-            Tick what goes out and drag to order it. Position decides the day, one a day starting
-            tomorrow, at {channel.name}&apos;s own slot hour so its shorts sit near its episodes.
-            Anything unticked goes back to publishable whenever. Publishing one now is always
-            allowed; the order decides what the studio would do by itself, not what you may do.
+          <Info label="What the order does, and what it does not">
+            Tick what goes out and drag to order it. Position gives each one a date, one a day
+            starting tomorrow, at {channel.name}&apos;s own slot hour.
+            <br />
+            <br />
+            <strong>Nothing publishes by itself.</strong> The dates are a plan, not a trigger:
+            there is no timer in this studio and nothing reads them except this page, so an
+            episode goes out when somebody presses publish and at no other time. Arranging the
+            order is how you decide what to press next, and in what order, without holding it in
+            your head.
           </Info>
         </p>
       )}
