@@ -127,6 +127,10 @@ Commands
                                  committed. Deliberate, and two steps on purpose.
   prompts [--show <id>] [--only <id>] [--out <file>]
                                  Every prompt sent to a model, as it is sent
+  categories                     The platform's categories, and whether every
+                                 show names one. A category must match a row in
+                                 the platform's database, and a wrong one is
+                                 only discovered at the end of a publish.
   release [--dry-run]            Publish whatever was approved and is due, one
                                  per run. For cron or Task Scheduler; the
                                  studio does the same on a timer while open.
@@ -754,6 +758,72 @@ const cmdUnpublish = async (argv: string[]): Promise<number> => {
       : `${result.audioId}: ${result.note}`
   );
   return 0;
+};
+
+/**
+ * The platform's categories, and whether every show names one.
+ *
+ * WHY THIS IS A COMMAND. A persona's category is a string that has to match a
+ * row in somebody else's database, and nothing local can tell you whether it
+ * does. Two shows named "Storytelling" for months: it IS a real category on the
+ * platform, of SERIES rather than of audio, so it looked right everywhere
+ * except the one place it is used. The failure then arrived at the very end of
+ * a publish, after the research, the writing, the voicing and the gate.
+ *
+ * One unauthenticated GET. Run it after adding a show, or when a publish
+ * complains about a category.
+ */
+const cmdCategories = async (): Promise<number> => {
+  const platform = platformUrl();
+  const client = new AudioVibeClient(platform.url, 'the category list is public');
+  const personas = loadAllPersonas();
+
+  console.log('');
+  console.log(`  ${platform.url}`);
+  console.log('');
+
+  // Asked once per distinct category rather than once per show, because the
+  // client caches the list after the first call anyway and this reads better.
+  const resolved = new Map<string, boolean>();
+  for (const category of new Set(personas.map((p) => p.category))) {
+    try {
+      await client.categoryId(category);
+      resolved.set(category, true);
+    } catch {
+      resolved.set(category, false);
+    }
+  }
+
+  const broken = personas.filter((p) => !resolved.get(p.category));
+
+  for (const persona of [...personas].sort((a, b) => a.id.localeCompare(b.id))) {
+    const ok = resolved.get(persona.category);
+    console.log(`  ${ok ? 'ok  ' : 'NO  '}${persona.id.padEnd(22)} ${persona.category}`);
+  }
+
+  console.log('');
+
+  if (!broken.length) {
+    console.log('  Every show names a category the platform has.');
+    console.log('');
+    return 0;
+  }
+
+  console.log(`  ${broken.length} show(s) name something the platform does not have.`);
+  console.log('  It must be one of:');
+  console.log('');
+
+  // The client's own failure lists them, so the fix needs no second command.
+  try {
+    await client.categoryId('no-such-category');
+  } catch (err) {
+    const message = (err as Error).message;
+    const list = message.slice(message.indexOf('one of:') + 'one of:'.length).trim();
+    for (const name of list.split(',').map((n) => n.trim())) console.log(`    ${name}`);
+  }
+
+  console.log('');
+  return 1;
 };
 
 const cmdApprove = async (argv: string[]): Promise<number> => {
@@ -1557,6 +1627,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return cmdChannelToken(rest);
       case 'release':
         return await cmdRelease(rest);
+      case 'categories':
+        return await cmdCategories();
       case 'unpublish':
         return await cmdUnpublish(rest);
       case 'approve':

@@ -38,7 +38,13 @@ name: Myths of the World
 # show about belief and practice goes, and this show does not ask a listener to
 # believe anything. Educational is where a documentary about a subject goes, and
 # this is a story about people, told as a story.
-category: Storytelling
+# THE PLATFORM'S LIST, NOT A DESCRIPTION. "Storytelling" is a SERIES
+# category and not an audio one, so every publish from this show failed at
+# the last step with "no category named Storytelling". Of the nine the
+# platform actually offers, these are religious traditions told from their
+# oldest written form, which is Spirituality more than anything else on the
+# list. `npm run foundry -- categories` checks this against the live API.
+category: Spirituality
 
 fiction: false
 
