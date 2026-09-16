@@ -46,6 +46,7 @@ import {
 } from './routes';
 import { getQueue } from './queue';
 import { getCalendar, releasingEnabled } from './calendar';
+import { freshness } from './freshness';
 import { releaseDue } from '../publish/release';
 import {
   createSeriesJob,
@@ -271,6 +272,7 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/catalogue') return send(res, 200, getCatalogue());
       if (pathname === '/api/queue') return send(res, 200, getQueue());
       if (pathname === '/api/platform') return send(res, 200, getPlatform());
+      if (pathname === '/api/freshness') return send(res, 200, freshness());
       if (pathname === '/api/calendar') {
         return send(res, 200, getCalendar(url.searchParams.get('month') ?? undefined));
       }

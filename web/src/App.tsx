@@ -79,6 +79,8 @@ export const App = () => {
   const [route, setRoute] = useState(path());
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  const [stale, setStale] = useState(false);
+  const [staleFile, setStaleFile] = useState<string | null>(null);
 
   const go = useCallback((to: string) => {
     window.location.hash = to;
@@ -101,6 +103,23 @@ export const App = () => {
       })
       .catch(() => setSignedIn(false));
   }, []);
+
+  useEffect(() => {
+    if (!signedIn) return;
+
+    const check = () =>
+      api
+        .freshness()
+        .then((f) => {
+          setStale(f.stale);
+          setStaleFile(f.newestFile);
+        })
+        .catch(() => undefined);
+
+    void check();
+    const timer = window.setInterval(check, 30_000);
+    return () => window.clearInterval(timer);
+  }, [signedIn]);
 
   if (signedIn === null) return <div className="gate-screen faint">...</div>;
   if (!signedIn) return <SignIn onIn={() => setSignedIn(true)} />;
@@ -145,6 +164,22 @@ export const App = () => {
 
   return (
     <div className="shell">
+      {/*
+        THE STUDIO IS ONE LONG-LIVED PROCESS. It compiles src once at boot and
+        then serves that forever, so an edit, a rebuild, even a commit changes
+        nothing about what is running - silently, because the page looks
+        identical either way. An episode went out with artwork that had been
+        fixed an hour earlier for exactly this reason, and the next hour was
+        spent reading code that was already correct.
+      */}
+      {stale && (
+        <div className="stale-bar">
+          This studio is running code from before your last change
+          {staleFile ? ` (${staleFile})` : ''}. Restart it, or what you publish will not match
+          what you fixed.
+        </div>
+      )}
+
       <header className="topbar">
         <a className="brand" href="#/" onClick={() => go('/')}>
           Foundry<span>.</span>

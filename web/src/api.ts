@@ -296,6 +296,14 @@ export const api = {
 
   platform: () => call<Platform>('/api/platform'),
 
+  freshness: () =>
+    call<{
+      startedAt: string;
+      stale: boolean;
+      newestFile: string | null;
+      changedAt: string | null;
+    }>('/api/freshness'),
+
   calendar: (month?: string) =>
     call<CalendarView>(`/api/calendar${month ? `?month=${encodeURIComponent(month)}` : ''}`),
 
