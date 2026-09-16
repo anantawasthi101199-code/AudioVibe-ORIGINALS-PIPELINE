@@ -359,6 +359,9 @@ the command that needs it rather than at startup.
 | `FOUNDRY_VOICES_FILE` | Where the voice registry lives. Tests point this away from the committed one. |
 | `FOUNDRY_BIBLES_DIR` | Where series bibles live. |
 | `FOUNDRY_ACCOUNTS_FILE` | Where channel credentials live. Tests point this away from the real one. |
+| `FOUNDRY_USERS` | `name:password` pairs, comma separated, for a studio more than one person uses. The journal then records who started, approved and published. See `docs/REMOTE.md`. |
+| `FOUNDRY_HOST` | Where the studio listens. Loopback unless set. Anything else marks the session cookie Secure and enforces a 12-character password minimum. |
+| `FOUNDRY_RELEASE` | `on` publishes approved episodes at their time, while the studio runs. |
 | `FOUNDRY_IMAGE` | `off` draws channel artwork instead of generating it, and costs nothing. |
 | `FOUNDRY_IMAGE_MODEL`, `FOUNDRY_IMAGE_QUALITY` | Which image model, and how hard it tries. Default `gpt-image-1` at `medium`. |
 | `EXA_API_KEY`, `FIRECRAWL_API_KEY` | Better retrieval when present, plain fetch when not. |

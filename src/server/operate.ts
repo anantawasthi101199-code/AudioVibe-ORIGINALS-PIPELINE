@@ -223,7 +223,7 @@ export const createSeriesJob = (channelId: string) => {
  * past the production check: `confirmed` is the person pressing the second
  * button, exactly as `--yes` is the person typing it.
  */
-export const publishRunJob = (runId: string, body: unknown) => {
+export const publishRunJob = (runId: string, body: unknown, who: string | null = null) => {
   const confirmed = z.object({ confirmed: z.boolean().default(false) }).parse(body ?? {}).confirmed;
 
   const run = Run.open(runId);
@@ -245,6 +245,8 @@ export const publishRunJob = (runId: string, body: unknown) => {
   if (getPlatform().isProduction && !confirmed) {
     throw new HttpError(428, `${getPlatform().url} is PRODUCTION`);
   }
+
+  if (who) run.journal({ stage: 'publish', event: `published by ${who}` });
 
   const job = jobs.start({
     id,
@@ -291,7 +293,11 @@ export const nextDue = () => {
  * spent, so approving two more adds two to the end rather than reshuffling a
  * fortnight somebody has already read.
  */
-export const approveForRelease = (channelId: string, body: unknown) => {
+export const approveForRelease = (
+  channelId: string,
+  body: unknown,
+  who: string | null = null
+) => {
   const { runIds } = z.object({ runIds: z.array(z.string()).min(1) }).parse(body ?? {});
 
   const persona = loadPersona(channelId);
@@ -327,7 +333,17 @@ export const approveForRelease = (channelId: string, body: unknown) => {
   });
 
   const approvedAt = new Date();
-  for (const p of placed) Run.open(p.runId).setReleaseAt(p.at, approvedAt);
+  for (const p of placed) {
+    const run = Run.open(p.runId);
+    run.setReleaseAt(p.at, approvedAt);
+    // WHO SAID YES. This approval is what later lets the releaser publish
+    // without anybody present, so the journal has to name the person whose
+    // decision that was.
+    run.journal({
+      stage: 'publish',
+      event: `approved for ${p.at.toISOString()}${who ? ` by ${who}` : ''}`,
+    });
+  }
 
   // A kind the channel has no capacity for gets no day at all, and saying so
   // beats leaving somebody to wonder why it never reached the calendar.

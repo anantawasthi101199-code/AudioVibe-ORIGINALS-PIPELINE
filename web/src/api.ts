@@ -285,9 +285,12 @@ const call = async <T>(path: string, init?: RequestInit): Promise<T> => {
 };
 
 export const api = {
-  me: () => call<{ signedIn: boolean }>('/api/me'),
+  me: () => call<{ signedIn: boolean; name?: string }>('/api/me'),
   signIn: (password: string) =>
-    call<{ ok: true }>('/api/session', { method: 'POST', body: JSON.stringify({ password }) }),
+    call<{ ok: true; name: string }>('/api/session', {
+      method: 'POST',
+      body: JSON.stringify({ password }),
+    }),
   signOut: () => call<{ ok: true }>('/api/session', { method: 'DELETE' }),
 
   catalogue: () => call<{ lanes: Lane[] }>('/api/catalogue'),

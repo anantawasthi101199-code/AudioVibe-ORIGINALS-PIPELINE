@@ -79,6 +79,9 @@ export const App = () => {
   const [route, setRoute] = useState(path());
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  // WHO IS SIGNED IN, shown because this studio can be reached by several
+  // people and every act it records is attributed to one of them.
+  const [who, setWho] = useState<string | null>(null);
   const [stale, setStale] = useState(false);
   const [staleFile, setStaleFile] = useState<string | null>(null);
 
@@ -97,8 +100,9 @@ export const App = () => {
     whenSignedOut(() => setSignedIn(false));
     api
       .me()
-      .then(() => {
+      .then((me) => {
         setSignedIn(true);
+        setWho(me.name ?? null);
         return api.platform().then(setPlatform);
       })
       .catch(() => setSignedIn(false));
@@ -252,10 +256,14 @@ export const App = () => {
           </span>
         )}
 
+        {who && <span className="whoami">{who}</span>}
         <button
           className="btn ghost small"
           onClick={() => {
-            void api.signOut().finally(() => setSignedIn(false));
+            void api.signOut().finally(() => {
+              setSignedIn(false);
+              setWho(null);
+            });
           }}
         >
           Sign out

@@ -23,11 +23,15 @@ import { URL } from 'url';
 import {
   SESSION_COOKIE,
   AuthNotConfigured,
+  identify,
   issueSession,
-  passwordMatches,
+  operators,
+  noteFailure,
+  noteSuccess,
   readCookie,
   sessionCookie,
-  sessionIsValid,
+  sessionUser,
+  tooManyAttempts,
 } from './auth';
 import { jobs } from './jobs';
 import {
@@ -240,21 +244,44 @@ export const createServer = (): http.Server =>
 
       // --- Anything before a session --------------------------------------
       if (pathname === '/api/session' && req.method === 'POST') {
+        // Behind a tunnel the socket address is the tunnel, so the forwarded
+        // header is the only thing that distinguishes one guesser from another.
+        const source =
+          (req.headers['cf-connecting-ip'] as string) ??
+          (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ??
+          req.socket.remoteAddress ??
+          'unknown';
+
+        if (tooManyAttempts(source)) {
+          send(res, 429, { error: 'too many attempts; wait a few minutes' });
+          return;
+        }
+
         const body = (await readBody(req)) as { password?: string } | null;
-        if (!passwordMatches(body?.password ?? '')) {
+        const who = identify(body?.password ?? '');
+
+        if (!who) {
+          noteFailure(source);
           // One message for a wrong password and a missing one. Distinguishing
           // them tells somebody guessing which half they got right.
           send(res, 401, { error: 'that is not the password' });
           return;
         }
-        send(res, 200, { ok: true }, { 'set-cookie': sessionCookie(issueSession()) });
+
+        noteSuccess(source);
+        console.log(`  signed in: ${who} from ${source}`);
+        send(res, 200, { ok: true, name: who }, { 'set-cookie': sessionCookie(issueSession(who)) });
         return;
       }
 
-      const signedIn = sessionIsValid(readCookie(req.headers.cookie, SESSION_COOKIE));
+      // WHO, not just whether. Every act that spends money or publishes is
+      // recorded against this name, which is the whole reason the studio has
+      // named people rather than one shared password.
+      const user = sessionUser(readCookie(req.headers.cookie, SESSION_COOKIE));
+      const signedIn = user !== null;
 
       if (pathname === '/api/me') {
-        send(res, signedIn ? 200 : 401, signedIn ? { signedIn: true } : { error: 'sign in' });
+        send(res, signedIn ? 200 : 401, signedIn ? { signedIn: true, name: user } : { error: 'sign in' });
         return;
       }
 
@@ -296,16 +323,16 @@ export const createServer = (): http.Server =>
 
       // --- Writing ----------------------------------------------------------
       if (pathname === '/api/runs' && req.method === 'POST') {
-        return send(res, 201, startRun(await readBody(req)));
+        return send(res, 201, startRun(await readBody(req), user));
       }
       if (pathname === '/api/run/script' && req.method === 'PUT') {
         return send(res, 200, saveScript(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/approve' && req.method === 'POST') {
-        return send(res, 202, approveRun(id ?? ''));
+        return send(res, 202, approveRun(id ?? '', user));
       }
       if (pathname === '/api/run/shorts' && req.method === 'POST') {
-        return send(res, 202, cutShorts(id ?? '', await readBody(req)));
+        return send(res, 202, cutShorts(id ?? '', await readBody(req), user));
       }
       if (pathname === '/api/release/now' && req.method === 'POST') {
         return send(res, 200, await releaseNow());
@@ -314,7 +341,7 @@ export const createServer = (): http.Server =>
         return send(res, 200, recheckChannel(id ?? ''));
       }
       if (pathname === '/api/channel/approve' && req.method === 'POST') {
-        return send(res, 200, approveForRelease(id ?? '', await readBody(req)));
+        return send(res, 200, approveForRelease(id ?? '', await readBody(req), user));
       }
       if (pathname === '/api/run/cancel' && req.method === 'POST') {
         return send(res, 200, cancelRelease(id ?? ''));
@@ -323,7 +350,7 @@ export const createServer = (): http.Server =>
         return send(res, 200, setHold(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/publish' && req.method === 'POST') {
-        return send(res, 200, publishRunJob(id ?? '', await readBody(req)));
+        return send(res, 200, publishRunJob(id ?? '', await readBody(req), user));
       }
       if (pathname === '/api/run' && req.method === 'DELETE') {
         return send(res, 200, discardRun(id ?? ''));
@@ -364,19 +391,27 @@ export const serve = async (opts: ServeOptions = {}): Promise<http.Server> => {
   const host = opts.host ?? process.env.FOUNDRY_HOST ?? '127.0.0.1';
 
   // FAIL NOW, NOT ON THE FIRST REQUEST. A server that starts and then rejects
-  // every sign-in is a server somebody debugs for ten minutes.
-  issueSession();
+  // every sign-in is a server somebody debugs for ten minutes. This also
+  // refuses a short password on an exposed host, which is the moment it stops
+  // being theatre and starts mattering.
+  const people = operators();
 
   const server = createServer();
   await new Promise<void>((resolve) => server.listen(port, host, resolve));
 
   console.log('');
   console.log(`  Foundry studio on http://${host}:${port}`);
+  console.log(
+    `  ${people.length === 1 ? 'One person' : `${people.length} people`} can sign in: ` +
+      people.map((p) => p.name).join(', ')
+  );
+
   if (host !== '127.0.0.1' && host !== 'localhost') {
     console.log('');
     console.log(`  NOT ON LOOPBACK. Anybody who can reach ${host}:${port} can reach this,`);
-    console.log('  and every button in it spends money. One password is the only thing');
-    console.log('  between them and a run.');
+    console.log('  and every button in it spends money and publishes to production.');
+    console.log('  Put it behind a tunnel with its own access control rather than');
+    console.log('  opening a port: see docs/REMOTE.md.');
   }
   if (releasingEnabled()) {
     startReleasing();

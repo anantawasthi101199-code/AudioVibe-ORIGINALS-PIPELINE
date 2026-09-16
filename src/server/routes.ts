@@ -170,7 +170,7 @@ export const startRunSchema = z.object({
  * the only irreversible spend, and a button is easier to press than a command
  * is to type.
  */
-export const startRun = (body: unknown) => {
+export const startRun = (body: unknown, who: string | null = null) => {
   const input = startRunSchema.parse(body);
   const persona = loadPersona(input.channelId);
   const format = loadFormat(input.formatId);
@@ -186,6 +186,10 @@ export const startRun = (body: unknown) => {
     onePass: true,
     holdForApproval: !input.renderNow && !format.sourceOnly,
   });
+
+  // WHO ASKED FOR IT. A studio several people can reach needs its journal to
+  // say which of them started something that costs money.
+  if (who) run.journal({ stage: 'pipeline', event: `started by ${who}` });
 
   const job = jobs.start({
     id: jobId('run', run.id),
@@ -214,7 +218,7 @@ export const startRun = (body: unknown) => {
  * Splitting them would leave a run approved but not started, which looks
  * finished in a listing and has no audio.
  */
-export const approveRun = (id: string) => {
+export const approveRun = (id: string, who: string | null = null) => {
   const run = openRun(id);
 
   if (!run.manifest.holdForApproval) throw new HttpError(400, `run "${id}" was not held`);
@@ -225,7 +229,10 @@ export const approveRun = (id: string) => {
 
   if (!run.manifest.approvedAt) {
     run.approve();
-    run.journal({ stage: 'pipeline', event: 'approved in the studio' });
+    run.journal({
+      stage: 'pipeline',
+      event: who ? `approved in the studio by ${who}` : 'approved in the studio',
+    });
   }
 
   const persona = loadPersona(run.manifest.personaId);
@@ -250,13 +257,15 @@ export const approveRun = (id: string) => {
 };
 
 /** Cut every story out of a source run, each into its own run. */
-export const cutShorts = (id: string, body: unknown) => {
+export const cutShorts = (id: string, body: unknown, who: string | null = null) => {
   const run = openRun(id);
   const only = z
     .object({ only: z.array(z.number().int().positive()).default([]) })
     .parse(body ?? {}).only;
 
   if (!run.hasArtifact('script')) throw new HttpError(400, `run "${id}" has no script to cut`);
+
+  if (who) run.journal({ stage: 'shorts', event: `cut by ${who}` });
 
   const job = jobs.start({
     id: jobId('shorts', run.id),

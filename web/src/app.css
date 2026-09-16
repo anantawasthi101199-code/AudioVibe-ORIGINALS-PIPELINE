@@ -2046,3 +2046,13 @@ table.runs .num {
   font-weight: 500;
   text-align: center;
 }
+
+/* Who is signed in. Shown because this studio can be reached by several people
+   and everything it records is attributed to one of them. */
+.whoami {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
