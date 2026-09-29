@@ -120,10 +120,9 @@ export interface PipelineDeps {
   /** Prior episodes to check self-similarity against. */
   priorTexts?: Array<{ label: string; text: string }>;
   /**
-   * Mix a synthesised bed under each part. Defaults to on.
+   * Mix a synthesised bed under each part. OFF unless true.
    *
-   * Off for judging the writing, where music is a distraction from whether the
-   * words work. `--no-music`.
+   * A toggle, off by default on the owner's instruction. `--music`.
    */
   music?: boolean;
   /**

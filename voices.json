@@ -28,5 +28,15 @@
         "firstRunId": "geopolitics-today/e003-20260929-geopolitics"
       }
     }
+  },
+  "how-they-built-it": {
+    "host": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "coral",
+        "firstUsedAt": "2026-09-29T19:16:38.123Z",
+        "firstRunId": "how-they-built-it/e002-20260929-did-reliance-group-ambani-become-the"
+      }
+    }
   }
 }

@@ -248,7 +248,9 @@ export const runBusiness = async (
         voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
-        music: deps.music,
+        // A toggle, off unless the run asks (--music).
+        music: deps.music === true,
+        musicPhraseFile: deps.musicPhraseFile,
         musicSeed: run.manifest.topic,
       },
       deps.tts,

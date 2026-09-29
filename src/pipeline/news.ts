@@ -365,7 +365,8 @@ export const runNews = async (
         voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
-        music: desk.music && deps.music !== false,
+        // A toggle, off unless the run asks (--music) or the desk opts in.
+        music: deps.music === true || desk.music,
         musicSeed: run.manifest.topic,
         musicPhraseFile: deps.musicPhraseFile,
       },

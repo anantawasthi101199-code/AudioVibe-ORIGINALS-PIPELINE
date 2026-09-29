@@ -142,9 +142,10 @@ Commands
                                  trusted outlet, under 3 minutes. --topic "..."
                                  for one specific story. Renders at once;
                                  --hold stops before audio. See docs/NEWS.md.
-      ... --no-music             Render a bare voice with no bed under it.
-                                 The bed is synthesised locally and is free,
-                                 so this is for judging the writing, not cost.
+      ... --music                Put a music bed under the voice. OFF by
+                                 default: every run is a bare voice unless
+                                 asked. The bed is synthesised locally and is
+                                 free. (--bed <name> picks one and implies it.)
 
       EVERY PAID CHECK IS OFF BY DEFAULT. The floor is the cheapest thing that
       produces an episode; each pass goes back on by name when it has earned
@@ -801,9 +802,12 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
     // FROM THE COMMAND LINE, NOT THE MANIFEST, and that is the difference
     // between this and the two above. Music changes nothing about what the
     // episode SAYS, so re-rendering one part with a bed and one without would
-    // be audible but never wrong - and being able to hear the same script bare
-    // is the point of having the flag.
-    music: !flag(argv, 'no-music'),
+    // be audible but never wrong.
+    //
+    // OFF BY DEFAULT, on the owner's instruction: "music is a toggle, not
+    // necessary, and by default it is false". `--music` turns the synthesised
+    // bed on, and naming a bed from the library with `--bed` implies it.
+    music: flag(argv, 'music') || !!bedName,
     musicPhraseFile: bedFile,
     log: (message, stage) => {
       if (stage && stage !== 'pipeline') ui.section(stage);
