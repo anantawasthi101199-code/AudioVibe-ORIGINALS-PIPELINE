@@ -35,6 +35,7 @@ import { PLAN_SYSTEM } from '../script/plan';
 import { SELECT_SYSTEM } from '../script/shorts';
 import { REVISE_INSTRUCTION, TITLE_SYSTEM, buildPrompt, buildSystem } from '../script/write';
 import { NEWS_INSTRUCTION } from '../news/newsScript';
+import { BUSINESS_INSTRUCTION } from '../business/storyScript';
 import { FUSE_SYSTEM, REVIEW_SYSTEM, SELECT_SYSTEM as STORY_SELECT_SYSTEM } from '../evidence/story';
 import { GROUNDING_SYSTEM } from '../qa/grounding';
 import { SHORT_INSTRUCTION } from '../script/shortScript';
@@ -108,6 +109,17 @@ export const promptRegistry = (input: {
         'filled per run. Figures in the result are checked against the article for free and ' +
         'block publishing when the article does not contain them.',
       text: NEWS_INSTRUCTION,
+    },
+    {
+      id: 'business',
+      stage: 'script',
+      source: 'src/business/storyScript.ts',
+      note:
+        'The business-story lane only. One call writes a whole episode or short, and its ' +
+        'title, from ONE source chosen without a model (src/business/pickSource.ts). ' +
+        '{HOST}, {SHOW} and {JARGON} are filled per run; episodes explain tricky terms, ' +
+        'shorts avoid them. Figures and quotations are checked against the source for free.',
+      text: BUSINESS_INSTRUCTION,
     },
     {
       id: 'counter',

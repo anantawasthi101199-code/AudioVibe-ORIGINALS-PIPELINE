@@ -1,0 +1,74 @@
+# The How They Built It casebook: how the channel finds the ONE source a
+# business story is told from. Its existence makes how-they-built-it a
+# business-story channel (src/pipeline/lanes.ts).
+
+id: how-they-built-it
+
+# Said in the goodbye.
+beat: business stories
+
+# {subject} is pulled from the topic: "how did Haldiram become Haldiram" ->
+# "Haldiram". Three searches surface the encyclopedia entry, the company's own
+# history page and the long-form profiles.
+queries:
+  - "{subject} history"
+  - "{subject} founder story"
+  - "{subject} biography wikipedia"
+
+# Sources that tell a whole story well. Encyclopedias lead because they are
+# complete and chronological by design. The business press next.
+preferred:
+  - host: wikipedia.org
+    bonus: 2
+  - host: britannica.com
+    bonus: 2
+  - host: business-standard.com
+    bonus: 1
+  - host: economictimes.indiatimes.com
+    bonus: 1
+  - host: livemint.com
+    bonus: 1
+  - host: forbes.com
+    bonus: 1
+  - host: forbesindia.com
+    bonus: 1
+  - host: bbc.co.uk
+    bonus: 1
+  - host: bbc.com
+    bonus: 1
+  - host: theguardian.com
+    bonus: 1
+  - host: hbs.edu
+    bonus: 1
+  - host: fundinguniverse.com
+    bonus: 1
+
+# Never a source. Social posts, Q&A, video, and the "success story" content
+# farms that the first live probe returned for Haldiram's.
+refused:
+  - linkedin.com
+  - quora.com
+  - medium.com
+  - youtube.com
+  - instagram.com
+  - facebook.com
+  - pinterest.com
+  - startuptalky.com
+  - tradejini.com
+  - scribd.com
+  - slideshare.net
+  - coursehero.com
+
+candidates: 6
+
+# A short needs a complete story, not a long one. An episode of 12 to 15
+# minutes needs enough material to fill it without padding.
+minChars:
+  short: 4000
+  long: 15000
+
+# What the writer reads. The only real cost lever on the script: 30,000 chars
+# is about 1.8p of input, 70,000 about 4.2p.
+readChars:
+  short: 30000
+  long: 70000

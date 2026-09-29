@@ -30,12 +30,15 @@ import { Script, WORDS_PER_SECOND, fullText } from '../script/write';
 import { countWords } from '../script/style';
 import { GateReport, runGate } from './gate';
 import { hasNewsDesk } from '../news/desk';
+import { hasCasebook } from '../business/casebook';
+import { regateBusiness } from '../pipeline/business';
 import { regateNews } from '../pipeline/news';
 
 export const regate = (run: Run, script: Script): GateReport | null => {
   // A NEWS RUN HAS ITS OWN CHECKS, including the one that refuses a report
   // that has gone stale since it was made. See pipeline/news.ts.
   if (hasNewsDesk(run.manifest.personaId)) return regateNews(run, script);
+  if (hasCasebook(run.manifest.personaId)) return regateBusiness(run, script);
   try {
     const persona = loadPersona(run.manifest.personaId);
 

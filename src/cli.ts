@@ -37,6 +37,8 @@ import { runShort } from './pipeline/short';
 import { cutStories } from './pipeline/anthology';
 import { runFiction } from './pipeline/fiction';
 import { runNews } from './pipeline/news';
+import { runBusiness } from './pipeline/business';
+import { assertFormatInLane, laneOf } from './pipeline/lanes';
 import { hasNewsDesk, loadDesk } from './news/desk';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import {
@@ -402,6 +404,21 @@ const cmdMake = async (argv: string[]): Promise<number> => {
     return 0;
   }
 
+  // ONE LANE PER CHANNEL, and a format from another lane is refused before
+  // anything is spent. See pipeline/lanes.ts.
+  assertFormatInLane(laneOf(persona), formatId);
+
+  if (laneOf(persona) === 'business' && flag(argv, 'dry-run')) {
+    const short = format.kind === 'short';
+    console.log(`${persona.name}: the story of "${topic}", from ONE complete source, ${short ? 'under 3 minutes' : '11 to 14 minutes'}.`);
+    console.log('  search + score sources    free (Brave web, fetch, arithmetic)');
+    console.log(`  write the whole story     ~${short ? '4-6' : '8-14'}p (one call)`);
+    console.log(`  render                    ~${short ? '3' : '12-16'}p on ${ttsProvider()}`);
+    console.log('  checks + gate             free');
+    console.log(`Budget: ${short ? 'under 10p' : 'under 100p'}. Publishes nothing.`);
+    return 0;
+  }
+
   if (flag(argv, 'dry-run')) {
     const asked = arg(argv, 'research');
     return describeRun(
@@ -728,6 +745,8 @@ const describeRun = (
 const finishRun = async (run: Run, argv: string[]): Promise<number> => {
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
+  const lane = laneOf(persona);
+  assertFormatInLane(lane, format.id);
 
   // The stages this run will ACTUALLY pass through, so a section can say
   // "3 of 7" truthfully. A fiction run does no research and a source format
@@ -799,9 +818,11 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
 
   const { gate } = persona.fiction
     ? await runFiction({ run }, deps)
-    : hasNewsDesk(persona.id)
+    : lane === 'news'
       ? await runNews(run, deps)
-      : await runEpisode(run, deps);
+      : lane === 'business'
+        ? await runBusiness(run, deps)
+        : await runEpisode(run, deps);
 
   ui.finish([
     ['spent', `${run.manifest.spentPence.toFixed(1)}p`],
@@ -1812,9 +1833,11 @@ const cmdTick = async (argv: string[]): Promise<number> => {
     try {
       result = persona.fiction
         ? await runFiction({ run }, buildDeps())
-        : hasNewsDesk(persona.id)
+        : laneOf(persona) === 'news'
           ? await runNews(run, buildDeps())
-          : await runEpisode(run, buildDeps());
+          : laneOf(persona) === 'business'
+            ? await runBusiness(run, buildDeps())
+            : await runEpisode(run, buildDeps());
     } catch (err) {
       if (!persona.fiction && topic) returnTopic(persona.id, topic);
       throw err;

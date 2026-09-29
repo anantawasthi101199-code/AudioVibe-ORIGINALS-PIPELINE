@@ -1,0 +1,72 @@
+# A business story, complete, under three minutes.
+#
+# QUICK, NOT A TRAILER. Somebody who hears only this has heard the whole story
+# from the beginning to the success. It never points at a longer version.
+#
+# Three parts, written in one call (src/business/storyScript.ts): the story up
+# to the break, the rise to where it stands, and the goodbye. The rise gets its
+# own budget so the ending cannot be squeezed out, the same lesson the myth
+# short learned.
+#
+# Business lane only (pipeline/lanes.ts refuses it anywhere else).
+
+id: biz-short
+name: The whole story, in three minutes
+
+research: single
+
+kind: short
+intent: >
+  How one business was built, beginning to success, in under three minutes,
+  told simply and in order, ending on a reason to follow.
+
+targetSeconds: [140, 170]
+
+serialised: false
+
+loops:
+  - id: how_they_did_it
+    question: How did they go from that beginning to this?
+
+beats:
+  - id: story
+    type: escalation
+    seconds: [85, 105]
+    function: >
+      A hooking first line, then the story in order from the beginning to the
+      turning point.
+    opens: [how_they_did_it]
+    constraints:
+      - >
+        HOOK IN ONE LINE: the tiny beginning against what it became, with a
+        real year or number. No greeting first; you have three seconds.
+      - >
+        THEN IN ORDER: who, where, when, the first venture, the hard part. The
+        year at each step. At most three names.
+      - Stop at the move that changed everything.
+    minClaims: 0
+
+  - id: rise
+    type: payoff
+    seconds: [45, 55]
+    function: >
+      The break, why it worked in one plain sentence, and where it stands now.
+    constraints:
+      - Continue straight on from the last part.
+      - >
+        FINISH THE STORY. Where it stands today, from the source. If time is
+        short, cut detail from the part before, never this.
+    minClaims: 0
+
+  - id: close
+    type: outro
+    seconds: [15, 22]
+    function: >
+      One line on what it took, then the goodbye.
+    closes: [how_they_did_it]
+    constraints:
+      - One sentence on what it took, drawn from the story just told.
+      - The goodbye asks the listener to follow, and is the last thing said.
+    minClaims: 0
+
+tensionCurve: [0.8, 1.0, 0.45]

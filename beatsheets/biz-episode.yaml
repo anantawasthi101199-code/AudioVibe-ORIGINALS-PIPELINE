@@ -1,0 +1,126 @@
+# How a business was built, told complete and in order, 11 to 14 minutes.
+#
+# THE FOUNDER-STORY ARC every good show of this kind shares: a hook that shows
+# the stakes, where it began, the hard years when it nearly failed, the break
+# that changed everything and the climb after it, and where it stands now. The
+# setbacks are the story; the ending is success because of them.
+#
+# WRITTEN IN ONE CALL, all five parts at once (src/business/storyScript.ts).
+# The owner: "it needs to be systematic, and therefore the story part is
+# generated at once". Parts exist here to give each stage of the life its own
+# budget, not to be written separately; the ending especially must never be
+# squeezed out by a long middle.
+#
+# FOR THE EAR. Every move between parts is signposted out loud, the year is
+# said at each new step, and tricky business terms are explained in a clause
+# the first time.
+#
+# Business lane only (pipeline/lanes.ts refuses it anywhere else).
+
+id: biz-episode
+name: The whole story, in order
+
+# One complete source, read whole. The business lane does its own source work
+# and never reads this field; `single` is the true description.
+research: single
+
+kind: long
+intent: >
+  How one business, or one businessperson, was built, from the very beginning
+  to where it stands today, told in order by a friendly host who explains every
+  tricky idea simply, ending on the success and a reason to follow.
+
+targetSeconds: [620, 880]
+
+serialised: false
+
+loops:
+  - id: how_they_did_it
+    question: How did they go from that beginning to this?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [50, 70]
+    function: >
+      A hooking start from the real story, the promise of the episode, and a
+      quick hello.
+    opens: [how_they_did_it]
+    constraints:
+      - >
+        OPEN ON THE CONTRAST OR THE MOMENT. The tiny beginning set against what
+        it became, or the real moment everything was on the line, from the
+        source. Concrete: a place, a year, a number.
+      - >
+        THEN THE PROMISE: in one or two sentences, what this episode will walk
+        through, so the listener knows the journey ahead.
+      - >
+        A QUICK HELLO after the hook, in your own words: "Hey, I'm Zara, and
+        this is How They Built It." One line.
+    minClaims: 0
+
+  - id: beginnings
+    type: context
+    seconds: [140, 190]
+    function: >
+      Where it all began: the founder, the family, the place and the times, and
+      the very first venture.
+    constraints:
+      - >
+        SIGNPOST IN: "So let's go back to the very beginning." Then the story
+        from the earliest point the source gives.
+      - The year at every step. The world they lived in, briefly, so the start makes sense.
+      - End on the first venture actually up and running.
+    minClaims: 0
+
+  - id: struggle
+    type: turn
+    seconds: [140, 190]
+    function: >
+      The hard years: the setbacks, risks, near failures and tough decisions.
+    constraints:
+      - >
+        SIGNPOST IN, continuing from the last part: "But it didn't stay easy for
+        long." Never a fresh start.
+      - >
+        THE REAL OBSTACLES from the source: money, competition, government,
+        family, timing. What was risked and what it cost.
+      - Explain any tricky business idea the first time, in a clause.
+    minClaims: 0
+
+  - id: rise
+    type: mechanism
+    seconds: [170, 230]
+    function: >
+      The break that changed everything and the climb after it: what they did
+      that worked, and why it worked, explained simply.
+    constraints:
+      - >
+        SIGNPOST IN: "And then came the move that changed everything."
+      - >
+        EXPLAIN WHY IT WORKED in plain terms, step by step, with one everyday
+        comparison if it helps. This is where a listener learns something.
+      - Growth in real numbers and years, as the source gives them.
+    minClaims: 0
+
+  - id: ending
+    type: payoff
+    seconds: [110, 150]
+    function: >
+      Where it stands today, what it took, a proper ending of success, and the
+      goodbye.
+    closes: [how_they_did_it]
+    constraints:
+      - >
+        WHERE IT STANDS NOW, from the source: size, reach, what it is known for.
+      - >
+        WHAT IT TOOK, in two or three sentences drawn from the real events
+        already told, not generic advice. Motivational because it is true.
+      - >
+        LAND THE SUCCESS, calling back to the opening contrast. Then the goodbye,
+        which asks the listener to follow, and is the last thing said.
+    minClaims: 0
+
+# Hook below the peak; builds through the struggle to the rise; settles into
+# the ending.
+tensionCurve: [0.6, 0.5, 0.85, 1.0, 0.6]
