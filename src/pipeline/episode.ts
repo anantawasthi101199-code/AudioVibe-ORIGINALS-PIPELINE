@@ -24,7 +24,14 @@ import {
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
 import { loadFormat } from '../formats/load';
+import { nominalSeconds } from '../formats/schema';
 import { episodeBudgetPence } from '../config';
+import {
+  OptionalStage,
+  StageFlags,
+  stageFlags,
+  stagesOff,
+} from '../config/stages';
 import { checkLedger, Claim, claimSchema, locateQuote } from '../evidence/claim';
 import { FetchDeps } from '../evidence/fetch';
 import {
@@ -45,6 +52,17 @@ import {
   MAX_SOURCES_PER_SHORT,
 } from '../evidence/research';
 import { SearchProvider } from '../evidence/search';
+import {
+  buildReference,
+  Reference,
+  ReferenceReview,
+  reviewReference,
+  selectStorySources,
+  StoryResearch,
+  topUpSelection,
+  referenceSchema,
+  storyResearchSchema,
+} from '../evidence/story';
 import { Source } from '../evidence/source';
 import {
   BLOCKING_VERDICTS,
@@ -54,15 +72,20 @@ import {
   verifyClaim,
 } from '../evidence/verify';
 import { repairAll, repairReportSchema } from '../evidence/repair';
-import { fillGaps, findGaps } from '../evidence/gaps';
+import { fillGaps, findGaps, findSequenceGaps } from '../evidence/gaps';
+import { GroundingReport, groundingReportSchema, reviewGrounding } from '../qa/grounding';
 import { LlmClient } from '../models/client';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { TtsProvider } from '../render/tts';
 import { checkDistinctStories } from '../script/forward';
-import { measure } from '../script/style';
+import { countWords, measure } from '../script/style';
 import { writeScriptOnePass } from '../script/onePass';
+import { writeStoryScript } from '../script/storyScript';
+import { writeShortScript } from '../script/shortScript';
+import { performScript } from '../script/perform';
 import {
   Script,
+  WORDS_PER_SECOND,
   beatText,
   fullText,
   scriptProgressSchema,
@@ -97,6 +120,13 @@ export interface PipelineDeps {
   /** Prior episodes to check self-similarity against. */
   priorTexts?: Array<{ label: string; text: string }>;
   /**
+   * Mix a synthesised bed under each part. Defaults to on.
+   *
+   * Off for judging the writing, where music is a distraction from whether the
+   * words work. `--no-music`.
+   */
+  music?: boolean;
+  /**
    * Write the whole script in one call instead of a beat at a time.
    *
    * THE DEFAULT SINCE THE COMPARISON WAS RUN, and the numbers are worth keeping
@@ -119,6 +149,13 @@ export interface PipelineDeps {
    * write. Set false to go back, which `--beat-by-beat` does.
    */
   onePass?: boolean;
+  /**
+   * Which optional stages run, overriding the defaults and the environment.
+   *
+   * See config/stages.ts. Absent means the defaults, which currently have the
+   * grounding review OFF.
+   */
+  stages?: Partial<StageFlags>;
   /**
    * Where a message goes.
    *
@@ -175,7 +212,18 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     run.spend(pence, budget);
   };
 
+  // WHICH OPTIONAL PASSES RUN, decided once and recorded, because a run that
+  // skipped a safety pass must carry that fact rather than look like one that
+  // passed it. See config/stages.ts.
+  const flags = stageFlags(deps.stages);
+  const skipped = stagesOff(flags);
+  const runs = (s: OptionalStage): boolean => flags[s];
+
   run.journal({ stage: 'pipeline', event: 'start', detail: run.manifest.topic });
+  if (skipped.length) {
+    report('pipeline', `stages OFF for this run: ${skipped.join(', ')}`);
+    run.journal({ stage: 'pipeline', event: 'stages-off', detail: skipped.join(', ') });
+  }
 
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
@@ -225,295 +273,536 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     throw new Error(`abandoned ${run.id}: ${reason}`);
   }
 
-  // --- 3. Claims ----------------------------------------------------------
-  let claimSet: ClaimSet;
-  if (run.hasArtifact('claims')) {
-    claimSet = run.readArtifact('claims', claimSetSchema);
-    report('claims', `reusing ${claimSet.claims.length} claims already bound`);
-  } else {
-    stage = 'claims';
-    log('claims: extracting and binding to quotes');
-    claimSet = await extractClaims(
-      brief,
-      corpus,
-      format,
-      deps.writer,
-      spend,
-      say('claims'),
-      // Chunk-level checkpointing, for the same reason beats have it: each
-      // chunk is thousands of tokens over a corpus that had to be searched and
-      // fetched first, and a real run lost three of four to the fourth coming
-      // back in an unexpected shape.
-      {
-        done: run.readCheckpoint('claims', z.array(claimSetSchema)) ?? [],
-        save: (done) => run.writeCheckpoint('claims', done),
-      }
-    );
-    run.writeArtifact('claims', claimSet);
-    run.markComplete('claims');
-    run.clearCheckpoint('claims');
-    report('claims', `${claimSet.claims.length} bound, ${claimSet.unsupported.length} unsupported`);
-  }
-
-  const claims: Claim[] = claimSet.claims.map((c) => claimSchema.parse(c));
-
-  // --- 4. Verification + counter-evidence ---------------------------------
-  let verification: z.infer<typeof verificationReportSchema>;
-  let counterEvidence: z.infer<typeof counterEvidenceSchema>;
-
-  if (run.hasArtifact('verification')) {
-    const stored = run.readArtifact(
-      'verification',
-      z.object({ verification: verificationReportSchema, counterEvidence: counterEvidenceSchema })
-    );
-    verification = stored.verification;
-    counterEvidence = stored.counterEvidence;
-    report('verification', `reusing, ${verification.blocking.length} claim(s) still blocking`);
-  } else {
-    stage = 'verification';
-    log('verification: checking every claim against its quote');
-    verification = await verifyAll(
-      claims,
-      corpus.sources,
-      deps.verifier,
-      spend,
-      deps.screener,
-      say('verification'),
-      // Per-claim, because this is the slowest stage whenever a rate limit is
-      // tight: thirty-five claims at three requests a minute is twelve
-      // minutes, and losing that to a failure on the last one is the most
-      // expensive kind of waste in the pipeline.
-      {
-        done: run.readCheckpoint('verification', z.record(verificationSchema)) ?? {},
-        save: (d) => run.writeCheckpoint('verification', d),
-      }
-    );
-
-    log('verification: searching for evidence against contested claims');
-    // The clerk writes these queries. It is generating search strings from a
-    // claim, and a weak one simply finds nothing - the failure is visible and
-    // cheap. Everything downstream of the search is unchanged.
-    counterEvidence = await gatherCounterEvidence(
-      claims,
-      deps.search,
-      deps.fetchDeps,
-      deps.clerk ?? deps.writer,
-      {},
-      spend
-    );
-
-    run.writeArtifact('verification', { verification, counterEvidence });
-    run.markComplete('verification');
-    run.clearCheckpoint('verification');
-    log(
-      `verification: ${verification.blocking.length} blocking, ` +
-        `${counterEvidence.filter((c) => c.sources.length).length} contested claims with counter-sources`
+  // WHICH LANE THIS EPISODE IS ON.
+  //
+  // `extensive` is everything below: claims bound to verbatim quotes, verified
+  // against a different model family, repaired, gap-filled and concentrated.
+  // `single` skips all of it and reads one to three documents whole instead,
+  // fusing them into a reference article. See evidence/story.ts for the run
+  // that forced the second lane to exist and the arithmetic behind it.
+  //
+  // THE RUN'S OVERRIDE WINS, AND IT IS ON THE MANIFEST RATHER THAN IN A FLAG
+  // READ EACH TIME, so a resume continues the way the run started instead of
+  // switching lanes halfway through an episode.
+  const researchMode = run.manifest.research ?? format.research;
+  const singleStory = researchMode === 'single';
+  if (run.manifest.research && run.manifest.research !== format.research) {
+    report(
+      'pipeline',
+      `researching as "${researchMode}", overriding the "${format.research}" this format asks for`
     );
   }
 
-  // --- 4c. Repair ---------------------------------------------------------
+  // DECLARED OUT HERE BECAUSE BOTH LANES REACH THE SAME GATE. On the single
+  // lane these stay empty, which is not a gap being papered over: the gate is
+  // told `evidence: 'reference'` and skips the sections that would read an
+  // empty ledger as a failing one.
+  let workingClaims: Claim[] = [];
+  let verification: z.infer<typeof verificationReportSchema> = {
+    results: [],
+    blocking: [],
+    costPence: 0,
+    verifierModel: '',
+  };
+  let counterEvidence: z.infer<typeof counterEvidenceSchema> = [];
+
+  // --- 3s. The single-story lane: select, then fuse. ------------------------
   //
-  // A CLAIM THAT SAYS MORE THAN ITS QUOTE USED TO BE DELETED, AND THE FACT WENT
-  // WITH IT. One episode named six men and gave sentences for two, because the
-  // claim carrying the other four said "Collins, Jones and Perkins each got
-  // seven years" against a quote saying "three ringleaders each received seven
-  // years". The seven years was solid; the names were the extractor filling in
-  // from context. Binning it lost both.
-  //
-  // Narrow, then rebind, then keep it with a hedge the script has to say out
-  // loud. See evidence/repair.ts for why the third route is honest rather than
-  // a loophole - and section 7a of the gate for what stops it becoming one.
-  let workingClaims: Claim[] = claims;
-  if (run.hasArtifact('repair')) {
-    const stored = run.readArtifact(
-      'repair',
-      z.object({ claims: z.array(claimSchema), report: repairReportSchema })
-    );
-    workingClaims = stored.claims;
-    report('repair', `reusing, ${stored.report.repaired.length} claim(s) repaired`);
-  } else {
-    stage = 'repair';
-    // BOTH KINDS OF FAILURE GO THROUGH THE SAME REPAIR, which is the point of
-    // doing it here rather than inside the verifier. The semantic failures come
-    // from verification ("says more than the quote"); the structural ones come
-    // from the ledger ("typed as a quotation but its wording does not appear in
-    // the quote", "typed as a statistic but states no number").
-    //
-    // They look different and they are the same fault: a claim describing
-    // itself as more than it is. Narrowing returns a corrected TYPE as well as
-    // corrected text, so the one pass fixes both - and a run that fixed the
-    // semantics while still failing the shape would have gained nothing.
-    const semantic = verification.results.filter((v) => BLOCKING_VERDICTS.includes(v.verdict));
+  // REPLACES STAGES 3 AND 4 ENTIRELY. No claim extraction, no verification, no
+  // repair, no gap-filling and no counter-evidence - one selection call and one
+  // fusion call, against documents read at sixty thousand characters each
+  // rather than six.
+  let reference: Reference | undefined;
+  let referenceReview: ReferenceReview | undefined;
+  let shortArticle: Source | undefined;
 
-    // THE FREE CHECK, FED IN HERE RATHER THAN LEFT TO THE GATE.
-    //
-    // `checkLedger` proves deterministically that a cited quote occurs in the
-    // document it names. That is the anti-fabrication guarantee, it costs
-    // nothing, and it was only being consulted at the gate - which is AFTER the
-    // render. A fever episode paid 29p to voice a script containing three
-    // claims whose quotes appear in no document, and the first anybody heard of
-    // it was a gate report about audio that already existed.
-    //
-    // A missing quote and a missing source are both `unsourced`: there is no
-    // passage to read, so rebind if the corpus holds one and otherwise drop.
-    // Shape problems - typed as a statistic with no number in it - are the
-    // wording category and no longer block anything, so they are not sent here
-    // at all; they surface at the gate for the person reading the script.
-    const structural = checkLedger(claims, corpus.sources)
-      .problems.filter((p) => p.kind === 'quote_not_in_source' || p.kind === 'missing_source')
-      .map((p) => ({
-        claimId: p.claimId,
-        verdict: 'unsourced' as const,
-        reason: p.detail,
-      }));
-
-    // One repair per claim. A claim that failed both ways is narrowed once
-    // against the more specific complaint, because two passes would mean the
-    // second one narrowing the first one's output against a stale reason.
-    const seen = new Set(semantic.map((v) => v.claimId));
-    const failing = [...semantic, ...structural.filter((v) => !seen.has(v.claimId))];
-
-    if (failing.length) {
-      report('repair', `${failing.length} claim(s) their sources will not carry`);
-      const repaired = await repairAll(claims, failing, {
-        sources: corpus.sources,
-        // The CLERK narrows. It is subtraction against a complaint that has
-        // already been written by the verifier, with a deterministic re-check
-        // after it - which is exactly the shape of work the clerk rule allows.
-        narrower: deps.clerk ?? deps.writer,
-        // Re-checked by the same verifier that rejected it. A repair judged by
-        // a softer standard than the rejection would mean nothing.
-        reverify: async (claim) => {
-          const source = corpus.sources.find((src) => src.id === claim.sourceId);
-          if (!source) {
-            return {
-              claimId: claim.id,
-              verdict: 'not_entailed' as const,
-              reason: 'its source is not in the corpus',
-            };
-          }
-          const { verification: v, costPence } = await verifyClaim(claim, source, deps.verifier);
-          spend(costPence);
-          return v;
-        },
-        onCost: spend,
-        onProgress: say('repair'),
-      });
-      workingClaims = repaired.claims;
-      run.writeArtifact('repair', repaired);
-
-      const counts = repaired.report.repaired.reduce<Record<string, number>>((acc, r) => {
-        acc[r.method] = (acc[r.method] ?? 0) + 1;
-        return acc;
-      }, {});
-      log(
-        `repair: ${counts.narrowed ?? 0} narrowed, ${counts.rebound ?? 0} rebound, ` +
-          `${counts.unverified ?? 0} kept as unsettled`
-      );
+  if (singleStory) {
+    let stored: StoryResearch | undefined;
+    if (run.hasArtifact('reference')) {
+      stored = run.readArtifact('reference', storyResearchSchema);
+      report('reference', `reusing the reference built from ${stored.selection.chosen.length} document(s)`);
     } else {
-      run.writeArtifact('repair', { claims, report: { repaired: [], costPence: 0 } });
+      stage = 'reference';
+
+      log('reference: choosing the documents that carry the story');
+      const selection = await selectStorySources(
+        run.manifest.topic,
+        corpus.sources,
+        // THE CLERK IS NOT ALLOWED THIS. Choosing which documents an episode is
+        // built from decides what the episode can know, and clerkConfig's rule
+        // is that the cheap model may only do work something other than a model
+        // checks. Nothing checks this.
+        deps.writer,
+        spend,
+        say('reference')
+      );
+
+      // ENOUGH OF IT, NOT JUST THE RIGHT ONE. The selector judges which document
+      // tells the story and is good at it; it has no sense of whether there is
+      // enough there to fill the episode, and it once chose 13,191 characters
+      // for a fifteen-minute slot. See topUpSelection.
+      const sized = topUpSelection(
+        selection.chosen,
+        corpus.sources,
+        nominalSeconds(format)
+      );
+      for (const extra of sized.added) {
+        report(
+          'reference',
+          `the chosen document(s) are too thin for ${Math.round(nominalSeconds(format) / 60)} ` +
+            `minutes, so ${extra.title} was added as well`
+        );
+      }
+      selection.chosen = sized.chosen;
+
+      for (const source of selection.chosen) {
+        report(
+          'reference',
+          `using ${source.title} (${source.tier}, ${source.text.length.toLocaleString()} chars)`
+        );
+      }
+      const passedOver = corpus.sources.length - selection.chosen.length;
+      if (passedOver > 0) {
+        report(
+          'reference',
+          `passed over ${passedOver} other document(s): ${selection.reasoning || 'no reason given'}`
+        );
+      }
+
+      // A SHORT SKIPS THE FUSION ENTIRELY, WHICH IS THE WHOLE COST ARGUMENT.
+      //
+      // The fusion measured 42p. A three-minute short has a budget of about
+      // fourteen, so it is three times the whole thing - and with one document
+      // there is nothing to fuse anyway. The article goes straight to the
+      // writer and the script comes back in one call. See script/shortScript.ts
+      // for what that gives up.
+      if (format.kind === 'short') {
+        const one = selection.chosen[0]!;
+        stored = {
+          selection: {
+            chosen: [one.id],
+            reasoning: selection.reasoning,
+            fellBack: selection.fellBack,
+            notUsed: corpus.sources
+              .filter((src) => src.id !== one.id)
+              .map((src) => ({ id: src.id, title: src.title })),
+          },
+          article: { id: one.id, title: one.title, url: one.url, chars: one.text.length },
+          review: {
+            unanswered: [],
+            unsupported: [],
+            checked: false,
+            failure: 'a short has no reference to check - it is written from the article itself',
+          },
+        };
+        run.writeArtifact('reference', stored);
+        run.markComplete('reference');
+        report('reference', `writing the short straight from ${one.title}, no fusion step`);
+      } else {
+
+      // CHECKPOINTED, BECAUSE IT IS THE MOST EXPENSIVE CALL ON THIS LANE. The
+      // fusion reads three documents at a hundred thousand characters each -
+      // roughly seventy-five thousand input tokens - and the review that runs
+      // straight after it reads the same documents again. A run that dies
+      // between the two (a budget ceiling is the likely way, since the review
+      // is the single largest line on the estimate) would otherwise pay for
+      // the fusion twice. Same reason the claims stage checkpoints per chunk.
+      let built = run.readCheckpoint('reference', referenceSchema);
+      if (built) {
+        report('reference', 'reusing the article from a run that stopped before the check');
+      } else {
+        log('reference: reading them whole and writing one article from them');
+        built = await buildReference(
+          { topic: run.manifest.topic, sources: selection.chosen, format, angle: brief.angle },
+          deps.writer,
+          spend
+        );
+        run.writeCheckpoint('reference', built);
+      }
+      report(
+        'reference',
+        `${built.sections.length} sections, ${built.cast.length} named, ` +
+          `${built.glossary.length} thing(s) to explain`
+      );
+      if (built.variants.length) {
+        report(
+          'reference',
+          `${built.variants.length} disagreement(s) between the documents, decided here and ` +
+            `kept out of the script. They are in reference.json if you want to check them.`
+        );
+      }
+
+      // THE ONE PAID CHECK ON THIS LANE, AND IT IS OFF BY DEFAULT.
+      //
+      // `checked: false` is not a formality here. It is the same shape the
+      // review returns when it fails, it is what the gate reads to fail
+      // closed, and it is the difference between "nothing was found" and
+      // "nobody looked". A skipped check must never be able to read as a
+      // clean one. See config/stages.ts.
+      let review: ReferenceReview = {
+        unanswered: [],
+        unsupported: [],
+        checked: false,
+        failure: 'the reference check was switched off for this run',
+      };
+
+      if (runs('referenceCheck')) {
+        log('reference: checking it against the documents it came from');
+        review = await reviewReference(
+          { reference: built, sources: selection.chosen },
+          deps.verifier,
+          spend
+        );
+        for (const question of review.unanswered) {
+          report('reference', `the sources answer this and the article did not carry it: ${question}`);
+        }
+      } else {
+        report(
+          'reference',
+          'the reference check is OFF, so nothing has verified the story this script ' +
+            'is written from. Turn it on with --reference-check.'
+        );
+      }
+
+      const chosenIds = new Set(selection.chosen.map((s) => s.id));
+      stored = {
+        selection: {
+          chosen: selection.chosen.map((s) => s.id),
+          reasoning: selection.reasoning,
+          fellBack: selection.fellBack,
+          notUsed: corpus.sources
+            .filter((s) => !chosenIds.has(s.id))
+            .map((s) => ({ id: s.id, title: s.title })),
+        },
+        reference: built,
+        review,
+      };
+      run.writeArtifact('reference', stored);
+      run.markComplete('reference');
+      // The checkpoint has served its purpose the moment the artifact exists.
+      run.clearCheckpoint('reference');
+      }
     }
-    // --- 4d. Go back for the names nobody placed. ---
-    //
-    // Extraction runs once, against a beat sheet, before anyone knows which
-    // names the episode will lean on. It reliably produces a claim saying
-    // Arnold Paole was bothering people at night and none saying who he was,
-    // and by the time that matters the evidence stage is over - leaving the
-    // writer a choice between saying a name it cannot place and dropping him.
-    //
-    // Nearly free, because the corpus is already on disk. No search, no fetch:
-    // BM25 finds the passage that talks about the name, one cheap call reads
-    // it, and the claim it produces is verified exactly like every other.
-    const gaps = findGaps(workingClaims);
-    if (gaps.length) {
-      report('gaps', `${gaps.length} name(s) the claims use and never introduce`);
-      const found = await fillGaps(
-        gaps,
+
+    reference = stored.reference;
+    referenceReview = stored.review;
+    // The article a short was written from, re-read so a resumed run does not
+    // have to fetch or choose again.
+    shortArticle = stored.article
+      ? corpus.sources.find((src) => src.id === stored!.article!.id)
+      : undefined;
+  }
+
+  if (!singleStory) {
+    // --- 3. Claims ----------------------------------------------------------
+    let claimSet: ClaimSet;
+    if (run.hasArtifact('claims')) {
+      claimSet = run.readArtifact('claims', claimSetSchema);
+      report('claims', `reusing ${claimSet.claims.length} claims already bound`);
+    } else {
+      stage = 'claims';
+      log('claims: extracting and binding to quotes');
+      claimSet = await extractClaims(
+        brief,
+        corpus,
+        format,
+        deps.writer,
+        spend,
+        say('claims'),
+        // Chunk-level checkpointing, for the same reason beats have it: each
+        // chunk is thousands of tokens over a corpus that had to be searched and
+        // fetched first, and a real run lost three of four to the fourth coming
+        // back in an unexpected shape.
         {
+          done: run.readCheckpoint('claims', z.array(claimSetSchema)) ?? [],
+          save: (done) => run.writeCheckpoint('claims', done),
+        }
+      );
+      run.writeArtifact('claims', claimSet);
+      run.markComplete('claims');
+      run.clearCheckpoint('claims');
+      report('claims', `${claimSet.claims.length} bound, ${claimSet.unsupported.length} unsupported`);
+    }
+
+    const claims: Claim[] = claimSet.claims.map((c) => claimSchema.parse(c));
+
+    // --- 4. Verification + counter-evidence ---------------------------------
+    // DEFAULTS TO NONE, because the counter-evidence pass is optional and "nothing
+    // was found against these claims" and "nobody looked" have to be the same shape
+    // here. The gate is told which stages were off, and says so separately.
+
+    if (run.hasArtifact('verification')) {
+      const stored = run.readArtifact(
+        'verification',
+        z.object({ verification: verificationReportSchema, counterEvidence: counterEvidenceSchema })
+      );
+      verification = stored.verification;
+      counterEvidence = stored.counterEvidence;
+      report('verification', `reusing, ${verification.blocking.length} claim(s) still blocking`);
+    } else {
+      stage = 'verification';
+      log('verification: checking every claim against its quote');
+      verification = await verifyAll(
+        claims,
+        corpus.sources,
+        deps.verifier,
+        spend,
+        deps.screener,
+        say('verification'),
+        // Per-claim, because this is the slowest stage whenever a rate limit is
+        // tight: thirty-five claims at three requests a minute is twelve
+        // minutes, and losing that to a failure on the last one is the most
+        // expensive kind of waste in the pipeline.
+        {
+          done: run.readCheckpoint('verification', z.record(verificationSchema)) ?? {},
+          save: (d) => run.writeCheckpoint('verification', d),
+        }
+      );
+
+      if (runs('counterEvidence')) {
+        log('verification: searching for evidence against contested claims');
+        // The clerk writes these queries. It is generating search strings from a
+        // claim, and a weak one simply finds nothing - the failure is visible and
+        // cheap. Everything downstream of the search is unchanged.
+        counterEvidence = await gatherCounterEvidence(
+          claims,
+          deps.search,
+          deps.fetchDeps,
+          deps.clerk ?? deps.writer,
+          {},
+          spend
+        );
+      } else {
+        log('verification: counter-evidence is OFF, so no contested claim was challenged');
+      }
+
+      run.writeArtifact('verification', { verification, counterEvidence });
+      run.markComplete('verification');
+      run.clearCheckpoint('verification');
+      log(
+        `verification: ${verification.blocking.length} blocking, ` +
+          `${counterEvidence.filter((c) => c.sources.length).length} contested claims with counter-sources`
+      );
+    }
+
+    // --- 4c. Repair ---------------------------------------------------------
+    //
+    // A CLAIM THAT SAYS MORE THAN ITS QUOTE USED TO BE DELETED, AND THE FACT WENT
+    // WITH IT. One episode named six men and gave sentences for two, because the
+    // claim carrying the other four said "Collins, Jones and Perkins each got
+    // seven years" against a quote saying "three ringleaders each received seven
+    // years". The seven years was solid; the names were the extractor filling in
+    // from context. Binning it lost both.
+    //
+    // Narrow, then rebind, then keep it with a hedge the script has to say out
+    // loud. See evidence/repair.ts for why the third route is honest rather than
+    // a loophole - and section 7a of the gate for what stops it becoming one.
+    workingClaims = claims;
+    if (run.hasArtifact('repair')) {
+      const stored = run.readArtifact(
+        'repair',
+        z.object({ claims: z.array(claimSchema), report: repairReportSchema })
+      );
+      workingClaims = stored.claims;
+      report('repair', `reusing, ${stored.report.repaired.length} claim(s) repaired`);
+    } else {
+      stage = 'repair';
+      // BOTH KINDS OF FAILURE GO THROUGH THE SAME REPAIR, which is the point of
+      // doing it here rather than inside the verifier. The semantic failures come
+      // from verification ("says more than the quote"); the structural ones come
+      // from the ledger ("typed as a quotation but its wording does not appear in
+      // the quote", "typed as a statistic but states no number").
+      //
+      // They look different and they are the same fault: a claim describing
+      // itself as more than it is. Narrowing returns a corrected TYPE as well as
+      // corrected text, so the one pass fixes both - and a run that fixed the
+      // semantics while still failing the shape would have gained nothing.
+      const semantic = verification.results.filter((v) => BLOCKING_VERDICTS.includes(v.verdict));
+
+      // THE FREE CHECK, FED IN HERE RATHER THAN LEFT TO THE GATE.
+      //
+      // `checkLedger` proves deterministically that a cited quote occurs in the
+      // document it names. That is the anti-fabrication guarantee, it costs
+      // nothing, and it was only being consulted at the gate - which is AFTER the
+      // render. A fever episode paid 29p to voice a script containing three
+      // claims whose quotes appear in no document, and the first anybody heard of
+      // it was a gate report about audio that already existed.
+      //
+      // A missing quote and a missing source are both `unsourced`: there is no
+      // passage to read, so rebind if the corpus holds one and otherwise drop.
+      // Shape problems - typed as a statistic with no number in it - are the
+      // wording category and no longer block anything, so they are not sent here
+      // at all; they surface at the gate for the person reading the script.
+      const structural = checkLedger(claims, corpus.sources)
+        .problems.filter((p) => p.kind === 'quote_not_in_source' || p.kind === 'missing_source')
+        .map((p) => ({
+          claimId: p.claimId,
+          verdict: 'unsourced' as const,
+          reason: p.detail,
+        }));
+
+      // One repair per claim. A claim that failed both ways is narrowed once
+      // against the more specific complaint, because two passes would mean the
+      // second one narrowing the first one's output against a stale reason.
+      const seen = new Set(semantic.map((v) => v.claimId));
+      const failing = [...semantic, ...structural.filter((v) => !seen.has(v.claimId))];
+
+      if (failing.length) {
+        report('repair', `${failing.length} claim(s) their sources will not carry`);
+        const repaired = await repairAll(claims, failing, {
           sources: corpus.sources,
-          // The clerk reads one passage for one fact against a deterministic
-          // quote check and a verifier afterwards, which is exactly the shape
-          // of work the clerk rule allows.
-          model: deps.clerk ?? deps.writer,
-          verify: async (candidate) => {
-            const source = corpus.sources.find((src) => src.id === candidate.sourceId);
-            if (!source) return false;
-            if (!locateQuote(source.text, candidate.quote).found) return false;
-            const { verification: v, costPence } = await verifyClaim(
-              candidate,
-              source,
-              deps.verifier
-            );
+          // The CLERK narrows. It is subtraction against a complaint that has
+          // already been written by the verifier, with a deterministic re-check
+          // after it - which is exactly the shape of work the clerk rule allows.
+          narrower: deps.clerk ?? deps.writer,
+          // Re-checked by the same verifier that rejected it. A repair judged by
+          // a softer standard than the rejection would mean nothing.
+          reverify: async (claim) => {
+            const source = corpus.sources.find((src) => src.id === claim.sourceId);
+            if (!source) {
+              return {
+                claimId: claim.id,
+                verdict: 'not_entailed' as const,
+                reason: 'its source is not in the corpus',
+              };
+            }
+            const { verification: v, costPence } = await verifyClaim(claim, source, deps.verifier);
             spend(costPence);
-            return v.verdict === 'entailed';
+            return v;
           },
           onCost: spend,
-          onProgress: say('gaps'),
-        },
-        // Attached to the beat that introduces people, so the density floors
-        // see them where a listener would meet them.
-        format.beats[1]?.id ?? format.beats[0]!.id,
-        1
-      );
-
-      if (found.length) {
-        workingClaims = [...workingClaims, ...found];
-        report('gaps', `filled ${found.length} of ${gaps.length}`);
-        run.writeArtifact('repair', {
-          claims: workingClaims,
-          report: { repaired: [], costPence: 0 },
+          onProgress: say('repair'),
         });
+        workingClaims = repaired.claims;
+        run.writeArtifact('repair', repaired);
+
+        const counts = repaired.report.repaired.reduce<Record<string, number>>((acc, r) => {
+          acc[r.method] = (acc[r.method] ?? 0) + 1;
+          return acc;
+        }, {});
+        log(
+          `repair: ${counts.narrowed ?? 0} narrowed, ${counts.rebound ?? 0} rebound, ` +
+            `${counts.unverified ?? 0} kept as unsettled`
+        );
+      } else {
+        run.writeArtifact('repair', { claims, report: { repaired: [], costPence: 0 } });
       }
+      // --- 4d. Go back for the names nobody placed. ---
+      //
+      // Extraction runs once, against a beat sheet, before anyone knows which
+      // names the episode will lean on. It reliably produces a claim saying
+      // Arnold Paole was bothering people at night and none saying who he was,
+      // and by the time that matters the evidence stage is over - leaving the
+      // writer a choice between saying a name it cannot place and dropping him.
+      //
+      // Nearly free, because the corpus is already on disk. No search, no fetch:
+      // BM25 finds the passage that talks about the name, one cheap call reads
+      // it, and the claim it produces is verified exactly like every other.
+      // TWO KINDS OF HOLE, FILLED BY ONE MECHANISM. A name the claims lean on and
+      // never introduce, and a counted sequence the claims summarised instead of
+      // giving. Both are specific, findable and fixable from the corpus already on
+      // disk, which is the whole test for belonging here.
+      const nameGaps = runs('gaps') ? findGaps(workingClaims) : [];
+      const sequenceGaps = runs('gaps') ? findSequenceGaps(workingClaims) : [];
+      const gaps = [...nameGaps, ...sequenceGaps];
+      if (gaps.length) {
+        report(
+          'gaps',
+          [
+            nameGaps.length ? `${nameGaps.length} name(s) the claims never introduce` : '',
+            sequenceGaps.length ? `${sequenceGaps.length} summarised sequence(s)` : '',
+          ]
+            .filter(Boolean)
+            .join(', ')
+        );
+        const found = await fillGaps(
+          gaps,
+          {
+            sources: corpus.sources,
+            // The clerk reads one passage for one fact against a deterministic
+            // quote check and a verifier afterwards, which is exactly the shape
+            // of work the clerk rule allows.
+            model: deps.clerk ?? deps.writer,
+            verify: async (candidate) => {
+              const source = corpus.sources.find((src) => src.id === candidate.sourceId);
+              if (!source) return false;
+              if (!locateQuote(source.text, candidate.quote).found) return false;
+              const { verification: v, costPence } = await verifyClaim(
+                candidate,
+                source,
+                deps.verifier
+              );
+              spend(costPence);
+              return v.verdict === 'entailed';
+            },
+            onCost: spend,
+            onProgress: say('gaps'),
+          },
+          // Attached to the beat that introduces people, so the density floors
+          // see them where a listener would meet them.
+          format.beats[1]?.id ?? format.beats[0]!.id,
+          1
+        );
+
+        if (found.length) {
+          workingClaims = [...workingClaims, ...found];
+          report('gaps', `filled ${found.length} of ${gaps.length}`);
+          run.writeArtifact('repair', {
+            claims: workingClaims,
+            report: { repaired: [], costPence: 0 },
+          });
+        }
+      }
+
+      run.markComplete('repair');
     }
 
-    run.markComplete('repair');
-  }
+    // --- 4b2. The show's own evidence policy, applied before the writer. ---
+    //
+    // Honest Health will not rest a claim on a source weaker than T2, and that
+    // was only checked at the gate - after the script and after the audio. A
+    // fever episode was written around a Wikipedia article, voiced, and then told
+    // it could not be. The rule is free to apply and was being applied too late
+    // to save anything.
+    if (persona.minSourceTier) {
+      const allowed = enforceSourceTier(workingClaims, corpus.sources, persona.minSourceTier);
 
-  // --- 4b2. The show's own evidence policy, applied before the writer. ---
-  //
-  // Honest Health will not rest a claim on a source weaker than T2, and that
-  // was only checked at the gate - after the script and after the audio. A
-  // fever episode was written around a Wikipedia article, voiced, and then told
-  // it could not be. The rule is free to apply and was being applied too late
-  // to save anything.
-  if (persona.minSourceTier) {
-    const allowed = enforceSourceTier(workingClaims, corpus.sources, persona.minSourceTier);
-
-    if (allowed.dropped.length) {
-      report(
-        'repair',
-        `dropped ${allowed.dropped.length} claim(s) resting on sources below ` +
-          `${persona.minSourceTier}, which ${persona.name} will not stand behind`
-      );
+      if (allowed.dropped.length) {
+        report(
+          'repair',
+          `dropped ${allowed.dropped.length} claim(s) resting on sources below ` +
+            `${persona.minSourceTier}, which ${persona.name} will not stand behind`
+        );
+      }
+      workingClaims = allowed.claims;
     }
-    workingClaims = allowed.claims;
-  }
 
-  // --- 4c. One story, one or two documents. ---------------------------------
-  //
-  // SHORT FORMATS ONLY, and it is about flow rather than about evidence. A
-  // ninety-second story stitched from four documents is a compilation - four
-  // writers' emphases, four sets of names for the same people, four points
-  // where the register changes - and a listener hears that as the thing jumping
-  // around. On a real ten-story set the story built from two sources was the
-  // best in it and the story built from four was the worst, and a listener
-  // named both without being told which was which.
-  //
-  // A long episode is the opposite case and is untouched: assembling what
-  // fourteen documents separately establish is the whole point of the factual
-  // lane, and breadth there is the product rather than a seam.
-  if (format.sourceOnly || format.kind === 'short') {
-    const concentrated = concentrateSources(workingClaims, corpus.sources);
+    // --- 4c. One story, one or two documents. ---------------------------------
+    //
+    // SHORT FORMATS ONLY, and it is about flow rather than about evidence. A
+    // ninety-second story stitched from four documents is a compilation - four
+    // writers' emphases, four sets of names for the same people, four points
+    // where the register changes - and a listener hears that as the thing jumping
+    // around. On a real ten-story set the story built from two sources was the
+    // best in it and the story built from four was the worst, and a listener
+    // named both without being told which was which.
+    //
+    // A long episode is the opposite case and is untouched: assembling what
+    // fourteen documents separately establish is the whole point of the factual
+    // lane, and breadth there is the product rather than a seam.
+    if (format.sourceOnly || format.kind === 'short') {
+      const concentrated = concentrateSources(workingClaims, corpus.sources);
 
-    if (concentrated.dropped.length) {
-      const facts = concentrated.dropped.reduce((n, d) => n + d.claims, 0);
-      report(
-        'repair',
-        `kept each story to its ${MAX_SOURCES_PER_SHORT} main sources, which cost ${facts} fact(s) ` +
-          `from ${concentrated.dropped.length} further document(s)`
-      );
+      if (concentrated.dropped.length) {
+        const facts = concentrated.dropped.reduce((n, d) => n + d.claims, 0);
+        report(
+          'repair',
+          `kept each story to its ${MAX_SOURCES_PER_SHORT} main sources, which cost ${facts} fact(s) ` +
+            `from ${concentrated.dropped.length} further document(s)`
+        );
+      }
+      workingClaims = concentrated.claims;
     }
-    workingClaims = concentrated.claims;
   }
 
   // --- 5. Script ----------------------------------------------------------
@@ -548,7 +837,52 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       subjects: format.beats.map((_, i) => storyForBeat(brief, format, i)),
     };
 
-    if (deps.onePass) {
+    if (singleStory && format.kind === 'short') {
+      // ONE ARTICLE, ONE CALL, NO REFERENCE. See script/shortScript.ts.
+      if (!shortArticle) throw new Error('short reached the writer with no article');
+      log('script: writing the short straight from the article');
+      script = await writeShortScript(
+        {
+          persona,
+          format,
+          article: {
+            title: shortArticle.title,
+            url: shortArticle.url,
+            text: shortArticle.text,
+          },
+          topic: run.manifest.topic,
+          isoDate: new Date().toISOString().slice(0, 10),
+        },
+        deps.writer,
+        spend,
+        say('script'),
+        runs('scriptRevisions')
+      );
+    } else if (singleStory) {
+      // ONE STORY, ONE REFERENCE, ONE PASS. There is no beat-by-beat option on
+      // this lane and there should not be: the whole argument for the single
+      // story is that one mind holds the whole thing at once, and writing it
+      // in five separate calls would put the collage back in at the last step.
+      if (!reference) throw new Error('single-story lane reached the writer with no reference');
+      log('script: telling the story from the reference');
+      script = await writeStoryScript(
+        {
+          persona,
+          format,
+          reference,
+          angle: brief.angle,
+          isoDate: new Date().toISOString().slice(0, 10),
+        },
+        deps.writer,
+        spend,
+        {
+          progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
+          save: (progress) => run.writeCheckpoint('script', progress),
+        },
+        say('script'),
+        runs('scriptRevisions')
+      );
+    } else if (deps.onePass) {
       log('script: writing the whole script in one pass');
       script = await writeScriptOnePass(
         scriptInput,
@@ -559,7 +893,8 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
           progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
           save: (progress) => run.writeCheckpoint('script', progress),
         },
-        say('script')
+        say('script'),
+        runs('scriptRevisions')
       );
     } else {
       log('script: writing beats');
@@ -578,7 +913,8 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
           progress: run.readCheckpoint('script', scriptProgressSchema) ?? { beats: [] },
           save: (progress) => run.writeCheckpoint('script', progress),
         },
-        say('script')
+        say('script'),
+        runs('scriptRevisions')
       );
     }
     run.writeArtifact('script', script);
@@ -724,6 +1060,85 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     return { run, script, gate: sourceGate };
   }
 
+  // --- 5a. The performance pass: how it sounds, not whether it is right. ------
+  //
+  // The only stage whose subject is delivery. It may not add a fact, and that is
+  // enforced by a deterministic guard rather than requested in the prompt, because
+  // an instruction has failed in this pipeline every single time it was the only
+  // thing standing between the writer and an invention.
+  //
+  // FAILS CLOSED. Anything wrong with the result keeps the draft and says why. A
+  // polish is never worth an episode.
+  stage = 'perform';
+  if (!runs('perform')) {
+    report('perform', 'OFF for this run, so the script goes to air as written');
+  } else if (run.hasArtifact('perform')) {
+    script = run.readArtifact('perform', scriptSchema);
+    report('perform', 'reusing the performed script');
+  } else {
+    report('perform', 'reading it for the ear');
+    const performed = await performScript(
+      { script, persona, format, plan: script.plan },
+      deps.writer,
+      spend
+    );
+    if (performed.applied) {
+      const was = countWords(fullText(script));
+      const now = countWords(fullText(performed.script));
+      script = performed.script;
+      report('perform', `polished for delivery, ${was} words to ${now}`);
+    } else {
+      report('perform', `kept the draft: ${performed.reason ?? 'no reason given'}`);
+    }
+    run.writeArtifact('perform', script);
+    run.markComplete('perform');
+  }
+
+  // --- 5b. Grounding: does the prose say more than the claims support? --------
+  //
+  // BEFORE THE APPROVAL BREAK, because the whole value of it is reaching the
+  // person who decides whether to pay for audio. See qa/grounding.ts for what
+  // this exists to catch: an episode whose best passage, a seven-item
+  // enumeration, came from the model's knowledge of the poem rather than from any
+  // claim, and which every deterministic check passed.
+  //
+  // The VERIFIER, not the writer. A model scores its own output higher, and
+  // asking the writer whether it invented anything is asking the wrong witness.
+  stage = 'grounding';
+  let grounding: GroundingReport | undefined;
+  if (singleStory) {
+    // NOT APPLICABLE RATHER THAN SKIPPED. The grounding review reads a script
+    // against a claim ledger, and this lane has no ledger to read it against.
+    // Running it on an empty one would report every sentence in the episode as
+    // unsupported, which is not a finding, it is the wrong question.
+    //
+    // What checks this lane is reviewReference, which ran before the script
+    // existed and is on the run as reference.json.
+    grounding = undefined;
+  } else if (!runs('grounding')) {
+    // UNDEFINED, NOT AN EMPTY REPORT, and the difference matters. An empty report
+    // with `checked: true` would tell the gate the script was reviewed and found
+    // clean. Absent tells it nothing was looked at, which is the truth.
+    grounding = undefined;
+    report('grounding', 'OFF for this run, so nothing has checked the prose between the claims');
+  } else if (run.hasArtifact('grounding')) {
+    grounding = run.readArtifact('grounding', groundingReportSchema);
+    report('grounding', 'reusing the grounding review');
+  } else {
+    report('grounding', 'reading the script against the claims');
+    grounding = await reviewGrounding({ script, claims: workingClaims }, deps.verifier, spend);
+    run.writeArtifact('grounding', grounding);
+    run.markComplete('grounding');
+  }
+  if (grounding && grounding.findings.length) {
+    report(
+      'grounding',
+      `${grounding.findings.length} passage(s) may say more than the claims support`
+    );
+  } else if (grounding?.checked) {
+    report('grounding', 'every specific in the script traces to a claim');
+  }
+
   // --- 5c. The approval break. ------------------------------------------------
   //
   // RENDERING IS THE ONLY IRREVERSIBLE SPEND. Everything before it produces text
@@ -732,9 +1147,9 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   // stops with its script written and gated as far as a script can be gated,
   // and waits.
   //
-  // Not a failure and not an error. It is the run doing exactly what it was
-  // asked to do, so it returns a passing report that says what it is waiting
-  // for.
+  // Not a failure and not an error, and the report it returns is the REAL one:
+  // it used to be a hardcoded pass with an empty findings list, which printed
+  // "GATE: passed" over a script nothing had checked.
   if (run.awaitingApproval) {
     report('script', `"${script.title}", ${script.beats.length} beats`);
     log('');
@@ -752,20 +1167,66 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       pence: run.manifest.spentPence,
     });
 
-    return {
-      run,
+    // THE REAL GATE, NOT A FABRICATED PASS.
+    //
+    // This used to return `{ passed: true, findings: [] }` with a measurement
+    // and nothing else, so the recommended path - which is the DEFAULT path -
+    // printed "GATE: passed" over a script nothing had checked. The comment
+    // above it said the run stops "gated as far as a script can be gated",
+    // which is what it should have done and was not doing.
+    //
+    // Proven on a real run: the held report said passed with no findings, and
+    // `gate --run` on the same script immediately found four blocking problems,
+    // three of them quotation claims whose words were not in their quotes. It
+    // would have gone to audio with a semicolon in it and a made-up quote.
+    //
+    // NOTHING IS BLOCKED BY THIS. `approve` does not consult the report, so a
+    // held run with findings is still approvable - the point is that the person
+    // approving it can SEE them. Reporting and refusing are different jobs and
+    // only the first one belongs here.
+    const heldGate = runGate({
+      persona,
+      format,
       script,
-      gate: {
-        passed: true,
-        findings: [],
-        measurement: measure(fullText(script), persona.styleCard.forbiddenPhrases),
-        needsHumanReview: true,
-        humanReviewReasons: [
-          `held before the render. Nothing has been voiced and nothing has been ` +
-            `published; approve the run to spend on audio.`,
-        ],
-      },
+      claims: workingClaims,
+      ledger: checkLedger(workingClaims, corpus.sources),
+      verification,
+      counterEvidence,
+      // ESTIMATED, BECAUSE NO AUDIO EXISTS YET. Measured speech is 2.85 words a
+      // second, so a word count is a good enough length to report against a
+      // target that is itself a guide. Passing zero here, which is what a
+      // missing render would otherwise mean, made the duration check say the
+      // episode ran 0 seconds and read as a fault rather than as an absence.
+      durationS: countWords(fullText(script)) / WORDS_PER_SECOND,
+      priorTexts: deps.priorTexts,
+      corpusText: corpus.sources.map((s) => s.text).join('\n'),
+      castNames: script.plan?.cast.map((c) => c.name) ?? [],
+      grounding,
+      stagesOff: skipped,
+      evidence: singleStory ? 'reference' : 'ledger',
+      referenceReview,
+      sources: singleStory
+        ? corpus.sources.filter((src) => reference?.sourceIds.includes(src.id))
+        : corpus.sources,
+    });
+
+    const gate: GateReport = {
+      ...heldGate,
+      needsHumanReview: true,
+      humanReviewReasons: [
+        ...heldGate.humanReviewReasons,
+        `held before the render. Nothing has been voiced and nothing has been ` +
+          `published; approve the run to spend on audio.`,
+      ],
     };
+
+    // WRITTEN, so `gate --run` and the studio both have something to read and
+    // so the report survives the terminal it was printed on. The run is not
+    // marked complete for `qa`, because the gate runs again for real once there
+    // is audio to measure.
+    run.writeArtifact('qa', gate);
+
+    return { run, script, gate };
   }
 
   // --- 6. Render -----------------------------------------------------------
@@ -805,6 +1266,11 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
+        // A BED UNDER EACH PART, KEYED TO THE EPISODE. Free - ffmpeg
+        // oscillators over a file that already exists - so it is not an
+        // optional stage. See render/bed.ts.
+        music: deps.music,
+        musicSeed: run.manifest.topic,
       },
       deps.tts,
       {},
@@ -849,6 +1315,13 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // claims. See GateInput.corpusText.
     corpusText: corpus.sources.map((s) => s.text).join('\n'),
     castNames: script.plan?.cast.map((c) => c.name) ?? [],
+    grounding,
+    stagesOff: skipped,
+    evidence: singleStory ? 'reference' : 'ledger',
+    referenceReview,
+    sources: singleStory
+      ? corpus.sources.filter((src) => reference?.sourceIds.includes(src.id))
+      : corpus.sources,
   });
 
   run.writeArtifact('qa', gate);

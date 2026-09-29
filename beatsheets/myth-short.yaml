@@ -1,0 +1,141 @@
+# A myth told whole in three minutes, from one article.
+#
+# NOT A TRAILER AND NOT A SUMMARY. The instruction was "the short should be
+# complete" and "the short should have complete information", and that is the
+# whole design constraint. Somebody who hears this and never hears anything else
+# from the show has been told a story from beginning to end - who, what
+# happened, why, and how it finished. A short that ends on "listen to the full
+# episode to find out" is an advert, and adverts get scrolled.
+#
+# WHY IT IS NOT THE `short-teardown` SHEET. That one starts mid-thought, carries
+# no outro, and ends on a `button` - built for a fragment cut out of a longer
+# piece, where the listener is meant to want the rest. This is the opposite: a
+# standalone thing researched on its own, which needs to orient a stranger in
+# one line and close properly enough to earn a follow.
+#
+# WHAT IT HAS THAT THE LONG SHEET DOES NOT: a budget. Three minutes is about
+# five hundred and twenty words, which is roughly a sixth of an episode, so
+# every constraint here is about what to LEAVE OUT. The long sheet can afford to
+# teach four unfamiliar things properly; this one can afford one.
+#
+# NO SEPARATE OPENING. The long sheet's opening exists to orient somebody before
+# a fifteen-minute commitment. At three minutes there is no commitment to earn,
+# so the orientation is one or two sentences at the top of the story itself.
+#
+# THE ENDING GETS ITS OWN PART, AND THAT IS NOT BOOKKEEPING. The first draft of
+# this sheet had one story beat, and a format that opens at its own peak was
+# rejected by the shipped-format check - correctly, because a single beat
+# carrying setup, middle and ending gives the ending no budget of its own and
+# nothing stops the writer spending the whole allowance before it arrives. That
+# is exactly the failure the instruction named: "the short should be complete".
+# Splitting it means the ending has forty seconds reserved for it by the sheet.
+
+id: myth-short
+name: Myth, in three minutes
+
+# ONE ARTICLE, READ WHOLE. Same lane as the long form, and the pipeline skips
+# the fusion step for a short: there is nothing to fuse when there is one
+# document, and the article goes straight to the writer. See evidence/story.ts.
+research: single
+
+kind: short
+intent: >
+  One myth told complete in under three minutes to somebody who has never heard
+  of it, from a single article, ending on a reason to follow.
+
+targetSeconds: [150, 185]
+
+serialised: false
+
+loops:
+  - id: the_story
+    question: What happens in this story?
+
+beats:
+  - id: story
+    type: escalation
+    seconds: [95, 115]
+    function: >
+      Say what this is in a sentence, then tell the story from the beginning up
+      to the point where it turns.
+    opens: [the_story]
+    constraints:
+      - >
+        OPEN BY SAYING WHAT THIS IS, IN ONE OR TWO SENTENCES, AND THEN START.
+        Whose story it is and roughly how old, then straight into it. No
+        greeting, no naming the show, no "today we are going to look at". A
+        listener in a feed gave you about three seconds.
+      - >
+        VISUAL, ALWAYS. Somebody is listening with nothing to look at. Say what
+        a person would SEE - a stone rolled across a cave mouth, a body on a
+        hook, a bird that does not come back. Physical actions in order beat any
+        amount of explanation about what the story means.
+      - >
+        EXPLAIN AT MOST ONE OR TWO UNFAMILIAR THINGS, and only what the story
+        cannot be followed without. There is no room for more. Everything else
+        goes into ordinary words: "the oldest writing anybody has found" rather
+        than a term the listener then has to carry.
+      - >
+        NAME AT MOST THREE PEOPLE across the whole short. Everybody else is what
+        they did - "her older sister, who rules the dead", "the strongest of the
+        gods". A fourth name in three minutes is a name nobody keeps.
+      - >
+        SAY WHY, IN THE SAME BREATH. Somebody does something strange and the
+        reason follows in the same sentence. It costs a clause and it is the
+        difference between a list of events and a story.
+      - >
+        STOP WHERE IT TURNS. This part ends at the moment the story tips - the
+        thing goes wrong, the bargain is struck, the trick is played. Do not
+        resolve it here.
+      - Two or three turns, each continuing the last. No turn restarts.
+      - >
+        NEVER SAY THE VERSIONS DISAGREE. Not "some tellings", not "scholars
+        differ". Tell what happened.
+    minClaims: 0
+
+  - id: ending
+    type: payoff
+    seconds: [35, 45]
+    function: >
+      How it actually ends.
+    constraints:
+      - >
+        CONTINUE STRAIGHT ON. No recap, no "so what happened next" - the same
+        sentence-to-sentence telling, one beat later.
+      - >
+        FINISH THE STORY. This part exists so the ending has a budget of its own,
+        because a short that runs out of time before the ending has failed
+        however good the first two minutes were. If it will not fit, cut detail
+        from the part before rather than stopping early.
+      - >
+        Never end on "there is more to this story", and never point at a longer
+        version. This is the whole thing.
+      - Still visual. The ending is something that happens, not a conclusion.
+    minClaims: 0
+
+  - id: close
+    type: outro
+    seconds: [20, 25]
+    function: >
+      One line that lands, then the goodbye.
+    closes: [the_story]
+    constraints:
+      - >
+        PICK UP FROM THE LAST THING THAT HAPPENED. One sentence referring to it
+        directly. Not "so what does this tell us" - the same person, still
+        talking, one beat later.
+      - >
+        LEAVE THEM ONE THING. An image or a detail that means something now they
+        know how it ended. One sentence, and no new names.
+      - >
+        THEN THE GOODBYE, which is where the follow is asked for. Warm and
+        quick, the way a person ends a conversation, not an announcer reading a
+        card.
+      - No moral, and nothing about what it says about us now.
+      - This whole part is twenty-five seconds. Two or three sentences, then go.
+    minClaims: 0
+
+# Builds into the ending, then settles for the goodbye. The story opens below
+# its own peak, which is what the shipped-format check asks of every format and
+# is right here too: a short that opens at full pitch has nowhere to go.
+tensionCurve: [0.8, 1.0, 0.45]

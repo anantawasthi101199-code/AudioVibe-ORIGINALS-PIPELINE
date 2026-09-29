@@ -19,6 +19,7 @@ import {
   money,
   until,
   watchJob,
+  type ArtState,
   type Beat,
   type JobEvent,
   type Platform,
@@ -26,6 +27,7 @@ import {
 } from '../api';
 import { CostBar, ErrorNote, LiveLog, StageRail, StatePill } from '../components/bits';
 import { Count, Info } from '../components/Info';
+import { ImagePicker } from '../components/ImagePicker';
 
 /** Delivery tags are part of the script and are not part of the sentence. */
 const Prose = ({ turns }: { turns: Beat['turns'] }) => (
@@ -57,6 +59,17 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [platform, setPlatform] = useState<Platform | null>(null);
   /** The second press. Publishing is the one thing here that cannot be undone. */
   const [confirming, setConfirming] = useState(false);
+  const [art, setArt] = useState<ArtState | null>(null);
+
+  const loadArt = useCallback(async () => {
+    try {
+      setArt(await api.runArtState(id));
+    } catch {
+      setArt(null);
+    }
+  }, [id]);
+
+  useEffect(() => void loadArt(), [loadArt]);
 
   useEffect(() => {
     void api
@@ -301,6 +314,40 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="player mt">
             {/* metadata, so the length is on screen before anybody presses play */}
             <audio controls preload="metadata" src={api.audioUrl(id)} />
+          </div>
+        </section>
+      )}
+
+      {/*
+        --- The picture -----------------------------------------------------
+
+        NOT SHOWN FOR A SOURCE SCRIPT, which is never published and therefore
+        never has a cover. Offering one would be asking somebody to choose
+        artwork for a thing that does not go anywhere.
+
+        THE PREVIEW IS THE DRAWN COVER UNTIL SOMEBODY REPLACES IT, so what is
+        on screen is always what would be published, rather than a blank frame
+        that implies there is nothing yet.
+      */}
+      {!isSource && (
+        <section className="mt2">
+          <h2>The picture</h2>
+          <div className="mt">
+            <ImagePicker
+              title="Episode image"
+              note="What shows on the card in the feed and on the lock screen while this plays."
+              state={art}
+              src={`/api/run/art?id=${encodeURIComponent(id)}`}
+              disabled={busy !== null || live}
+              onUpload={async (image) => {
+                await api.uploadRunArt(id, image);
+                await loadArt();
+              }}
+              onRemove={async () => {
+                await api.removeRunArt(id);
+                await loadArt();
+              }}
+            />
           </div>
         </section>
       )}

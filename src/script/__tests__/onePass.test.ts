@@ -141,17 +141,31 @@ describe('writeScriptOnePass', () => {
     expect(script.beats.map((b) => b.beatType)).toEqual(format.beats.map((b) => b.type));
   });
 
-  it('writes the beats in ONE call, which is the whole point', async () => {
-    // Beat by beat this format is seven beats plus revisions, so eight to
-    // fifteen calls. Here it is a plan, a script and a title. If this number
-    // ever creeps up, the method has quietly stopped being what it claims.
+  it('writes every beat in ONE call, which is the whole point', async () => {
+    // Beat by beat this format is one call per beat plus up to two revisions
+    // each. One pass is a plan, then ONE call that produces every beat, then at
+    // most MAX_SCRIPT_REVISIONS rewrites of the whole thing, then a title.
+    //
+    // ASSERTED AS "FEWER CALLS THAN BEATS" RATHER THAN "EXACTLY ONE", because
+    // exactly one was only ever true when the fixture happened to pass every
+    // check first time. It stopped being true when the flat-ending budget and
+    // the no-question check were added, and the test failed for a script that
+    // was being correctly repaired - which is the loop working, not the method
+    // breaking. What actually needs pinning is that the cost does not scale with
+    // the beat count.
     const writer = fakeWriter();
     await writeScriptOnePass(input, writer);
 
     const scriptCalls = writer.calls.filter(
       (c) => !c.system.includes('You plan one episode') && !c.system.includes('title and description')
     );
-    expect(scriptCalls).toHaveLength(1);
+
+    expect(scriptCalls.length).toBeLessThanOrEqual(1 + MAX_SCRIPT_REVISIONS);
+    expect(scriptCalls.length).toBeLessThan(format.beats.length);
+
+    // And the FIRST call asked for the whole script, not a beat of it.
+    expect(scriptCalls[0]!.prompt).toContain(format.beats[0]!.id);
+    expect(scriptCalls[0]!.prompt).toContain(format.beats[format.beats.length - 1]!.id);
   });
 
   it('hands the writer every beat and every fact at once', async () => {
@@ -184,7 +198,8 @@ describe('writeScriptOnePass', () => {
     // failure the per-beat writer already catches. One pass has to catch the
     // same thing or the two methods are not being held to one standard.
     const writer = fakeWriter({ skipClaimIds: true });
-    await writeScriptOnePass(input, writer);
+    // REVISIONS ARE OFF BY DEFAULT and have to be bought. See config/stages.ts.
+    await writeScriptOnePass(input, writer, undefined, undefined, undefined, true);
 
     const scriptCalls = writer.calls.filter(
       (c) => !c.system.includes('You plan one episode') && !c.system.includes('title and description')
@@ -195,6 +210,24 @@ describe('writeScriptOnePass', () => {
     // try again.
     expect(scriptCalls[1]!.prompt).toContain('WHAT FAILED:');
     expect(scriptCalls[1]!.prompt).toContain('lists no claim ids');
+  });
+
+  it('does NOT rewrite when revisions have not been paid for', async () => {
+    // THE DEFAULT, AND IT IS THE CHEAPEST THING THAT PRODUCES AN EPISODE. One
+    // run paid 11.7p for a script and 87.1p rewriting it, so a rewrite is now
+    // bought deliberately rather than taken automatically.
+    //
+    // The critique still RAN - it is deterministic and free - and the failure
+    // is still reported. What does not happen is paying a model to act on it.
+    const writer = fakeWriter({ skipClaimIds: true });
+    const said: string[] = [];
+    await writeScriptOnePass(input, writer, undefined, undefined, (m) => said.push(m));
+
+    const scriptCalls = writer.calls.filter(
+      (c) => !c.system.includes('You plan one episode') && !c.system.includes('title and description')
+    );
+    expect(scriptCalls).toHaveLength(1);
+    expect(said.join(' ')).toContain('lists no claim ids');
   });
 
   it('REFUSES a script that came back missing a beat', async () => {

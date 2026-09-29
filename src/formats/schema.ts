@@ -208,6 +208,35 @@ export const formatSchema = z
      */
     sourceOnly: z.boolean().default(false),
 
+    /**
+     * How this format researches: broad, or one story read properly.
+     *
+     * `extensive` is the original pipeline - search wide, fetch fourteen
+     * documents, extract claims bound to verbatim quotes, verify each one
+     * against a different model family, repair what fails, and write from the
+     * ledger. It is the right shape when assembling what many documents
+     * SEPARATELY establish is the product, which is what Honest Health is.
+     *
+     * `single` reads less and reads all of it. A selector picks the one to
+     * three documents that carry the whole story, they are read whole rather
+     * than through a six-thousand-character keyhole, and they are fused into
+     * ONE reference article that the writer works from. There is no claim
+     * ledger, no per-fact verification and no counter-evidence pass.
+     *
+     * WHY THE SECOND ONE HAD TO EXIST. The Descent of Inanna episode fetched
+     * 585,396 characters, showed the extractor 13% of them, and drew six of its
+     * forty-one facts from the article that is actually the story - behind a
+     * course handout, a general article about the underworld, and two
+     * biographies. A script assembled from eight documents' partial views of
+     * one myth wanders and contradicts itself, and a listener hears exactly
+     * that. The keyhole also lost the answer to the episode's own central
+     * question, which sat at character 71,000 of a document the extractor saw
+     * 6,000 of.
+     *
+     * DEFAULTS TO `extensive`, so every existing format behaves as it did.
+     */
+    research: z.enum(['extensive', 'single']).default('extensive'),
+
     /** One sentence on what this shape is good for. */
     intent: z.string().min(1),
 

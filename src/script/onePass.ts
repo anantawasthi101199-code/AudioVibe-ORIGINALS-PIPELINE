@@ -39,7 +39,7 @@ import { Claim } from '../evidence/claim';
 import { EpisodeFormat } from '../formats/schema';
 import { LlmClient, completeJson } from '../models/client';
 import { turnSchema } from './dialogue';
-import { checkDistinctStories } from './forward';
+import { checkBridge, checkDistinctStories } from './forward';
 import { StoryPlan, planStory } from './plan';
 import {
   Script,
@@ -57,12 +57,37 @@ import {
 /**
  * How many times the whole script may be rewritten.
  *
- * ONE, against MAX_REVISIONS of two per beat. A second full rewrite costs as
- * much as the draft did and arrives with the same problems in different places,
- * because what fails a whole-script critique is usually a decision about the
- * episode rather than a sentence somebody can fix by trying again.
+ * RAISED TO TWO, matching MAX_REVISIONS per beat, because one was demonstrably
+ * not enough and the run that proved it said nothing about it.
+ *
+ * The first long episode drafted with fourteen problems, revised down to three,
+ * and then SHIPPED WITH THOSE THREE. The budget was spent, the loop exited, and
+ * nothing anywhere said that three known faults had been left in.
+ *
+ * The old argument for one was that a second full rewrite "arrives with the same
+ * problems in different places". The evidence says otherwise: the one revision
+ * fixed eleven of fourteen, which is a repair working rather than a reshuffle. A
+ * further attempt at three specific named faults is a cheap way to finish the
+ * job, and the loop exits the moment there is nothing left to fix, so the extra
+ * budget costs nothing on a script that does not need it.
  */
-export const MAX_SCRIPT_REVISIONS = 1;
+export const MAX_SCRIPT_REVISIONS = 2;
+
+/**
+ * How many beats may end without opening the next one.
+ *
+ * ONE. An episode is allowed a single quiet handover - sometimes a part of a
+ * story genuinely just finishes - and it is not allowed to be built entirely of
+ * them, which is what "detached paragraphs" means and what all three long
+ * scripts so far have done.
+ *
+ * A BUDGET RATHER THAN A PER-BEAT RULE, because the per-beat check recognises
+ * five of the seven real section endings in the reference transcripts. Requiring
+ * a recognised shape at every boundary would reject the other two and push the
+ * writer towards the shapes the regex knows. Asking for the property in the
+ * aggregate gets the episode without dictating the sentences.
+ */
+export const FLAT_ENDINGS_ALLOWED = 1;
 
 const scriptReplySchema = z.object({
   beats: z
@@ -214,7 +239,16 @@ export const writeScriptOnePass = async (
    * would be written to a spine the first half never had.
    */
   checkpoint?: ScriptCheckpoint,
-  onProgress?: (message: string) => void
+  onProgress?: (message: string) => void,
+  /**
+   * Whether a failing draft is PAID TO BE REWRITTEN.
+   *
+   * The critique is deterministic and free and runs either way; this decides
+   * whether a model is bought to act on it. Default false - see
+   * config/stages.ts for the run that made rewriting the largest avoidable
+   * cost in the pipeline.
+   */
+  allowRevisions = false
 ): Promise<Script> => {
   const system = buildSystem(input.persona, input.isoDate, input.format.kind);
 
@@ -267,7 +301,9 @@ export const writeScriptOnePass = async (
   let beats: ScriptBeat[] = [];
   let revisions = 0;
 
-  for (let attempt = 0; attempt <= MAX_SCRIPT_REVISIONS; attempt++) {
+  const revisionBudget = allowRevisions ? MAX_SCRIPT_REVISIONS : 0;
+
+  for (let attempt = 0; attempt <= revisionBudget; attempt++) {
     const isRevision = attempt > 0;
     onProgress?.(
       isRevision ? 'rewriting the script' : `writing all ${input.format.beats.length} beats in one call`
@@ -320,6 +356,25 @@ export const writeScriptOnePass = async (
     const failures = describeFailures(beats, input);
     if (!failures) break;
     onProgress?.(`  ${failures.split('\n').length} problem(s) to fix`);
+
+    // WHAT SURVIVES THE BUDGET IS SAID OUT LOUD, because it used to be swallowed.
+    //
+    // On the last attempt the loop exits with the failures still standing and
+    // nothing reported them, so a real script shipped with three known faults -
+    // a semicolon the renderer speaks as a full stop, a phrase repeated from an
+    // earlier beat, and a contrastive definition - and the terminal showed only
+    // "writing the title". The gate catches most of them later, but by then the
+    // specific rewrite instruction has been thrown away, and whoever is reading
+    // the script has no idea the writer already knew.
+    if (attempt === revisionBudget) {
+      const lines = failures.split('\n').filter(Boolean);
+      onProgress?.(
+        `  giving up with ${lines.length} problem(s) unfixed after ${revisionBudget} ` +
+          `rewrite(s). Left in the script rather than papered over, and the gate will ` +
+          `report them:`
+      );
+      for (const line of lines) onProgress?.(`    ${line}`);
+    }
   }
 
   onProgress?.('writing the title');
@@ -421,6 +476,59 @@ const describeFailures = (
     for (const problem of blocking) problems.push(`- ${written.beatId}: ${problem}`);
   });
 
+  // --- Whole-script properties, which no per-beat check can see. -------------
+  //
+  // A QUESTION AT A HINGE IS AN EPISODE-LEVEL DEVICE and asking for one per beat
+  // would be asking for five, which is the tic that got it removed from the
+  // network guidance in the first place. So it is counted once, over the whole
+  // script, and only for a show whose card actually wants it.
+  //
+  // WHY IT IS COUNTED AT ALL. Three long scripts contained ZERO questions between
+  // them, across roughly 6,000 words, against a card asking for 0.5 per hundred
+  // words and reference transcripts running 0.35 and 0.52. The number was on the
+  // card, the drift check reported it as advisory, the persona canon asked for it
+  // in words, and none of that produced a single one. A named failure in the
+  // revision loop is the only mechanism in this pipeline that has been observed
+  // to change what the writer does.
+  // HOW MANY BEATS END FLAT. Enforced over the script rather than per beat,
+  // because the per-beat check recognises only five of the seven real section
+  // endings in the reference transcripts, and demanding a recognised shape at
+  // every boundary would teach the writer to produce those shapes. A budget asks
+  // for the property without dictating the sentence.
+  if (!input.format.sourceOnly) {
+    const flat = beats.filter((written, i) => {
+      const beat = input.format.beats[i];
+      if (!beat || beat.type === 'outro') return false;
+      return checkBridge(beatText(written), { isFinal: false }).length > 0;
+    });
+
+    if (flat.length > FLAT_ENDINGS_ALLOWED) {
+      problems.push(
+        `- ${flat.length} beats end without opening the next one (${flat
+          .map((b) => b.beatId)
+          .join(', ')}). That is what makes an episode sound like separate pieces about one ` +
+          `subject. Fix all but one of them: finish what the beat was doing, then in a single ` +
+          `sentence name something that is about to matter and do not explain it yet.`
+      );
+    }
+  }
+
+  // THE QUESTION CHECK IS GONE, ON PURPOSE, AND IT WORKED WHILE IT EXISTED.
+  //
+  // It was added because three long scripts contained zero questions between them
+  // against a card asking for 0.5 per hundred words, and it did move the number:
+  // 0.00, then 1.06, then 1.68 per thousand words.
+  //
+  // It is still the wrong instrument. A question at a hinge is a judgement about
+  // one moment in one story, and a rule saying "somewhere in this script there
+  // must be a question mark" cannot tell a question that carries the listener
+  // forward from one inserted to satisfy a counter. The owner settled it: control
+  // it through the prompt, do not make it a hard rule.
+  //
+  // So the device lives where a device belongs - in the persona canon of the show
+  // that wants it, at the rate that show wants it - and the style card still
+  // MEASURES the rate as an advisory, because reporting a number is not the same
+  // as enforcing it. See personas/myths-of-the-world.yaml.
   return problems.join('\n');
 };
 

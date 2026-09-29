@@ -197,6 +197,16 @@ export interface Platform {
   configured: boolean;
 }
 
+export type ArtKind = 'avatar' | 'cover';
+
+/** A picture's provenance, and the shape a replacement has to be. */
+export interface ArtState {
+  /** True when this is one somebody chose, rather than one the studio made. */
+  supplied: boolean;
+  width: number;
+  height: number;
+}
+
 export interface Job {
   id: string;
   kind: 'run' | 'shorts' | 'channel' | 'series' | 'publish';
@@ -343,6 +353,40 @@ export const api = {
       `/api/channel/token?id=${encodeURIComponent(id)}`,
       { method: 'POST', body: JSON.stringify({ token }) }
     ),
+
+  // --- Artwork somebody chose ---------------------------------------------
+  //
+  // RAW BYTES, NOT FormData. The studio server has no multipart parser, and a
+  // File is already a Blob the body of a fetch will take as it is. The
+  // content-type has to be set explicitly because `call` otherwise stamps
+  // every request that has a body as JSON.
+  channelArtState: (id: string) =>
+    call<Record<ArtKind, ArtState>>(`/api/channel/art/state?id=${encodeURIComponent(id)}`),
+
+  uploadChannelArt: (id: string, kind: ArtKind, image: Blob) =>
+    call<{ ok: true; width: number; height: number }>(
+      `/api/channel/art?id=${encodeURIComponent(id)}&kind=${kind}`,
+      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
+    ),
+
+  removeChannelArt: (id: string, kind: ArtKind) =>
+    call<{ ok: true; removed: boolean }>(
+      `/api/channel/art?id=${encodeURIComponent(id)}&kind=${kind}`,
+      { method: 'DELETE' }
+    ),
+
+  runArtState: (id: string) => call<ArtState>(`/api/run/art/state?id=${encodeURIComponent(id)}`),
+
+  uploadRunArt: (id: string, image: Blob) =>
+    call<{ ok: true; width: number; height: number }>(
+      `/api/run/art?id=${encodeURIComponent(id)}`,
+      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
+    ),
+
+  removeRunArt: (id: string) =>
+    call<{ ok: true; removed: boolean }>(`/api/run/art?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    }),
 
   createSeries: (id: string) =>
     call<{ jobId: string }>(`/api/channel/series?id=${encodeURIComponent(id)}`, { method: 'POST' }),

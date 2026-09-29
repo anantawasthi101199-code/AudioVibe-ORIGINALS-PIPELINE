@@ -96,12 +96,29 @@ hosts:
         style: 0.5
 
 styleCard:
-  # In line with the network after the plain-language pass: medium sentences,
-  # with the spread doing the pacing. Slightly below the crime show's mean,
-  # because this one carries more unfamiliar names and a listener holding a new
-  # name needs a little more room around it.
-  sentenceWordsMean: 18
-  sentenceWordsStdDevMin: 8
+  # MEASURED AGAINST TRANSCRIPTS OF A SHOW THIS ONE IS MEANT TO STAND BESIDE,
+  # rather than set by argument, which is how it arrived at 18 and stayed there.
+  #
+  # Two long-form episodes of a mythology show the owner named as the target
+  # measure 12.6 and 12.2 words a sentence, with standard deviations of 6.7 and
+  # 6.3. Both of this studio's own scripts measure 23.7 and 26.1. That is not a
+  # near miss, it is nearly double, and it is the single biggest measurable
+  # difference between what this show writes and what it is trying to be. Long
+  # comma-spliced sentences are exactly what a listener cannot hold, because
+  # they cannot glance back at the front of one.
+  #
+  # 13 rather than 12.4: one notch above the reference on purpose, because this
+  # show carries more unfamiliar names per minute and a name needs a little room
+  # around it. The check is advisory either way, so this is a target the writer
+  # is told about and measured against, not a rule that refuses episodes.
+  sentenceWordsMean: 13
+
+  # LOWERED FROM 8, WHICH WOULD HAVE REJECTED BOTH REFERENCE TRANSCRIPTS. This
+  # one is BLOCKING, so its calibration matters more than any other number here:
+  # at 8 it fails prose measuring 6.7 and 6.3, which is to say it fails the
+  # target. Five still catches genuinely metronomic writing, which is what it was
+  # put there for.
+  sentenceWordsStdDevMin: 5
 
   # Sparse. A rhetorical question is a device this show may reach for once, when
   # the question genuinely is the next thing anybody would ask.
@@ -109,6 +126,20 @@ styleCard:
 
   # Sparse. The story and the people who told it are the subject, not whoever is
   # listening.
+  #
+  # CHECKED AGAINST THE CORPUS AND DELIBERATELY LEFT ALONE. A genre slice of the
+  # reference corpus flagged both this and the question rate as too low, and that
+  # slice was the wrong evidence: it is history-of-Rome and what-if videos, which
+  # are the closest thing in the corpus to a told story and are not this show.
+  #
+  # The two actual mythology transcripts measure 0.47 and 1.63 second person, and
+  # 0.35 and 0.52 questions per hundred words. The card's 0.5 and 0.5 sit on the
+  # first of those almost exactly. The second is the chattier of the two, with
+  # "welcome back" and asides to the comments, and this show does not want that.
+  #
+  # So: not a miscalibration. Do not raise these on the strength of the pooled
+  # corpus. If the show is ever meant to be warmer, that is a register decision
+  # and the register paragraph is where it belongs.
   secondPersonPer100Words: 0.5
 
   # Higher than the crime show, and that is not a lowering of standards. Myth
@@ -186,6 +217,25 @@ canon:
       Never present a scholarly guess as a finding. If the dating is disputed or
       the translation is argued over, say that plainly and say who argues what.
 
+  # THE DEVICE THIS SHOW LOST BY ACCIDENT. script/narration.ts removed the
+  # rhetorical question from the network guidance because it had become a tic at
+  # two per hundred words, and its comment says it "now lives in the persona
+  # canon of the show that wants it". True Crime got that entry. This show never
+  # did, and the result is measurable: zero questions in 2,156 words of the first
+  # long episode and zero in 2,878 of the anthology, against a style card that
+  # asks for 0.5 per hundred words and two reference transcripts that run 0.35
+  # and 0.52. An over-correction from too many to none at all.
+  #
+  # A question is also this show's main way of handing one section to the next.
+  # "So who were these beings? Where did they come from?" is what makes somebody
+  # stay for the answer.
+  - kind: stylistic_rule
+    text: >
+      Two or three times an episode, when the question really is the next thing
+      anybody listening would ask, ask it out loud and then answer it. Best at a
+      hinge, where one part of the story has finished and the next has not
+      started. Never as a habit, and never a question you do not then answer.
+
   - kind: stylistic_rule
     text: >
       Say a name once, slowly, in the shape a listener can hold, and then use it
@@ -203,9 +253,21 @@ canon:
       Tell it from inside the world of the story. What the tellers believed,
       stated as what they believed, without stopping to rule on it.
 
-# TWO FORMATS, AND THE ORDER MATTERS - the first is what `make` uses by default.
+# THREE FORMATS, AND THE ORDER MATTERS - the first is what `make` uses by default.
 #
-# myth-told is the show: one myth, in full, in order. ten-stories is a SOURCE
+# myth-story is the show now. Same five beats as myth-told, on the single-story
+# research lane, and it is the default because of what e008 sounded like: an
+# accurate episode that spent half its payoff on which Sumerian fragment might
+# belong to which poem and ended on an open scholarly question. See the header
+# of beatsheets/myth-story.yaml for the three specific rules that produced that
+# and where each one now lives.
+#
+# myth-told is kept and is still the right sheet for a myth whose transmission
+# genuinely IS the story - where which manuscript survived, and who changed it,
+# is more interesting than the events. Choose it explicitly:
+#   npm run foundry -- make --show myths-of-the-world --format myth-told --topic "..."
+#
+# ten-stories is a SOURCE
 # and never goes out whole - ten short myths from one research pass, cut
 # afterwards into ten standalone shorts.
 #
@@ -214,14 +276,65 @@ canon:
 # do not have that. A tradition with four surviving paragraphs is not a bad
 # episode, it is a good ninety seconds, and this is where those go.
 formats:
+  - myth-story
+  - myth-short
   - myth-told
   - ten-stories
 
-episodeSeconds: [840, 1140]
+episodeSeconds: [600, 1200]
 
 # Cleared for named-person claims, which here means named authors, translators,
 # collectors and scholars - Lonnrot, Guest, Ximenez - rather than living private
 # individuals. The persona taboos do the rest of the work.
+# HOW THE SHOW SAYS GOODBYE.
+#
+# THE OLD SHEET BANNED THIS OUTRIGHT - "No sign-off, no call to action, no
+# naming the show, no next-time" - and that rule was written against a real
+# fault, episodes trailing off into filler and self-promotion. It overshot. The
+# Inanna episode's last sentence is a question about which telling the scribes
+# meant to be final, and then silence. Somebody who stayed twelve minutes is
+# owed better than a shrug.
+#
+# The writer is told to land on this in its own words rather than recite it, so
+# it varies the way a person varies and stays recognisable across episodes.
+# A LIST, AND ONE IS PICKED PER EPISODE from the topic - stable if the episode
+# is re-rendered, different between episodes. A presenter says roughly the same
+# thing a slightly different way each week; a show that recites one sentence
+# verbatim every time sounds like a card being read, which is what it is.
+#
+# The writer is told to land on these in its own words rather than recite them,
+# so they vary further. EDIT THEM HERE. Nothing else hard-codes a goodbye.
+signoff:
+  - >
+    That is where I will leave it. Thanks for spending the time with me, and
+    with them. There will be another story next week, from somewhere else
+    entirely. Until then, take care of yourself.
+  - >
+    Thank you for listening. Somebody told that story for the first time a very
+    long time ago, and you have just heard it. I will have another one for you
+    next week. Until then, take care.
+  - >
+    And that is the whole of it. Thanks for staying to the end with me. Next
+    week there is another one, from another part of the world. See you then, and
+    take care of yourself.
+  - >
+    That is the story. Thank you for listening to it. I will be back next week
+    with another, from somewhere completely different. Until then, bye for now.
+
+# SHORTS GET THEIR OWN, and it is a different job. Ninety seconds is usually
+# somebody's first contact with the show, so it has to earn a follow rather than
+# thank somebody for staying fifteen minutes - and the long goodbye would eat a
+# fifth of the episode.
+signoffShort:
+  - >
+    Follow for more stories like this one, from every corner of the world. Until
+    next time, take care.
+  - >
+    There are a lot more of these where that came from, so follow along if you
+    want them. See you next time.
+  - >
+    Follow for more myths, properly told. Until next time, bye for now.
+
 allowedRiskTiers:
   - general
   - named_person

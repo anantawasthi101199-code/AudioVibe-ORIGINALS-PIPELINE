@@ -120,21 +120,65 @@ export const measurePlainness = (text: string): PlainMeasurement => {
 /** Below this many words, the ratios are noise. */
 export const MIN_WORDS_TO_JUDGE = 120;
 
-/** Share of ordinary words that may run to three syllables or more. */
+/**
+ * Share of ordinary words that may run to three syllables or more, advisory.
+ *
+ * DELIBERATELY BELOW THE REFERENCE CORPUS, AND LEFT THERE AFTER NEARLY RAISING IT.
+ *
+ * The corpus of 25 long-form transcripts runs a median of 12.5% long words, so
+ * 6.5% sits below its entire distribution and this note fires on almost every
+ * beat. That looked like a miscalibration and the fix looked obvious.
+ *
+ * It is not, for two reasons. That corpus leans heavily on clinical and
+ * scientific explainers - ADHD, BPD, postpartum depression, dark energy - whose
+ * vocabulary is genuinely heavier than a told story's, so its median is the wrong
+ * target for this network. And this number is an ASPIRATION rather than a
+ * refusal: it says the network wants to be plainer than the average explainer,
+ * which is a decision somebody made on purpose, and a test pins it to be tighter
+ * than the episode that prompted it.
+ *
+ * So the aspiration stays and only the REFUSAL moved. See LONG_WORD_BLOCK, which
+ * was sitting at the corpus median and sending back 58% of the target. An
+ * advisory that fires often is a gradient to read; a block that fires often is a
+ * good episode refused, and only the second one is a defect.
+ */
 export const LONG_WORD_SHARE = 0.065;
 
-/** Nominalisations per hundred ordinary words. */
+/** Nominalisations per hundred ordinary words, advisory. Same argument as above. */
 export const NOMINAL_PER_100 = 1.1;
 
 /**
  * Where it stops being heavy and starts not being speech.
  *
- * Set well past anything a real episode has produced - the worst measured was
- * 8.6% and 1.8 - so this only fires on prose that has genuinely turned into a
+ * RE-SET FROM A REFERENCE CORPUS, AND THE OLD NUMBERS WERE AT ITS MEDIAN.
+ *
+ * These were 0.12 and 3, justified as "well past anything a real episode has
+ * produced - the worst measured was 8.6% and 1.8". That was true of the only
+ * evidence available at the time, which was this studio's own output. Measured
+ * against 129 beat-sized chunks of 25 long-form transcripts the owner named as
+ * the target:
+ *
+ *              p50     p75     p90     p95     p99
+ *   longShare  0.125   0.160   0.185   0.196   0.218
+ *   nominal    2.37    3.56    4.48    5.24    6.53
+ *
+ * So 0.12 sat at the target's MEDIAN and would have sent back 58% of it, and 3
+ * sat between its median and p75 and would have sent back 36%. A threshold set
+ * from our own worst output will always be tight, because our own output is what
+ * we are trying to improve.
+ *
+ * Now at roughly the corpus p95: we essentially never refuse writing of the kind
+ * we are aiming at, and still catch prose that has genuinely turned into a
  * report.
+ *
+ * GENRE CAVEAT, recorded because it will matter later. That corpus leans heavily
+ * on clinical and scientific explainers - ADHD, BPD, postpartum depression, dark
+ * energy - which legitimately carry long words. A myth retelling should be
+ * plainer than its p95, and the place to say so is the persona, not here. These
+ * are the network's outer bounds, not a target.
  */
-export const LONG_WORD_BLOCK = 0.12;
-export const NOMINAL_BLOCK = 3;
+export const LONG_WORD_BLOCK = 0.2;
+export const NOMINAL_BLOCK = 5.2;
 
 export const checkPlainWords = (text: string): PlainProblem[] => {
   const m = measurePlainness(text);

@@ -249,7 +249,10 @@ beats:
         ending; returning to several is the recap this format spent an episode
         avoiding.
       - "No advice, no call to action, no sign-off, no naming the show."
-    minClaims: 1
+    # Zero. An outro is handed no claims by construction, so a floor here can
+    # only produce a finding nobody can act on. See myth-told.yaml for the full
+    # reasoning; the grounding review now covers what this was guarding.
+    minClaims: 0
 
 # The peak is the mechanism, because that is where the actual explanation is,
 # and the evidence beat sits just under it. Both are well above the opening,

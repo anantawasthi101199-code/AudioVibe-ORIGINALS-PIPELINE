@@ -206,7 +206,62 @@ const HAS_NUMBER = /\d/;
 export interface ShapeProblem {
   claimId: string;
   problem: string;
+  /**
+   * Worth seeing, but not worth refusing the episode over.
+   *
+   * ADDED BECAUSE A SHAPE RULE IS NOT ALWAYS A BREAK. A quotation claim that
+   * reproduces two spans and can prove one of them is imperfect provenance and
+   * the sentence is still true; a quotation claim that can prove none of them
+   * is a made-up quote. Those are different events and used to be the same
+   * finding, so the second was invisible among the first.
+   */
+  advisory?: boolean;
 }
+
+/**
+ * The spans a claim presents as somebody's actual words.
+ *
+ * WHY THIS IS NOT A SLICE FROM THE FIRST QUOTE MARK, which is what it was, and
+ * which failed on real claims in both directions:
+ *
+ *   FALSE FAILURE. "Enki's messengers were told to mimic Ereshkigal's cries"
+ *   quotes nothing at all, but the apostrophe in "Enki's" was read as an
+ *   opening quotation mark, so the check compared "'s messengers were told to
+ *   mimic..." against the source and of course did not find it.
+ *
+ *   FALSE FAILURE, AGAIN. "...ends with lines praising Ereshkigal: 'Holy
+ *   Ereshkigal! Great is your renown!'" is a correct claim whose words are in
+ *   the quote verbatim, and it failed because the slice kept the leading
+ *   apostrophe and `normaliseForMatch` does not strip quote marks. The compared
+ *   string began with a character the source does not have.
+ *
+ *   MISSED FAILURE. A claim quoting two spans was judged on the first thirty
+ *   characters of the first one, so the second could be unsupported and nothing
+ *   looked at it. That is the case worth catching and it was the one being
+ *   skipped.
+ *
+ * So: find every span, test each one, and never treat a possessive as a quote.
+ * A single-quoted span has to be delimited like a quotation - opened at a
+ * boundary, closed before one - which is what separates 'neither male nor
+ * female' from Enki's.
+ */
+export const quotedSpans = (text: string): string[] => {
+  const spans: string[] = [];
+  const push = (raw: string | undefined): void => {
+    const span = normaliseForMatch((raw ?? '').replace(/["'“”‘’]/g, ' '));
+    // Two words is the floor. One quoted word is a term of art far more often
+    // than it is a quotation, and it would match almost any document by chance.
+    if (span.split(' ').filter(Boolean).length >= 2) spans.push(span);
+  };
+
+  for (const m of text.matchAll(/[“"]([^“”"]{2,400})[”"]/g)) push(m[1]);
+  // A single-quoted run: the opener sits at the start or after a space, colon
+  // or bracket, and the closer is followed by whitespace, punctuation or the
+  // end. A possessive fails both halves.
+  for (const m of text.matchAll(/(?:^|[\s:([])['‘]([^'’]{2,400})['’](?=$|[\s.,;:!?)\]])/g)) push(m[1]);
+
+  return spans;
+};
 
 /**
  * Structural rules per claim type. Cheap, deterministic, and run before any
@@ -239,6 +294,30 @@ export interface ShapeProblem {
  * written for.
  */
 export const retypeClaim = (claim: Claim): Claim => {
+  // A QUOTATION THAT QUOTES NOTHING IS AN ATTRIBUTION, and this is the same
+  // argument as the statistic below, on a much larger scale.
+  //
+  // The extraction prompt already says, in capitals, TYPE IT "quotation" ONLY IF
+  // THE CLAIM REPRODUCES THE QUOTED WORDING, with a worked example of the
+  // difference. It does not work: across three runs of one topic, twelve of
+  // forty-six, twelve of forty-nine and six of forty-three claims came back typed
+  // `quotation` with no quoted span anywhere in them. A quarter of the ledger,
+  // every run, reported as a fault on a report meant to be read.
+  //
+  // Nothing is wrong with those claims. "The pamphlet says the tortures were
+  // described with relish" is a perfectly good assertion bound to a perfectly
+  // good quote; it is simply an attribution that got the wrong label. So the
+  // label is corrected, deterministically, and the findings list stops being a
+  // quarter noise - which matters because a list somebody learns to skim is a
+  // list that hides the one real forgery in it.
+  //
+  // THE RULE STILL BITES WHERE IT MATTERS. A claim that DOES present quoted words
+  // keeps its type, and if those words are not in the quote it still fails. That
+  // is a quote nobody said, and it is the failure the rule was written for.
+  if (claim.type === 'quotation' && quotedSpans(claim.text).length === 0) {
+    return { ...claim, type: 'attribution' };
+  }
+
   if (claim.type !== 'statistic') return claim;
 
   // Only when NEITHER side has a number. A claim with a figure the quote lacks
@@ -273,10 +352,35 @@ export const checkClaimShape = (claim: Claim, source: Source): ShapeProblem[] =>
   }
 
   if (claim.type === 'quotation') {
-    // The claim is meant to reproduce words, so it should contain them.
-    const claimCore = normaliseForMatch(claim.text.replace(/^[^"'“]*/, ''));
-    if (claimCore && !normaliseForMatch(claim.quote).includes(claimCore.slice(0, 30))) {
-      add('typed as a quotation but its wording does not appear in the quote');
+    // The claim is meant to reproduce words, so it should contain them, and
+    // every span it presents as words should be in the quote. See quotedSpans
+    // for the three ways the previous version of this got it wrong.
+    const spans = quotedSpans(claim.text);
+    const inQuote = normaliseForMatch(claim.quote);
+
+    if (!spans.length) {
+      // Nothing is presented as words at all, so this is a typing mistake
+      // rather than a provenance failure. Advisory: the sentence may be
+      // perfectly well supported, it just is not a quotation.
+      problems.push({
+        claimId: claim.id,
+        problem: 'typed as a quotation but quotes nothing. Retype it or quote the words.',
+        advisory: true,
+      });
+    } else {
+      const missing = spans.filter((s) => !inQuote.includes(s));
+      if (missing.length) {
+        problems.push({
+          claimId: claim.id,
+          problem:
+            `quotes ${missing.length} span(s) the supporting quote does not contain, ` +
+            `starting "${missing[0]!.slice(0, 60)}"`,
+          // Blocking only when NOTHING it quotes can be proved. One unsupported
+          // span among several is bad provenance on a sentence that is probably
+          // true; none supported is a quote nobody said.
+          advisory: missing.length < spans.length,
+        });
+      }
     }
   }
 
@@ -297,6 +401,8 @@ export interface LedgerProblem {
   claimId: string;
   kind: 'missing_source' | 'quote_not_in_source' | 'quote_too_short' | 'shape';
   detail: string;
+  /** Worth seeing, but not worth refusing the episode over. See ShapeProblem. */
+  advisory?: boolean;
 }
 
 export interface LedgerReport {
@@ -350,7 +456,7 @@ export const checkLedger = (claims: Claim[], sources: Source[]): LedgerReport =>
     }
 
     for (const p of checkClaimShape(claim, source)) {
-      problems.push({ claimId: p.claimId, kind: 'shape', detail: p.problem });
+      problems.push({ claimId: p.claimId, kind: 'shape', detail: p.problem, advisory: p.advisory });
     }
 
     const list = tiersByBeat.get(claim.beatId) ?? [];
@@ -361,7 +467,16 @@ export const checkLedger = (claims: Claim[], sources: Source[]): LedgerReport =>
   const tierByBeat: Record<string, SourceTier | null> = {};
   for (const [beat, tiers] of tiersByBeat) tierByBeat[beat] = weakestTier(tiers);
 
-  return { ok: problems.length === 0, problems, tierByBeat, claimsByBeat };
+  // ADVISORIES DO NOT MAKE A LEDGER NOT-OK. The gate reads `ok` to decide
+  // whether to report the ledger, so counting advisories here would let a
+  // note-to-self block an episode through the back door, which is the opposite
+  // of what marking it advisory meant.
+  return {
+    ok: !problems.some((p) => !p.advisory),
+    problems,
+    tierByBeat,
+    claimsByBeat,
+  };
 };
 
 /** Beats that fall short of the format's per-beat claim floor. */

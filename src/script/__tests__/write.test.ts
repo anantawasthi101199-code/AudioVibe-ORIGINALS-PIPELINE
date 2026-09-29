@@ -135,7 +135,8 @@ const beatCalls = (w: { seen: LlmRequest[] }): LlmRequest[] =>
     (r) => !r.system.includes('plan one episode') && !r.system.includes('title and description')
   );
 
-const ctx = (p = SOLO) => ({
+const ctx = (p = SOLO, allowRevisions = false) => ({
+  allowRevisions,
   persona: p,
   format: FORMAT,
   beat: FORMAT.beats[0]!,
@@ -323,16 +324,27 @@ describe('writeBeat', () => {
     // negation tic instead is a better fixture anyway: it is the fault the
     // revision loop most often has to fix on a real run, and it is one a
     // listener actually complained about.
+    // THREE OF THEM, because the negation opener now has a budget of one and
+    // BLOCKS at more than double it. Measured: the reference corpus opens a
+    // sentence with "Not" in 11% of its beat-sized chunks, so a flat ban refused
+    // writing chosen as the standard - but the episode that prompted the check had
+    // four in one beat, and three is unambiguously the tic rather than a choice.
+    // The revision loop only acts on blocking findings, so an advisory fixture
+    // would leave this test asserting a rewrite that never happens.
     const failsThenPasses = (_r: LlmRequest, n: number) =>
       n === 0
-        ? soloTurns(`${GOOD} Not a legend, not a heist film pitch.`)
+        ? soloTurns(
+            `${GOOD} Not a legend, not a heist film pitch. ` +
+              `Not a gang bursting through a wall with a sledgehammer. ` +
+              `Not from the newspaper version either.`
+          )
         : soloTurns();
 
     it('REVISES a beat that fails, and hands it the failures', async () => {
       // Writing once and judging wasted every rejection: the critique knew
       // exactly what was wrong and the only response was a human.
       const w = fakeWriter(failsThenPasses);
-      const beat = await writeBeat(ctx(), w);
+      const beat = await writeBeat(ctx(SOLO, true), w);
 
       expect(beat.revisions).toBe(1);
       expect(w.seen).toHaveLength(2);
@@ -344,7 +356,7 @@ describe('writeBeat', () => {
       // Failures alone produce a fresh draft that fails differently; both
       // together produce a repair.
       const w = fakeWriter(failsThenPasses);
-      await writeBeat(ctx(), w);
+      await writeBeat(ctx(SOLO, true), w);
       expect(w.seen[1]!.prompt).toMatch(/YOUR PREVIOUS DRAFT/);
       expect(w.seen[1]!.prompt).toContain('Not a legend');
     });
@@ -352,7 +364,7 @@ describe('writeBeat', () => {
     it('revises cooler than it drafts', async () => {
       // A hot rewrite discards the parts that were working.
       const w = fakeWriter(failsThenPasses);
-      await writeBeat(ctx(), w);
+      await writeBeat(ctx(SOLO, true), w);
       expect(w.seen[1]!.temperature).toBeLessThan(w.seen[0]!.temperature!);
     });
 
@@ -361,15 +373,24 @@ describe('writeBeat', () => {
       // rather than the prose, and more calls arrive at the same place.
       // A draft that keeps failing the same way. "Too short" used to be the
       // handy one and stopped being a failure when length became a guide.
-      const w = fakeWriter(soloTurns(`${GOOD} Not a legend, not a heist film pitch.`));
-      const beat = await writeBeat(ctx(), w);
+      // Three openers, for the same reason as failsThenPasses above: the budget
+      // is one and it blocks at more than double, so a single one is advisory and
+      // would never trigger the loop this test is about.
+      const w = fakeWriter(
+        soloTurns(
+          `${GOOD} Not a legend, not a heist film pitch. ` +
+            `Not a gang bursting through a wall with a sledgehammer. ` +
+            `Not from the newspaper version either.`
+        )
+      );
+      const beat = await writeBeat(ctx(SOLO, true), w);
       expect(beat.revisions).toBe(MAX_REVISIONS);
       expect(w.seen).toHaveLength(MAX_REVISIONS + 1);
     });
 
     it('does not revise a beat that passes first time', async () => {
       const w = fakeWriter(soloTurns());
-      await writeBeat(ctx(), w);
+      await writeBeat(ctx(SOLO, true), w);
       expect(w.seen).toHaveLength(1);
     });
   });
@@ -506,5 +527,97 @@ describe('beatText and fullText', () => {
         ],
       })
     ).toBe('One.\n\nTwo.');
+  });
+});
+
+/**
+ * SKIPPED MATERIAL, which is the check that protects the content from all the
+ * others.
+ *
+ * Every check on prose creates pressure, and a writer under pressure buys
+ * compliance with the cheapest thing it has. Adding rewrite pressure for sentence
+ * length, handovers and questions moved all three to reference level and produced
+ * an episode of the Descent of Inanna WITH NO SEVEN GATES IN IT - no crown, no
+ * earrings, no measuring rod, no "naked before Ereshkigal" - while its own plan
+ * said "stripped of one garment or piece of regalia at each". Its story beat had
+ * left six of twenty-five facts unused and come in under its length guide.
+ */
+describe('critiqueBeat - material the beat was given and skipped', () => {
+  const beat = FORMAT.beats[0]!;
+  const short = 'A short beat that says almost nothing at all about the subject it was given.';
+
+  const facts = (n: number): Claim[] =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `c${i + 1}`,
+      text: `Verified fact number ${i + 1} about the thing that happened.`,
+      type: 'chronology' as const,
+      beatId: beat.id,
+      sourceId: 's1',
+      quote: `Verified fact number ${i + 1} about the thing that happened, as the source has it.`,
+      contested: false,
+      status: 'verified' as const,
+    }));
+
+  it('asks for a rewrite when a short beat leaves its own facts unused', () => {
+    const { blocking } = critiqueBeat(
+      [{ speaker: 'host', text: short }],
+      SOLO,
+      beat,
+      undefined,
+      undefined,
+      facts(6),
+      ['c1'] // cited one of six
+    );
+    expect(blocking.join(' ')).toMatch(/leaves 5 of its 6 facts unused/);
+  });
+
+  it('says nothing when the beat used what it was given', () => {
+    const { blocking } = critiqueBeat(
+      [{ speaker: 'host', text: short }],
+      SOLO,
+      beat,
+      undefined,
+      undefined,
+      facts(6),
+      ['c1', 'c2', 'c3', 'c4', 'c5', 'c6']
+    );
+    expect(blocking.join(' ')).not.toMatch(/facts unused/);
+  });
+
+  it('allows one unused fact, because one that does not fit is taste', () => {
+    const { blocking } = critiqueBeat(
+      [{ speaker: 'host', text: short }],
+      SOLO,
+      beat,
+      undefined,
+      undefined,
+      facts(6),
+      ['c1', 'c2', 'c3', 'c4', 'c5']
+    );
+    expect(blocking.join(' ')).not.toMatch(/facts unused/);
+  });
+
+  /**
+   * A BEAT AT ITS FULL LENGTH THAT STILL LEFT FACTS HAS MORE MATERIAL THAN FITS,
+   * which is an editorial decision and none of this function's business. Without
+   * this half, the check would be a word floor wearing a disguise, and a floor
+   * makes a beat pad - which is settled policy the owner was explicit about.
+   */
+  it('says nothing about unused facts when the beat is at full length', () => {
+    const long = Array.from(
+      { length: 200 },
+      (_, i) => `Sentence ${i} carries a little of the story forward.`
+    ).join(' ');
+
+    const { blocking } = critiqueBeat(
+      [{ speaker: 'host', text: long }],
+      SOLO,
+      beat,
+      undefined,
+      undefined,
+      facts(6),
+      ['c1']
+    );
+    expect(blocking.join(' ')).not.toMatch(/facts unused/);
   });
 });

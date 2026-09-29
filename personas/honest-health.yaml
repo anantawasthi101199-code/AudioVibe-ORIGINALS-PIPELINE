@@ -135,7 +135,23 @@ styleCard:
   sentenceWordsStdDevMin: 7
 
   questionsPer100Words: 0.5
-  secondPersonPer100Words: 0.6
+
+  # RAISED FROM 0.6, MEASURED AGAINST NINE TRANSCRIPTS OF THIS SHOW'S GENRE.
+  #
+  # The clinical and health explainers in the reference corpus - ADHD, burnout,
+  # BPD, postpartum depression, B12, keto, tendon strength - address the listener
+  # at a median of 2.89 times per hundred words. This card allowed 0.6, which is
+  # a fifth of that, and the drift check is advisory in both directions so nothing
+  # ever pulled it up.
+  #
+  # It matters more on this show than anywhere else in the network, because the
+  # audience has the question personally. A show about sleep or grief that never
+  # says "you" is talking about people rather than to them.
+  #
+  # 2.0 rather than the genre median, deliberately: this show is not a wellness
+  # influencer and the register is meant to stay assured and plain. It is a large
+  # move from 0.6 without going all the way to the genre's own habit.
+  secondPersonPer100Words: 2.0
 
   # THE HIGHEST OF ANY SHOW HERE, and it is the point rather than a weakness.
   # This material genuinely is uncertain, and a show that never hedged would be

@@ -42,12 +42,27 @@ separates three things, and most new content is a new one of the cheapest:
 | **Format** | the shape of an episode | a day |
 | **Show** | the voice, the taboos, the subject | an hour |
 
-There are two lanes today and they are the expensive part:
+There are three lanes today and they are the expensive part:
 
-**The factual lane** (`src/pipeline/episode.ts`). Brief, corpus, claims bound to
-verbatim quotes, verification by a different model family, repair, script, render,
-gate. Every assertion traces to a quote that provably occurs in a fetched
-document. About 80p an episode, most of it research.
+**The factual lane** (`src/pipeline/episode.ts`, `research: extensive`). Brief,
+corpus, claims bound to verbatim quotes, verification by a different model
+family, repair, script, render, gate. Every assertion traces to a quote that
+provably occurs in a fetched document. About 80p an episode, most of it
+research.
+
+**The single-story lane** (`src/pipeline/episode.ts`, `research: single`, and
+`src/evidence/story.ts`). Brief, corpus, then *select* the one to three
+documents that carry the whole story and *fuse* them - read whole, at a hundred
+thousand characters each - into one reference article the writer works from.
+No claim ledger, no per-fact verification, no counter-evidence. One check:
+`reviewReference` reads the article back against its own documents. About £1.60
+an episode, and the two research calls are the bulk of it.
+
+Which lane a format is on is declared in the beat sheet and overridable per run
+with `--research single|extensive`. Use `single` when the episode is **one
+story told in order** and `extensive` when it is **a subject assembled from many
+documents**. The full argument, with the numbers from the episode that forced
+the split, is in DECISIONS under "A told story reads few documents whole".
 
 **The fiction lane** (`src/pipeline/fiction.ts`). No research at all, because no
 document entails an invented scene. Continuity against a series bible replaces

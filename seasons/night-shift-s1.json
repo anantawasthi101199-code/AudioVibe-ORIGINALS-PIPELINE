@@ -1,0 +1,151 @@
+{
+  "personaId": "night-shift",
+  "seasonNumber": 1,
+  "title": "Handover",
+  "premise": "A hospital's overnight ward runs its usual string of small emergencies while its charge nurse quietly runs out of nights, and nobody wants to be the one who says so first.",
+  "spine": "The season is about the gap between what someone can still do and what they'll admit they can't, and it settles when Ruth finally tells Femi the truth herself, on her own terms, instead of him finding it out from someone else.",
+  "world": [
+    "Between roughly two and five a.m. there is no one above Ruth to ask - day administration only exists as memos and forms until the sun's up.",
+    "The ward runs on a skeleton crew who know each other's habits better than their names; a stranger on shift is immediately conspicuous."
+  ],
+  "carryCast": [
+    {
+      "name": "Ruth",
+      "who": "Charge nurse, twenty years of nights, says less than she knows."
+    },
+    {
+      "name": "Femi",
+      "who": "Two years in, narrates his own thinking, asks what nobody else will."
+    },
+    {
+      "name": "Priya",
+      "who": "Agency nurse assigned to shadow Ruth specifically, for reasons she doesn't explain at first."
+    },
+    {
+      "name": "Dele",
+      "who": "The registrar who's on call most nights and clashes with Ruth over judgment calls."
+    }
+  ],
+  "promises": [
+    {
+      "id": "why-ruth-disappears",
+      "text": "Where does Ruth keep going for those unexplained stretches during the shift?"
+    },
+    {
+      "id": "whats-wrong-with-ruth",
+      "text": "What is actually wrong with Ruth?"
+    },
+    {
+      "id": "why-priya-here",
+      "text": "Why was Priya specifically sent to shadow Ruth, of all people?"
+    },
+    {
+      "id": "the-merger",
+      "text": "Is the night ward actually being shut down or folded into another one?"
+    },
+    {
+      "id": "will-ruth-tell-femi",
+      "text": "Will Ruth tell Femi the truth herself, or will he have to hear it from someone else?"
+    }
+  ],
+  "episodes": [
+    {
+      "number": 1,
+      "title": "Quiet Hours",
+      "opens": "Femi mid-sentence to a confused elderly patient, trying to get a name out of her while an alarm goes off two beds down.",
+      "story": "A routine fall-and-confusion case takes up most of the night; Femi and Ruth work it the way they've worked a hundred like it. Partway through, Ruth vanishes for nearly forty minutes with no explanation, leaving Femi to cover and improvise. She reappears as if nothing happened. At shift's end a memo goes round about a 'service reconfiguration review' of night staffing, and Femi assumes that's where she was.",
+      "changes": "Femi now knows Ruth disappears sometimes and lies, gently, about it. The team has heard, for the first time, that nights might not exist in their current form.",
+      "cliffhanger": "Femi checks the meeting schedule pinned by the desk out of idle curiosity and sees the reconfiguration review was two hours earlier than Ruth was gone - she wasn't there at all.",
+      "plants": [
+        "why-ruth-disappears",
+        "the-merger"
+      ],
+      "paysOff": []
+    },
+    {
+      "number": 2,
+      "title": "New Hands",
+      "opens": "A woman in scrubs Femi doesn't recognise is already reading the whiteboard when he comes in, and Ruth says only, 'Priya. She's with me tonight.'",
+      "story": "Priya, an agency nurse, has been assigned to shadow Ruth specifically - unusual, since agency staff normally rotate. A case involving a young patient brings Dele in, and he and Ruth disagree sharply over a call; Ruth wins, but Femi notices her hand isn't quite steady signing off afterward. Late in the shift, Priya asks Femi, almost idly, how long Ruth's been unwell.",
+      "changes": "Priya is now a fixture on the ward. Femi has seen, with his own eyes, that something is physically wrong with Ruth, not just secretive.",
+      "cliffhanger": "Femi asks Priya what she means, and she says, 'You don't know?' - and goes back to charting, leaving it there.",
+      "plants": [
+        "whats-wrong-with-ruth",
+        "why-priya-here"
+      ],
+      "paysOff": []
+    },
+    {
+      "number": 3,
+      "title": "Not Tonight",
+      "opens": "Femi corners Ruth by the med room with a question half out of his mouth before she cuts him off.",
+      "story": "Femi tries directly asking Ruth what's going on; she deflects with 'not tonight' and puts him on a family dispute case instead - a patient's son and Dele arguing over treatment decisions, which Ruth defuses with unusual gentleness, almost tenderness, that doesn't match her usual manner. Femi clocks the change in her but says nothing more that night. Afterward, restocking the med room, he finds a reminder card in her coat for a clinic appointment - not HR, not the reconfiguration meeting. A clinical department.",
+      "changes": "Femi stops asking Ruth and starts looking for answers on his own - the trust between them has quietly shifted from asking to watching.",
+      "cliffhanger": "Femi reads the department name on the card twice to be sure, and it isn't anything he can explain away.",
+      "plants": [
+        "will-ruth-tell-femi"
+      ],
+      "paysOff": []
+    },
+    {
+      "number": 4,
+      "title": "What the Tests Say",
+      "opens": "Ruth's hand slips on a line she's placed a thousand times, and for a second nobody in the room breathes.",
+      "story": "A high-pressure case goes sideways when Ruth's hand fails her mid-procedure; Femi steps in smoothly enough that only the two of them notice. Afterward, in the near-empty break room, he finally gets it out of her - the disappearances have been appointments, tests, something she's 'being looked at for.' She won't say what. She asks him, flatly, not to tell anyone, especially administration.",
+      "changes": "The unspoken thing is now spoken between them - it cannot be unknown again. Ruth has, for the first time, asked Femi to keep a secret from the ward.",
+      "cliffhanger": "Ruth says the results come back tomorrow and asks him again to keep it quiet - and only as she says it does Femi notice Priya standing just outside the doorway, close enough to have heard all of it.",
+      "plants": [],
+      "paysOff": [
+        "why-ruth-disappears"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Cover",
+      "opens": "Priya is already filling in a form Femi didn't ask her to fill in, in handwriting too neat for 3 a.m.",
+      "story": "Femi confronts Priya about what she heard; she tells him she was sent because administration already has months of reports flagging Ruth's declining performance, and Priya is being quietly trained as her eventual replacement. A deteriorating patient exposes the gap between Ruth's cautious instincts and Priya's by-the-book approach, and for the first time on record, Ruth's judgment is overruled in front of the team.",
+      "changes": "The 'reconfiguration' is recontextualised - it was never about the ward closing, it's about Ruth being managed out. Her authority has visibly cracked, in front of witnesses, for the first time.",
+      "cliffhanger": "Ruth, who has clearly heard enough of the conversation to understand it, says only 'mm' - and walks off the floor mid-shift, leaving Femi alone with a patient who is getting worse.",
+      "plants": [],
+      "paysOff": [
+        "why-priya-here"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Steady",
+      "opens": "Ruth is back at the desk like nothing happened, except she won't pick up the pen when Femi hands it to her.",
+      "story": "A case comes in needing exactly the kind of fine, steady work Ruth built her reputation on, and she can't do it - she hands it to Femi in front of Priya and Dele without a word of explanation, which is its own kind of announcement. Afterward she finally tells Femi what the tests found: something degenerative, in her hands and getting worse, not going away. She keeps it as plain and unmedical as she can manage.",
+      "changes": "The ward now knows, without being told outright, that Ruth is stepping back from hands-on work. It's no longer hideable, and it isn't going to reverse.",
+      "cliffhanger": "Ruth asks him flatly, 'How long do you think I've got, doing this' - and Femi, for once, has nothing to fill the silence with.",
+      "plants": [],
+      "paysOff": [
+        "whats-wrong-with-ruth"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "The Reconfiguration",
+      "opens": "The whole team - Ruth, Femi, Priya, Dele - is in one room for once, over a case that needs all four of them at once.",
+      "story": "The hardest case of the season pulls everyone together and shows, plainly, what this ward is and does. Afterward, Ruth tells the team the truth administration has been circling for months: nights are being restructured, and it was accelerated because of her. She confirms she's stepping down - not being pushed, choosing it - and that Priya will take the post.",
+      "changes": "The team knows officially, together, what's coming. Ruth has taken ownership of the ending instead of having it handed to her.",
+      "cliffhanger": "Ruth tells Femi she's already picked her last shift, and it isn't in a few months like everyone assumed - it's next week.",
+      "plants": [],
+      "paysOff": [
+        "the-merger"
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Last Shift",
+      "opens": "Femi is doing the handover board the way Ruth always does it, except it's her last night and she's watching him do it.",
+      "story": "Ruth's final shift is deliberately small and quiet - one unremarkable case, echoing the season's first night. In the dead hours, she finally says to Femi, in her own words and without being pushed into it, what she's spent the season not saying: what the diagnosis means, why she couldn't say it sooner, and what she needs him to do once she's gone. She hands him unofficial charge of the ward for the rest of the night, and doesn't take it back.",
+      "changes": "Ruth's era on the ward ends on her own terms. Femi is, in practice if not yet on paper, the one running nights.",
+      "cliffhanger": "",
+      "plants": [],
+      "paysOff": [
+        "will-ruth-tell-femi"
+      ]
+    }
+  ]
+}

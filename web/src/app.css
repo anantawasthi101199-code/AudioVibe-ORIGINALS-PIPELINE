@@ -2056,3 +2056,61 @@ table.runs .num {
   color: var(--text-dim);
   font-size: 0.78rem;
 }
+
+/* --- Choosing artwork -----------------------------------------------------
+   A thumbnail beside its controls, because the question somebody is answering
+   is "is that the right picture", and no arrangement of words answers it. The
+   frame is always filled: before anybody supplies one it shows what the studio
+   drew, so what is on screen is always what would be published. */
+.art-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 0.75rem;
+}
+
+.art-picker {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-800);
+}
+
+.art-thumb {
+  flex: 0 0 auto;
+  width: 5.5rem;
+  height: 5.5rem;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--ink-850);
+}
+
+/* A supplied picture is outlined in the pass colour, paired with the "yours"
+   pill rather than replacing it: colour alone fails for a tenth of readers. */
+.art-thumb.chosen {
+  border-color: var(--pass-dim);
+}
+
+.art-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.art-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.bad {
+  color: var(--fail);
+}

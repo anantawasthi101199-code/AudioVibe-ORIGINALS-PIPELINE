@@ -26,7 +26,8 @@ import { verificationReportSchema } from '../evidence/verify';
 import { renderResultSchema } from '../render/assemble';
 import { priorEpisodeTexts } from '../deps';
 import { Run } from '../run/store';
-import { Script } from '../script/write';
+import { Script, WORDS_PER_SECOND, fullText } from '../script/write';
+import { countWords } from '../script/style';
 import { GateReport, runGate } from './gate';
 import { hasNewsDesk } from '../news/desk';
 import { regateNews } from '../pipeline/news';
@@ -84,9 +85,15 @@ export const regate = (run: Run, script: Script): GateReport | null => {
       // run that had done twelve of them. A re-gate that invents failures is
       // worse than one that prints a stale report, because it looks like news.
       counterEvidence: verification.counterEvidence,
-      // Zero duration where there is no audio, which reads as a large miss
-      // against the format target - correctly, since there is nothing to hear.
-      durationS: render?.durationS ?? 0,
+      // ESTIMATED FROM THE WORDS WHERE THERE IS NO AUDIO, rather than zero.
+      //
+      // Zero was defended as "correct, since there is nothing to hear", and it
+      // is not: the duration check exists to say whether the EPISODE is the
+      // right length, and a script that has not been voiced yet still has a
+      // length. Reporting "runs 0s against a 624-1296s guide" on every held run
+      // trained the eye to skip the line, which is the worst thing a check can
+      // do. Measured speech is 2.85 words a second.
+      durationS: render?.durationS ?? countWords(fullText(script)) / WORDS_PER_SECOND,
       sources: corpus.sources,
       corpusText: corpus.sources.map((src) => src.text).join('\n'),
       castNames: script.plan?.cast.map((c) => c.name) ?? [],

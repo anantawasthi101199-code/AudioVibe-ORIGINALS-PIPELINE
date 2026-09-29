@@ -136,7 +136,10 @@ beats:
         March" leaves a listener with something real; "time will tell" leaves
         them with nothing.
       - No prediction, no advice, no sign-off, no naming the show.
-    minClaims: 1
+    # Zero. An outro is handed no claims by construction, so a floor here can
+    # only produce a finding nobody can act on. See myth-told.yaml for the full
+    # reasoning; the grounding review now covers what this was guarding.
+    minClaims: 0
 
 # The document beat is the peak, which is the whole argument of the format: the
 # most interesting thing in an explainer is the primary text, not the row about

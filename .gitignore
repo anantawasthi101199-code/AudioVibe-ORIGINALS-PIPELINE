@@ -45,3 +45,8 @@ accounts.json
 
 # Generated channel artwork. Rebuilt by `channel-setup`.
 art/
+
+# The cross-process release lock. Runtime state, never committed.
+.release.lock
+release.log
+release.log.old

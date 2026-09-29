@@ -27,6 +27,13 @@ export const STAGES = [
   'brief',
   'corpus',
   'claims',
+  // The single-story lane's replacement for claims, verification and repair:
+  // the one to three documents that carry the story, read whole and fused into
+  // one reference article. Its own stage so a resumed run does not pay for the
+  // fusion twice - it is the most expensive single call on that lane, because
+  // it reads three documents at sixty thousand characters each.
+  // See evidence/story.ts.
+  'reference',
   'verification',
   // Narrowing, rebinding and hedging the claims that failed verification, so a
   // claim that says more than its quote loses the over-reach instead of losing
@@ -34,6 +41,15 @@ export const STAGES = [
   // costed - see evidence/repair.ts.
   'repair',
   'script',
+  // The last pass over the prose before it is voiced, and the only one whose
+  // subject is how it SOUNDS rather than whether it is right. It may not add a
+  // fact, which is enforced rather than requested. See script/perform.ts.
+  'perform',
+  // Reading the finished script against the ledger for anything it states that
+  // no claim supports. Runs AFTER the performance pass, so it reviews the text
+  // that will actually be spoken. Its own stage for the ordinary reason: it costs
+  // a model call, so a resumed run must not pay for it twice.
+  'grounding',
   'render',
   'qa',
   'publish',
@@ -101,6 +117,27 @@ export const runManifestSchema = z.object({
    * switching methods halfway through an episode.
    */
   onePass: z.boolean().optional(),
+  /**
+   * Which optional stages this run was started with.
+   *
+   * ON THE MANIFEST FOR THE SAME REASON AS onePass: a resume must continue the way
+   * the run started. Resuming with different stages would mean half an episode was
+   * checked by passes the other half never saw, and the gate report would describe
+   * neither half. See config/stages.ts.
+   */
+  stages: z.record(z.boolean()).optional(),
+
+  /**
+   * How this run researched, when it was asked for something other than what
+   * its format says.
+   *
+   * ON THE MANIFEST FOR THE SAME REASON AS onePass AND stages: a resume must
+   * continue the way the run started. Half an episode researched breadth-first
+   * and half from one fused reference would be neither, and the artifacts on
+   * disk would not say which. Absent means the format decides, which is the
+   * normal case.
+   */
+  research: z.enum(['extensive', 'single']).optional(),
 
   /**
    * Which unit of a source script this run was cut from.
@@ -326,6 +363,9 @@ export class Run {
       story?: number;
       /** Set when the script is to be written in a single call. */
       onePass?: boolean;
+      stages?: Record<string, boolean>;
+      /** Override the format's research mode for this run only. */
+      research?: 'extensive' | 'single';
       /** Stop before rendering and wait for a person to read the script. */
       holdForApproval?: boolean;
     },
@@ -358,6 +398,8 @@ export class Run {
       derivedFrom: input.derivedFrom,
       story: input.story,
       onePass: input.onePass,
+      stages: input.stages,
+      research: input.research,
       holdForApproval: input.holdForApproval ?? false,
     });
 

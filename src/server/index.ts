@@ -68,6 +68,18 @@ import {
   setUpChannelJob,
   verifyPublished,
 } from './operate';
+import {
+  MAX_UPLOAD_BYTES,
+  artKind,
+  channelArtFile,
+  channelArtState,
+  removeChannelArt,
+  removeRunArt,
+  runArtFile,
+  runArtState,
+  saveChannelArt,
+  saveRunArt,
+} from './art';
 
 /** Where the built interface lives, when it has been built. */
 const webRoot = (): string => path.join(__dirname, '..', '..', 'web', 'dist');
@@ -81,6 +93,13 @@ const MIME: Record<string, string> = {
   '.json': 'application/json; charset=utf-8',
   '.wav': 'audio/wav',
   '.ico': 'image/x-icon',
+  // Artwork, which this server now serves back as a preview. Without these a
+  // supplied JPEG goes out as octet-stream and some browsers offer to download
+  // the studio's own page furniture instead of drawing it.
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
 };
 
 const send = (res: http.ServerResponse, status: number, body: unknown, headers: Record<string, string> = {}): void => {
@@ -111,6 +130,41 @@ const readBody = async (req: http.IncomingMessage): Promise<unknown> => {
   } catch {
     throw new HttpError(400, 'the body was not JSON');
   }
+};
+
+/**
+ * The bytes of a picture somebody picked.
+ *
+ * SEPARATE FROM readBody, AND NOT JUST FOR THE LIMIT. That one parses JSON and
+ * caps at a megabyte because a script is words; this one must not parse
+ * anything, because a PNG put through JSON.parse is a 400 that says the body
+ * was not JSON, which is true and useless.
+ *
+ * RAW BYTES RATHER THAN multipart/form-data. A multipart parser is a
+ * surprising amount of code to get right and this server has no dependency
+ * that brings one. A browser can send a File as a request body directly, and
+ * the one thing multipart would have carried that this does not - the original
+ * filename - is not something the studio keeps: art/supplied.ts names the file
+ * after what its header says it is.
+ */
+const readImage = async (req: http.IncomingMessage): Promise<Buffer> => {
+  const chunks: Buffer[] = [];
+  let size = 0;
+
+  for await (const chunk of req) {
+    size += (chunk as Buffer).length;
+    if (size > MAX_UPLOAD_BYTES) {
+      throw new HttpError(
+        413,
+        `that image is over ${Math.round(MAX_UPLOAD_BYTES / (1024 * 1024))}MB, which is larger ` +
+          `than anything the app will ever show. Export it smaller.`
+      );
+    }
+    chunks.push(chunk as Buffer);
+  }
+
+  if (!chunks.length) throw new HttpError(400, 'there was no image in that request');
+  return Buffer.concat(chunks);
 };
 
 /**
@@ -319,6 +373,44 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/run/audio') {
         serveFile(res, audioPath(id ?? ''), 'episode.wav');
         return;
+      }
+
+      // --- Artwork ----------------------------------------------------------
+      //
+      // The picture itself and the fact of it are two routes, because the page
+      // wants the second in JSON beside everything else it loads and the first
+      // only as the src of an img.
+      if (pathname === '/api/channel/art/state') {
+        return send(res, 200, channelArtState(id ?? ''));
+      }
+      if (pathname === '/api/run/art/state') {
+        return send(res, 200, runArtState(id ?? ''));
+      }
+
+      if (pathname === '/api/channel/art' && req.method === 'GET') {
+        const file = channelArtFile(id ?? '', artKind(url.searchParams.get('kind')));
+        if (!file) return send(res, 404, { error: 'this channel has no artwork yet' });
+        serveFile(res, file);
+        return;
+      }
+      if (pathname === '/api/run/art' && req.method === 'GET') {
+        const file = runArtFile(id ?? '');
+        if (!file) return send(res, 404, { error: 'this run has no cover yet' });
+        serveFile(res, file);
+        return;
+      }
+      if (pathname === '/api/channel/art' && req.method === 'POST') {
+        const kind = artKind(url.searchParams.get('kind'));
+        return send(res, 200, saveChannelArt(id ?? '', kind, await readImage(req)));
+      }
+      if (pathname === '/api/channel/art' && req.method === 'DELETE') {
+        return send(res, 200, removeChannelArt(id ?? '', artKind(url.searchParams.get('kind'))));
+      }
+      if (pathname === '/api/run/art' && req.method === 'POST') {
+        return send(res, 200, saveRunArt(id ?? '', await readImage(req)));
+      }
+      if (pathname === '/api/run/art' && req.method === 'DELETE') {
+        return send(res, 200, removeRunArt(id ?? ''));
       }
 
       // --- Writing ----------------------------------------------------------

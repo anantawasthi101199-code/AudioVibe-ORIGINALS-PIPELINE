@@ -262,6 +262,45 @@ export const personaSchema = z.object({
   allowedRiskTiers: z.array(z.enum(['general', 'health', 'finance', 'legal', 'named_person'])),
 
   /**
+   * How this show says goodbye.
+   *
+   * WHY A SHOW NEEDS ONE, AND WHY IT LIVES HERE. The `myth-told` sheet ends
+   * "No sign-off, no call to action, no naming the show, no next-time", which
+   * was written against the real fault of episodes trailing off into filler -
+   * and it overshot. The Inanna episode's last sentence is an unresolved
+   * scholarly question, so a listener who stayed fifteen minutes is handed a
+   * shrug and silence. A show somebody comes back to has to sound like it
+   * expects them back.
+   *
+   * On the persona rather than the format because it is a property of the
+   * SHOW: it should be the same words at the end of every episode whatever
+   * shape that episode was, which is the whole point of a sign-off.
+   *
+   * A STRING OR A LIST. Give several and the show picks one per episode, chosen
+   * from the topic so it is stable on a re-render and different between
+   * episodes - which is how a real presenter sounds, saying roughly the same
+   * thing a slightly different way each week.
+   *
+   * The writer is told to land on it in its own words rather than to recite it,
+   * so it varies further and stays recognisable. THIS FIELD IS THE ONE PLACE TO
+   * EDIT IT: nothing else in the pipeline hard-codes a goodbye.
+   *
+   * Absent means no sign-off, which is right for the shows whose formats
+   * genuinely should stop rather than close.
+   */
+  signoff: z.union([z.string(), z.array(z.string().min(1)).min(1)]).optional(),
+
+  /**
+   * How the show says goodbye at the end of a SHORT.
+   *
+   * A different job from the long sign-off. A short is ninety seconds to three
+   * minutes, it is usually somebody's first contact with the show, and it has
+   * to earn a follow rather than thank somebody for staying fifteen minutes.
+   * Using the long one would spend a fifth of the episode on goodbye.
+   */
+  signoffShort: z.union([z.string(), z.array(z.string().min(1)).min(1)]).optional(),
+
+  /**
    * The weakest source this show will rest a claim on.
    *
    * WHY A SHOW NEEDS ITS OWN FLOOR. Tiers are recorded on every claim already,

@@ -19,6 +19,7 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import type { SynthesisResult } from './tts';
+import { mixBed } from './bed';
 
 export const beatTimingSchema = z.object({
   id: z.string(),
@@ -54,7 +55,7 @@ export type RenderResult = z.infer<typeof renderResultSchema>;
 export const ffmpegBin = (): string => process.env.FFMPEG_PATH || 'ffmpeg';
 export const ffprobeBin = (): string => process.env.FFPROBE_PATH || 'ffprobe';
 
-const runProcess = (bin: string, args: string[]): Promise<{ code: number; stdout: string; stderr: string }> =>
+export const runProcess = (bin: string, args: string[]): Promise<{ code: number; stdout: string; stderr: string }> =>
   new Promise((resolve) => {
     let stdout = '';
     let stderr = '';
@@ -282,6 +283,8 @@ export interface RenderDeps {
    */
   trailing?: (file: string, durationS: number) => Promise<number | null>;
   concat?: (files: string[], out: string, gap: number) => Promise<void>;
+  /** Process runner, injected so the bed can be driven without ffmpeg. */
+  run?: typeof runProcess;
 }
 
 export interface RenderableTurn {
@@ -348,6 +351,80 @@ export const STITCH_CHARS = 400;
  * merged with its neighbours. A single over-long beat becomes a group of one
  * and renders exactly as it used to.
  */
+/**
+ * A gap inside one beat, between two halves of the same thought.
+ *
+ * Smaller than either of the others, because this seam is not a join between
+ * two things - it is the middle of a paragraph that had to be sent in two
+ * requests. The sentence-final pause is already in the audio; this is just
+ * enough to stop the two takes butting up against each other.
+ */
+export const SPLIT_GAP_S = 0.12;
+
+/**
+ * Cut one beat's text into pieces the engine will actually accept.
+ *
+ * WHY THIS HAD TO EXIST. `groupBeats` stops GROUPING at the engine's limit and
+ * never SPLITS, and the comment above it says so plainly: "a single over-long
+ * beat becomes a group of one and renders exactly as it used to". That was
+ * true and harmless for as long as no single beat exceeded the limit.
+ *
+ * Then the single-story lane started writing longer beats. A 9,350-character
+ * story beat went to OpenAI as one request and came back:
+ *
+ *   Input of 2212 tokens is over the maximum input limit of 2000 tokens.
+ *
+ * after the research, the script and the performance pass were all paid for.
+ * The renderer knew the limit, measured every beat against it, and then sent
+ * an over-limit beat anyway because a group of one has nothing to be grouped
+ * with. Refusing the beat would be no better: the fix a person would make by
+ * hand is to send it in two requests, so the renderer does that.
+ *
+ * SPLITS ON SENTENCE ENDINGS ONLY, where it possibly can. A cut inside a
+ * sentence is audible - the voice drops as if the sentence had finished, then
+ * starts the rest of it cold - and that is the one thing this whole grouping
+ * apparatus exists to avoid. A single sentence longer than the entire budget
+ * has no good cut, so it falls back to a word boundary, which is ugly and is
+ * still better than a failed render.
+ */
+export const splitForSynthesis = (text: string, maxChars: number): string[] => {
+  if (!maxChars || text.length <= maxChars) return [text];
+
+  // Keep the terminator with the sentence it ends.
+  const sentences = text.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [text];
+
+  const chunks: string[] = [];
+  let current = '';
+
+  const flush = () => {
+    if (current.trim()) chunks.push(current.trim());
+    current = '';
+  };
+
+  for (const sentence of sentences) {
+    // One sentence that cannot fit on its own. Nothing here is a good answer,
+    // so take the least bad one and break it between words.
+    if (sentence.length > maxChars) {
+      flush();
+      let rest = sentence;
+      while (rest.length > maxChars) {
+        const cut = rest.lastIndexOf(' ', maxChars);
+        const at = cut > maxChars / 2 ? cut : maxChars;
+        chunks.push(rest.slice(0, at).trim());
+        rest = rest.slice(at);
+      }
+      current = rest;
+      continue;
+    }
+
+    if (current.length + sentence.length > maxChars) flush();
+    current += sentence;
+  }
+  flush();
+
+  return chunks.filter((c) => c.length);
+};
+
 export const groupBeats = <T extends { turns: Turnish[] }>(
   beats: T[],
   maxChars: number | undefined,
@@ -416,6 +493,24 @@ export const renderScript = async (
     voices: Record<string, import('../canon/schema').Voice>;
     beatPathFor: (name: string) => string;
     outputPath: string;
+    /**
+     * Mix a synthesised bed under each part. OPT IN.
+     *
+     * NOT AN OPTIONAL STAGE, because it costs no money. `OPTIONAL_STAGES`
+     * exists for passes that call a model; this is ffmpeg synthesising a
+     * twenty-four second orchestral phrase and convolving it against a
+     * reverb, over a file that already exists.
+     *
+     * OPT IN RATHER THAN OPT OUT, because it is not free in TIME. Defaulting
+     * it on made every render in the unit suite spawn ffmpeg, and five
+     * hermetic suites went from four seconds to fifty and timed out in
+     * parallel. A library function that silently synthesises music unless told
+     * not to is the wrong contract; the CLI opts in explicitly, and
+     * `--no-music` opts back out.
+     */
+    music?: boolean;
+    /** Decides the bed's key. The episode subject, so it is stable per topic. */
+    musicSeed?: string;
   },
   tts: import('./tts').TtsProvider,
   deps: RenderDeps = {},
@@ -614,8 +709,60 @@ export const renderScript = async (
           : undefined,
       };
 
-      result = await tts.synthesise(request);
-      write(file, result.audio);
+      // ONE BEAT, MORE THAN ONE REQUEST, WHEN THE ENGINE WILL NOT TAKE IT WHOLE.
+      // See splitForSynthesis for the render this cost. Each piece still gets
+      // the stitching context of its neighbours, so the voice carries across an
+      // internal seam the same way it carries across a beat boundary.
+      const pieces = tts.maxInputChars
+        ? splitForSynthesis(request.text, tts.maxInputChars)
+        : [request.text];
+
+      if (pieces.length > 1) {
+        onProgress?.(
+          `${i + 1}/${groups.length}: ${beat.beatId} is ${request.text.length} characters, ` +
+            `past the ${tts.maxInputChars} this engine takes. Sending it in ${pieces.length} pieces.`
+        );
+
+        const pieceFiles: string[] = [];
+        let pieceCost = 0;
+        let pieceResult: SynthesisResult | null = null;
+
+        for (const [n, piece] of pieces.entries()) {
+          const one = await tts.synthesise({
+            text: piece,
+            voice: request.voice,
+            previousText:
+              n === 0
+                ? request.previousText
+                : pieces[n - 1]!.slice(-STITCH_CHARS),
+            nextText:
+              n === pieces.length - 1
+                ? request.nextText
+                : pieces[n + 1]!.slice(0, STITCH_CHARS),
+          });
+          const pieceFile = input.beatPathFor(
+            `${String(i + 1).padStart(2, '0')}-${beat.beatId}-p${String(n + 1).padStart(2, '0')}.mp3`
+          );
+          write(pieceFile, one.audio);
+          pieceFiles.push(pieceFile);
+          pieceCost += one.costPence;
+          pieceResult = one;
+        }
+
+        await join(pieceFiles, file, SPLIT_GAP_S);
+
+        result = {
+          ...pieceResult!,
+          // The bytes live in `file`, which `join` wrote. Handing back the last
+          // piece's audio would make the truncation guard below measure one
+          // piece and believe it had measured the beat.
+          audio: Buffer.alloc(0),
+          costPence: pieceCost,
+        };
+      } else {
+        result = await tts.synthesise(request);
+        write(file, result.audio);
+      }
 
       // A TRUNCATED RENDER IS WORTH ONE MORE CALL. The provider drops the tail
       // of an utterance intermittently - proven by rendering identical text
@@ -632,7 +779,20 @@ export const renderScript = async (
       const firstTrailing =
         measured === null ? null : await measureTrailing(file, measured);
 
-      if (firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
+      // NOT FOR A BEAT THAT HAD TO BE SPLIT. The retry re-sends `request`
+      // whole, and `request` being too big for the engine is the entire reason
+      // the beat was split - so the retry would fail with the same error that
+      // forced the split, after the pieces had already been paid for and
+      // joined. Re-taking one piece of a joined file is a different and much
+      // larger job; until something needs it, a split beat keeps its first
+      // take and the run says so rather than pretending it was checked.
+      if (pieces.length > 1 && firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
+        onProgress?.(
+          `${i + 1}/${groups.length}: ${beat.beatId} ended on ` +
+            `${firstTrailing.toFixed(1)}s of silence, and it was rendered in ` +
+            `${pieces.length} pieces, so it cannot be re-taken as one. Keeping it.`
+        );
+      } else if (firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
         onProgress?.(
           `${i + 1}/${groups.length}: ${beat.beatId} ended on ` +
             `${firstTrailing.toFixed(1)}s of silence. Taking it again.`
@@ -688,6 +848,27 @@ export const renderScript = async (
           `real durations, and an estimated one would put every later timestamp out.`
       );
     }
+    // THE BED GOES ON LAST, AFTER EVERY DECISION ABOUT THE SPEECH IS MADE.
+    //
+    // It has to be after the truncation retry, because that measures trailing
+    // silence to decide whether the provider dropped the tail - and a bed fading
+    // out over the last four seconds fills exactly the silence that check reads.
+    // Mixed in first, the guard would stop seeing truncation at all.
+    //
+    // The duration is already in hand, the mix is one ffmpeg call on a file that
+    // exists, and a failure leaves the speech untouched. See render/bed.ts.
+    if (input.music === true) {
+      const bed = await mixBed(
+        { file, durationS, seed: input.musicSeed ?? beat.beatId },
+        { run: deps.run }
+      );
+      if (bed.applied) {
+        onProgress?.(`${i + 1}/${groups.length}: ${beat.beatId} has a bed under it`);
+      } else if (bed.reason) {
+        onProgress?.(`${i + 1}/${groups.length}: no bed on ${beat.beatId} - ${bed.reason}`);
+      }
+    }
+
     // One measured duration, shared out by character count when the group holds
     // more than one beat. See apportion.
     const shares = group.map((b) => speakable(b.turns.map((t) => t.text).join('\n\n')).length);

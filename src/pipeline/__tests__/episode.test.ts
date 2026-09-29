@@ -447,10 +447,46 @@ describe('the approval break', () => {
     expect(tts.calls).toBe(0);
     expect(script.title).toBeTruthy();
 
-    // Not a failure. The run did what it was asked to do.
-    expect(gate.passed).toBe(true);
     expect(gate.needsHumanReview).toBe(true);
     expect(gate.humanReviewReasons.join(' ')).toMatch(/held before the render/);
+  });
+
+  /**
+   * THE HELD PATH USED TO FABRICATE A PASS, and this test asserted it.
+   *
+   * It expected `gate.passed === true` with the comment "not a failure, the run
+   * did what it was asked to do" - which is true of the RUN and was not true of
+   * the SCRIPT. The code returned `{ passed: true, findings: [] }` without
+   * running a single check, so the default and recommended path printed "GATE:
+   * passed" over a script nothing had looked at.
+   *
+   * Caught on a real episode: the held report said passed with no findings, and
+   * `gate --run` on the same script immediately found four blocking problems,
+   * three of them quotation claims whose words were not in their quotes.
+   *
+   * So the hold now runs the real gate and reports what it finds. It still does
+   * not REFUSE anything - `approve` never consults the report - because the
+   * point is that the person approving can see the findings.
+   */
+  it('runs the real checks at the hold rather than assuming a pass', async () => {
+    const run = held();
+    const { gate } = await runEpisode(run, buildDeps({ tts: fakeTts() }));
+
+    // The artifact exists, so `gate --run` and the studio have something to read
+    // and the report survives the terminal it was printed on.
+    expect(run.hasArtifact('qa')).toBe(true);
+
+    // Every check that does not need audio has actually run. The measurement is
+    // not evidence of that - the old fabricated report carried one too - so this
+    // asserts on the checks themselves.
+    const checks = gate.findings.map((f) => f.check);
+    expect(gate.measurement.words).toBeGreaterThan(0);
+
+    // A length is reported rather than the zero a missing render would give,
+    // which used to make every held run claim it ran 0 seconds.
+    expect(
+      checks.some((c) => c === 'duration') && gate.findings.find((f) => f.check === 'duration')!.detail
+    ).not.toMatch(/runs 0s/);
   });
 
   it('renders once approved, without re-paying for the script', async () => {

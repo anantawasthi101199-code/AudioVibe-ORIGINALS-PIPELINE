@@ -9,7 +9,7 @@ shipped, and turned out to be wrong in a way that cost real money or a real
 episode. Those are recorded with what the mistake actually was, because the
 reasoning that produced them was plausible and will be plausible again.
 
-Last updated 2026-09-13.
+Last updated 2026-09-27.
 
 ---
 
@@ -245,6 +245,110 @@ What it costs is facts. A story trimmed from four sources to two loses whatever
 only the other two carried, and can fall below its claim floor - at which point
 the gate reports it as thin, which is true.
 
+### A told story reads few documents whole; a subject reads many in part
+
+Two research lanes, declared per format as `research: single | extensive`.
+
+`extensive` is the original: search wide, fetch fourteen documents, extract
+claims bound to verbatim quotes, verify each against a different model family,
+repair what fails, write from the ledger. Right where assembling what many
+documents **separately** establish is the product, which is Honest Health.
+
+`single` picks the one to three documents that carry the whole story, reads
+them at a hundred thousand characters each rather than six thousand, and fuses
+them into **one reference article** the writer works from. No claim ledger, no
+per-fact verification, no counter-evidence pass, and one check at the end:
+`reviewReference` reads the article back against its own documents.
+
+**What forced it.** The Descent of Inanna episode (e008) fetched 585,396
+characters across fourteen documents, showed the extractor 13% of them, and
+drew its facts like this:
+
+| claims | document |
+| --- | --- |
+| 9 | a university course handout |
+| 8 | Ancient Mesopotamian underworld - Wikipedia |
+| 7 | Inanna - Wikipedia (her whole biography) |
+| 7 | Dumuzid - Wikipedia (his whole biography) |
+| **6** | **Descent of Inanna into the Underworld** |
+| 2 | Ereshkigal - Wikipedia |
+| 1 | a chronology table |
+| 1 | a second course page |
+
+The article that **is** the story came fifth. A script assembled from eight
+documents' partial views of one myth wanders, changes its emphasis and
+contradicts itself, and a listener hears exactly that.
+
+The keyhole also lost the answer to the episode's own central question. The
+script says "The text does not explain guilty of what". The main article has a
+section headed **"A guilty goddess"** explaining it - Inanna went down to take
+her sister's throne and "failed in her thoughtless endeavor to conquer" - at
+roughly character 71,000 of a 98,191-character document. `REFERENCE_CHARS_PER_SOURCE`
+is 100,000 for that reason and not as a round number.
+
+**What it costs.** No sentence-level quote binding, so a fabricated sentence in
+the reference has one check rather than five. `sourceIds` are still real fetched
+sources and cannot be invented, and the gate fails closed when the review did
+not run - but this lane is weaker on provenance and stronger on coherence, and
+that is the trade. A myth is a claim about a text; a health claim is a claim
+about the world, and the second one keeps the ledger.
+
+### Where the sources disagree, the fusion decides and the episode says nothing
+
+The disagreements go in the reference's `variants`, which is written to the run
+and **never shown to the writer**. A person can audit every choice; a listener
+hears one story.
+
+**The reversal this is.** `myth-told` says "WHERE THE VERSIONS DISAGREE, SAY SO
+PLAINLY AND SAY WHO SAYS WHAT", and the writer prompt says a beat using an
+unsettled claim without voicing it "is rejected". On e008, **one** contested
+claim out of forty-four produced roughly 200 of the 386 words in the payoff
+beat - fragment attribution, the Akkadian transmission history, the
+dying-and-rising-god reading that fell apart - plus the last line of the
+episode. The planner had already baked it into the spine before a word was
+written.
+
+That is a literature review in the place where the story should land. Scholarly
+honesty was never the problem; the problem is that a disagreement is the most
+interesting thing on the page to a writer and the least interesting thing in the
+world to somebody walking home with headphones on.
+
+Enforced rather than requested: `findHedging` is a deterministic check over the
+finished prose, and every pattern in it is a phrase from that episode. A model
+told three times not to hedge still hedges when the material invites it, and it
+reaches for a synonym rather than for the truth - "the surviving tablets stop
+agreeing with each other" is in the list because a list of the obvious verbs
+walked straight past it.
+
+**What would change it.** A myth whose transmission genuinely is the story -
+where which manuscript survived, and who changed it, is more interesting than
+the events. `myth-told` is kept for exactly that and is chosen with `--format`.
+
+### Explanation is not an assertion, and a grounding check that says otherwise flattens the prose
+
+The grounding review reads a script against its ledger and reports what no claim
+supports. On e008 it reported:
+
+- "It comes from Sumer, in what is now southern Iraq."
+- "It was written down in cuneiform, wedge marks pressed into wet clay"
+- "They came to Uruk, a city on the Euphrates."
+
+All three are general world knowledge doing the one job this show's own canon
+says matters most - "the world of the story has to be explained before the
+story, or every event in it sounds arbitrary". The prompt has carve-outs for
+inference **from the claims** and none for knowing where Iraq is.
+
+With two revision passes a beat, a writer told that explaining is a violation
+learns that the safe way to explain something is to barely explain it. That is
+where "cuneiform, wedge marks pressed into wet clay" comes from: the
+information is present, the clause is unimpeachable, and nobody is taught
+anything. A listener wants the four sentences - what it is, how it was done,
+why anybody did it that way, and why that is why we still have the story.
+
+So on the `single` lane the rule is split. **Events, names, numbers, motives and
+anything anybody said** come from the reference. **Explanation of the world**
+does not have to, and the beat sheet asks for it at length.
+
 ### Only two verdicts block, and neither is about wording
 
 `contradicted` (the document says the opposite) and `unsourced` (there is no
@@ -286,6 +390,47 @@ one flat sentence.
 ---
 
 ## Reversals
+
+### "Everything on by default, because every pass was built in response to a real fault"
+
+Every paid pass is now **off** by default. `config/stages.ts` used to read
+"everything else is on, because everything else was built in response to a fault
+that reached a finished episode", which was true of each pass individually and
+produced a pipeline where one episode cost 232p, of which 139p was checking and
+rewriting rather than making:
+
+| | |
+| --- | --- |
+| script draft | 11.7p |
+| three rewrites | **87.1p** |
+| reference check | **51.6p** (and it failed) |
+| perform | 8.1p |
+| the actual research + render | 85p |
+
+The rewrites were also not converging. Draft one averaged 24.4 words a sentence
+against a target of 13; the rewrite over-corrected to 4.1 words of variance
+against a minimum of 5; six problems were still outstanding when the budget ran
+out. Paying four times to arrive somewhere neither is a bill, not a control.
+
+The owner's instruction: *"remove all the checks, i dont want to waste money on
+any checks revisions or gates, we will add them one by one later. we start with
+minimal cost and keep adding stuff as we go along."*
+
+**A DETERMINISTIC CHECK IS NEVER SWITCHED OFF, because it is free.** The style
+card, `critiqueBeat`, `findHedging`, speakability, self-similarity, the quote
+ledger and the gate are arithmetic over text already on disk. They still run and
+still report on every run; what changed is only whether a MODEL is bought to act
+on them. A draft that fails its critique is now reported and kept rather than
+rewritten three times.
+
+Estimated floor for a single-story episode: **62p against 232p**.
+
+What would change it: an episode going out. Everything here is a drafting
+economy, and the gate still fails closed on the single-story lane when the
+reference was never checked, precisely so that "cheap" cannot quietly become
+"unchecked and published".
+
+
 
 Recorded because the reasoning that produced each was plausible.
 

@@ -86,9 +86,80 @@ const textAbout = (corpus: string, surname: string): string => {
   const windows: string[] = [];
   let m: RegExpExecArray | null;
   while ((m = re.exec(corpus))) {
-    windows.push(corpus.slice(m.index, m.index + EVIDENCE_WINDOW));
+    windows.push(evidenceFrom(corpus.slice(m.index, m.index + EVIDENCE_WINDOW), surname));
   }
   return windows.join(' ');
+};
+
+/**
+ * The part of a window that is still about this person.
+ *
+ * A RAW WINDOW ACCUSED A REAL SCRIPT OF MISGENDERING SOMEBODY IT HAD RIGHT.
+ * The source sentence was:
+ *
+ *   "Some researchers, including Thorkild Jacobsen, Jean Bottero and Samuel
+ *    Noah Kramer, did not take this tablet into account ... while others, such
+ *    as Bendt Alster and Dina Katz, believe it to be an independent text"
+ *
+ * Three hundred characters from "Kramer" runs straight through Alster and Katz,
+ * so the window's pronouns were mostly about other people. The script said
+ * "his time" about Kramer, which is correct and which no claim stated either
+ * way, and the check called it a blocking error. A blocking false accusation is
+ * the one outcome this module's own header says would teach everyone to ignore
+ * it.
+ *
+ * So the window stops at the first OTHER PERSON named in it. Everything from the
+ * target's name to the next person's name is about the target; past that it is
+ * about somebody else, and in the Kramer sentence it was two other people in the
+ * same clause, so cutting at sentence boundaries would not have helped.
+ *
+ * "ANOTHER PERSON" IS TWO CAPITALISED WORDS IN A ROW, and the first attempt at
+ * this broke on ONE, which broke the case the module exists for. The real corpus
+ * reads "Judge Christopher Kinch QC said he did not know if it could be proved
+ * ... in English legal history" - and "March", "English" and "Crown" are all
+ * capitalised without being anybody, so cutting at every capital left "Kinch 9th"
+ * as the entire evidence and the misgendered judge went unreported.
+ *
+ * A pair is a much better signal, because a document introducing somebody else
+ * gives them both names: "Bendt Alster", "Dina Katz", "Thorkild Jacobsen". A
+ * month followed by a year is not a pair. A nationality followed by a lowercase
+ * noun is not a pair. And a pair containing the TARGET is not somebody else,
+ * which is what keeps "Christopher Kinch" from cutting the window about Kinch.
+ *
+ * The cost is less evidence and therefore more nulls, and that is the right
+ * direction: this module would rather say nothing than say something false.
+ */
+export const evidenceFrom = (window: string, surname: string): string => {
+  const target = surname.toLowerCase();
+  const words = window.split(/\s+/);
+  const bare = words.map((w) => w.replace(/[^A-Za-z'’-]/g, ''));
+  const isCapped = (i: number): boolean => {
+    const w = bare[i];
+    return !!w && w.length >= 3 && /^[A-Z]/.test(w);
+  };
+  const isTarget = (i: number): boolean => (bare[i] ?? '').toLowerCase() === target;
+
+  const kept: string[] = [];
+  // The first token IS the target's name, so it never counts as somebody else.
+  let sentenceStart = true;
+
+  for (let i = 0; i < words.length; i++) {
+    // Somebody else's full name: two capitalised words together, neither of them
+    // the person this window is supposed to be evidence about.
+    const startsOtherName =
+      i > 0 &&
+      !sentenceStart &&
+      isCapped(i) &&
+      isCapped(i + 1) &&
+      !isTarget(i) &&
+      !isTarget(i + 1);
+
+    if (startsOtherName) break;
+    kept.push(words[i]!);
+    sentenceStart = /[.!?]["'’”]?$/.test(words[i]!);
+  }
+
+  return kept.join(' ');
 };
 
 /**

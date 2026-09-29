@@ -250,30 +250,48 @@ describe('runGate', () => {
     expect(report.findings.some((f) => f.check === 'selfSimilarity')).toBe(false);
   });
 
-  it('REPORTS an episode far outside its format length without blocking it', () => {
-    // THIS USED TO BLOCK, and blocking it was wrong. A format's target length
-    // is a planning number - roughly what shape of story suits the show - and
-    // enforcing it on a finished episode makes the writer pad to reach it. The
-    // very next episode after the floor was tightened was described as "forced
-    // to be long", and the cheapest padding is describing something already
-    // described.
-    //
-    // Still reported, because a big miss is worth knowing about: half the
-    // target usually means thin research, double usually means rambling beats.
-    // Both worth a look, neither worth refusing to publish over.
-    for (const durationS of [60, 900]) {
-      const report = runGate(input({ durationS }));
-      expect(report.passed).toBe(true);
-      const duration = report.findings.find((f) => f.check === 'duration');
-      expect(duration).toBeDefined();
-      expect(duration!.blocking).toBe(false);
-    }
-  });
-
-  it('says nothing at all about a duration inside the guide', () => {
-    expect(runGate(input({ durationS: 290 })).findings.some((f) => f.check === 'duration')).toBe(
+  /**
+   * THE FORMAT TARGET IS NO LONGER REPORTED AGAINST AT ALL for a long episode,
+   * and that is a second step in the same direction as the first.
+   *
+   * Blocking the target was wrong because it made the writer pad. Reporting the
+   * target was still wrong for the same reason in a quieter way: the studio's
+   * first two long episodes came in at 12.6 and 10.2 minutes against a 13-18
+   * target, so both carried a "you are short" note, and both were exactly as
+   * long as their material. The owner settled it: "the target time can be
+   * anything, don't make it match to some threshold ... if there is limited
+   * information I wouldn't want it to keep pushing out stuff to just reach the
+   * mark".
+   *
+   * What replaces it is two product boundaries rather than a target: under five
+   * minutes it is a short sitting in a long feed, and past twenty minutes a beat
+   * is rambling. Between them the gate says nothing about length.
+   */
+  it('says nothing about a length between the floor and the cap', () => {
+    // 900s is fifteen minutes and more than double this fixture's 300-400s
+    // target. Under the old rule it was reported. It is a perfectly good length
+    // for an episode and is now silent.
+    expect(runGate(input({ durationS: 900 })).findings.some((f) => f.check === 'duration')).toBe(
       false
     );
+  });
+
+  it('REPORTS an episode under the five-minute floor without blocking it', () => {
+    const report = runGate(input({ durationS: 240 }));
+    expect(report.passed).toBe(true);
+    const duration = report.findings.find((f) => f.check === 'duration');
+    expect(duration).toBeDefined();
+    expect(duration!.blocking).toBe(false);
+    expect(duration!.detail).toMatch(/floor/);
+  });
+
+  it('REPORTS an episode past the cap without blocking it', () => {
+    const report = runGate(input({ durationS: 1500 }));
+    expect(report.passed).toBe(true);
+    const duration = report.findings.find((f) => f.check === 'duration');
+    expect(duration).toBeDefined();
+    expect(duration!.blocking).toBe(false);
+    expect(duration!.detail).toMatch(/cap/);
   });
 
   it('BLOCKS a show making claims about named parties it is not cleared for', () => {
@@ -497,3 +515,130 @@ describe("a show's own evidence policy", () => {
     );
   });
 });
+
+/**
+ * The single-story lane, which reaches the same gate with no ledger.
+ *
+ * WHY THESE MATTER MORE THAN THEY LOOK. Sections 1 to 4 of the gate read a
+ * claim ledger, and a reference-lane script has none. Run against an empty
+ * ledger they do not fall silent, they report FAULTS - every beat below its
+ * claim floor, nothing citing anything - and a report full of findings that
+ * are all artefacts of asking the wrong question is a report somebody learns
+ * to skim. That is how a real fault gets missed.
+ *
+ * The other half is the opposite risk. Skipping four sections must not make an
+ * unchecked script look clean, so the lane brings its own check and its absence
+ * fails closed, exactly like everything else here.
+ */
+describe('runGate on the single-story lane', () => {
+  const storyScript = (): Script => {
+    const s = script();
+    // No ledger, so no claim ids. This is the shape the lane really produces.
+    for (const beat of s.beats) beat.claimIds = [];
+    return s;
+  };
+
+  const storyInput = (over: Partial<GateInput> = {}): GateInput =>
+    input({
+      evidence: 'reference',
+      script: storyScript(),
+      claims: [],
+      ledger: ledger({ tierByBeat: {}, claimsByBeat: {} }),
+      referenceReview: { unanswered: [], unsupported: [], checked: true },
+      ...over,
+    });
+
+  it('passes a clean story episode that cites no claims at all', () => {
+    const report = runGate(storyInput());
+
+    expect(report.findings.filter((f) => f.blocking)).toEqual([]);
+    expect(report.passed).toBe(true);
+  });
+
+  it('does not report an empty ledger as thin evidence', () => {
+    const report = runGate(storyInput());
+
+    for (const check of ['evidenceDensity', 'claimUse', 'ledger', 'factuality']) {
+      expect(report.findings.some((f) => f.check === check)).toBe(false);
+    }
+  });
+
+  it('still judges the prose exactly as it judges any other episode', () => {
+    // The whole point of skipping four sections and no more. Style is a
+    // property of the audio and does not care how it was sourced.
+    const report = runGate(
+      storyInput({
+        script: (() => {
+          const s = storyScript();
+          s.beats[0]!.turns[0]!.text = 'It is shrouded in mystery. '.repeat(20);
+          return s;
+        })(),
+      })
+    );
+
+    expect(report.findings.some((f) => f.check.startsWith('style'))).toBe(true);
+  });
+
+  it('FAILS CLOSED when the reference was never checked', () => {
+    const report = runGate(storyInput({ referenceReview: undefined }));
+
+    expect(report.findings.some((f) => f.check === 'reference')).toBe(true);
+    expect(report.needsHumanReview).toBe(true);
+  });
+
+  it('fails closed when the check ran and could not finish', () => {
+    const report = runGate(
+      storyInput({ referenceReview: { unanswered: [], unsupported: [], checked: false } })
+    );
+
+    expect(report.findings.some((f) => f.check === 'reference')).toBe(true);
+  });
+
+  it('surfaces a question the sources answered and the reference dropped', () => {
+    // The Inanna fault, as a gate finding: the script would have said "the
+    // text does not explain guilty of what" over a source section headed
+    // "A guilty goddess".
+    const report = runGate(
+      storyInput({
+        referenceReview: {
+          unanswered: ['why the Annuna judged Inanna guilty - the source has a section on it'],
+          unsupported: [],
+          checked: true,
+        },
+      })
+    );
+
+    expect(report.findings.some((f) => f.check === 'referenceGap')).toBe(true);
+    expect(report.needsHumanReview).toBe(true);
+    // Advisory, not blocking. It is a judgement, and the owner's standing
+    // instruction is to highlight rather than refuse.
+    expect(report.findings.filter((f) => f.blocking)).toEqual([]);
+  });
+
+  it('surfaces a statement no document supports', () => {
+    const report = runGate(
+      storyInput({
+        referenceReview: {
+          unanswered: [],
+          unsupported: ['the corpse hung for three days and three nights'],
+          checked: true,
+        },
+      })
+    );
+
+    expect(report.findings.some((f) => f.check === 'referenceUnsupported')).toBe(true);
+    expect(report.needsHumanReview).toBe(true);
+  });
+
+  it('does not tell a story run that grounding and counter-evidence were skipped', () => {
+    // Neither runs on this lane by design, so reporting them as missing safety
+    // passes would be describing the lane as broken rather than as different.
+    const report = runGate(
+      storyInput({ stagesOff: ['grounding', 'counterEvidence'] })
+    );
+
+    expect(
+      report.humanReviewReasons.some((r) => r.includes('has not been checked for'))
+    ).toBe(false);
+  });
+})

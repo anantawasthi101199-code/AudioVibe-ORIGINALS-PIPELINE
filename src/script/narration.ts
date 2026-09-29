@@ -48,7 +48,21 @@ export const NARRATION_GUIDANCE = [
   // is a list of things the sources say about a subject, in no order at all.
   'TELL IT IN ORDER, AND MAKE EACH THING CAUSE THE NEXT. What happened first, what that led to, what followed from that. A listener is holding the whole thing in their head with nothing to look back at, and a chain is the only shape that survives that. If two facts have no causal link, the second one probably does not belong.',
   'MAKE IT SEEABLE. A listener should be able to picture what you are describing: who is in the room, where they are standing, what is in their hands, what moves. Concrete nouns and physical actions do this; abstractions and categories do not. "The rope was Vasuki, a great serpent, wound around the mountain so both sides could pull on him" can be seen. "A cooperative arrangement was established" cannot.',
-  'NEVER NARRATE THE RESEARCH. The subject is what happened, not what the sources say about what happened. No "the record does not settle", no "one text names", no "there is also a claim that". If something is known, say it as a thing that happened. If it is not known, leave it out - somebody who knew the subject would.',
+  // THE CARVE-OUT WAS MISSING AND THE PIPELINE CONTRADICTED ITSELF.
+  //
+  // This line banned the frame a quotation needs - "one text names", "the record
+  // says" - while myth-told's `story` beat requires "where the text itself
+  // matters, say so HERE", and the show's own canon asks for the manuscript
+  // detail "at the moment it bites". Two instructions in the same prompt, one
+  // asking for the thing the other forbade, and the result was a script that
+  // quoted nothing.
+  //
+  // The decision this preserves is the real one: do not report on the state of
+  // scholarship. The thing it was over-reaching into is different: naming the
+  // text you are about to read from is not narrating the research, it is
+  // attribution, and it takes four words.
+  'NEVER NARRATE THE STATE OF THE RESEARCH. The subject is what happened. No "the sources do not settle", no "there is also a claim that", no summarising what scholars think. If something is known, say it as a thing that happened. If it is not known, leave it out, which is what somebody who knew the subject would do.',
+  'BUT THE TEXT ITSELF IS PART OF THE STORY, and naming it is not narrating research. "The oldest copy of this stops here." "The line is broken and nobody can translate it." "In the version a monk wrote out four hundred years later, she goes willingly." Say those at the moment they bite, in the telling, where they are the most interesting sentence in the beat. Never as a preamble at the front, where the same sentence is bibliography.',
   'You are ONE person telling a story out loud, from beginning to end, to somebody who has never heard it. Not reading an essay, not presenting.',
   'THE STORY AND THE FACTS ARE THE SUBJECT. Not the listener, and not the telling. "You can see where this is going" and "if you were in that room" are sentences spent on the audience instead of on what happened. Address the listener directly only where it genuinely earns its place, which is rarely.',
   // THIS LINE USED TO SAY "say things twice, differently", AND IT WAS WRONG

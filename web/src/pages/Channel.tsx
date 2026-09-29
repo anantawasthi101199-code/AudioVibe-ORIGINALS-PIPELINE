@@ -20,6 +20,8 @@ import {
   clock,
   money,
   watchJob,
+  type ArtKind,
+  type ArtState,
   type Channel as ChannelT,
   type JobEvent,
   type Platform,
@@ -28,6 +30,7 @@ import {
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
+import { ImagePicker } from '../components/ImagePicker';
 
 /** The once-per-channel jobs, which is where everything platform-facing lives. */
 const Setup = ({
@@ -46,6 +49,20 @@ const Setup = ({
   const [busy, setBusy] = useState<string | null>(null);
   const [log, setLog] = useState<JobEvent[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [art, setArt] = useState<Record<ArtKind, ArtState> | null>(null);
+
+  // Its own call rather than part of the channel payload, because it changes
+  // on its own schedule: picking a file must update these two without
+  // reloading every run on the page behind them.
+  const loadArt = useCallback(async () => {
+    try {
+      setArt(await api.channelArtState(channel.id));
+    } catch {
+      setArt(null);
+    }
+  }, [channel.id]);
+
+  useEffect(() => void loadArt(), [loadArt]);
 
   const { account } = channel;
   // A show that publishes loose episodes never needs a shelf, so it is set up
@@ -70,7 +87,9 @@ const Setup = ({
     setError(null);
     try {
       const { jobId } = await api.setUpChannel(channel.id, email, password, redraw);
-      watch(jobId, redraw ? 'artwork' : 'account');
+      // An existing account re-running setup is sending artwork, not creating
+      // anything, and the button that is spinning should be the one pressed.
+      watch(jobId, redraw ? 'artwork' : account.exists ? 'upload' : 'account');
     } catch (e) {
       setError((e as Error).message);
     }
@@ -159,15 +178,33 @@ const Setup = ({
                   channel with the password this studio already recorded; admin
                   is only ever needed to bring an account into existence.
                 */}
+                {/*
+                  TWO BUTTONS, BECAUSE THEY COST DIFFERENTLY. Sending uses
+                  whatever is already on disk and spends nothing. Redrawing
+                  calls an image model for every picture nobody supplied, which
+                  is the right thing when you want a new one and an accidental
+                  charge when you only wanted to upload the file you just
+                  picked.
+                */}
                 <div className="row" style={{ gap: '0.5rem' }}>
                   <button
                     className="btn small"
                     disabled={busy !== null}
+                    onClick={() => void create(false)}
+                  >
+                    {busy === 'upload' ? 'Sending...' : 'Send artwork to the platform'}
+                  </button>
+                  <button
+                    className="btn small ghost"
+                    disabled={busy !== null}
                     onClick={() => void create(true)}
                   >
-                    {busy === 'artwork' ? 'Redrawing...' : 'Redraw and re-upload artwork'}
+                    {busy === 'artwork' ? 'Redrawing...' : 'Redraw'}
                   </button>
-                  <span className="faint tiny">Replaces the avatar and cover on the platform.</span>
+                  <span className="faint tiny">
+                    Sending costs nothing. Redrawing makes a new picture for anything you have not
+                    supplied, and leaves what you have supplied alone.
+                  </span>
                 </div>
               </div>
             ) : (
@@ -202,6 +239,53 @@ const Setup = ({
                   Account, profile, avatar and cover. Once per channel, ever.
                 </span>
               </>
+            )}
+
+            {/*
+              THE PICTURES, AND THEY SIT ABOVE THE CREATE BUTTON'S OUTCOME
+              RATHER THAN AFTER IT. Choosing them before the account exists is
+              the point: setup uploads whatever is here, so a channel can be
+              born wearing its real artwork instead of a monogram that somebody
+              then has to go and replace.
+            */}
+            <div className="art-pair">
+              <ImagePicker
+                title="Profile picture"
+                note="The circle on the profile and beside every card this channel publishes."
+                state={art?.avatar ?? null}
+                src={art ? `/api/channel/art?id=${encodeURIComponent(channel.id)}&kind=avatar` : null}
+                disabled={busy !== null}
+                onUpload={async (image) => {
+                  await api.uploadChannelArt(channel.id, 'avatar', image);
+                  await loadArt();
+                }}
+                onRemove={async () => {
+                  await api.removeChannelArt(channel.id, 'avatar');
+                  await loadArt();
+                }}
+              />
+              <ImagePicker
+                title="Cover image"
+                note="The banner across the top of the profile. The app overlays the profile picture and handle over its lower left, so keep that corner clear."
+                state={art?.cover ?? null}
+                src={art ? `/api/channel/art?id=${encodeURIComponent(channel.id)}&kind=cover` : null}
+                disabled={busy !== null}
+                onUpload={async (image) => {
+                  await api.uploadChannelArt(channel.id, 'cover', image);
+                  await loadArt();
+                }}
+                onRemove={async () => {
+                  await api.removeChannelArt(channel.id, 'cover');
+                  await loadArt();
+                }}
+              />
+            </div>
+
+            {account.exists && (art?.avatar.supplied || art?.cover.supplied) && (
+              <span className="faint tiny">
+                Choosing a file here does not touch the live profile by itself. Press
+                &ldquo;Send artwork to the platform&rdquo; above to put it there.
+              </span>
             )}
           </div>
         </div>

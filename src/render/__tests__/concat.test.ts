@@ -19,7 +19,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { spawn } from 'child_process';
-import { concatBeats, probeDuration } from '../assemble';
+import { concatBeats, probeDuration, splitForSynthesis } from '../assemble';
 
 const ffmpeg = process.env.FFMPEG_PATH || 'ffmpeg';
 
@@ -134,3 +134,75 @@ describe('concatBeats', () => {
     await expect(concatBeats([], path.join(dir, 'x.wav'))).rejects.toThrow(/nothing to concat/);
   });
 });
+
+/**
+ * Splitting one beat across several requests.
+ *
+ * WHAT THIS COST. `groupBeats` stops GROUPING at the engine's limit and never
+ * SPLITS - its own comment says "a single over-long beat becomes a group of one
+ * and renders exactly as it used to" - which was harmless while no beat
+ * exceeded the limit. The single-story lane writes longer beats, and a
+ * 9,350-character story beat went to OpenAI as one request:
+ *
+ *   Input of 2212 tokens is over the maximum input limit of 2000 tokens.
+ *
+ * after the research, the script and the performance pass had all been paid
+ * for. The renderer knew the limit and sent the beat anyway.
+ */
+describe('splitForSynthesis', () => {
+  const sentence = (n: number) => `This is sentence number ${n} and it runs on a little. `;
+  const long = Array.from({ length: 200 }, (_, i) => sentence(i)).join('');
+
+  it('leaves anything already under the limit alone', () => {
+    expect(splitForSynthesis('Short enough.', 6000)).toEqual(['Short enough.']);
+  });
+
+  it('does nothing when the engine declares no limit', () => {
+    expect(splitForSynthesis(long, 0)).toEqual([long]);
+  });
+
+  it('keeps every piece under the limit', () => {
+    const pieces = splitForSynthesis(long, 6000);
+
+    expect(pieces.length).toBeGreaterThan(1);
+    for (const piece of pieces) expect(piece.length).toBeLessThanOrEqual(6000);
+  });
+
+  it('loses no words', () => {
+    const words = (s: string) => s.split(/\s+/).filter(Boolean);
+    const pieces = splitForSynthesis(long, 6000);
+
+    expect(words(pieces.join(' '))).toEqual(words(long));
+  });
+
+  it('cuts on sentence endings, not mid-sentence', () => {
+    // A cut inside a sentence is audible: the voice drops as if the sentence
+    // had finished, then starts the rest of it cold. Avoiding that is the
+    // whole reason the grouping apparatus exists.
+    for (const piece of splitForSynthesis(long, 6000)) {
+      expect(piece.trimEnd()).toMatch(/[.!?]$/);
+    }
+  });
+
+  it('handles the real beat that broke the render', () => {
+    // 9,350 characters against a 6,000-character budget.
+    const real = Array.from({ length: 100 }, (_, i) =>
+      `She reached the ${i}th gate and something was taken from her there. `
+    ).join('');
+    expect(real.length).toBeGreaterThan(6000);
+
+    const pieces = splitForSynthesis(real, 6000);
+    expect(pieces.length).toBe(2);
+    for (const piece of pieces) expect(piece.length).toBeLessThanOrEqual(6000);
+  });
+
+  it('falls back to a word boundary for one unsplittable sentence', () => {
+    // Ugly, and still better than a failed render.
+    const monster = `${'word '.repeat(3000)}end.`;
+    const pieces = splitForSynthesis(monster, 6000);
+
+    expect(pieces.length).toBeGreaterThan(1);
+    for (const piece of pieces) expect(piece.length).toBeLessThanOrEqual(6000);
+    expect(pieces.join(' ').split(/\s+/).filter(Boolean)).toHaveLength(3001);
+  });
+})

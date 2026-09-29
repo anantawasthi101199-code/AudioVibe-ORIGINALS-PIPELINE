@@ -20,6 +20,7 @@ import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
 import { platformUrl } from '../config';
 import { paletteFor, renderCover } from '../art/cover';
+import { suppliedArt } from '../art/supplied';
 import { claimSetSchema, corpusSchema } from '../evidence/research';
 import { loadBible } from '../fiction/bible';
 import { renderResultSchema } from '../render/assemble';
@@ -209,19 +210,30 @@ export const publishRun = async (
   // title and on nothing expensive. Drawing it is deterministic, so
   // re-publishing never quietly changes the artwork of something already in
   // somebody's library.
-  const coverPath = renderCover(
-    {
-      showName: persona.name,
-      title: script.title,
-      palette: paletteFor(persona.id),
-      // Fiction numbers its episodes because a serial is an order; a factual
-      // show does not, because "episode 41" tells a listener nothing about
-      // whether this is the one they want.
-      episodeNumber: seriesId ? episodeNumberFor(run, persona) : undefined,
-      kind: format.kind === 'short' ? 'short' : 'episode',
-    },
-    run.mediaPath('cover.png')
-  );
+  //
+  // UNLESS SOMEBODY CHOSE ONE. A supplied cover is used as it is and never
+  // redrawn over, which is also why it is not written to cover.png: this line
+  // has to keep working for the next episode.
+  const drawnCover = run.mediaPath('cover.png');
+  const chosenCover = suppliedArt(path.dirname(drawnCover), 'cover');
+
+  if (chosenCover) say(`using the cover you supplied (${path.basename(chosenCover)})`);
+
+  const coverPath =
+    chosenCover ??
+    renderCover(
+      {
+        showName: persona.name,
+        title: script.title,
+        palette: paletteFor(persona.id),
+        // Fiction numbers its episodes because a serial is an order; a factual
+        // show does not, because "episode 41" tells a listener nothing about
+        // whether this is the one they want.
+        episodeNumber: seriesId ? episodeNumberFor(run, persona) : undefined,
+        kind: format.kind === 'short' ? 'short' : 'episode',
+      },
+      drawnCover
+    );
 
   // WHERE THE AUDIO IS, not where the record says it was. A renamed run
   // directory leaves the stored path pointing at a folder that no longer

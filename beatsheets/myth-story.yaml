@@ -1,0 +1,187 @@
+# One myth, told as three things a listener hears - not five sections a reader
+# skims.
+#
+# WHY THIS WENT FROM FIVE BEATS TO THREE, 2026-09-29. The owner listened to the
+# five-beat version and named the fault exactly: "everytime a new parah is
+# started it is not a continuation of the previous parah, it has a new start
+# like a fresh start altogether."
+#
+# That is true and it was structural. Five beats, each with its own MUST and its
+# own constraints, is five separate briefs handed to a writer in one call - so
+# it writes five short essays and butts them together. On the page you see
+# headings and forgive it. In the ear there are no headings: there is a voice
+# that finishes a thought, pauses, and then starts again as though the last four
+# minutes had not happened.
+#
+# Measured on the Amaterasu episode, every beat came back as ONE unbroken turn,
+# and the two densest were the ones that open and close:
+#
+#     beat      words  w/sent  turns  new names/100w
+#     opening     286    28.6      1             2.4
+#     world       547    22.8      1             2.2
+#     story      1363    20.0      1             2.2
+#     ending      723    30.1      1             1.8
+#     close       230    19.2      1             3.0
+#
+# So: three parts, because a listener can hold three. Here is where you are,
+# here is the story, here is what it meant and goodbye. The world-building does
+# not get its own section any more - it is woven into the telling at the moment
+# each piece is needed, which is where CONTEXT_GUIDANCE always said it belonged.
+#
+# THE ONLY TWO SEAMS IN THE EPISODE ARE NOW NAMED AND SCRIPTED. Part one hands
+# over out loud. Part three picks up from where the story actually stopped.
+# Neither is allowed to restart.
+
+id: myth-story
+name: Myth, told as a story
+
+research: single
+
+kind: long
+intent: >
+  One myth from one culture, told in full and in order by somebody who has read
+  it properly and is telling it to you: a short orientation, the story itself
+  with everything explained as it is needed, and an ending that says what it
+  meant and then says goodbye.
+
+targetSeconds: [600, 1140]
+
+serialised: false
+
+loops:
+  - id: the_story
+    question: What happens in this story?
+
+beats:
+  - id: opening
+    type: orientation
+    seconds: [70, 140]
+    function: >
+      Tell the listener what they are about to hear and why it is worth their
+      time, then hand over to the story out loud.
+    opens: [the_story]
+    constraints:
+      - >
+        SAY WHAT THIS IS IN THE FIRST THREE SENTENCES. The story, whose it is,
+        and roughly how old. A listener with nothing to look at and no knowledge
+        of this pantheon cannot be dropped into a scene.
+      - >
+        Say how old it is in a way a person can hold. "Older than the Iliad" is
+        worth more than a date, and a date on its own is worth almost nothing.
+      - >
+        GIVE THE SHAPE, NOT THE PLOT. Two or three sentences on what kind of
+        journey this is and what is at stake. Knowing where a story is going
+        does not spoil a myth. But do NOT narrate the events here - the story
+        is part two, and telling it twice is the fastest way to lose somebody.
+      - >
+        THIS IS THE SHORTEST PART AND THE MOST SPOKEN. Keep sentences short
+        here, shorter than anywhere else in the episode. This is the part where
+        a listener decides whether to stay, and a long clause-stacked sentence
+        in the first minute loses them before the story has started.
+      - >
+        NAME AT MOST THREE PEOPLE. Every name introduced here is a name the
+        listener is carrying before anything has happened. Everyone else can be
+        met when they act.
+      - >
+        END BY HANDING OVER, OUT LOUD. The last sentence invites them into the
+        story itself - something like "so let's go back to the beginning and
+        hear it properly" - in your own words, warm, one sentence. This is a
+        real spoken handover, not a section break.
+      - Talk to the listener directly here. This is the one part that may.
+      - No suspense and no teasing. Nothing here is being saved for later.
+    minClaims: 0
+
+  - id: story
+    type: escalation
+    seconds: [440, 820]
+    function: >
+      The myth itself, from the beginning, in order, with everything the
+      listener needs to understand it delivered at the moment they need it.
+    constraints:
+      - >
+        OPEN AS A CONTINUATION. The voice has just said "let's hear it". Start
+        telling, immediately, from the beginning of the story. Do not
+        re-introduce the subject, do not re-state what this episode is, do not
+        begin with a fresh framing sentence. They are already here.
+      - >
+        BUILD THE WORLD INSIDE THE STORY, NOT BEFORE IT. There is no separate
+        section for the rules of this world any more. When the story needs a
+        god, a custom, a place or an object, explain it at that moment, in a
+        sentence or three, and then carry straight on. A listener cannot hold a
+        rule in reserve for four minutes waiting for it to matter.
+      - >
+        TEACH THE UNFAMILIAR THING PROPERLY WHEN IT ARRIVES. Take the sentences
+        it needs: what it was, how it worked, why anybody did it that way. An
+        explanation folded into a comma is an explanation nobody hears. Then get
+        straight back to the story.
+      - >
+        WRITE IT IN SEVERAL TURNS, NOT ONE BLOCK. Each turn is a paragraph the
+        voice breathes between. Break where the story naturally moves - a new
+        scene, a jump in time, a change of who we are following. Six to ten
+        turns for this part.
+      - >
+        EVERY TURN CONTINUES THE LAST ONE. No turn restarts the episode, and no
+        turn opens by re-announcing the subject. If a turn could be the first
+        thing somebody heard, it is written wrong.
+      - Chronological, at a pace that lets each thing land before the next.
+      - >
+        SAY WHY, EVERY TIME THERE IS A WHY. Somebody does something strange and
+        the listener immediately wants to know what for. The reference has the
+        answer. An episode that lets a "but why" hang sounds like it did not
+        finish the reading.
+      - >
+        NEVER SAY THE VERSIONS DISAGREE. Not "some tellings", not "scholars
+        differ", not "it is unclear". That was decided before you started
+        writing. Tell what happened.
+      - >
+        The one exception is a text that physically stops - a tablet broken off
+        mid-line, a manuscript burned. That is an event in the story of the
+        story, and it is worth one sentence where it bites.
+      - Do not explain the meaning as you go. The story carries it.
+    minClaims: 0
+
+  - id: close
+    type: outro
+    seconds: [90, 180]
+    function: >
+      What it meant to the people who told it, one thing to walk away with, and
+      goodbye.
+    closes: [the_story]
+    constraints:
+      - >
+        PICK UP FROM WHERE THE STORY STOPPED. The first sentence refers to what
+        just happened, by name. No "so, what does all this mean" and no fresh
+        framing - this is the same person still talking, changing register from
+        telling to reflecting.
+      - >
+        SAY WHAT IT MEANT TO THEM. What it explained, what it warned, what they
+        saw happen every year that this accounted for. From inside: what THEY
+        took from it, never what it might mean for us now.
+      - >
+        INTRODUCE NO NEW NAMES HERE. Not a place, not a person, not a shrine, not
+        a scholar. Everything in this part is something the listener has already
+        met. A name arriving in the last ninety seconds is a name nobody can do
+        anything with, and it is the single easiest way to end on confusion.
+      - >
+        LEAVE THEM HOLDING ONE THING. An image, a detail, something from earlier
+        that means something different now they know the rest. One thing,
+        chosen, in a short sentence.
+      - >
+        THIS PART IS NOT ABOUT THE MANUSCRIPTS. No fragment attribution, no
+        translation history, no what-scholars-concluded. If it is a fact about
+        how the text reached us rather than about what happens in it, it belonged
+        in part two or nowhere.
+      - >
+        KEEP THE SENTENCES SHORT, like the opening. This is the other place a
+        listener is most likely to drift, because the story is over and they are
+        deciding whether it landed.
+      - >
+        THEN SAY GOODBYE. Name the show, and close the way the show closes. The
+        same person who has been talking for fifteen minutes finishing a
+        conversation, not an announcer reading a card.
+      - No moral, and nothing about what it says about people or about us now.
+    minClaims: 0
+
+# Three parts, so three numbers. The story carries the whole arc now, so it
+# holds the peak for most of its length rather than climbing to one.
+tensionCurve: [0.45, 1.0, 0.55]

@@ -261,10 +261,90 @@ describe('retypeClaim', () => {
   it('never promotes a claim into a stricter type', () => {
     // Retyping upward would be this function inventing a promise the
     // extractor never made.
-    for (const type of ['causal', 'quotation', 'chronology', 'attribution', 'definition'] as const) {
+    //
+    // `quotation` IS NOT IN THIS LIST ANY MORE, and that is not a weakening of
+    // the principle. A quotation claim that quotes nothing is DEMOTED to
+    // attribution, which is the same direction as the statistic rule below and
+    // for the same reason. See the dedicated describe block at the end of this
+    // file. The principle asserted here is about promotion, and nothing promotes.
+    for (const type of ['causal', 'chronology', 'attribution', 'definition'] as const) {
       expect(retypeClaim(claim({ type, text: 'no numbers here', quote: 'nor here' })).type).toBe(
         type
       );
     }
+
+    // A quotation that DOES quote something keeps its type, so the no-promotion
+    // rule is still covered for that type too.
+    expect(
+      retypeClaim(
+        claim({
+          type: 'quotation',
+          text: `He called it 'a great serpent'.`,
+          quote: 'a great serpent wound around the mountain',
+        })
+      ).type
+    ).toBe('quotation');
+  });
+});
+
+/**
+ * A QUOTATION THAT QUOTES NOTHING IS AN ATTRIBUTION.
+ *
+ * The extraction prompt says this in capitals with a worked example and it does
+ * not take: across three runs of one topic, 12 of 46, 12 of 49 and 6 of 43 claims
+ * came back typed `quotation` with no quoted span in them. A quarter of the
+ * ledger, every run, on a report meant to be read - and a list somebody learns to
+ * skim is a list that hides the one real forgery in it.
+ */
+describe('retypeClaim - a quotation that quotes nothing', () => {
+  const q = (text: string, quote: string): Claim => ({
+    id: 'c1',
+    text,
+    type: 'quotation',
+    beatId: 'story',
+    sourceId: 's1',
+    quote,
+    contested: false,
+    status: 'verified',
+  });
+
+  it('retypes a claim that only describes what was said', () => {
+    const out = retypeClaim(
+      q(
+        'Enki instructed his messengers to mimic Ereshkigal in order to please her.',
+        'When she cries, Oh! Oh! My inside! Cry also, Oh! Oh! Your inside!'
+      )
+    );
+    expect(out.type).toBe('attribution');
+  });
+
+  it('leaves a real quotation as a quotation', () => {
+    const out = retypeClaim(
+      q(
+        "The poem ends with lines praising her: 'Holy Ereshkigal! Great is your renown!'",
+        'Holy Ereshkigal! Great is your renown! Holy Ereshkigal! I sing your praises!'
+      )
+    );
+    expect(out.type).toBe('quotation');
+  });
+
+  it('does not rescue a quotation whose words are not in the quote', () => {
+    // The failure the rule exists for: a quote nobody said. It keeps its type so
+    // checkClaimShape still refuses it.
+    const claim = q(
+      "The report calls them 'creatures neither male nor female'.",
+      'Go to the underworld, enter the door like flies.'
+    );
+    expect(retypeClaim(claim).type).toBe('quotation');
+    expect(
+      checkClaimShape(retypeClaim(claim), {
+        id: 's1',
+        url: 'https://example.org/x',
+        title: 'x',
+        text: 'Go to the underworld, enter the door like flies.',
+        tier: 'T1',
+        fetchedAt: '2026-09-25T00:00:00.000Z',
+      }).map((p) => p.problem).join(' ')
+    ).toMatch(/does not contain/);
   });
 });

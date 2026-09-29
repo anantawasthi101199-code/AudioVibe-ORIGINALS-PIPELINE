@@ -22,6 +22,7 @@ import { CounterEvidence } from '../evidence/research';
 import { Script, fullText } from '../script/write';
 import { checkStyle, StyleMeasurement, vocabularyOverlap } from '../script/style';
 import { ContinuityReport } from '../fiction/continuity';
+import { GroundingReport } from './grounding';
 import { checkSpeakability } from '../script/speakable';
 import { withoutTags } from '../script/dialogue';
 
@@ -52,7 +53,38 @@ export interface GateReport {
  */
 export const MAX_VOCABULARY_OVERLAP = 0.45;
 
-/** Duration may drift this far from the format target before it is a problem. */
+/**
+ * The shortest thing that is still a long-form episode, in seconds.
+ *
+ * FIVE MINUTES, AND IT IS A PRODUCT BOUNDARY RATHER THAN A QUALITY ONE. Below
+ * it the thing in the long-form feed is a short, and a listener who opened an
+ * episode gets ninety seconds of one. That is worth saying out loud even though
+ * nothing about the writing is wrong.
+ *
+ * It is NOT a floor to write towards, which is the distinction that matters and
+ * the one the old target-plus-tolerance rule lost. Nothing asks a beat to reach
+ * it. It only reports, afterwards, that the material did not carry an episode.
+ */
+export const EPISODE_FLOOR_S = 300;
+
+/**
+ * The longest an episode should run before it is probably rambling.
+ *
+ * Twenty minutes. Set from the owner's preference rather than derived, and it
+ * sits comfortably above every episode the studio has produced so far (the
+ * longest was 12.6 minutes) while staying under the half-hour that the
+ * reference transcripts use for a full epic. If a show genuinely wants the
+ * half-hour shape later, this is the one number to move.
+ */
+export const EPISODE_CAP_S = 1200;
+
+/**
+ * Duration may drift this far from the format target before it is a problem.
+ *
+ * KEPT FOR THE SHORT FORMATS, which still have a real target: a ninety-second
+ * short that runs three minutes is not a short. Long episodes no longer use it.
+ * See section 7.
+ */
 export const DURATION_TOLERANCE = 0.2;
 
 /**
@@ -101,6 +133,24 @@ export interface GateInput {
   now?: Date;
   castNames?: string[];
   /**
+   * Whether the prose says anything the claims do not support.
+   *
+   * Optional because it costs a model call and an older run has none stored.
+   * Absent means the check did not run, which is honest - it does not mean the
+   * script is grounded. See qa/grounding.ts.
+   */
+  grounding?: GroundingReport;
+  /**
+   * Optional stages that were switched off for this run.
+   *
+   * REPORTED, BECAUSE OFF IS NOT PASSED. Without this the gate is silent about a
+   * missing pass in exactly the way it used to be silent about the whole gate on a
+   * held run: the counter-evidence duty simply produces no human-review reason
+   * when nothing was searched, which reads identically to nothing being found.
+   * See config/stages.ts.
+   */
+  stagesOff?: readonly string[];
+  /**
    * Continuity, for a fiction show. Required when persona.fiction is set.
    *
    * Required rather than optional-with-a-default for the same reason the whole
@@ -109,6 +159,38 @@ export interface GateInput {
    * the shape of failure this file exists to refuse.
    */
   continuity?: ContinuityReport;
+  /**
+   * Which ground truth this script answers to.
+   *
+   * `ledger` is the original lane: every fact bound to a verbatim quote and
+   * verified, so sections 1 to 4 below have something to judge.
+   *
+   * `reference` is the single-story lane, where there is no ledger by design
+   * and the script was written from one fused reference article instead. Those
+   * four sections are skipped for the same reason fiction skips them - not
+   * because the bar is lower, but because a check asking "which claim supports
+   * this sentence" has been handed a question with no answer, and a gate that
+   * answers it anyway reports a fault that does not exist.
+   *
+   * WHAT REPLACES THEM is `referenceReview`, plus the fact that every section
+   * from 5 down runs unchanged. Style, self-similarity, speakability and
+   * duration are properties of the audio and do not care how it was sourced.
+   */
+  evidence?: 'ledger' | 'reference';
+  /**
+   * What the single-story lane's one check found.
+   *
+   * Optional, and absent on the ledger lane. Its `unanswered` list is the
+   * finding that matters: a question the reference left hanging whose answer
+   * was in the documents. That is the exact fault that produced "The text does
+   * not explain guilty of what" over a source section headed "A guilty
+   * goddess", so it is surfaced for a human rather than swallowed.
+   */
+  referenceReview?: {
+    unanswered: string[];
+    unsupported: string[];
+    checked: boolean;
+  };
 }
 
 export const runGate = (input: GateInput): GateReport => {
@@ -132,10 +214,20 @@ export const runGate = (input: GateInput): GateReport => {
   // unpublishable as a factual one that does.
   const fiction = input.persona.fiction;
 
+  // SECTIONS 1 TO 4 NEED A LEDGER, and the single-story lane does not have one.
+  // Kept separate from `fiction` rather than folded into it, because the two
+  // are different facts about a run and a report that conflated them would say
+  // a myth episode was fiction, which is the one thing this network's whole
+  // factual/fiction split exists to prevent.
+  const bound = !fiction && input.evidence !== 'reference';
+
   // --- 1. The ledger. Deterministic, and the cheapest thing to be sure of. ---
-  if (!fiction && !input.ledger.ok) {
+  //
+  // REPORTED WHETHER OR NOT THE LEDGER IS OK, because it now carries advisory
+  // problems too and those exist precisely to be seen on a run that passes.
+  if (bound) {
     for (const p of input.ledger.problems) {
-      add('ledger', `${p.claimId}: ${p.detail}`);
+      add('ledger', `${p.claimId}: ${p.detail}`, !p.advisory);
     }
   }
 
@@ -156,7 +248,7 @@ export const runGate = (input: GateInput): GateReport => {
   // What IS still reported: a blocking verdict on a claim that came through
   // unchanged. That means repair did not run, or did not reach it, and the
   // episode is asserting something its source does not support.
-  if (!fiction) {
+  if (bound) {
     const byId = new Map(input.claims.map((c) => [c.id, c]));
     for (const v of input.verification.blocking) {
       const claim = byId.get(v.claimId);
@@ -185,7 +277,7 @@ export const runGate = (input: GateInput): GateReport => {
   // An episode is informative because it USES its evidence. Assigning it is
   // the cheap half.
   const floors = Object.fromEntries(input.format.beats.map((b) => [b.id, b.minClaims]));
-  if (!fiction) {
+  if (bound) {
     const cited: Record<string, number> = {};
     for (const beat of input.script.beats) {
       cited[beat.beatId] = new Set(beat.claimIds).size;
@@ -230,7 +322,7 @@ export const runGate = (input: GateInput): GateReport => {
   }
 
   // --- 4. Counter-evidence. The check that separates true from one-sided. ---
-  const contested = fiction ? [] : input.claims.filter((c) => c.contested);
+  const contested = bound ? input.claims.filter((c) => c.contested) : [];
 
   // A SHORT MAY NOT CARRY A CONTESTED CLAIM AT ALL.
   //
@@ -269,6 +361,75 @@ export const runGate = (input: GateInput): GateReport => {
       `${withCounterSources.length} contested claim(s) have disconfirming sources; ` +
         `check the script acknowledges them rather than talking past them`
     );
+  }
+
+  // --- 4a2. What the single-story lane answers to instead of a ledger. ---
+  //
+  // FAILS CLOSED, LIKE EVERYTHING ELSE HERE. A reference-lane script arriving
+  // with no review has had nothing at all check its facts: there is no ledger,
+  // no verifier and no grounding pass on this lane, so this one report is the
+  // whole of the evidence apparatus and its absence is not a quiet pass.
+  if (input.evidence === 'reference') {
+    const review = input.referenceReview;
+
+    if (!review || !review.checked) {
+      add(
+        'reference',
+        `the reference was not checked against its own documents, and on this lane ` +
+          `that is the only evidence check there is. Nothing has verified the story ` +
+          `the script was written from.`,
+        false
+      );
+      humanReviewReasons.push(
+        'the reference article was never checked against its sources; read the script ' +
+          'against them before voicing'
+      );
+    }
+
+    // THE FINDING THIS WHOLE LANE WAS BUILT AROUND. An unanswered question is a
+    // question the documents DO answer and the reference dropped - which is
+    // what produced "The text does not explain guilty of what" over a source
+    // section headed "A guilty goddess". Not blocking, because it is a
+    // judgement and the episode may be fine without it, but it goes in front of
+    // a person every time.
+    for (const question of review?.unanswered ?? []) {
+      add(
+        'referenceGap',
+        `the sources answer this and the reference did not carry it across: ${question}`,
+        false
+      );
+    }
+    if (review?.unanswered.length) {
+      humanReviewReasons.push(
+        `${review.unanswered.length} question(s) the sources answer did not reach the ` +
+          `reference. An episode that leaves one of these hanging sounds like it did ` +
+          `not finish the reading.`
+      );
+    }
+
+    for (const claim of review?.unsupported ?? []) {
+      add('referenceUnsupported', `no document supports this: ${claim}`, false);
+    }
+    if (review?.unsupported.length) {
+      humanReviewReasons.push(
+        `${review.unsupported.length} statement(s) in the reference rest on no document. ` +
+          `There is no quote ledger on this lane, so this is the only warning you get.`
+      );
+    }
+
+    // The show's evidence policy, which on this lane applies to the documents
+    // themselves rather than to claims - every source kept IS a source used.
+    const floor = input.persona.minSourceTier;
+    if (floor) {
+      for (const source of input.sources ?? []) {
+        if (TIER_RANK[source.tier] > TIER_RANK[floor]) {
+          add(
+            'sourceTier',
+            `${input.persona.name} does not build a story on a source this weak: ${source.url}`
+          );
+        }
+      }
+    }
   }
 
   // --- 4b. Continuity. What fiction answers to instead of evidence. ---
@@ -377,25 +538,61 @@ export const runGate = (input: GateInput): GateReport => {
     }
   }
 
-  // --- 7. Duration against the format. ---
-  const [lo, hi] = input.format.targetSeconds;
-  const min = lo * (1 - DURATION_TOLERANCE);
-  const max = hi * (1 + DURATION_TOLERANCE);
-  // ADVISORY, NOT BLOCKING. A format's target length is a planning number - it
-  // says roughly what shape of story suits the show - and it was being enforced
-  // as though a finished episode owed it something. It does not: the length
-  // that is right is the length the material supports, and an episode held to a
-  // floor pads to reach it.
+  // --- 7. Duration. ---
   //
-  // Still reported, because a big miss is worth knowing about. An episode at
-  // half the target usually means thin research, and one at double usually
-  // means the beats are rambling - both worth a look, neither worth refusing to
-  // publish over.
-  if (input.durationS < min || input.durationS > max) {
+  // THERE IS NOTHING TO PAD TOWARDS AND TWO REAL EDGES.
+  //
+  // The format's target used to be enforced at both ends with a tolerance, so an
+  // episode whose material ran out at eleven minutes was told it was short and
+  // an episode that had more to say was told it was long. The owner settled it:
+  // "the target time can be anything, don't make it match to some threshold ...
+  // if there is limited information I wouldn't want it to keep pushing out stuff
+  // to just reach the mark".
+  //
+  // So the target is a planning number for the beat sheet and nothing reports
+  // against it. What is left is the two places where length stops being a matter
+  // of taste and becomes the wrong product:
+  //
+  //   UNDER FIVE MINUTES it is not a long episode, it is a short, and it is
+  //   sitting in the wrong feed with the wrong expectations. The owner's words:
+  //   "keep the floor to 5 mins the lowest time frame, because below this then
+  //   it becomes a short form content."
+  //
+  //   OVER THE CAP the beats have started rambling. An audio episode that will
+  //   not end is the one fault a listener cannot skim past.
+  //
+  // Both are reported. Neither refuses the run, because the gate's job here is
+  // to tell somebody, and a held run has a human reading it anyway.
+  //
+  // A SHORT KEEPS THE OLD RULE, because a short genuinely does owe its target: a
+  // ninety-second format that runs four minutes is not a short any more, and
+  // the five-minute floor would fire on every correct one.
+  if (input.format.kind === 'short') {
+    const [lo, hi] = input.format.targetSeconds;
+    const min = lo * (1 - DURATION_TOLERANCE);
+    const max = hi * (1 + DURATION_TOLERANCE);
+    if (input.durationS < min || input.durationS > max) {
+      add(
+        'duration',
+        `runs ${Math.round(input.durationS)}s against a ${Math.round(min)}-${Math.round(max)}s ` +
+          `guide for a short.`,
+        false
+      );
+    }
+  } else if (input.durationS < EPISODE_FLOOR_S) {
     add(
       'duration',
-      `runs ${Math.round(input.durationS)}s against a ${Math.round(min)}-${Math.round(max)}s guide. ` +
-        `Worth a look if the gap is large, but length follows the material.`,
+      `runs ${Math.round(input.durationS)}s, under the ${EPISODE_FLOOR_S}s floor for a long episode. ` +
+        `Below five minutes this is short-form content in a long-form feed. Usually it means the ` +
+        `research came back thin, so look at the corpus before looking at the script.`,
+      false
+    );
+  } else if (input.durationS > EPISODE_CAP_S) {
+    add(
+      'duration',
+      `runs ${Math.round(input.durationS)}s, past the ${EPISODE_CAP_S}s cap. ` +
+        `Length follows the material, but past the cap it is usually a beat rambling rather than ` +
+        `more material.`,
       false
     );
   }
@@ -411,7 +608,7 @@ export const runGate = (input: GateInput): GateReport => {
   // Both rules are opt-in per show, because a network-wide floor would either
   // be too weak to help health or too strong for a myth retelling citing a
   // Victorian translation.
-  if (!fiction && (input.persona.minSourceTier || input.persona.maxSourceAgeDays)) {
+  if (bound && (input.persona.minSourceTier || input.persona.maxSourceAgeDays)) {
     const sourceById = new Map((input.sources ?? []).map((src) => [src.id, src]));
     const floor = input.persona.minSourceTier;
     const maxAge = input.persona.maxSourceAgeDays;
@@ -476,6 +673,66 @@ export const runGate = (input: GateInput): GateReport => {
     }
   }
 
+  // --- 7a2. Passes that did not run. ---
+  //
+  // A skipped check is a hole in the report, and a report with an unmarked hole is
+  // worse than no report, because somebody reads it and believes it. This is the
+  // same lesson as the held gate printing "GATE: passed" over an ungated script.
+  if (input.stagesOff?.length) {
+    add(
+      'stagesOff',
+      `switched off for this run: ${input.stagesOff.join(', ')}. Whatever those passes ` +
+        `would have found, nothing here found it.`,
+      false
+    );
+
+    const safety = input.stagesOff.filter((s) => s === 'grounding' || s === 'counterEvidence');
+    if (safety.length && bound) {
+      humanReviewReasons.push(
+        `${safety.join(' and ')} did not run, so this script has not been checked for ` +
+          `prose the evidence does not support${
+            input.stagesOff.includes('counterEvidence') ? ' or for one-sidedness' : ''
+          }. Read it before voicing.`
+      );
+    }
+  }
+
+  // --- 7b. Grounding: prose the evidence does not support. ---
+  //
+  // ADVISORY, AND IT MARKS THE RUN FOR A HUMAN. The most serious gap the studio
+  // has had - an episode whose best passage, a seven-item enumeration, came from
+  // the model's own knowledge of the poem rather than from any claim - and it is
+  // still not a blocking check, for two reasons. It is a judgement, so it will
+  // sometimes be wrong, and the owner's standing instruction is to highlight
+  // rather than refuse. What it does do is put the sentences in front of the
+  // person who approves the render, which is the only place this can be caught.
+  if (bound && input.grounding) {
+    if (!input.grounding.checked) {
+      add(
+        'grounding',
+        `the grounding review did not run, so nothing has checked the prose between the ` +
+          `claims. This is NOT a clean result.` +
+          (input.grounding.failure ? ` It failed with: ${input.grounding.failure}` : ''),
+        false
+      );
+    }
+
+    for (const f of input.grounding.findings) {
+      add(
+        'grounding',
+        `${f.beatId}: ${f.detail} - "${f.sentence.replace(/\s+/g, ' ').slice(0, 120)}"`,
+        false
+      );
+    }
+
+    if (input.grounding.findings.length) {
+      humanReviewReasons.push(
+        `${input.grounding.findings.length} passage(s) may state more than the claims support. ` +
+          `Read them before voicing: an invented fact sounds exactly like a sourced one.`
+      );
+    }
+  }
+
   // --- 8. Risk tier. A show does not get a topic it is not cleared for. ---
   //
   // WHAT THIS IS ACTUALLY PROTECTING AGAINST: a claim about a LIVING named
@@ -495,7 +752,7 @@ export const runGate = (input: GateInput): GateReport => {
   //
   // Skipped for fiction, which has no claims to tier.
   const riskyTypes = new Set(['attribution']);
-  const hasNamedPersonClaims = !fiction && input.claims.some((c) => riskyTypes.has(c.type));
+  const hasNamedPersonClaims = bound && input.claims.some((c) => riskyTypes.has(c.type));
   if (hasNamedPersonClaims && !input.persona.allowedRiskTiers.includes('named_person')) {
     add(
       'riskTier',
@@ -506,7 +763,7 @@ export const runGate = (input: GateInput): GateReport => {
   // The second place a human is genuinely required: anything resting on the
   // weakest sources. Not blocking, because a well-framed T4 anecdote is
   // legitimate - but somebody has to have looked at the framing.
-  const weakBeats = fiction
+  const weakBeats = !bound
     ? []
     : Object.entries(input.ledger.tierByBeat)
         .filter(([, tier]) => tier === 'T4')

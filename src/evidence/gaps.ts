@@ -74,11 +74,96 @@ const IDENTIFIES = [
 ];
 
 export interface Gap {
-  /** The name nobody has placed. */
+  /** The name nobody has placed, or for a sequence, the terms to search on. */
   name: string;
   /** How many claims lean on it, so the worst gaps can be filled first. */
   mentions: number;
+  /**
+   * What kind of hole this is.
+   *
+   * Optional, defaulting to the original meaning, so every existing caller and
+   * fixture keeps working without knowing sequences exist.
+   */
+  kind?: 'identity' | 'sequence';
+  /** For a sequence, the summary claim that stood in for the steps. */
+  summary?: string;
+  /**
+   * The beat these claims belong to, overriding the caller's default.
+   *
+   * A name gap is attached wherever people are introduced, which is the caller's
+   * business. A sequence belongs in the beat whose summary sent us here, because
+   * that is the beat that has to tell the steps.
+   */
+  beatId?: string;
 }
+
+/**
+ * A claim that summarises a counted sequence instead of giving it.
+ *
+ * WHY THIS IS A GAP RATHER THAN AN INSTRUCTION, and it is the second attempt.
+ *
+ * The first attempt was extraction rule 8: "a counted sequence needs one claim
+ * per step", with a worked example. It did not work. The very next run produced
+ * one specific gate claim and then, in the same ledger, "Inanna passed through a
+ * total of seven gates, at each one removing a piece of clothing or jewelry" -
+ * the exact summary the rule forbids. That is the same lesson this pipeline keeps
+ * teaching: an instruction is bullet N of a long prompt, and only a deterministic
+ * loop changes what comes out.
+ *
+ * So the summary is treated as what it is: a specific, findable, fixable hole, in
+ * exactly the sense the name gaps above are. The corpus is already on disk, eight
+ * of fourteen documents enumerate the steps, BM25 can find the passage, and one
+ * extraction call turns it into per-step claims that answer to every ordinary
+ * check.
+ *
+ * WHAT COUNTS. A count, and a distributive phrase saying the same thing happened
+ * at each of them. "Seven gates, at each one removing a piece of clothing" counts.
+ * "Seven judges found her guilty" does not, because nothing distributes over the
+ * seven: they acted once, together.
+ */
+const COUNT =
+  /\b(two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|twenty|\d{1,3})\b/i;
+
+const DISTRIBUTIVE = [
+  /\bat each\b/i,
+  /\beach one\b/i,
+  /\beach of (the|them)\b/i,
+  /\bevery one\b/i,
+  /\bone at (a time|every|each)\b/i,
+  /\bone by one\b/i,
+  /\bin turn\b/i,
+  /\beach time\b/i,
+  /\bper (gate|step|stage|round|attempt|day|night)\b/i,
+];
+
+export const findSequenceGaps = (claims: Claim[], limit = 2): Gap[] => {
+  const out: Gap[] = [];
+
+  for (const claim of claims) {
+    if (!COUNT.test(claim.text)) continue;
+    if (!DISTRIBUTIVE.some((re) => re.test(claim.text))) continue;
+
+    // The BM25 query. The claim's own content words are the best description of
+    // the passage that would enumerate it, and using them costs nothing.
+    const query = claim.text
+      .replace(/[^A-Za-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length > 3)
+      .slice(0, 12)
+      .join(' ');
+
+    out.push({
+      name: query,
+      mentions: 1,
+      kind: 'sequence',
+      summary: claim.text,
+      beatId: claim.beatId,
+    });
+    if (out.length >= limit) break;
+  }
+
+  return out;
+};
 
 /**
  * Names the claims use and never introduce.
@@ -176,6 +261,45 @@ const gapReplySchema = z.object({
   quote: z.string().default(''),
 });
 
+export const SEQUENCE_SYSTEM = `You are given a SUMMARY of a counted sequence and
+passages from the corpus. Write ONE CLAIM PER STEP of that sequence, each with the
+verbatim quote that establishes it.
+
+The summary is the problem. "She passed through seven gates, removing a piece of
+clothing at each" tells a listener that something happened seven times and never
+once tells them what. The steps are the most concrete material the story has, and
+a writer given only the summary can only write a summary.
+
+So: find the steps in the passages and give each one its own claim. First gate,
+what was taken. Second gate, what was taken. And so on, as far as the passages
+actually go.
+
+Rules, and they are the same rules every other claim here answers to:
+- THE QUOTE MUST BE COPIED EXACTLY from one of the passages, character for
+  character. A paraphrase is rejected.
+- ONE STEP PER CLAIM. Do not combine two steps into one claim, and do not restate
+  the summary as a claim - that already exists and is what sent you here.
+- SAY NO MORE THAN THE QUOTE ESTABLISHES, and add nothing from your own knowledge,
+  however confident you are about how this story goes. A step you know and cannot
+  quote is a step you leave out.
+- RETURN ONLY THE STEPS THE PASSAGES SUPPORT. Four of seven is a good answer.
+  Zero is a good answer if the passages only summarise too.
+
+Return JSON only:
+{"steps": [{"text": "what happened at this step", "sourceId": "the id given with the passage you used", "quote": "verbatim"}]}`;
+
+const sequenceReplySchema = z.object({
+  steps: z
+    .array(
+      z.object({
+        text: z.string().default(''),
+        sourceId: z.string().default(''),
+        quote: z.string().default(''),
+      })
+    )
+    .default([]),
+});
+
 export interface FillDeps {
   sources: Source[];
   model: LlmClient;
@@ -202,8 +326,63 @@ export const fillGaps = async (
   let nextId = startingId;
 
   for (const gap of gaps) {
-    const passages = passagesAbout(gap.name, deps.sources);
+    // Two passages per source for a sequence, because the steps are usually
+    // spread over a longer stretch than a name's introduction is.
+    const passages = passagesAbout(gap.name, deps.sources, gap.kind === 'sequence' ? 2 : 1);
     if (!passages.length) continue;
+
+    if (gap.kind === 'sequence') {
+      let steps: z.infer<typeof sequenceReplySchema>;
+      try {
+        steps = sequenceReplySchema.parse(
+          await completeJson<unknown>(
+            deps.model,
+            {
+              system: SEQUENCE_SYSTEM,
+              prompt: [
+                `SUMMARY THAT STOOD IN FOR THE STEPS: ${gap.summary ?? gap.name}`,
+                ...passages.map((p) => `PASSAGE [${p.sourceId}]:\n${p.text}`),
+              ].join('\n\n'),
+              temperature: 0,
+              // Medium, not low: this is reading several passages and separating
+              // one step from the next, which is more than looking up a fact.
+              effort: 'medium',
+              maxTokens: 3000,
+            },
+            deps.onCost,
+            { parse: (v) => sequenceReplySchema.parse(v), label: 'the steps of a sequence' }
+          )
+        );
+      } catch {
+        continue;
+      }
+
+      let added = 0;
+      for (const step of steps.steps) {
+        if (!step.text.trim() || !step.quote.trim()) continue;
+
+        const claim = claimSchema.parse({
+          id: `g${nextId}`,
+          text: step.text.trim(),
+          type: 'chronology',
+          beatId: gap.beatId ?? beatId,
+          sourceId: step.sourceId.trim(),
+          quote: step.quote.trim(),
+        });
+
+        // EVERY STEP IS VERIFIED SEPARATELY. Nothing here is relaxed because the
+        // claims arrived in a batch; a step whose quote does not occur, or which
+        // the verifier will not stand behind, is dropped like any other claim.
+        if (!(await deps.verify(claim))) continue;
+
+        nextId++;
+        added++;
+        filled.push(claim);
+      }
+
+      if (added) deps.onProgress?.(`broke a summarised sequence into ${added} step(s)`);
+      continue;
+    }
 
     let reply: z.infer<typeof gapReplySchema>;
     try {
@@ -236,7 +415,7 @@ export const fillGaps = async (
       id: `g${nextId}`,
       text: reply.text.trim(),
       type: 'attribution',
-      beatId,
+      beatId: gap.beatId ?? beatId,
       sourceId: reply.sourceId.trim(),
       quote: reply.quote.trim(),
     });

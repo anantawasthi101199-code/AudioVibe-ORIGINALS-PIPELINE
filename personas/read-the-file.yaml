@@ -80,7 +80,17 @@ styleCard:
   sentenceWordsMean: 18
   sentenceWordsStdDevMin: 7
 
-  questionsPer100Words: 0.5
+  # LOWERED FROM 0.5, AND THIS IS THE ONE CARD THE CORPUS SAYS WAS TOO HIGH.
+  #
+  # Five transcripts of this show's genre - geopolitics, a tech investigation, a
+  # leaked-document story - ask 0.17 questions per hundred words. This card asked
+  # for three times that. A document show does not need to stage a question,
+  # because the document is the question; asking one out loud is closer to a
+  # gesture than to the work.
+  questionsPer100Words: 0.25
+
+  # The corpus median for this genre is 0.65 against a card of 0.5, which is
+  # inside tolerance and left alone.
   secondPersonPer100Words: 0.5
 
   # Moderate. A show about contested documents has to be able to say "this is

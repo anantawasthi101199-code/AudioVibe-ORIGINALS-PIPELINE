@@ -8,6 +8,7 @@ code, the code is right and the document is a bug.
 
 | Document | What it is for |
 |---|---|
+| [FLOW.md](FLOW.md) | What actually happens between a topic and an audio file, on both lanes, with every constant and every measured cost. Start here. |
 | [COMMANDS.md](COMMANDS.md) | Every command, what it does, what it costs, what the gate findings mean, and every environment variable. The one to open first. |
 | [PIPELINES.md](PIPELINES.md) | The lanes that exist, the shows asked for, what each actually costs to build, and the build order. Read before starting any new kind of show. |
 | [DECISIONS.md](DECISIONS.md) | Load-bearing decisions and, more usefully, the ones that were reversed. Read before re-opening an argument. |
@@ -28,6 +29,10 @@ A visual version of PIPELINES.md, with each stage drawn at the width of what it
 costs:
 
 **https://claude.ai/code/artifact/9033d8ea-8c58-466c-9c7d-6b2e28138dc2**
+
+And a drawn version of FLOW.md, showing both lanes and where they diverge:
+
+**https://claude.ai/artifact/NXhiAbwvRNsJPnkYtJUnxX**
 
 Published 2026-09-13. It shows the cost split per lane, the render-engine
 decision, and the four proposed shows with what is missing from each. Private

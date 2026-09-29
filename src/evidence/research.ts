@@ -388,8 +388,28 @@ export const enforceSourceTier = (
   return { claims: keep, dropped };
 };
 
+/**
+ * How many candidates the single-story lane wants to choose from.
+ *
+ * EIGHT, WHICH IS A POOL RATHER THAN A CORPUS. This lane keeps at most three
+ * documents, so everything past the pool is fetch time and bandwidth spent on
+ * something that will be read once by a selector and then dropped. Eight is
+ * enough that the dedicated treatment of the subject is reliably in there
+ * alongside some real alternatives.
+ *
+ * NOT ONE OR THREE. Search does not know which result is the whole story, and
+ * fetching exactly what you intend to keep means a single 403 leaves the run
+ * with nothing. The corpus floor is four sources, and eight clears it with room
+ * for the half of a myth corpus that routinely comes back 403 or unfetchable -
+ * on the Inanna run, ten of twenty-four candidates failed to fetch, including
+ * every ETCSL primary translation.
+ */
+export const SINGLE_STORY_CANDIDATES = 8;
+
 export const gatherFor = (format: EpisodeFormat): GatherOptions =>
-  format.sourceOnly
+  format.research === 'single'
+    ? { targetSources: SINGLE_STORY_CANDIDATES, perQuery: 8 }
+    : format.sourceOnly
     ? // THREE PER STORY, AND IT WAS TWO. Two documents is one telling plus a
       // fragment, which is enough to say a story happened and not enough to
       // tell it to the end: the first real set stopped Garuda's story at the
@@ -591,6 +611,22 @@ RULES, and these are not style preferences:
    support one, it goes in "unsupported" like anything else - which is a useful
    signal on its own, because a story whose people cannot be identified from the
    sources is a story this show cannot yet tell.
+8. A COUNTED SEQUENCE NEEDS ONE CLAIM PER STEP. If the document enumerates a
+   series - seven gates and what is taken at each, four attempts and how each
+   failed, three charges and the verdict on each, five payments and their dates -
+   extract EACH STEP as its own claim with its own quote. One claim saying "she
+   was stripped at each of the seven gates" is a summary of the sequence, not the
+   sequence, and a writer given only the summary can only write a summary.
+
+   This is the rule that was missing, and it cost the best passage in an episode.
+   Eight of fourteen fetched documents enumerated what Inanna surrenders at each
+   gate. Extraction produced ONE claim, about the crown. The script then said
+   "at the next gate, something else is taken" and generalised the other five -
+   correctly, because that was all the evidence it had.
+
+   A counted sequence is the most concrete material a story ever offers and the
+   easiest to summarise away. If the document has the steps, the ledger gets the
+   steps.
 
 Return JSON only:
 {

@@ -64,6 +64,24 @@ export const biblesDir = (): string => {
 };
 
 /**
+ * Where season plans live, one JSON file per show per season.
+ *
+ * SEPARATE FROM BIBLES, AND THE SEPARATION IS THE WHOLE DESIGN. A bible is
+ * HISTORY: what a listener has already heard, which a later episode may not
+ * contradict. A plan is INTENTION: what the season means to do, which a writer
+ * must be allowed to abandon when the episode in front of it turns out better
+ * than the card that described it.
+ *
+ * Collapsing the two would make the continuity check enforce an outline, and
+ * bible.ts refuses that in its header for good reason. So the plan is checked
+ * against the bible only to REPORT drift, never to block on it.
+ */
+export const seasonsDir = (): string => {
+  const configured = process.env.FOUNDRY_SEASONS_DIR || 'seasons';
+  return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
+};
+
+/**
  * Ceiling on what one episode may cost, in pence.
  *
  * A run that would exceed it stops rather than degrading. A cost overrun should

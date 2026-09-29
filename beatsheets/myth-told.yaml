@@ -66,7 +66,20 @@ intent: >
   heard of it, with what is actually known about where it comes from surfacing
   at the points in the telling where it changes what you are hearing.
 
-targetSeconds: [780, 1080]
+# LENGTH FOLLOWS THE MATERIAL, AND THIS IS A PLANNING RANGE ONLY.
+#
+# Nothing reports an episode against this any more. The gate has a five minute
+# floor (below that it is a short in a long feed) and a twenty minute cap (past
+# that a beat is rambling), and between them it says nothing, because an episode
+# whose material ran out at eleven minutes is eleven minutes long and being told
+# otherwise is how it starts padding.
+#
+# The beat ranges below were LOWERED AT THE BOTTOM for the same reason. The
+# first real episode came in under the minimum on four of five beats, which
+# meant every one of them was carrying a "you are short" note that was wrong:
+# the material was what it was. A guide that the good outcome fails is a guide
+# pointing the wrong way.
+targetSeconds: [600, 1140]
 
 serialised: false
 
@@ -77,7 +90,7 @@ loops:
 beats:
   - id: opening
     type: orientation
-    seconds: [95, 145]
+    seconds: [60, 140]
     function: >
       Say what this story is, whose it is, how old, and what happens in it in
       one line - before any of it is told.
@@ -102,7 +115,7 @@ beats:
 
   - id: world
     type: stakes
-    seconds: [200, 270]
+    seconds: [120, 280]
     function: >
       The world this story happens in, as the people who told it understood it.
       The rules that make everything after this make sense.
@@ -134,7 +147,7 @@ beats:
 
   - id: story
     type: escalation
-    seconds: [260, 340]
+    seconds: [240, 440]
     function: >
       The myth itself, from the beginning, in the order it happens, at length.
     constraints:
@@ -150,7 +163,7 @@ beats:
 
   - id: ending
     type: payoff
-    seconds: [180, 250]
+    seconds: [120, 260]
     function: >
       How it ends, what that ending meant to the people who told it, and where
       the surviving versions do not agree.
@@ -172,7 +185,7 @@ beats:
 
   - id: close
     type: outro
-    seconds: [65, 100]
+    seconds: [45, 100]
     function: >
       Land the episode. Give it an ending that feels like one, and leave the
       listener holding something.
@@ -200,10 +213,27 @@ beats:
         that sits with them on its own.
       - No moral, and nothing about what it says about people or about us now.
       - "No sign-off, no call to action, no naming the show, no next-time."
-    # THE ENDING STILL RESTS ON SOMETHING SOURCED. A callback returns to a claim
-    # the episode already used, which counts - what is not allowed is an ending
-    # the writer made up because the beat had to end somehow.
-    minClaims: 1
+    # ZERO, AND THE FLOOR OF ONE WAS UNREACHABLE BY CONSTRUCTION.
+    #
+    # It read: "the ending still rests on something sourced - a callback returns
+    # to a claim the episode already used, which counts". The intent is right and
+    # the mechanism never existed. `writeScript` hands each beat only the claims
+    # routed to it, research routes none to an outro, so the closing beat is given
+    # nothing to cite and could not satisfy a floor of one however well it was
+    # written. Every long run so far reported "close cites 0 claims, below its
+    # floor of 1", which trained the eye to skip the density line.
+    #
+    # THE INTENT IS NOT LOST. A callback returns to material the episode already
+    # told, which was extracted, quote-checked and verified when it was first
+    # used. What the floor was guarding against - an ending the writer invented
+    # because the beat had to end somehow - is now caught by the grounding review,
+    # which reads the whole script against the whole ledger and does not care
+    # which beat a fact was filed under.
+    #
+    # Handing the outro every earlier claim was the other option and is worse: it
+    # invites new facts into an ending that this sheet explicitly tells to add
+    # none.
+    minClaims: 0
 
 # Opens on a scene, drops through the orientation because that is where the
 # listener decides to stay, and then climbs steadily. The `world` beat sits low

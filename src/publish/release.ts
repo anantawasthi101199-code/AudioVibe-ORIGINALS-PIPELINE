@@ -26,6 +26,7 @@ import { Run } from '../run/store';
 import { regate } from '../qa/regate';
 import { scriptSchema } from '../script/write';
 import { PublishRefused, publishRun } from './publishRun';
+import { takeReleaseLock } from './releaseLock';
 
 export interface DueRun {
   runId: string;
@@ -139,31 +140,50 @@ export const releaseDue = async (
   opts: { report?: (message: string) => void } = {}
 ): Promise<ReleaseResult> => {
   const say = opts.report ?? (() => undefined);
-  const plan = dueForRelease(now);
 
   const released: Released[] = [];
   const failed: Array<{ runId: string; reason: string }> = [];
 
-  const next = plan.due[0];
-  if (!next) {
-    return { released, failed, held: plan.held, remaining: 0 };
+  // ONE RELEASER AT A TIME, ACROSS PROCESSES. The studio's timer and the
+  // scheduled task both call this, and the "already published" check cannot
+  // separate them on its own: that flag is written after the upload, so two
+  // callers reading the plan seconds apart both see the same run as unsent.
+  // See releaseLock.ts for the episode this actually happened to.
+  const lock = takeReleaseLock(now.getTime());
+  if (!lock) {
+    say('another releaser is already running; leaving it to that one');
+    return { released, failed, held: [], remaining: 0 };
   }
-
-  const run = Run.open(next.runId);
-  const gate = regate(run, run.readArtifact('script', scriptSchema))!;
-
-  say(`releasing "${next.title}" (${next.channelName})`);
 
   try {
-    // `confirmed` is the approval a person gave when they saved the order,
-    // which is the same act `--yes` is on the command line.
-    const result = await publishRun(run, gate, { confirmed: true, report: say });
-    released.push({ runId: next.runId, audioId: result.audioId, url: result.url });
-  } catch (err) {
-    const reason = err instanceof PublishRefused ? err.reason : (err as Error).message;
-    failed.push({ runId: next.runId, reason });
-    say(`refused: ${reason}`);
-  }
+    // INSIDE THE LOCK, not before it. Reading the plan first would reintroduce
+    // the whole race: the losing caller would hold a stale plan naming a run
+    // the winner is already uploading.
+    const plan = dueForRelease(now);
 
-  return { released, failed, held: plan.held, remaining: plan.due.length - 1 };
+    const next = plan.due[0];
+    if (!next) {
+      return { released, failed, held: plan.held, remaining: 0 };
+    }
+
+    const run = Run.open(next.runId);
+    const gate = regate(run, run.readArtifact('script', scriptSchema))!;
+
+    say(`releasing "${next.title}" (${next.channelName})`);
+
+    try {
+      // `confirmed` is the approval a person gave when they saved the order,
+      // which is the same act `--yes` is on the command line.
+      const result = await publishRun(run, gate, { confirmed: true, report: say });
+      released.push({ runId: next.runId, audioId: result.audioId, url: result.url });
+    } catch (err) {
+      const reason = err instanceof PublishRefused ? err.reason : (err as Error).message;
+      failed.push({ runId: next.runId, reason });
+      say(`refused: ${reason}`);
+    }
+
+    return { released, failed, held: plan.held, remaining: plan.due.length - 1 };
+  } finally {
+    lock.release();
+  }
 };

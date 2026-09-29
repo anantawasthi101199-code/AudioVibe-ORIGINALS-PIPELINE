@@ -39,7 +39,7 @@ import { writeHook } from './hooks';
 import { SHORT_FORM_GUIDANCE } from './shorts';
 import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
-import { FORWARD_GUIDANCE, checkForward, checkRepetition } from './forward';
+import { FORWARD_GUIDANCE, checkBridge, checkForward, checkRepetition } from './forward';
 import { PLAIN_GUIDANCE, checkPlainWords } from './plain';
 import { CONTEXT_GUIDANCE } from './context';
 import { PRONOUN_RULE } from '../qa/pronouns';
@@ -112,6 +112,35 @@ export const WORDS_PER_SECOND = 2.85;
  * spends money to arrive at the same place.
  */
 export const MAX_REVISIONS = 2;
+
+/**
+ * How far past the card's sentence-length target a beat may sit before it is
+ * rewritten rather than merely noted.
+ *
+ * 1.45, which is a fault threshold and not a bullseye. The card target is what
+ * good prose for this show measures; this is the point at which a beat has
+ * stopped being followable by ear. For a card of 13 that is 18.9 words a
+ * sentence: a beat at 16 is left alone, a beat at 21 is sent back.
+ *
+ * Set from three measured scripts at 23.7, 26.1 and 21.2 against references at
+ * 12.2 and 12.6. Anything tighter would fire on every draft and spend the
+ * revision budget chasing a decimal place.
+ */
+export const REWRITE_SENTENCE_MULTIPLE = 1.45;
+
+/**
+ * How many of a beat's own facts it may leave unused while running short.
+ *
+ * ONE. A beat routinely has a fact that does not fit the telling, and arguing
+ * about it would be arguing about taste. Two or more, in a beat that has also
+ * come in under its length guide, is not taste: it is material that was
+ * researched, verified, routed to this beat and then skipped.
+ *
+ * Measured on three runs of one topic. The story beat used 15 of 16, then 17 of
+ * 18, then 19 of 25 - and the run that left six behind is the run that lost the
+ * seven gates, which is the spine of the myth.
+ */
+export const SKIPPED_CLAIMS_ALLOWED = 1;
 
 export const wordsForBeat = (beat: Beat): { min: number; max: number } => ({
   min: Math.round(beat.seconds[0] * WORDS_PER_SECOND),
@@ -227,6 +256,14 @@ figures, dates, names or causes from your own knowledge, however confident you
 are. If a claim is not there, write around it. Claims are pre-verified against
 their sources; anything you add is not.
 
+SAY THE WORDS OUT LOUD WHERE A CLAIM CARRIES THEM. A claim marked WORDS is a
+verbatim line from the text this episode is about, and reading it aloud is the
+single strongest sentence available to you. Introduce it the way a person would
+- who wrote it, or what it is from, in a handful of words - and then say it, and
+then stop. Do not paraphrase it first and quote it second, that is the same
+thing twice. Do not quote more than two or three of them in one beat, because
+the effect is contrast and a beat that is all quotation has none.
+
 CONNECT A CLAIM TO WHAT THE EPISODE HAS ALREADY SAID. A claim is written to be
 true standing on its own, because it cannot know what has been said before it.
 You do know. So a claim reading "three of the six ringleaders were each
@@ -247,6 +284,14 @@ Return JSON only:
 };
 
 export interface BeatContext {
+  /**
+   * Whether a beat that fails its critique is PAID TO BE REWRITTEN.
+   *
+   * The critique itself is deterministic and free and runs either way. This
+   * decides whether a model is bought to act on it. Default false - see
+   * config/stages.ts.
+   */
+  allowRevisions?: boolean;
   persona: Persona;
   format: EpisodeFormat;
   beat: Beat;
@@ -340,8 +385,32 @@ export const renderClaims = (claims: Claim[]): string => {
   // can see exactly what did not survive.
   const usable = claims.filter((c) => c.status !== 'unverified');
 
+  // A QUOTATION CLAIM CARRIES ITS WORDS, and until now it did not.
+  //
+  // THE BIGGEST UNUSED ASSET IN THE PIPELINE. Every claim is bound to a verbatim
+  // span that provably occurs in a fetched document, the span is checked twice,
+  // and the writer was never shown a single one of them. So a studio whose whole
+  // claim is that somebody went and read the file was paraphrasing the file, and
+  // the strongest sentence available in any episode - the line from the text,
+  // read out - was sitting in claims.json where no listener could reach it.
+  //
+  // Measured on the transcripts this network is trying to stand beside: one gives
+  // 4.5% of its sentences to primary text spoken at length, and those block quotes
+  // ARE the show. One of this studio's own scripts quotes nothing at all.
+  //
+  // Only for `quotation` claims, deliberately. Handing over the supporting span
+  // for every claim would invite the writer to reproduce source prose generally,
+  // which is how a told story turns back into a literature review. A quotation
+  // claim exists precisely because somebody said words worth hearing.
+  const render = (c: Claim): string => {
+    const line = `[${c.id}] (${c.type}) ${c.text}`;
+    return c.type === 'quotation'
+      ? `${line}\n      WORDS, exactly as the text has them: "${c.quote.replace(/\s+/g, ' ').trim()}"`
+      : line;
+  };
+
   return usable.length
-    ? usable.map((c) => `[${c.id}] (${c.type}) ${c.text}`).join('\n')
+    ? usable.map(render).join('\n')
     : '(none available - write this beat without stating new facts)';
 };
 
@@ -480,6 +549,82 @@ export const critiqueBeat = (
     (p.blocking ? blocking : advisory).push(p.detail);
   }
 
+  // Whether this beat leaves the next one anything to arrive at. Advisory: a
+  // bridge is a craft judgement and a regex sees only the commonest shapes of
+  // one, so blocking it would teach the writer to produce those shapes. The work
+  // is done by the instruction; this reports whether it worked.
+  //
+  // The closing beat is exempt, because an ending that points forward is the
+  // "next time on" the outro is explicitly told not to write.
+  // ADVISORY HERE, AND ENFORCED AS A BUDGET OVER THE WHOLE SCRIPT INSTEAD.
+  //
+  // It was briefly made blocking, on the good argument that instruction had been
+  // tried and measured and had made the bridge rate WORSE (0.52 per thousand
+  // words after the instruction, against 0.93 before it), while the revision loop
+  // demonstrably fixes eleven of fourteen named faults in one pass. Feedback
+  // works on this writer and instruction does not.
+  //
+  // MEASURING IT STOPPED THAT BEING THE RIGHT FIX. Per beat, the check fires on
+  // 92% of ours - which is the fault, honestly reported - but it also recognises
+  // only five of the seven real section endings in the reference transcripts. A
+  // check with two known blind spots, made blocking at every boundary, would
+  // reject good endings it does not recognise and teach the writer to produce the
+  // shapes it does. That is how a house style is born, and this file already
+  // carries the scar of one.
+  //
+  // So: reported per beat, and required in the aggregate. See describeFailures in
+  // onePass.ts, where more than one flat ending in a script is a rewrite. A
+  // script may end one beat quietly; it may not end all of them that way.
+  for (const p of checkBridge(text, { isFinal: beat.type === 'outro' })) {
+    advisory.push(p.detail);
+  }
+
+  // MATERIAL THE BEAT WAS GIVEN AND SKIPPED, which is the check that protects the
+  // content from everything else in this function.
+  //
+  // WHY IT HAD TO EXIST. Adding rewrite pressure for sentence length, handovers
+  // and questions moved every one of those metrics to reference level, and the
+  // episode it produced DROPPED THE SEVEN GATES: no crown, no earrings, no
+  // necklace, no measuring rod, no robe, no "naked before Ereshkigal". The single
+  // most concrete and memorable sequence in the myth, present and correct in an
+  // earlier and much worse-written draft, gone. Its own plan had said "stripped of
+  // one garment or piece of regalia at each, arriving naked before Ereshkigal".
+  //
+  // That is Goodhart's law arriving on schedule. Every check in this function
+  // measures the PROSE, so a writer under rewrite pressure buys compliance with
+  // the cheapest thing it has, which is material. Nothing was looking at whether
+  // the story still got told.
+  //
+  // WHY THIS SIGNAL RATHER THAN A WORD FLOOR. A floor makes a beat pad, which is
+  // settled policy and the owner was explicit about it. This is a different
+  // question: not "is the beat long enough" but "did it use what it was given".
+  // Measured across three runs of one topic, the story beat used 15 of 16 claims,
+  // then 17 of 18, then 19 of 25 - and the third is the one that lost the gates.
+  //
+  // BOTH CONDITIONS ARE REQUIRED. A beat that is at or over its guide and still
+  // left claims has more material than fits, which is an editorial decision and
+  // none of this function's business. A beat that is SHORT and left claims behind
+  // has skipped them.
+  if (claims.length) {
+    const cited = new Set(claimIds);
+    const unused = claims.filter((c) => c.status !== 'unverified' && !cited.has(c.id));
+    const words = text.split(/\s+/).filter(Boolean).length;
+    const guide = wordsForBeat(beat);
+
+    if (unused.length >= SKIPPED_CLAIMS_ALLOWED + 1 && words < guide.min) {
+      blocking.push(
+        `runs ${words} words, short of the ${guide.min} this beat has room for, and leaves ` +
+          `${unused.length} of its ${claims.length} facts unused: ` +
+          unused
+            .slice(0, 4)
+            .map((c) => `[${c.id}] ${c.text.replace(/\s+/g, ' ').slice(0, 90)}`)
+            .join('; ') +
+          `. Do not pad and do not reach for length. Tell the things you were given and left out, ` +
+          `because a listener would rather hear them than hear the rest said better.`
+      );
+    }
+  }
+
   // Anything said twice, inside this beat or anywhere earlier in the episode.
   // Blocking, and deliberately strict: the listener's instruction was "don't
   // say anything twice", and a check that allowed a little repetition would be
@@ -527,8 +672,30 @@ export const critiqueBeat = (
   // whether it worked, and blocks only where the beat has stopped being speech.
   for (const p of checkPlainWords(text)) (p.blocking ? blocking : advisory).push(p.detail);
 
-  const { violations } = checkStyle(text, persona.styleCard);
+  const { violations, measurement } = checkStyle(text, persona.styleCard);
   for (const v of violations) (v.blocking ? blocking : advisory).push(v.detail);
+
+  // SENTENCE LENGTH DRIVES A REWRITE ONCE IT IS BADLY OUT, for the same reason
+  // as the bridge above: instruction has been tried and measured, and it did not
+  // work. Three long scripts averaged 23.7, 26.1 and then, with an explicit
+  // instruction to write around thirteen, 21.2 - against the 12.2 and 12.6 of the
+  // transcripts this show is aimed at. The writer is not ignoring the rule out of
+  // malice, it is one bullet among ninety-nine.
+  //
+  // A GENEROUS MULTIPLE, NOT THE TARGET. Asking a beat to hit 13 exactly would
+  // fire on nearly every draft and spend two rewrites chasing a decimal. At 1.45x
+  // the card, a beat has to be genuinely long-winded before this says anything:
+  // for this show that is 18.9 words a sentence, which passes 16 and catches the
+  // 21 that made an episode hard to follow. The gate still only whispers about
+  // it, so nothing is refused over prose rhythm.
+  if (measurement.sentences >= 8 && measurement.sentenceWordsMean > persona.styleCard.sentenceWordsMean * REWRITE_SENTENCE_MULTIPLE) {
+    blocking.push(
+      `averages ${measurement.sentenceWordsMean.toFixed(1)} words a sentence against a target of ` +
+        `${persona.styleCard.sentenceWordsMean}. Break the long ones up. A listener cannot go back ` +
+        `to the front of a sentence, so anything built out of clauses joined by "and" or ", which" ` +
+        `is lost by the time the verb arrives. Same facts, more sentences.`
+    );
+  }
 
   // THERE IS NO LONGER A FLOOR, and removing it is a correction rather than a
   // relaxation. It was raised to 0.85 of the minimum one commit after an
@@ -596,7 +763,9 @@ export const writeBeat = async (
   let current: { turns: Turn[]; claimIds: string[] } | null = null;
   let lastFailures: string[] = [];
 
-  while (calls <= MAX_REVISIONS) {
+  const revisionBudget = ctx.allowRevisions ? MAX_REVISIONS : 0;
+
+  while (calls <= revisionBudget) {
     const isRevision = current !== null;
     calls++;
 
@@ -710,7 +879,13 @@ export const writeTitle = async (
       ].join('\n\n'),
       temperature: 0.8,
       effort: 'low',
-      maxTokens: 1500,
+      // RAISED FROM 1,500, WHICH TRUNCATED A REAL RUN. The reply is two short
+      // fields, but `low` effort is not `no` effort and the thinking comes out
+      // of the same ceiling - so a model that reasons for a moment about the
+      // description returns JSON cut off mid-sentence, and the whole episode
+      // fails at the very last call after the script has been paid for. Room
+      // costs nothing when it is not used. See models/client.ts.
+      maxTokens: 6000,
     },
     onCost
   );
@@ -773,7 +948,9 @@ export const writeScript = async (
   writer: LlmClient,
   onCost?: (pence: number) => void,
   checkpoint?: ScriptCheckpoint,
-  onProgress?: (message: string) => void
+  onProgress?: (message: string) => void,
+  /** Whether a failing beat is paid to be rewritten. See BeatContext. */
+  allowRevisions = false
 ): Promise<Script> => {
   // Beats are resumed BY INDEX, and only a prefix is trusted. A checkpoint
   // holding beats 1, 2 and 5 would be a checkpoint from a different format, and
@@ -875,6 +1052,7 @@ export const writeScript = async (
 
     const written = await writeBeat(
       {
+        allowRevisions,
         persona: input.persona,
         format: input.format,
         beat,

@@ -32,6 +32,7 @@ import { Persona } from '../canon/schema';
 import { openAiConfig } from '../config';
 import { paletteFor } from './cover';
 import { renderAvatar, renderChannelCover } from './channel';
+import { suppliedArt } from './supplied';
 
 /** Square, because every surface that shows an avatar crops to one. */
 export const AVATAR_SIZE = 1024;
@@ -239,6 +240,16 @@ export const artworkFor = async (
 
   const make = async (kind: ArtKind): Promise<string> => {
     const out = path.join(dir, `${kind}.png`);
+
+    // WHAT A PERSON CHOSE BEATS ANYTHING HERE, and costs nothing to honour.
+    // Checked before `imagesEnabled` rather than after, because an upload is
+    // not a fallback for generation being off - it outranks generation being
+    // on. A redraw reaches this line too, which is how an upload survives one.
+    const chosen = suppliedArt(dir, kind);
+    if (chosen) {
+      deps.onProgress?.(`using the ${kind} you supplied (${path.basename(chosen)})`);
+      return chosen;
+    }
 
     if (!imagesEnabled()) {
       deps.onProgress?.(`drawing the ${kind} (FOUNDRY_IMAGE=off)`);

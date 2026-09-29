@@ -21,6 +21,7 @@ import path from 'path';
 import { loadPersona } from '../canon/load';
 import { platformUrl, repoRoot } from '../config';
 import { artworkFor, GenerateDeps } from '../art/generate';
+import { suppliedArt } from '../art/supplied';
 import {
   Account,
   PlatformAccounts,
@@ -168,11 +169,20 @@ export const setUpChannel = async (
   // --- 3. Its face ----------------------------------------------------------
   const artDir = deps.artDir ?? path.join(repoRoot(), 'art', channelId);
 
+  // WHICH FILE IS THIS CHANNEL'S FACE, in the order this studio trusts them:
+  // one a person supplied, then whatever is already on disk, then something
+  // made now.
+  //
   // REUSED IF IT IS ALREADY THERE. Artwork costs money to generate and a
   // channel's face should not change because somebody re-ran a setup command.
-  const avatarPath = path.join(artDir, 'avatar.png');
-  const coverPath = path.join(artDir, 'cover.png');
-  const haveBoth = fs.existsSync(avatarPath) && fs.existsSync(coverPath);
+  //
+  // A SUPPLIED FILE OUTRANKS EVEN A REDRAW, which is the whole reason it is
+  // stored under its own name. Choosing a picture and then pressing the button
+  // beside it must not undo the choice.
+  const faceOf = (kind: 'avatar' | 'cover'): string =>
+    suppliedArt(artDir, kind) ?? path.join(artDir, `${kind}.png`);
+
+  const haveBoth = fs.existsSync(faceOf('avatar')) && fs.existsSync(faceOf('cover'));
 
   let generated: string[] = [];
   if (haveBoth && !deps.redraw) {
@@ -185,10 +195,15 @@ export const setUpChannel = async (
     generated = art.generated;
   }
 
-  log('uploading the avatar', 'artwork');
+  // Resolved AFTER the step above, because that step is what may have created
+  // the file this is about to read.
+  const avatarPath = faceOf('avatar');
+  const coverPath = faceOf('cover');
+
+  log(`uploading the avatar (${path.basename(avatarPath)})`, 'artwork');
   await api.uploadAvatar(avatarPath);
 
-  log('uploading the cover', 'artwork');
+  log(`uploading the cover (${path.basename(coverPath)})`, 'artwork');
   await api.uploadCover(coverPath);
 
   account.profile = { avatar: true, cover: true };

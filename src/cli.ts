@@ -39,6 +39,14 @@ import { runFiction } from './pipeline/fiction';
 import { runNews } from './pipeline/news';
 import { hasNewsDesk, loadDesk } from './news/desk';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
+import {
+  SEASON_EPISODES,
+  checkPlan,
+  loadPlan,
+  renderPlan,
+  savePlan,
+} from './fiction/season';
+import { planSeason } from './fiction/planner';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
 import { currentPlan } from './schedule/current';
@@ -63,6 +71,12 @@ import {
 import { imageModel, imageQuality, imagesEnabled } from './art/generate';
 import { serve } from './server/index';
 import { formatGateReport, GateReport } from './qa/gate';
+import {
+  StageFlags,
+  stageFlags,
+  stageOverridesFromArgv,
+  stagesOff,
+} from './config/stages';
 import { regate } from './qa/regate';
 import { compare, formatComparison } from './qa/compare';
 import { fullText, Script, scriptSchema } from './script/write';
@@ -93,8 +107,44 @@ Commands
       ... --beat-by-beat         Write one beat at a time instead of the whole
                                  script in one call. Slower, and it starves a
                                  beat; see COMMANDS.md.
+      ... --research single     Build the episode from the one to three documents
+                                 that carry the whole story, read whole and
+                                 fused into one reference article. No claim
+                                 ledger. This is what a told story wants.
+      ... --research extensive   Search wide, extract claims bound to verbatim
+                                 quotes, verify each one. This is what a
+                                 subject assembled from many documents wants.
+                                 Both default to whatever the format declares.
       ... --render-now           Skip the approval break and voice it straight
                                  away. Spends without anybody reading it first.
+  make --show geopolitics-today  A NEWS channel (it has desks/<id>.yaml): today's
+                                 top story on its beat, from ONE article by a
+                                 trusted outlet, under 3 minutes. --topic "..."
+                                 for one specific story. Renders at once;
+                                 --hold stops before audio. See docs/NEWS.md.
+      ... --no-music             Render a bare voice with no bed under it.
+                                 The bed is synthesised locally and is free,
+                                 so this is for judging the writing, not cost.
+
+      EVERY PAID CHECK IS OFF BY DEFAULT. The floor is the cheapest thing that
+      produces an episode; each pass goes back on by name when it has earned
+      its cost. Free deterministic checks (style card, critique, hedging,
+      speakability, the gate) always run and always report.
+      ... --reference-check      Read the fused reference back against its own
+                                 documents. On the single-story lane this is
+                                 the ONLY thing that checks what the episode
+                                 says. About 50-80p.
+      ... --script-revisions     Pay a model to rewrite a draft that failed its
+                                 style checks. The largest avoidable cost there
+                                 is: one run spent 12p writing and 87p
+                                 rewriting.
+      ... --perform              One delivery pass over the finished script.
+                                 Cannot add a fact, only readability.
+      ... --grounding            Read the script against the claim ledger.
+                                 Extensive lane only.
+      ... --counter-evidence     Search for sources that disagree with a
+                                 contested claim. Extensive lane only.
+      ... --repair  --gaps       Rescue and backfill claims. Extensive only.
   approve --run <id>             Release a held run, then render and gate it.
                                  Nothing is voiced until this.
   channel-setup --show <id> [--redraw]
@@ -142,6 +192,10 @@ Commands
                                  looking at the result.
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
+  season --show <id>             Break a season: plan every episode of a serial
+         [--episodes N]          before writing any of them. Costs about a tenth
+         [--season N]            of one episode, writes the plan to disk and
+         [--premise "..."]       stops. Add --show-plan to read one back.
   series --show <id>             What a fiction show has established so far
   series-setup --show <id>       Make the platform series a show publishes into
   due                            What the schedule says should be made now
@@ -283,7 +337,16 @@ const cmdMake = async (argv: string[]): Promise<number> => {
     return 0;
   }
 
-  if (flag(argv, 'dry-run')) return describeRun(persona, format, topic, !flag(argv, 'beat-by-beat'));
+  if (flag(argv, 'dry-run')) {
+    const asked = arg(argv, 'research');
+    return describeRun(
+      persona,
+      format,
+      topic,
+      !flag(argv, 'beat-by-beat'),
+      asked === 'single' || asked === 'extensive' ? asked : undefined
+    );
+  }
 
   // ONE PASS IS THE DEFAULT. `--beat-by-beat` goes back, and `--one-pass` is
   // still accepted because it is in the history and in people's shell history.
@@ -292,6 +355,28 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   // different way is not comparable to one that was not, and six weeks later
   // the only place that fact could live is the manifest.
   const onePass = !flag(argv, 'beat-by-beat');
+
+  // HOW THIS RUN RESEARCHES, when the format's own answer is not what is
+  // wanted. Two modes and the difference is breadth against depth:
+  //
+  //   --research extensive   search wide, fetch fourteen documents, extract
+  //                          claims bound to verbatim quotes, verify each one,
+  //                          repair what fails, write from the ledger.
+  //
+  //   --research single      pick the one to three documents that carry the
+  //                          whole story, read them WHOLE rather than through a
+  //                          six-thousand-character keyhole, fuse them into one
+  //                          reference article, write from that. No claim
+  //                          ledger, no per-fact verification.
+  //
+  // Usually left off: a format declares which lane it belongs on, and the
+  // choice of format is the ordinary way to pick. This is for trying the same
+  // topic both ways.
+  const research = arg(argv, 'research');
+  if (research && research !== 'single' && research !== 'extensive') {
+    console.error(`--research takes "single" or "extensive", not "${research}"`);
+    return 1;
+  }
 
   // The header is printed by finishRun, which also prints it on a resume, so
   // the two commands look the same and neither repeats the other.
@@ -307,7 +392,21 @@ const cmdMake = async (argv: string[]): Promise<number> => {
     ? flag(argv, 'hold')
     : !flag(argv, 'render-now') && !format.sourceOnly;
 
-  const run = Run.create({ personaId: persona.id, formatId, topic, onePass, holdForApproval });
+  // `--grounding` / `--no-perform` and so on, resolved once and recorded, so a
+  // resume of this run uses the same passes. See config/stages.ts.
+  const stages = stageFlags(stageOverridesFromArgv(argv));
+  const off = stagesOff(stages);
+  if (off.length) console.log(`  stages OFF: ${off.join(', ')}`);
+
+  const run = Run.create({
+    personaId: persona.id,
+    formatId,
+    topic,
+    onePass,
+    holdForApproval,
+    stages,
+    research: research as 'single' | 'extensive' | undefined,
+  });
   return finishRun(run, argv);
 };
 
@@ -327,11 +426,22 @@ const describeRun = (
   persona: Persona,
   format: EpisodeFormat,
   topic: string,
-  onePass: boolean
+  onePass: boolean,
+  /** Which lane, when the run was asked for one other than the format's. */
+  research?: 'extensive' | 'single'
 ): number => {
+  // A DRY RUN THAT QUOTES FOR THE WRONG LANE IS WORSE THAN NO DRY RUN. The
+  // single-story lane does not extract claims and does not verify them, and
+  // those are the two largest lines on this table - so quoting them would
+  // overstate a story run by roughly half while naming stages it will never
+  // reach.
+  const singleStory = (research ?? format.research) === 'single';
   const writer = writerConfig();
   const verifier = verifierConfig();
   const engine = ttsProvider();
+  // RESOLVED BEFORE THE TABLE IS BUILT, because two of its rows now exist only
+  // when the pass that fills them is switched on.
+  const flags = stageFlags(stageOverridesFromArgv(process.argv));
 
   // Rough token shapes per call, from what the prompts actually contain. Wrong
   // in the third significant figure and right in the first, which is the
@@ -359,46 +469,73 @@ const describeRun = (
   const stages: Array<[string, number, string]> = [
     ['brief', write(writer.model, 1, 1_200, 900), '1 call'],
     ['corpus', 0, 'search + fetch, no model calls'],
-    [
-      'claims',
-      (() => {
-        // CHUNKED, so this is not one call. The corpus rides in a cached system
-        // prefix, so the first chunk pays a 1.25x write and the rest read at
-        // 0.1x - but the OUTPUT is per chunk and does not shrink, and output is
-        // where the money is when every claim carries a verbatim quote.
-        //
-        // Measured at 67p on a real ten-beat episode with fourteen sources,
-        // against the 14p this used to guess. The old number assumed one call
-        // and cheap quotes, and was wrong about both.
-        const chunks = Math.ceil(format.beats.length / 3);
-        const corpusIn = 30_000;
-        const cached = corpusIn * (1.25 + 0.1 * (chunks - 1));
-        return write(writer.model, 1, cached, 0) + write(writer.model, chunks, 500, 5_000);
-      })(),
-      `${Math.ceil(format.beats.length / 3)} calls, three beats each, sharing a cached corpus`,
-    ],
-    [
-      'verification',
-      (() => {
-        const screener = screenerConfig();
-        // SAMPLED, unless somebody asked for all of them. The deterministic
-        // quote check runs on every claim and costs nothing; this is the model
-        // being asked whether that quote entails the claim, and it is the
-        // largest line here when it runs on everything.
-        const asked =
-          verifyMode() === 'all' ? estimatedClaims : Math.ceil(estimatedClaims * VERIFY_SAMPLE);
+    ...(singleStory
+      ? ([
+          [
+            'reference',
+            // A SHORT HAS NO FUSION STEP, and that is most of why a short fits
+            // in fourteen pence. It picks one article and the writer reads it
+            // directly; the fusion alone is three times a short's whole budget.
+            // See script/shortScript.ts.
+            format.kind === 'short'
+              ? write(writer.model, 1, 12_000, 400)
+              : write(writer.model, 1, 12_000, 400) + write(writer.model, 1, 75_000, 9_000),
+            format.kind === 'short'
+              ? 'pick the one best article. No fusion step on a short.'
+              : 'pick 1-3 documents, then read them whole and fuse them into one article',
+          ],
+          ...(flags.referenceCheck
+            ? ([
+                [
+                  'ref-check',
+                  write(verifier.model, 1, 75_000, 1_200),
+                  'the verifier reads the article back against the documents it came from',
+                ],
+              ] as Array<[string, number, string]>)
+            : []),
+        ] as Array<[string, number, string]>)
+      : ([
+          [
+            'claims',
+            (() => {
+              // CHUNKED, so this is not one call. The corpus rides in a cached system
+              // prefix, so the first chunk pays a 1.25x write and the rest read at
+              // 0.1x - but the OUTPUT is per chunk and does not shrink, and output is
+              // where the money is when every claim carries a verbatim quote.
+              //
+              // Measured at 67p on a real ten-beat episode with fourteen sources,
+              // against the 14p this used to guess. The old number assumed one call
+              // and cheap quotes, and was wrong about both.
+              const chunks = Math.ceil(format.beats.length / 3);
+              const corpusIn = 30_000;
+              const cached = corpusIn * (1.25 + 0.1 * (chunks - 1));
+              return write(writer.model, 1, cached, 0) + write(writer.model, chunks, 500, 5_000);
+            })(),
+            `${Math.ceil(format.beats.length / 3)} calls, three beats each, sharing a cached corpus`,
+          ],
+          [
+            'verification',
+            (() => {
+              const screener = screenerConfig();
+              // SAMPLED, unless somebody asked for all of them. The deterministic
+              // quote check runs on every claim and costs nothing; this is the model
+              // being asked whether that quote entails the claim, and it is the
+              // largest line here when it runs on everything.
+              const asked =
+                verifyMode() === 'all' ? estimatedClaims : Math.ceil(estimatedClaims * VERIFY_SAMPLE);
 
-        if (!screener) return write(verifier.model, asked, 1_400, 200);
-        return (
-          write(screener.model, asked, 1_400, 200) +
-          write(verifier.model, Math.ceil(asked * 0.2), 1_400, 200)
-        );
-      })(),
-      verifyMode() === 'all'
-        ? `every one of ~${estimatedClaims} claims put to a model`
-        : `~${Math.ceil(estimatedClaims * VERIFY_SAMPLE)} of ~${estimatedClaims} claims put to a ` +
-          `model; the rest have their quotes located and go to the human reader`,
-    ],
+              if (!screener) return write(verifier.model, asked, 1_400, 200);
+              return (
+                write(screener.model, asked, 1_400, 200) +
+                write(verifier.model, Math.ceil(asked * 0.2), 1_400, 200)
+              );
+            })(),
+            verifyMode() === 'all'
+              ? `every one of ~${estimatedClaims} claims put to a model`
+              : `~${Math.ceil(estimatedClaims * VERIFY_SAMPLE)} of ~${estimatedClaims} claims put to a ` +
+                `model; the rest have their quotes located and go to the human reader`,
+          ],
+        ] as Array<[string, number, string]>)),
     [
       'script',
       // THE STORY PLAN IS PAID FOR EITHER WAY. It used to be described here as
@@ -406,20 +543,58 @@ const describeRun = (
       // dropped their cold opens: a hook competition only runs when the first
       // beat is typed `cold_open`, so an estimate naming it was quoting for
       // work the run would not do.
-      write(writer.model, 1, 2_000, 1_500) +
-        (onePass
-          ? // One call carrying the whole beat sheet and every claim, and up to
-            // one rewrite of the whole thing. The output is the episode, so it
-            // is large; the input is large too and mostly cached.
-            write(writer.model, 1.5, 16_000, 8_000)
-          : write(writer.model, beats * 1.6, 3_500, 1_200)),
-      onePass
-        ? `story plan + the whole script in 1 call (plus up to 1 rewrite)`
-        : `story plan${format.beats[0]?.type === 'cold_open' ? ' + hook competition' : ''} + ` +
-          `~${Math.round(beats * 1.6)} beat calls (${beats} beats, some revised)`,
+      // REVISIONS ARE BOUGHT, NOT ASSUMED. With them off this is one call, and
+      // that is the difference between 12p and 99p on a real run.
+      (singleStory ? 0 : write(writer.model, 1, 2_000, 1_500)) +
+        (singleStory && format.kind === 'short'
+          ? // The article IS the input here, up to sixty thousand characters,
+            // plus a short answer and a little thinking at low effort.
+            write(writer.model, flags.scriptRevisions ? 2 : 1, 15_000, 3_000)
+          : onePass || singleStory
+            ? write(writer.model, flags.scriptRevisions ? 2.5 : 1, 16_000, 8_000)
+            : write(writer.model, beats * (flags.scriptRevisions ? 1.6 : 1), 3_500, 1_200)),
+      (() => {
+        const rewrites = flags.scriptRevisions
+          ? `, plus up to ${2} rewrite(s)`
+          : '. Revisions are OFF, so a failing draft is reported and kept';
+        if (singleStory && format.kind === 'short')
+          return `the article straight to the script in 1 call${rewrites}`;
+        if (singleStory) return `the whole script from the reference in 1 call${rewrites}`;
+        if (onePass) return `story plan + the whole script in 1 call${rewrites}`;
+        return (
+          `story plan${format.beats[0]?.type === 'cold_open' ? ' + hook competition' : ''} + ` +
+          `~${Math.round(beats * (flags.scriptRevisions ? 1.6 : 1))} beat calls${rewrites}`
+        );
+      })(),
     ],
     ['title', write(writer.model, 1, 1_200, 200), '1 call'],
+    // TWO STAGES THAT WERE MISSING FROM THIS ESTIMATE AND ARE NOT CHEAP.
+    //
+    // A dry run exists so somebody can decide whether to spend, and it was
+    // quoting for a pipeline two stages shorter than the one that now runs. The
+    // grounding review alone came to 34p on a real episode, so the estimate was
+    // understating a run by roughly half.
   ];
+
+  // THE OPTIONAL PASSES ARE QUOTED ONLY IF THEY WILL RUN. An estimate that
+  // includes a stage the run will skip is as misleading as one that omits a stage
+  // it will not, and the whole point of a dry run is deciding whether to spend.
+  if (flags.perform) {
+    stages.push([
+      'perform',
+      write(writer.model, 1, 8_000, 6_000),
+      'one pass over the finished script for delivery, adding no facts',
+    ]);
+  }
+  if (flags.grounding && !singleStory) {
+    stages.push([
+      'grounding',
+      // The verifier, with the whole ledger and the whole script as input. Low
+      // effort, but the input is the largest of any call in the run.
+      write(verifier.model, 1, 12_000, 2_000),
+      'the verifier reads the script against every claim',
+    ]);
+  }
 
   // Speech is roughly 150 words a minute and 5.5 characters a word.
   const nominal = (format.targetSeconds[0] + format.targetSeconds[1]) / 2;
@@ -477,7 +652,7 @@ const describeRun = (
  * claim on a listener is that it read the documents. The show decides, once,
  * in its own file.
  */
-const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
+const finishRun = async (run: Run, argv: string[]): Promise<number> => {
   const persona = loadPersona(run.manifest.personaId);
   const format = loadFormat(run.manifest.formatId);
 
@@ -512,6 +687,14 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
   // second half of an episode by a different method from the first.
   const deps = buildDeps({
     onePass: run.manifest.onePass,
+    // Also from the manifest, and for the same reason.
+    stages: run.manifest.stages as Partial<StageFlags> | undefined,
+    // FROM THE COMMAND LINE, NOT THE MANIFEST, and that is the difference
+    // between this and the two above. Music changes nothing about what the
+    // episode SAYS, so re-rendering one part with a bed and one without would
+    // be audible but never wrong - and being able to hear the same script bare
+    // is the point of having the flag.
+    music: !flag(argv, 'no-music'),
     log: (message, stage) => {
       if (stage && stage !== 'pipeline') ui.section(stage);
       ui.line(message);
@@ -541,6 +724,26 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
     console.log(`\nRead it first:  npm run foundry -- script --run ${run.id}`);
     console.log(`Then publish:   npm run foundry -- publish --run ${run.id}`);
   }
+
+  // A HELD RUN EXITS ZERO EVEN WITH FINDINGS, and this is a consequence of the
+  // hold learning to gate for real.
+  //
+  // Before that it returned a fabricated pass, so a held run always exited zero.
+  // Once it started running the actual checks, the first one reported a short
+  // quote and a self-similarity overlap and the command exited 2 - which reads
+  // as "the run crashed" when what happened is the run did exactly what it was
+  // asked to do and then told the truth about the script.
+  //
+  // Nothing is being hidden: the findings are printed immediately above, and the
+  // run has published nothing and voiced nothing. The exit code answers "did the
+  // command work", and for a hold the answer is yes. `publish` is where a failed
+  // gate has to bite, and it still does.
+  if (run.awaitingApproval) {
+    console.log(`\nRead it first:  npm run foundry -- script  --run ${run.id}`);
+    console.log(`Then release:   npm run foundry -- approve --run ${run.id}`);
+    return 0;
+  }
+
   return gate.passed ? 0 : 2;
 };
 
@@ -1036,6 +1239,122 @@ const cmdSeries = (argv: string[]): number => {
   return 0;
 };
 
+
+/**
+ * Break a season: plan every episode of a serial before writing any of them.
+ *
+ * THE CHEAPEST CONTROL POINT IN THE STUDIO, and the reason it is a separate
+ * command rather than a stage inside `make`. A plan costs about a tenth of one
+ * written episode, so a season rejected here is rejected for pennies and a
+ * season rejected after generation is rejected for the price of all of it.
+ * Making it a stage would take that choice away by running the expensive part
+ * before anybody had read the cheap one.
+ *
+ * It writes the plan to disk and stops. Nothing renders, nothing publishes, and
+ * no episode is written until somebody has read the cards.
+ */
+const cmdSeason = async (argv: string[]): Promise<number> => {
+  const showId = arg(argv, 'show');
+  if (!showId) {
+    console.error('Usage: season --show <id> [--episodes N] [--season N] [--premise "..."]');
+    return 1;
+  }
+
+  const persona = loadPersona(showId);
+  if (!persona.fiction) {
+    // The same refusal runFiction makes, for the same reason. A factual show
+    // planned like a serial is a show inventing what it is going to find.
+    console.error(
+      `${persona.name} is not a fiction show. A season plan decides what happens ` +
+        `before anything is researched, which is the one thing a show built on an ` +
+        `evidence ledger may never do.`
+    );
+    return 1;
+  }
+
+  const [minEps, maxEps] = SEASON_EPISODES;
+  const seasonNumber = Number(arg(argv, 'season') ?? '1');
+  const episodes = Number(arg(argv, 'episodes') ?? '8');
+
+  if (!Number.isInteger(episodes) || episodes < minEps || episodes > maxEps) {
+    console.error(`--episodes must be between ${minEps} and ${maxEps}`);
+    return 1;
+  }
+
+  const existing = loadPlan(persona.id, seasonNumber);
+
+  if (argv.includes('--show-plan')) {
+    if (!existing) {
+      console.error(`${persona.name} has no plan for season ${seasonNumber}.`);
+      return 1;
+    }
+    console.log(renderPlan(existing));
+    return 0;
+  }
+
+  if (existing && !argv.includes('--force')) {
+    // Overwriting a plan that episodes have already been written against would
+    // leave those episodes answerable to a document that no longer exists.
+    console.error(
+      `${persona.name} season ${seasonNumber} is already planned. Read it with ` +
+        `\`season --show ${persona.id} --season ${seasonNumber} --show-plan\`, or pass --force to replace it.`
+    );
+    return 1;
+  }
+
+  // Episode length comes from the show rather than a flag, because the cards
+  // have to be sized to what an episode can actually hold and the show already
+  // knows that number.
+  const [lo, hi] = persona.episodeSeconds;
+  const minutes = Math.round((lo + hi) / 2 / 60);
+
+  const deps = buildDeps();
+  let pence = 0;
+
+  console.log(`Breaking ${persona.name} season ${seasonNumber}: ${episodes} episodes, about ${minutes} minutes each.`);
+
+  const plan = await planSeason(
+    {
+      persona,
+      seasonNumber,
+      episodes,
+      episodeMinutes: minutes,
+      premise: arg(argv, 'premise'),
+      isoDate: new Date().toISOString().slice(0, 10),
+    },
+    deps.writer,
+    (p) => {
+      pence += p;
+    }
+  );
+
+  const file = savePlan(plan);
+
+  console.log('');
+  console.log(renderPlan(plan));
+  console.log('');
+
+  // FREE, AND THIS IS WHERE IT PAYS. Every one of these is arithmetic over the
+  // object just returned, and each one names a season that would have read
+  // fine episode by episode and disappointed as a whole.
+  const problems = checkPlan(plan, persona.hosts.map((h) => h.name));
+  if (problems.length) {
+    console.log('PROBLEMS WITH THIS PLAN');
+    for (const p of problems) console.log(`  - ${p}`);
+    console.log('');
+  } else {
+    console.log('The plan plants everything it pays off, and lands.');
+    console.log('');
+  }
+
+  console.log(`  spent      ${pence.toFixed(1)}p`);
+  console.log(`  plan       ${file}`);
+  console.log('');
+  console.log('Read it, edit the file by hand if you want to, then write episode one:');
+  console.log(`  npm run foundry -- make --show ${persona.id}`);
+
+  return 0;
+};
 
 /**
  * Create the platform series a show publishes its episodes into.
@@ -1634,6 +1953,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdShort(rest);
       case 'shorts':
         return await cmdShorts(rest);
+      case 'season':
+        return await cmdSeason(rest);
       case 'series':
         return cmdSeries(rest);
       case 'series-setup':

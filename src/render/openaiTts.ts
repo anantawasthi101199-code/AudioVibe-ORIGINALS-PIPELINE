@@ -138,14 +138,25 @@ export class OpenAiTts implements TtsProvider {
   readonly understandsTags = false;
 
   /**
-   * Measured, not taken from the documentation.
+   * THE LIMIT IS IN TOKENS, NOT CHARACTERS, AND THAT COST A RENDER.
    *
-   * The docs quote 4096 for the older speech models. This one took 10,000 in a
-   * single request and rendered a whole episode in one call. Set below what was
-   * tested, because the limit is undocumented and a render that 400s halfway
-   * through a run is worse than one extra seam.
+   * This was 9000, with a note saying the model "took 10,000 in a single request
+   * and rendered a whole episode in one call". Whatever accepted that, the model
+   * in use now does not:
+   *
+   *   Input of 2119 tokens is over the maximum input limit of 2000 tokens.
+   *
+   * So the ceiling is 2000 TOKENS, and a character budget is only ever a proxy
+   * for it. English prose runs around four characters per token, but punctuation,
+   * short words and names push it lower, and the failure mode is the whole render
+   * dying after the script has been paid for.
+   *
+   * 6000 characters is comfortably under 2000 tokens even at a pessimistic three
+   * and a half characters each. It costs one extra seam on a long episode, which
+   * is the trade the previous note already argued for and then got the wrong way
+   * round.
    */
-  readonly maxInputChars = 9000;
+  readonly maxInputChars = 6000;
   private model: string;
 
   constructor(

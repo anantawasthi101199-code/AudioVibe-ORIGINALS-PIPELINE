@@ -8,5 +8,43 @@
         "firstRunId": "honest-health/e001-20260913-a-bad-nights-sleep-makes-you"
       }
     }
+  },
+  "myths-of-the-world": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "fable",
+        "firstUsedAt": "2026-09-25T20:04:04.427Z",
+        "firstRunId": "myths-of-the-world/e008-20260925-descent-of-inanna-to-the-underworld"
+      }
+    }
+  },
+  "business-teardowns": {
+    "reporter": {
+      "fake-tts": {
+        "provider": "fake-tts",
+        "voiceId": "nova",
+        "firstUsedAt": "2026-09-29T12:19:19.589Z",
+        "firstRunId": "business-teardowns/e001-20260929-fine"
+      }
+    },
+    "sceptic": {
+      "fake-tts": {
+        "provider": "fake-tts",
+        "voiceId": "onyx",
+        "firstUsedAt": "2026-09-29T12:19:19.589Z",
+        "firstRunId": "business-teardowns/e001-20260929-fine"
+      }
+    }
+  },
+  "geopolitics-today": {
+    "reporter": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "onyx",
+        "firstUsedAt": "2026-09-29T15:54:49.119Z",
+        "firstRunId": "geopolitics-today/e003-20260929-geopolitics"
+      }
+    }
   }
 }

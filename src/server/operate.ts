@@ -407,7 +407,11 @@ export const verifyPublished = async (runId: string) => {
   }
 
   try {
-    const res = await fetch(`${platform.url}/api/audio/${artifact.audioId}`);
+    // `/api/audios/<id>`, PLURAL. The singular form 404s for everything, so
+    // this reported every healthy episode as "the platform has no such audio"
+    // - a check that always fails is worse than no check, because it teaches
+    // people to ignore it. The publishing routes next door are plural too.
+    const res = await fetch(`${platform.url}/api/audios/${artifact.audioId}`);
     const body = (await res.json().catch(() => null)) as {
       data?: { audio?: Record<string, unknown> } | Record<string, unknown>;
     } | null;

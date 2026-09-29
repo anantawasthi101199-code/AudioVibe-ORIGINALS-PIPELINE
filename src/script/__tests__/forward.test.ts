@@ -8,27 +8,39 @@
  * a model actually produces it has a particular shape, and these are that
  * shape.
  */
-import { checkDistinctStories, checkForward, checkRepetition } from '../forward';
+import { checkBridge, checkDistinctStories, checkForward, checkRepetition } from '../forward';
 
 const codes = (text: string, isOrientation = false) =>
   checkForward(text, { isOrientation }).map((p) => p.code);
 
 describe('checkForward - the negation tic', () => {
-  it('catches a fragment that opens by denying something nobody said', () => {
+  /**
+   * A BUDGET OF ONE NOW, so these assert the TIC rather than the construction.
+   *
+   * Measured over 129 beat-sized chunks of the reference corpus: 11% of them open
+   * a sentence with "Not". A flat ban refused writing the owner named as the
+   * standard. The episode that prompted the check had FOUR in one beat, which is
+   * what a tic looks like and what these fixtures now carry.
+   */
+  it('catches a beat full of fragments that deny something nobody said', () => {
     const real =
       "Reader's first conviction for burglary came in 1950, when he was eleven years old. " +
-      'Not eleven months into a criminal career. Eleven years old, full stop.';
+      'Not eleven months into a criminal career. Eleven years old, full stop. ' +
+      'Not a legend, not a heist film pitch.';
     expect(codes(real)).toContain('forward:negationOpener');
   });
 
-  it('catches the other three from the same episode', () => {
-    for (const real of [
+  it('catches the rest of them from the same episode', () => {
+    const real = [
       'Not a legend, not a heist film pitch.',
       'Not from the newspaper version, not from whatever you already half-remember.',
       'Not a gang bursting through a wall with a sledgehammer.',
-    ]) {
-      expect(codes(real)).toContain('forward:negationOpener');
-    }
+    ].join(' ');
+    expect(codes(real)).toContain('forward:negationOpener');
+  });
+
+  it('allows ONE, because the reference corpus does it', () => {
+    expect(codes('Not one of them said a word to the police.')).toEqual([]);
   });
 
   it('leaves alone a negative that is an EVENT rather than a correction', () => {
@@ -50,12 +62,17 @@ describe('checkForward - the negation tic', () => {
     );
   });
 
-  it('does not fire on a tag at the head of a sentence', () => {
+  it('sees through a tag at the head of a sentence', () => {
     // Tags are stripped first, or "[quietly] Not..." would be invisible and
-    // "[quietly] Nobody came" might look like one.
-    expect(codes('[quietly] Not a single door was locked.')).toContain(
-      'forward:negationOpener'
-    );
+    // "[quietly] Nobody came" might look like one. Two of them, because one is
+    // inside the budget - what is under test here is the stripping, not the count.
+    expect(
+      codes('[quietly] Not a single door was locked. [grim] Not a window either.')
+    ).toContain('forward:negationOpener');
+  });
+
+  it('still says nothing when a tagged sentence is the only one', () => {
+    expect(codes('[quietly] Not a single door was locked.')).toEqual([]);
   });
 });
 
@@ -69,8 +86,23 @@ describe('checkForward - the negation tic', () => {
  * looked for a negation at the START of a clause and this one trails.
  */
 describe('checkForward - pairing a fact with what it is not', () => {
-  const caught = (text: string) =>
-    checkForward(text).some((p) => p.code === 'forward:contrastiveDefinition' && p.blocking);
+  /**
+   * A BUDGET NOW, NOT A BAN, so these assert DETECTION rather than blocking.
+   *
+   * The tic is real and was measured at 24 of 91 sentences in one episode. But
+   * running the check over two long-form transcripts the owner named as the
+   * target fired it seven times on one of them, and objected hardest to the
+   * hinge sentence the whole second half turns on ("Not because he was more
+   * powerful, but because his story survives in detail"). One use is a good
+   * sentence; six is a habit. See CONTRASTIVE_BUDGET.
+   */
+  const detected = (text: string) =>
+    checkForward(text).some((p) => p.code === 'forward:contrastiveDefinition');
+
+  /** Enough of the shape to exceed the budget, so detection is observable. */
+  const thrice = (text: string) => [text, text, text].join(' ');
+
+  const caught = (text: string) => detected(thrice(text));
 
   it.each([
     ['a trailing comma denial', 'All three are real scientific claims, not folklore.'],
@@ -80,17 +112,42 @@ describe('checkForward - pairing a fact with what it is not', () => {
     ['as opposed to', 'The scan shows shape as opposed to movement.'],
     ['and not', 'It came from mice and not from a living human head.'],
     ['not X but Y', 'It is not a theory but a measurement.'],
-  ])('catches %s', (_label, text) => {
+  ])('catches %s once the budget is past', (_label, text) => {
     expect(caught(text)).toBe(true);
+  });
+
+  it('allows ONE, because the hinge sentence in the reference transcript is one', () => {
+    // Verbatim from the transcript the owner named as the target. Under the old
+    // ban this was a blocking failure, which is how a check ends up rejecting
+    // the thing it is supposed to be aiming at.
+    expect(
+      detected(
+        'But of the seven, there was one that was given more attention. ' +
+          'Not because he was more powerful, but because his story survives in detail.'
+      )
+    ).toBe(false);
+  });
+
+  it('blocks only when the beat is full of it', () => {
+    const one = checkForward('It is not a theory but a measurement.');
+    expect(one.some((p) => p.code === 'forward:contrastiveDefinition')).toBe(false);
+
+    const many = checkForward(
+      Array.from({ length: 6 }, () => 'It is not a theory but a measurement.').join(' ')
+    );
+    expect(
+      many.some((p) => p.code === 'forward:contrastiveDefinition' && p.blocking)
+    ).toBe(true);
   });
 
   it('leaves the older rule-out-then-answer form to the older check', () => {
     // "No door forced, no glass broken, just a lift shaft" is the same move and
-    // is already blocked by ruledOutThenAnswered. Pinning which check owns it
-    // keeps the two from drifting into overlapping, differently-worded advice
-    // for one sentence.
-    const codes = checkForward('No door forced, no glass broken, just a lift shaft.')
-      .filter((p) => p.blocking)
+    // is owned by ruledOutThenAnswered. Pinning which check owns it keeps the
+    // two from drifting into overlapping, differently-worded advice for one
+    // sentence. Repeated past both budgets so each fires.
+    const codes = checkForward(
+      Array.from({ length: 4 }, () => 'No door forced, no glass broken, just a lift shaft.').join(' ')
+    )
       .map((p) => p.code);
 
     expect(codes).toContain('forward:ruledOutThenAnswered');
@@ -250,15 +307,37 @@ describe('checkRepetition', () => {
     expect(codesOf(payoff, orientation)).toContain('forward:repeatsEpisode');
   });
 
-  it('catches a beat saying the same thing twice inside itself', () => {
-    // The sum of money, given twice in the payoff beat.
+  /**
+   * A BUDGET OF TWO NOW, so this fixture carries the three repeats the real
+   * episode had rather than the one it used to.
+   *
+   * At zero, this check fired on 47% of 129 beat-sized chunks of the reference
+   * corpus. Part of that was a genuine bug - a phrase made entirely of names was
+   * exempt across beats and not within one, so a term of art used twice counted -
+   * and the rest is that four hundred words of real speech reuses a phrase now and
+   * then. The measured fault was several repeats in one beat: the drill described
+   * twice in nearly the same words, the sum of money three times, the time on the
+   * clock twice.
+   */
+  it('catches a beat that circles the same things several times', () => {
     const payoff =
+      'Property now put at just short of fourteen million pounds. ' +
+      'The drill was built for grinding through concrete and steel, and they went in at twenty past nine. ' +
+      'Diamonds, gold, jewellery, cash, all of it sitting behind those boxes for exactly this reason, ' +
+      'and all of it gone by the time the sun came up on the Sunday. It did not stay theirs. ' +
+      'The drill was built for grinding through concrete and steel, which is why the wall gave way. ' +
+      'They had come back at twenty past nine on the second night as well. ' +
+      'Which means two thirds of nearly fourteen million pounds simply never came back.';
+    expect(codesOf(payoff)).toContain('forward:restatesItself');
+  });
+
+  it('allows a phrase reused once, which real speech does constantly', () => {
+    const fine =
       'Property now put at just short of fourteen million pounds. ' +
       'Diamonds, gold, jewellery, cash, all of it sitting behind those boxes for exactly this reason, ' +
       'and all of it gone by the time the sun came up on the Sunday. It did not stay theirs. ' +
-      'Surveillance work and what came out afterward at trial put names to faces, and eventually to sentences. ' +
       'Which means two thirds of nearly fourteen million pounds simply never came back.';
-    expect(codesOf(payoff)).toContain('forward:restatesItself');
+    expect(codesOf(fine)).not.toContain('forward:restatesItself');
   });
 
   it('leaves deliberate adjacent repetition alone', () => {
@@ -355,5 +434,77 @@ describe('the closing beat may make one callback', () => {
     expect(checkRepetition(recap, soFar, { isClose: true }).map((p) => p.code)).toContain(
       'forward:repeatsEpisode'
     );
+  });
+});
+
+/**
+ * THE CHECKS, MEASURED AGAINST REAL WRITING IN BOTH DIRECTIONS.
+ *
+ * Every string below is verbatim from something: the two long-form transcripts
+ * the owner named as the target, or a script this pipeline actually produced.
+ * None of it is invented, because both of these checks were wrong in ways an
+ * invented example would not have exposed.
+ *
+ * The recall half exists because a check that fires on good writing is worse
+ * than no check at all. checkBridge reported all four non-final beats of a real
+ * episode as ending flat while every one of them handed over cleanly, and it
+ * burned both revision passes nagging for something already done. DENIAL_CONTRAST
+ * called "She was not ready for what waited at the first gate" a fault, which is
+ * a negative fact and exactly what FORWARD_GUIDANCE says is welcome.
+ */
+describe('checkBridge - recognising a real handover', () => {
+  const bridges = (t: string) => checkBridge(t, {}).length === 0;
+
+  it.each([
+    ['of the seven', 'It was something that arrived fully formed. But of the seven, there was one that was given more attention.'],
+    ['a key event', 'What is also important about the Apkallu was the time that they existed. A key event would change everything.'],
+    ['the next step', 'This suggests they were part of a protective practice. And that leads to the next step in their story.'],
+    ['a question', 'The knowledge of humanity advanced overnight. So what does the evidence actually show?'],
+    ['a promise', 'He wants his name to live forever, and you will see how important that is later.'],
+    ['a consequence pending', 'However you tell it, one thing is clear. They had just flipped off the gods, and the gods had noticed.'],
+    ['a curse not yet paid', 'May Enkidu have no one to bury him. It would not be long before it came true.'],
+  ])('recognises the reference hinge: %s', (_l, text) => {
+    expect(bridges(text)).toBe(true);
+  });
+
+  it.each([
+    ['you need to know', 'She chooses who. Before any gate opens, though, you need to know what the Sumerians believed was waiting underneath the ground they stood on.'],
+    ['what waited', 'She was ready for the gods to refuse her. She was not ready for what waited at the first gate.'],
+    ['what happens next', 'A sister who has just found him. What happens next divides a year into two halves, and not everyone who has studied these tablets agrees on where the story actually ends.'],
+    ['not all of the pieces', 'She could only decide, once, who paid it. But even that decision comes down to us in pieces, and not all of the pieces found their way here the same way.'],
+  ])('recognises our own real handover: %s', (_l, text) => {
+    expect(bridges(text)).toBe(true);
+  });
+
+  it.each([
+    ['a summary that stops', 'The tablets were copied by different scribes in different centuries. That is what they will always give you.'],
+    ['a beat that just ends', 'He was named Ganesha. He is worshipped now as the one who removes obstacles.'],
+  ])('still catches a genuinely flat ending: %s', (_l, text) => {
+    expect(bridges(text)).toBe(false);
+  });
+
+  it('says nothing about the closing beat, which has nothing to hand to', () => {
+    expect(checkBridge('He is worshipped now as the one who removes obstacles.', { isFinal: true })).toEqual([]);
+  });
+});
+
+describe('DENIAL_CONTRAST - the redefinition is what makes it a fault', () => {
+  const denies = (t: string) =>
+    checkForward(t).some((p) => p.code === 'forward:denialContrast');
+
+  it.each([
+    ['a comma redefinition', 'It was not a theory, it was a measurement.'],
+    ['a but redefinition', 'This was not a burglary but a demolition.'],
+    ['a just redefinition', 'They were not professionals, just men with a drill.'],
+  ])('catches %s', (_l, text) => {
+    expect(denies(text)).toBe(true);
+  });
+
+  it.each([
+    ['a negative fact with a parallel', 'She was not ready for what waited at the first gate.'],
+    ['an absence that is the finding', 'It was not written down anywhere in the record.'],
+    ['a plain negative about a person', 'He was not going to back down from that.'],
+  ])('leaves alone %s', (_l, text) => {
+    expect(denies(text)).toBe(false);
   });
 });

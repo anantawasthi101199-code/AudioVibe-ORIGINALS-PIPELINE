@@ -13,6 +13,62 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A second research lane, for a story told rather than a subject assembled.**
+  Formats declare `research: single | extensive`; a run overrides with
+  `--research`. `myths-of-the-world` now defaults to a new `myth-story` sheet
+  on the single lane, and `myth-told` is kept unchanged for a myth whose
+  transmission genuinely is the story.
+  On the single lane a selector picks the one to three documents that carry the
+  whole story, they are read WHOLE at a hundred thousand characters each rather
+  than through a six-thousand-character BM25 keyhole, and they are fused into
+  one reference article the writer works from. No claim ledger, no per-fact
+  verification, no counter-evidence, no grounding review. One check instead:
+  `reviewReference` reads the article back against its own documents, and the
+  gate fails closed if it did not run.
+  The Descent of Inanna episode is why. It fetched 585,396 characters across
+  fourteen documents, showed the extractor 13% of them, and drew six of its
+  forty-one facts from the article that IS the story - behind a course handout,
+  a general article about the underworld, and two biographies. A script
+  assembled from eight documents' partial views of one myth wanders and
+  contradicts itself, and a listener hears exactly that. The same keyhole lost
+  the answer to the episode's own central question: the script says "The text
+  does not explain guilty of what" over a source section headed "A guilty
+  goddess", which sat at character 71,000 of a document the extractor saw 6,000
+  of. `REFERENCE_CHARS_PER_SOURCE` is 100,000 for that reason and not as a
+  round number.
+  Re-run on the new lane, the same topic selected TWO documents: the ETCSL
+  primary translation, which the old run failed to fetch at all, and the
+  dedicated Wikipedia article. It passed over the Ereshkigal biography, the
+  Dumuzid biography, Sumer, and a rare-books guide.
+
+- **The reference decides where the sources disagree, and the episode says
+  nothing about it.** Disagreements go in the reference's `variants`, which is
+  written to the run and never shown to the writer. A person can audit every
+  choice; a listener hears one story.
+  On the old run, ONE contested claim out of forty-four produced roughly 200 of
+  the 386 words in the payoff beat - fragment attribution, Akkadian
+  transmission history, the dying-and-rising-god reading that fell apart - plus
+  the last line of the episode. Three rules pushed it there and all three are
+  off this lane. `findHedging` enforces it deterministically over the finished
+  prose, and every pattern in it is a phrase from that episode.
+
+- **A show can say goodbye.** `signoff` on the persona, and the new sheet's
+  closing beat lands on it. The old sheet ended "No sign-off, no call to
+  action, no naming the show, no next-time", written against episodes trailing
+  off into filler, and it overshot: the Inanna episode's last sentence is an
+  unresolved scholarly question followed by silence.
+
+- **Explaining the world is no longer treated as an unsourced assertion.** The
+  grounding review flagged "Sumer, in what is now southern Iraq", "cuneiform,
+  wedge marks pressed into wet clay" and "Uruk, a city on the Euphrates" as
+  facts no claim supported. All three are world knowledge doing the orienting
+  this show's own canon says matters most, and with two revision passes a beat
+  the writer learned that the safe way to explain something is to barely
+  explain it. On the single lane the rule is split: events, names, numbers,
+  motives and anything anybody said come from the reference; explanation of the
+  world does not have to, and the reference carries a `glossary` written to be
+  spoken at length rather than folded into a comma.
+
 - **An episode costs about a quarter of what it did** (£3.55 to £0.95), from two
   changes and one deliberate refusal.
   The writer defaults to Sonnet rather than Opus. Writing is more than half an
