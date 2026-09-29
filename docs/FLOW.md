@@ -95,7 +95,7 @@ npm run foundry -- script --run <run-id>
 | 6 | **Write** | 8-30p | The whole thing in one call. Three parts either way. |
 | 7 | **Critique** | free | Style card, repetition, banned phrases, speakability, `findHedging`. Always runs, always reports. |
 | 8 | **Rewrite** | ~87p, **OFF** | Pays a model to act on what the critique found. `--script-revisions` |
-| 9 | **Render + bed** | 3-15p | One TTS request per part, split on sentence endings past the engine's limit. Then a synthesised music bed mixed under each part. `--no-music` for a bare voice. |
+| 9 | **Render + bed** | 3-15p | One TTS request per part, split on sentence endings past the engine's limit. A music bed under each part only with `--music` (off by default). |
 | 10 | **Gate** | free | Measures and reports. **Never stops an episode being made** - only `publish` consults it. |
 
 **Every paid pass is OFF by default.** Free deterministic checks always run.

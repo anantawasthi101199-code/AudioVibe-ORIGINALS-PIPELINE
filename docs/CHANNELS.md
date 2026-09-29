@@ -60,7 +60,7 @@ npm run foundry -- make --show night-shift                       # next episode 
 ```
 
 Add `--render-now` to skip the approval break, `--dry-run` to price it without
-spending, `--no-music` to hear the words bare.
+spending, `--music` to put a bed under the voice (off by default).
 
 ### Make a short
 
