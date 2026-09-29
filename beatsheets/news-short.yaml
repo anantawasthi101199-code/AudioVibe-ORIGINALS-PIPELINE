@@ -60,7 +60,7 @@ beats:
         perfect tense, active voice. Not a greeting, not the channel's name,
         not background, not a quotation, not a statistic.
       - >
-        SECOND, WHY IT MATTERS, in one sentence, from what the article says.
+        SECOND, WHY IT MATTERS, in one sentence, from what the source reports.
       - >
         NAME THE SOURCE HERE, once, the way a newsreader does: "according to
         reporting by" the outlet, or the outlet "reports".
@@ -85,7 +85,7 @@ beats:
         sense: why these two countries, what the deal was, what happened last
         time.
       - >
-        FIGURES AS DIGITS and exactly as the article gives them, rounded only
+        FIGURES AS DIGITS and exactly as the source gives them, rounded only
         the way a newsreader rounds.
       - Title before name, the first time. At most four names in the whole report.
     minClaims: 0
@@ -99,8 +99,9 @@ beats:
     closes: [the_news]
     constraints:
       - >
-        WHAT HAPPENS NEXT, only if the article says: a vote, a deadline, a
-        meeting, a response awaited. Otherwise skip it; never guess.
+        WHAT HAPPENS NEXT, only if the source reports it: a vote, a deadline,
+        a meeting, a response awaited. If it does not, go straight to the
+        recap and say nothing about what is unknown. Never guess.
       - >
         THE KEY DEVELOPMENT AGAIN IN FRESH WORDS, one sentence. Radio repeats
         the headline because somebody tuned in halfway.

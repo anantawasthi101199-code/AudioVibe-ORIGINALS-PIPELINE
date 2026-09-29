@@ -242,6 +242,39 @@ describe('the figure check', () => {
     ).toEqual([]);
   });
 
+  it('BLOCKS a report that talks about "the article", seen on the first render', async () => {
+    const { newsGate } = await import('../check');
+    const { loadPersona } = await import('../../canon/load');
+    const { loadFormat } = await import('../../formats/load');
+    const persona = loadPersona('geopolitics-today');
+    const gate = newsGate({
+      persona,
+      format: loadFormat('news-short'),
+      desk,
+      script: {
+        personaId: persona.id,
+        formatId: 'news-short',
+        title: 'T',
+        description: 'D',
+        writerModel: 'w',
+        beats: [
+          { beatId: 'lede', beatType: 'cold_open', claimIds: [], revisions: 0, turns: [{ speaker: 'reporter', text: 'The BBC reports talks met.' }] },
+          { beatId: 'close', beatType: 'outro', claimIds: [], revisions: 0, turns: [{ speaker: 'reporter', text: 'The article does not say when talks end. Follow me.' }] },
+        ],
+      },
+      source: {
+        id: 's', url: 'https://bbc.co.uk/news/x-1', title: 'T', retrievedAt: NOW.toISOString(),
+        contentHash: 'a'.repeat(64), tier: 'T2', text: 'Talks met.', httpStatus: 200,
+      },
+      outlet: 'the BBC',
+      publishedAt: NOW.toISOString(),
+      durationS: 100,
+      measured: true,
+      now: NOW,
+    });
+    expect(gate.findings.find((f) => f.check === 'newsMeta')?.blocking).toBe(true);
+  });
+
   it('checks the outro, the source and the length before any audio', () => {
     const problems = draftProblems(
       [

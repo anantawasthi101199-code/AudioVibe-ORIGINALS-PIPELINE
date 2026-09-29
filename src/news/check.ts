@@ -305,6 +305,17 @@ export const newsGate = (input: NewsGateInput): GateReport => {
     );
   }
 
+  // THE PAGE IS NEVER THE SOURCE ON AIR. "The article does not say" survived an
+  // explicit rule in the prompt on the first rendered report, so it is checked.
+  const meta = text.match(/\bthe (article|report|piece|story) (does not|doesn't|says|notes|adds|mentions)\b[^.]*/gi);
+  if (meta?.length) {
+    add(
+      'newsMeta',
+      `"${meta[0]}" talks about the page instead of reporting. A reporter says "${input.outlet} ` +
+        `reports", and leaves out what the source does not say.`
+    );
+  }
+
   const loaded = [...new Set((text.match(LOADED_VERBS) ?? []).map((w) => w.toLowerCase()))];
   if (loaded.length) {
     add(
