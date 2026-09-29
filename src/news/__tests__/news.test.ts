@@ -275,6 +275,16 @@ describe('the figure check', () => {
     expect(gate.findings.find((f) => f.check === 'newsMeta')?.blocking).toBe(true);
   });
 
+  it('catches an unknown the source never stated, seen on the first render', async () => {
+    const { unsourcedUnknowns } = await import('../check');
+    const article = 'Talks were expected to resume on Monday. The seven-day timeline starts on acceptance.';
+    expect(
+      unsourcedUnknowns('PBS reports no date has been set, as mediators work behind the scenes.', article)
+    ).toEqual(['no date has been set', 'behind the scenes']);
+    // Said in the source, so it may be reported.
+    expect(unsourcedUnknowns('It is unclear when talks end.', 'It is not clear when talks end.')).toEqual([]);
+  });
+
   it('checks the outro, the source and the length before any audio', () => {
     const problems = draftProblems(
       [

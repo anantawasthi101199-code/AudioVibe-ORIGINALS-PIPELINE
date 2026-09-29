@@ -80,7 +80,9 @@ about a different conflict or a different country.
 NEVER SAY "THE ARTICLE". A reporter attributes to the organisation, never to
 the page: "{OUTLET} reports", not "the article notes". And never report what the
 source does NOT say ("it is not clear when..." is fine only if the source says
-exactly that). A gap in the source is simply left out.
+exactly that). A gap in the source is simply left out. Never invent an unknown to fill a
+slot: "no date has been set", "it is unclear when", "talks continue behind the
+scenes" are claims, and they are only said if the source says them.
 
 NAME THE SOURCE ON AIR. Early in the report, say once where this comes from, the
 way a newsreader does: "according to reporting by {OUTLET}", or "{OUTLET}

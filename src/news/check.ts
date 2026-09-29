@@ -162,6 +162,23 @@ export const namesSource = (script: string, outlet: string): boolean => {
   return script.toLowerCase().includes(bare);
 };
 
+/**
+ * Statements that something is NOT known, and the words that must then be in
+ * the source for the statement to be the source's rather than the writer's.
+ */
+const UNKNOWNS: Array<[RegExp, RegExp]> = [
+  [/\bno (date|timeline|timetable|deadline) (has|had) been (set|given|announced)\b/i, /\bno (date|timeline|timetable|deadline)\b/i],
+  [/\b(it is|it's|it remains|it was) (not |un)clear\b/i, /\b(not clear|unclear)\b/i],
+  [/\b(did|does|has) not (say|said|specify|specified|indicate|indicated) (when|whether|how|what|why)\b/i, /\b(did|does|has) not (say|specify|indicate)\b/i],
+  [/\b(behind the scenes|remains to be seen|no word on)\b/i, /\b(behind the scenes|remains to be seen|no word on)\b/i],
+];
+
+export const unsourcedUnknowns = (script: string, article: string): string[] =>
+  UNKNOWNS.flatMap(([said, needs]) => {
+    const m = script.match(said);
+    return m && !needs.test(article) ? [m[0]] : [];
+  });
+
 /** Verbs a newsreader never puts in their own voice. */
 export const LOADED_VERBS = /\b(claimed|claims|admitted|admits|slammed|slams|blasted|blasts|insisted|vowed)\b/gi;
 
@@ -313,6 +330,19 @@ export const newsGate = (input: NewsGateInput): GateReport => {
       'newsMeta',
       `"${meta[0]}" talks about the page instead of reporting. A reporter says "${input.outlet} ` +
         `reports", and leaves out what the source does not say.`
+    );
+  }
+
+  // AN INVENTED UNKNOWN. Seen on the first rendered report: "PBS NewsHour
+  // reports no date has been set", a sentence the source never contained,
+  // written to fill the what-happens-next slot and credited to the outlet. A
+  // statement about what is NOT known is a claim like any other, so it must be
+  // in the source in its own words.
+  for (const found of unsourcedUnknowns(text, article)) {
+    add(
+      'newsUnknown',
+      `"${found}" says something is not known, and the source never says so. Cut it: a gap ` +
+        `in the source is left out, never reported.`
     );
   }
 
