@@ -1,0 +1,78 @@
+# The Geopolitics Today news desk.
+#
+# THIS FILE EXISTING IS WHAT MAKES geopolitics-today A NEWS CHANNEL. See
+# src/news/desk.ts. To start another news channel (markets, tech, climate), copy
+# this file and personas/geopolitics-today.yaml under the new id and change the
+# beat, the queries and the goodbye.
+
+id: geopolitics-today
+
+# Said in the goodbye, and the default topic: `make --show geopolitics-today`
+# with no --topic reports today's most important story on this beat.
+beat: geopolitics
+
+# The morning sweep. Each is one Brave News request over the last 24 hours.
+# Broad on purpose: the most important story is whichever the most outlets are
+# carrying, and narrow queries would decide that in advance.
+queries:
+  - world news
+  - foreign minister talks
+  - sanctions
+  - ceasefire
+  - summit leaders
+
+# THE ONE-DEPENDABLE-SOURCE LIST, most preferred first. Wire services and
+# public-service broadcasters lead because they report rather than argue, and
+# because their pages fetch. Paywalled outlets are further down: a paywall stub
+# is rejected and the next outlet carrying the story is tried.
+outlets:
+  - host: apnews.com
+    onAir: the Associated Press
+  - host: bbc.co.uk
+    onAir: the BBC
+  - host: bbc.com
+    onAir: the BBC
+  - host: reuters.com
+    onAir: Reuters
+  - host: theguardian.com
+    onAir: the Guardian
+  - host: npr.org
+    onAir: NPR
+  - host: dw.com
+    onAir: DW
+  - host: france24.com
+    onAir: France 24
+  - host: aljazeera.com
+    onAir: Al Jazeera
+  - host: news.sky.com
+    onAir: Sky News
+  - host: cbsnews.com
+    onAir: CBS News
+  - host: abcnews.go.com
+    onAir: ABC News
+  - host: pbs.org
+    onAir: PBS NewsHour
+  - host: ft.com
+    onAir: the Financial Times
+  - host: economist.com
+    onAir: the Economist
+
+maxAgeHours: 30
+publishWithinHours: 48
+
+# Headline words that put a story off this desk's beat.
+excludeWords:
+  - football
+  - cricket
+  - tennis
+  - olympics
+  - celebrity
+  - recipe
+  - horoscope
+  - box office
+  - premier league
+  - weather forecast
+
+country: ALL
+language: en
+music: false

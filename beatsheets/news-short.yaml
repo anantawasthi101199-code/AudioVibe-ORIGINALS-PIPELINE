@@ -1,0 +1,113 @@
+# A news report, under three minutes, from one article.
+#
+# THE INVERTED PYRAMID, IN THREE PARTS. Every broadcast newsroom writes a report
+# the same way round: the newest and most important fact first, then the detail
+# that supports it, then what happens next. A story builds to its ending; a
+# report starts with it. Somebody who leaves after the first sentence has the
+# news, and somebody who stays to the end has all of it.
+#
+# WHY THREE PARTS AND NOT ONE. Same reason as the myth short: one part carrying
+# lede, detail and goodbye gives the goodbye no budget, and a writer spends the
+# whole allowance on detail before it arrives. The close is its own part so that
+# "what happens next", the recap and the follow ask have thirty seconds reserved
+# for them by the sheet.
+#
+# NOT A TRAILER. A report on this channel never points at a longer version and
+# never ends on a teaser. The owner's instruction: "the content should be
+# complete".
+#
+# Written by the news lane (src/pipeline/news.ts), never by the story writers.
+
+id: news-short
+name: News report, under three minutes
+
+# One article, read whole. The news lane does its own research (the wire, the
+# story, the one article) and never reads this field; `single` is here because
+# it is the true description and so the story lanes refuse nothing if somebody
+# points them at this sheet by mistake.
+research: single
+
+kind: short
+intent: >
+  Today's most important development on the channel's beat, reported complete
+  and neutrally from one named source, in under three minutes, ending with a
+  reason to follow.
+
+# 170 at the top, not 180: speech rate is an estimate, and the owner's limit is
+# "less than 3 minutes". news/check.ts measures the real audio against 180.
+targetSeconds: [110, 170]
+
+serialised: false
+
+loops:
+  - id: the_news
+    question: What has happened, and what happens now?
+
+beats:
+  - id: lede
+    type: cold_open
+    seconds: [20, 30]
+    function: >
+      The news in the first sentence, then the one line that says why it
+      matters, and where this comes from.
+    opens: [the_news]
+    constraints:
+      - >
+        THE FIRST SENTENCE IS THE NEWS. Who did what, present or present
+        perfect tense, active voice. Not a greeting, not the channel's name,
+        not background, not a quotation, not a statistic.
+      - >
+        SECOND, WHY IT MATTERS, in one sentence, from what the article says.
+      - >
+        NAME THE SOURCE HERE, once, the way a newsreader does: "according to
+        reporting by" the outlet, or the outlet "reports".
+      - Say the day, by name.
+    minClaims: 0
+
+  - id: report
+    type: mechanism
+    seconds: [65, 100]
+    function: >
+      The detail: what happened, where, who is involved and what each side
+      says, and the background a listener needs to understand it.
+    constraints:
+      - >
+        ATTRIBUTION BEFORE EVERY CLAIM THAT IS A CLAIM. Figures one side
+        counted, accusations, intentions, and what each party says.
+      - >
+        BOTH SIDES THE ARTICLE CARRIES. A response, denial or refusal to
+        comment goes in.
+      - >
+        BACKGROUND FROM THE ARTICLE, briefly, only what makes the news make
+        sense: why these two countries, what the deal was, what happened last
+        time.
+      - >
+        FIGURES AS DIGITS and exactly as the article gives them, rounded only
+        the way a newsreader rounds.
+      - Title before name, the first time. At most four names in the whole report.
+    minClaims: 0
+
+  - id: close
+    type: outro
+    seconds: [20, 35]
+    function: >
+      What happens next, the key development once more for anybody who joined
+      late, then the goodbye and the follow.
+    closes: [the_news]
+    constraints:
+      - >
+        WHAT HAPPENS NEXT, only if the article says: a vote, a deadline, a
+        meeting, a response awaited. Otherwise skip it; never guess.
+      - >
+        THE KEY DEVELOPMENT AGAIN IN FRESH WORDS, one sentence. Radio repeats
+        the headline because somebody tuned in halfway.
+      - >
+        THEN THE GOODBYE, which asks the listener to follow for more on the
+        beat. Warm and quick, the last thing said.
+      - No opinion, no moral, no "only time will tell".
+    minClaims: 0
+
+# Opens firm, the detail carries the weight, settles for the goodbye. Below the
+# peak at the open, as the shipped-format check asks: a report read at full
+# pitch from its first word sounds like shouting.
+tensionCurve: [0.85, 1.0, 0.5]

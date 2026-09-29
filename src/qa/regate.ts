@@ -28,8 +28,13 @@ import { priorEpisodeTexts } from '../deps';
 import { Run } from '../run/store';
 import { Script } from '../script/write';
 import { GateReport, runGate } from './gate';
+import { hasNewsDesk } from '../news/desk';
+import { regateNews } from '../pipeline/news';
 
 export const regate = (run: Run, script: Script): GateReport | null => {
+  // A NEWS RUN HAS ITS OWN CHECKS, including the one that refuses a report
+  // that has gone stale since it was made. See pipeline/news.ts.
+  if (hasNewsDesk(run.manifest.personaId)) return regateNews(run, script);
   try {
     const persona = loadPersona(run.manifest.personaId);
 

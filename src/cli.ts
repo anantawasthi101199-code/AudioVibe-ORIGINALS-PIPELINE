@@ -36,6 +36,8 @@ import { runEpisode } from './pipeline/episode';
 import { runShort } from './pipeline/short';
 import { cutStories } from './pipeline/anthology';
 import { runFiction } from './pipeline/fiction';
+import { runNews } from './pipeline/news';
+import { hasNewsDesk, loadDesk } from './news/desk';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
@@ -257,7 +259,10 @@ const cmdShows = (): number => {
 
 const cmdMake = async (argv: string[]): Promise<number> => {
   const showId = arg(argv, 'show');
-  const topic = arg(argv, 'topic');
+  // A NEWS CHANNEL NEEDS NO TOPIC: its desk's beat means "today's most
+  // important story on it". See news/desk.ts.
+  const news = !!showId && hasNewsDesk(showId);
+  const topic = arg(argv, 'topic') ?? (news ? loadDesk(showId!).beat : undefined);
   if (!showId || !topic) {
     console.error('Usage: make --show <id> --topic "what the episode is about"');
     return 1;
@@ -266,6 +271,17 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   const persona = loadPersona(showId);
   const formatId = arg(argv, 'format') ?? persona.formats[0]!;
   const format = loadFormat(formatId); // Fail now, not after the first API call.
+
+  if (news && flag(argv, 'dry-run')) {
+    console.log(`${persona.name}: news report on "${topic}", from ONE article, under 3 minutes.`);
+    console.log('  wire + story + article   free (Brave News, fetch, arithmetic)');
+    console.log('  write                    ~2-4p (one call: headline, report, goodbye)');
+    console.log(`  render                   ~2-3p on ${ttsProvider()}`);
+    console.log('  checks + gate            free');
+    console.log('It renders straight away (news goes stale; --hold to stop before audio)');
+    console.log('and publishes nothing.');
+    return 0;
+  }
 
   if (flag(argv, 'dry-run')) return describeRun(persona, format, topic, !flag(argv, 'beat-by-beat'));
 
@@ -283,7 +299,13 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   // script is cheapest to fix before it has been voiced. `--render-now` skips
   // the break for somebody who knows what they are doing; a source format is
   // never held, because it stops before the render anyway.
-  const holdForApproval = !flag(argv, 'render-now') && !format.sourceOnly;
+  //
+  // NEWS IS NOT HELD unless `--hold` asks. A report is a few pence of audio and
+  // loses its value by the hour; publishing is still a separate human command,
+  // and the gate refuses a stale one there.
+  const holdForApproval = news
+    ? flag(argv, 'hold')
+    : !flag(argv, 'render-now') && !format.sourceOnly;
 
   const run = Run.create({ personaId: persona.id, formatId, topic, onePass, holdForApproval });
   return finishRun(run, argv);
@@ -503,7 +525,9 @@ const finishRun = async (run: Run, _argv: string[]): Promise<number> => {
 
   const { gate } = persona.fiction
     ? await runFiction({ run }, deps)
-    : await runEpisode(run, deps);
+    : hasNewsDesk(persona.id)
+      ? await runNews(run, deps)
+      : await runEpisode(run, deps);
 
   ui.finish([
     ['spent', `${run.manifest.spentPence.toFixed(1)}p`],
@@ -1215,7 +1239,9 @@ const cmdTick = async (argv: string[]): Promise<number> => {
     try {
       result = persona.fiction
         ? await runFiction({ run }, buildDeps())
-        : await runEpisode(run, buildDeps());
+        : hasNewsDesk(persona.id)
+          ? await runNews(run, buildDeps())
+          : await runEpisode(run, buildDeps());
     } catch (err) {
       if (!persona.fiction && topic) returnTopic(persona.id, topic);
       throw err;
