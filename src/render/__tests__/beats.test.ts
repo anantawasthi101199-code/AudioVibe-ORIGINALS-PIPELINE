@@ -22,14 +22,18 @@ import {
   loadBeat,
   recipePath,
   saveBeat,
+  settingsFor,
 } from '../beats';
+import { DEFAULTS, SynthSettings, synthSchema } from '../synth';
+
+const settings = (over: Partial<SynthSettings> = {}): SynthSettings =>
+  synthSchema.parse({ ...DEFAULTS, ...over });
 
 const recipe = (over: Partial<BeatRecipe> = {}): BeatRecipe => ({
   name: 'night-piano',
-  style: 'piano',
-  key: 'a',
   note: 'Low and slow.',
   madeAt: '2026-09-29T17:00:00.000Z',
+  settings: settings({ voices: ['piano'], root: 'a' }),
   ...over,
 });
 
@@ -169,13 +173,30 @@ describe('buildBeat', () => {
     expect((await buildBeat(recipe(), { dir }, ff)).rendered).toBe(true);
   });
 
-  it('refuses the silent style rather than writing an empty loop', async () => {
-    const ff = fakeFfmpeg();
-    const built = await buildBeat(recipe({ style: 'none' }), { dir }, ff);
+  /**
+   * The old three-style form had a `none` that made no sound, and this test
+   * used to check it was refused. There is no such style now: an instrument
+   * list is the control, and the schema requires at least one. The refusal
+   * moved from the renderer to the type, which is where it belongs.
+   */
+  it('refuses a recipe with no instruments at all', () => {
+    expect(() => saveBeat(recipe({ settings: { ...settings(), voices: [] } }), dir)).toThrow();
+  });
 
-    expect(built.ok).toBe(false);
-    expect(built.reason).toContain('none');
-    expect(ff.calls).toHaveLength(0);
+  /**
+   * A recipe written before the synthesiser existed carries a style and a key
+   * and nothing else. A published episode was mixed against one of those, so
+   * they have to keep rendering.
+   */
+  it('renders an old style-and-key recipe through its preset', async () => {
+    const ff = fakeFfmpeg();
+    const old = { name: 'legacy', note: '', madeAt: '2026-09-01T00:00:00.000Z', style: 'piano', key: 'd' };
+
+    const built = await buildBeat(old, { dir }, ff);
+
+    expect(built.ok).toBe(true);
+    expect(settingsFor(old).voices).toEqual(['piano']);
+    expect(settingsFor(old).root).toBe('d');
   });
 
   it('reports an ffmpeg failure instead of claiming a beat exists', async () => {

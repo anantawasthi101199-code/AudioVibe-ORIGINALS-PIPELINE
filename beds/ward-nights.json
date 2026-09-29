@@ -1,0 +1,34 @@
+{
+  "name": "ward-nights",
+  "note": "Stillness and exhaustion in a hospital ward at the quiet hours",
+  "madeAt": "2026-09-29T19:36:11.601Z",
+  "settings": {
+    "voices": [
+      "pad",
+      "bell"
+    ],
+    "root": "a",
+    "mode": "aeolian",
+    "progression": "drone",
+    "tempo": 48,
+    "bars": 6,
+    "density": 0.2,
+    "swing": 0.08,
+    "attack": 2.1,
+    "decay": 4.5,
+    "brightness": 900,
+    "resonance": 2,
+    "detune": 8,
+    "partials": 2,
+    "lfoRate": 0.06,
+    "lfoDepth": 0.35,
+    "vibrato": 3,
+    "space": 3.2,
+    "spaceMix": 0.6,
+    "delay": 0,
+    "delayFeedback": 0,
+    "warmth": 0.15,
+    "air": 0.12,
+    "gain": 0.8
+  }
+}

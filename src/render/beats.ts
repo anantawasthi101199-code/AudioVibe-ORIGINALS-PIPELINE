@@ -25,7 +25,8 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import { repoRoot } from '../config';
-import { BED_STYLES, BedDeps, BedStyle, renderPhrase } from './bed';
+import { SynthSettings, fromPreset, synthSchema } from './synth';
+import { SynthDeps, renderSynth } from './synthRender';
 
 /**
  * The eight roots a bed may sit on, by name.
@@ -51,12 +52,23 @@ export const isKey = (k: string): boolean =>
 export const beatRecipeSchema = z.object({
   /** How it is asked for. Lowercase and hyphenated so it is safe as a filename. */
   name: z.string().regex(/^[a-z0-9-]+$/, 'lowercase, digits and hyphens only'),
-  style: z.enum(BED_STYLES),
-  /** Key name, not the frequency, so the file reads as music rather than physics. */
-  key: z.string().refine(isKey, 'not one of the eight keys'),
   /** One line from whoever made it, for choosing between two later. */
   note: z.string().default(''),
   madeAt: z.string().min(1),
+  /**
+   * Every synthesiser parameter.
+   *
+   * OPTIONAL ONLY FOR RECIPES WRITTEN BEFORE THE SYNTHESISER EXISTED. Those
+   * carry `style` and `key` instead, and `settingsFor` turns them into a full
+   * set from the matching preset. A published episode was mixed against one of
+   * those beats, so they have to keep rendering, and rendering the same.
+   */
+  settings: synthSchema.optional(),
+
+  /** @deprecated The old three-style form. Read for migration, never written. */
+  style: z.string().optional(),
+  /** @deprecated As above. */
+  key: z.string().optional(),
 });
 
 export type BeatRecipe = z.infer<typeof beatRecipeSchema>;
@@ -128,10 +140,20 @@ export interface BeatBuild {
  * hashing the recipe into the filename - would leave the directory full of
  * files nobody can identify by looking at it.
  */
+/**
+ * The settings a recipe renders with.
+ *
+ * A recipe written before the synthesiser existed has a style and a key and
+ * nothing else; `fromPreset` turns those into the full set that reproduces what
+ * that style used to sound like. New recipes carry their settings outright.
+ */
+export const settingsFor = (recipe: BeatRecipe): SynthSettings =>
+  recipe.settings ?? fromPreset(recipe.style ?? 'strings', recipe.key ?? 'a');
+
 export const buildBeat = async (
   recipe: BeatRecipe,
   opts: { force?: boolean; dir?: string } = {},
-  deps: BedDeps = {}
+  deps: SynthDeps = {}
 ): Promise<BeatBuild> => {
   const file = audioPath(recipe.name, opts.dir);
 
@@ -139,18 +161,9 @@ export const buildBeat = async (
     return { ok: true, file, rendered: false };
   }
 
-  if (recipe.style === 'none') {
-    return { ok: false, file, rendered: false, reason: 'style "none" makes no sound' };
-  }
-
   fs.mkdirSync(path.dirname(file), { recursive: true });
 
-  const root = KEYS[recipe.key.toLowerCase()];
-  if (root === undefined) {
-    return { ok: false, file, rendered: false, reason: `unknown key "${recipe.key}"` };
-  }
-
-  const built = await renderPhrase(recipe.style as BedStyle, root, file, deps);
+  const built = await renderSynth(settingsFor(recipe), file, deps);
   return built.ok
     ? { ok: true, file, rendered: true }
     : { ok: false, file, rendered: false, reason: built.reason };

@@ -115,21 +115,45 @@ on a fresh clone the check would otherwise believe the studio had made nothing.
 ### What will it sound like
 
 ```bash
-npm run foundry -- beat --list
-npm run foundry -- beat --name calm-piano --style piano --key a --note "..."
-npm run foundry -- make --show <id> --topic "..." --bed calm-piano
+npm run foundry -- beat --list        # what exists
+npm run foundry -- beat --controls    # every knob, its range, what it does
+
+# from a description: a cheap model fills in all 24 settings (~0.3p)
+npm run foundry -- beat --name ward --describe "tired, three in the morning"
+
+# by hand, or on top of a description, or on top of an existing beat
+npm run foundry -- beat --name ward --voices pad,bass --mode phrygian --brightness 900
+
+npm run foundry -- make --show <id> --topic "..." --bed ward
 ```
 
-Styles are `piano`, `strings`, `epic`. Keys are `a` through `e`, all low,
-because the bed sits under a speaking voice.
+In the studio, the **Beats** tab does the same thing with sliders and a player
+for each one.
+
+**Twenty-four controls, in five groups.** What plays (instruments, key, mode,
+chords), time (tempo, bars, density, swing), shape (attack, decay, brightness,
+resonance, detune, harmonics), movement (rate, depth, vibrato) and space and
+character (room, echo, warmth, air, level). `beat --controls` prints all of them
+with their ranges, because a copy in a document would be wrong within a week.
+
+**A description is a starting point, not the author.** It fills the form in and
+stops, so you can see all 24 values, change any of them, and only then make the
+sound. Nothing needs the model: every control has a default and the form works
+with the box empty.
+
+**Every beat is normalised to -20 LUFS.** Measured across the parameter range
+the raw output spanned 29 dB, so a dark sparse setting would have been inaudible
+under speech while a dense bright one fought it, at the same `BED_GAIN`.
+Swapping one beat for another now changes the sound and not the level.
 
 Without `--bed`, a phrase is synthesised from the topic string for **every part
 separately** and thrown away, so a three-part episode builds the same phrase
 three times and the show sounds different every week. A named beat is a channel
 having a sound.
 
-Recipes in `beds/*.json` are committed; the rendered `.mp3` beside each is not,
-and rebuilds on demand.
+Recipes in `beds/*.json` are committed and are under a kilobyte. The rendered
+`.mp3` beside each is not, and rebuilds on demand, because synthesis is
+deterministic.
 
 ---
 

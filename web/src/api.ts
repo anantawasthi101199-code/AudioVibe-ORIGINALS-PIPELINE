@@ -294,12 +294,28 @@ const call = async <T>(path: string, init?: RequestInit): Promise<T> => {
   return body as T;
 };
 
+export interface SynthControl {
+  id: string;
+  label: string;
+  group: string;
+  kind: 'toggles' | 'choice' | 'slider';
+  help: string;
+  options?: Array<{ value: string; label: string; help?: string }>;
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+}
+
+/** Every knob, as the engine defines it. The page never keeps its own copy. */
+export type SynthSettings = Record<string, string | number | string[]>;
+
 export interface Beat {
   name: string;
-  style: string;
-  key: string;
   note: string;
   madeAt: string;
+  settings: SynthSettings;
+  summary: string;
   rendered: boolean;
 }
 
@@ -362,10 +378,20 @@ export const api = {
   /* --- The library: beats, season plans, and what has been covered ------- */
 
   beats: () =>
-    call<{ styles: string[]; keys: string[]; beats: Beat[] }>('/api/beats'),
+    call<{ controls: SynthControl[]; defaults: SynthSettings; beats: Beat[] }>('/api/beats'),
 
-  makeBeat: (body: { name: string; style: string; key: string; note: string }) =>
+  makeBeat: (body: { name: string; note: string; settings: SynthSettings }) =>
     call<{ beat: Beat }>('/api/beats', { method: 'POST', body: JSON.stringify(body) }),
+
+  /**
+   * Settings for a description. Fills the form in and stops, so whoever asked
+   * can see what was chosen and change it before anything is synthesised.
+   */
+  suggestBeat: (describe: string) =>
+    call<{ settings: SynthSettings; reading: string; summary: string; pence: number }>(
+      '/api/beats/suggest',
+      { method: 'POST', body: JSON.stringify({ describe }) }
+    ),
 
   /**
    * Not a fetch. It is the src of an audio element, and the point of the whole

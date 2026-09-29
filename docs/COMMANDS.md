@@ -177,21 +177,33 @@ episode they make, so the check would block their second episode and every one
 after it. Each has the right version of the idea already: a serial has its
 season plan, a news desk has its own already-reported test.
 
-### `beat --name <name> [--style piano|strings|epic] [--key a..e] [--note "..."]`
+### `beat --name <name> [--describe "..."] [--<control> <value> ...]`
 
-Synthesises one loopable phrase, saves the recipe, caches the audio, and tells
-you where to listen to it. `--list` shows what exists.
+Synthesises one loopable phrase, saves the settings, caches the audio, and tells
+you where to listen to it. `--list` shows what exists; `--controls` prints every
+knob with its range and what it does.
+
+**Twenty-four controls**, in five groups: what plays, time, shape, movement,
+space and character. Any of them can be set as a flag, so
+`--voices pad,bass --mode phrygian --brightness 900` is a valid beat.
+
+`--describe "tired, three in the morning"` sends the description to the cheap
+model, which returns every setting. About **0.3p**. Flags typed alongside it
+win, always, because somebody who names a value has been specific and a
+suggestion is only a starting point. Running the command again on an existing
+beat starts from that beat's settings, so one flag changes one thing.
+
+Nothing here needs the model. Every control has a default and the command works
+without `--describe` at all.
+
+Every beat comes out at **-20 LUFS**. Across the parameter range the raw output
+spanned 29 dB, so without this a dark sparse beat would be inaudible under
+speech while a dense bright one fought it, at the same `BED_GAIN`.
 
 Use one with `make ... --bed <name>`.
 
-Without a named beat, a phrase is synthesised from the topic string for every
-part separately and thrown away, so a three-part episode builds the same phrase
-three times and a show sounds different every week. A named beat is a channel
-having a sound rather than a setting.
-
-Recipes in `beds/*.json` are committed and are a few hundred bytes. The rendered
-`.mp3` beside each is gitignored and rebuilds on demand, because synthesis is
-deterministic.
+Recipes in `beds/*.json` are committed and are under a kilobyte; the rendered
+`.mp3` beside each is gitignored and rebuilds on demand.
 
 ### `tick [--dry-run]`
 

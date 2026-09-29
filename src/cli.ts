@@ -14,6 +14,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import {
+  clerkConfig,
   screenerConfig,
   episodeBudgetPence,
   platformUrl,
@@ -56,22 +57,29 @@ import {
   recordMade,
   refusal,
 } from './catalogue/covered';
-import { BED_STYLES, isBedStyle } from './render/bed';
 import {
-  KEYS,
   audioPath,
   bedsDir,
   buildBeat,
-  isKey,
   listBeats,
   loadBeat,
   saveBeat,
+  settingsFor,
 } from './render/beats';
+import {
+  CONTROLS,
+  DEFAULTS,
+  SynthSettings,
+  describe as describeSynth,
+  settingsFromValues,
+  synthSchema,
+} from './render/synth';
+import { suggestSynth } from './render/synthSuggest';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
 import { currentPlan } from './schedule/current';
 import { writeLibrary } from './run/library';
-import { costPenceFor, OpenAiClient } from './models/client';
+import { AnthropicClient, costPenceFor, OpenAiClient } from './models/client';
 import { EpisodeFormat } from './formats/schema';
 import { COMPOSED_INTO_WRITER, promptRegistry } from './prompts/registry';
 import { loadSchedule, returnTopic, takeTopic } from './schedule/load';
@@ -1370,7 +1378,8 @@ const cmdBeat = async (argv: string[]): Promise<number> => {
     if (!beats.length) {
       console.log('No beats yet.');
       console.log('');
-      console.log(`  npm run foundry -- beat --name calm-piano --style piano --key a`);
+      console.log('  npm run foundry -- beat --name calm --describe "tired, three in the morning"');
+      console.log('  npm run foundry -- beat --name calm --voices pad,bass --mode aeolian --brightness 1200');
       return 0;
     }
 
@@ -1378,18 +1387,38 @@ const cmdBeat = async (argv: string[]): Promise<number> => {
     console.log('');
     for (const b of beats) {
       const cached = fs.existsSync(audioPath(b.name));
-      console.log(`  ${b.name.padEnd(20)} ${b.style.padEnd(8)} key ${b.key.padEnd(3)} ${cached ? '' : '(not rendered)'}`);
-      if (b.note) console.log(`  ${''.padEnd(20)} ${b.note}`);
+      console.log(`  ${b.name.padEnd(18)} ${describeSynth(settingsFor(b))}${cached ? '' : '  (not rendered)'}`);
+      if (b.note) console.log(`  ${''.padEnd(18)} ${b.note}`);
     }
     console.log('');
     console.log('Use one:  npm run foundry -- make --show <id> --topic "..." --bed <name>');
     return 0;
   }
 
+  if (flag(argv, 'controls')) {
+    // The knobs, as the interface and the model both see them. Printed rather
+    // than documented, for the reason `prompts` is: a copy in a document is
+    // wrong within a week.
+    for (const group of [...new Set(CONTROLS.map((c) => c.group))]) {
+      console.log(group.toUpperCase());
+      for (const c of CONTROLS.filter((x) => x.group === group)) {
+        const range =
+          c.kind === 'slider'
+            ? `${c.min} to ${c.max}${c.unit ? ' ' + c.unit : ''}`
+            : (c.options ?? []).map((o) => o.value).join(', ');
+        console.log(`  --${String(c.id).padEnd(14)} ${range}`);
+        console.log(`  ${''.padEnd(16)} ${c.help}`);
+      }
+      console.log('');
+    }
+    return 0;
+  }
+
   const name = arg(argv, 'name');
   if (!name) {
-    console.error('Usage: beat --name <name> [--style piano|strings|epic] [--key a..e] [--note "..."]');
-    console.error('       beat --list');
+    console.error('Usage: beat --name <name> [--describe "..."] [--<control> <value> ...]');
+    console.error('       beat --list        what exists');
+    console.error('       beat --controls    every knob, its range and what it does');
     return 1;
   }
   if (!/^[a-z0-9-]+$/.test(name)) {
@@ -1398,32 +1427,57 @@ const cmdBeat = async (argv: string[]): Promise<number> => {
   }
 
   const existing = loadBeat(name);
-  const style = arg(argv, 'style') ?? existing?.style ?? 'piano';
-  const key = (arg(argv, 'key') ?? existing?.key ?? 'a').toLowerCase();
 
-  if (!isBedStyle(style) || style === 'none') {
-    console.error(`--style is one of: ${BED_STYLES.filter((b) => b !== 'none').join(', ')}`);
-    return 1;
+  // THREE SOURCES, IN THIS ORDER: what the beat already was, what a model made
+  // of a description, then whatever was typed on the command line. The typed
+  // flags win, always, because somebody who names a value has been specific and
+  // a suggestion is only ever a starting point.
+  let settings: SynthSettings = existing ? settingsFor(existing) : DEFAULTS;
+  let pence = 0;
+  let reading: string | null = null;
+
+  const description = arg(argv, 'describe');
+  if (description) {
+    const cfg = clerkConfig();
+    console.log('Asking for settings...');
+    const suggestion = await suggestSynth(
+      description,
+      new AnthropicClient(cfg.model, cfg.apiKey),
+      (p) => {
+        pence += p;
+      }
+    );
+    settings = suggestion.settings;
+    reading = suggestion.reading;
   }
-  if (!isKey(key)) {
-    console.error(`--key is one of: ${Object.keys(KEYS).join(', ')}`);
-    return 1;
+
+  const overrides = settingsFromValues((id) => arg(argv, id));
+  if (Object.keys(overrides).length) {
+    const merged = synthSchema.safeParse({ ...settings, ...overrides });
+    if (!merged.success) {
+      console.error(
+        merged.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('\n')
+      );
+      return 1;
+    }
+    settings = merged.data;
   }
 
   const recipe = {
     name,
-    style,
-    key,
-    note: arg(argv, 'note') ?? existing?.note ?? '',
+    note: arg(argv, 'note') ?? reading ?? existing?.note ?? '',
     madeAt: existing?.madeAt ?? new Date().toISOString(),
+    settings,
   };
 
   const file = saveBeat(recipe);
 
+  if (reading) console.log(`  read as: ${reading}`);
+  console.log(`Synthesising ${describeSynth(settings)}...`);
+
   // FORCED WHENEVER THE RECIPE IS WRITTEN, because the cache is keyed by the
-  // file existing rather than by the recipe's contents. Changing the key and
-  // reusing the old audio is the one stale result this design can produce.
-  console.log(`Synthesising ${style} in ${key}...`);
+  // audio existing rather than by the settings. Changing a knob and reusing the
+  // old file is the one stale result this design can produce.
   const built = await buildBeat(recipe, { force: true });
 
   if (!built.ok) {
@@ -1435,6 +1489,7 @@ const cmdBeat = async (argv: string[]): Promise<number> => {
   console.log('');
   console.log(`  recipe   ${file}`);
   console.log(`  audio    ${built.file}`);
+  if (pence > 0) console.log(`  spent    ${pence.toFixed(2)}p`);
   console.log('');
   console.log('Listen to it, then use it:');
   console.log(`  npm run foundry -- make --show <id> --topic "..." --bed ${name}`);

@@ -54,6 +54,7 @@ import {
   getCovered,
   getSeason,
   makeBeat,
+  suggestBeat,
 } from './beats';
 import { getQueue } from './queue';
 import { getCalendar, releasingEnabled } from './calendar';
@@ -454,6 +455,11 @@ export const createServer = (): http.Server =>
       // --- Writing ----------------------------------------------------------
       if (pathname === '/api/beats' && req.method === 'POST') {
         return send(res, 200, await makeBeat(await readBody(req)));
+      }
+      // Suggesting and making are separate calls so the form can be filled in,
+      // looked at and changed before anything is synthesised. See beats.ts.
+      if (pathname === '/api/beats/suggest' && req.method === 'POST') {
+        return send(res, 200, await suggestBeat(await readBody(req)));
       }
       if (pathname === '/api/runs' && req.method === 'POST') {
         return send(res, 201, startRun(await readBody(req), user));

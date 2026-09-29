@@ -1,0 +1,35 @@
+{
+  "name": "xibalba-dread",
+  "note": "a Maya underworld, dread and ritual, something waiting in the dark",
+  "madeAt": "2026-09-29T19:44:01.390Z",
+  "settings": {
+    "voices": [
+      "pad",
+      "bass",
+      "drum"
+    ],
+    "root": "d",
+    "mode": "phrygian",
+    "progression": "unease",
+    "tempo": 48,
+    "bars": 6,
+    "density": 0.35,
+    "swing": 0.08,
+    "attack": 1.2,
+    "decay": 4.5,
+    "brightness": 1200,
+    "resonance": 3,
+    "detune": 12,
+    "partials": 2,
+    "lfoRate": 0.08,
+    "lfoDepth": 0.4,
+    "vibrato": 8,
+    "space": 5,
+    "spaceMix": 0.65,
+    "delay": 0,
+    "delayFeedback": 0,
+    "warmth": 0.3,
+    "air": 0.15,
+    "gain": 0.85
+  }
+}
