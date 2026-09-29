@@ -41,6 +41,7 @@ import { GROUNDING_SYSTEM } from '../qa/grounding';
 import { SHORT_INSTRUCTION } from '../script/shortScript';
 import { STORY_INSTRUCTION } from '../script/storyScript';
 import { SEASON_INSTRUCTION } from '../fiction/planner';
+import { SUGGEST_SYSTEM } from '../render/synthSuggest';
 
 export interface PromptEntry {
   /** Stable id, usable as a filter on the command line. */
@@ -338,6 +339,18 @@ export const promptRegistry = (input: {
         'that plant in one episode and pay off in a later one. Runs once per season, ' +
         'never during an episode. See docs/DRAMA.md.',
       text: SEASON_INSTRUCTION,
+    },
+    {
+      id: 'beat-settings',
+      stage: 'beat (not part of a run)',
+      source: 'src/render/synthSuggest.ts (SUGGEST_SYSTEM)',
+      note:
+        'Turns a description of a mood into the 24 synthesiser settings for a background ' +
+        'bed. Runs on the cheap model at about 0.3p, never during an episode, and never ' +
+        'in the render path: every control has a default and a beat can be made entirely ' +
+        'by hand. The control list is appended to this at call time from CONTROLS, so the ' +
+        'model always sees the real ranges.',
+      text: SUGGEST_SYSTEM,
     },
     {
       id: 'grounding',

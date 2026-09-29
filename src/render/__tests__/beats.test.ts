@@ -37,12 +37,26 @@ const recipe = (over: Partial<BeatRecipe> = {}): BeatRecipe => ({
   ...over,
 });
 
-/** A stand-in for ffmpeg that writes a plausible file and reports success. */
+/**
+ * A stand-in for ffmpeg.
+ *
+ * IT MUST NOT WRITE FOR THE MEASURE PASS. `renderSynth` runs three commands:
+ * synthesise, measure loudness, apply the gain. The measure call ends in `-`,
+ * ffmpeg's name for no output at all, and an earlier version of this fake wrote
+ * to whatever the last argument was. That left a file literally called `-` in
+ * the repository root, and it was committed before anybody noticed.
+ */
 const fakeFfmpeg = (calls: string[][] = []) => ({
   run: async (bin: string, args: string[]) => {
     calls.push(args);
-    // renderPhrase passes the output path last.
     const out = args[args.length - 1]!;
+
+    // The loudness pass. Answer with something ebur128-shaped so the levelling
+    // is actually exercised rather than silently skipped.
+    if (out === '-') {
+      return { code: 0, stdout: '', stderr: '  I:         -26.3 LUFS' };
+    }
+
     fs.mkdirSync(path.dirname(out), { recursive: true });
     fs.writeFileSync(out, 'not really audio');
     return { code: 0, stdout: '', stderr: '' };
