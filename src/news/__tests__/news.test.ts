@@ -344,7 +344,7 @@ const REPORT = {
           speaker: 'reporter',
           text:
             'Officials say the framework would take effect within 48 hours. ' +
-            'Russia says it was not consulted, and has not said whether it will accept the terms. ' +
+            'Russia says it was not consulted. ' +
             'The talks took place over two days behind closed doors. ' +
             'Negotiators have been trying for months to find wording that every side could sign, and this is the closest they have come. ' +
             'The agreement covers the 3 border regions where most of the fighting has taken place.',
