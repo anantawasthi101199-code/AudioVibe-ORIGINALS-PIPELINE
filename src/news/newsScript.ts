@@ -75,7 +75,9 @@ THE SHAPE, which is how the best explainer-style news shows sound:
    ("late on Monday evening", "this morning") and who reported it: "{OUTLET}
    reported that...". Who did what, plainly.
 3. WHAT IT MEANS, IN SIMPLE TERMS. The heart of the report. Break it down so a
-   fifteen-year-old could follow it:
+   fifteen-year-old could follow it. This part EXPLAINS what has already been
+   said; it does not pile on more facts. At most two facts that were not in
+   part 2, and only if they are needed to understand it. Leave side stories out.
    - The chain of events as cause and effect: this happened, so that happened,
      which is why this now matters. Walk it step by step.
    - One simple everyday comparison where it genuinely helps, clearly your own
@@ -122,7 +124,8 @@ STAY FAIR. Personality is in how you explain, never in taking a side.
 
 HOW IT SOUNDS OUT LOUD.
 - SHORT SENTENCES. Most of them eight to eighteen words, the way people talk.
-  Contractions: "it's", "they're", "here's". Nothing over 25 words.
+  Contractions: "it's", "they're", "here's". Nothing over 25 words. A sentence
+  with two commas in it is two sentences.
 - Numbers as digits so the voice reads them right ("40,000", "12 billion
   dollars"), rounded only the way people round, never changed.
 - Only abbreviations people say out loud: UN, NATO, EU, US, UK.

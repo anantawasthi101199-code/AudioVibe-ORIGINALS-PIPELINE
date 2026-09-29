@@ -284,7 +284,7 @@ describe('the figure check', () => {
     const article = 'Talks were expected to resume on Monday. The seven-day timeline starts on acceptance.';
     expect(
       unsourcedUnknowns('PBS reports no date has been set, as mediators work behind the scenes.', article)
-    ).toEqual(['no date has been set', 'behind the scenes']);
+    ).toEqual(['no date has been set']);
     // Said in the source, so it may be reported.
     expect(unsourcedUnknowns('It is unclear when talks end.', 'It is not clear when talks end.')).toEqual([]);
   });

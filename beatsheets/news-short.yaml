@@ -79,7 +79,7 @@ beats:
 
   - id: explain
     type: mechanism
-    seconds: [50, 75]
+    seconds: [45, 65]
     function: >
       What it means, in simple terms: the chain of events step by step, one
       everyday comparison, and any unfamiliar thing explained plainly.
@@ -87,6 +87,9 @@ beats:
       - >
         CAUSE AND EFFECT, STEP BY STEP. This happened, so that happened, which is
         why it matters now. A listener should be able to retell it.
+      - >
+        EXPLAIN, DO NOT ADD. At most two facts that were not already in the
+        news part, and only if they are needed to understand it.
       - >
         ONE EVERYDAY COMPARISON where it genuinely helps, clearly your own
         illustration, never a new fact. Two at most.

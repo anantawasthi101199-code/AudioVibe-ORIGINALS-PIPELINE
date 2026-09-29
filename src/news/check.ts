@@ -173,7 +173,9 @@ const UNKNOWNS: Array<[RegExp, RegExp]> = [
   [/\bno (date|timeline|timetable|deadline) (has|had) been (set|given|announced)\b/i, /\bno (date|timeline|timetable|deadline)\b/i],
   [/\b(it is|it's|it remains|it was) (not |un)clear\b/i, /\b(not clear|unclear)\b/i],
   [/\b(did|does|has) not (say|said|specify|specified|indicate|indicated) (when|whether|how|what|why)\b/i, /\b(did|does|has) not (say|specify|indicate)\b/i],
-  [/\b(behind the scenes|remains to be seen|no word on)\b/i, /\b(behind the scenes|remains to be seen|no word on)\b/i],
+  // "behind the scenes" was here and blocked a fair turn of phrase ("has not
+  // rejected it behind the scenes"). A phrase is not an unknown.
+  [/\b(remains to be seen|no word (yet )?on)\b/i, /\b(remains to be seen|no word)\b/i],
 ];
 
 export const unsourcedUnknowns = (script: string, article: string): string[] =>
