@@ -233,9 +233,17 @@ export const formatSchema = z
      * question, which sat at character 71,000 of a document the extractor saw
      * 6,000 of.
      *
+     * `casefile` reads ONE document whole and turns it into a chronology, a
+     * cast with backgrounds, and a set of places, before any prose exists. It
+     * is for something that HAPPENED, to real people, on particular dates, and
+     * it differs from `single` in the two ways a case differs from a myth: it
+     * has a calendar rather than an order, and its people are real, so every
+     * event carries whether it is established, alleged or disputed and the
+     * writer is shown all of it. See evidence/casefile.ts.
+     *
      * DEFAULTS TO `extensive`, so every existing format behaves as it did.
      */
-    research: z.enum(['extensive', 'single']).default('extensive'),
+    research: z.enum(['extensive', 'single', 'casefile']).default('extensive'),
 
     /** One sentence on what this shape is good for. */
     intent: z.string().min(1),

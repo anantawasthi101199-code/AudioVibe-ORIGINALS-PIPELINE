@@ -534,7 +534,11 @@ const describeRun = (
   // those are the two largest lines on this table - so quoting them would
   // overstate a story run by roughly half while naming stages it will never
   // reach.
-  const singleStory = (research ?? format.research) === 'single';
+  const researchMode = research ?? format.research;
+  const caseLane = researchMode === 'casefile';
+  // Both one-document lanes price the same way: a selection, then one big read.
+  // What they build from it differs; what it costs does not, much.
+  const singleStory = researchMode === 'single' || caseLane;
   const writer = writerConfig();
   const verifier = verifierConfig();
   const engine = ttsProvider();
@@ -578,10 +582,18 @@ const describeRun = (
             // See script/shortScript.ts.
             format.kind === 'short'
               ? write(writer.model, 1, 12_000, 400)
-              : write(writer.model, 1, 12_000, 400) + write(writer.model, 1, 75_000, 9_000),
+              : write(writer.model, 1, 12_000, 400) +
+                // A case file is ONE document read whole, where a fused
+                // reference is two or three, so the read is smaller and the
+                // structured answer is bigger.
+                (caseLane
+                  ? write(writer.model, 1, 35_000, 7_000)
+                  : write(writer.model, 1, 75_000, 9_000)),
             format.kind === 'short'
-              ? 'pick the one best article. No fusion step on a short.'
-              : 'pick 1-3 documents, then read them whole and fuse them into one article',
+              ? 'pick the one best article. No case file or fusion on a short.'
+              : caseLane
+                ? 'pick the one document, then read it whole into a dated case file'
+                : 'pick 1-3 documents, then read them whole and fuse them into one article',
           ],
           ...(flags.referenceCheck
             ? ([

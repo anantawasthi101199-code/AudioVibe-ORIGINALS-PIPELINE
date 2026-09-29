@@ -143,6 +143,30 @@
       "topic": "how did Haldiram become Haldiram",
       "runId": "how-they-built-it/e003-20260929-did-haldiram-become-haldiram",
       "madeAt": "2026-09-29T19:16:46.518Z"
+    },
+    {
+      "showId": "true-crime-in-full",
+      "topic": "The murder of Julia Wallace, Liverpool 1931",
+      "runId": "true-crime-in-full/e001-20260929-murder-of-julia-wallace-liverpool-1931",
+      "madeAt": "2026-09-29T20:40:07.054Z"
+    },
+    {
+      "showId": "true-crime-in-full",
+      "topic": "The Green Bicycle Case, Leicestershire 1919",
+      "runId": "true-crime-in-full/e002-20260929-green-bicycle-case-leicestershire-1919",
+      "madeAt": "2026-09-29T20:43:04.876Z"
+    },
+    {
+      "showId": "true-crime-in-full",
+      "topic": "The murder of Julia Wallace, Liverpool 1931",
+      "runId": "true-crime-in-full/e003-20260929-murder-of-julia-wallace-liverpool-1931",
+      "madeAt": "2026-09-29T20:44:31.749Z"
+    },
+    {
+      "showId": "true-crime-in-full",
+      "topic": "The poisoning of Charles Bravo at the Priory, Balham, 1876",
+      "runId": "true-crime-in-full/e004-20260929-poisoning-of-charles-bravo-at-the",
+      "madeAt": "2026-09-29T20:50:40.687Z"
     }
   ]
 }

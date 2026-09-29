@@ -1,0 +1,67 @@
+# One case in three minutes, complete.
+#
+# COMPLETE IS THE WHOLE CONSTRAINT. A short that summarises a case is worse than
+# no short: a listener gets the shape of something terrible and none of the
+# person it happened to. So this is one case with FEWER EVENTS rather than a
+# faster account of many - the spine, and the rest left out.
+#
+# NO CASE FILE IS BUILT FOR THIS, which is the entire cost difference. Building
+# one is about thirty pence against a budget of ten, and with one article and
+# three minutes there is not enough case to be worth structuring first.
+#
+# WHAT THAT GIVES UP, stated plainly: nothing has separated established from
+# alleged before the writer sees the article. The writer is instructed to do it,
+# but an instruction is not a pass. A contested case does not belong in this
+# format, and that is a decision made in the topic queue rather than here.
+
+id: case-short
+name: One case, short
+kind: short
+
+intent: >
+  One true case, whole, in under three minutes. Who it happened to, what
+  happened, how it ended.
+
+targetSeconds: [150, 185]
+
+research: casefile
+
+loops:
+  - id: the_case
+    question: What happened to them?
+
+beats:
+  - id: who_and_what
+    type: cold_open
+    seconds: [80, 100]
+    function: >
+      One true moment, then who this happened to, then what happened.
+    opens: [the_case]
+    constraints:
+      - Open on a fact at a moment, not on a summary.
+      - Say who they were before you say what happened to them, even here.
+      - Two or three names at most. One place.
+
+  - id: ending
+    type: payoff
+    seconds: [50, 65]
+    function: >
+      How it ended, and what was never settled.
+    constraints:
+      - Answer it properly. A short that stops early is a summary.
+      - The last thing said about the case is about the person it happened to.
+
+  # THE LOOP CLOSES HERE, ON THE LAST BEAT, and not on the payoff above. The
+  # checker is right to insist: a loop closed at beat two of three leaves the
+  # third with no reason for anybody to still be listening. The last line about
+  # the victim is part of the answer, not an afterword to it.
+  - id: close
+    type: outro
+    seconds: [12, 20]
+    function: A last line about the person it happened to, then the sign-off.
+    closes: [the_case]
+    constraints:
+      - Short. No recap.
+      - Nothing new. This is the last thing heard, not another fact.
+
+tensionCurve: [0.8, 0.95, 0.4]

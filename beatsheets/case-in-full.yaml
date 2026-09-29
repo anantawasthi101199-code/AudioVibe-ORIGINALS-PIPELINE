@@ -1,0 +1,93 @@
+# One case, told in full, in three parts.
+#
+# THREE PARTS AND NOT FIVE, and the reason is the same one that changed the myth
+# lane. Five beats each carrying their own brief produced five short essays butted
+# together - "every time a new parah is started it is not a continuation of the
+# previous parah, it has a fresh start altogether". A case is worse for it than a
+# myth, because a listener following a calendar across a seam has to rebuild
+# where they were in it.
+#
+# THE ORDER IS NOT THE ORDER THINGS HAPPENED, and that is the whole design. The
+# chronology in the case file decides what is TRUE; this sheet decides what is
+# TOLD FIRST. A listener will not care when something happened until they care
+# who it happened to, so the person comes before the calendar, and one true
+# moment comes before the person.
+#
+# WHAT IS DELIBERATELY ABSENT: a counterpoint beat. The factual lanes have one
+# because a confident one-sided account of something real is the commonest way
+# generated content is false while every sentence is sourced. Here the equivalent
+# work is done inside the case file instead - `contested` is separated from
+# `established` before a word is written, and the writer is shown both. A beat
+# arguing the other side of a real person's case would be the show speculating,
+# which is the one thing this lane may not do.
+
+id: case-in-full
+name: One case, in full
+kind: long
+
+intent: >
+  One true case, from who it happened to through what was done about it to how
+  it ended, told so that somebody with headphones in can picture it.
+
+# Thirteen to seventeen minutes. Long enough to give the victim a life before
+# anything happens to them, short enough for one walk.
+targetSeconds: [780, 1020]
+
+research: casefile
+
+loops:
+  - id: the_case
+    question: What happened, and what was never settled about it?
+
+beats:
+  - id: opening
+    type: cold_open
+    seconds: [200, 260]
+    function: >
+      Open on one true moment, then go back and introduce the person it happened
+      to, properly, before anything happens to them.
+    opens: [the_case]
+    constraints:
+      - Start inside a moment from the case file's hook. A fact, at a time, with
+        a person in it. Not a summary of what is coming and not a question.
+      - Then stop and say who this is about - what they did, what they were
+        like, what that week looked like. Give it real room.
+      - Hand over out loud at the end, so part two is a continuation and not a
+        restart.
+      - No sentence about crime in general, ever.
+
+  - id: what_happened
+    type: escalation
+    seconds: [380, 500]
+    function: >
+      The calendar, in order, and then what investigators did as a second
+      sequence. The longest part, and the one carrying the chronology.
+    constraints:
+      - Pick up from the last thing part one said, by name.
+      - Dates in order, said the way a person says them, with the gaps between
+        them made felt - "eleven days later", not "on the twenty-fifth".
+      - Every scene gets a time, a place and one physical detail, and every one
+        of those comes from the case file rather than from you.
+      - Keep the investigation separate from the crime's own timeline, so the
+        listener always knows what was known when.
+      - Anything marked alleged or disputed is attributed once, plainly, where
+        it belongs. Say it once and then stop qualifying.
+
+  - id: how_it_ended
+    type: payoff
+    seconds: [200, 260]
+    function: >
+      How it ended, what was never settled, and a last word about the person it
+      happened to rather than about whoever did it.
+    closes: [the_case]
+    constraints:
+      - Say plainly what happened in the end. A case that trails off has wasted
+        the listener's time.
+      - Name what the record does not say, where it matters. A gap said out loud
+        is more trustworthy than one glided over.
+      - The last thing the listener hears is about the victim, not the offender.
+      - Then the sign-off, in the show's own words.
+
+# Rises through the calendar, peaks where it goes wrong, and comes down for the
+# ending. A case is not a thriller and the curve should not pretend it is.
+tensionCurve: [0.5, 0.95, 0.55]

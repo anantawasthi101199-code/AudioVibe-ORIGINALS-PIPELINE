@@ -38,5 +38,15 @@
         "firstRunId": "how-they-built-it/e002-20260929-did-reliance-group-ambani-become-the"
       }
     }
+  },
+  "true-crime-in-full": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "ballad",
+        "firstUsedAt": "2026-09-29T20:41:20.303Z",
+        "firstRunId": "true-crime-in-full/e001-20260929-murder-of-julia-wallace-liverpool-1931"
+      }
+    }
   }
 }

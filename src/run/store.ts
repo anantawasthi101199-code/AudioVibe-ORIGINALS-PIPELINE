@@ -34,6 +34,13 @@ export const STAGES = [
   // it reads three documents at sixty thousand characters each.
   // See evidence/story.ts.
   'reference',
+  // The true crime lane's replacement for the same three stages, and a separate
+  // stage from `reference` rather than a reuse of it because what it holds is a
+  // different object: a dated chronology, a cast with backgrounds, and every
+  // event marked established, alleged or disputed. Sharing the name would mean
+  // one artifact file that parses two ways depending on which lane wrote it,
+  // and a resumed run guessing which. See evidence/casefile.ts.
+  'casefile',
   'verification',
   // Narrowing, rebinding and hedging the claims that failed verification, so a
   // claim that says more than its quote loses the over-reach instead of losing

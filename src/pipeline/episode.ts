@@ -82,6 +82,14 @@ import { countWords, measure } from '../script/style';
 import { writeScriptOnePass } from '../script/onePass';
 import { writeStoryScript } from '../script/storyScript';
 import { writeShortScript } from '../script/shortScript';
+import {
+  CaseFile,
+  buildCaseFile,
+  caseFileSchema,
+  checkCaseFile,
+  reviewCaseFile,
+} from '../evidence/casefile';
+import { writeCaseScript, writeCaseShort } from '../script/caseScript';
 import { performScript } from '../script/perform';
 import {
   Script,
@@ -242,16 +250,58 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
   // --- 1. Brief -----------------------------------------------------------
   let brief: Brief;
+  const researchMode = run.manifest.research ?? format.research;
+  const singleStory = researchMode === 'single';
+  /**
+   * The true crime lane: one document, read whole, turned into a chronology.
+   *
+   * SHARES THE SELECTION WITH `single` AND NOTHING ELSE. Both need the same
+   * thing first - the one document that actually carries the story, rather than
+   * fourteen partial views of it - and after that they diverge completely: a
+   * myth gets a fused reference article, a case gets a dated case file with
+   * every event marked established, alleged or disputed.
+   */
+  const caseLane = researchMode === 'casefile';
+  /** Either lane that reads documents whole instead of building a claim ledger. */
+  const oneDocLane = singleStory || caseLane;
+
   if (run.hasArtifact('brief')) {
     brief = run.readArtifact('brief', briefSchema);
     report('brief', `reusing "${brief.angle}"`);
   } else {
     stage = 'brief';
-    log('brief: planning the research');
-    brief = await buildBrief(run.manifest.topic, persona, format, deps.writer, spend);
-    run.writeArtifact('brief', brief);
-    run.markComplete('brief');
-    report('brief', `"${brief.angle}" with ${brief.queries.length} queries`);
+
+    // A NAMED CASE IS ALREADY ITS OWN SEARCH QUERY, so a short does not pay a
+    // model to invent one. The brief exists to narrow a broad subject to an
+    // angle and turn it into queries; "The murder of Julia Wallace, Liverpool
+    // 1931" is both already, and asking a model to rephrase it returned the
+    // topic with different words for two pence.
+    //
+    // ONLY ON A SHORT. An episode has a pound to spend and a real brief is
+    // worth two pence of it, because a fifteen-minute case does benefit from
+    // queries aimed at the investigation and the aftermath separately.
+    if (caseLane && format.kind === 'short') {
+      brief = {
+        angle: run.manifest.topic,
+        mustEstablish: ['who it happened to', 'what happened', 'how it ended'],
+        queries: [run.manifest.topic, `${run.manifest.topic} case`],
+        // EMPTY, AND IT IS HONEST. This field exists for the counter-evidence
+        // pass to aim at, that pass does not run on this lane, and guessing
+        // what is contested without having read anything would be worse than
+        // saying nothing. The case file marks what is actually disputed, from
+        // the document.
+        likelyContested: [],
+      };
+      run.writeArtifact('brief', brief);
+      run.markComplete('brief');
+      report('brief', 'the case is its own query, so no brief was paid for');
+    } else {
+      log('brief: planning the research');
+      brief = await buildBrief(run.manifest.topic, persona, format, deps.writer, spend);
+      run.writeArtifact('brief', brief);
+      run.markComplete('brief');
+      report('brief', `"${brief.angle}" with ${brief.queries.length} queries`);
+    }
   }
 
   // --- 2. Corpus ----------------------------------------------------------
@@ -290,8 +340,6 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   // THE RUN'S OVERRIDE WINS, AND IT IS ON THE MANIFEST RATHER THAN IN A FLAG
   // READ EACH TIME, so a resume continues the way the run started instead of
   // switching lanes halfway through an episode.
-  const researchMode = run.manifest.research ?? format.research;
-  const singleStory = researchMode === 'single';
   if (run.manifest.research && run.manifest.research !== format.research) {
     report(
       'pipeline',
@@ -321,8 +369,16 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   let reference: Reference | undefined;
   let referenceReview: ReferenceReview | undefined;
   let shortArticle: Source | undefined;
+  let caseFile: CaseFile | undefined;
 
-  if (singleStory) {
+  if (oneDocLane) {
+    // THE CASE FILE IS ITS OWN ARTIFACT AND ITS OWN STAGE, so a resumed run
+    // reads it back rather than paying thirty pence to build it a second time.
+    if (caseLane && run.hasArtifact('casefile')) {
+      caseFile = run.readArtifact('casefile', caseFileSchema);
+      report('reference', `reusing the case file: ${caseFile.chronology.length} dated event(s)`);
+    }
+
     let stored: StoryResearch | undefined;
     if (run.hasArtifact('reference')) {
       stored = run.readArtifact('reference', storyResearchSchema);
@@ -412,6 +468,116 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       // straight after it reads the same documents again. A run that dies
       // between the two (a budget ceiling is the likely way, since the review
       // is the single largest line on the estimate) would otherwise pay for
+      // THE CASE LANE STOPS HERE AND BUILDS SOMETHING ELSE.
+      //
+      // One document, not two or three: the owner's instruction, and the right
+      // one for a case. Fusing two accounts of a myth resolves a disagreement
+      // about a story; fusing two accounts of a crime resolves a disagreement
+      // about what a real person did, which is not a thing to do quietly.
+      //
+      // A SHORT NEVER REACHES HERE. The branch above has already stored its one
+      // article and gone straight to the writer, because building a case file
+      // is about thirty pence against a short's whole budget of ten.
+      if (caseLane) {
+        let file = run.readCheckpoint('casefile', caseFileSchema);
+        if (file) {
+          report('reference', 'reusing the case file from a run that stopped after it');
+        } else {
+          log('reference: reading the document and setting down the case');
+          file = await buildCaseFile(
+            {
+              topic: run.manifest.topic,
+              source: selection.chosen[0]!,
+              targetSeconds: (format.targetSeconds[0] + format.targetSeconds[1]) / 2,
+            },
+            deps.writer,
+            spend
+          );
+          // CHECKPOINTED IMMEDIATELY. This is the expensive call on the lane,
+          // and a crash after it used to mean paying for it twice.
+          run.writeCheckpoint('casefile', file);
+        }
+
+        caseFile = file;
+
+        report(
+          'reference',
+          `${file.chronology.length} dated event(s), ${file.cast.filter((c) => c.carry).length} ` +
+            `name(s) to carry, ended ${file.outcome.status}`
+        );
+
+        // FREE, AND EVERY ONE IS A REAL FAILURE OF THIS LANE rather than a
+        // tidiness check. A case file with no victim is a file about whoever
+        // did it, which is the thing the whole lane is written against.
+        for (const problem of checkCaseFile(file)) report('reference', `  ${problem}`);
+
+        if (file.contested.length) {
+          report(
+            'reference',
+            `${file.contested.length} contested claim(s), shown to the writer to be attributed ` +
+              `rather than hidden from it. These are real people.`
+          );
+        }
+
+        // THE ONE PAID CHECK ON THIS LANE, and the one most worth turning on.
+        //
+        // `checked: false` is not a formality. It is what the gate reads to
+        // fail closed, and it is the difference between "nothing was found"
+        // and "nobody looked". On a lane about real people those are very
+        // different states. See config/stages.ts.
+        if (runs('referenceCheck')) {
+          log('reference: checking the case file against the document it came from');
+          const review = await reviewCaseFile(
+            { file, source: selection.chosen[0]! },
+            // THE VERIFIER, NOT THE WRITER, and here that matters more than
+            // anywhere else in the studio: a checker sharing the builder's
+            // priors reconstructs its reasoning instead of reading the
+            // document, and a plausible-sounding case is exactly what the
+            // builder is good at producing.
+            deps.verifier,
+            spend
+          );
+
+          for (const line of review.invented) {
+            report('reference', `NOT IN THE DOCUMENT: ${line}`);
+          }
+          for (const line of review.overstated) {
+            report('reference', `stated as established, but attributed in the source: ${line}`);
+          }
+          for (const line of review.missing) {
+            report('reference', `the document establishes this and the file dropped it: ${line}`);
+          }
+          if (review.checked && !review.invented.length && !review.overstated.length) {
+            report('reference', 'nothing in the file goes beyond the document');
+          }
+          if (!review.checked) {
+            report('reference', `the check could not run: ${review.failure ?? 'unknown'}`);
+          }
+
+          referenceReview = {
+            unanswered: review.missing,
+            unsupported: [...review.invented, ...review.overstated],
+            checked: review.checked,
+            failure: review.failure,
+          };
+        } else {
+          report(
+            'reference',
+            'the case file check is OFF, so nothing has verified this against its own ' +
+              'source. On a lane about real people that is the check worth paying for: ' +
+              '--reference-check.'
+          );
+        }
+
+        run.writeArtifact('casefile', file);
+        run.markComplete('casefile');
+        run.clearCheckpoint('casefile');
+      }
+
+      // THE FUSION, WHICH THE CASE LANE DOES NOT DO. Two accounts of a myth
+      // fused resolves a disagreement about a story. Two accounts of a crime
+      // fused resolves a disagreement about what a real person did.
+      if (!caseLane) {
       // the fusion twice. Same reason the claims stage checkpoints per chunk.
       let built = run.readCheckpoint('reference', referenceSchema);
       if (built) {
@@ -488,18 +654,24 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       // The checkpoint has served its purpose the moment the artifact exists.
       run.clearCheckpoint('reference');
       }
+      }
     }
 
-    reference = stored.reference;
-    referenceReview = stored.review;
+    // ALL OPTIONAL, because a case-lane episode never writes this artifact: it
+    // has a case file instead, and `stored` stays undefined for it.
+    reference = stored?.reference;
+    // ONLY FROM `stored`, WHICH THE CASE LANE NEVER WRITES. Without the guard
+    // this line ran after the case review had already been assigned above and
+    // set it back to undefined, which the gate reads as "nobody looked".
+    referenceReview = stored?.review ?? referenceReview;
     // The article a short was written from, re-read so a resumed run does not
     // have to fetch or choose again.
-    shortArticle = stored.article
+    shortArticle = stored?.article
       ? corpus.sources.find((src) => src.id === stored!.article!.id)
-      : undefined;
+      : shortArticle;
   }
 
-  if (!singleStory) {
+  if (!oneDocLane) {
     // --- 3. Claims ----------------------------------------------------------
     let claimSet: ClaimSet;
     if (run.hasArtifact('claims')) {
@@ -843,7 +1015,44 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       subjects: format.beats.map((_, i) => storyForBeat(brief, format, i)),
     };
 
-    if (singleStory && format.kind === 'short') {
+    if (caseLane && format.kind === 'short') {
+      // ONE ARTICLE, ONE CALL, NO CASE FILE. See script/caseScript.ts for what
+      // that gives up: nothing has separated established from alleged before
+      // the writer sees the article.
+      if (!shortArticle) throw new Error('short reached the writer with no article');
+      log('script: writing the case short straight from the article');
+      script = await writeCaseShort(
+        {
+          persona,
+          format,
+          article: {
+            title: shortArticle.title,
+            url: shortArticle.url,
+            text: shortArticle.text,
+          },
+          topic: run.manifest.topic,
+          isoDate: new Date().toISOString().slice(0, 10),
+        },
+        deps.writer,
+        spend,
+        say('script')
+      );
+    } else if (caseLane) {
+      if (!caseFile) throw new Error('the case reached the writer with no case file');
+      log('script: telling the case from the file');
+      script = await writeCaseScript(
+        {
+          persona,
+          format,
+          file: caseFile,
+          topic: run.manifest.topic,
+          isoDate: new Date().toISOString().slice(0, 10),
+        },
+        deps.writer,
+        spend,
+        say('script')
+      );
+    } else if (singleStory && format.kind === 'short') {
       // ONE ARTICLE, ONE CALL, NO REFERENCE. See script/shortScript.ts.
       if (!shortArticle) throw new Error('short reached the writer with no article');
       log('script: writing the short straight from the article');
@@ -1112,7 +1321,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   // asking the writer whether it invented anything is asking the wrong witness.
   stage = 'grounding';
   let grounding: GroundingReport | undefined;
-  if (singleStory) {
+  if (oneDocLane) {
     // NOT APPLICABLE RATHER THAN SKIPPED. The grounding review reads a script
     // against a claim ledger, and this lane has no ledger to read it against.
     // Running it on an empty one would report every sentence in the episode as
@@ -1209,10 +1418,18 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       castNames: script.plan?.cast.map((c) => c.name) ?? [],
       grounding,
       stagesOff: skipped,
-      evidence: singleStory ? 'reference' : 'ledger',
+      // A CASE FILE IS THE SAME KIND OF THING AS A REFERENCE as far as the gate
+      // is concerned: prose answerable to documents read whole rather than to a
+      // claim ledger. What differs is what it holds, not how it is checked.
+      evidence: oneDocLane ? 'reference' : 'ledger',
       referenceReview,
-      sources: singleStory
-        ? corpus.sources.filter((src) => reference?.sourceIds.includes(src.id))
+      sources: oneDocLane
+        ? corpus.sources.filter(
+            (src) =>
+              reference?.sourceIds.includes(src.id) ||
+              caseFile?.sourceIds.includes(src.id) ||
+              src.id === shortArticle?.id
+          )
         : corpus.sources,
     });
 
@@ -1324,10 +1541,15 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     castNames: script.plan?.cast.map((c) => c.name) ?? [],
     grounding,
     stagesOff: skipped,
-    evidence: singleStory ? 'reference' : 'ledger',
+    evidence: oneDocLane ? 'reference' : 'ledger',
     referenceReview,
-    sources: singleStory
-      ? corpus.sources.filter((src) => reference?.sourceIds.includes(src.id))
+    sources: oneDocLane
+      ? corpus.sources.filter(
+          (src) =>
+            reference?.sourceIds.includes(src.id) ||
+            caseFile?.sourceIds.includes(src.id) ||
+            src.id === shortArticle?.id
+        )
       : corpus.sources,
   });
 

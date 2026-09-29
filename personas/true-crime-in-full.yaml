@@ -232,7 +232,16 @@ canon:
   - kind: catchphrase
     text: "Here is the part that gets me."
 
+# THREE PARTS, NOT FIVE, AND A SHORT. `case-in-full` is the working format:
+# one document read whole into a dated case file, then three parts that are a
+# continuation of each other rather than five short essays butted together.
+#
+# `told-story` is KEPT rather than deleted because it is the five-beat shape and
+# is what every episode before this was made with. A re-render of one of those
+# has to still work.
 formats:
+  - case-in-full
+  - case-short
   - told-story
 
 # Thirteen to seventeen minutes. Long enough to tell something properly, short
