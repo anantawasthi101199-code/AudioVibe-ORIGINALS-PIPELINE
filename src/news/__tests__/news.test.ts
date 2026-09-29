@@ -93,6 +93,8 @@ describe('the wire screen', () => {
 
   it('strips the outlet off a headline', () => {
     expect(stripSiteSuffix('Iran rejects ceasefire | Hindustan Times')).toBe('Iran rejects ceasefire');
+    expect(stripSiteSuffix('Leaders meet in Geneva - BBC News')).toBe('Leaders meet in Geneva');
+    expect(stripSiteSuffix('Talks resume after 2020 deal')).toBe('Talks resume after 2020 deal');
     // From the first live run: a section name with a hyphen in it survived.
     expect(stripSiteSuffix('US-Iran talks in New York | US-Israel war on Iran News')).toBe(
       'US-Iran talks in New York'
