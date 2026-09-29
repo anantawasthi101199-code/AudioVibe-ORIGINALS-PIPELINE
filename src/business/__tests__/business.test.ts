@@ -49,6 +49,15 @@ describe('the shipped channel', () => {
   });
 });
 
+describe('the duplicate-topic check, for business questions', () => {
+  it('does not treat two "how did X become Y" topics as the same subject', () => {
+    const { overlap, subjectKey } = jest.requireActual('../../catalogue/covered');
+    const a = subjectKey('how did Haldiram become Haldiram');
+    const b = subjectKey('how did reliance group ambani become the richest in asia');
+    expect(overlap(a, b)).toBe(0);
+  });
+});
+
 describe('finding the one source', () => {
   it('pulls the subject out of a question', () => {
     expect(subjectOf('how did Haldiram become Haldiram')).toBe('Haldiram');

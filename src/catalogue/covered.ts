@@ -43,6 +43,10 @@ const STOPWORDS = new Set([
   'is', 'are', 'was', 'were', 'be', 'been', 'being', 'it', 'its', 'this',
   'that', 'these', 'those', 'as', 'how', 'why', 'what', 'who', 'when', 'where',
   'his', 'her', 'their', 'our', 'we', 'they',
+  // Question scaffolding. "how did Reliance become the richest in Asia" was
+  // blocked as a duplicate of "how did Haldiram become Haldiram": with these
+  // counted, the two share two of three words. They are never the subject.
+  'did', 'does', 'do', 'become', 'became',
 ]);
 
 /**
