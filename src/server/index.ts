@@ -361,6 +361,13 @@ export const createServer = (): http.Server =>
       }
 
       // --- Reading ----------------------------------------------------------
+      //
+      // EVERY ROUTE HERE THAT ALSO HAS A WRITE MUST SAY `req.method === 'GET'`.
+      // These are matched in file order, so an unguarded read sitting above a
+      // POST for the same path answers the POST with the read's body and a 200,
+      // and the write below it never runs. It looks exactly like success.
+      // Three routes were broken this way at once - starting a run, deleting a
+      // run, and making a beat - and routes.test.ts now fails if it recurs.
       if (pathname === '/api/catalogue') return send(res, 200, getCatalogue());
       if (pathname === '/api/queue') return send(res, 200, getQueue());
       if (pathname === '/api/platform') return send(res, 200, getPlatform());
@@ -372,11 +379,13 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/run/verify') return send(res, 200, await verifyPublished(id ?? ''));
       if (pathname === '/api/next') return send(res, 200, nextDue());
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
-      if (pathname === '/api/runs') return send(res, 200, getRuns(url.searchParams.get('channel')));
-      if (pathname === '/api/run') return send(res, 200, getRun(id ?? ''));
+      if (pathname === '/api/runs' && req.method === 'GET') {
+        return send(res, 200, getRuns(url.searchParams.get('channel')));
+      }
+      if (pathname === '/api/run' && req.method === 'GET') return send(res, 200, getRun(id ?? ''));
 
       // --- The library: beats, season plans, and what has been covered ------
-      if (pathname === '/api/beats') return send(res, 200, getBeats());
+      if (pathname === '/api/beats' && req.method === 'GET') return send(res, 200, getBeats());
       if (pathname === '/api/beats/audio') {
         serveFile(res, beatAudioPath(url.searchParams.get('name') ?? ''));
         return;

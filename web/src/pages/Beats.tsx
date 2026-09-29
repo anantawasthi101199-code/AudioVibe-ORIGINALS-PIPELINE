@@ -37,6 +37,15 @@ export const Beats = () => {
   const [key, setKey] = useState('a');
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
+  // The one just made, so the list says which row is new. Synthesis is fast
+  // enough that without this the only evidence of success is a row appearing
+  // somewhere alphabetical, which is easy to miss.
+  const [made, setMade] = useState<string | null>(null);
+  // Errors are shown BESIDE THE BUTTON as well as at the top of the page. The
+  // page-level note is above the fold and the form is below it, so a failure
+  // reported only up there is invisible to somebody looking at the button they
+  // just pressed - which reads as nothing happening at all.
+  const [formError, setFormError] = useState<string | null>(null);
 
   const load = () =>
     api
@@ -56,15 +65,19 @@ export const Beats = () => {
 
   const make = async (e: React.FormEvent) => {
     e.preventDefault();
+    const wanted = name.trim();
     setBusy(true);
     setError(null);
+    setFormError(null);
+    setMade(null);
     try {
-      await api.makeBeat({ name: name.trim(), style, key, note: note.trim() });
+      await api.makeBeat({ name: wanted, style, key, note: note.trim() });
       await load();
+      setMade(wanted);
       setName('');
       setNote('');
     } catch (err) {
-      setError((err as Error).message);
+      setFormError((err as Error).message);
     } finally {
       setBusy(false);
     }
@@ -107,14 +120,27 @@ export const Beats = () => {
             value={name}
             onChange={(e) => setName(e.target.value.toLowerCase())}
           />
-          <select className="field" value={style} onChange={(e) => setStyle(e.target.value)}>
+          {/* .field is width:100%, and in a flex row that makes every control
+              claim the whole line, so the three wrap onto three rows. The
+              selects want their content width instead. */}
+          <select
+            className="field"
+            style={{ width: 'auto', flex: '0 0 auto' }}
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+          >
             {styles.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
           </select>
-          <select className="field" value={key} onChange={(e) => setKey(e.target.value)}>
+          <select
+            className="field"
+            style={{ width: 'auto', flex: '0 0 auto' }}
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+          >
             {keys.map((k) => (
               <option key={k} value={k}>
                 key of {k}
@@ -148,6 +174,22 @@ export const Beats = () => {
         <button className="btn" type="submit" disabled={busy || !nameOk}>
           {busy ? 'Synthesising...' : existing ? 'Replace it' : 'Make it (free)'}
         </button>
+
+        {busy && (
+          <p className="muted tiny" style={{ margin: 0 }}>
+            Building the phrase and its room with ffmpeg. A few seconds.
+          </p>
+        )}
+        {formError && (
+          <p className="tiny" style={{ margin: 0, color: 'var(--fail, #f87171)' }}>
+            {formError}
+          </p>
+        )}
+        {made && !busy && (
+          <p className="tiny" style={{ margin: 0 }}>
+            Made <strong>{made}</strong>. It is in the list below, with a player.
+          </p>
+        )}
       </form>
 
       {!beats && !error && <p className="faint">...</p>}
@@ -158,7 +200,11 @@ export const Beats = () => {
 
       <div className="stack tight">
         {(beats ?? []).map((b) => (
-          <div key={b.name} className="card">
+          <div
+            key={b.name}
+            className="card"
+            style={b.name === made ? { borderColor: 'var(--amber)' } : undefined}
+          >
             <div className="row between" style={{ gap: '1rem', flexWrap: 'wrap' }}>
               <div style={{ minWidth: 0 }}>
                 <strong>{b.name}</strong>

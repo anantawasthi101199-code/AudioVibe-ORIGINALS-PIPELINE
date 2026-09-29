@@ -112,3 +112,66 @@ describe('startRun refuses a duplicate', () => {
     expect(() => startRun(body({ formatId: 'news-short' }))).toThrow(/does not make/);
   });
 });
+
+/**
+ * Route guards, read straight out of index.ts.
+ *
+ * WHY A SOURCE-READING TEST RATHER THAN AN HTTP ONE. The failure is not in any
+ * handler, it is in the ORDER they are tried. Routes are matched top to bottom,
+ * so an unguarded read above a write for the same path answers the write with
+ * the read's body and a 200, the write never runs, and the page sees success.
+ *
+ * That was live on three routes at once: starting a run, deleting a run, and
+ * making a beat. Nothing failed, nothing logged, and the only symptom was that
+ * pressing the button did nothing at all.
+ *
+ * Driving real HTTP would need a listening server and the pipeline behind it;
+ * the ordering is a property of the file and is checked as one.
+ */
+describe('route method guards', () => {
+  const source = fs.readFileSync(
+    path.join(__dirname, '..', 'index.ts'),
+    'utf8'
+  );
+
+  interface Guard {
+    at: number;
+    path: string;
+    method: string | null;
+  }
+
+  const guards: Guard[] = [
+    ...source.matchAll(/pathname === '(\/api\/[^']*)'(?:\s*&&\s*req\.method === '(\w+)')?/g),
+  ].map((m) => ({ at: m.index ?? 0, path: m[1]!, method: m[2] ?? null }));
+
+  it('finds the routes at all, so a rewrite does not make this pass vacuously', () => {
+    expect(guards.length).toBeGreaterThan(20);
+    expect(guards.some((g) => g.path === '/api/beats')).toBe(true);
+  });
+
+  it('never puts an unguarded read above a write for the same path', () => {
+    const byPath = new Map<string, Guard[]>();
+    for (const g of guards) {
+      byPath.set(g.path, [...(byPath.get(g.path) ?? []), g]);
+    }
+
+    const swallowed: string[] = [];
+    for (const [routePath, list] of byPath) {
+      if (list.length < 2) continue;
+      const ordered = [...list].sort((a, b) => a.at - b.at);
+      const first = ordered[0]!;
+      if (first.method === null && ordered.slice(1).some((g) => g.method !== null)) {
+        swallowed.push(
+          `${routePath}: an unguarded handler comes first, so ` +
+            `${ordered
+              .slice(1)
+              .map((g) => g.method)
+              .filter(Boolean)
+              .join(', ')} never runs`
+        );
+      }
+    }
+
+    expect(swallowed).toEqual([]);
+  });
+});
