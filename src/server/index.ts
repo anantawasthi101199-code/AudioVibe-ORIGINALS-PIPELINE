@@ -48,6 +48,13 @@ import {
   startRun,
   suggest,
 } from './routes';
+import {
+  beatAudioPath,
+  getBeats,
+  getCovered,
+  getSeason,
+  makeBeat,
+} from './beats';
 import { getQueue } from './queue';
 import { getCalendar, releasingEnabled } from './calendar';
 import { freshness } from './freshness';
@@ -92,6 +99,10 @@ const MIME: Record<string, string> = {
   '.woff2': 'font/woff2',
   '.json': 'application/json; charset=utf-8',
   '.wav': 'audio/wav',
+  // The beat library, which the interface plays in an audio element. Served as
+  // octet-stream a browser is entitled to offer it as a download instead, and
+  // the whole point of the library is that somebody LISTENS before choosing.
+  '.mp3': 'audio/mpeg',
   '.ico': 'image/x-icon',
   // Artwork, which this server now serves back as a preview. Without these a
   // supplied JPEG goes out as octet-stream and some browsers offer to download
@@ -363,6 +374,24 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
       if (pathname === '/api/runs') return send(res, 200, getRuns(url.searchParams.get('channel')));
       if (pathname === '/api/run') return send(res, 200, getRun(id ?? ''));
+
+      // --- The library: beats, season plans, and what has been covered ------
+      if (pathname === '/api/beats') return send(res, 200, getBeats());
+      if (pathname === '/api/beats/audio') {
+        serveFile(res, beatAudioPath(url.searchParams.get('name') ?? ''));
+        return;
+      }
+      if (pathname === '/api/season') {
+        const season = Number(url.searchParams.get('season') ?? '1');
+        return send(res, 200, getSeason(id ?? '', Number.isFinite(season) ? season : 1));
+      }
+      if (pathname === '/api/covered') {
+        return send(
+          res,
+          200,
+          getCovered(url.searchParams.get('channel'), url.searchParams.get('topic'))
+        );
+      }
       if (pathname === '/api/job') return send(res, 200, getJob(id ?? ''));
 
       if (pathname === '/api/job/events') {
@@ -414,6 +443,9 @@ export const createServer = (): http.Server =>
       }
 
       // --- Writing ----------------------------------------------------------
+      if (pathname === '/api/beats' && req.method === 'POST') {
+        return send(res, 200, await makeBeat(await readBody(req)));
+      }
       if (pathname === '/api/runs' && req.method === 'POST') {
         return send(res, 201, startRun(await readBody(req), user));
       }

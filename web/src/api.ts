@@ -294,6 +294,60 @@ const call = async <T>(path: string, init?: RequestInit): Promise<T> => {
   return body as T;
 };
 
+export interface Beat {
+  name: string;
+  style: string;
+  key: string;
+  note: string;
+  madeAt: string;
+  rendered: boolean;
+}
+
+export interface EpisodeCard {
+  number: number;
+  title: string;
+  opens: string;
+  story: string;
+  changes: string;
+  cliffhanger: string;
+  plants: string[];
+  paysOff: string[];
+}
+
+export interface SeasonPlan {
+  personaId: string;
+  seasonNumber: number;
+  title: string;
+  premise: string;
+  spine: string;
+  world: string[];
+  carryCast: Array<{ name: string; who: string }>;
+  promises: Array<{ id: string; text: string }>;
+  episodes: EpisodeCard[];
+}
+
+export interface SeasonView {
+  show: string;
+  season: number;
+  plan: SeasonPlan | null;
+  rendered?: string;
+  problems?: string[];
+  drift?: string[];
+  nextEpisode?: number;
+}
+
+export interface CoveredEntry {
+  showId: string;
+  topic: string;
+  runId: string;
+  madeAt: string;
+}
+
+export interface CoveredView {
+  entries: CoveredEntry[];
+  matches: Array<{ entry: CoveredEntry; score: number; sameShow: boolean }>;
+}
+
 export const api = {
   me: () => call<{ signedIn: boolean; name?: string }>('/api/me'),
   signIn: (password: string) =>
@@ -304,6 +358,29 @@ export const api = {
   signOut: () => call<{ ok: true }>('/api/session', { method: 'DELETE' }),
 
   catalogue: () => call<{ lanes: Lane[] }>('/api/catalogue'),
+
+  /* --- The library: beats, season plans, and what has been covered ------- */
+
+  beats: () =>
+    call<{ styles: string[]; keys: string[]; beats: Beat[] }>('/api/beats'),
+
+  makeBeat: (body: { name: string; style: string; key: string; note: string }) =>
+    call<{ beat: Beat }>('/api/beats', { method: 'POST', body: JSON.stringify(body) }),
+
+  /**
+   * Not a fetch. It is the src of an audio element, and the point of the whole
+   * beat library is that somebody hears one before choosing it.
+   */
+  beatAudio: (name: string) => `/api/beats/audio?name=${encodeURIComponent(name)}`,
+
+  season: (channel: string, season = 1) =>
+    call<SeasonView>(`/api/season?id=${encodeURIComponent(channel)}&season=${season}`),
+
+  covered: (channel?: string, topic?: string) =>
+    call<CoveredView>(
+      `/api/covered${channel ? `?channel=${encodeURIComponent(channel)}` : ''}` +
+        `${channel && topic ? `&topic=${encodeURIComponent(topic)}` : ''}`
+    ),
 
   queue: () => call<QueueView>('/api/queue'),
 
@@ -451,7 +528,14 @@ export const api = {
 
   run: (id: string) => call<RunDetail>(`/api/run?id=${encodeURIComponent(id)}`),
 
-  start: (body: { channelId: string; formatId: string; topic: string; renderNow?: boolean }) =>
+  start: (body: {
+    channelId: string;
+    formatId: string;
+    topic: string;
+    renderNow?: boolean;
+    /** Make it even though this channel has covered the subject. */
+    again?: boolean;
+  }) =>
     call<{ runId: string; jobId: string }>('/api/runs', {
       method: 'POST',
       body: JSON.stringify(body),

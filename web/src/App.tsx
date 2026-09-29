@@ -18,6 +18,7 @@ import { Lanes } from './pages/Lanes';
 import { Queue } from './pages/Queue';
 import { Publish } from './pages/Publish';
 import { Calendar } from './pages/Calendar';
+import { Beats } from './pages/Beats';
 import { Run } from './pages/Run';
 import { ErrorNote } from './components/bits';
 import './app.css';
@@ -135,6 +136,7 @@ export const App = () => {
   const runMatch = /^\/r\/(.+)$/.exec(route);
   const onChannels = route === '/channels';
   const onCalendar = route === '/calendar';
+  const onBeats = route === '/beats';
 
   // THE QUEUE IS HOME. The question asked of this studio most often is "does
   // anything need me", and the answer should be the thing that loads.
@@ -145,9 +147,11 @@ export const App = () => {
   // current one marked.
   const tab = onCalendar
     ? 'calendar'
-    : channelMatch || publishMatch || runMatch || onChannels
-      ? 'channels'
-      : 'queue';
+    : onBeats
+      ? 'beats'
+      : channelMatch || publishMatch || runMatch || onChannels
+        ? 'channels'
+        : 'queue';
 
   // Breadcrumbs only once you are deeper than a tab, where they earn their
   // space by being the way back up.
@@ -220,6 +224,19 @@ export const App = () => {
           >
             Channels
           </a>
+          {/* THE ONE TAB BEHIND WHICH NOTHING SPENDS. A beat is local ffmpeg
+              and costs nothing, which is why it can sit beside the three that
+              do without inheriting their weight. */}
+          <a
+            className={`tab${tab === 'beats' ? ' on' : ''}`}
+            href="#/beats"
+            onClick={(e) => {
+              e.preventDefault();
+              go('/beats');
+            }}
+          >
+            Beats
+          </a>
         </nav>
 
         {crumbs.length > 0 && (
@@ -272,6 +289,8 @@ export const App = () => {
 
       {onCalendar ? (
         <Calendar go={go} />
+      ) : onBeats ? (
+        <Beats />
       ) : publishMatch ? (
         <Publish id={publishMatch[1]!} go={go} />
       ) : runMatch ? (

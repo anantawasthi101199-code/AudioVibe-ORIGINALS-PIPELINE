@@ -131,8 +131,27 @@ export const catalogueSchema = z.object({
 
 export type Catalogue = z.infer<typeof catalogueSchema>;
 
-const cataloguePath = (dir?: string): string =>
-  path.join(dir ?? repoRoot(), 'catalogue.json');
+/**
+ * Where the ledger lives.
+ *
+ * CONFIGURABLE FOR ONE REASON: the test suite must not write to the committed
+ * one. It did, within an hour of this module being written - a route test that
+ * redirected runs, bibles and voices but not this, so three invented subjects
+ * went into the real file and would have refused those topics forever.
+ *
+ * That is the same failure `voices.json` had twice, and the same fix. See
+ * config/index.ts, where the identical comment sits over the voice registry.
+ */
+const cataloguePath = (dir?: string): string => {
+  if (dir) return path.join(dir, 'catalogue.json');
+
+  const configured = process.env.FOUNDRY_CATALOGUE_FILE;
+  if (configured) {
+    return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
+  }
+
+  return path.join(repoRoot(), 'catalogue.json');
+};
 
 export const loadCatalogue = (dir?: string): Catalogue => {
   const file = cataloguePath(dir);

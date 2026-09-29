@@ -32,6 +32,8 @@ import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
 import { loadTopics } from '../schedule/load';
+import { blocking, findCovered, loadCatalogue, recordMade, refusal } from '../catalogue/covered';
+import { hasNewsDesk } from '../news/desk';
 import { Script, scriptBeatSchema, scriptSchema } from '../script/write';
 import { catalogue, channel, runs, runSummary } from './catalog';
 import { jobs, jobId } from './jobs';
@@ -160,6 +162,8 @@ export const startRunSchema = z.object({
   topic: z.string().min(1),
   /** Off by default here, unlike the command line: a web button is easy to press. */
   renderNow: z.boolean().default(false),
+  /** The interface's `--again`. Off by default, for the same reason. */
+  again: z.boolean().default(false),
 });
 
 /**
@@ -179,6 +183,17 @@ export const startRun = (body: unknown, who: string | null = null) => {
     throw new HttpError(400, `${persona.name} does not make "${format.id}"`);
   }
 
+  // THE SAME REFUSAL THE COMMAND LINE MAKES, and it has to be here rather than
+  // only in the page. A check that lives in one front end is a rule the other
+  // does not have, and the interface would then warn about a duplicate while
+  // happily making it. Skipped for fiction and news for the reason covered.ts
+  // gives: both reuse one topic string for every episode they ever make.
+  const deduped = !persona.fiction && !hasNewsDesk(persona.id);
+  if (deduped && !input.again) {
+    const blocked = blocking(findCovered(loadCatalogue(), persona.id, input.topic));
+    if (blocked.length) throw new HttpError(409, refusal(persona.id, input.topic, blocked));
+  }
+
   const run = Run.create({
     personaId: persona.id,
     formatId: format.id,
@@ -186,6 +201,11 @@ export const startRun = (body: unknown, who: string | null = null) => {
     onePass: true,
     holdForApproval: !input.renderNow && !format.sourceOnly,
   });
+
+  // Recorded at creation rather than on success, as the command line does: a
+  // subject recorded only when a run finishes means a failing show retries it
+  // forever, spending money each time.
+  if (deduped) recordMade(persona.id, input.topic, run.id);
 
   // WHO ASKED FOR IT. A studio several people can reach needs its journal to
   // say which of them started something that costs money.

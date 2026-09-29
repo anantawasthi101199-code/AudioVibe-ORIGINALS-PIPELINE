@@ -27,6 +27,8 @@ import {
   type Platform,
   type Route,
   type RunSummary,
+  type CoveredView,
+  type SeasonView,
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
@@ -385,6 +387,19 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const [starting, setStarting] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
   const [ideas, setIdeas] = useState<Array<{ topic: string; why: string }>>([]);
+  // THE SEASON PLAN AND THE COVERED LEDGER. Both are read-only here on purpose:
+  // breaking a season costs money and editing a plan is a text edit that wants
+  // a text editor, so the page shows them and points at the command rather than
+  // growing two more buttons that spend.
+  const [season, setSeason] = useState<SeasonView | null>(null);
+  const [covered, setCovered] = useState<CoveredView | null>(null);
+  // What the topic being typed clashes with, checked as it is typed.
+  //
+  // THE SERVER DECIDES, NOT THE PAGE. The same call `make` makes before it
+  // spends anything, so the warning here cannot say one thing while the
+  // pipeline does another. Reimplementing the match in the browser would be two
+  // definitions of "already covered" that agree until one is edited.
+  const [clash, setClash] = useState<CoveredView['matches']>([]);
 
   const load = useCallback(
     () =>
@@ -404,7 +419,43 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
       .platform()
       .then(setPlatform)
       .catch(() => undefined);
-  }, [load]);
+    // Both fail quietly. A channel page that will not render because the
+    // duplicate ledger is missing has traded something useful for something
+    // decorative.
+    void api
+      .covered(id)
+      .then(setCovered)
+      .catch(() => undefined);
+  }, [load, id]);
+
+  // Only a fiction show has a season, and asking for one on a factual show is a
+  // 400 rather than an empty answer.
+  useEffect(() => {
+    if (!data?.channel.fiction) return;
+    void api
+      .season(id)
+      .then(setSeason)
+      .catch(() => undefined);
+  }, [data?.channel.fiction, id]);
+
+  useEffect(() => {
+    const t = topic.trim();
+    if (!t || data?.channel.fiction) {
+      setClash([]);
+      return;
+    }
+
+    // Debounced, because this fires on every keystroke and the answer only
+    // matters once somebody has stopped typing a subject.
+    const timer = window.setTimeout(() => {
+      void api
+        .covered(id, t)
+        .then((d) => setClash(d.matches))
+        .catch(() => setClash([]));
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [topic, id, data?.channel.fiction]);
 
   if (error && !data) {
     return (
@@ -419,7 +470,11 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const queue = route?.kind === 'shorts' ? data.sets : data.topics;
   const ready = runs.filter((r) => r.state === 'ready' && !r.isSource).length;
 
-  const start = async () => {
+  // Whether the topic as typed would be refused. Same threshold the server
+  // uses, and the server is still the one that decides.
+  const refused = clash.some((m) => m.sameShow && m.score >= 0.6);
+
+  const start = async (again = false) => {
     if (!route || !topic.trim()) return;
     setStarting(true);
     setError(null);
@@ -428,6 +483,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         channelId: channel.id,
         formatId: route.formatId,
         topic: topic.trim(),
+        again,
       });
       go(`/r/${runId}`);
     } catch (e) {
@@ -507,6 +563,154 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </button>
         )}
 
+        {/* --- The season plan, for a serial ---------------------------- */}
+        {channel.fiction && (
+          <section className="panel">
+            <div className="panel-head">
+              <h2>Season</h2>
+              <span className="spacer" />
+              <span className="right-edge">
+                <Info label="Why a serial is planned first">
+                  A serial written one episode at a time from a summary of the last one cannot
+                  foreshadow, because nothing knows where the last episode ends. Breaking the
+                  season first is what lets episode two plant something episode seven pays off.
+                  The plan costs about a tenth of one written episode, which is the whole point:
+                  it is the cheapest place to change your mind.
+                </Info>
+              </span>
+            </div>
+
+            <div className="panel-body stack">
+              {!season && <p className="faint">...</p>}
+
+              {season && !season.plan && (
+                <>
+                  <p className="muted">
+                    No season planned. Episodes will be written from the series bible alone, which
+                    works, but nothing will be planted for a later episode to pay off.
+                  </p>
+                  <code className="tiny">
+                    npm run foundry -- season --show {channel.id} --episodes 8
+                  </code>
+                </>
+              )}
+
+              {season?.plan && (
+                <>
+                  <div>
+                    <strong>{season.plan.title}</strong>
+                    <span className="muted tiny" style={{ marginLeft: '0.6rem' }}>
+                      season {season.plan.seasonNumber}, {season.plan.episodes.length} episodes
+                    </span>
+                  </div>
+                  <p className="muted" style={{ margin: 0 }}>
+                    {season.plan.premise}
+                  </p>
+
+                  {/* EVERY ONE OF THESE IS FREE AND FOUND BEFORE ANY EPISODE WAS
+                      WRITTEN. An unpaid promise is invisible to every other check
+                      in the studio: each episode passes, and the season still owes
+                      the listener an answer it never gives. */}
+                  {season.problems && season.problems.length > 0 && (
+                    <div className="stack tight">
+                      <div className="eyebrow">Problems with this plan</div>
+                      {season.problems.map((p) => (
+                        <p key={p} className="tiny" style={{ margin: 0, color: 'var(--amber)' }}>
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  {season.drift && season.drift.length > 0 && (
+                    <div className="stack tight">
+                      <div className="eyebrow">Drifted from the plan</div>
+                      {season.drift.map((d) => (
+                        <p key={d} className="tiny muted" style={{ margin: 0 }}>
+                          {d}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="stack tight">
+                    {season.plan.episodes.map((ep) => {
+                      const next = ep.number === season.nextEpisode;
+                      return (
+                        <div
+                          key={ep.number}
+                          className="card"
+                          style={next ? { borderColor: 'var(--amber)' } : undefined}
+                        >
+                          <div className="row between" style={{ gap: '0.8rem' }}>
+                            <strong>
+                              {ep.number}. {ep.title}
+                            </strong>
+                            {next && <span className="pill hold">writes next</span>}
+                          </div>
+                          <p className="muted tiny" style={{ margin: '0.35rem 0 0' }}>
+                            {ep.story}
+                          </p>
+                          {ep.cliffhanger ? (
+                            <p className="tiny" style={{ margin: '0.35rem 0 0' }}>
+                              <span className="faint">ends on </span>
+                              {ep.cliffhanger}
+                            </p>
+                          ) : (
+                            <p className="tiny faint" style={{ margin: '0.35rem 0 0' }}>
+                              the finale, which lands rather than opens
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <p className="faint tiny" style={{ margin: 0 }}>
+                    Edit <code>seasons/{channel.id}-s{season.plan.seasonNumber}.json</code> by hand
+                    to change any of this. That is expected, not a workaround.
+                  </p>
+                </>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* --- What this channel has already covered -------------------- */}
+        {!channel.fiction && covered && covered.entries.length > 0 && (
+          <section className="panel">
+            <div className="panel-head">
+              <h2>Already covered</h2>
+              <span className="spacer" />
+              <span className="right-edge">
+                <Info label="What this stops">
+                  Starting a run on a subject this channel has already made is refused before
+                  anything is spent, and the earlier run is named. Matching is on the identifying
+                  words rather than the exact string, because a duplicate is nearly always the
+                  same subject typed at a different length. Pass --again if it really is
+                  different.
+                </Info>
+              </span>
+            </div>
+
+            <div className="panel-body stack tight">
+              {covered.entries.slice(0, 12).map((e) => (
+                <div key={e.runId} className="row between" style={{ gap: '1rem' }}>
+                  <span style={{ minWidth: 0 }}>{e.topic}</span>
+                  <span className="faint tiny" style={{ whiteSpace: 'nowrap' }}>
+                    {e.madeAt.slice(0, 10)}
+                  </span>
+                </div>
+              ))}
+              {covered.entries.length > 12 && (
+                <p className="faint tiny" style={{ margin: 0 }}>
+                  and {covered.entries.length - 12} more
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* --- Make something ------------------------------------------- */}
         <section className="panel">
           <div className="panel-head">
@@ -556,10 +760,50 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   onChange={(e) => setTopic(e.target.value)}
                 />
 
+                {clash.length > 0 && (
+                  <div className="stack tight">
+                    {clash.map((m) => (
+                      <p
+                        key={m.entry.runId}
+                        className="tiny"
+                        style={{
+                          margin: 0,
+                          color: m.sameShow && m.score >= 0.6 ? 'var(--amber)' : undefined,
+                        }}
+                      >
+                        {m.sameShow && m.score >= 0.6
+                          ? 'This will be refused: '
+                          : m.sameShow
+                            ? 'Close to something this channel made: '
+                            : `${m.entry.showId} has covered something close: `}
+                        <span className="muted">{m.entry.topic}</span>
+                        <span className="faint"> ({m.entry.madeAt.slice(0, 10)})</span>
+                      </p>
+                    ))}
+                  </div>
+                )}
+
                 <div className="row">
-                  <button className="btn spend" disabled={!topic.trim() || starting} onClick={start}>
+                  <button
+                    className="btn spend"
+                    disabled={!topic.trim() || starting || refused}
+                    onClick={() => void start(false)}
+                  >
                     {starting ? 'Starting...' : 'Research and write'}
                   </button>
+                  {/* THE OVERRIDE IS A SEPARATE BUTTON, not a checkbox beside
+                      the first. A checkbox can be left ticked from the last
+                      time; a button that only exists while a duplicate is on
+                      screen cannot be pressed by accident a week later. */}
+                  {refused && (
+                    <button
+                      className="btn ghost"
+                      disabled={starting}
+                      onClick={() => void start(true)}
+                    >
+                      {starting ? 'Starting...' : 'Make it anyway'}
+                    </button>
+                  )}
                   <button className="btn ghost" onClick={suggest} disabled={suggesting}>
                     {suggesting ? 'Thinking...' : 'Suggest'}
                   </button>
