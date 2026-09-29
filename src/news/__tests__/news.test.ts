@@ -232,6 +232,10 @@ describe('the figure check', () => {
     ).toEqual([]);
   });
 
+  it('allows a spoken clock time, which the writer is told to say', () => {
+    expect(unsupportedFigures('It was reported at 10 this morning, and again at 6 in the evening.', article, NOW)).toEqual([]);
+  });
+
   it('reports names the article never uses', () => {
     expect(
       unfamiliarNames('The minister met Lavrov in Geneva. Rowan reporting.', 'The minister met in Geneva.', ['Rowan'])
@@ -326,28 +330,37 @@ const REPORT = {
   description: 'Foreign ministers agreed a framework covering 3 border regions. Russia says it was not consulted.',
   beats: [
     {
-      beatId: 'lede',
+      beatId: 'hello',
       turns: [
         {
           speaker: 'reporter',
           text:
-            'Foreign ministers from 12 countries have agreed a ceasefire framework. ' +
-            'On Tuesday, according to reporting by the BBC, officials in Geneva said it covers 3 border regions. ' +
-            'It is the first agreement of its kind this year, and it could end months of fighting along the border.',
+            'Hi, it\'s Rowan. Let\'s look at the latest on the border fighting that negotiators have been trying to stop for months. ' +
+            'So here\'s what happened.',
         },
       ],
     },
     {
-      beatId: 'report',
+      beatId: 'news',
       turns: [
         {
           speaker: 'reporter',
           text:
-            'Officials say the framework would take effect within 48 hours. ' +
-            'Russia says it was not consulted. ' +
-            'The talks took place over two days behind closed doors. ' +
-            'Negotiators have been trying for months to find wording that every side could sign, and this is the closest they have come. ' +
-            'The agreement covers the 3 border regions where most of the fighting has taken place.',
+            'On Tuesday, the BBC reported that foreign ministers from 12 countries have agreed a ceasefire framework in Geneva. ' +
+            'Officials say it covers 3 border regions. Russia says it was not consulted.',
+        },
+      ],
+    },
+    {
+      beatId: 'explain',
+      turns: [
+        {
+          speaker: 'reporter',
+          text:
+            'Now, why does that matter? Because most of the fighting has been in those 3 regions. ' +
+            'Think of the framework as a set of traffic rules everyone signs before the road reopens. ' +
+            'Officials say it would take effect within 48 hours. That means both sides have two days to pull back. ' +
+            'The talks took place over two days behind closed doors in Geneva, and this is the closest the negotiators have come.',
         },
       ],
     },
@@ -358,7 +371,7 @@ const REPORT = {
           speaker: 'reporter',
           text:
             'Negotiators meet again next week to agree how it will be monitored. ' +
-            'Again, ministers from 12 countries have agreed a framework for a ceasefire. ' +
+            'So, 12 countries have agreed the rules for a ceasefire, and now it has to hold. ' +
             'To keep yourself updated on geopolitics, follow me. See you next time.',
         },
       ],
@@ -410,7 +423,7 @@ describe('runNews', () => {
     process.env.FOUNDRY_EPISODE_BUDGET_PENCE = '1000';
     process.env.FOUNDRY_RUNS_DIR = root;
     process.env.FOUNDRY_VOICES_FILE = path.join(root, 'voices.json');
-    jest.spyOn(assemble, 'probeDuration').mockResolvedValue(50);
+    jest.spyOn(assemble, 'probeDuration').mockResolvedValue(35);
     jest.spyOn(assemble, 'concatBeats').mockImplementation(async (_f: string[], out: string) => {
       fs.writeFileSync(out, Buffer.alloc(16));
     });
@@ -478,7 +491,7 @@ describe('runNews', () => {
 
   it('BLOCKS a report whose figure is not in the article', async () => {
     const wrong = JSON.parse(JSON.stringify(REPORT));
-    wrong.beats[1].turns[0].text = wrong.beats[1].turns[0].text.replace('48 hours', '72 hours');
+    wrong.beats[2].turns[0].text = wrong.beats[2].turns[0].text.replace('48 hours', '72 hours');
     const { gate } = await runNews(makeRun(), deps(fakeWriter(wrong)), newsDeps);
     expect(gate.passed).toBe(false);
     expect(gate.findings.find((f) => f.check === 'newsFigures')?.detail).toContain('72');

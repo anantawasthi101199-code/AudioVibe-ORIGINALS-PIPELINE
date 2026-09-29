@@ -78,6 +78,9 @@ const exemptSpans = (text: string): Array<[number, number]> => {
     new RegExp(`\\b(?:${MONTHS})\\s+\\d{1,2}(?:st|nd|rd|th)?\\b`, 'gi'),
     /\b\d{1,2}[:.]\d{2}\s*(?:am|pm|gmt|bst|utc)?\b/gi,
     /\b\d{1,2}\s*(?:am|pm)\b/gi,
+    // "at 10 this morning", "around 6 in the evening": when it was reported,
+    // which the writer is TOLD in UK time and the article states in its own zone.
+    /\b\d{1,2}\s+(?:o'clock|this (?:morning|afternoon|evening)|in the (?:morning|afternoon|evening)|last night|tonight)\b/gi,
   ];
   for (const re of patterns) for (const m of text.matchAll(re)) spans.push([m.index!, m.index! + m[0].length]);
   return spans;

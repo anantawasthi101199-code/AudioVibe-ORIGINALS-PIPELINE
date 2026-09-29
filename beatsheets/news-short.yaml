@@ -1,16 +1,20 @@
 # A news report, under three minutes, from one article.
 #
-# THE INVERTED PYRAMID, IN THREE PARTS. Every broadcast newsroom writes a report
-# the same way round: the newest and most important fact first, then the detail
-# that supports it, then what happens next. A story builds to its ending; a
-# report starts with it. Somebody who leaves after the first sentence has the
-# news, and somebody who stays to the end has all of it.
+# FOUR PARTS, EXPLAINER-STYLE. hello (greeting + the ongoing story in a line or
+# two), news (what happened, when, who reported it), explain (cause and effect
+# in plain terms, one everyday comparison), close (where it leaves things, then
+# the follow).
 #
-# WHY THREE PARTS AND NOT ONE. Same reason as the myth short: one part carrying
-# lede, detail and goodbye gives the goodbye no budget, and a writer spends the
-# whole allowance on detail before it arrives. The close is its own part so that
-# "what happens next", the recap and the follow ask have thirty seconds reserved
-# for them by the sheet.
+# WHY NOT THE INVERTED PYRAMID ANY MORE. The first version was written the way
+# wire-service radio is: news in the first sentence, detail, recap. It was
+# correct and the owner heard it as robotic: "no personal human touch", no
+# hello, no context, nothing explained. A feed short is not a bulletin between
+# two songs; the listener chose to press play on a person, and the value is
+# understanding the news, not just hearing it. The fact discipline is unchanged
+# and still checked for free; only the telling changed.
+#
+# WHY SEPARATE PARTS. One part carrying everything gives the goodbye no budget,
+# and a writer spends the allowance before it arrives.
 #
 # NOT A TRAILER. A report on this channel never points at a longer version and
 # never ends on a teaser. The owner's instruction: "the content should be
@@ -19,26 +23,19 @@
 # Written by the news lane (src/pipeline/news.ts), never by the story writers.
 
 id: news-short
-name: News report, under three minutes
+name: News, explained, under three minutes
 
-# One article, read whole. The news lane does its own research (the wire, the
-# story, the one article) and never reads this field; `single` is here because
-# it is the true description and so the story lanes refuse nothing if somebody
-# points them at this sheet by mistake.
 research: single
 
 kind: short
 intent: >
-  Today's most important development on the channel's beat, reported complete
-  and neutrally from one named source, in under three minutes, ending with a
-  reason to follow.
+  Today's most important development on the channel's beat, from one named
+  source, told by a presenter with some warmth: the big picture, what happened,
+  what it means in plain terms, and where it leaves things. Under three minutes.
 
-# 160 at the top, not 180: speech rate is an estimate, and the owner's limit is
-# "less than 3 minutes". news/check.ts measures the real audio against 180.
-# Lowered from 170 after the first live report came back at 178 estimated: the
-# writer overshoots its budget by about ten per cent, so the budget sits ten per
-# cent under the line.
-targetSeconds: [100, 160]
+# 160 at the top, not 180: speech rate is an estimate and the writer overshoots
+# its budget by about ten per cent. news/check.ts measures the audio against 180.
+targetSeconds: [120, 160]
 
 serialised: false
 
@@ -47,71 +44,77 @@ loops:
     question: What has happened, and what happens now?
 
 beats:
-  - id: lede
-    type: cold_open
-    seconds: [15, 25]
+  - id: hello
+    type: context
+    seconds: [12, 20]
     function: >
-      The news in the first sentence, then the one line that says why it
-      matters, and where this comes from.
+      Say hello, and set up the ongoing story this belongs to in a sentence or
+      two, then hand into the news.
     opens: [the_news]
     constraints:
       - >
-        THE FIRST SENTENCE IS THE NEWS. Who did what, present or present
-        perfect tense, active voice. Not a greeting, not the channel's name,
-        not background, not a quotation, not a statistic.
+        A GREETING IN YOUR OWN WORDS, then straight to it. "Hi, it's Rowan."
+        One line, not a speech.
       - >
-        SECOND, WHY IT MATTERS, in one sentence, from what the source reports.
+        THE BIG PICTURE in one or two sentences: what ongoing story this is part
+        of, so somebody who has not followed it knows where they are. Only what
+        the source says about it.
       - >
-        NAME THE SOURCE HERE, once, the way a newsreader does: "according to
-        reporting by" the outlet, or the outlet "reports".
-      - Say the day, by name.
+        HAND OVER out loud: "So here's what happened." The news itself belongs
+        to the next part.
     minClaims: 0
 
-  - id: report
-    type: mechanism
-    seconds: [60, 95]
+  - id: news
+    type: stakes
+    seconds: [25, 40]
     function: >
-      The detail: what happened, where, who is involved and what each side
-      says, and the background a listener needs to understand it.
+      What happened, when it was reported and who reported it, plainly.
     constraints:
       - >
-        ATTRIBUTION BEFORE EVERY CLAIM THAT IS A CLAIM. Figures one side
-        counted, accusations, intentions, and what each party says.
+        NAME THE SOURCE HERE, once: the outlet reported it, and when, said
+        naturally ("late on Monday evening", "this morning").
+      - Who did what, in plain words, and each side's first response if the source has it.
+      - Attribution before every claim that is a claim.
+    minClaims: 0
+
+  - id: explain
+    type: mechanism
+    seconds: [50, 75]
+    function: >
+      What it means, in simple terms: the chain of events step by step, one
+      everyday comparison, and any unfamiliar thing explained plainly.
+    constraints:
       - >
-        BOTH SIDES THE ARTICLE CARRIES. A response, denial or refusal to
-        comment goes in.
+        CAUSE AND EFFECT, STEP BY STEP. This happened, so that happened, which is
+        why it matters now. A listener should be able to retell it.
       - >
-        BACKGROUND FROM THE ARTICLE, briefly, only what makes the news make
-        sense: why these two countries, what the deal was, what happened last
-        time.
+        ONE EVERYDAY COMPARISON where it genuinely helps, clearly your own
+        illustration, never a new fact. Two at most.
       - >
-        FIGURES AS DIGITS and exactly as the source gives them, rounded only
-        the way a newsreader rounds.
-      - Title before name, the first time. At most four names in the whole report.
+        EXPLAIN UNFAMILIAR THINGS the first time, in a clause: what a blockade
+        is, what sanctions do, who is mediating.
+      - Each side's position fairly, with who said it. No view of your own.
+      - Continue from the last part. Never a fresh start.
     minClaims: 0
 
   - id: close
     type: outro
-    seconds: [20, 30]
+    seconds: [15, 25]
     function: >
-      What happens next, the key development once more for anybody who joined
-      late, then the goodbye and the follow.
+      Where it leaves things, then the goodbye and the follow.
     closes: [the_news]
     constraints:
       - >
-        WHAT HAPPENS NEXT, only if the source reports it: a vote, a deadline,
-        a meeting, a response awaited. If it does not, go straight to the
-        recap and say nothing about what is unknown. Never guess.
+        PULL IT TOGETHER in one or two sentences, fresh words: where things
+        stand now, and what happens next only if the source says so. Never
+        invent an unknown.
       - >
-        THE KEY DEVELOPMENT AGAIN IN FRESH WORDS, one sentence. Radio repeats
-        the headline because somebody tuned in halfway.
-      - >
-        THEN THE GOODBYE, which asks the listener to follow for more on the
-        beat. Warm and quick, the last thing said.
+        THEN THE GOODBYE, warm and quick, asking the listener to follow for more
+        on the beat. The last thing said.
       - No opinion, no moral, no "only time will tell".
     minClaims: 0
 
-# Opens firm, the detail carries the weight, settles for the goodbye. Below the
-# peak at the open, as the shipped-format check asks: a report read at full
-# pitch from its first word sounds like shouting.
-tensionCurve: [0.85, 1.0, 0.5]
+# Settles in with the hello, lands the news, carries the weight in the
+# explanation, and eases out. Below the peak at the open, as the shipped-format
+# check asks.
+tensionCurve: [0.5, 0.85, 1.0, 0.45]
