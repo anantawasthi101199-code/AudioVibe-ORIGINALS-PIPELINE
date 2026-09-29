@@ -115,7 +115,7 @@ export const stripSiteSuffix = (title: string): string => {
   // section name under a rule that only stripped suffixes free of hyphens.
   const piped = title.split(/\s+\|\s+/)[0]!;
   // A dash is, sometimes. Only a short trailing outlet name is stripped.
-  return piped.replace(/\s+[–—-]\s+[^–—-]{2,30}$/, '').trim();
+  return piped.replace(/\s+[20132014-]\s+[^20132014-]{2,30}$/, '').trim();
 };
 
 /** A rolling live page. By URL first, because the URL does not get rewritten. */
