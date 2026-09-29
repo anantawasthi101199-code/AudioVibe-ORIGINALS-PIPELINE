@@ -236,6 +236,10 @@ describe('the figure check', () => {
     expect(
       unfamiliarNames('The minister met Lavrov in Geneva. Rowan reporting.', 'The minister met in Geneva.', ['Rowan'])
     ).toEqual(['Lavrov']);
+    // Both seen live as false alarms.
+    expect(
+      unfamiliarNames('Separately, the United Nations met.', 'The U.N. met on Monday.', [])
+    ).toEqual([]);
   });
 
   it('checks the outro, the source and the length before any audio', () => {

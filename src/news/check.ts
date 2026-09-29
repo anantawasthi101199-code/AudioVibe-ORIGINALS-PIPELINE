@@ -120,7 +120,12 @@ const COMMON_CAPITALS = new Set(
     'While After Before Now Then There Here What Why How Who Where Which Monday Tuesday Wednesday ' +
     'Thursday Friday Saturday Sunday January February March April May June July August September ' +
     'October November December Mr Mrs Ms Dr Sir UN NATO EU US UK Again Meanwhile Until Thanks ' +
-    'Follow See Bye Goodbye Take Also Still Even Both Some Many Most One Two Three'
+    'Follow See Bye Goodbye Take Also Still Even Both Some Many Most One Two Three ' +
+    // Institutions, which an article often writes as an abbreviation ("U.N.")
+    // that the script is told to spell out. Seen live: "Nations" flagged.
+    'United Nations States Kingdom Union European Council Security General Assembly White House ' +
+    'Ministry Minister President Prime Foreign Secretary Supreme Leader Court Parliament Congress ' +
+    'Senate Government Army Navy Air Force Defence Defense Department State Republic'
   ).split(' ')
 );
 
@@ -140,7 +145,10 @@ export const unfamiliarNames = (script: string, article: string, allowed: string
     words.forEach((raw, i) => {
       const word = raw.replace(/^[^A-Za-z]+|[^A-Za-z']+$/g, '').replace(/'s$/, '');
       if (!/^[A-Z][a-zA-Z]{2,}$/.test(word)) return;
-      if (i === 0 && COMMON_CAPITALS.has(word)) return;
+      // THE FIRST WORD OF A SENTENCE IS CAPITALISED ANYWAY. Seen live:
+      // "Separately" flagged as a name. A real name there is almost always
+      // repeated mid-sentence, where it is still checked.
+      if (i === 0) return;
       if (COMMON_CAPITALS.has(word) || allow.has(word.toLowerCase())) return;
       if (!haystack.includes(word.toLowerCase())) found.add(word);
     });

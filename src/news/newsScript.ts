@@ -84,7 +84,9 @@ exactly that). A gap in the source is simply left out.
 
 NAME THE SOURCE ON AIR. Early in the report, say once where this comes from, the
 way a newsreader does: "according to reporting by {OUTLET}", or "{OUTLET}
-reports that". Never suggest this channel confirmed anything itself. Mention
+reports that". Name it in the first part, and never start another part with
+the outlet's name: two parts opening the same way sound machine-made, and the
+gate rejects it. Never suggest this channel confirmed anything itself. Mention
 another news organisation only where the article itself attributes something
 to it, and then say so as the article does: "{OUTLET} says Axios reported".
 
