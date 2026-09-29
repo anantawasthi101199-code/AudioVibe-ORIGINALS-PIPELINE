@@ -34,6 +34,7 @@ import { EPISODE_SUGGEST_SYSTEM, SET_SUGGEST_SYSTEM } from '../server/suggest';
 import { PLAN_SYSTEM } from '../script/plan';
 import { SELECT_SYSTEM } from '../script/shorts';
 import { REVISE_INSTRUCTION, TITLE_SYSTEM, buildPrompt, buildSystem } from '../script/write';
+import { NEWS_INSTRUCTION } from '../news/newsScript';
 
 export interface PromptEntry {
   /** Stable id, usable as a filter on the command line. */
@@ -91,6 +92,17 @@ export const promptRegistry = (input: {
         'prefix and beats are chunked three at a time, so this text is prepended to a large ' +
         'body of source documents not shown here.',
       text: EXTRACT_SYSTEM,
+    },
+    {
+      id: 'news',
+      stage: 'script',
+      source: 'src/news/newsScript.ts',
+      note:
+        'The news lane only. One call writes the headline, lede, report and goodbye from ONE ' +
+        'article chosen without a model (see src/news/pick.ts). {OUTLET} and {WEEKDAY} are ' +
+        'filled per run. Figures in the result are checked against the article for free and ' +
+        'block publishing when the article does not contain them.',
+      text: NEWS_INSTRUCTION,
     },
     {
       id: 'counter',

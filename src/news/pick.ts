@@ -187,7 +187,16 @@ export const pickArticle = async (
         (parseWhen(b.seenAt)?.getTime() ?? 0) - (parseWhen(a.seenAt)?.getTime() ?? 0)
     );
 
-    for (const item of order.slice(0, FETCHES_PER_STORY)) {
+    // ONE ATTEMPT PER OUTLET. An outlet that refuses the fetcher refuses it for
+    // every article, and the first live run spent its whole budget on three
+    // NPR pages timing out one after another while the same story sat on two
+    // other outlets untried.
+    const refused = new Set<string>();
+    let attempts = 0;
+    for (const item of order) {
+      if (attempts >= FETCHES_PER_STORY) break;
+      if (refused.has(item.outlet)) continue;
+      attempts += 1;
       let source: Source;
       try {
         // T2 BY DECLARATION. Every desk outlet is named reporting with editorial
@@ -198,6 +207,7 @@ export const pickArticle = async (
         const reason =
           err instanceof SourceFetchError ? err.message : `fetch failed: ${(err as Error).message}`;
         rejected.push({ url: item.url, reason });
+        refused.add(item.outlet);
         onProgress?.(`${item.outlet} did not fetch: ${reason}`);
         continue;
       }

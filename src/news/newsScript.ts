@@ -74,12 +74,19 @@ for a listener in a few words: where a country or city is, what an organisation
 is. Nothing more. If the article does not say it, the report does not say it.
 
 REPORT ONLY THE STORY IN THE ARTICLE'S HEADLINE. Pages carry links and
-paragraphs about other stories. Ignore them.
+paragraphs about other stories. Ignore them, including asides the article makes
+about a different conflict or a different country.
+
+NEVER SAY "THE ARTICLE". A reporter attributes to the organisation, never to
+the page: "{OUTLET} reports", not "the article notes". And never report what the
+source does NOT say ("it is not clear when..." is fine only if the source says
+exactly that). A gap in the source is simply left out.
 
 NAME THE SOURCE ON AIR. Early in the report, say once where this comes from, the
 way a newsreader does: "according to reporting by {OUTLET}", or "{OUTLET}
-reports that". Do not mention any other news organisation, and never suggest
-this channel confirmed anything itself.
+reports that". Never suggest this channel confirmed anything itself. Mention
+another news organisation only where the article itself attributes something
+to it, and then say so as the article does: "{OUTLET} says Axios reported".
 
 HOW RADIO NEWS IS WRITTEN. Follow every one of these.
 - THE LEDE FIRST. The first sentence is the single most important new
@@ -111,8 +118,9 @@ HOW RADIO NEWS IS WRITTEN. Follow every one of these.
   is paraphrased and attributed.
 - ONLY ABBREVIATIONS PEOPLE SAY OUT LOUD: UN, NATO, EU, US, UK. Everything else
   spelled out the first time or replaced by a description.
-- ONE IDEA TO A SENTENCE. Mostly short sentences, some longer ones where a thing
-  needs gathering. No semicolons, no dashes, no brackets.
+- ONE IDEA TO A SENTENCE. Broadcast copy averages about 15 words a sentence and
+  no sentence runs past 25. A listener holds one idea at a time. No semicolons,
+  no dashes, no brackets.
 - TIME. Name days, not "today" or "yesterday", because this will be heard for
   days. Say the day once near the top: "On {WEEKDAY}, ...". If the events are
   on an earlier day, name that day.
@@ -186,6 +194,7 @@ export const buildNewsPrompt = (input: NewsScriptInput): string => {
   const signoff = signoffFor(input.persona, 'short', input.article.url);
   const speaker = input.persona.hosts[0]!.id;
   const published = new Date(input.article.publishedAt);
+  const ceiling = input.format.beats.reduce((n, b) => n + wordsForBeat(b).max, 0);
 
   const parts = input.format.beats
     .map((beat) => {
@@ -222,6 +231,12 @@ export const buildNewsPrompt = (input: NewsScriptInput): string => {
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${speaker}", "text": "..."}]}]}`,
     `THE ONLY SPEAKER ID IS "${speaker}". One turn per part is right for a report.`,
+    '',
+    // THE TOTAL, SAID OUTRIGHT. Per-part budgets alone came back 36 words over
+    // on the first live run, which is thirteen seconds, which is the difference
+    // between under three minutes and not.
+    `THE WHOLE REPORT IS AT MOST ${ceiling} WORDS, goodbye included. Over that, it runs ` +
+      'past three minutes and cannot be used. Cut background before cutting the news.',
     '',
     'THE PARTS, in order:',
     '',

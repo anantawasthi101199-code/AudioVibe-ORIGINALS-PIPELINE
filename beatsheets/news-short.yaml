@@ -33,9 +33,12 @@ intent: >
   and neutrally from one named source, in under three minutes, ending with a
   reason to follow.
 
-# 170 at the top, not 180: speech rate is an estimate, and the owner's limit is
+# 160 at the top, not 180: speech rate is an estimate, and the owner's limit is
 # "less than 3 minutes". news/check.ts measures the real audio against 180.
-targetSeconds: [110, 170]
+# Lowered from 170 after the first live report came back at 178 estimated: the
+# writer overshoots its budget by about ten per cent, so the budget sits ten per
+# cent under the line.
+targetSeconds: [100, 160]
 
 serialised: false
 
@@ -46,7 +49,7 @@ loops:
 beats:
   - id: lede
     type: cold_open
-    seconds: [20, 30]
+    seconds: [15, 25]
     function: >
       The news in the first sentence, then the one line that says why it
       matters, and where this comes from.
@@ -66,7 +69,7 @@ beats:
 
   - id: report
     type: mechanism
-    seconds: [65, 100]
+    seconds: [60, 95]
     function: >
       The detail: what happened, where, who is involved and what each side
       says, and the background a listener needs to understand it.
@@ -89,7 +92,7 @@ beats:
 
   - id: close
     type: outro
-    seconds: [20, 35]
+    seconds: [20, 30]
     function: >
       What happens next, the key development once more for anybody who joined
       late, then the goodbye and the follow.

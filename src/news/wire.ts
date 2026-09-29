@@ -109,13 +109,36 @@ export class BraveNews implements NewsSearch {
  * "Headline | Outlet Name" and "Headline - Outlet" are how most pages title
  * themselves. The outlet half is noise for clustering and for the writer.
  */
-export const stripSiteSuffix = (title: string): string =>
-  title.replace(/\s+[|–—-]\s+[^|–—-]{2,40}$/, '').trim();
+export const stripSiteSuffix = (title: string): string => {
+  // A PIPE IS NEVER PART OF A HEADLINE, so everything from the first one goes,
+  // however it is worded: "US-Iran talks | US-Israel war on Iran News" kept its
+  // section name under a rule that only stripped suffixes free of hyphens.
+  const piped = title.split(/\s+\|\s+/)[0]!;
+  // A dash is, sometimes. Only a short trailing outlet name is stripped.
+  return piped.replace(/\s+[–—-]\s+[^–—-]{2,30}$/, '').trim();
+};
 
 /** A rolling live page. By URL first, because the URL does not get rewritten. */
 export const isLiveBlog = (url: string, title: string): boolean =>
   /\/(live|live-news|live-updates|liveblog|live-blog)(\/|-|$)/i.test(url) ||
   /\blive[- ]?(updates?|blog|coverage)\b|^live:|\bas it happened\b/i.test(title);
+
+/**
+ * A section front or headlines page, not an article. Seen live: "News: U.S. and
+ * World News Headlines : NPR". An article's address has a story slug or an id
+ * in it; a section front is one or two short path segments.
+ */
+export const isIndexPage = (url: string, title: string): boolean => {
+  if (/\bheadlines\b|^(latest|top) news\b|^news\s*:/i.test(title)) return true;
+  try {
+    const parts = new URL(url).pathname.split('/').filter(Boolean);
+    // No story slug (a hyphen) and no id (a digit) in a short path: a section.
+    const last = parts[parts.length - 1] ?? '';
+    return parts.length === 0 || (parts.length <= 2 && !/[-\d]/.test(last));
+  } catch {
+    return true;
+  }
+};
 
 /** Commentary, not reporting. */
 export const isOpinion = (url: string, title: string): boolean =>
@@ -155,6 +178,10 @@ export const screenWire = (
     }
     if (isLiveBlog(item.url, item.title)) {
       rejected.push({ url: item.url, reason: 'a live blog, which is many stories on one page' });
+      continue;
+    }
+    if (isIndexPage(item.url, item.title)) {
+      rejected.push({ url: item.url, reason: 'a section front or headlines page, not an article' });
       continue;
     }
     if (isOpinion(item.url, item.title)) {

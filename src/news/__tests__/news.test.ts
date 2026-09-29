@@ -16,7 +16,7 @@ import { PipelineDeps } from '../../pipeline/episode';
 import { regate } from '../../qa/regate';
 import { scriptSchema } from '../../script/write';
 import { deskSchema, hasNewsDesk, loadDesk, outletFor } from '../desk';
-import { isLiveBlog, isOpinion, parseWhen, screenWire, stripSiteSuffix, WireItem } from '../wire';
+import { isIndexPage, isLiveBlog, isOpinion, parseWhen, screenWire, stripSiteSuffix, WireItem } from '../wire';
 import { clusterStories, headlineOverlap, headlineTokens, pickArticle } from '../pick';
 import { draftProblems, unfamiliarNames, unsupportedFigures } from '../check';
 import { spokenDate } from '../newsScript';
@@ -61,6 +61,13 @@ describe('the wire screen', () => {
     expect(isLiveBlog('https://apnews.com/article/iran-talks-1', 'Iran rejects offer')).toBe(false);
   });
 
+  it('refuses a headlines page, which the live wire returned', () => {
+    expect(isIndexPage('https://www.npr.org/sections/news/', 'News: U.S. and World News Headlines : NPR')).toBe(true);
+    expect(isIndexPage('https://www.bbc.co.uk/news/world', 'World')).toBe(true);
+    expect(isIndexPage('https://www.bbc.co.uk/news/articles/c4g0x1y2z3', 'Ministers meet')).toBe(false);
+    expect(isIndexPage('https://apnews.com/article/iran-trump-negotiations-871504dbd98d', 'Talks')).toBe(false);
+  });
+
   it('refuses opinion and explainers', () => {
     expect(isOpinion('https://www.theguardian.com/commentisfree/2026/x', 'x')).toBe(true);
     expect(isOpinion('https://www.hindustantimes.com/ht-explainers/x', 'x')).toBe(true);
@@ -70,8 +77,8 @@ describe('the wire screen', () => {
   it('keeps only desk outlets, dedupes, and says why the rest went', () => {
     const { kept, rejected } = screenWire(
       [
-        item('https://apnews.com/article/a', 'Leaders meet in Geneva'),
-        item('https://apnews.com/article/a?utm=1', 'Leaders meet in Geneva'),
+        item('https://apnews.com/article/leaders-geneva-8a1b', 'Leaders meet in Geneva'),
+        item('https://apnews.com/article/leaders-geneva-8a1b?utm=1', 'Leaders meet in Geneva'),
         item('https://randomblog.com/a', 'Leaders meet'),
         item('https://www.bbc.co.uk/sport/football/1', 'Football final'),
       ],
@@ -86,6 +93,10 @@ describe('the wire screen', () => {
 
   it('strips the outlet off a headline', () => {
     expect(stripSiteSuffix('Iran rejects ceasefire | Hindustan Times')).toBe('Iran rejects ceasefire');
+    // From the first live run: a section name with a hyphen in it survived.
+    expect(stripSiteSuffix('US-Iran talks in New York | US-Israel war on Iran News')).toBe(
+      'US-Iran talks in New York'
+    );
   });
 
   it('treats a zoneless Brave date as UTC and a missing one as unknown', () => {
@@ -142,6 +153,26 @@ describe('choosing the story', () => {
     expect(picked?.item.outlet).toBe('the BBC');
     expect(picked?.source.tier).toBe('T2');
     expect(picked?.rejected[0]!.url).toContain('apnews');
+  });
+
+  it('tries each outlet once, so one blocking outlet cannot use up a story', async () => {
+    // The first live run: three NPR pages timed out in turn and the story's
+    // other outlets were never tried.
+    const story = clusterStories([
+      wi('https://npr.org/1', 'Trump rejects Iran ceasefire proposal', 'NPR', 0),
+      wi('https://npr.org/2', 'Trump rejects Iran ceasefire proposal again', 'NPR', 0),
+      wi('https://npr.org/3', 'Trump rejects latest Iran ceasefire proposal', 'NPR', 0),
+      wi('https://npr.org/4', 'Iran ceasefire proposal rejected by Trump', 'NPR', 0),
+      wi('https://bbc.co.uk/1', 'Trump rejects Iran ceasefire proposal, BBC', 'the BBC', 1),
+    ]);
+    const httpGet = jest.fn(async (url: string): Promise<HttpResponse> =>
+      url.includes('npr')
+        ? { status: 403, body: 'no', finalUrl: url }
+        : { status: 200, body: page('2026-09-29T07:00:00Z'), finalUrl: url, contentType: 'text/html' }
+    );
+    const picked = await pickArticle(story, desk, { httpGet }, NOW);
+    expect(picked?.item.outlet).toBe('the BBC');
+    expect(httpGet).toHaveBeenCalledTimes(2);
   });
 
   it('refuses an old article re-indexed today, by the page\'s own date', async () => {

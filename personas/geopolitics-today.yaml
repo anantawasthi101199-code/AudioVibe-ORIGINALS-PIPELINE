@@ -141,7 +141,7 @@ formats:
 
 # A news channel makes only shorts. The shared persona schema needs a range, and
 # this is the short's range.
-episodeSeconds: [110, 170]
+episodeSeconds: [100, 160]
 
 # SIGN-OFFS. One is picked per report, from the article's address, so it varies
 # between reports and stays the same on a re-render. The writer lands on it in
