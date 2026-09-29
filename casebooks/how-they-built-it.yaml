@@ -18,10 +18,12 @@ queries:
 # Sources that tell a whole story well. Encyclopedias lead because they are
 # complete and chronological by design. The business press next.
 preferred:
+  # +1, not +2: a short encyclopedia stub lost to a long feature that told the
+  # whole story once length was allowed to count for more (Haldiram's, first run).
   - host: wikipedia.org
-    bonus: 2
+    bonus: 1
   - host: britannica.com
-    bonus: 2
+    bonus: 1
   - host: business-standard.com
     bonus: 1
   - host: economictimes.indiatimes.com

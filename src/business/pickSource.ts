@@ -139,8 +139,12 @@ export const scoreSource = (
   const host = hostOf(source.url);
   const bonus = book.preferred.find((p) => matchesHost(host, p.host))?.bonus ?? 0;
 
+  // COMPLETENESS WEIGHS MOST. The first live run chose a 5,121-character
+  // encyclopedia stub over an 18,178-character feature telling the whole
+  // story, because the tier bonus outweighed length. The owner's rule is "a
+  // source that has the complete story", so length now carries the most.
   const score =
-    (Math.min(text.length, 40_000) / 40_000) * 3 +
+    (Math.min(text.length, 30_000) / 30_000) * 5 +
     (Math.min(years.length, 25) / 25) * 3 +
     (Math.min(span, 60) / 60) * 1 +
     coverage * 2 +
