@@ -102,7 +102,10 @@ export const coveredBy = (personaId: string, now: Date): AlreadyCovered => {
     try {
       const run = Run.open(id);
       if (Date.parse(run.manifest.createdAt) < now.getTime() - COVERED_DAYS * 86_400_000) continue;
-      if (!run.hasArtifact('reference')) continue;
+      // VOICED, OR IT REPORTED NOTHING. A held run that never got audio is a
+      // draft, and counting it made the first real report skip the day's top
+      // story because two unvoiced test scripts had looked at it.
+      if (!run.hasArtifact('reference') || !run.isComplete('render')) continue;
       const { news } = run.readArtifact('reference', newsRecordSchema);
       covered.urls.add(normaliseUrl(news.url));
       covered.titles.push(headlineTokens(news.headline));

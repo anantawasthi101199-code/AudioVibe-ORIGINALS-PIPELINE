@@ -461,6 +461,16 @@ describe('runNews', () => {
     await expect(runNews(run, deps(), { ...newsDeps, wire: empty })).rejects.toThrow(/abandoned/);
   });
 
+  it('does not count a held, unvoiced run as having reported anything', async () => {
+    const held = Run.create(
+      { personaId: 'geopolitics-today', formatId: 'news-short', topic: 'geopolitics', holdForApproval: true },
+      { root }
+    );
+    await runNews(held, deps(), newsDeps);
+    const { gate } = await runNews(makeRun(), deps(), newsDeps);
+    expect(gate.passed).toBe(true);
+  });
+
   it('will not report the same article on the next run', async () => {
     await runNews(makeRun(), deps(), newsDeps);
     const second = makeRun();
