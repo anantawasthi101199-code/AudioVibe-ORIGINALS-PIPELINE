@@ -74,9 +74,9 @@ describe('finding the one source', () => {
   });
 
   it('strips citation markers and back matter so footnotes cannot pass as figures', () => {
-    const text = `Founded in 1937 [12] in Bikaner.[a] ${'Story. '.repeat(200)}\nReferences\n1. Some 2021 book.`;
+    const text = `Founded in 1937 [12] in Bikaner.[a] Grew [ 20 ] fast. ${'Story. '.repeat(200)}\nReferences\n1. Some 2021 book.`;
     const cleaned = cleanStoryText(text);
-    expect(cleaned).not.toMatch(/\[12\]|\[a\]|References|2021/);
+    expect(cleaned).not.toMatch(/\[12\]|\[a\]|\[ 20 \]|References|2021/);
     expect(cleaned).toMatch(/1937/);
   });
 
@@ -113,6 +113,14 @@ describe('the free checks', () => {
     expect(inventedQuotes('He told them, "we will make the best bhujia in India".', source)).toEqual([]);
     expect(inventedQuotes('He said, "never stop dreaming big my son".', source)).toEqual(['never stop dreaming big my son']);
     expect(inventedQuotes('They called it "the bhujia".', source)).toEqual([]);
+  });
+
+  it('accepts a decade the source has years inside, and no other', async () => {
+    const { unsupportedFigures } = await import('../../qa/sourceText');
+    const source = 'In 1991 it listed. In 1995 it grew.';
+    expect(unsupportedFigures('Through the 1990s it grew.', source, NOW)).toEqual([]);
+    expect(unsupportedFigures('Through the 1980s it grew.', source, NOW)).toEqual(['1980']);
+    expect(unsupportedFigures('In 1990 it grew.', source, NOW)).toEqual(['1990']);
   });
 
   it('counts the story stepping back in time after the hook', () => {

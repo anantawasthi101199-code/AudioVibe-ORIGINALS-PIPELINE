@@ -88,10 +88,16 @@ export const unsupportedFigures = (script: string, article: string, now: Date): 
     // live in is treated as a year and must match exactly.
     // Trailing punctuation is the sentence, not the number: "In 1932, he...".
     const isYear = /^(1[5-9]\d{2}|20\d{2})$/.test(m[0].replace(/,+$/, ''));
+    // A DECADE ("the 1990s") is supported by any year inside it. Seen on the
+    // first Reliance episode: "the late 1990s and 2000s", a fair summary of a
+    // source dated year by year, blocked as an unsupported figure.
+    const decade = isYear && n % 10 === 0 && script[at + m[0].length] === 's';
     const matched = known.some((k) =>
-      isYear || n < EXACT_BELOW || k < EXACT_BELOW
-        ? k === n
-        : Math.abs(n - k) <= ROUNDING_TOLERANCE * Math.max(k, n)
+      decade
+        ? k >= n && k <= n + 9
+        : isYear || n < EXACT_BELOW || k < EXACT_BELOW
+          ? k === n
+          : Math.abs(n - k) <= ROUNDING_TOLERANCE * Math.max(k, n)
     );
     if (!matched) problems.add(m[0].replace(/,+$/, ''));
   }

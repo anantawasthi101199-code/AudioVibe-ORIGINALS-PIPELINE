@@ -64,7 +64,8 @@ export const subjectTokens = (subject: string): string[] =>
  */
 export const cleanStoryText = (text: string): string => {
   let t = text
-    .replace(/\[(?:\d+|[a-z]|citation needed|edit|note \d+|nb \d+)\]/gi, '')
+    // Spaces allowed inside: the live Reliance page came through as "[ 20 ]".
+    .replace(/\[\s*(?:\d+|[a-z]|citation needed|edit|note \d+|nb \d+)\s*\]/gi, '')
     .replace(/[ \t]+\n/g, '\n');
   const back = /\n\s*(References|External links|See also|Notes|Further reading|Bibliography|Sources)\s*\n/gi;
   let cutAt = -1;
