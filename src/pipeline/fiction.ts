@@ -64,6 +64,7 @@ import {
   checkContinuity,
   extractEstablished,
 } from '../fiction/continuity';
+import { briefForEpisode, locateEpisode, planDrift } from '../fiction/season';
 import { PipelineDeps } from './episode';
 
 export interface FictionResult {
@@ -87,6 +88,21 @@ const seriesBriefSchema = z.object({
   cast: z.string(),
   storySoFar: z.string(),
   episodeNumber: z.number().int().positive(),
+  /**
+   * The season plan's brief for this episode, already rendered.
+   *
+   * STORED RATHER THAN RECOMPUTED, because a plan is a file a person is meant
+   * to edit. A run resumed after somebody rewrote episode four's card would
+   * otherwise write the second half of an episode against a different brief
+   * from the first half, and nothing anywhere would say so.
+   *
+   * Absent for a show with no plan, which is a serial being improvised rather
+   * than an error.
+   */
+  seasonBrief: z.string().optional(),
+  /** Which season, and which episode of it. For the log. */
+  season: z.number().int().positive().optional(),
+  episodeOfSeason: z.number().int().positive().optional(),
 });
 
 export const runFiction = async (
@@ -139,17 +155,50 @@ export const runFiction = async (
     brief = run.readArtifact('brief', seriesBriefSchema);
     log(`series: reusing episode ${brief.episodeNumber}`);
   } else {
+    const episodeNumber = bible.episodes.length + 1;
+
+    // THE SEASON PLAN, IF THERE IS ONE. Free: the plan is a file on disk and
+    // the brief is assembled from it deterministically. A show without one
+    // still runs, on the bible alone, which is what every episode made before
+    // the planner existed did.
+    const located = locateEpisode(persona.id, episodeNumber);
+
     brief = {
       premise: input.premise ?? run.manifest.topic,
       cast: castBrief(bible),
       storySoFar: storySoFar(bible),
-      episodeNumber: bible.episodes.length + 1,
+      episodeNumber,
+      seasonBrief: located ? briefForEpisode(located.plan, bible, located.number) : undefined,
+      season: located?.plan.seasonNumber,
+      episodeOfSeason: located?.number,
     };
     run.writeArtifact('brief', brief);
     run.markComplete('brief');
+
+    if (located) {
+      // locateEpisode only returns a number the season actually has, so this is
+      // always present. Named rather than inlined so the log reads.
+      const title = located.plan.episodes[located.number - 1]?.title ?? '(untitled)';
+      log(
+        `series: season ${located.plan.seasonNumber} episode ${located.number}, ` +
+          `"${title}", written against the plan`
+      );
+      // ADVISORY, NEVER BLOCKING. The plan is intention and the bible is
+      // history; when they disagree, the history is what happened.
+      for (const note of planDrift(located.plan, bible)) log(`  drift: ${note}`);
+    } else {
+      // Said out loud rather than passed over. The difference between a planned
+      // serial and an improvised one is the difference between an episode that
+      // can foreshadow and one that cannot.
+      log(
+        `series: episode ${episodeNumber} is not covered by any season plan, so it ` +
+          `is written from the bible alone. Break a season with ` +
+          `"foundry season --show ${persona.id}".`
+      );
+    }
     log(
-      `series: episode ${brief.episodeNumber}, ${bible.entities.length} established ` +
-        `entities across ${bible.episodes.length} episode(s)`
+      `series: ${bible.entities.length} established entities across ` +
+        `${bible.episodes.length} episode(s)`
     );
   }
 
@@ -169,16 +218,22 @@ export const runFiction = async (
         // document, and that grounding arrives through the angle below, which
         // carries the cast and the story so far.
         claims: [],
-        angle: [
-          brief.premise,
-          '',
-          'THE CAST, as established. Do not contradict any of this, and do not',
-          'introduce someone new unless this episode is about them:',
-          brief.cast,
-          '',
-          'WHAT HAS HAPPENED SO FAR, in the order a listener heard it:',
-          brief.storySoFar,
-        ].join('\n'),
+        // THE SEASON BRIEF ALREADY CARRIES THE CAST AND THE STORY SO FAR, plus
+        // the things only a plan knows: what this episode has to answer, what it
+        // has to plant, and where the next one picks up. Concatenating both would
+        // hand the writer the same cast twice and the episode's job once.
+        angle:
+          brief.seasonBrief ??
+          [
+            brief.premise,
+            '',
+            'THE CAST, as established. Do not contradict any of this, and do not',
+            'introduce someone new unless this episode is about them:',
+            brief.cast,
+            '',
+            'WHAT HAS HAPPENED SO FAR, in the order a listener heard it:',
+            brief.storySoFar,
+          ].join('\n'),
         isoDate: new Date().toISOString().slice(0, 10),
       },
       deps.writer,

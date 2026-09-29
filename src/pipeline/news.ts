@@ -367,6 +367,7 @@ export const runNews = async (
         outputPath: run.mediaPath('episode.wav'),
         music: desk.music && deps.music !== false,
         musicSeed: run.manifest.topic,
+        musicPhraseFile: deps.musicPhraseFile,
       },
       deps.tts,
       {},

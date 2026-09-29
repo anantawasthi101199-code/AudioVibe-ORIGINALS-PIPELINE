@@ -511,6 +511,14 @@ export const renderScript = async (
     music?: boolean;
     /** Decides the bed's key. The episode subject, so it is stable per topic. */
     musicSeed?: string;
+    /**
+     * A named beat from the library, used under every part instead of one
+     * synthesised from the seed.
+     *
+     * Passed as a path rather than a name so this module keeps knowing nothing
+     * about where beats live. See render/beats.ts.
+     */
+    musicPhraseFile?: string;
   },
   tts: import('./tts').TtsProvider,
   deps: RenderDeps = {},
@@ -859,7 +867,12 @@ export const renderScript = async (
     // exists, and a failure leaves the speech untouched. See render/bed.ts.
     if (input.music === true) {
       const bed = await mixBed(
-        { file, durationS, seed: input.musicSeed ?? beat.beatId },
+        {
+          file,
+          durationS,
+          seed: input.musicSeed ?? beat.beatId,
+          phraseFile: input.musicPhraseFile,
+        },
         { run: deps.run }
       );
       if (bed.applied) {

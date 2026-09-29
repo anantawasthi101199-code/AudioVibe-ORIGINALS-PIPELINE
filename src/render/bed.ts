@@ -320,6 +320,20 @@ export const mixBed = async (
     /** Decides the key. The episode subject, so it is stable per show-topic. */
     seed: string;
     style?: BedStyle;
+    /**
+     * A loop already on disk, from the beat library, used instead of
+     * synthesising one.
+     *
+     * THE REASON THIS OPTION EXISTS IS NOT SPEED, though it is faster. Without
+     * it the phrase is built per PART, so a three-part episode makes the same
+     * twenty-four second phrase three times, and a show's music is whatever the
+     * topic string happened to seed rather than something anybody chose. A
+     * named beat is a show having a sound.
+     *
+     * Not deleted afterwards, unlike a synthesised phrase: it belongs to the
+     * library rather than to this call.
+     */
+    phraseFile?: string;
   },
   deps: BedDeps = {}
 ): Promise<{ applied: boolean; reason?: string }> => {
@@ -349,8 +363,13 @@ export const mixBed = async (
   const phrase = `${input.file}.phrase.mp3`;
   const tmp = `${input.file}.bed.mp3`;
 
-  const built = await renderPhrase(style, root, phrase, deps);
-  if (!built.ok) return { applied: false, reason: built.reason };
+  const supplied = input.phraseFile && fs.existsSync(input.phraseFile);
+  const loop = supplied ? input.phraseFile! : phrase;
+
+  if (!supplied) {
+    const built = await renderPhrase(style, root, phrase, deps);
+    if (!built.ok) return { applied: false, reason: built.reason };
+  }
 
   // LOOPED RATHER THAN GENERATED AT FULL LENGTH. A sixteen-minute graph with
   // three hundred note sources would be slow and would hit ffmpeg's input
@@ -362,7 +381,7 @@ export const mixBed = async (
     '-stream_loop',
     '-1',
     '-i',
-    phrase,
+    loop,
     '-i',
     input.file,
     '-filter_complex',
@@ -384,7 +403,8 @@ export const mixBed = async (
     tmp,
   ]);
 
-  fs.rmSync(phrase, { force: true });
+  // Only a phrase this call synthesised. A library beat is not ours to delete.
+  if (!supplied) fs.rmSync(phrase, { force: true });
 
   if (res.code !== 0) {
     return { applied: false, reason: res.stderr.slice(0, 250) || `ffmpeg exited ${res.code}` };

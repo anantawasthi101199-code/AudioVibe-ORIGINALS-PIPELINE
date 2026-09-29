@@ -154,6 +154,20 @@ export const recordVoices = (
   registry: VoiceRegistry,
   now = new Date()
 ): { registry: VoiceRegistry; recorded: Array<{ hostId: string; voiceId: string }> } => {
+  // A FAKE PROVIDER IS NOT A COMMITMENT AND MUST NEVER ENTER THE REGISTRY.
+  //
+  // This file is committed, and the whole point of it is that it is the record
+  // of which real voice a show is pinned to forever. A stand-in used by a test
+  // or a smoke run is the opposite of that: it names a voice nobody bought, on
+  // a provider that does not exist, and it pins the show to it.
+  //
+  // It has happened twice. The first time the test suite wrote "fake-tts" into
+  // the real file, which is why config/index.ts made the path configurable; the
+  // second time a manual run did it, which no amount of test isolation would
+  // have stopped. Refusing the name here is the fix that covers both, because
+  // it lives with the invariant rather than with one of the callers.
+  if (provider.startsWith('fake')) return { registry, recorded: [] };
+
   const next: VoiceRegistry = { ...registry, [persona.id]: { ...(registry[persona.id] ?? {}) } };
   const recorded: Array<{ hostId: string; voiceId: string }> = [];
 

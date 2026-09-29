@@ -127,6 +127,13 @@ export interface PipelineDeps {
    */
   music?: boolean;
   /**
+   * A rendered loop from the beat library, used under every part.
+   *
+   * Resolved to a path by the caller rather than looked up here, so the
+   * pipeline never has to know the library exists. `--bed <name>`.
+   */
+  musicPhraseFile?: string;
+  /**
    * Write the whole script in one call instead of a beat at a time.
    *
    * THE DEFAULT SINCE THE COMPARISON WAS RUN, and the numbers are worth keeping
@@ -1271,6 +1278,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         // optional stage. See render/bed.ts.
         music: deps.music,
         musicSeed: run.manifest.topic,
+        musicPhraseFile: deps.musicPhraseFile,
       },
       deps.tts,
       {},

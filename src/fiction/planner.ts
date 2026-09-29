@@ -76,7 +76,7 @@ const EAR_RULES_FOR_PLANNING = [
   'Time and place changes have to be speakable. If a card needs four locations, the episode will spend its length announcing where it is.',
 ];
 
-const PLAN_INSTRUCTION = `You are breaking a season of an audio serial, the way a writers' room breaks a season before anybody writes a script.
+export const SEASON_INSTRUCTION = `You are breaking a season of an audio serial, the way a writers' room breaks a season before anybody writes a script.
 
 You are NOT writing the show. No dialogue, no prose, no scenes. You are producing the board: who this is about, what the season is doing, and what each episode has to achieve.
 
@@ -164,7 +164,7 @@ export const planSeason = async (
     throw new Error(`a season is ${minEps} to ${maxEps} episodes, not ${episodes}`);
   }
 
-  const system = `${PLAN_INSTRUCTION}
+  const system = `${SEASON_INSTRUCTION}
 
 SHOW: ${persona.name}
 THESIS: ${persona.thesis.trim().replace(/\s+/g, ' ')}

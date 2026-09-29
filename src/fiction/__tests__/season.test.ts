@@ -17,6 +17,7 @@ import path from 'path';
 import { Bible } from '../bible';
 import {
   MAX_CARRY_CAST,
+  locateEpisode,
   SeasonPlan,
   briefForEpisode,
   checkPlan,
@@ -310,6 +311,52 @@ describe('renderPlan', () => {
 
   it('names the finale as landing rather than leaving it blank', () => {
     expect(renderPlan(plan())).toContain('the finale, which lands');
+  });
+});
+
+describe('locateEpisode', () => {
+  let dir: string;
+
+  beforeEach(() => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-locate-'));
+  });
+
+  afterEach(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  it('maps an overall episode number onto its season', () => {
+    savePlan(plan(), dir);
+    savePlan(plan({ seasonNumber: 2, title: 'Second' }), dir);
+
+    expect(locateEpisode('night-shift', 1, dir)?.number).toBe(1);
+    expect(locateEpisode('night-shift', 5, dir)?.number).toBe(5);
+
+    // The first episode of season two, which the bible counts as the sixth.
+    const sixth = locateEpisode('night-shift', 6, dir);
+    expect(sixth?.plan.seasonNumber).toBe(2);
+    expect(sixth?.number).toBe(1);
+  });
+
+  /** Not an error. It is a show that needs its next season broken. */
+  it('returns null past the end of what has been planned', () => {
+    savePlan(plan(), dir);
+    expect(locateEpisode('night-shift', 6, dir)).toBeNull();
+  });
+
+  it('returns null for a show with no plan at all', () => {
+    expect(locateEpisode('night-shift', 1, dir)).toBeNull();
+  });
+
+  /**
+   * A gap is the end. Guessing which card episode six wants when season two was
+   * never planned is exactly the guess this module exists to prevent.
+   */
+  it('treats a missing season as the end rather than skipping it', () => {
+    savePlan(plan(), dir);
+    savePlan(plan({ seasonNumber: 3, title: 'Third' }), dir);
+
+    expect(locateEpisode('night-shift', 6, dir)).toBeNull();
   });
 });
 

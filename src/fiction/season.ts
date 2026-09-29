@@ -171,6 +171,54 @@ export const savePlan = (plan: SeasonPlan, dir?: string): string => {
 };
 
 /**
+ * A ceiling on the season scan, so a missing plan cannot loop forever.
+ *
+ * Nothing here is a real limit on how long a show may run. It is the number of
+ * seasons this will look through before deciding a show has not planned that
+ * far, and fifty is far past any serial this studio will make.
+ */
+const MAX_SEASONS_SCANNED = 50;
+
+export interface EpisodeLocation {
+  plan: SeasonPlan;
+  /** Which episode of THAT season, one-based. */
+  number: number;
+}
+
+/**
+ * Which season an episode belongs to, given how many the show has made.
+ *
+ * WHY THIS IS ARITHMETIC AND NOT A FIELD. The bible counts every episode a show
+ * has ever published, and a season counts from one. Storing the season on a run
+ * would mean two records of the same fact that can disagree, and the one that
+ * disagreed would be discovered at the worst moment: episode nine written
+ * against season one's card nine, which does not exist.
+ *
+ * Returns null when the show has not planned that far, which is not an error.
+ * It is a show that needs its next season broken, and the pipeline says so.
+ */
+export const locateEpisode = (
+  personaId: string,
+  overallNumber: number,
+  dir?: string
+): EpisodeLocation | null => {
+  let remaining = overallNumber;
+
+  for (let season = 1; season <= MAX_SEASONS_SCANNED; season += 1) {
+    const plan = loadPlan(personaId, season, dir);
+    // A gap in the seasons is the same as the end of them. A show with season
+    // one and season three planned has not planned season two, and guessing
+    // which card episode nine wants is exactly the guess this file exists to
+    // stop anybody making.
+    if (!plan) return null;
+    if (remaining <= plan.episodes.length) return { plan, number: remaining };
+    remaining -= plan.episodes.length;
+  }
+
+  return null;
+};
+
+/**
  * Everything wrong with a plan that can be found without a model.
  *
  * FREE, AND IT RUNS BEFORE ANY EPISODE IS WRITTEN. That ordering is the whole

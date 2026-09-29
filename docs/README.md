@@ -8,9 +8,12 @@ code, the code is right and the document is a bug.
 
 | Document | What it is for |
 |---|---|
+| [CHANNELS.md](CHANNELS.md) | Every show, which lane it uses, and the exact command to make something. The one to open when the question is "what do I type". |
 | [FLOW.md](FLOW.md) | What actually happens between a topic and an audio file, on both lanes, with every constant and every measured cost. Start here. |
 | [COMMANDS.md](COMMANDS.md) | Every command, what it does, what it costs, what the gate findings mean, and every environment variable. The one to open first. |
 | [PIPELINES.md](PIPELINES.md) | The lanes that exist, the shows asked for, what each actually costs to build, and the build order. Read before starting any new kind of show. |
+| [DRAMA.md](DRAMA.md) | The serial lane: a season broken once up front, then episodes written against it. Promises, the approval stop, and why not write-then-split. |
+| [NEWS.md](NEWS.md) | The news desk lane: a wire sweep, one article, under three minutes. |
 | [DECISIONS.md](DECISIONS.md) | Load-bearing decisions and, more usefully, the ones that were reversed. Read before re-opening an argument. |
 
 ## The studio

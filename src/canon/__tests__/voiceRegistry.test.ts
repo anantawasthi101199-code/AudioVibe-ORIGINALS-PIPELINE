@@ -162,3 +162,23 @@ describe('retireVoices', () => {
     expect(retireVoices('other', pinned('v'))).toEqual(pinned('v'));
   });
 });
+
+describe('fake providers', () => {
+  /**
+   * This file is committed and is the record of which real voice a show is
+   * pinned to. It has been polluted twice, once by the test suite and once by a
+   * manual smoke run, and both wrote a provider nobody bought a voice from.
+   */
+  it('never records a fake provider', () => {
+    const { registry, recorded } = recordVoices(show(), 'fake-tts', 'run/e001', {});
+
+    expect(recorded).toEqual([]);
+    expect(registry).toEqual({});
+  });
+
+  it('leaves an existing registry exactly as it was', () => {
+    const before = pinned('v-eleven');
+
+    expect(recordVoices(show(), 'fake-anything', 'run/e002', before).registry).toBe(before);
+  });
+});

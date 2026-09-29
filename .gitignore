@@ -31,13 +31,32 @@ library.json
 # once per published episode, and a diff on it is the most readable record of
 # what a show has established that exists anywhere.
 
+# seasons/ is NOT ignored, for the same reason bibles/ is not. A bible is the
+# series' memory and a season plan is its intention: hand-edited, referenced by
+# every episode written against it, and not reproducible from anything. Losing
+# one orphans every episode that was written to it.
+
+# catalogue.json is NOT ignored either. It records which subjects have already
+# been made, and runs/ - the only other place that knows - is ignored, so on a
+# fresh clone the duplicate check would believe the studio had made nothing.
+
 # Scratch audio
 *.wav
 *.mp3
 
+# The beat library. The RECIPES in beds/*.json are committed and are a few
+# hundred bytes each; the rendered loops beside them are not, and are covered by
+# the *.mp3 line above. Synthesis is deterministic, so a recipe rebuilds its
+# exact audio on any machine - which is the same bargain runs/ makes, and the
+# reason a quarter of a megabyte per beat never enters the history.
+!beds/*.json
+
 # The built interface. Rebuilt with `npm --prefix web run build`.
 web/dist/
 web/node_modules/
+# TypeScript's incremental build cache. It was tracked for a while, so every
+# build produced a diff nobody could read and nobody wanted.
+web/tsconfig.tsbuildinfo
 
 # Real credentials for real accounts on production. See src/publish/account.ts.
 # This repo has no remote, and this line is what keeps it that way if it ever gets one.

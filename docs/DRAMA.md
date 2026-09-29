@@ -31,7 +31,7 @@ If this file disagrees with the code, the code is right and this is a bug.
      |
   +--- for each episode 1..N -----------------------------+
   |                                                       |
-  |  [free]  BRIEF                                        |
+  |  [free]  BRIEF        wired: runFiction reads the plan |
   |    this card + THE NEXT CARD + cast + story so far    |
   |    + threads the listener is still holding            |
   |                                                       |
@@ -210,7 +210,7 @@ episode, so the approval stop costs almost nothing and saves everything.
 
 | Path | What it is |
 |---|---|
-| `src/fiction/season.ts` | The plan: schema, free checks, the writer's brief, drift. No model import, so the checks are tested hermetically. |
+| `src/fiction/season.ts` | The plan: schema, free checks, the writer's brief, drift, and `locateEpisode`. No model import, so the checks are tested hermetically. |
 | `src/fiction/planner.ts` | The one paid call. Season shape, cliffhanger rules, ear rules. |
 | `src/fiction/bible.ts` | History. What the series has established. |
 | `src/fiction/continuity.ts` | The check that blocks, against the bible. |
@@ -222,11 +222,20 @@ episode, so the approval stop costs almost nothing and saves everything.
 
 ---
 
+## Which episode is which
+
+The bible counts every episode a show has published; a season counts from one.
+`locateEpisode` walks the seasons in order and subtracts, so overall episode six
+of an eight-episode first season is season one episode six, and overall episode
+nine is season two episode one.
+
+**A gap is the end.** A show with seasons one and three planned has not planned
+season two, and guessing which card episode nine wants is exactly the guess this
+module exists to prevent. It returns null, and the run says so and writes from
+the bible alone rather than inventing a card.
+
 ## Not built yet
 
-- **The episode writer does not read the plan.** `runFiction` still builds its
-  brief from the bible alone, so `briefForEpisode` is written, tested and not
-  yet wired in. This is the next piece.
 - **No re-planning.** When an episode diverges from its card, later cards go
   stale and `planDrift` only reports it. Paying a model to rewrite the remaining
   cards is a later upgrade, deliberately not a v1.

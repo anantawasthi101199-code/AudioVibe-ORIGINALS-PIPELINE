@@ -35,6 +35,11 @@ import { PLAN_SYSTEM } from '../script/plan';
 import { SELECT_SYSTEM } from '../script/shorts';
 import { REVISE_INSTRUCTION, TITLE_SYSTEM, buildPrompt, buildSystem } from '../script/write';
 import { NEWS_INSTRUCTION } from '../news/newsScript';
+import { FUSE_SYSTEM, REVIEW_SYSTEM, SELECT_SYSTEM as STORY_SELECT_SYSTEM } from '../evidence/story';
+import { GROUNDING_SYSTEM } from '../qa/grounding';
+import { SHORT_INSTRUCTION } from '../script/shortScript';
+import { STORY_INSTRUCTION } from '../script/storyScript';
+import { SEASON_INSTRUCTION } from '../fiction/planner';
 
 export interface PromptEntry {
   /** Stable id, usable as a filter on the command line. */
@@ -261,6 +266,75 @@ export const promptRegistry = (input: {
       source: 'src/fiction/continuity.ts',
       note: 'Fiction lane only. Checks a new episode against the bible for contradictions.',
       text: CHECK_SYSTEM,
+    },
+    {
+      id: 'story-select',
+      stage: 'select (single-story lane)',
+      source: 'src/evidence/story.ts (SELECT_SYSTEM)',
+      note:
+        'Chooses the two or three documents an episode is built from, judging both ' +
+        'COMPLETE and LONG ENOUGH. The distinction is the whole prompt: a tidy blog ' +
+        'that covers the story was once picked over the article that is the story.',
+      text: STORY_SELECT_SYSTEM,
+    },
+    {
+      id: 'fuse',
+      stage: 'fuse (single-story lane)',
+      source: 'src/evidence/story.ts (FUSE_SYSTEM)',
+      note:
+        'The most expensive call in the studio at around 41p, and the one the single-' +
+        'story lane exists for. Reads the chosen documents whole and writes ONE ' +
+        'reference article, resolving every disagreement into variants the writer ' +
+        'never sees.',
+      text: FUSE_SYSTEM,
+    },
+    {
+      id: 'reference-check',
+      stage: 'reference check (OFF by default)',
+      source: 'src/evidence/story.ts (REVIEW_SYSTEM)',
+      note:
+        'Reads the fused article back against its own documents with a different model ' +
+        'family. On this lane it is the only thing checking the facts, which is why the ' +
+        'gate fails closed when it has not run.',
+      text: REVIEW_SYSTEM,
+    },
+    {
+      id: 'story-write',
+      stage: 'script (single-story lane, episodes)',
+      source: 'src/script/storyScript.ts (STORY_INSTRUCTION)',
+      note:
+        'Writes a whole episode in one call, three parts. Carries the rules that came ' +
+        'out of real episodes: name in three moves, teach rather than tuck into a ' +
+        'comma, never say the sources disagree, and no pronunciation respellings.',
+      text: STORY_INSTRUCTION,
+    },
+    {
+      id: 'short-write',
+      stage: 'script (shorts)',
+      source: 'src/script/shortScript.ts (SHORT_INSTRUCTION)',
+      note:
+        'One complete story under three minutes, from one article, in one call. The ' +
+        'whole script stage of a 14.5p short.',
+      text: SHORT_INSTRUCTION,
+    },
+    {
+      id: 'season-plan',
+      stage: 'season (not part of a run)',
+      source: 'src/fiction/planner.ts (SEASON_INSTRUCTION)',
+      note:
+        'Breaks a serial into episode cards before any of it is written, with promises ' +
+        'that plant in one episode and pay off in a later one. Runs once per season, ' +
+        'never during an episode. See docs/DRAMA.md.',
+      text: SEASON_INSTRUCTION,
+    },
+    {
+      id: 'grounding',
+      stage: 'grounding (OFF by default)',
+      source: 'src/qa/grounding.ts',
+      note:
+        'Reads a finished script against the evidence behind it. Paid, and off unless ' +
+        '--grounding is passed.',
+      text: GROUNDING_SYSTEM,
     },
     {
       id: 'compare',

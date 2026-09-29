@@ -143,6 +143,56 @@ inherits the parent's checking along with its authority.
 
 About 9p.
 
+### `season --show <id> [--episodes N] [--season N] [--premise "..."]`
+
+Breaks a season of a fiction show into episode cards before any of it is
+written, then **stops**. About 14p measured for eight episodes.
+
+The free checks run over the result: every promise planted and paid, paid after
+planted rather than before, a cliffhanger on every episode but the last, a
+finale that lands, the show's own hosts in the cast, and a cast small enough for
+an ear to carry.
+
+`--show-plan` reads one back. `--force` replaces one, and it refuses without
+that flag so episodes already written are never orphaned from their plan.
+
+The plan is `seasons/<show>-s<n>.json`, it is committed, and **editing it by
+hand is expected rather than a workaround**. It is the cheapest place in the
+studio to change your mind. See [DRAMA.md](DRAMA.md).
+
+### `covered [--show <id>] [--backfill]`
+
+What the studio has already made. `make` consults this before it spends
+anything: a subject the show has already covered is refused, the earlier run is
+named with its date, and `--again` overrides it.
+
+Matching is deterministic and free. Topics are reduced to their identifying
+words and compared by containment rather than by exact string, because the shape
+a duplicate really takes is the same subject typed at two different lengths.
+
+`--backfill` seeds the ledger from existing runs, and is safe to repeat.
+
+Skipped for fiction shows and news desks. Both reuse one topic string for every
+episode they make, so the check would block their second episode and every one
+after it. Each has the right version of the idea already: a serial has its
+season plan, a news desk has its own already-reported test.
+
+### `beat --name <name> [--style piano|strings|epic] [--key a..e] [--note "..."]`
+
+Synthesises one loopable phrase, saves the recipe, caches the audio, and tells
+you where to listen to it. `--list` shows what exists.
+
+Use one with `make ... --bed <name>`.
+
+Without a named beat, a phrase is synthesised from the topic string for every
+part separately and thrown away, so a three-part episode builds the same phrase
+three times and a show sounds different every week. A named beat is a channel
+having a sound rather than a setting.
+
+Recipes in `beds/*.json` are committed and are a few hundred bytes. The rendered
+`.mp3` beside each is gitignored and rebuilds on demand, because synthesis is
+deterministic.
+
 ### `tick [--dry-run]`
 
 Makes the next thing the schedule says is due, then stops. One item, not a

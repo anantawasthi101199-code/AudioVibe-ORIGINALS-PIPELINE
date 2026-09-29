@@ -47,6 +47,24 @@ import {
   savePlan,
 } from './fiction/season';
 import { planSeason } from './fiction/planner';
+import {
+  blocking,
+  findCovered,
+  loadCatalogue,
+  recordMade,
+  refusal,
+} from './catalogue/covered';
+import { BED_STYLES, isBedStyle } from './render/bed';
+import {
+  KEYS,
+  audioPath,
+  bedsDir,
+  buildBeat,
+  isKey,
+  listBeats,
+  loadBeat,
+  saveBeat,
+} from './render/beats';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
 import { currentPlan } from './schedule/current';
@@ -192,6 +210,14 @@ Commands
                                  looking at the result.
   publish --run <id> [--yes]     Publish a run that passed the gate
   compare --a <run> --b <run>    Which of two scripts is better to listen to
+  beat --name <name>             Synthesise a background loop and keep it, so a
+       [--style piano|strings|epic]  show has a sound instead of a setting.
+       [--key a..e] [--note "..."]   --list shows what exists. Use one with
+                                     "make ... --bed <name>".
+  covered [--show <id>]          What the studio has already made, so it does
+          [--backfill]            not make it twice. --backfill seeds the ledger
+                                  from existing runs. "make" refuses a repeat
+                                  unless you pass --again.
   season --show <id>             Break a season: plan every episode of a serial
          [--episodes N]          before writing any of them. Costs about a tenth
          [--season N]            of one episode, writes the plan to disk and
@@ -311,6 +337,45 @@ const cmdShows = (): number => {
   return 0;
 };
 
+/**
+ * Stop a run that would remake something the show has already covered.
+ *
+ * BEFORE Run.create AND BEFORE ANY PAID STAGE, which is the only placement that
+ * makes it worth having. The whole value is that a duplicate costs nothing
+ * rather than the price of an episode, and a check that runs after the research
+ * has been paid for has saved exactly the render.
+ *
+ * SKIPPED FOR FICTION AND NEWS, and not as an oversight. Both reuse one topic
+ * string for every episode they ever make - a fiction show passes its own
+ * thesis and a news desk passes its beat - so the check would block their
+ * second episode and every episode after it. Each already has the right version
+ * of this idea: a serial has the season plan and its episode numbers, and a
+ * news desk has its own already-reported test in news/check.ts.
+ *
+ * Returns true when the caller should stop.
+ */
+const coveredAlready = (persona: Persona, topic: string, argv: string[]): boolean => {
+  if (persona.fiction || hasNewsDesk(persona.id)) return false;
+  if (flag(argv, 'again')) return false;
+
+  const matches = findCovered(loadCatalogue(), persona.id, topic);
+  const blocked = blocking(matches);
+
+  if (blocked.length) {
+    console.error(refusal(persona.id, topic, blocked));
+    return true;
+  }
+
+  // Near misses are worth seeing and must never stop anything. A check that
+  // blocks two genuinely different episodes is a check somebody turns off.
+  for (const m of matches) {
+    const where = m.sameShow ? 'this show' : m.entry.showId;
+    console.log(`  note: ${where} has something close - "${m.entry.topic}" (${m.entry.runId})`);
+  }
+
+  return false;
+};
+
 const cmdMake = async (argv: string[]): Promise<number> => {
   const showId = arg(argv, 'show');
   // A NEWS CHANNEL NEEDS NO TOPIC: its desk's beat means "today's most
@@ -398,6 +463,8 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   const off = stagesOff(stages);
   if (off.length) console.log(`  stages OFF: ${off.join(', ')}`);
 
+  if (coveredAlready(persona, topic, argv)) return 1;
+
   const run = Run.create({
     personaId: persona.id,
     formatId,
@@ -407,6 +474,12 @@ const cmdMake = async (argv: string[]): Promise<number> => {
     stages,
     research: research as 'single' | 'extensive' | undefined,
   });
+
+  // Recorded at creation, not at success, for the reason takeTopic is consumed
+  // up front: a subject recorded only on success means a failing show retries
+  // it forever, spending money each time.
+  if (!persona.fiction && !hasNewsDesk(persona.id)) recordMade(persona.id, topic, run.id);
+
   return finishRun(run, argv);
 };
 
@@ -685,6 +758,23 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
   // FROM THE MANIFEST, NOT FROM THE COMMAND LINE, so a resume continues the way
   // the run started. Resuming a one-pass run without the flag would write the
   // second half of an episode by a different method from the first.
+  // RESOLVED BEFORE THE RUN, so a typo in --bed is a message rather than an
+  // episode that quietly comes out with the wrong music. A missing beat is
+  // named and the run continues on a synthesised bed, because music is
+  // decoration on a thing whose value is the words.
+  let bedFile: string | undefined;
+  const bedName = arg(argv, 'bed');
+  if (bedName) {
+    const recipe = loadBeat(bedName);
+    if (!recipe) {
+      console.error(`No beat called "${bedName}". See: npm run foundry -- beat --list`);
+      return 1;
+    }
+    const built = await buildBeat(recipe);
+    if (built.ok) bedFile = built.file;
+    else console.log(`  could not use beat "${bedName}": ${built.reason}`);
+  }
+
   const deps = buildDeps({
     onePass: run.manifest.onePass,
     // Also from the manifest, and for the same reason.
@@ -695,6 +785,7 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
     // be audible but never wrong - and being able to hear the same script bare
     // is the point of having the flag.
     music: !flag(argv, 'no-music'),
+    musicPhraseFile: bedFile,
     log: (message, stage) => {
       if (stage && stage !== 'pipeline') ui.section(stage);
       ui.line(message);
@@ -1241,6 +1332,160 @@ const cmdSeries = (argv: string[]): number => {
 
 
 /**
+ * Make, list and rebuild the synthesised beats a show can sit on.
+ *
+ * MADE BY HAND, ON PURPOSE. Before this, a bed was whatever the episode's topic
+ * string happened to seed, synthesised fresh for every part and thrown away, so
+ * there was no way to hear one without making an episode and no way to keep one
+ * you liked. A named beat is a show having a sound rather than a setting.
+ */
+const cmdBeat = async (argv: string[]): Promise<number> => {
+  if (flag(argv, 'list') || argv.length === 0) {
+    const beats = listBeats();
+    if (!beats.length) {
+      console.log('No beats yet.');
+      console.log('');
+      console.log(`  npm run foundry -- beat --name calm-piano --style piano --key a`);
+      return 0;
+    }
+
+    console.log(`${beats.length} beat(s) in ${bedsDir()}`);
+    console.log('');
+    for (const b of beats) {
+      const cached = fs.existsSync(audioPath(b.name));
+      console.log(`  ${b.name.padEnd(20)} ${b.style.padEnd(8)} key ${b.key.padEnd(3)} ${cached ? '' : '(not rendered)'}`);
+      if (b.note) console.log(`  ${''.padEnd(20)} ${b.note}`);
+    }
+    console.log('');
+    console.log('Use one:  npm run foundry -- make --show <id> --topic "..." --bed <name>');
+    return 0;
+  }
+
+  const name = arg(argv, 'name');
+  if (!name) {
+    console.error('Usage: beat --name <name> [--style piano|strings|epic] [--key a..e] [--note "..."]');
+    console.error('       beat --list');
+    return 1;
+  }
+  if (!/^[a-z0-9-]+$/.test(name)) {
+    console.error('A beat name is lowercase letters, digits and hyphens. It becomes a filename.');
+    return 1;
+  }
+
+  const existing = loadBeat(name);
+  const style = arg(argv, 'style') ?? existing?.style ?? 'piano';
+  const key = (arg(argv, 'key') ?? existing?.key ?? 'a').toLowerCase();
+
+  if (!isBedStyle(style) || style === 'none') {
+    console.error(`--style is one of: ${BED_STYLES.filter((b) => b !== 'none').join(', ')}`);
+    return 1;
+  }
+  if (!isKey(key)) {
+    console.error(`--key is one of: ${Object.keys(KEYS).join(', ')}`);
+    return 1;
+  }
+
+  const recipe = {
+    name,
+    style,
+    key,
+    note: arg(argv, 'note') ?? existing?.note ?? '',
+    madeAt: existing?.madeAt ?? new Date().toISOString(),
+  };
+
+  const file = saveBeat(recipe);
+
+  // FORCED WHENEVER THE RECIPE IS WRITTEN, because the cache is keyed by the
+  // file existing rather than by the recipe's contents. Changing the key and
+  // reusing the old audio is the one stale result this design can produce.
+  console.log(`Synthesising ${style} in ${key}...`);
+  const built = await buildBeat(recipe, { force: true });
+
+  if (!built.ok) {
+    console.error(`Could not render it: ${built.reason}`);
+    console.error('The recipe is saved. Fix ffmpeg and run the same command again.');
+    return 1;
+  }
+
+  console.log('');
+  console.log(`  recipe   ${file}`);
+  console.log(`  audio    ${built.file}`);
+  console.log('');
+  console.log('Listen to it, then use it:');
+  console.log(`  npm run foundry -- make --show <id> --topic "..." --bed ${name}`);
+  return 0;
+};
+
+/**
+ * What the studio has already covered, and the backfill that seeds it.
+ *
+ * THE BACKFILL EXISTS BECAUSE THE LEDGER ARRIVED LATE. Everything made before
+ * this command existed is recorded only in runs/, which is gitignored, so on a
+ * fresh clone the check would believe the studio had made nothing and would
+ * happily approve a second Descent of Inanna. Reading the manifests once fixes
+ * that, and it is safe to run repeatedly because entries are keyed by run id.
+ */
+const cmdCovered = async (argv: string[]): Promise<number> => {
+  const showId = arg(argv, 'show');
+
+  if (flag(argv, 'backfill')) {
+    let added = 0;
+    for (const id of Run.list()) {
+      let run;
+      try {
+        run = Run.open(id);
+      } catch {
+        // A half-written run directory is not a reason to abandon the backfill.
+        continue;
+      }
+
+      const { personaId, topic } = run.manifest;
+      if (!topic) continue;
+
+      // Same exclusions as the live check, and for the same reason: a fiction
+      // show reuses its thesis and a news desk reuses its beat, so recording
+      // those would poison the ledger with a topic that means nothing.
+      let persona;
+      try {
+        persona = loadPersona(personaId);
+      } catch {
+        continue;
+      }
+      if (persona.fiction || hasNewsDesk(personaId)) continue;
+
+      const before = loadCatalogue().entries.length;
+      recordMade(personaId, topic, id, new Date(run.manifest.createdAt));
+      if (loadCatalogue().entries.length > before) added += 1;
+    }
+
+    console.log(`Backfilled ${added} run(s) into catalogue.json.`);
+    return 0;
+  }
+
+  const entries = loadCatalogue()
+    .entries.filter((e) => !showId || e.showId === showId)
+    .sort((a, b) => a.madeAt.localeCompare(b.madeAt));
+
+  if (!entries.length) {
+    console.log(
+      showId
+        ? `${showId} has covered nothing yet. Seed from existing runs with --backfill.`
+        : 'Nothing covered yet. Seed from existing runs with --backfill.'
+    );
+    return 0;
+  }
+
+  console.log(`${entries.length} subject(s) covered`);
+  console.log('');
+  for (const e of entries) {
+    console.log(`  ${e.madeAt.slice(0, 10)}  ${e.showId}`);
+    console.log(`              ${e.topic}`);
+  }
+
+  return 0;
+};
+
+/**
  * Break a season: plan every episode of a serial before writing any of them.
  *
  * THE CHEAPEST CONTROL POINT IN THE STUDIO, and the reason it is a separate
@@ -1552,7 +1797,16 @@ const cmdTick = async (argv: string[]): Promise<number> => {
     }
 
     const formatId = persona.formats.find((f) => loadFormat(f).kind !== 'short') ?? persona.formats[0]!;
+
+    // A tick is unattended, so a duplicate here would never be seen by anybody.
+    // The topic goes back on the queue rather than being silently consumed.
+    if (coveredAlready(persona, topic, argv)) {
+      if (!persona.fiction) returnTopic(persona.id, topic);
+      return 1;
+    }
+
     const run = Run.create({ personaId: persona.id, formatId, topic });
+    if (!persona.fiction && !hasNewsDesk(persona.id)) recordMade(persona.id, topic, run.id);
     console.log(`run ${run.id}: ${topic}`);
 
     try {
@@ -1955,6 +2209,10 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdShorts(rest);
       case 'season':
         return await cmdSeason(rest);
+      case 'covered':
+        return await cmdCovered(rest);
+      case 'beat':
+        return await cmdBeat(rest);
       case 'series':
         return cmdSeries(rest);
       case 'series-setup':
