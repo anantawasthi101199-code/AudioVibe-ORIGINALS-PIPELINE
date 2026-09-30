@@ -33,7 +33,7 @@ import { EpisodeFormat } from '../formats/schema';
 import { completeJson, LlmClient } from '../models/client';
 import { CaseFile, renderCaseFile } from '../evidence/casefile';
 import { Turn } from './dialogue';
-import { findHedging, signoffFor } from './storyScript';
+import { findHedging } from './storyScript';
 import {
   Script,
   ScriptBeat,
@@ -69,19 +69,43 @@ export const CASE_INSTRUCTION = `You are telling a true story about real people 
 
 They are walking, or driving, or washing up. They cannot rewind easily and they will stop if they lose the thread. They will not tell you when they do.
 
-HOW TO OPEN. In the middle of something true. A fact, at a moment, with a person in it. Not a summary of what the episode will cover, not a question to the audience, and never a sentence about crime in general. The case file gives you the detail to open on: use it, and use it in the first two sentences.
+TELL IT THE WAY YOU WOULD TELL A FRIEND. Not the way a documentary narrates and not the way a report is written. Ordinary words, contractions, the occasional aside. Somebody who finds this genuinely interesting and is taking their time over it.
 
-THE ORDER THINGS ARE TOLD IN, WHICH IS NOT THE ORDER THEY HAPPENED.
-1. The hook. One moment, mid-scene.
-2. Who this is about, BEFORE anything happens to them. What they did, what they were like, what that week looked like. A listener cannot be made to care about a name.
-3. Then the calendar, in order, and now the dates land because there is somebody standing in them.
-4. What was done about it, as a second sequence. Keep it separate from the first or the listener loses track of what was known when.
-5. How it ended, plainly, and what was never settled.
+GO SLOWLY, AND UNDERSTAND WHAT THAT MEANS. It means FEWER IDEAS IN EACH SENTENCE. It does not mean longer sentences, which is the opposite and is the commonest way this goes wrong.
+
+One idea per sentence for anything that matters. When you find yourself joining clauses with "and", "because", "which" or "while", stop and use a full stop instead. A listener has no punctuation and no page - they have only the gap where you stopped, and if you do not stop they have nowhere to put the thing you just told them.
+
+  Too much at once: "A young woman is getting dressed in men's clothes in her father's cottage, because her lover has told her the parish officers are coming to prosecute her, and the only way to leave without being seen is to look like somebody else."
+
+  Slow: "A young woman is getting dressed in men's clothes. Her lover has told her the parish officers are coming for her. The only way out without being seen is to look like somebody else."
+
+Same facts, same words, three places to breathe instead of none. That is what slow is.
+
+There is also no prize for covering ground. A listener would rather understand four things than half-follow twelve.
+
+PAINT THE FIRST SCENE BEFORE YOU DO ANYTHING ELSE.
+Open on one moment, and take four or five sentences over it. Where are we. What time of day. What day, what month, what year. Who is there. What does it look like. Only then start moving.
+A listener who does not know what year they are in is not following anything, so say the date out loud early and plainly.
+Do not rush the opening to get to the story. The opening IS the story starting.
+
+ONE THING AT A TIME, IN ORDER.
+After the opening, go forwards and keep going forwards. Do not jump ahead and come back. Do not mention something that happens later and then return to it. If a listener has to hold two timelines at once, they are holding neither.
+Before every move in time or place, SAY SO. "The next morning." "Two streets away." "By the Thursday." Never make somebody work out that time has passed.
+Finish with one person before starting on the next. A new name in the middle of somebody else's paragraph is where people lose the thread.
 
 MAKING IT PICTURABLE. Every scene needs a time, a place, and ONE physical thing. Take them from the case file and nowhere else - if the file does not record what the weather was, there was no weather.
 - "The August heat had made the asphalt soft" is a picture.
 - "It was a difficult summer" is an adjective with nothing behind it.
 Never invent a detail to make a scene work. If there is nothing recorded, say what is recorded and move on. A thin scene is a small cost; an invented one is a false statement about a real event.
+
+PLAIN WORDS, AND NO FILLER.
+Say the thing. Do not decorate it and do not explain that you are about to say it.
+Banned outright, because they are the sound of a writer rather than a person, in every form including contracted ones: "the record shows", "by all accounts", "by the account that survives", "it bears noting", "what is certain is", "what's certain is", "one thing is clear", "in a twist", "little did", "fast forward", "needless to say".
+If somebody said something, say who said it. If nobody did, say it plainly or leave it out.
+No sentence that exists to sound good. If you cut it and nothing is lost, it was that kind of sentence.
+
+MAKE THEM WANT THE NEXT BIT.
+End every part on the thing the listener now needs to know, and let them feel it rather than being told to. Not a question to the audience. Not "but that was only the beginning". The plainest version of what happens next, held back by exactly one beat.
 
 DATES. Say them the way a person says them. "The fourteenth of March" and not "March 14th, 1987" every time. Once the year is established, stop repeating it. Say how long things took in a way anybody can feel: "eleven days later", "by the end of that week", "it would be nineteen years before anybody looked at it again."
 
@@ -94,6 +118,8 @@ WHAT IS ESTABLISHED AND WHAT IS NOT. The file marks each one.
 Never supply a motive the record does not give. Never say what somebody was thinking or feeling unless they said so themselves.
 
 WHOSE STORY THIS IS. The victim's. They get the background, the detail and the words. The person who did it gets what the record supports and nothing else: no nickname the reporting did not use, no theory about their childhood, nothing that sounds like admiration or like a character study. Do not describe violence in detail - say what happened and let the listener not be shown it.
+
+HOW IT ENDS. On the case, and then it stops. NO SIGN-OFF. No "thanks for listening", no "see you next time", no mention of a next episode, no address to the audience at all. Somebody died. A presenter stepping out from behind that to say goodbye is the worst note available to this show.
 
 TONE. Interested, not excited. This is somebody's worst year. The difference between telling this well and telling it badly is almost entirely the difference between those two words.`;
 
@@ -143,7 +169,9 @@ export const writeCaseScript = async (
 
 ${CASE_INSTRUCTION}`;
 
-  const sign = signoffFor(persona, 'long', input.topic);
+  // DELIBERATELY NOT `signoffFor`. This lane has no sign-off and must not
+  // acquire one: the persona happens to define none today, and if somebody adds
+  // one for another format it must not leak into a true crime episode.
 
   const prompt = `${renderCaseFile(file)}
 
@@ -161,8 +189,6 @@ ${format.beats
   .join('\n\n')}
 
 THE JOINS MATTER AS MUCH AS THE PARTS. Part two picks up from the last thing part one said, by name. Part three picks up from the last event of part two. Nobody starts again.
-
-${sign ? `END ON THIS, in your own words rather than verbatim: ${sign}` : ''}
 
 ${returnShape(parts)}`;
 
@@ -270,7 +296,7 @@ export const writeCaseShort = async (
     const { min, max } = wordsForBeat(b);
     return { id: b.id, words: Math.round((min + max) / 2) };
   });
-  const sign = signoffFor(persona, 'short', input.topic);
+
 
   const system = `${buildSystem(persona, input.isoDate, 'short')}
 
@@ -291,8 +317,6 @@ WRITE IT. ${parts.length} parts, in one piece.
 ${format.beats
   .map((b, i) => `PART ${i + 1} (${b.id}), about ${parts[i]!.words} words\n  ${b.function.trim().replace(/\s+/g, ' ')}`)
   .join('\n\n')}
-
-${sign ? `END ON THIS, in your own words: ${sign}` : ''}
 
 ${returnShape(parts)}`;
 

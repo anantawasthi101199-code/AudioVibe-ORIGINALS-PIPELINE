@@ -204,7 +204,13 @@ KEEP THE INVESTIGATION SEPARATE from the crime's own timeline. They are two sequ
 
 NAMES. At most ${MAX_CARRY} people marked carry. Everybody else is named once where they act, or described by what they did. A listener holds about six names and an investigation touches dozens.
 
-PLACES. Only what the document records. A place with no recorded detail gets an empty picture, which is honest, rather than a sentence you made up, which is not.`;
+PLACES. Only what the document records. A place with no recorded detail gets an empty picture, which is honest, rather than a sentence you made up, which is not.
+
+HARVEST EVERY PHYSICAL DETAIL THE DOCUMENT GIVES YOU, and put it in. This file is the ONLY thing the writer will see - it never reads the document - so a detail you leave out is a detail that cannot reach the episode, and the episode will be abstract because of it.
+
+What counts: the time of day, the weather, what somebody was wearing or carrying, how far apart two places were, how long a walk took, what a room had in it, what was found where, what the light was like, what somebody was doing when they were interrupted. Put it in the event it belongs to, in its "what" field, in the plain words the document uses.
+
+This is the opposite of inventing atmosphere and the two are easy to confuse. "A quiet street where nothing ever happened" is invention. "The only thing open after six was the petrol station" is harvesting, IF the document says so. The test is the same one every time: could you point at the sentence in the document that this came from.`;
 
 const RETURN_SHAPE = `Return ONLY this JSON object.
 

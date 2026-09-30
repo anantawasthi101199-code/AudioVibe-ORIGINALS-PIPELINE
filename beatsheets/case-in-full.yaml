@@ -48,8 +48,11 @@ beats:
       to, properly, before anything happens to them.
     opens: [the_case]
     constraints:
-      - Start inside a moment from the case file's hook. A fact, at a time, with
-        a person in it. Not a summary of what is coming and not a question.
+      - Open on the moment in the case file's hook, and PAINT IT. Where we are,
+        what time it is, what day, who is there, what it looks like. Take four
+        or five sentences over it. Do not rush past it into the story.
+      - Say the date out loud in the first thirty seconds. A listener who does
+        not know what year they are in is not following anything.
       - Then stop and say who this is about - what they did, what they were
         like, what that week looked like. Give it real room.
       - Hand over out loud at the end, so part two is a continuation and not a
@@ -86,7 +89,10 @@ beats:
       - Name what the record does not say, where it matters. A gap said out loud
         is more trustworthy than one glided over.
       - The last thing the listener hears is about the victim, not the offender.
-      - Then the sign-off, in the show's own words.
+      - NO SIGN-OFF. No "thanks for listening", no "see you next time", no
+        mention of a next episode. This is somebody's death, and a presenter
+        stepping out from behind it to say goodbye is the single worst note
+        this show could end on. It ends on the case and then it stops.
 
 # Rises through the calendar, peaks where it goes wrong, and comes down for the
 # ending. A case is not a thriller and the curve should not pretend it is.

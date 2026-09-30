@@ -5,6 +5,12 @@
 # person it happened to. So this is one case with FEWER EVENTS rather than a
 # faster account of many - the spine, and the rest left out.
 #
+# TWO BEATS, NOT THREE. The third was an outro, and an outro on a true crime
+# short is the wrong instinct carried over from the myth lane: "see you next
+# time" after three minutes about a real person's death reads as a presenter
+# who has stopped paying attention to what they just said. It ends on the
+# victim and stops.
+#
 # NO CASE FILE IS BUILT FOR THIS, which is the entire cost difference. Building
 # one is about thirty pence against a budget of ten, and with one article and
 # three minutes there is not enough case to be worth structuring first.
@@ -44,24 +50,17 @@ beats:
 
   - id: ending
     type: payoff
-    seconds: [50, 65]
+    seconds: [60, 85]
     function: >
-      How it ended, and what was never settled.
-    constraints:
-      - Answer it properly. A short that stops early is a summary.
-      - The last thing said about the case is about the person it happened to.
-
-  # THE LOOP CLOSES HERE, ON THE LAST BEAT, and not on the payoff above. The
-  # checker is right to insist: a loop closed at beat two of three leaves the
-  # third with no reason for anybody to still be listening. The last line about
-  # the victim is part of the answer, not an afterword to it.
-  - id: close
-    type: outro
-    seconds: [12, 20]
-    function: A last line about the person it happened to, then the sign-off.
+      How it ended, what was never settled, and a last line about the person it
+      happened to.
     closes: [the_case]
     constraints:
-      - Short. No recap.
-      - Nothing new. This is the last thing heard, not another fact.
+      - Answer it properly. A short that stops early is a summary.
+      - Name what was never settled, if anything was not.
+      - The last thing said is about the person it happened to, and then it
+        stops. NO SIGN-OFF of any kind - no "thanks for listening", no "see you
+        next time", no next episode. This is a real death. A presenter stepping
+        out from behind it to say goodbye is the worst note available here.
 
-tensionCurve: [0.8, 0.95, 0.4]
+tensionCurve: [0.8, 0.95]
