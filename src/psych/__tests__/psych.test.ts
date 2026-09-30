@@ -110,6 +110,19 @@ describe('the craft checks', () => {
     expect(
       unglossedTerms('The chemical that tells you what matters, dopamine, is uneven here.')
     ).toEqual([]);
+    // BOTH GLOSSES THE FIRST LIVE EPISODE ACTUALLY WROTE. An appositive noun
+    // phrase after the term is the commonest gloss in English, and the first
+    // version of this check flagged both of these as unexplained.
+    expect(
+      unglossedTerms(
+        'Your brain uses dopamine, a brain chemical that helps you start and stay with a task, differently.'
+      )
+    ).toEqual([]);
+    expect(
+      unglossedTerms(
+        'Working memory, the narrow holding space your mind uses to keep things in view, is only so wide.'
+      )
+    ).toEqual([]);
   });
 
   it('counts technical terms, for a short\'s stricter cap', () => {

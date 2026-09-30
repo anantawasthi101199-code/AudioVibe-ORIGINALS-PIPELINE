@@ -203,6 +203,13 @@ export const unglossedTerms = (script: string): string[] => {
     // "dopamine, which is the chemical that tags what matters"
     if (GLOSS_MARKER.test(rest.slice(0, GLOSS_WINDOW))) continue;
 
+    // THE COMMONEST GLOSS IN ENGLISH, and the one the first live episode used
+    // for both of its terms: the term, then a noun phrase between commas.
+    // "dopamine, a brain chemical that helps you start a task," and "working
+    // memory, the narrow holding space your mind uses to keep things in view,".
+    // The closing comma is what keeps this from matching any old clause.
+    if (/^,\s+(?:a|an|the|your|which is)\b[^,.!?]{10,140},/i.test(rest)) continue;
+
     // THE OTHER ORDER, which is just as good English and just as clear: "the
     // chemical that tags what matters, dopamine, is uneven here". An
     // appositive is a gloss, so the term sitting between two commas counts.
@@ -352,6 +359,8 @@ export interface PsychGateInput {
   understanding?: Understanding;
   durationS: number;
   measured: boolean;
+  /** How many of the documents are from a body on the curriculum's list. */
+  trusted?: number;
   priorTexts?: Array<{ label: string; text: string }>;
   stagesOff?: string[];
 }
@@ -457,6 +466,27 @@ export const psychGate = (input: PsychGateInput): GateReport => {
         `the picture this episode was built on is not ${place.early ? 'landed at the end' : 'set up at the start'}`
       );
     }
+  }
+
+  // WHERE THIS EPISODE ACTUALLY CAME FROM, reported rather than blocked.
+  //
+  // The first live run asked about "ADHD overwhelm" and came back with six
+  // coaching and clinic blogs and nothing from the NHS, the APA or CHADD,
+  // because a colloquial phrase for an experience is not what those bodies put
+  // in a page title. The episode was good and the sourcing was not what this
+  // channel promises, and that is exactly the kind of thing a person should be
+  // told rather than have silently decided for them.
+  if (input.trusted !== undefined && input.format.kind !== 'short' && input.trusted < 2) {
+    add(
+      'psychSources',
+      `only ${input.trusted} of ${input.sources.length} documents are from a body on this ` +
+        `channel's list. The rest are practice and coaching sites, which are often written by ` +
+        `practitioners and are still marketing. Read this one before it goes out.`,
+      false
+    );
+    humanReviewReasons.push(
+      `${input.trusted} of ${input.sources.length} documents came from a trusted body`
+    );
   }
 
   const page = aboutThePage(text);

@@ -15,6 +15,11 @@ beat: how your mind works
 # helps, because that is how the internet is weighted. One query each means the
 # corpus has all four kinds of document in it.
 queries:
+  # PHRASED THE WAY A CLINICAL PAGE IS TITLED, and first on the list for that
+  # reason. The first live run ("ADHD overwhelm") came back with six coaching
+  # and clinic blogs and nothing from the NHS, the APA or CHADD, because the
+  # colloquial phrasing of a topic is not what those bodies put in a title.
+  - "{topic} symptoms causes treatment"
   - "{topic} psychology explained"
   - "what causes {topic} brain research"
   - "what it feels like to experience {topic}"

@@ -390,6 +390,7 @@ export const runPsych = async (
       understanding,
       durationS,
       measured,
+      trusted: sources.filter((src) => bonusOf(src.url, book) > 0).length,
       priorTexts: deps.priorTexts,
       stagesOff: skipped,
     });
@@ -487,6 +488,7 @@ export const regatePsych = (run: Run, script: Script): GateReport | null => {
       understanding: record.understanding,
       durationS: render?.durationS ?? estimatedSeconds(script),
       measured: !!render,
+      trusted: sources.filter((src) => bonusOf(src.url, loadCurriculum(persona.id)) > 0).length,
       stagesOff: stagesOff(stageFlags(run.manifest.stages as never)),
     });
   } catch {
