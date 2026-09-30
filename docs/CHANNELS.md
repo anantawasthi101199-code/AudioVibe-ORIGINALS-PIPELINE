@@ -15,7 +15,8 @@ Current as of 2026-09-29. If this disagrees with the code, the code is right.
 | `myths-of-the-world` | The same, short | single-story, no fusion | `myth-short` | 3 min |
 | `honest-health` | Health claims, weighed | extensive | `what-we-know` | 11-15 min |
 | `business-teardowns` | Companies, taken apart | extensive | `case-study-teardown` | 15 min |
-| `true-crime-in-full` | One case, whole | extensive | `told-story` | 15 min |
+| `true-crime-in-full` | One case, whole | casefile | `case-in-full` | 13-17 min |
+| `true-crime-in-full` | The same, short | casefile | `case-short` | 3 min |
 | `geopolitics-today` | Today's story on the beat | news desk | `news-short` | under 3 min |
 | `night-shift` | The serial drama | fiction | `serial-reversal` | 8-12 min |
 
@@ -33,11 +34,15 @@ the same in all four.
 ```
   EXTENSIVE          many documents, claim ledger, quote binding
                      for a subject ASSEMBLED from sources
-                     honest-health, business-teardowns, true-crime-in-full
+                     honest-health, business-teardowns
 
   SINGLE-STORY       2-3 documents read WHOLE, fused into one article
                      for a subject that IS one story already
                      myths-of-the-world
+
+  CASEFILE           ONE document read whole, into a dated case file
+                     for something that HAPPENED, to real people
+                     true-crime-in-full
 
   NEWS DESK          one article, today, from a wire sweep
                      geopolitics-today
@@ -45,6 +50,36 @@ the same in all four.
   FICTION            no research at all; a season plan and a series bible
                      night-shift
 ```
+
+### Why true crime has its own lane
+
+A case is not a myth and not a subject. It differs in two ways that change the
+pipeline rather than the prompt.
+
+**It has a calendar, not an order.** The difference between "later" and "eleven
+days later" is most of what makes a case frightening, so the chronology is built
+before a word of script exists and the writer never reconstructs a sequence from
+prose.
+
+**Its people are real.** Every event is marked `established`, `alleged` or
+`disputed`, and the writer is shown all of it. That reverses the myth lane,
+where disagreements are resolved and *hidden* from the writer because one
+contested claim once ate half an episode in hedging. Here presenting a disputed
+claim as settled is not a style fault, so the rule inverts: say it once,
+attributed, where it belongs, and stop qualifying everything else.
+
+The case file also carries a background for every carried name (the victim's
+first), places holding only the one physical detail the reporting actually
+recorded, and a list of what the record does not say. Free checks refuse a file
+with no victim, a victim with no background, fewer than three dated events, or a
+name that acts in the chronology and was never introduced.
+
+**One source is a real limit.** One document carries its own errors and framing
+straight through and nothing in the pipeline can see that. This lane is for
+cases reported properly once and long settled, not for anything recent or
+genuinely contested. Turn `--reference-check` on: it reads the case file back
+against its own document with a different model family, and it is the only
+evidence check this lane has.
 
 ---
 
@@ -57,6 +92,9 @@ npm run foundry -- make --show myths-of-the-world --topic "Houyi shoots the ten 
 npm run foundry -- make --show honest-health --topic "Do cold showers do anything"
 npm run foundry -- make --show geopolitics-today                 # no topic: today's story
 npm run foundry -- make --show night-shift                       # next episode of the serial
+
+# true crime, with the one check this lane really wants
+npm run foundry -- make --show true-crime-in-full --topic "..." --reference-check
 ```
 
 Add `--render-now` to skip the approval break, `--dry-run` to price it without
@@ -162,6 +200,8 @@ deterministic.
 | Thing | Cost |
 |---|---|
 | Short, single-story | **14.5p measured** |
+| Short, true crime | **8.5p measured** |
+| Episode, true crime, 15 min | **35p measured** |
 | Episode, single-story, 15 min | **81p measured** |
 | Episode, extensive, all checks off | ~90p |
 | News report, under 3 min | ~20p |

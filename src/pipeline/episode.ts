@@ -58,6 +58,7 @@ import {
   ReferenceReview,
   reviewReference,
   selectStorySources,
+  SOURCE_CHARS_PER_SECOND,
   StoryResearch,
   topUpSelection,
   referenceSchema,
@@ -396,26 +397,55 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         // checks. Nothing checks this.
         deps.writer,
         spend,
-        say('reference')
+        say('reference'),
+        // ONE DOCUMENT ON THE CASE LANE. It reads only the first anyway, so
+        // picking three meant paying to reason about two the episode never
+        // opened and logging "using" them, which was untrue.
+        caseLane ? 1 : undefined
       );
 
       // ENOUGH OF IT, NOT JUST THE RIGHT ONE. The selector judges which document
       // tells the story and is good at it; it has no sense of whether there is
       // enough there to fill the episode, and it once chose 13,191 characters
       // for a fifteen-minute slot. See topUpSelection.
-      const sized = topUpSelection(
-        selection.chosen,
-        corpus.sources,
-        nominalSeconds(format)
-      );
-      for (const extra of sized.added) {
-        report(
-          'reference',
-          `the chosen document(s) are too thin for ${Math.round(nominalSeconds(format) / 60)} ` +
-            `minutes, so ${extra.title} was added as well`
+      //
+      // NOT ON THE CASE LANE, AND THE FIRST RUN THAT NEEDED IT SHOWED WHY. The
+      // Croydon poisonings had one good 13,500-character account and a corpus
+      // otherwise full of general arsenic toxicology, so topping up added a
+      // toxicology page to reach the length. That lane reads only the first
+      // document, so the page would never have been opened - but it was logged
+      // as "using", which was untrue, and on a lane where the whole premise is
+      // one source it is exactly the wrong repair.
+      //
+      // A thin source is a REAL FINDING here rather than a shortfall to pad.
+      // It means this case has not been reported properly in one place, which
+      // is the thing that decides whether it belongs in this format at all.
+      if (caseLane) {
+        const chars = selection.chosen[0]?.text.length ?? 0;
+        const wanted = nominalSeconds(format) * SOURCE_CHARS_PER_SECOND;
+        if (chars < wanted) {
+          report(
+            'reference',
+            `the one document is ${chars.toLocaleString()} characters and this format wants ` +
+              `about ${wanted.toLocaleString()}. Nothing was added to make up the difference, ` +
+              `because this lane reads one source. Expect a thin episode, or tell it as a short.`
+          );
+        }
+      } else {
+        const sized = topUpSelection(
+          selection.chosen,
+          corpus.sources,
+          nominalSeconds(format)
         );
+        for (const extra of sized.added) {
+          report(
+            'reference',
+            `the chosen document(s) are too thin for ${Math.round(nominalSeconds(format) / 60)} ` +
+              `minutes, so ${extra.title} was added as well`
+          );
+        }
+        selection.chosen = sized.chosen;
       }
-      selection.chosen = sized.chosen;
 
       for (const source of selection.chosen) {
         report(

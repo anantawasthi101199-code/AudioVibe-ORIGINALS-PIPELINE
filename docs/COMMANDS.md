@@ -143,6 +143,43 @@ inherits the parent's checking along with its authority.
 
 About 9p.
 
+### True crime: `--format case-in-full` and `--format case-short`
+
+A third research lane, `casefile`. One document read whole into a dated case
+file before any prose exists, then three parts written from it.
+
+The case file carries a **chronology** with every event marked `established`,
+`alleged` or `disputed`; a **cast with backgrounds**, the victim's first;
+**places** holding only the one physical detail the reporting actually recorded;
+and lists of what is **contested** and what the record **does not say**.
+
+Free checks refuse a file with no victim, a victim with no background, fewer
+than three dated events, or a name that acts in the chronology and was never
+introduced. They run before the script is paid for.
+
+**It reverses one rule from the myth lane.** There, disagreements are resolved
+and hidden from the writer, because one contested claim once ate half an episode
+in hedging. Here they are shown, because presenting a disputed claim about a
+real person as settled is not a style fault. The instruction inverts with it:
+say it once, attributed, where it belongs, and stop qualifying everything else.
+
+**Turn `--reference-check` on.** It reads the case file back against its own
+document with a different model family and reports invented dates and details,
+allegations promoted to facts, and load-bearing things the file dropped. It is
+the only evidence check this lane has. On its first real run it caught a case
+file that had given a real man an age the document never stated.
+
+A short skips the case file entirely, and skips the paid brief as well: a named
+case is already its own search query, and paying a model to rephrase it returned
+the topic in different words for two pence.
+
+```bash
+npm run foundry -- make --show true-crime-in-full --topic "..." --reference-check
+npm run foundry -- make --show true-crime-in-full --format case-short --topic "..."
+```
+
+Measured: **8.5p a short**, **35p an episode**, **around 65p with the check on**.
+
 ### `season --show <id> [--episodes N] [--season N] [--premise "..."]`
 
 Breaks a season of a fiction show into episode cards before any of it is

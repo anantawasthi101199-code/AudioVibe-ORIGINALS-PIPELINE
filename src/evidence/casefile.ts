@@ -484,8 +484,10 @@ export const reviewCaseFile = async (
   model: LlmClient,
   onCost?: (pence: number) => void
 ): Promise<CaseReview> => {
+  // COMPACT, NOT PRETTY-PRINTED. The indentation was about a fifth of the
+  // tokens in this prompt and reads no differently to a model.
   const prompt = `THE CASE FILE
-${JSON.stringify(input.file, null, 1)}
+${JSON.stringify(input.file)}
 
 THE DOCUMENT IT WAS BUILT FROM
 ${input.source.title}
@@ -507,8 +509,15 @@ Return ONLY this JSON object.
       {
         system: CASE_REVIEW_SYSTEM,
         prompt,
-        maxTokens: 16_000,
-        effort: 'medium',
+        // MEASURED, AND THE REASON THE NUMBERS ARE HERE. At medium effort with a
+        // 16,000 ceiling this call came to 94p on a 51,000-character document,
+        // which put a checked episode at 129p against a budget of a pound.
+        // Reasoning tokens bill at output rates, and this is a COMPARISON task
+        // rather than a reasoning one: read the file, read the document, say
+        // what does not match. Low effort is both cheaper and, for structured
+        // output, more reliable.
+        maxTokens: 8_000,
+        effort: 'low',
         cacheSystem: true,
         // Zero. Judgement should not wander.
         temperature: 0,

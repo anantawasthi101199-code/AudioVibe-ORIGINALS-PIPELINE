@@ -42,6 +42,8 @@ import { SHORT_INSTRUCTION } from '../script/shortScript';
 import { STORY_INSTRUCTION } from '../script/storyScript';
 import { SEASON_INSTRUCTION } from '../fiction/planner';
 import { SUGGEST_SYSTEM } from '../render/synthSuggest';
+import { CASE_REVIEW_SYSTEM } from '../evidence/casefile';
+import { CASE_INSTRUCTION } from '../script/caseScript';
 
 export interface PromptEntry {
   /** Stable id, usable as a filter on the command line. */
@@ -351,6 +353,30 @@ export const promptRegistry = (input: {
         'by hand. The control list is appended to this at call time from CONTROLS, so the ' +
         'model always sees the real ranges.',
       text: SUGGEST_SYSTEM,
+    },
+    {
+      id: 'case-write',
+      stage: 'script (true crime)',
+      source: 'src/script/caseScript.ts (CASE_INSTRUCTION)',
+      note:
+        'Tells a case from a case file, and is used for both the episode and the short. ' +
+        'The order it enforces is hook, then the person, then the calendar, because nobody ' +
+        'cares when something happened until they care who it happened to. Every scene ' +
+        'needs a time, a place and one physical detail, all from the file rather than ' +
+        'invented, because a detail made up to carry a scene is a false statement about a ' +
+        'real event.',
+      text: CASE_INSTRUCTION,
+    },
+    {
+      id: 'case-check',
+      stage: 'case file check (OFF by default)',
+      source: 'src/evidence/casefile.ts (CASE_REVIEW_SYSTEM)',
+      note:
+        'Reads a case file back against the one document it came from, with a different ' +
+        'model family. The only evidence check this lane has, which on a lane about real ' +
+        'people makes it the one worth paying for. It caught a case file that had given a ' +
+        'real man an age the document never stated. --reference-check',
+      text: CASE_REVIEW_SYSTEM,
     },
     {
       id: 'grounding',

@@ -253,8 +253,19 @@ export const selectStorySources = async (
   sources: Source[],
   model: LlmClient,
   onCost?: (pence: number) => void,
-  onProgress?: (message: string) => void
+  onProgress?: (message: string) => void,
+  /**
+   * How many documents to keep.
+   *
+   * THE CASE LANE PASSES ONE, and it is not a tuning knob. Fusing two accounts
+   * of a myth resolves a disagreement about a story; fusing two accounts of a
+   * crime resolves a disagreement about what a real person did, and that lane
+   * reads only the first document anyway. Without this the selector chose three
+   * and the log said "using" all of them, which was simply untrue.
+   */
+  max: number = MAX_STORY_SOURCES
 ): Promise<{ chosen: Source[]; reasoning: string; fellBack: boolean }> => {
+  const keep = Math.max(1, Math.min(max, MAX_STORY_SOURCES));
   // BY SIZE AND TIER, and it is the fallback as well as the tie-break. A
   // dedicated article is almost always among the longest things fetched about
   // its own subject.
@@ -266,7 +277,7 @@ export const selectStorySources = async (
   });
 
   const fallback = () => ({
-    chosen: byWeight.slice(0, Math.min(MAX_STORY_SOURCES, byWeight.length)),
+    chosen: byWeight.slice(0, Math.min(keep, byWeight.length)),
     reasoning: 'chosen by tier and length; the selector did not answer',
     fellBack: true,
   });
@@ -282,6 +293,10 @@ export const selectStorySources = async (
         system: SELECT_SYSTEM,
         prompt: [
           `SUBJECT: ${topic}`,
+          '',
+          keep === 1
+            ? 'Choose exactly ONE document: the single best account of this. Not a shortlist.'
+            : `Choose up to ${keep}.`,
           '',
           `THE CANDIDATES, ${sources.length} of them:`,
           '',
@@ -306,7 +321,7 @@ export const selectStorySources = async (
       return fallback();
     }
 
-    return { chosen: chosen.slice(0, MAX_STORY_SOURCES), reasoning: parsed.reasoning, fellBack: false };
+    return { chosen: chosen.slice(0, keep), reasoning: parsed.reasoning, fellBack: false };
   } catch (err) {
     onProgress?.(`the selector failed (${(err as Error).message}); using tier and length`);
     return fallback();
