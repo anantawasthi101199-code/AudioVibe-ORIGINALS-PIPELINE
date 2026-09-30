@@ -1,0 +1,106 @@
+# The Inside Your Head curriculum: what the channel teaches and where it reads.
+#
+# THIS FILE EXISTING IS WHAT MAKES inside-your-head A PSYCHOLOGY CHANNEL. See
+# src/psych/curriculum.ts and src/pipeline/lanes.ts.
+
+id: inside-your-head
+
+# Said in the goodbye.
+beat: how your mind works
+
+# ONE QUERY PER QUESTION THE EPISODE ASKS, because gatherCorpus keeps each
+# query's candidates separate. This matters more here than anywhere else in the
+# studio: a single pooled search on a psychology topic comes back with six pages
+# explaining the mechanism and nothing at all about what it feels like or what
+# helps, because that is how the internet is weighted. One query each means the
+# corpus has all four kinds of document in it.
+queries:
+  - "{topic} psychology explained"
+  - "what causes {topic} brain research"
+  - "what it feels like to experience {topic}"
+  - "how to cope with {topic} strategies"
+  - "{topic} myths misconceptions"
+
+# A short is one article, so it looks for the one page that explains the whole
+# thing plainly rather than for four different kinds of page.
+shortQueries:
+  - "{topic} explained simply"
+  - "what causes {topic}"
+
+# WHERE THIS CHANNEL IS ALLOWED TO READ, best first.
+#
+# Clinical and academic bodies lead, because this is the subject where the gap
+# between what the research says and what the internet says is widest. The good
+# explainer press follows and is not an afterthought: it is where the lived
+# experience and the worked examples actually are, and an episode with the
+# mechanism and no recognisable moment is a lecture.
+preferred:
+  - host: apa.org
+    bonus: 2
+  - host: nimh.nih.gov
+    bonus: 2
+  - host: nih.gov
+    bonus: 2
+  - host: nhs.uk
+    bonus: 2
+  - host: mind.org.uk
+    bonus: 2
+  - host: health.harvard.edu
+    bonus: 2
+  - host: ncbi.nlm.nih.gov
+    bonus: 1.5
+  - host: clevelandclinic.org
+    bonus: 1.5
+  - host: mayoclinic.org
+    bonus: 1.5
+  - host: bps.org.uk
+    bonus: 1.5
+  - host: mentalhealth.org.uk
+    bonus: 1.5
+  - host: chadd.org
+    bonus: 1
+  - host: verywellmind.com
+    bonus: 1
+  - host: psychologytoday.com
+    bonus: 1
+  - host: additudemag.com
+    bonus: 1
+  - host: scientificamerican.com
+    bonus: 1
+  - host: theguardian.com
+    bonus: 0.5
+
+# NEVER A SOURCE. Forums and social platforms are anecdote presented as
+# prevalence; therapy marketplaces and coaching sites are funnels whose advice
+# ends at a sign-up button; and a wellness shop selling a supplement is not a
+# source about the brain.
+refused:
+  - reddit.com
+  - quora.com
+  - medium.com
+  - youtube.com
+  - tiktok.com
+  - instagram.com
+  - facebook.com
+  - pinterest.com
+  - linkedin.com
+  - betterhelp.com
+  - talkspace.com
+  - goop.com
+  - wikihow.com
+  - scribd.com
+  - coursehero.com
+  - onnit.com
+
+# Six documents: enough that the mechanism, the experience and the strategies
+# each come from somewhere that is good at them.
+sources: 6
+
+# THE MAIN COST LEVER ON AN EPISODE. Seven thousand characters per document,
+# chosen for free by BM25 against the queries above, is about 2.5p of reading
+# across six documents. Reading them whole would be 40p and would spend most of
+# it on navigation, cookie notices and related-article lists.
+extractCharsPerSource: 7000
+
+shortReadChars: 24000
+shortMinChars: 3000

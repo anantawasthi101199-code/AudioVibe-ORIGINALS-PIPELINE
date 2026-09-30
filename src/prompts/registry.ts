@@ -36,6 +36,8 @@ import { SELECT_SYSTEM } from '../script/shorts';
 import { REVISE_INSTRUCTION, TITLE_SYSTEM, buildPrompt, buildSystem } from '../script/write';
 import { NEWS_INSTRUCTION } from '../news/newsScript';
 import { BUSINESS_INSTRUCTION } from '../business/storyScript';
+import { PSYCH_INSTRUCTION } from '../psych/psychScript';
+import { EXTRACT_SYSTEM as PSYCH_EXTRACT_SYSTEM, FUSE_SYSTEM as PSYCH_FUSE_SYSTEM } from '../psych/understand';
 import { FUSE_SYSTEM, REVIEW_SYSTEM, SELECT_SYSTEM as STORY_SELECT_SYSTEM } from '../evidence/story';
 import { GROUNDING_SYSTEM } from '../qa/grounding';
 import { SHORT_INSTRUCTION } from '../script/shortScript';
@@ -123,6 +125,38 @@ export const promptRegistry = (input: {
         '{HOST}, {SHOW} and {JARGON} are filled per run; episodes explain tricky terms, ' +
         'shorts avoid them. Figures and quotations are checked against the source for free.',
       text: BUSINESS_INSTRUCTION,
+    },
+    {
+      id: 'psych-extract',
+      stage: 'reference',
+      source: 'src/psych/understand.ts',
+      note:
+        'The psychology lane, first of two research calls. Reads each document SEPARATELY and ' +
+        'pulls out only the five things this show uses, keeping each attached to the document ' +
+        'it came from. Which part of each document it sees is chosen for free by BM25.',
+      text: PSYCH_EXTRACT_SYSTEM,
+    },
+    {
+      id: 'psych-fuse',
+      stage: 'reference',
+      source: 'src/psych/understand.ts (FUSE_SYSTEM)',
+      note:
+        'The psychology lane, second research call. Turns those notes into ONE understanding: ' +
+        'the everyday picture the episode is built on, the mechanism in plain words, the moments, ' +
+        'and what helps. Disagreements are decided here and never reach the writer.',
+      text: PSYCH_FUSE_SYSTEM,
+    },
+    {
+      id: 'psych',
+      stage: 'script',
+      source: 'src/psych/psychScript.ts',
+      note:
+        'The psychology lane writer. One call writes the whole episode from the understanding. ' +
+        'Its rules are taken from a sample script the owner supplied: open on the moment, take ' +
+        'the blame off, one sustained everyday picture called back at the end, one glossed term ' +
+        'at most, and advice as subtraction with a worked before and after. The safety floor ' +
+        '(no diagnosis, no treatment direction, no cure) is enforced free in psych/check.ts.',
+      text: PSYCH_INSTRUCTION,
     },
     {
       id: 'counter',

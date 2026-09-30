@@ -1,0 +1,231 @@
+# How your mind works, explained warmly, nine to twelve minutes.
+#
+# THE SHAPE IS TAKEN FROM A SCRIPT THE OWNER SUPPLIED as the target for this
+# show, an episode about ADHD overwhelm. Its order is not arbitrary and it is
+# not the order a textbook would use:
+#
+#   the moment  ->  the picture  ->  the science  ->  real life  ->  the
+#   feelings  ->  what helps  ->  back to the picture
+#
+# WHY VALIDATION COMES BEFORE EXPLANATION. The sample spends its entire first
+# minute on "this is real, you are not doing it on purpose, you are not alone,
+# and it has a name" before a single fact arrives. Somebody who thinks the
+# answer is that they are lazy cannot hear an explanation of dopamine; they are
+# still defending themselves. The order is doing therapeutic work, not literary
+# work.
+#
+# WHY THE PICTURE COMES BEFORE THE SCIENCE. The sample builds its control panel
+# of blinking buttons FIRST, then explains the prefrontal cortex and dopamine
+# THROUGH it ("everything shows up at the same volume"). The science arrives as
+# the explanation of something the listener can already see, which is the
+# difference between understanding and being told.
+#
+# WHY THE FEELINGS GET THEIR OWN PART. Shame is the thing that actually stops
+# somebody acting, and an episode that explains the mechanism and skips the
+# shame has explained the smaller half. The sample gives it a section of its
+# own, quotes the inner voice, and names masking.
+#
+# WHY WHAT HELPS IS THE LONGEST PART. It is the reason somebody pressed play,
+# and it is the part most easily ruined by generality. Every strategy here has
+# to arrive with a worked before and after.
+#
+# WRITTEN IN ONE CALL, all seven parts at once (src/psych/psychScript.ts), so
+# that one mind holds the whole arc and the joins are written rather than
+# butted together.
+#
+# Psychology lane only (pipeline/lanes.ts refuses it anywhere else).
+
+id: psych-episode
+name: How your mind works, explained
+
+# The lane does its own two-stage research (extract, then fuse into one
+# understanding) and never reads this field. `single` is the true description:
+# the script is written from one fused source of truth.
+research: single
+
+kind: long
+intent: >
+  One experience of the mind, explained so warmly and so plainly that somebody
+  living it feels understood, understands what is actually happening, and
+  leaves with one small thing they can do today.
+
+targetSeconds: [520, 740]
+
+serialised: false
+
+loops:
+  - id: what_is_happening
+    question: What is actually happening to me, and what do I do about it?
+
+beats:
+  - id: opening
+    type: cold_open
+    seconds: [55, 80]
+    function: >
+      The moment they will recognise, said back to them, then the blame taken
+      off, then the name of the thing, then what this episode will do.
+    opens: [what_is_happening]
+    constraints:
+      - >
+        OPEN ON THE MOMENT, IN THE SECOND PERSON, and make it specific and
+        physical. "You sit down to do one simple thing and your mind will not
+        start." Not a definition, not a greeting, not the name of the show.
+      - >
+        AN EVERYDAY COMPARISON IN THE FIRST FEW LINES, the kind anybody would
+        recognise: fifty tabs open, too many programs running at once.
+      - >
+        TAKE THE BLAME OFF, EXPLICITLY AND EARLY. "You're not doing it on
+        purpose. You're not avoiding it." Then "if that sounds familiar, you're
+        not alone."
+      - >
+        THEN NAME IT. Giving the experience its name is half of what this show
+        does for somebody.
+      - >
+        THEN PROMISE THREE THINGS, in one sentence: what is actually happening,
+        why it feels the way it does, and what helps.
+      - A quick hello in your own words fits here, after the moment. One line, never first.
+
+  - id: picture
+    type: context
+    seconds: [85, 120]
+    function: >
+      Build the one everyday picture this episode runs on, make it concrete,
+      and use it to reframe what this actually is.
+    constraints:
+      - >
+        BUILD THE PICTURE GIVEN TO YOU, out loud and in your own words. Invite
+        them to imagine it, then contrast it with how it works for everybody
+        else if that is part of it.
+      - >
+        MAKE IT CONCRETE WITH THEIR OWN LIFE. The ordinary things in it should
+        be the listener's ordinary things: the laundry, the email, the text
+        nobody answered, drinking some water.
+      - >
+        THEN THE REFRAME the picture earns: what this experience actually is,
+        as against the label people put on it.
+      - >
+        SAY PLAINLY WHAT IT IS NOT. "It's not laziness. It's not a lack of
+        motivation." This is the sentence somebody has been waiting years to
+        hear.
+      - >
+        ONE SMALL HUMAN ASIDE may live here, in your own voice, warm and quick.
+        Never a joke at the listener's expense, and never more than one in the
+        episode.
+
+  - id: brain
+    type: mechanism
+    seconds: [85, 120]
+    function: >
+      What is actually happening, explained through the picture, with at most
+      two real terms and each one explained in the same breath.
+    constraints:
+      - >
+        START BY CORRECTING WHAT PEOPLE BELIEVE. "People often think this is
+        about X, but it's actually about Y." That single move is what makes the
+        science land rather than wash over.
+      - >
+        AT MOST TWO TECHNICAL TERMS IN THE WHOLE EPISODE, each given its plain
+        meaning in the same sentence: "the prefrontal cortex, the part of the
+        brain that helps you organise and start things".
+      - >
+        EXPLAIN IT THROUGH THE PICTURE, not beside it. The mechanism should
+        arrive as the reason the picture looks the way it does.
+      - >
+        END ON THE CONSEQUENCE, plainly, and take the blame off it again: what
+        the mind does when it is overloaded, and why that is not giving up.
+      - One idea per sentence. Keep the real specifics, say them in ordinary words.
+
+  - id: real_life
+    type: stakes
+    seconds: [65, 95]
+    function: >
+      Two to four moments from ordinary life where this actually shows up, told
+      back to the listener in the second person.
+    constraints:
+      - >
+        CONCRETE AND PHYSICAL. What they were doing, what happened, where they
+        ended up. "You get up to clean your room, and twenty minutes later
+        you're sitting on the bed on your phone in the same spot."
+      - >
+        INCLUDE THE ONE THAT CARRIES GUILT, if the research has it, and name
+        both halves of it honestly: the relief and the guilt arriving together.
+      - Second person throughout. No case studies, no "some people find".
+      - Continue straight on from the last part. Never restart the episode here.
+
+  - id: feelings
+    type: turn
+    seconds: [55, 85]
+    function: >
+      The emotional weight: the inner voice, the hiding, and why shame makes
+      the whole thing heavier.
+    constraints:
+      - >
+        QUOTE THEIR INNER VOICE, in their words, as thoughts. "Why can't I just
+        do it? Everyone else seems fine. What is wrong with me?"
+      - >
+        NAME THE HIDING. Looking fine on the outside while none of it is fine
+        on the inside is the part nobody says out loud.
+      - >
+        SAY WHAT SHAME ACTUALLY DOES, plainly and with rhythm. It is not a
+        feeling that sits still; it stops motivation, clarity and the ability
+        to choose.
+      - >
+        END BY NAMING WHY IT FEELS SO HEAVY: it is this on top of the thing
+        itself, both at once.
+      - Never scold, never pity, never perform sadness.
+
+  - id: helps
+    type: payoff
+    seconds: [110, 155]
+    function: >
+      The kind reframe, then three or four things that genuinely help, each
+      with a worked before and after.
+    constraints:
+      - >
+        START WITH THE REFRAME: what the mind is doing FOR them. It is not
+        trying to make life harder; here is what it is protecting them from.
+      - >
+        THE PRINCIPLE BEFORE THE TACTICS, in one line: pushing harder is not
+        what works here, making things smaller is.
+      - >
+        EVERY STRATEGY GETS A WORKED BEFORE AND AFTER. "Clean the kitchen"
+        becomes "pick up one thing and throw it away". Without the example it
+        is advice nobody can use.
+      - >
+        INCLUDE SOMETHING OUTSIDE THEIR OWN HEAD: a timer, a short list,
+        another person. And give the emotional version of the same move: they
+        don't have to trust the whole thing, only the next two minutes.
+      - >
+        GIVE PERMISSION, in short sentences. They don't have to finish. They
+        don't have to do it well. They only have to begin.
+      - Nothing that costs money, and nothing that is really a medical decision.
+
+  - id: close
+    type: outro
+    seconds: [45, 70]
+    function: >
+      Land the episode on the picture, give one tiny thing to do today, then
+      the goodbye.
+    closes: [what_is_happening]
+    constraints:
+      - >
+        COME BACK TO THE PICTURE AND TURN IT. The last image of the episode is
+        the first one, seen differently now: not broken, just overloaded.
+      - >
+        AFFIRM WHAT IS ACTUALLY TRUE about them, drawn from what the episode
+        established, never flattery.
+      - >
+        ONE TINY THING TO DO TODAY, smaller than they expect, and only one.
+      - >
+        A LINE WITH RHYTHM TO IT before the goodbye. Something short enough to
+        stay with somebody.
+      - >
+        THEN THE GOODBYE, warm and unhurried, which asks them to follow and to
+        pass it to somebody who needs it. It is the last thing said.
+
+# Settles in, builds through the science and the feelings, peaks on what
+# actually helps, and comes down gently to the close. Below its own peak at the
+# open, as the shipped-format check asks, and for a reason particular to this
+# show: an episode that opens at full pitch sounds like somebody performing
+# concern at you.
+tensionCurve: [0.55, 0.7, 0.85, 0.8, 0.9, 1.0, 0.5]

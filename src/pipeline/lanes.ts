@@ -3,10 +3,11 @@
  *
  * The lanes are mutually exclusive by construction:
  *
- *   fiction   persona.fiction is true            pipeline/fiction.ts
- *   news      desks/<id>.yaml exists             pipeline/news.ts
- *   business  casebooks/<id>.yaml exists         pipeline/business.ts
- *   story     none of the above                  pipeline/episode.ts
+ *   fiction     persona.fiction is true            pipeline/fiction.ts
+ *   news        desks/<id>.yaml exists             pipeline/news.ts
+ *   business    casebooks/<id>.yaml exists         pipeline/business.ts
+ *   psychology  curricula/<id>.yaml exists         pipeline/psych.ts
+ *   story       none of the above                  pipeline/episode.ts
  *
  * A channel that qualifies for two is refused outright, and so is a run whose
  * format belongs to another lane: `make --show myths-of-the-world --format
@@ -15,13 +16,15 @@
 import { Persona } from '../canon/schema';
 import { hasCasebook } from '../business/casebook';
 import { hasNewsDesk } from '../news/desk';
+import { hasCurriculum } from '../psych/curriculum';
 
-export type Lane = 'fiction' | 'news' | 'business' | 'story';
+export type Lane = 'fiction' | 'news' | 'business' | 'psychology' | 'story';
 
 /** Formats that belong to one lane only, by id prefix. */
 const OWNED: Array<[RegExp, Lane]> = [
   [/^news-/, 'news'],
   [/^biz-/, 'business'],
+  [/^psych-/, 'psychology'],
 ];
 
 export const laneOf = (persona: Persona): Lane => {
@@ -29,6 +32,7 @@ export const laneOf = (persona: Persona): Lane => {
   if (persona.fiction) claims.push('fiction');
   if (hasNewsDesk(persona.id)) claims.push('news');
   if (hasCasebook(persona.id)) claims.push('business');
+  if (hasCurriculum(persona.id)) claims.push('psychology');
   if (claims.length > 1) {
     throw new Error(
       `${persona.id} qualifies for the ${claims.join(' and ')} lanes at once. A channel is one ` +
@@ -44,7 +48,7 @@ export const assertFormatInLane = (lane: Lane, formatId: string): void => {
   if (owner && owner !== lane) {
     throw new Error(`"${formatId}" is a ${owner} format and this channel is on the ${lane} lane.`);
   }
-  if (!owner && (lane === 'news' || lane === 'business')) {
+  if (!owner && (lane === 'news' || lane === 'business' || lane === 'psychology')) {
     throw new Error(`the ${lane} lane only runs its own formats, and "${formatId}" is not one.`);
   }
 };

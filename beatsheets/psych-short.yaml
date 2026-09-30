@@ -1,0 +1,97 @@
+# One thing about your mind, explained kindly, under three minutes.
+#
+# NOT A TRAILER AND NOT A SUMMARY OF AN EPISODE. Somebody who hears only this
+# has been told one true thing about how their mind works, in words they can
+# use today. It never points at a longer version.
+#
+# ONE IDEA, NOT A SUBJECT. The episode explains ADHD overwhelm; a short explains
+# why the freeze happens. Three minutes is about four hundred and fifty words,
+# and the commonest way to waste them is to try to cover the whole topic and
+# leave the listener with an outline instead of an understanding.
+#
+# THE ORDER IS THE EPISODE'S ORDER, COMPRESSED: the moment first, so they know
+# they are understood; then the one thing that explains it, through one
+# comparison; then one thing to try. Validation still comes first, because
+# three minutes is not a reason to skip the part that makes somebody listen.
+#
+# Written in one call from ONE article (src/psych/psychScript.ts). The fused
+# understanding an episode gets costs more than a short's entire budget, and
+# with one idea there is far less to fuse.
+#
+# Psychology lane only (pipeline/lanes.ts refuses it anywhere else).
+
+id: psych-short
+name: One thing about your mind
+
+research: single
+
+kind: short
+intent: >
+  One true thing about how the mind works, explained in under three minutes so
+  kindly and so plainly that somebody living it feels understood and has one
+  small thing to try today.
+
+# The parts allow 166s; the budget sits under the line because speech rate is
+# an estimate and the writer tends to overshoot by about ten per cent.
+targetSeconds: [125, 160]
+
+serialised: false
+
+loops:
+  - id: one_thing
+    question: What is actually happening, and what can I do right now?
+
+beats:
+  - id: moment
+    type: cold_open
+    seconds: [55, 72]
+    function: >
+      The moment they will recognise, the blame taken off, and the name of the
+      thing.
+    opens: [one_thing]
+    constraints:
+      - >
+        OPEN ON THE MOMENT ITSELF, second person, specific and physical. No
+        greeting, no naming the show, no "today we're talking about". Somebody
+        scrolling gave you about three seconds.
+      - >
+        TAKE THE BLAME OFF IMMEDIATELY. "You're not being lazy. You're not
+        avoiding it." Then that they are not the only one.
+      - NAME IT, if it has a name. That is half of what this does for somebody.
+
+  - id: why
+    type: mechanism
+    seconds: [48, 62]
+    function: >
+      The one thing that explains it, through one everyday comparison.
+    constraints:
+      - >
+        ONE IDEA ONLY. The single piece of understanding that makes the moment
+        make sense, not a tour of the subject.
+      - >
+        ONE EVERYDAY COMPARISON, and let it carry the explanation. Fifty tabs
+        open, a phone on five per cent, an alarm that cannot tell toast from a
+        fire.
+      - >
+        NO JARGON. If a term genuinely cannot be avoided, it gets four plain
+        words and nothing else.
+      - Continue straight on. Never restart, never recap what you just said.
+
+  - id: one_thing
+    type: outro
+    seconds: [22, 32]
+    function: >
+      One small thing to try, then the goodbye.
+    closes: [one_thing]
+    constraints:
+      - >
+        ONE THING, SMALLER THAN THEY EXPECT, and concrete enough to do in the
+        next ten minutes. Never "be kind to yourself" on its own.
+      - >
+        NO LIST. A second suggestion halves the chance of the first one
+        happening.
+      - >
+        THEN THE GOODBYE, warm and quick, asking them to follow. It is the last
+        thing said.
+
+tensionCurve: [0.75, 1.0, 0.5]

@@ -39,6 +39,7 @@ import { cutStories } from './pipeline/anthology';
 import { runFiction } from './pipeline/fiction';
 import { runNews } from './pipeline/news';
 import { runBusiness } from './pipeline/business';
+import { runPsych } from './pipeline/psych';
 import { assertFormatInLane, laneOf } from './pipeline/lanes';
 import { hasNewsDesk, loadDesk } from './news/desk';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
@@ -424,6 +425,26 @@ const cmdMake = async (argv: string[]): Promise<number> => {
     console.log(`  write the whole story     ~${short ? '4-6' : '8-14'}p (one call)`);
     console.log(`  render                    ~${short ? '3' : '12-16'}p on ${ttsProvider()}`);
     console.log('  checks + gate             free');
+    console.log(`Budget: ${short ? 'under 10p' : 'under 100p'}. Publishes nothing.`);
+    return 0;
+  }
+
+  if (laneOf(persona) === 'psychology' && flag(argv, 'dry-run')) {
+    const short = format.kind === 'short';
+    console.log(
+      `${persona.name}: "${topic}", explained ${short ? 'in under 3 minutes' : 'in 9 to 12 minutes'}.`
+    );
+    if (short) {
+      console.log('  search + one article      free');
+      console.log('  write it                  ~4p (one call)');
+    } else {
+      console.log('  search + choose sources   free');
+      console.log('  extract what is usable    ~5p (one call over 6 documents)');
+      console.log('  fuse one understanding    ~4p (one call)');
+      console.log('  write the whole episode   ~6p (one call)');
+    }
+    console.log(`  render                    ~${short ? '3' : '12-16'}p on ${ttsProvider()}`);
+    console.log('  safety + craft checks     free');
     console.log(`Budget: ${short ? 'under 10p' : 'under 100p'}. Publishes nothing.`);
     return 0;
   }
@@ -846,7 +867,9 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
       ? await runNews(run, deps)
       : lane === 'business'
         ? await runBusiness(run, deps)
-        : await runEpisode(run, deps);
+        : lane === 'psychology'
+          ? await runPsych(run, deps)
+          : await runEpisode(run, deps);
 
   ui.finish([
     ['spent', `${run.manifest.spentPence.toFixed(1)}p`],
@@ -1908,7 +1931,9 @@ const cmdTick = async (argv: string[]): Promise<number> => {
           ? await runNews(run, buildDeps())
           : laneOf(persona) === 'business'
             ? await runBusiness(run, buildDeps())
-            : await runEpisode(run, buildDeps());
+            : laneOf(persona) === 'psychology'
+              ? await runPsych(run, buildDeps())
+              : await runEpisode(run, buildDeps());
     } catch (err) {
       if (!persona.fiction && topic) returnTopic(persona.id, topic);
       throw err;
