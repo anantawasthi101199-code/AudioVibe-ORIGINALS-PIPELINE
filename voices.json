@@ -48,5 +48,15 @@
         "firstRunId": "true-crime-in-full/e001-20260929-murder-of-julia-wallace-liverpool-1931"
       }
     }
+  },
+  "inside-your-head": {
+    "host": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "shimmer",
+        "firstUsedAt": "2026-09-30T20:57:40.383Z",
+        "firstRunId": "inside-your-head/e001-20260930-adhd-overwhelm"
+      }
+    }
   }
 }
