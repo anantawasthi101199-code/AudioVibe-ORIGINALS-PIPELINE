@@ -26,7 +26,7 @@ import {
   type Platform,
   type RunDetail,
 } from '../api';
-import { CostBar, ErrorNote, LiveLog, StageRail, StatePill } from '../components/bits';
+import { CostBar, ErrorNote, LiveLog, StageRail, StatePill, NowBanner } from '../components/bits';
 import { Count, Info } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
 
@@ -136,7 +136,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   if (error && !data) return <div className="page"><ErrorNote>{error}</ErrorNote></div>;
   if (!data) return <div className="page"><div className="empty">Reading the run.</div></div>;
 
-  const { run, script, gate, manifest, claims, corpus, cuts, hasAudio, isSource } = data;
+  const { run, script, gate, manifest, claims, corpus, cuts, hasAudio, isSource, inSeries } = data;
   const held = manifest.holdForApproval && !manifest.approvedAt;
   const currentStage = live ? (events[events.length - 1]?.stage ?? null) : null;
 
@@ -178,7 +178,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       <div className="row between" style={{ marginBottom: '0.9rem' }}>
         <h1 style={{ fontSize: '1.4rem' }}>{script?.title ?? run.topic}</h1>
         <div className="row nowrap">
-          <StatePill state={live ? 'running' : run.state} />
+          <StatePill state={live ? 'running' : run.state} stage={currentStage} />
           <Info label="What this run was asked for">
             {run.channelName} · e{String(run.episode).padStart(3, '0')}
             {run.short ? `-s${String(run.short).padStart(2, '0')}` : ''} · {run.formatId}
@@ -210,6 +210,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               )}
             </div>
             <div className="panel-body stack">
+              {live && <NowBanner events={events} startedAt={data.job?.startedAt} />}
               <LiveLog events={events} />
               <CostBar events={events} total={run.spentPence} />
             </div>
@@ -303,7 +304,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                         {c.title ?? '(untitled)'}
                       </td>
                       <td>
-                        <StatePill state={c.state} />
+                        <StatePill state={c.state} stage={c.liveStage} />
                       </td>
                       <td className="right num">
                         {c.releaseAt ? (
@@ -358,8 +359,12 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <h2>The picture</h2>
           <div className="mt">
             <ImagePicker
-              title="Episode image"
-              note="What shows on the card in the feed and on the lock screen while this plays."
+              title={inSeries ? 'Episode image' : 'Audiocard image'}
+              note={
+                inSeries
+                  ? 'What shows on this episode in its series, and on the lock screen while it plays.'
+                  : 'What shows on the audiocard in the feed, and on the lock screen while it plays.'
+              }
               state={art}
               src={`/api/run/art?id=${encodeURIComponent(id)}`}
               disabled={busy !== null || live}

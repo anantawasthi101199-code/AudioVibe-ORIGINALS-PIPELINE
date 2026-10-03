@@ -931,7 +931,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   <span className="row nowrap">
                     <span className="muted mono tiny">{clock(r.durationS)}</span>
                     <span className="muted mono tiny">{money(r.spentPence)}</span>
-                    <StatePill state={r.state} />
+                    <StatePill state={r.state} stage={r.liveStage} />
                   </span>
                 </button>
               ))}

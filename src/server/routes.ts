@@ -135,7 +135,21 @@ export const getRun = (id: string) => {
     isSource: loadFormat(run.manifest.formatId).sourceOnly && run.manifest.story === undefined,
     job: job ?? null,
     hasAudio: fs.existsSync(path.join(run.dir, 'media', 'episode.wav')),
+    // WHERE IT WILL SIT ON THE APP, so the page can name its picture right: an
+    // episode of a series, or a loose audiocard. Shorts are always cards.
+    inSeries: inSeriesFor(run),
   };
+};
+
+const inSeriesFor = (run: Run): boolean => {
+  if (loadFormat(run.manifest.formatId).kind === 'short') return false;
+  if (run.manifest.seriesTitle) return true;
+  try {
+    return Boolean(loadPersona(run.manifest.personaId).publishesAsSeries);
+  } catch {
+    // A run from a channel that no longer exists: it is not going anywhere.
+    return false;
+  }
 };
 
 export const getJob = (id: string) => {

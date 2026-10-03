@@ -65,6 +65,8 @@ export type RunState =
   | 'abandoned';
 
 export interface RunSummary {
+  /** While working: the stage the pipeline last reported. */
+  liveStage: string | null;
   id: string;
   channelId: string;
   channelName: string;
@@ -273,6 +275,8 @@ export interface RunDetail {
   isSource: boolean;
   job: Job | null;
   hasAudio: boolean;
+  /** Publishes as an episode of a series, rather than a loose audiocard. */
+  inSeries: boolean;
 }
 
 export class ApiError extends Error {

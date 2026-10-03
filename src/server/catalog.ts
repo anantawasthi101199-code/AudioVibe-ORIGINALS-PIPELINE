@@ -32,6 +32,7 @@ import { loadVoiceRegistry } from '../canon/voiceRegistry';
 import { loadAccounts } from '../publish/account';
 import { findSeries, loadRegistry } from '../publish/seriesRegistry';
 import { platformUrl } from '../config';
+import { jobs } from './jobs';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -312,6 +313,11 @@ export interface RunSummary {
    * audio", not "is it current".
    */
   hasAudio: boolean;
+  /**
+   * While it is working, the stage the pipeline last reported, so a list can
+   * say "writing" rather than only "running". Null when nothing is in flight.
+   */
+  liveStage: string | null;
 }
 
 /**
@@ -410,6 +416,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     spentPence: m.spentPence,
     completed: [...m.completed],
     state,
+    liveStage: liveIds.has(run.id) ? (jobs.forRun(run.id)?.events.at(-1)?.stage ?? null) : null,
     episode: m.episode,
     short: m.short ?? null,
     story: m.story ?? null,

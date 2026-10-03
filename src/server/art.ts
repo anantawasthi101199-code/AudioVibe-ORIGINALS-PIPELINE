@@ -50,7 +50,7 @@ export const SHAPES: Record<ChannelArtKind, ArtShape> = {
 export const EPISODE_SHAPE: ArtShape = {
   width: AUDIO_COVER_SIZE.width,
   height: AUDIO_COVER_SIZE.height,
-  label: 'episode image',
+  label: 'audiocard or episode image',
 };
 
 /**

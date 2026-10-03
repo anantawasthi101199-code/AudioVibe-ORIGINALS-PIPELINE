@@ -70,7 +70,7 @@ const RunRow = ({ run, go }: { run: RunSummary; go: (path: string) => void }) =>
         {run.gate && run.gate.blocking > 0 && <span className="pill fail">{run.gate.blocking}</span>}
         <span className="muted mono tiny">{clock(run.durationS)}</span>
         <span className="muted mono tiny">{money(run.spentPence)}</span>
-        <StatePill state={run.state} />
+        <StatePill state={run.state} stage={run.liveStage} />
       </>
     }
   />

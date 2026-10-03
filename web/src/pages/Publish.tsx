@@ -426,7 +426,7 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
                   <span className="queue-title">{r.title ?? r.topic}</span>
                   <span className="muted">{ago(r.createdAt)}</span>
                 </span>
-                <StatePill state={r.state} />
+                <StatePill state={r.state} stage={r.liveStage} />
               </button>
             ))}
           </div>

@@ -41,7 +41,7 @@ describe('the shapes a supplied picture has to match', () => {
     // "cover failed a check" helps nobody who just picked a file.
     expect(SHAPES.avatar.label).toBe('profile picture');
     expect(SHAPES.cover.label).toBe('cover image');
-    expect(EPISODE_SHAPE.label).toBe('episode image');
+    expect(EPISODE_SHAPE.label).toBe('audiocard or episode image');
   });
 });
 

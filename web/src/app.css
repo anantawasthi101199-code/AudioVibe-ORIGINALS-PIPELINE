@@ -2114,3 +2114,26 @@ table.runs .num {
 .bad {
   color: var(--fail);
 }
+
+/* --- What a working run is doing right now -------------------------------- */
+.now {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line, #2a3554);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.now-step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.now-step strong {
+  font-size: 1.05rem;
+}
+.now-line {
+  overflow-wrap: anywhere;
+}

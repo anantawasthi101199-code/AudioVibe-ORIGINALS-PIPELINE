@@ -6,6 +6,7 @@
  * twelve cannot tell the green from the red, and a studio where "passed" and
  * "failed" look identical to them is a studio that publishes the wrong episode.
  */
+import { useEffect, useState } from 'react';
 import type { JobEvent, RunState } from '../api';
 import { money } from '../api';
 
@@ -20,12 +21,15 @@ const STATE: Record<RunState, { label: string; tone: string }> = {
   abandoned: { label: 'abandoned', tone: '' },
 };
 
-export const StatePill = ({ state }: { state: RunState }) => {
+export const StatePill = ({ state, stage }: { state: RunState; stage?: string | null }) => {
   const s = STATE[state];
+  // A working run says which step it is on, not just that it is running.
+  const phase = state === 'running' ? phaseOf(stage) : null;
+  const label = phase ? PHASES.find((p) => p.id === phase)!.doing.toLowerCase() : s.label;
   return (
     <span className={`pill ${s.tone}`}>
       <span className="dot" />
-      {s.label}
+      {label}
     </span>
   );
 };
@@ -34,36 +38,45 @@ export const Pill = ({ children, tone = '' }: { children: React.ReactNode; tone?
   <span className={`pill ${tone}`}>{children}</span>
 );
 
-/* --- The stage rail ------------------------------------------------------- */
+/* --- Where a run is -------------------------------------------------------- */
 
 /**
- * Where a run is, as the pipeline itself defines it.
+ * Six steps every run passes through, whatever its lane.
  *
- * THE STAGES ARE THE PIPELINE'S, not a friendlier set invented for the screen.
- * When something goes wrong the next thing somebody does is read the journal or
- * the terminal, and a rail using different words would make them translate.
+ * THE PIPELINES REPORT TWENTY-ODD STAGE NAMES (brief, wire, source, reference,
+ * casefile, claims, perform, grounding...), and the rail used to know eight of
+ * them, so most channels showed nothing but "running". Every name maps to one
+ * of these; the log underneath still shows the pipeline's own word.
  */
-export const STAGES = [
-  'brief',
-  'corpus',
-  'claims',
-  'verification',
-  'repair',
-  'script',
-  'render',
-  'qa',
+export const PHASES = [
+  { id: 'plan', label: 'Plan', doing: 'Planning what to look for' },
+  { id: 'research', label: 'Research', doing: 'Researching sources' },
+  { id: 'write', label: 'Write', doing: 'Writing the script' },
+  { id: 'voice', label: 'Voice', doing: 'Voicing the audio' },
+  { id: 'check', label: 'Check', doing: 'Checking it' },
+  { id: 'publish', label: 'Publish', doing: 'Publishing' },
 ] as const;
 
-const STAGE_NOTE: Record<string, string> = {
-  brief: 'what to look for',
-  corpus: 'search and fetch',
-  claims: 'bind to quotes',
-  verification: 'check each one',
-  repair: 'narrow or hedge',
-  script: 'write it',
-  render: 'voice it',
-  qa: 'gate it',
+export type PhaseId = (typeof PHASES)[number]['id'];
+
+const PHASE_OF: Record<string, PhaseId> = {
+  brief: 'plan', wire: 'plan', pipeline: 'plan', next: 'plan',
+  corpus: 'research', source: 'research', article: 'research', reference: 'research',
+  casefile: 'research', claims: 'research', verification: 'research', repair: 'research',
+  gaps: 'research', counterEvidence: 'research', continuity: 'research', research: 'research',
+  extract: 'research', fuse: 'research', story: 'research', belief: 'research',
+  script: 'write', perform: 'write', grounding: 'write', title: 'write', taboo: 'write',
+  stylistic_rule: 'write', series: 'write',
+  render: 'voice', voice: 'voice', artwork: 'voice',
+  qa: 'check', gate: 'check',
+  publish: 'publish', account: 'publish',
 };
+
+/** Which step a pipeline stage belongs to. Unknown names count as research. */
+export const phaseOf = (stage: string | null | undefined): PhaseId | null =>
+  stage ? (PHASE_OF[stage] ?? 'research') : null;
+
+const phaseIndex = (id: PhaseId) => PHASES.findIndex((p) => p.id === id);
 
 export const StageRail = ({
   completed,
@@ -73,24 +86,78 @@ export const StageRail = ({
   completed: string[];
   live?: string | null;
   skip?: string[];
-}) => (
-  <div className="rail">
-    {STAGES.filter((s) => !skip.includes(s)).map((stage) => {
-      const done = completed.includes(stage);
-      const isLive = live === stage;
-      return (
-        <div
-          key={stage}
-          className={`rail-stage ${isLive ? 'live' : done ? 'done' : 'pending'}`}
-          title={`${stage}: ${done ? 'done' : isLive ? 'working' : 'not yet'}`}
-        >
-          <div className="rail-name">{stage}</div>
-          <div className="rail-note">{isLive ? 'working' : STAGE_NOTE[stage]}</div>
-        </div>
-      );
-    })}
-  </div>
-);
+}) => {
+  const livePhase = phaseOf(live);
+  const shown = PHASES.filter((p) => !(skip.includes('render') && p.id === 'voice') && !(skip.includes('qa') && p.id === 'check'));
+  const doneUpTo = Math.max(-1, ...completed.map((c) => phaseIndex(phaseOf(c)!)));
+  return (
+    <div className="rail">
+      {shown.map((p) => {
+        const idx = phaseIndex(p.id);
+        const isLive = livePhase === p.id;
+        // Everything before the live step is done; otherwise what has completed.
+        const done = livePhase ? idx < phaseIndex(livePhase) : idx <= doneUpTo;
+        return (
+          <div
+            key={p.id}
+            className={`rail-stage ${isLive ? 'live' : done ? 'done' : 'pending'}`}
+            title={`${p.label}: ${isLive ? 'working now' : done ? 'done' : 'not yet'}`}
+          >
+            <div className="rail-name">
+              {done && !isLive ? '✓ ' : ''}
+              {p.label}
+            </div>
+            <div className="rail-note">{isLive ? 'working now' : done ? 'done' : ''}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const since = (from: string, now: number): string => {
+  const s = Math.max(0, Math.round((now - new Date(from).getTime()) / 1000));
+  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+};
+
+/**
+ * What a working run is doing right now, in words: the step, the last thing it
+ * reported, and how long each has taken. Ticks every second.
+ */
+export const NowBanner = ({ events, startedAt }: { events: JobEvent[]; startedAt?: string }) => {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(t);
+  }, []);
+
+  const last = events[events.length - 1];
+  const phase = phaseOf(last?.stage) ?? 'plan';
+  const step = PHASES.find((p) => p.id === phase)!;
+  // When this step began: the first event of the unbroken run of this phase.
+  let stepStart = last?.at;
+  for (let i = events.length - 1; i >= 0 && phaseOf(events[i]!.stage) === phase; i--) {
+    stepStart = events[i]!.at;
+  }
+  const spent = events.reduce((n, e) => Math.max(n, e.spentPence), 0);
+
+  return (
+    <div className="now">
+      <div className="now-step">
+        <span className="pill live">
+          <span className="dot" /> Step {phaseIndex(phase) + 1} of {PHASES.length}
+        </span>
+        <strong>{step.doing}</strong>
+        {stepStart && <span className="faint">for {since(stepStart, now)}</span>}
+      </div>
+      <div className="now-line muted">{last ? last.message : 'Starting...'}</div>
+      <div className="now-meta faint tiny">
+        {startedAt && <>Running {since(startedAt, now)}</>}
+        {spent > 0 && <> · spent so far {money(spent)}</>}
+      </div>
+    </div>
+  );
+};
 
 /* --- Live log ------------------------------------------------------------- */
 
