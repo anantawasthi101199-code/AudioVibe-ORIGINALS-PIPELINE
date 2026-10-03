@@ -32,6 +32,13 @@ const fake = (over: { provisionStatus?: number; isAi?: boolean } = {}) => {
         body = sent as Record<string, unknown>;
         return { status: 200, json: { data: { tokens: { accessToken: 'ch' } } }, text: '' };
       }
+      if (url.endsWith('/api/feed/categories')) {
+        return {
+          status: 200,
+          json: { data: { categories: [{ id: 'cat-health', name: 'Fitness & Health' }] } },
+          text: '',
+        };
+      }
       if (url.endsWith('/api/admin/provision/users')) {
         if (over.provisionStatus === 409) {
           return { status: 409, json: { message: 'already exists' }, text: '' };

@@ -40,6 +40,13 @@ const fake = (over: { provisionStatus?: number; isAi?: boolean } = {}) => {
           text: '',
         };
       }
+      if (url.endsWith('/api/feed/categories')) {
+        return {
+          status: 200,
+          json: { data: { categories: [{ id: 'cat-health', name: 'Fitness & Health' }] } },
+          text: '',
+        };
+      }
       if (url.endsWith('/api/admin/provision/users')) {
         if (over.provisionStatus === 409) {
           return { status: 409, json: { message: 'Username or email already exists' }, text: '' };
@@ -137,6 +144,10 @@ describe('PlatformAccounts', () => {
     await api.uploadCover(img);
 
     expect(calls.some((c) => c.method === 'PUT' && c.url.endsWith('/api/users/profile'))).toBe(true);
+    // The genre is declared on the account, so the channel is findable under
+    // its category before its first upload.
+    const niche = calls.find((c) => c.method === 'PUT' && c.url.endsWith('/api/creator/niche'));
+    expect(niche?.body).toEqual({ category_ids: ['cat-health'] });
     expect(uploads.map((u) => u.field)).toEqual(['avatar', 'cover']);
     expect(uploads[0]!.url).toContain('/api/users/avatar');
     expect(calls.some((c) => c.url.includes('/admin/'))).toBe(false);

@@ -308,6 +308,18 @@ export class PlatformAccounts {
       bio: bioFor(persona),
       is_private: false,
     });
+
+    // THE CHANNEL'S GENRE, declared rather than waiting for uploads to imply
+    // it. The platform otherwise derives a creator's genres from what they have
+    // published, so a new channel sat in no category and never appeared under
+    // one until its first episode.
+    const data = await this.call('GET', '/api/feed/categories', undefined, false);
+    const list = (data.categories as Array<{ id: string; name: string }> | undefined) ?? [];
+    const category = list.find((c) => c.name.toLowerCase() === persona.category.toLowerCase());
+    if (!category) {
+      throw new AccountError(400, `the platform has no category "${persona.category}"`);
+    }
+    await this.call('PUT', '/api/creator/niche', { category_ids: [category.id] });
   }
 
   /**
