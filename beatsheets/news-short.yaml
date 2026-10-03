@@ -44,80 +44,66 @@ loops:
     question: What has happened, and what happens now?
 
 beats:
-  - id: hello
-    type: context
-    seconds: [12, 20]
+  # THREE STEPS, from the owner's channel sheet (2026-09-30): what happened
+  # today, why it actually matters to you, what happens next. Crisp and clear.
+  - id: what_happened
+    type: stakes
+    seconds: [40, 55]
     function: >
-      Say hello, and set up the ongoing story this belongs to in a sentence or
-      two, then hand into the news.
+      Step one, WHAT HAPPENED TODAY: a one-line hello, then the news itself,
+      plainly, with who reported it and when.
     opens: [the_news]
     constraints:
       - >
-        A GREETING IN YOUR OWN WORDS, then straight to it. "Hi, it's Rowan."
-        One line, not a speech.
+        ONE LINE OF HELLO in your own words, then straight to it. "Hi, it's
+        Rowan." Not a speech.
       - >
-        THE BIG PICTURE in one or two sentences: what ongoing story this is part
-        of, so somebody who has not followed it knows where they are. Only what
-        the source says about it.
+        THE NEWS IN PLAIN WORDS: who did what, where, and when. Name the source
+        once, naturally ("this morning, Reuters reported...").
       - >
-        HAND OVER out loud: "So here's what happened." The news itself belongs
-        to the next part.
-    minClaims: 0
-
-  - id: news
-    type: stakes
-    seconds: [25, 40]
-    function: >
-      What happened, when it was reported and who reported it, plainly.
-    constraints:
-      - >
-        NAME THE SOURCE HERE, once: the outlet reported it, and when, said
-        naturally ("late on Monday evening", "this morning").
-      - Who did what, in plain words, and each side's first response if the source has it.
+        ONE SENTENCE OF BACKGROUND only if somebody who has not followed the
+        story would be lost without it.
       - Attribution before every claim that is a claim.
     minClaims: 0
 
-  - id: explain
+  - id: why_it_matters
     type: mechanism
     seconds: [45, 65]
     function: >
-      What it means, in simple terms: the chain of events step by step, one
-      everyday comparison, and any unfamiliar thing explained plainly.
+      Step two, WHY IT ACTUALLY MATTERS TO YOU: the chain from this event to an
+      ordinary person's life, step by step.
     constraints:
       - >
-        CAUSE AND EFFECT, STEP BY STEP. This happened, so that happened, which is
-        why it matters now. A listener should be able to retell it.
+        SAY IT OUT LOUD AS THE STEP: "So why does this matter to you?" then
+        answer it. The listener should hear the structure.
       - >
-        EXPLAIN, DO NOT ADD. At most two facts that were not already in the
-        news part, and only if they are needed to understand it.
+        CAUSE AND EFFECT, STEP BY STEP, down to something a person feels:
+        prices, jobs, travel, safety, what is on the news next week.
       - >
-        ONE EVERYDAY COMPARISON where it genuinely helps, clearly your own
-        illustration, never a new fact. Two at most.
+        EXPLAIN UNFAMILIAR THINGS the first time, in a clause: what sanctions
+        do, what a tariff is.
       - >
-        EXPLAIN UNFAMILIAR THINGS the first time, in a clause: what a blockade
-        is, what sanctions do, who is mediating.
-      - Each side's position fairly, with who said it. No view of your own.
-      - Continue from the last part. Never a fresh start.
+        EXPLAIN, DO NOT ADD. At most two facts not already said, only if
+        needed. Each side's position fairly, with who said it. No view of your
+        own.
     minClaims: 0
 
-  - id: close
+  - id: whats_next
     type: outro
-    seconds: [15, 25]
+    seconds: [25, 40]
     function: >
-      Where it leaves things, then the goodbye and the follow.
+      Step three, WHAT HAPPENS NEXT, then the goodbye and the follow.
     closes: [the_news]
     constraints:
       - >
-        PULL IT TOGETHER in one or two sentences, fresh words: where things
-        stand now, and what happens next only if the source says so. Never
-        invent an unknown.
+        SAY IT AS THE STEP: "So what happens next?" Then only what the source
+        says is scheduled, threatened or expected. Never invent an unknown; if
+        nothing is known, say what to watch for.
       - >
-        THEN THE GOODBYE, warm and quick, asking the listener to follow for more
-        on the beat. The last thing said.
+        THEN THE GOODBYE, warm and quick, asking the listener to follow for more.
+        The last thing said.
       - No opinion, no moral, no "only time will tell".
     minClaims: 0
 
-# Settles in with the hello, lands the news, carries the weight in the
-# explanation, and eases out. Below the peak at the open, as the shipped-format
-# check asks.
-tensionCurve: [0.5, 0.85, 1.0, 0.45]
+# Lands the news, carries the weight in why it matters, eases out on what next.
+tensionCurve: [0.85, 1.0, 0.5]

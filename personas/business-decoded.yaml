@@ -136,6 +136,12 @@ canon:
       distributor as the bridge between the factory and every corner shop".
 
 # The first is what `make` uses by default.
+# From the owner's channel sheet: shorts with background music, long form
+# without. A run's --music / --no-music wins.
+music:
+  short: true
+  long: false
+
 formats:
   - biz-episode
   - biz-short

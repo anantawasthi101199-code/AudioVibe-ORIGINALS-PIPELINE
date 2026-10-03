@@ -20,6 +20,8 @@
  * the plumbing every lane shares: the run store, the renderer, the voice
  * registry, the gate, and the source-text checks in qa/sourceText.ts.
  */
+import { formatForRun } from '../formats/forRun';
+import { musicFor } from '../render/musicFor';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import {
@@ -100,7 +102,7 @@ export const runBusiness = async (
   const flags = stageFlags(deps.stages);
   const skipped = stagesOff(flags);
   const persona = loadPersona(run.manifest.personaId);
-  const format = loadFormat(run.manifest.formatId);
+  const format = formatForRun(run);
   const book = bizDeps.casebook ?? loadCasebook(persona.id);
   const kind = format.kind;
   run.journal({ stage: 'pipeline', event: 'start', detail: run.manifest.topic });
@@ -248,8 +250,7 @@ export const runBusiness = async (
         voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
-        // A toggle, off unless the run asks (--music).
-        music: deps.music === true,
+        music: musicFor(deps.music, persona, run.manifest.formatId),
         musicPhraseFile: deps.musicPhraseFile,
         musicSeed: run.manifest.topic,
       },

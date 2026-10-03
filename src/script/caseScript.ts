@@ -188,7 +188,7 @@ ${format.beats
   })
   .join('\n\n')}
 
-THE JOINS MATTER AS MUCH AS THE PARTS. Part two picks up from the last thing part one said, by name. Part three picks up from the last event of part two. Nobody starts again.
+THE JOINS MATTER AS MUCH AS THE PARTS. Every part picks up from the last thing the part before it said, by name. Nobody starts again.
 
 ${returnShape(parts)}`;
 

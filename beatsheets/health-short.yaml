@@ -1,0 +1,92 @@
+# One everyday health question in three minutes, from one article.
+#
+# The Root Health's short, from the owner's channel sheet (2026-09-30): coffee
+# good or bad, gut-friendly drinks, cholesterol symptoms, PCOD, myth busting;
+# narrated "hook intro - story - suggestion from doctors / myth debunk".
+#
+# THE SUGGESTION IS ATTRIBUTED, NEVER THE NARRATOR'S OWN. The owner chose this
+# on 2026-10-03: the close says what a named health body recommends, as theirs
+# ("the NHS suggests..."), and never "you should". The persona's no-advice,
+# no-diagnosis, no-treatment taboos still apply in full.
+
+id: health-short
+name: Health question, in three minutes
+
+research: single
+
+kind: short
+intent: >
+  One everyday health question answered in under three minutes: a hook, the
+  real story of what is known, then either the myth's verdict or what a named
+  health body recommends, said as theirs.
+
+targetSeconds: [150, 185]
+
+serialised: false
+
+loops:
+  - id: the_question
+    question: Is this true, and what do the people who study it say?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [20, 30]
+    function: >
+      The question, put the way people actually ask it, so the listener stays.
+    opens: [the_question]
+    constraints:
+      - >
+        OPEN WITH THE QUESTION OR THE BELIEF, in everyday words: "Is coffee
+        actually bad for you?" or the thing everybody's aunt says. One or two
+        sentences.
+      - >
+        No greeting, no naming the show. A listener in a feed gave you about
+        three seconds.
+      - Never answer it here.
+    minClaims: 0
+
+  - id: story
+    type: escalation
+    seconds: [85, 105]
+    function: >
+      What is actually known, told as a story: where the belief came from and
+      what the evidence found.
+    constraints:
+      - >
+        TELL IT AS A STORY, IN ORDER: where the idea came from, what people
+        tested, what they found. People and studies doing things, not a list
+        of facts.
+      - >
+        PLAIN WORDS. Any medical term gets its everyday meaning in the same
+        breath, the first time it is said. At most two in the whole short.
+      - >
+        SAY HOW SURE THE EVIDENCE IS, in plain words: "large studies agree" is
+        different from "one small study found".
+      - >
+        NEVER DIAGNOSE AND NEVER IMPLY THE LISTENER HAS A CONDITION. Describe
+        what happens in people generally.
+    minClaims: 0
+
+  - id: verdict
+    type: payoff
+    seconds: [35, 50]
+    function: >
+      The answer: the myth's verdict, or what a named health body recommends,
+      then the goodbye.
+    closes: [the_question]
+    constraints:
+      - >
+        ANSWER THE QUESTION FROM THE OPENING, clearly: true, false, or true
+        with a catch.
+      - >
+        ANY SUGGESTION IS ATTRIBUTED. Say what a named body recommends, as
+        theirs: "the NHS suggests", "the WHO advises". Never "you should",
+        never a dose, never starting, stopping or changing a medicine.
+      - >
+        IF IT CONCERNS SYMPTOMS, say that a doctor or pharmacist is the person
+        to ask, in one plain sentence.
+      - Then a calm, warm goodbye, which is where the follow is asked for.
+    minClaims: 0
+
+tensionCurve: [0.7, 0.9, 0.5]

@@ -40,33 +40,43 @@ loops:
     question: What happened, and what was never settled about it?
 
 beats:
-  - id: opening
+  # FIVE PARTS, from the owner's channel sheet (2026-09-30): hook, context,
+  # investigation, turning point, aftermath.
+  - id: hook
     type: cold_open
-    seconds: [200, 260]
+    seconds: [90, 130]
     function: >
-      Open on one true moment, then go back and introduce the person it happened
-      to, properly, before anything happens to them.
+      The hook: open on one true moment from the case file and paint it.
     opens: [the_case]
     constraints:
       - Open on the moment in the case file's hook, and PAINT IT. Where we are,
         what time it is, what day, who is there, what it looks like. Take four
-        or five sentences over it. Do not rush past it into the story.
+        or five sentences over it. Do not rush past it.
       - Say the date out loud in the first thirty seconds. A listener who does
         not know what year they are in is not following anything.
-      - Then stop and say who this is about - what they did, what they were
-        like, what that week looked like. Give it real room.
-      - Hand over out loud at the end, so part two is a continuation and not a
-        restart.
+      - Never resolve anything here. End on the question the moment raises.
       - No sentence about crime in general, ever.
 
-  - id: what_happened
-    type: escalation
-    seconds: [380, 500]
+  - id: context
+    type: context
+    seconds: [150, 210]
     function: >
-      The calendar, in order, and then what investigators did as a second
-      sequence. The longest part, and the one carrying the chronology.
+      The context: go back and introduce the people it happened to, properly,
+      and the world they lived in, before anything happens to them.
     constraints:
-      - Pick up from the last thing part one said, by name.
+      - Pick up from the moment the hook ended on, by name, then go back.
+      - Who this is about - what they did, what they were like, what that week
+        looked like. Give it real room.
+      - The place and the time, so the rest makes sense, from the case file only.
+
+  - id: investigation
+    type: escalation
+    seconds: [300, 400]
+    function: >
+      The investigation: the calendar of events in order, then what
+      investigators did and found, as its own sequence. The longest part.
+    constraints:
+      - Pick up from the last thing the context said, by name.
       - Dates in order, said the way a person says them, with the gaps between
         them made felt - "eleven days later", not "on the twenty-fifth".
       - Every scene gets a time, a place and one physical detail, and every one
@@ -75,13 +85,27 @@ beats:
         listener always knows what was known when.
       - Anything marked alleged or disputed is attributed once, plainly, where
         it belongs. Say it once and then stop qualifying.
+      - Stop just before the turning point. Do not reveal it here.
 
-  - id: how_it_ended
-    type: payoff
-    seconds: [200, 260]
+  - id: turning_point
+    type: escalation
+    seconds: [120, 170]
     function: >
-      How it ended, what was never settled, and a last word about the person it
-      happened to rather than about whoever did it.
+      The turning point: the one discovery, mistake or confession that changed
+      the case, told as a scene.
+    constraints:
+      - Pick up from the last thing the investigation said, by name.
+      - ONE turning point, from the case file, told slowly as a scene with its
+        time, place and physical detail.
+      - Say plainly why it changed everything. If the record disputes it, say
+        so once, attributed.
+
+  - id: aftermath
+    type: payoff
+    seconds: [150, 210]
+    function: >
+      The aftermath: how it ended, what was never settled, and a last word
+      about the person it happened to rather than about whoever did it.
     closes: [the_case]
     constraints:
       - Say plainly what happened in the end. A case that trails off has wasted
@@ -94,6 +118,4 @@ beats:
         stepping out from behind it to say goodbye is the single worst note
         this show could end on. It ends on the case and then it stops.
 
-# Rises through the calendar, peaks where it goes wrong, and comes down for the
-# ending. A case is not a thriller and the curve should not pretend it is.
-tensionCurve: [0.5, 0.95, 0.55]
+tensionCurve: [0.6, 0.45, 0.85, 1.0, 0.5]

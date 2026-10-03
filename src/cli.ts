@@ -420,6 +420,14 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   // anything is spent. See pipeline/lanes.ts.
   assertFormatInLane(laneOf(persona), formatId);
 
+  // A LONG EPISODE'S SERIES. It opens by naming it and publishes onto its
+  // shelf. Refused on a short: shorts are loose cards, found by strangers.
+  const seriesTitle = arg(argv, 'series')?.trim() || undefined;
+  if (seriesTitle && format.kind === 'short') {
+    console.error(`--series is for long episodes; "${format.id}" is a short, which publishes as a loose card.`);
+    return 1;
+  }
+
   if (laneOf(persona) === 'business' && flag(argv, 'dry-run')) {
     const short = format.kind === 'short';
     console.log(`${persona.name}: the story of "${topic}", from ONE complete source, ${short ? 'under 3 minutes' : '11 to 14 minutes'}.`);
@@ -522,6 +530,7 @@ const cmdMake = async (argv: string[]): Promise<number> => {
     holdForApproval,
     stages,
     research: research as 'single' | 'extensive' | undefined,
+    seriesTitle,
   });
 
   // Recorded at creation, not at success, for the reason takeTopic is consumed
@@ -847,10 +856,10 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
     // episode SAYS, so re-rendering one part with a bed and one without would
     // be audible but never wrong.
     //
-    // OFF BY DEFAULT, on the owner's instruction: "music is a toggle, not
-    // necessary, and by default it is false". `--music` turns the synthesised
-    // bed on, and naming a bed from the library with `--bed` implies it.
-    music: flag(argv, 'music') || !!bedName,
+    // THE CHANNEL DECIDES unless the run says otherwise: `--music` (or naming
+    // a bed with `--bed`) turns it on, `--no-music` turns it off, and neither
+    // leaves it to the persona's music setting for this format's length.
+    music: flag(argv, 'no-music') ? false : flag(argv, 'music') || bedName ? true : undefined,
     musicPhraseFile: bedFile,
     log: (message, stage) => {
       if (stage && stage !== 'pipeline') ui.section(stage);

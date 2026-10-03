@@ -15,6 +15,8 @@
  * without anyone reading the first episodes is the failure mode this whole
  * design exists to avoid.
  */
+import { formatForRun } from '../formats/forRun';
+import { musicFor } from '../render/musicFor';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import {
@@ -23,7 +25,6 @@ import {
   recordVoices,
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
-import { loadFormat } from '../formats/load';
 import { nominalSeconds } from '../formats/schema';
 import { episodeBudgetPence } from '../config';
 import {
@@ -241,7 +242,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   }
 
   const persona = loadPersona(run.manifest.personaId);
-  const format = loadFormat(run.manifest.formatId);
+  const format = formatForRun(run);
 
   // BEFORE ANY MODEL CALL. A channel whose voice has changed under it is a
   // different show to everybody following it, and finding that out after paying
@@ -1522,7 +1523,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         // A BED UNDER EACH PART, KEYED TO THE EPISODE. Free - ffmpeg
         // oscillators over a file that already exists - so it is not an
         // optional stage. See render/bed.ts.
-        music: deps.music,
+        music: musicFor(deps.music, persona, run.manifest.formatId),
         musicSeed: run.manifest.topic,
         musicPhraseFile: deps.musicPhraseFile,
       },

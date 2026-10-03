@@ -41,6 +41,33 @@ absent from the schedule. See `archive/README.md`.
 
 ---
 
+## The launch seven, per the owner's channel sheet
+
+Set up on 2026-10-03. Music: shorts get a bed where marked, long form never;
+`--music` / `--no-music` overrides any run. Long episodes take
+`--series "Title"`: the episode opens by naming it and publishes onto that
+series' shelf, created the first time the title is used.
+
+| Channel | Short | Long | Music on shorts | Voice |
+|---|---|---|---|---|
+| Business Decoded | `biz-short` | `biz-episode` + `--series` (Founder Stories, Startup School, Innovative Businesses) | yes | Arjun, echo |
+| Eureka Tales | `science-short` (mystery, then the story) | `told-story` + `--series` | yes | Kabir, ash |
+| The Global Thread | `news-short` (what happened, why it matters to you, what next) | none | yes, subtle (desk) | Rowan, nova |
+| The Root Health | `health-short` (hook, story, myth verdict or attributed guidance) | later: `what-we-know` + `--series` | yes | Sena, sage |
+| The Crime Files | none | `case-in-full` (hook, context, investigation, turning point, aftermath) + `--series "<the case>"` | n/a | Cal, ballad (ElevenLabs before publishing) |
+| Mythic Archives | `myth-short` | `myth-story` + `--series` | no | Wren, onyx, slow and heavy |
+| Psyche Session | `psych-short` | `psych-episode` + `--series` | no | Noor, shimmer |
+
+```bash
+npm run foundry -- make --show business-decoded --format biz-short --topic "..."
+npm run foundry -- make --show business-decoded --format biz-episode --series "Founder Stories" --topic "..."
+npm run foundry -- make --show crime-files --series "The Missing Hour" --topic "..."
+```
+
+A titled series takes a supplied 16:9 cover from
+`art/<channel>/series-<slug>.supplied.png` (slug: the title lowercased, words
+joined by hyphens); without one it is drawn.
+
 ## The four lanes
 
 Each lane is a different answer to "where does this come from", and that is the

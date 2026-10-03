@@ -22,7 +22,8 @@
 #   now `disagreement`: who found what, who reads it differently, and what would
 #   settle it.
 #
-#   NO ADVICE, ever, and it is a taboo rather than a style note. "Here is what
+#   NO ADVICE IN THE NARRATOR'S OWN VOICE (attributed guidance from a named
+#   health body is allowed since 2026-10-03), and it is a taboo rather than a style note. "Here is what
 #   the evidence says" and "here is what you should do" are different products
 #   with different exposure, and only the first one is this show.
 #
@@ -217,10 +218,11 @@ canon:
 
   - kind: taboo
     text: >
-      NEVER GIVE ADVICE. Not "so try", not "the takeaway", not "experts
-      recommend". This show says what is known and stops. What somebody does
-      with it is theirs, and the moment it tells them, it becomes a different
-      thing with different exposure.
+      NEVER GIVE ADVICE IN YOUR OWN VOICE. Not "so try", not "the takeaway",
+      not "you should". What a NAMED health body recommends may be reported,
+      as theirs - "the NHS suggests", "the WHO advises" - and nothing beyond
+      it: never a dose, never starting, stopping or changing a medicine. The
+      owner chose this on 2026-10-03 for the health short's close.
 
   - kind: taboo
     text: >
@@ -264,7 +266,14 @@ canon:
 # The second exists entirely for cost. Research is roughly half of what an
 # episode costs, so ten standalone shorts pay for it ten times over the same
 # ground; one pass fanned out pays once.
+# From the owner's channel sheet: shorts with background music, long form
+# without. A run's --music / --no-music wins.
+music:
+  short: true
+  long: false
+
 formats:
+  - health-short
   - what-we-know
   - ten-stories
 

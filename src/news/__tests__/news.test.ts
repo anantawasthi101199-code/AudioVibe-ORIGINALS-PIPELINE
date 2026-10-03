@@ -330,29 +330,18 @@ const REPORT = {
   description: 'Foreign ministers agreed a framework covering 3 border regions. Russia says it was not consulted.',
   beats: [
     {
-      beatId: 'hello',
+      beatId: 'what_happened',
       turns: [
         {
           speaker: 'reporter',
           text:
-            'Hi, it\'s Rowan. Let\'s look at the latest on the border fighting that negotiators have been trying to stop for months. ' +
-            'So here\'s what happened.',
-        },
-      ],
-    },
-    {
-      beatId: 'news',
-      turns: [
-        {
-          speaker: 'reporter',
-          text:
-            'On Tuesday, the BBC reported that foreign ministers from 12 countries have agreed a ceasefire framework in Geneva. ' +
+            "Hi, it's Rowan. On Tuesday, the BBC reported that foreign ministers from 12 countries have agreed a ceasefire framework in Geneva. " +
             'Officials say it covers 3 border regions. Russia says it was not consulted.',
         },
       ],
     },
     {
-      beatId: 'explain',
+      beatId: 'why_it_matters',
       turns: [
         {
           speaker: 'reporter',
@@ -365,7 +354,7 @@ const REPORT = {
       ],
     },
     {
-      beatId: 'close',
+      beatId: 'whats_next',
       turns: [
         {
           speaker: 'reporter',
@@ -444,6 +433,9 @@ describe('runNews', () => {
   });
 
   const deps = (writer = fakeWriter()): PipelineDeps => ({
+    // Off explicitly: these test the lane, not the channel's music setting,
+    // and a real ffmpeg bed under every render pushes them past the timeout.
+    music: false,
     writer,
     verifier: writer,
     search: { name: 'unused', search: async () => [] },
@@ -491,7 +483,7 @@ describe('runNews', () => {
 
   it('BLOCKS a report whose figure is not in the article', async () => {
     const wrong = JSON.parse(JSON.stringify(REPORT));
-    wrong.beats[2].turns[0].text = wrong.beats[2].turns[0].text.replace('48 hours', '72 hours');
+    wrong.beats[1].turns[0].text = wrong.beats[1].turns[0].text.replace('48 hours', '72 hours');
     const { gate } = await runNews(makeRun(), deps(fakeWriter(wrong)), newsDeps);
     expect(gate.passed).toBe(false);
     expect(gate.findings.find((f) => f.check === 'newsFigures')?.detail).toContain('72');

@@ -82,6 +82,17 @@ export const loadRegistry = (dir?: string): SeriesRegistry => {
   }
 };
 
+/**
+ * The registry key for a NAMED series of a channel, e.g. Business Decoded's
+ * "Founder Stories". The channel id alone is the key of the one-series-per-show
+ * shelf; a titled series sits beside it under its own key, so the file's shape
+ * does not change.
+ */
+export const seriesKey = (personaId: string, title?: string): string =>
+  title
+    ? `${personaId}#${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`
+    : personaId;
+
 export const findSeries = (
   personaId: string,
   apiUrl: string,

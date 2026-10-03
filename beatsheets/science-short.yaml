@@ -1,0 +1,87 @@
+# A science story in three minutes, from one article.
+#
+# Eureka Tales' short, from the owner's channel sheet (2026-09-30): "story
+# format of any invention, accidental inventions, anything with a bit of
+# drama", told with "a curious beginning on what the mystery is, followed with
+# the story". Same single-story lane and the same three-part shape as
+# myth-short, because the job is the same: one complete story, by ear, from
+# one source.
+
+id: science-short
+name: Science story, in three minutes
+
+research: single
+
+kind: short
+intent: >
+  One true story from science - an invention, an accident that became a
+  discovery, a race to be first - told complete in under three minutes,
+  opening on the mystery and ending on how it was solved.
+
+targetSeconds: [150, 185]
+
+serialised: false
+
+loops:
+  - id: the_mystery
+    question: What was the puzzle, and how was it cracked?
+
+beats:
+  - id: mystery
+    type: cold_open
+    seconds: [20, 30]
+    function: >
+      The mystery, in two or three sentences, so the listener wants the answer.
+    opens: [the_mystery]
+    constraints:
+      - >
+        OPEN ON THE PUZZLE, NOT THE ANSWER. What did nobody understand, or what
+        went strangely wrong, or what did somebody notice that should not have
+        happened? Concrete: a place, a year, a thing you could see.
+      - >
+        No greeting, no naming the show, no "today we are going to look at". A
+        listener in a feed gave you about three seconds.
+      - Never give away the discovery here. This part only asks.
+    minClaims: 0
+
+  - id: story
+    type: escalation
+    seconds: [85, 105]
+    function: >
+      Who was there and what they did, in order, up to the moment it clicked.
+    constraints:
+      - >
+        TELL IT IN ORDER, AS A STORY. People doing things, one after another,
+        and why they did each one, in the same breath.
+      - >
+        EXPLAIN THE ONE IDEA THE STORY NEEDS, in plain words, at the moment it
+        is needed. At most one or two unfamiliar things in the whole short.
+      - >
+        NAME AT MOST THREE PEOPLE. Everybody else is what they did - "his lab
+        assistant", "a rival in Paris".
+      - >
+        THE WRONG TURN IS THE STORY. If somebody got it wrong first, or it
+        happened by accident, give that its full weight.
+      - Two or three turns, each continuing the last. No turn restarts.
+    minClaims: 0
+
+  - id: close
+    type: payoff
+    seconds: [35, 50]
+    function: >
+      How it was solved, what it changed, then the goodbye.
+    closes: [the_mystery]
+    constraints:
+      - >
+        ANSWER THE MYSTERY FROM THE OPENING, clearly and completely. A short
+        that runs out of time before the answer has failed.
+      - >
+        ONE LINE ON WHAT IT CHANGED, concrete: a thing people use, a number, a
+        place. Never "and the world was never the same".
+      - >
+        A CLEAR END, then the goodbye, which is where the follow is asked for.
+        Warm and quick.
+      - Never call anybody a genius.
+    minClaims: 0
+
+tensionCurve: [0.7, 1.0, 0.5]

@@ -237,6 +237,15 @@ export const personaSchema = z.object({
    */
   bio: z.string().min(1).optional(),
 
+  /**
+   * Whether this channel's audio gets a music bed, by length. From the owner's
+   * channel sheet: shorts with background music, long form without. A run's
+   * own --music / --no-music always wins; see musicFor.
+   */
+  music: z
+    .object({ short: z.boolean().default(false), long: z.boolean().default(false) })
+    .default({ short: false, long: false }),
+
   /** Who it is talking to. Shapes assumed knowledge, not tone. */
   audience: z.string().min(1),
 

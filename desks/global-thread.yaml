@@ -75,4 +75,4 @@ excludeWords:
 
 country: ALL
 language: en
-music: false
+music: true

@@ -28,6 +28,8 @@
  * the plumbing every lane shares: the run store, the renderer, the voice
  * registry, the gate and the corpus fetcher.
  */
+import { formatForRun } from '../formats/forRun';
+import { musicFor } from '../render/musicFor';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import {
@@ -187,7 +189,7 @@ export const runPsych = async (
   const flags = stageFlags(deps.stages);
   const skipped = stagesOff(flags);
   const persona = loadPersona(run.manifest.personaId);
-  const format = loadFormat(run.manifest.formatId);
+  const format = formatForRun(run);
   const book = psychDeps.curriculum ?? loadCurriculum(persona.id);
   const short = format.kind === 'short';
   const topic = run.manifest.topic;
@@ -428,7 +430,7 @@ export const runPsych = async (
         voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
-        music: deps.music === true,
+        music: musicFor(deps.music, persona, run.manifest.formatId),
         musicSeed: topic,
         musicPhraseFile: deps.musicPhraseFile,
       },

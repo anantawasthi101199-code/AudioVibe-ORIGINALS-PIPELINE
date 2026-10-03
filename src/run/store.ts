@@ -87,6 +87,13 @@ export const runManifestSchema = z.object({
   derivedFrom: z.string().optional(),
 
   /**
+   * The series a long episode is filed into, by title. Its script opens by
+   * naming it (formats/forRun.ts) and publish puts it on that series' shelf,
+   * creating the shelf the first time a title is used.
+   */
+  seriesTitle: z.string().min(1).optional(),
+
+  /**
    * Which episode of the channel this is.
    *
    * Recorded rather than parsed back out of the directory name, because a
@@ -375,6 +382,8 @@ export class Run {
       research?: 'extensive' | 'single';
       /** Stop before rendering and wait for a person to read the script. */
       holdForApproval?: boolean;
+      /** The series a long episode belongs to. */
+      seriesTitle?: string;
     },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
@@ -398,6 +407,7 @@ export class Run {
       short: name.short,
       personaId: input.personaId,
       formatId: input.formatId,
+      seriesTitle: input.seriesTitle,
       topic: input.topic,
       createdAt: now.toISOString(),
       completed: [],

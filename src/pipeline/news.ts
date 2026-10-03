@@ -26,6 +26,7 @@
  * resumed run reports the story it started with rather than whatever is top of
  * the wire an hour later.
  */
+import { musicFor } from '../render/musicFor';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import {
@@ -365,8 +366,8 @@ export const runNews = async (
         voices: Object.fromEntries(persona.hosts.map((h) => [h.id, h.voice])),
         beatPathFor: (name) => run.mediaPath(name),
         outputPath: run.mediaPath('episode.wav'),
-        // A toggle, off unless the run asks (--music) or the desk opts in.
-        music: deps.music === true || desk.music,
+        // The run's choice wins; otherwise the desk or the channel opts in.
+        music: deps.music ?? (desk.music || musicFor(undefined, persona, run.manifest.formatId)),
         musicSeed: run.manifest.topic,
         musicPhraseFile: deps.musicPhraseFile,
       },

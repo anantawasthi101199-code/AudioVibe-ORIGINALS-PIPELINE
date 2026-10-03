@@ -1,69 +1,16 @@
-# What The Root Health asks next, in order, taken from the top.
-#
-# WHAT MAKES A GOOD ENTRY HERE, and the test is stricter than any other show's
-# because this is the one where being wrong can hurt somebody.
-#
-#   1. THERE IS A REAL BODY OF WORK, and it reaches T2 or better - systematic
-#      reviews, trials, guidelines, the studies themselves. The show's floor
-#      refuses anything weaker, so a question whose only coverage is journalism
-#      cannot be made at all. That is the filter working.
-#   2. THE COMMON BELIEF IS WORTH STEELMANNING. The `belief` beat needs
-#      something a sensible person actually holds, for a reason. A question
-#      nobody has a prior about gives that beat nothing to do.
-#   3. THE EVIDENCE IS GENUINELY UNSETTLED SOMEWHERE. This show's whole value is
-#      saying how well a thing is known, and a question with one clean answer
-#      belongs in a textbook rather than here.
-#   4. IT IS A QUESTION SOMEBODY HAS AT THREE IN THE MORNING. Not "the role of
-#      the default mode network" but "why does the same worry come back at
-#      night".
-#
-# NOT ON THIS LIST, deliberately: anything where the honest answer is "see a
-# doctor". Diagnosis, treatment choices, drug comparisons, anything about a
-# specific condition somebody might be deciding about. The show has no clearance
-# to help with that and no way to know who is listening.
-
+# The Root Health's queue, from the owner's channel sheet (2026-09-30).
+# Shorts for now (health-short); the long-form series - women's health, and
+# understanding gut issues - come later, made with `--series`.
 topics:
-  # One of the best-replicated findings in the field and still argued about at
-  # the mechanism level, which is exactly the gap this show is for. Systematic
-  # reviews are plentiful and the effect sizes are honest-sized rather than
-  # dramatic.
-  - Why a bad night's sleep makes you forget things - what is actually known
-    about sleep and memory, how large the effect really is, and what the
-    disagreement about why it happens is still about
-
-  # The belief is near-universal, the origin of it is traceable to specific
-  # popular writing, and the research says something more interesting and much
-  # less tidy.
-  - Whether it takes twenty-one days to form a habit - where that number came
-    from, what the studies that measured it actually found, and how much the
-    answer depends on what the habit is
-
-  # Grief research has moved a long way from the five stages, the five stages
-  # are still what everybody has heard, and the person who proposed them said
-  # they were being misused. A clean example of a belief worth steelmanning.
-  - Whether grief comes in stages - where the five stages came from, what
-    Kubler-Ross actually claimed, and what the research on bereavement has found
-    since
-
-  # A large, well-documented literature with a genuinely contested core, and the
-  # popular version is confidently wrong in a specific and checkable way.
-  - Whether willpower runs out like a battery - the ego depletion experiments,
-    what happened when people tried to repeat them, and what the argument looks
-    like now
-
-  # Everybody has the experience, the mechanism is well studied, and the honest
-  # answer includes a large unsettled part.
-  - Why the same worry comes back at three in the morning - what is known about
-    why the night makes things worse, and how much of it is the clock rather
-    than the dark
-
-  # The belief is old, the evidence is unusually good, and the size of the
-  # effect is the interesting part rather than its existence.
-  - What being outside actually does - the research on time spent outdoors and
-    mood, how much of it survives once you account for exercise and daylight,
-    and what nobody has separated yet
-
-  # A question with a real literature and a popular version that is not so much
-  # wrong as much smaller than people think.
-  - Whether you can catch up on lost sleep at the weekend - what recovery sleep
-    restores, what it does not, and how long the effect of a bad week lasts
+  - Is coffee good or bad for you - what the large studies actually found about
+    everyday coffee drinking, and who should be careful with it
+  - Three gut-friendly drinks you can make at home - kefir, buttermilk and
+    kombucha, what is in them and what the evidence says they do
+  - The symptoms of high cholesterol - why most people have none, and how it is
+    actually found
+  - Why PCOD and PCOS are being diagnosed more in women - what the condition is,
+    and what is behind the rise
+  - The myth that eating fat makes you fat - where the idea came from and what
+    the research found
+  - The myth that you need eight glasses of water a day - where the number came
+    from and what the evidence says

@@ -164,6 +164,8 @@ export const startRunSchema = z.object({
   renderNow: z.boolean().default(false),
   /** The interface's `--again`. Off by default, for the same reason. */
   again: z.boolean().default(false),
+  /** The interface's `--series`: the series a long episode is filed into. */
+  seriesTitle: z.string().trim().min(1).optional(),
 });
 
 /**
@@ -200,6 +202,7 @@ export const startRun = (body: unknown, who: string | null = null) => {
     topic: input.topic,
     onePass: true,
     holdForApproval: !input.renderNow && !format.sourceOnly,
+    seriesTitle: format.kind === 'short' ? undefined : input.seriesTitle,
   });
 
   // Recorded at creation rather than on success, as the command line does: a

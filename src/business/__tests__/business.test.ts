@@ -216,6 +216,9 @@ describe('runBusiness', () => {
   }));
 
   const deps = (writer = fakeWriter()): PipelineDeps => ({
+    // Off explicitly: these test the lane, not the channel's music setting,
+    // and a real ffmpeg bed under every render pushes them past the timeout.
+    music: false,
     writer,
     verifier: writer,
     search,

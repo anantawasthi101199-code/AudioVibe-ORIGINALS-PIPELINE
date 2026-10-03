@@ -30,7 +30,9 @@ import { scriptSchema } from '../script/write';
 import { AudioVibeClient } from './ingest';
 import { publishTokenFor } from './account';
 import { buildFictionProvenance, buildProvenance } from './provenance';
-import { findSeries } from './seriesRegistry';
+import { findSeries, recordSeries, seriesKey } from './seriesRegistry';
+import { SERIES_COVER_SIZE } from '../art/cover';
+import { repoRoot } from '../config';
 
 /**
  * Where this episode sits in a serial.
@@ -194,7 +196,40 @@ export const publishRun = async (
   // shelf whenever the registry was missing, and the registry going missing is
   // exactly the situation where you least want that.
   let seriesId: string | undefined;
-  if (persona.publishesAsSeries && format.kind !== 'short') {
+  const seriesTitle = run.manifest.seriesTitle;
+  if (seriesTitle && format.kind !== 'short') {
+    // A NAMED SERIES, from `make --series`. Unlike the one-per-show shelf this
+    // one IS created on first use: the title is on the run, so there is no
+    // guessing which shelf was meant, and the registry key is the title.
+    const key = seriesKey(persona.id, seriesTitle);
+    let record = findSeries(key, platform.url);
+    if (!record) {
+      say(`creating the series "${seriesTitle}"`);
+      const slug = key.split('#')[1]!;
+      const coverPath =
+        suppliedArt(path.join(repoRoot(), 'art', persona.id), `series-${slug}`) ??
+        renderCover(
+          { showName: persona.name, title: seriesTitle, palette: paletteFor(persona.id) },
+          path.join(os.tmpdir(), `foundry-series-${persona.id}-${slug}.png`),
+          SERIES_COVER_SIZE
+        );
+      const made = await new AudioVibeClient(platform.url, publishTokenFor(persona.id)).createSeries({
+        title: seriesTitle,
+        description: `${seriesTitle}, from ${persona.name}. ${(persona.bio ?? persona.thesis).trim().replace(/\s+/g, ' ')}`,
+        category: persona.category,
+        coverPath,
+      });
+      recordSeries(key, {
+        seriesId: made.seriesId,
+        title: made.title,
+        apiUrl: platform.url,
+        createdAt: new Date().toISOString(),
+      });
+      record = findSeries(key, platform.url)!;
+    }
+    seriesId = record.seriesId;
+    say(`publishing into "${record.title}"`);
+  } else if (persona.publishesAsSeries && format.kind !== 'short') {
     const record = findSeries(persona.id, platform.url);
     if (!record) {
       throw new PublishRefused(
