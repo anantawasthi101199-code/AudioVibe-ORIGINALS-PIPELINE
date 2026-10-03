@@ -1,8 +1,8 @@
-# The How They Built It casebook: how the channel finds the ONE source a
-# business story is told from. Its existence makes how-they-built-it a
+# The Business Decoded casebook: how the channel finds the ONE source a
+# business story is told from. Its existence makes business-decoded a
 # business-story channel (src/pipeline/lanes.ts).
 
-id: how-they-built-it
+id: business-decoded
 
 # Said in the goodbye.
 beat: business stories

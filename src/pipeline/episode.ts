@@ -967,7 +967,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
 
     // --- 4b2. The show's own evidence policy, applied before the writer. ---
     //
-    // Honest Health will not rest a claim on a source weaker than T2, and that
+    // The Root Health will not rest a claim on a source weaker than T2, and that
     // was only checked at the gate - after the script and after the audio. A
     // fever episode was written around a Wikipedia article, voiced, and then told
     // it could not be. The rule is free to apply and was being applied too late

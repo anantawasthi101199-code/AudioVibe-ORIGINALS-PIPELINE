@@ -53,7 +53,7 @@ describe('checkNoNewFacts', () => {
 });
 
 describe('the performance prompt', () => {
-  const persona = loadPersona('myths-of-the-world');
+  const persona = loadPersona('mythic-archives');
 
   it('states the no-new-facts rule as overriding', () => {
     const system = performanceSystem(persona);
@@ -126,7 +126,7 @@ describe('checkNoNewFacts - word forms', () => {
  * valid ids were, and the reassembly took `t.speaker` from the reply verbatim.
  */
 describe('the speaker id survives the performance pass', () => {
-  const solo = loadPersona('myths-of-the-world');
+  const solo = loadPersona('mythic-archives');
 
   it('names the valid ids in the prompt', () => {
     const system = performanceSystem(solo);

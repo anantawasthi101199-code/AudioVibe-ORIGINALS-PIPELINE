@@ -13,7 +13,7 @@ import path from 'path';
 import { PlatformAccounts, loadAccounts, type HttpDeps } from '../../publish/account';
 import { emailFor, setUpChannel } from '../channel';
 
-const CHANNEL = 'honest-health';
+const CHANNEL = 'root-health';
 
 /** A platform that records what it was asked, and answers as the real one does. */
 const fake = (over: { provisionStatus?: number; isAi?: boolean } = {}) => {

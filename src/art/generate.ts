@@ -46,6 +46,16 @@ export const AVATAR_SIZE = 1024;
  */
 export const COVER_SIZE = { width: 1536, height: 1024 };
 
+/**
+ * The profile banner AS THE APP SHOWS IT: 2.5:1, the app's PROFILE_COVER_RATIO.
+ *
+ * COVER_SIZE above is what the image API can be asked for, and it is not this
+ * shape, so the app centre-crops a generated banner. A supplied or drawn banner
+ * has no such excuse and is held to the real frame.
+ */
+// ponytail: generated banners are still 3:2 and get cropped on display; crop them to this after generation if that ever matters
+export const PROFILE_BANNER_SIZE = { width: 2000, height: 800 };
+
 export type ArtKind = 'avatar' | 'cover';
 
 /**
@@ -235,7 +245,7 @@ export const artworkFor = async (
     const input = { name: persona.name, palette: paletteFor(persona.id) };
     return kind === 'avatar'
       ? renderAvatar(input, out, AVATAR_SIZE)
-      : renderChannelCover(input, out, COVER_SIZE);
+      : renderChannelCover(input, out, PROFILE_BANNER_SIZE);
   };
 
   const make = async (kind: ArtKind): Promise<string> => {

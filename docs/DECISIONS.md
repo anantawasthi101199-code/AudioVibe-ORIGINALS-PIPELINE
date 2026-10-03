@@ -252,7 +252,7 @@ Two research lanes, declared per format as `research: single | extensive`.
 `extensive` is the original: search wide, fetch fourteen documents, extract
 claims bound to verbatim quotes, verify each against a different model family,
 repair what fails, write from the ledger. Right where assembling what many
-documents **separately** establish is the product, which is Honest Health.
+documents **separately** establish is the product, which is The Root Health.
 
 `single` picks the one to three documents that carry the whole story, reads
 them at a hundred thousand characters each rather than six thousand, and fuses

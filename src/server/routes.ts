@@ -9,8 +9,8 @@
  * decision belongs further down.
  *
  * RUN IDS CONTAIN A SLASH, so they travel as a query parameter rather than in
- * the path. `/api/run?id=honest-health/e001-...` is unambiguous;
- * `/api/runs/honest-health/e001-.../script` needs a parser that guesses where
+ * the path. `/api/run?id=root-health/e001-...` is unambiguous;
+ * `/api/runs/root-health/e001-.../script` needs a parser that guesses where
  * the id stops, and the guess is wrong the first time a channel is called
  * "script".
  *

@@ -1,9 +1,9 @@
-# How They Built It - how businesses and the people behind them were built,
+# Business Decoded - how businesses and the people behind them were built,
 # from the first shop to the empire, told complete and in order by a friendly
 # host who explains everything simply.
 #
 # A BUSINESS-STORY CHANNEL, which means it has a casebook
-# (casebooks/how-they-built-it.yaml). That routes it to its own lane,
+# (casebooks/business-decoded.yaml). That routes it to its own lane,
 # src/pipeline/business.ts, and nowhere else.
 #
 # NOT business-teardowns. That show is two hosts reconstructing what went wrong
@@ -11,9 +11,9 @@
 # telling a whole founding story from one complete source, and it is
 # motivational where that one is forensic.
 
-id: how-they-built-it
-handle: howtheybuiltit
-name: How They Built It
+id: business-decoded
+handle: businessdecoded
+name: Business Decoded
 
 category: Business & Finance
 
@@ -23,6 +23,11 @@ thesis: >
   How the world's businesses were really built, from the first shop to the
   empire, told as one complete story in order and explained so simply that
   anybody can follow it by ear.
+
+bio: >
+  Founder stories, startup lessons and the strategy behind the businesses you
+  know. Quick stories of one founder or one big idea, and longer deep dives
+  into how companies were really built.
 
 audience: >
   Somebody with headphones in who loves a good success story and wants to know
@@ -37,7 +42,7 @@ register: >
 
 hosts:
   - id: host
-    name: Zara
+    name: Arjun
     role: >
       The show's host. Has read the whole story properly and tells it from the
       very beginning to where it stands today, in order, with the years, the
@@ -53,9 +58,9 @@ hosts:
     voice:
       provider: elevenlabs
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # The voice the channel uses on OpenAI. Warm and bright; unused by any
-      # other channel. The first render pins it for ever (voices.json).
-      draftVoiceId: coral
+      # The owner's sheet: a man, clarity and calmness, a neutral tone. Unused
+      # by any other channel. The first render pins it for ever (voices.json).
+      draftVoiceId: echo
       settings:
         stability: 0.5
         similarity_boost: 0.75
@@ -139,8 +144,8 @@ episodeSeconds: [620, 900]
 
 signoff:
   - >
-    And that's the story of how they built it. If you enjoyed this one, follow
-    the show for more business stories from around the world. I'm Zara, see you
+    And that's the story, decoded. If you enjoyed this one, follow Business
+    Decoded for more business stories from around the world. I'm Arjun, see you
     next time.
   - >
     That's where we'll leave it. Thanks for spending the time with me. Follow
@@ -157,7 +162,7 @@ signoffShort:
     Want more stories of how the world's businesses were built? Follow along.
     Until next time.
   - >
-    That's how they built it. Follow for more, and I'll see you in the next one.
+    That's the story, decoded. Follow for more, and I'll see you in the next one.
 
 allowedRiskTiers:
   - general

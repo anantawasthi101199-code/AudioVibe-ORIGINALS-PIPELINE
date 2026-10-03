@@ -9,7 +9,7 @@ npm run foundry -- <command> [options]
 ```
 
 A run id is `<channel>/<folder>`, for example
-`honest-health/e001-20260913-a-bad-nights-sleep-makes-you`. Anywhere a command
+`root-health/e001-20260913-a-bad-nights-sleep-makes-you`. Anywhere a command
 takes `--run`, you can paste just the folder name if it is unambiguous, and
 leaving `--run` off entirely means the most recent run.
 
@@ -76,8 +76,8 @@ A fiction show skips research entirely and checks continuity against its series
 bible instead. That is decided by the show, never by a flag.
 
 ```
-npm run foundry -- make --show honest-health --topic "Why a bad night's sleep makes you forget things"
-npm run foundry -- make --show myths-of-the-world --format ten-stories --topic "Vampire beliefs in the Balkans"
+npm run foundry -- make --show root-health --topic "Why a bad night's sleep makes you forget things"
+npm run foundry -- make --show mythic-archives --format ten-stories --topic "Vampire beliefs in the Balkans"
 ```
 
 **The script is written in one call**, and `--beat-by-beat` goes back to writing
@@ -106,7 +106,7 @@ Which method a run used is recorded on the run, so `resume` continues the way it
 started and a comparison later still knows which was which.
 
 ```
-npm run foundry -- make --show honest-health --topic "..." --beat-by-beat
+npm run foundry -- make --show root-health --topic "..." --beat-by-beat
 npm run foundry -- compare --a <run> --b <run>
 ```
 
@@ -174,8 +174,8 @@ case is already its own search query, and paying a model to rephrase it returned
 the topic in different words for two pence.
 
 ```bash
-npm run foundry -- make --show true-crime-in-full --topic "..." --reference-check
-npm run foundry -- make --show true-crime-in-full --format case-short --topic "..."
+npm run foundry -- make --show crime-files --topic "..." --reference-check
+npm run foundry -- make --show crime-files --format case-short --topic "..."
 ```
 
 Measured: **8.5p a short**, **35p an episode**, **around 65p with the check on**.

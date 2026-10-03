@@ -26,7 +26,7 @@ import { promptRegistry } from '../registry';
 
 const ISO = '2026-09-12';
 
-const solo = loadPersona('true-crime-in-full');
+const solo = loadPersona('crime-files');
 
 describe('the assembled writer prompt', () => {
   it('does not say the same thing twice', () => {

@@ -51,8 +51,9 @@ export const parsePersona = (source: string, label = '<inline>'): Persona => {
   return result.data;
 };
 
+// The override exists for tests that drive a lane through an archived show.
 export const personasDir = (): string =>
-  path.resolve(__dirname, '..', '..', 'personas');
+  process.env.FOUNDRY_PERSONAS_DIR ?? path.resolve(__dirname, '..', '..', 'personas');
 
 /** Load one show by its id, which is also its filename. */
 export const loadPersona = (id: string, dir = personasDir()): Persona => {

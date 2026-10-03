@@ -528,7 +528,7 @@ const describeFailures = (
   // So the device lives where a device belongs - in the persona canon of the show
   // that wants it, at the rate that show wants it - and the style card still
   // MEASURES the rate as an advisory, because reporting a number is not the same
-  // as enforcing it. See personas/myths-of-the-world.yaml.
+  // as enforcing it. See personas/mythic-archives.yaml.
   return problems.join('\n');
 };
 

@@ -350,7 +350,7 @@ export const concentrateSources = (
  * Drop claims resting on sources the show will not stand behind.
  *
  * A SHOW'S EVIDENCE POLICY, ENFORCED BEFORE THE WRITER RATHER THAN AT THE GATE.
- * Honest Health declares `minSourceTier: T2` because a health claim sourced to a
+ * The Root Health declares `minSourceTier: T2` because a health claim sourced to a
  * news write-up of a press release about a preprint passes every other check in
  * this pipeline and is still not evidence about the world.
  *

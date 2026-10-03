@@ -1,9 +1,9 @@
-# The Inside Your Head curriculum: what the channel teaches and where it reads.
+# The Psyche Session curriculum: what the channel teaches and where it reads.
 #
-# THIS FILE EXISTING IS WHAT MAKES inside-your-head A PSYCHOLOGY CHANNEL. See
+# THIS FILE EXISTING IS WHAT MAKES psyche-session A PSYCHOLOGY CHANNEL. See
 # src/psych/curriculum.ts and src/pipeline/lanes.ts.
 
-id: inside-your-head
+id: psyche-session
 
 # Said in the goodbye.
 beat: how your mind works

@@ -1,7 +1,7 @@
-# Geopolitics Today - one report a day on the most important development in
+# The Global Thread - one report a day on the most important development in
 # world affairs, under three minutes, from one named news organisation.
 #
-# A NEWS CHANNEL, WHICH MEANS IT HAS A DESK. desks/geopolitics-today.yaml holds
+# A NEWS CHANNEL, WHICH MEANS IT HAS A DESK. desks/global-thread.yaml holds
 # what it searches each morning and which outlets it will build a report on.
 # The desk's existence is what routes this channel to the news lane
 # (src/pipeline/news.ts), so there is no flag to forget.
@@ -11,9 +11,9 @@
 # with an everyday comparison. WHAT IT IS NOT: commentary. It does not predict
 # and does not take a side, and every fact comes from one named outlet.
 
-id: geopolitics-today
-handle: geopoliticstoday
-name: Geopolitics Today
+id: global-thread
+handle: globalthread
+name: The Global Thread
 
 category: News & Politics
 
@@ -22,6 +22,10 @@ fiction: false
 thesis: >
   The day's most important development in world affairs, reported plainly and
   completely in under three minutes, from one named and dependable news source.
+
+bio: >
+  World events, clearly explained. What happened today, why it actually
+  matters to you, and what happens next, in a few minutes.
 
 audience: >
   Somebody scrolling a feed with headphones in, who follows the world loosely
@@ -56,7 +60,7 @@ hosts:
       # The voice the channel actually uses. News shorts render on OpenAI or
       # they do not fit the budget (see docs/FLOW.md), so this is the real one.
       # A different voice from every other channel, so none are confused.
-      draftVoiceId: onyx
+      draftVoiceId: nova
       settings:
         # High stability reads as "even and controlled" to the OpenAI engine,
         # which is the delivery a newsreader has.

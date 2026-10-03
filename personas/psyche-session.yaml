@@ -1,8 +1,8 @@
-# Inside Your Head - what is actually happening in your mind, explained warmly
+# Psyche Session - what is actually happening in your mind, explained warmly
 # and very simply by somebody who has read the research properly.
 #
 # A PSYCHOLOGY CHANNEL, which means it has a curriculum
-# (curricula/inside-your-head.yaml). That routes it to its own lane,
+# (curricula/psyche-session.yaml). That routes it to its own lane,
 # src/pipeline/psych.ts, and nowhere else.
 #
 # WHO IS LISTENING, AND WHY EVERY RULE HERE FOLLOWS FROM IT. Somebody searches
@@ -13,11 +13,11 @@
 # explains, why it never diagnoses, why it says "you", and why the advice at the
 # end is always smaller than anybody expects.
 
-id: inside-your-head
-handle: insideyourhead
-name: Inside Your Head
+id: psyche-session
+handle: psychesession
+name: Psyche Session
 
-category: Educational
+category: Fitness & Health
 
 fiction: false
 
@@ -25,6 +25,10 @@ thesis: >
   What is actually happening in your mind when it will not do what you want,
   explained in very plain words by somebody who has read the research, so that
   you feel understood first and informed second.
+
+bio: >
+  Psychology to go. What is happening in your mind when it will not do what
+  you want, explained in plain words by somebody who has read the research.
 
 audience: >
   Somebody with headphones in who is probably living the thing this episode is

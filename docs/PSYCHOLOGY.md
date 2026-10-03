@@ -12,10 +12,10 @@ If this file disagrees with the code, the code is right and this is a bug.
 
 ```bash
 # An episode (the default format)
-npm run foundry -- make --show inside-your-head --topic "ADHD overwhelm"
+npm run foundry -- make --show psyche-session --topic "ADHD overwhelm"
 
 # A short
-npm run foundry -- make --show inside-your-head --format psych-short --topic "why you procrastinate on easy tasks"
+npm run foundry -- make --show psyche-session --format psych-short --topic "why you procrastinate on easy tasks"
 
 # Price it, spending nothing
     ... --dry-run
@@ -150,6 +150,6 @@ approving the render.
 | `src/psych/understand.ts` | EXTRACT and FUSE, and what the writer is shown. |
 | `src/psych/psychScript.ts` | The host prompt and the one-call writer. |
 | `src/psych/check.ts` | The safety floor and the craft checks. |
-| `curricula/inside-your-head.yaml` | Queries, preferred and refused hosts, sizes. |
-| `personas/inside-your-head.yaml` | Noor, the register, the goodbyes. |
+| `curricula/psyche-session.yaml` | Queries, preferred and refused hosts, sizes. |
+| `personas/psyche-session.yaml` | Noor, the register, the goodbyes. |
 | `beatsheets/psych-episode.yaml`, `psych-short.yaml` | The shapes. |

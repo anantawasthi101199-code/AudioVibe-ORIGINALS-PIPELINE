@@ -22,7 +22,7 @@ import { draftProblems, unfamiliarNames, unsupportedFigures } from '../check';
 import { spokenDate } from '../newsScript';
 
 const desk = deskSchema.parse({
-  id: 'geopolitics-today',
+  id: 'global-thread',
   beat: 'geopolitics',
   queries: ['world news'],
   outlets: [
@@ -37,12 +37,12 @@ const NOW = new Date('2026-09-29T12:00:00Z');
 
 describe('the shipped desk', () => {
   it('exists for the geopolitics channel and loads', () => {
-    expect(hasNewsDesk('geopolitics-today')).toBe(true);
-    expect(loadDesk('geopolitics-today').beat).toBe('geopolitics');
+    expect(hasNewsDesk('global-thread')).toBe(true);
+    expect(loadDesk('global-thread').beat).toBe('geopolitics');
   });
 
   it('does not exist for a story channel, so those are untouched', () => {
-    expect(hasNewsDesk('myths-of-the-world')).toBe(false);
+    expect(hasNewsDesk('mythic-archives')).toBe(false);
   });
 
   it('matches an outlet on a subdomain but not a lookalike', () => {
@@ -250,7 +250,7 @@ describe('the figure check', () => {
     const { newsGate } = await import('../check');
     const { loadPersona } = await import('../../canon/load');
     const { loadFormat } = await import('../../formats/load');
-    const persona = loadPersona('geopolitics-today');
+    const persona = loadPersona('global-thread');
     const gate = newsGate({
       persona,
       format: loadFormat('news-short'),
@@ -452,7 +452,7 @@ describe('runNews', () => {
   });
 
   const makeRun = () =>
-    Run.create({ personaId: 'geopolitics-today', formatId: 'news-short', topic: 'geopolitics' }, { root });
+    Run.create({ personaId: 'global-thread', formatId: 'news-short', topic: 'geopolitics' }, { root });
 
   const newsDeps = { wire, now: () => NOW, sleep: async () => undefined };
 
@@ -523,7 +523,7 @@ describe('runNews', () => {
 
   it('does not count a held, unvoiced run as having reported anything', async () => {
     const held = Run.create(
-      { personaId: 'geopolitics-today', formatId: 'news-short', topic: 'geopolitics', holdForApproval: true },
+      { personaId: 'global-thread', formatId: 'news-short', topic: 'geopolitics', holdForApproval: true },
       { root }
     );
     await runNews(held, deps(), newsDeps);

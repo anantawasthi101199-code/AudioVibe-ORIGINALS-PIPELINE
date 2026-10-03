@@ -29,6 +29,9 @@ import { Run } from '../../run/store';
 import { runEpisode, PipelineDeps } from '../episode';
 import { runShort } from '../short';
 
+// The only shows on this lane were archived on 2026-10-03; they stay as fixtures.
+process.env.FOUNDRY_PERSONAS_DIR = path.resolve(__dirname, '../../../archive/personas');
+
 const PERSONA_ID = 'business-teardowns';
 const FORMAT_ID = 'case-study-teardown';
 const SHORT_FORMAT_ID = 'short-teardown';

@@ -337,6 +337,26 @@ const Setup = ({
               {account.hasSeries ? (
                 <span className="muted">Series exists</span>
               ) : (
+                <>
+                <ImagePicker
+                  title="Series cover"
+                  note="The 16:9 shelf art. Read once, when the series is created; without one it is drawn."
+                  state={art?.series ?? null}
+                  src={
+                    art?.series.supplied
+                      ? `/api/channel/art?id=${encodeURIComponent(channel.id)}&kind=series`
+                      : null
+                  }
+                  disabled={busy !== null}
+                  onUpload={async (image) => {
+                    await api.uploadChannelArt(channel.id, 'series', image);
+                    await loadArt();
+                  }}
+                  onRemove={async () => {
+                    await api.removeChannelArt(channel.id, 'series');
+                    await loadArt();
+                  }}
+                />
                 <div className="row" style={{ gap: '0.5rem' }}>
                   <button
                     className="btn"
@@ -347,6 +367,7 @@ const Setup = ({
                   </button>
                   <span className="faint tiny">The shelf its episodes sit on.</span>
                 </div>
+                </>
               )}
             </div>
           </div>

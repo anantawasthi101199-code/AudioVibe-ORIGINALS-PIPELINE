@@ -22,7 +22,7 @@ describe('approving and withdrawing', () => {
   afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
 
   const make = () =>
-    Run.create({ personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' }, { root });
+    Run.create({ personaId: 'root-health', formatId: 'what-we-know', topic: 'x' }, { root });
 
   it('records the decision separately from the date', () => {
     // A date is a plan; the approval is somebody saying yes. Something that
@@ -84,7 +84,7 @@ describe('dueForRelease', () => {
   it('ignores a run nobody approved, however old its date', () => {
     withRuns((root) => {
       const run = Run.create(
-        { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+        { personaId: 'root-health', formatId: 'what-we-know', topic: 'x' },
         { root }
       );
       run.setReleaseAt(new Date('2020-01-01T00:00:00Z'));
@@ -100,7 +100,7 @@ describe('dueForRelease', () => {
   it('ignores an approved run whose time has not come', () => {
     withRuns((root) => {
       const run = Run.create(
-        { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+        { personaId: 'root-health', formatId: 'what-we-know', topic: 'x' },
         { root }
       );
       run.setReleaseAt(new Date('2026-09-20T07:00:00Z'), new Date());
@@ -112,7 +112,7 @@ describe('dueForRelease', () => {
   it('holds an approved run that has no script, and says so', () => {
     withRuns((root) => {
       const run = Run.create(
-        { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+        { personaId: 'root-health', formatId: 'what-we-know', topic: 'x' },
         { root }
       );
       run.setReleaseAt(new Date('2020-01-01T00:00:00Z'), new Date());

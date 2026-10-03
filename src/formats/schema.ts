@@ -215,7 +215,7 @@ export const formatSchema = z
      * documents, extract claims bound to verbatim quotes, verify each one
      * against a different model family, repair what fails, and write from the
      * ledger. It is the right shape when assembling what many documents
-     * SEPARATELY establish is the product, which is what Honest Health is.
+     * SEPARATELY establish is the product, which is what The Root Health is.
      *
      * `single` reads less and reads all of it. A selector picks the one to
      * three documents that carry the whole story, they are read whole rather

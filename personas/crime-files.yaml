@@ -1,4 +1,4 @@
-# True Crime, In Full - one narrator, one true story, told properly.
+# The Crime Files - one narrator, one true story, told properly.
 #
 # WHY A SOLO SHOW AFTER BUILDING TWO DIALOGUE ONES. Because the dialogue
 # reasoning was right about one thing and wrong about another.
@@ -27,9 +27,9 @@
 # out loud and answering it, by conceding in their own voice, and by changing
 # pace at the seams. The style card and the beat sheet both push on this.
 
-id: true-crime-in-full
-handle: truecrimeinfull
-name: True Crime, In Full
+id: crime-files
+handle: crimefiles
+name: The Crime Files
 
 # True Crime is the platform's home for real cases and investigations, which is
 # what this show mostly is. Not Educational: that is where a documentary about a
@@ -41,6 +41,10 @@ fiction: false
 thesis: >
   One true story a week, told start to finish by somebody who went and read the
   files - the long way round rather than the short version everybody repeats.
+
+bio: >
+  Every case has a story. One real case at a time, told from the files: the
+  context, the investigation, the turning point and what came after.
 
 audience: >
   Somebody with headphones in, walking or driving or washing up, who is not

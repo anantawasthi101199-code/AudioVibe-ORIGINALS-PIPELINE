@@ -242,9 +242,9 @@ const MANIFEST = 'run.json';
  *
  * So the layout is a channel per directory, and a name that says what it is:
  *
- *   runs/honest-health/e001-20260913-why-a-bad-night-makes-you-forget/
- *   runs/honest-health/e001-s01-20260913-the-twenty-minute-gap/
- *   runs/honest-health/e002-20260920-whether-willpower-runs-out/
+ *   runs/root-health/e001-20260913-why-a-bad-night-makes-you-forget/
+ *   runs/root-health/e001-s01-20260913-the-twenty-minute-gap/
+ *   runs/root-health/e002-20260920-whether-willpower-runs-out/
  *
  * The episode number is per channel and counted from what is already there, so
  * it matches what a listener sees in a feed. A short carries its PARENT's

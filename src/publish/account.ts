@@ -350,7 +350,7 @@ export class PlatformAccounts {
  * where somebody first has to work it out.
  */
 export const bioFor = (persona: Persona): string => {
-  const thesis = persona.thesis.trim().replace(/\s+/g, ' ');
+  const thesis = (persona.bio ?? persona.thesis).trim().replace(/\s+/g, ' ');
   const made =
     'An AudioVibe Originals show. Written and voiced by AI, from documents you can check: ' +
     'every episode lists what it read.';

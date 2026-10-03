@@ -1,4 +1,4 @@
-# Myths of the World - one myth, told properly, from the oldest version anybody
+# Mythic Archives - one myth, told properly, from the oldest version anybody
 # can still read.
 #
 # WHY THIS SHOW IS ON THE FACTUAL LANE AND NOT THE FICTION ONE. The obvious
@@ -30,9 +30,9 @@
 # at the point where the manuscript runs out, it is the best sentence in the
 # episode. The beat sheet requires it in the two beats where it bites.
 
-id: myths-of-the-world
-handle: mythsoftheworld
-name: Myths of the World
+id: mythic-archives
+handle: mythicarchives
+name: Mythic Archives
 
 # Storytelling, not Spirituality and not Educational. Spirituality is where a
 # show about belief and practice goes, and this show does not ask a listener to
@@ -52,6 +52,10 @@ thesis: >
   One myth a week from somewhere in the world, told in full and in order, from
   the oldest version anybody can still read - and the story of how it survived
   at all, which is usually stranger than the myth.
+
+bio: >
+  Myths and legends from around the world, told in full and in order, from the
+  oldest versions that still survive.
 
 audience: >
   Somebody with headphones in, walking or driving or washing up, who has never
@@ -86,10 +90,15 @@ hosts:
     voice:
       provider: elevenlabs
       voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # Used only when FOUNDRY_TTS=openai, for hearing a script before any
-      # Eleven credits are bought. Deliberately a different draft voice from
-      # True Crime, In Full, so two shows are never confused while drafting.
-      draftVoiceId: fable
+      # The owner's ask, 2026-10-03: "a little slow yet heavy". onyx is the
+      # deepest OpenAI voice, and the pace comes from speed plus direction,
+      # because gpt-4o-mini-tts mostly listens to the direction.
+      draftVoiceId: onyx
+      direction: >
+        A deep, heavy, low voice telling an old story by lamplight. Slow and
+        deliberate, with weight on the names and a real pause at the end of
+        each sentence. Grave rather than gloomy, and never theatrical.
+      speed: 0.88
       settings:
         stability: 0.4
         similarity_boost: 0.75
@@ -265,7 +274,7 @@ canon:
 # myth-told is kept and is still the right sheet for a myth whose transmission
 # genuinely IS the story - where which manuscript survived, and who changed it,
 # is more interesting than the events. Choose it explicitly:
-#   npm run foundry -- make --show myths-of-the-world --format myth-told --topic "..."
+#   npm run foundry -- make --show mythic-archives --format myth-told --topic "..."
 #
 # ten-stories is a SOURCE
 # and never goes out whole - ten short myths from one research pass, cut

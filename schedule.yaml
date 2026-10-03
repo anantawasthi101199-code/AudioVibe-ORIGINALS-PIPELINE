@@ -27,24 +27,10 @@ shows:
   # subject. A studio that picks its own subjects converges on whatever the
   # model finds most available, which is the same handful of stories everyone
   # else is already telling.
-  business-teardowns:
-    everyDays: 3
-    # Monday morning, on the way to work, for a show about companies.
-    slot: { day: mon, hour: 7 }
-    # A ceiling, not a target. Approving twenty shorts fills the next seven
-    # weeks rather than putting twenty out in twenty days.
-    perWeek: { episodes: 2, shorts: 3 }
-    # Two shorts per episode, cut on the days between episodes. They are cheap,
-    # they reach people who have never heard the show, and they are the only
-    # thing here that can publish on a day no episode does.
-    shortsPerEpisode: 2
-    # Off until somebody decides otherwise. The pipeline stops at the gate
-    # exactly as it does when run by hand.
-    autoPublish: false
 
   # Weekly, and the flagship. A told story lives or dies on the telling, and
   # nothing about that gets better by doing it twice as often.
-  true-crime-in-full:
+  crime-files:
     everyDays: 7
     # Friday evening. A told story is what somebody puts on when the week ends.
     slot: { day: fri, hour: 18 }
@@ -54,23 +40,11 @@ shows:
 
   # Weekly, because a serial trains an expectation and then has to keep it. A
   # drama that arrives whenever it is ready is one a listener stops waiting for.
-  night-shift:
-    everyDays: 7
-    # Late, which is the point of the show.
-    slot: { day: wed, hour: 21 }
-    # No shorts at all: a short cut from a serial either spoils it or makes no
-    # sense out of order. Zero means an approval of one is left unscheduled
-    # rather than given a day it should not have.
-    perWeek: { episodes: 1, shorts: 0 }
-    # None. A short cut from a serial episode either spoils it or makes no
-    # sense out of order, and both are worse than not making one.
-    shortsPerEpisode: 0
-    autoPublish: false
 
   # Weekly. One myth told properly is the show; the anthology sets are a
   # separate thing and are not on a clock yet, because ten shorts arriving at
   # once is a publishing decision rather than a cadence.
-  myths-of-the-world:
+  mythic-archives:
     everyDays: 7
     slot: { day: sun, hour: 10 }
     # One myth told properly on Sunday, three anthology shorts in the week.
@@ -84,7 +58,7 @@ shows:
   # Weekly. The evidence work here is the slowest of any show - a health claim
   # has to clear T2 sourcing before it can be said at all - and there is no
   # version of this that is twice as fast without being worse.
-  honest-health:
+  root-health:
     everyDays: 7
     # Tuesday morning. Nothing symbolic; it is the day nothing else goes out.
     slot: { day: tue, hour: 8 }

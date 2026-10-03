@@ -12,10 +12,10 @@ If this file disagrees with the code, the code is right and this is a bug.
 
 ```bash
 # Today's top story on the channel's beat (no topic needed)
-npm run foundry -- make --show geopolitics-today
+npm run foundry -- make --show global-thread
 
 # One specific story
-npm run foundry -- make --show geopolitics-today --topic "Iran ceasefire talks"
+npm run foundry -- make --show global-thread --topic "Iran ceasefire talks"
 
 # Stop before the audio, to read the script first
     ... --hold
@@ -124,9 +124,9 @@ through.
 
 A channel is a news channel exactly when `desks/<id>.yaml` exists. Copy both:
 
-- `personas/geopolitics-today.yaml` - the reporter, the register, the goodbyes
+- `personas/global-thread.yaml` - the reporter, the register, the goodbyes
   (`signoffShort`, one picked per report)
-- `desks/geopolitics-today.yaml` - the beat, the morning queries, the trusted
+- `desks/global-thread.yaml` - the beat, the morning queries, the trusted
   outlets in preference order, the age limits, headline words that are off-beat
 
 Change the id, the beat, the queries and the goodbyes. Nothing else.
@@ -154,5 +154,5 @@ Change the id, the beat, the queries and the goodbyes. Nothing else.
 | `src/news/newsScript.ts` | The reporter prompt and the writer. |
 | `src/news/check.ts` | The figure, name, source, outro, length and staleness checks. |
 | `beatsheets/news-short.yaml` | The three-part report shape. |
-| `desks/geopolitics-today.yaml` | The first desk. |
-| `personas/geopolitics-today.yaml` | The first news channel. |
+| `desks/global-thread.yaml` | The first desk. |
+| `personas/global-thread.yaml` | The first news channel. |

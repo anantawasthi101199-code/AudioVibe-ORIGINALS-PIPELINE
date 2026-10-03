@@ -23,7 +23,8 @@ import os from 'os';
 import path from 'path';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
-import { platformUrl } from '../config';
+import { platformUrl, repoRoot } from '../config';
+import { suppliedArt } from '../art/supplied';
 import { setUpChannel } from '../pipeline/channel';
 import { AudioVibeClient } from '../publish/ingest';
 import {
@@ -186,11 +187,14 @@ export const createSeriesJob = (channelId: string) => {
 
       // 16:9, the frame the platform crops series to. A square one would keep
       // the middle band and shave the wordmark off the top and bottom.
-      const coverPath = renderCover(
-        { showName: persona.name, title: persona.name, palette: paletteFor(persona.id) },
-        path.join(os.tmpdir(), `foundry-series-${persona.id}.png`),
-        SERIES_COVER_SIZE
-      );
+      // A supplied one wins, as everywhere else.
+      const coverPath =
+        suppliedArt(path.join(repoRoot(), 'art', persona.id), 'series') ??
+        renderCover(
+          { showName: persona.name, title: persona.name, palette: paletteFor(persona.id) },
+          path.join(os.tmpdir(), `foundry-series-${persona.id}.png`),
+          SERIES_COVER_SIZE
+        );
 
       const client = new AudioVibeClient(platform.url!, publishTokenFor(persona.id));
       const created = await client.createSeries({

@@ -19,7 +19,7 @@ import {
   type HttpDeps,
 } from '../account';
 
-const persona = loadPersona('honest-health');
+const persona = loadPersona('root-health');
 
 /** A platform that records what it was asked, and answers as the real one does. */
 const fake = (over: { provisionStatus?: number; isAi?: boolean } = {}) => {
@@ -70,7 +70,7 @@ describe('PlatformAccounts', () => {
     const made = await api.provision({
       username: 'honesthealth',
       password: 'Passw0rd_aa',
-      fullName: 'Honest Health',
+      fullName: 'The Root Health',
       email: 'honesthealth@originals.audiovibe.co',
       studioSlug: 'originals',
     });
@@ -207,10 +207,15 @@ describe('bioFor', () => {
 
   it('drops the thesis whole rather than truncating mid-sentence', () => {
     // A cut-off final clause reads as a bug rather than as brevity.
-    const wordy = { ...persona, thesis: 'x '.repeat(400) };
+    const wordy = { ...persona, bio: undefined, thesis: 'x '.repeat(400) };
     const bio = bioFor(wordy);
     expect(bio.length).toBeLessThanOrEqual(500);
     expect(bio.startsWith('An AudioVibe Originals show')).toBe(true);
+  });
+
+  it('prefers the listener-facing bio over the thesis written for the writer', () => {
+    const bio = bioFor({ ...persona, bio: 'Everyday health, explained simply.' });
+    expect(bio.startsWith('Everyday health, explained simply. An AudioVibe Originals show')).toBe(true);
   });
 });
 
@@ -233,8 +238,8 @@ describe('the credentials file', () => {
       profile: { avatar: true, cover: true },
     };
 
-    saveAccounts({ 'honest-health': account }, file);
-    expect(loadAccounts(file)['honest-health']).toEqual(account);
+    saveAccounts({ 'root-health': account }, file);
+    expect(loadAccounts(file)['root-health']).toEqual(account);
   });
 
   it('is empty rather than an error before any channel exists', () => {
@@ -274,25 +279,25 @@ describe('publishTokenFor', () => {
   it('prefers the channel credential over the studio-wide one', () => {
     // The token carries a user id, so the wrong one publishes as the wrong
     // show - and there is no moving an episode between accounts afterwards.
-    record('honest-health', 'channel-token');
+    record('root-health', 'channel-token');
     process.env.AUDIOVIBE_INGEST_TOKEN = 'studio-wide';
 
-    expect(publishTokenFor('honest-health', file)).toBe('channel-token');
+    expect(publishTokenFor('root-health', file)).toBe('channel-token');
   });
 
   it('falls back to the environment, which is what one show always used', () => {
-    record('honest-health');
+    record('root-health');
     process.env.AUDIOVIBE_INGEST_TOKEN = 'studio-wide';
 
-    expect(publishTokenFor('honest-health', file)).toBe('studio-wide');
+    expect(publishTokenFor('root-health', file)).toBe('studio-wide');
   });
 
   it('says how to get one rather than reporting a missing variable', () => {
     // The token cannot be made from here: the platform has no endpoint that
     // issues machine credentials, deliberately. So the error is the recipe.
-    record('honest-health');
+    record('root-health');
 
-    expect(() => publishTokenFor('honest-health', file)).toThrow(/mintIngestToken/);
-    expect(() => publishTokenFor('honest-health', file)).toThrow(/channel-token --show/);
+    expect(() => publishTokenFor('root-health', file)).toThrow(/mintIngestToken/);
+    expect(() => publishTokenFor('root-health', file)).toThrow(/channel-token --show/);
   });
 });

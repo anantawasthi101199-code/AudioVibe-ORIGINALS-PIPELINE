@@ -47,48 +47,48 @@ describe('newRunName', () => {
   };
 
   it('puts a channel in its own folder, numbered and dated and named', () => {
-    const name = make('honest-health', 'Why a bad night makes you forget things');
-    expect(name.id).toBe('honest-health/e001-20260913-a-bad-night-makes-you-forget');
+    const name = make('root-health', 'Why a bad night makes you forget things');
+    expect(name.id).toBe('root-health/e001-20260913-a-bad-night-makes-you-forget');
     expect(name.episode).toBe(1);
   });
 
   it('counts episodes per channel, not across the studio', () => {
-    make('honest-health', 'One');
+    make('root-health', 'One');
     make('read-the-file', 'Two');
-    expect(make('honest-health', 'Three').episode).toBe(2);
+    expect(make('root-health', 'Three').episode).toBe(2);
     expect(make('read-the-file', 'Four').episode).toBe(2);
   });
 
   it('puts a short beside the episode it came from, carrying its number', () => {
-    make('honest-health', 'The parent episode');
-    const short = make('honest-health', 'The twenty minute gap', 1);
-    expect(short.id).toBe('honest-health/e001-s01-20260913-twenty-minute-gap');
+    make('root-health', 'The parent episode');
+    const short = make('root-health', 'The twenty minute gap', 1);
+    expect(short.id).toBe('root-health/e001-s01-20260913-twenty-minute-gap');
     expect(short.episode).toBe(1);
     expect(short.short).toBe(1);
   });
 
   it('numbers a second short of the same episode', () => {
-    make('honest-health', 'The parent');
-    make('honest-health', 'First short', 1);
-    expect(make('honest-health', 'Second short', 1).short).toBe(2);
+    make('root-health', 'The parent');
+    make('root-health', 'First short', 1);
+    expect(make('root-health', 'Second short', 1).short).toBe(2);
   });
 
   it('DOES NOT let shorts advance the episode number', () => {
     // Three shorts cut from episode one must not make the next episode four. A
     // short is not an episode.
-    make('honest-health', 'Episode one');
-    make('honest-health', 'a', 1);
-    make('honest-health', 'b', 1);
-    make('honest-health', 'c', 1);
-    expect(make('honest-health', 'Episode two').episode).toBe(2);
+    make('root-health', 'Episode one');
+    make('root-health', 'a', 1);
+    make('root-health', 'b', 1);
+    make('root-health', 'c', 1);
+    expect(make('root-health', 'Episode two').episode).toBe(2);
   });
 
   it('sorts into production order within a channel', () => {
     // The reason the old scheme led with a timestamp, and it survives: within a
     // channel the episode number leads, so `ls` answers "what is the latest".
-    const first = make('honest-health', 'One');
-    const second = make('honest-health', 'Two');
-    const short = make('honest-health', 'A short of one', 1);
+    const first = make('root-health', 'One');
+    const second = make('root-health', 'Two');
+    const short = make('root-health', 'A short of one', 1);
     const leaves = [second.id, short.id, first.id].map((id) => id.split('/')[1]!).sort();
     expect(leaves).toEqual([
       first.id.split('/')[1],
@@ -230,7 +230,7 @@ describe('a run that has been moved', () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'runs-'));
 
     const made = Run.create(
-      { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+      { personaId: 'root-health', formatId: 'what-we-know', topic: 'x' },
       { root }
     );
     const before = made.id;
@@ -240,9 +240,9 @@ describe('a run that has been moved', () => {
     const to = path.join(path.dirname(from), 'e009-renamed');
     fs.renameSync(from, to);
 
-    const after = Run.open('honest-health/e009-renamed', { root });
+    const after = Run.open('root-health/e009-renamed', { root });
 
-    expect(after.id).toBe('honest-health/e009-renamed');
+    expect(after.id).toBe('root-health/e009-renamed');
     expect(after.id).not.toBe(before);
     expect(Run.list({ root })).toContain(after.id);
 
@@ -261,7 +261,7 @@ describe('finding a run audio after it has moved', () => {
    */
   const withAudio = (root: string): Run => {
     const run = Run.create(
-      { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+      { personaId: 'root-health', formatId: 'what-we-know', topic: 'x' },
       { root }
     );
     fs.writeFileSync(run.mediaPath('episode.wav'), 'RIFF');
@@ -273,7 +273,7 @@ describe('finding a run audio after it has moved', () => {
     const run = withAudio(root);
 
     // A path from before a rename: absolute, and pointing nowhere.
-    const stale = path.join(root, 'honest-health', 'e006-gone', 'media', 'episode.wav');
+    const stale = path.join(root, 'root-health', 'e006-gone', 'media', 'episode.wav');
 
     expect(run.audioFile(stale)).toBe(path.join(run.dir, 'media', 'episode.wav'));
     fs.rmSync(root, { recursive: true, force: true });
@@ -290,7 +290,7 @@ describe('finding a run audio after it has moved', () => {
   it('is null when there is genuinely no audio, rather than a path that is not there', () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'runs-'));
     const run = Run.create(
-      { personaId: 'honest-health', formatId: 'what-we-know', topic: 'x' },
+      { personaId: 'root-health', formatId: 'what-we-know', topic: 'x' },
       { root }
     );
 

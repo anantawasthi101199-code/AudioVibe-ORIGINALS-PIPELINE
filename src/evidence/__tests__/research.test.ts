@@ -435,7 +435,7 @@ describe('concentrateSources', () => {
 /**
  * A show's evidence policy, applied before the writer.
  *
- * Honest Health declares minSourceTier T2 because a health claim sourced to a
+ * The Root Health declares minSourceTier T2 because a health claim sourced to a
  * news write-up of a press release about a preprint passes every other check
  * here and is still not evidence about the world. It was only checked at the
  * gate - which is after the script and after the audio - so a fever episode was

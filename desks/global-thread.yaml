@@ -1,13 +1,13 @@
-# The Geopolitics Today news desk.
+# The The Global Thread news desk.
 #
-# THIS FILE EXISTING IS WHAT MAKES geopolitics-today A NEWS CHANNEL. See
+# THIS FILE EXISTING IS WHAT MAKES global-thread A NEWS CHANNEL. See
 # src/news/desk.ts. To start another news channel (markets, tech, climate), copy
-# this file and personas/geopolitics-today.yaml under the new id and change the
+# this file and personas/global-thread.yaml under the new id and change the
 # beat, the queries and the goodbye.
 
-id: geopolitics-today
+id: global-thread
 
-# Said in the goodbye, and the default topic: `make --show geopolitics-today`
+# Said in the goodbye, and the default topic: `make --show global-thread`
 # with no --topic reports today's most important story on this beat.
 beat: geopolitics
 

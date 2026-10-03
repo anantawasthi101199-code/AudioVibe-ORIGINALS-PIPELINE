@@ -34,9 +34,9 @@ const entry = (showId: string, topic: string, runId: string) => ({
 
 const catalogue = (over: Partial<Catalogue> = {}): Catalogue => ({
   entries: [
-    entry('myths-of-the-world', 'The Descent of Inanna to the Underworld', 'myths/e008'),
-    entry('myths-of-the-world', 'Amaterasu and the cave', 'myths/e012'),
-    entry('honest-health', 'Does a bad night of sleep make you ill', 'health/e001'),
+    entry('mythic-archives', 'The Descent of Inanna to the Underworld', 'myths/e008'),
+    entry('mythic-archives', 'Amaterasu and the cave', 'myths/e012'),
+    entry('root-health', 'Does a bad night of sleep make you ill', 'health/e001'),
   ],
   ...over,
 });
@@ -109,7 +109,7 @@ describe('overlap', () => {
 
 describe('findCovered', () => {
   it('finds the same subject typed differently', () => {
-    const matches = findCovered(catalogue(), 'myths-of-the-world', "Inanna's descent");
+    const matches = findCovered(catalogue(), 'mythic-archives', "Inanna's descent");
 
     expect(matches[0]?.entry.runId).toBe('myths/e008');
     expect(matches[0]?.score).toBeGreaterThanOrEqual(BLOCK_AT);
@@ -117,7 +117,7 @@ describe('findCovered', () => {
   });
 
   it('says nothing about a genuinely new subject', () => {
-    expect(findCovered(catalogue(), 'myths-of-the-world', 'Houyi shoots the ten suns')).toEqual([]);
+    expect(findCovered(catalogue(), 'mythic-archives', 'Houyi shoots the ten suns')).toEqual([]);
   });
 
   /**
@@ -135,19 +135,19 @@ describe('findCovered', () => {
   it('sorts the closest match first', () => {
     const many = catalogue({
       entries: [
-        entry('myths-of-the-world', 'Inanna and the huluppu tree', 'myths/e020'),
-        entry('myths-of-the-world', 'The Descent of Inanna to the Underworld', 'myths/e008'),
+        entry('mythic-archives', 'Inanna and the huluppu tree', 'myths/e020'),
+        entry('mythic-archives', 'The Descent of Inanna to the Underworld', 'myths/e008'),
       ],
     });
 
-    const matches = findCovered(many, 'myths-of-the-world', 'The descent of Inanna');
+    const matches = findCovered(many, 'mythic-archives', 'The descent of Inanna');
     expect(matches[0]?.entry.runId).toBe('myths/e008');
   });
 });
 
 describe('blocking', () => {
   it('blocks a close match from the same show', () => {
-    const matches = findCovered(catalogue(), 'myths-of-the-world', 'Descent of Inanna');
+    const matches = findCovered(catalogue(), 'mythic-archives', 'Descent of Inanna');
     expect(blocking(matches)).toHaveLength(1);
   });
 
@@ -157,18 +157,18 @@ describe('blocking', () => {
    */
   it('does not block a distant match', () => {
     const near = catalogue({
-      entries: [entry('myths-of-the-world', 'Inanna, Dumuzi and the shepherd', 'myths/e030')],
+      entries: [entry('mythic-archives', 'Inanna, Dumuzi and the shepherd', 'myths/e030')],
     });
 
-    const matches = findCovered(near, 'myths-of-the-world', 'The cave of Amaterasu and the sun');
+    const matches = findCovered(near, 'mythic-archives', 'The cave of Amaterasu and the sun');
     expect(blocking(matches)).toEqual([]);
   });
 });
 
 describe('refusal', () => {
   it('names the earlier run, its date, and the override', () => {
-    const matches = findCovered(catalogue(), 'myths-of-the-world', 'Descent of Inanna');
-    const text = refusal('myths-of-the-world', 'Descent of Inanna', matches);
+    const matches = findCovered(catalogue(), 'mythic-archives', 'Descent of Inanna');
+    const text = refusal('mythic-archives', 'Descent of Inanna', matches);
 
     expect(text).toContain('myths/e008');
     expect(text).toContain('2026-09-25');
@@ -193,9 +193,9 @@ describe('recordMade', () => {
   });
 
   it('records a subject and finds it again', () => {
-    recordMade('myths-of-the-world', 'Houyi shoots the ten suns', 'myths/e015', new Date(), dir);
+    recordMade('mythic-archives', 'Houyi shoots the ten suns', 'myths/e015', new Date(), dir);
 
-    const found = findCovered(loadCatalogue(dir), 'myths-of-the-world', 'Houyi and the ten suns');
+    const found = findCovered(loadCatalogue(dir), 'mythic-archives', 'Houyi and the ten suns');
     expect(found).toHaveLength(1);
   });
 
@@ -205,11 +205,11 @@ describe('recordMade', () => {
    * second thing and both belong in the ledger.
    */
   it('is idempotent for one run, and keeps a deliberate remake', () => {
-    recordMade('myths-of-the-world', 'Orpheus', 'myths/e014', new Date(), dir);
-    recordMade('myths-of-the-world', 'Orpheus', 'myths/e014', new Date(), dir);
+    recordMade('mythic-archives', 'Orpheus', 'myths/e014', new Date(), dir);
+    recordMade('mythic-archives', 'Orpheus', 'myths/e014', new Date(), dir);
     expect(loadCatalogue(dir).entries).toHaveLength(1);
 
-    recordMade('myths-of-the-world', 'Orpheus', 'myths/e021', new Date(), dir);
+    recordMade('mythic-archives', 'Orpheus', 'myths/e021', new Date(), dir);
     expect(loadCatalogue(dir).entries).toHaveLength(2);
   });
 

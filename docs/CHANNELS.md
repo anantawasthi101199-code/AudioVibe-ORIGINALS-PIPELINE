@@ -11,14 +11,30 @@ Current as of 2026-09-29. If this disagrees with the code, the code is right.
 
 | Show | What it is | Lane | Format | Length |
 |---|---|---|---|---|
-| `myths-of-the-world` | Myths, told properly | single-story | `myth-story` | 15 min |
-| `myths-of-the-world` | The same, short | single-story, no fusion | `myth-short` | 3 min |
-| `honest-health` | Health claims, weighed | extensive | `what-we-know` | 11-15 min |
+| `mythic-archives` | Myths, told properly | single-story | `myth-story` | 15 min |
+| `mythic-archives` | The same, short | single-story, no fusion | `myth-short` | 3 min |
+| `root-health` | Health claims, weighed | extensive | `what-we-know` | 11-15 min |
 | `business-teardowns` | Companies, taken apart | extensive | `case-study-teardown` | 15 min |
-| `true-crime-in-full` | One case, whole | casefile | `case-in-full` | 13-17 min |
-| `true-crime-in-full` | The same, short | casefile | `case-short` | 3 min |
-| `geopolitics-today` | Today's story on the beat | news desk | `news-short` | under 3 min |
+| `crime-files` | One case, whole | casefile | `case-in-full` | 13-17 min |
+| `crime-files` | The same, short | casefile | `case-short` | 3 min |
+| `global-thread` | Today's story on the beat | news desk | `news-short` | under 3 min |
 | `night-shift` | The serial drama | fiction | `serial-reversal` | 8-12 min |
+
+### What listeners see
+
+Set from the owner's channel sheet on 2026-10-02, before launch, so every
+channel starts fresh under these ids. Do not rename an id once a channel has
+published: it is stamped into every episode's provenance as `persona_ref`.
+
+| Id | Public name | Handle |
+|---|---|---|
+| `business-decoded` | Business Decoded | @businessdecoded |
+| `eureka-tales` | Eureka Tales | @eurekatales |
+| `global-thread` | The Global Thread | @globalthread |
+| `root-health` | The Root Health | @roothealth |
+| `crime-files` | The Crime Files | @crimefiles |
+| `mythic-archives` | Mythic Archives | @mythicarchives |
+| `psyche-session` | Psyche Session | @psychesession |
 
 `read-the-file` was archived on 2026-09-29. It never produced a run and was
 absent from the schedule. See `archive/README.md`.
@@ -34,18 +50,18 @@ the same in all four.
 ```
   EXTENSIVE          many documents, claim ledger, quote binding
                      for a subject ASSEMBLED from sources
-                     honest-health, business-teardowns
+                     root-health, business-teardowns
 
   SINGLE-STORY       2-3 documents read WHOLE, fused into one article
                      for a subject that IS one story already
-                     myths-of-the-world
+                     mythic-archives
 
   CASEFILE           ONE document read whole, into a dated case file
                      for something that HAPPENED, to real people
-                     true-crime-in-full
+                     crime-files
 
   NEWS DESK          one article, today, from a wire sweep
-                     geopolitics-today
+                     global-thread
 
   FICTION            no research at all; a season plan and a series bible
                      night-shift
@@ -88,13 +104,13 @@ evidence check this lane has.
 ### Make one episode
 
 ```bash
-npm run foundry -- make --show myths-of-the-world --topic "Houyi shoots the ten suns"
-npm run foundry -- make --show honest-health --topic "Do cold showers do anything"
-npm run foundry -- make --show geopolitics-today                 # no topic: today's story
+npm run foundry -- make --show mythic-archives --topic "Houyi shoots the ten suns"
+npm run foundry -- make --show root-health --topic "Do cold showers do anything"
+npm run foundry -- make --show global-thread                 # no topic: today's story
 npm run foundry -- make --show night-shift                       # next episode of the serial
 
 # true crime, with the one check this lane really wants
-npm run foundry -- make --show true-crime-in-full --topic "..." --reference-check
+npm run foundry -- make --show crime-files --topic "..." --reference-check
 ```
 
 Add `--render-now` to skip the approval break, `--dry-run` to price it without
@@ -103,7 +119,7 @@ spending, `--music` to put a bed under the voice (off by default).
 ### Make a short
 
 ```bash
-npm run foundry -- make --show myths-of-the-world --format myth-short --topic "..."
+npm run foundry -- make --show mythic-archives --format myth-short --topic "..."
 ```
 
 ### Run a drama season
@@ -136,13 +152,13 @@ npm run foundry -- tick    # make the next due thing, then stop
 ### Has it been done already
 
 ```bash
-npm run foundry -- covered --show myths-of-the-world
+npm run foundry -- covered --show mythic-archives
 ```
 
 `make` refuses a subject the show has already covered, names the earlier run,
 and spends nothing. Pass `--again` if it really is different.
 
-This does **not** apply to `night-shift` or `geopolitics-today`, and that is
+This does **not** apply to `night-shift` or `global-thread`, and that is
 deliberate: both reuse one topic string for every episode they make, so the
 check would block their second episode forever. A serial is deduplicated by its
 season plan and a news desk by its own already-reported test.

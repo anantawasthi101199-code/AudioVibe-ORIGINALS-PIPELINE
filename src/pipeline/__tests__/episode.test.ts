@@ -18,6 +18,9 @@ import { sourceIdFor } from '../../evidence/source';
 import { Run } from '../../run/store';
 import { runEpisode, PipelineDeps } from '../episode';
 
+// The only shows on this lane were archived on 2026-10-03; they stay as fixtures.
+process.env.FOUNDRY_PERSONAS_DIR = path.resolve(__dirname, '../../../archive/personas');
+
 // The persona and format used here are the shipped ones, so this also proves
 // the real beat sheet and show bible survive a full run.
 const PERSONA_ID = 'business-teardowns';

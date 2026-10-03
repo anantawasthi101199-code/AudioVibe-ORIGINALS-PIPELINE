@@ -197,7 +197,7 @@ export interface Platform {
   configured: boolean;
 }
 
-export type ArtKind = 'avatar' | 'cover';
+export type ArtKind = 'avatar' | 'cover' | 'series';
 
 /** A picture's provenance, and the shape a replacement has to be. */
 export interface ArtState {

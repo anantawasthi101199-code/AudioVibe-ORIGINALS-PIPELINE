@@ -18,6 +18,7 @@ import {
   screenerConfig,
   episodeBudgetPence,
   platformUrl,
+  repoRoot,
   ttsProvider,
   verifierConfig,
   writerConfig,
@@ -78,6 +79,7 @@ import {
 import { suggestSynth } from './render/synthSuggest';
 import { environmentKey, findSeries, recordSeries } from './publish/seriesRegistry';
 import { SERIES_COVER_SIZE, paletteFor, renderCover } from './art/cover';
+import { suppliedArt } from './art/supplied';
 import { currentPlan } from './schedule/current';
 import { writeLibrary } from './run/library';
 import { AnthropicClient, costPenceFor, OpenAiClient } from './models/client';
@@ -146,7 +148,7 @@ Commands
                                  Both default to whatever the format declares.
       ... --render-now           Skip the approval break and voice it straight
                                  away. Spends without anybody reading it first.
-  make --show geopolitics-today  A NEWS channel (it has desks/<id>.yaml): today's
+  make --show global-thread  A NEWS channel (it has desks/<id>.yaml): today's
                                  top story on its beat, from ONE article by a
                                  trusted outlet, under 3 minutes. --topic "..."
                                  for one specific story. Renders at once;
@@ -1763,11 +1765,14 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
   // The shelf gets 16:9 art, which is the frame the platform crops series to.
   // Sending a square one here would have the middle band of it kept and the
   // top and bottom shaved off, taking the wordmark with them.
-  const coverPath = renderCover(
-    { showName: persona.name, title: persona.name, palette: paletteFor(persona.id) },
-    path.join(os.tmpdir(), `foundry-series-${persona.id}.png`),
-    SERIES_COVER_SIZE
-  );
+  // A supplied one wins, as everywhere else.
+  const coverPath =
+    suppliedArt(path.join(repoRoot(), 'art', persona.id), 'series') ??
+    renderCover(
+      { showName: persona.name, title: persona.name, palette: paletteFor(persona.id) },
+      path.join(os.tmpdir(), `foundry-series-${persona.id}.png`),
+      SERIES_COVER_SIZE
+    );
 
   // THE CHANNEL'S OWN CREDENTIAL, not a studio-wide one. The token carries a
   // user id, so a series made with the wrong one belongs to the wrong show and

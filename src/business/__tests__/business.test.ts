@@ -25,13 +25,13 @@ import { cleanStoryText, isRefused, scoreSource, subjectOf } from '../pickSource
 import { sourceSchema } from '../../evidence/source';
 
 const NOW = new Date('2026-09-29T12:00:00Z');
-const book = loadCasebook('how-they-built-it');
+const book = loadCasebook('business-decoded');
 
 describe('the shipped channel', () => {
   it('is a business channel and nothing else', () => {
-    expect(hasCasebook('how-they-built-it')).toBe(true);
-    expect(laneOf(loadPersona('how-they-built-it'))).toBe('business');
-    for (const id of loadPersona('how-they-built-it').formats) loadFormat(id);
+    expect(hasCasebook('business-decoded')).toBe(true);
+    expect(laneOf(loadPersona('business-decoded'))).toBe('business');
+    for (const id of loadPersona('business-decoded').formats) loadFormat(id);
   });
 
   it('keeps every lane to its own formats', () => {
@@ -40,8 +40,8 @@ describe('the shipped channel', () => {
     expect(() => assertFormatInLane('news', 'biz-episode')).toThrow(/business format/);
     expect(() => assertFormatInLane('business', 'news-short')).toThrow(/news format/);
     expect(() => assertFormatInLane('business', 'myth-story')).toThrow(/only runs its own/);
-    expect(laneOf(loadPersona('geopolitics-today'))).toBe('news');
-    expect(laneOf(loadPersona('myths-of-the-world'))).toBe('story');
+    expect(laneOf(loadPersona('global-thread'))).toBe('news');
+    expect(laneOf(loadPersona('mythic-archives'))).toBe('story');
   });
 
   it('parses a casebook and rejects a query with no subject in it', () => {
@@ -224,7 +224,7 @@ describe('runBusiness', () => {
   });
 
   const makeRun = (formatId = 'biz-short') =>
-    Run.create({ personaId: 'how-they-built-it', formatId, topic: 'how did Haldiram become Haldiram' }, { root });
+    Run.create({ personaId: 'business-decoded', formatId, topic: 'how did Haldiram become Haldiram' }, { root });
 
   const bizDeps = { now: () => NOW, sleep: async () => undefined };
 

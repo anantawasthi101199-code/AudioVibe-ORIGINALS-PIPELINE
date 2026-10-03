@@ -1,4 +1,4 @@
-# Honest Health - one question about how people work, answered as far as the
+# The Root Health - one question about how people work, answered as far as the
 # evidence actually goes.
 #
 # THE ONLY SHOW HERE WHERE BEING WRONG CAN HURT SOMEBODY. Everywhere else the
@@ -32,10 +32,10 @@
 # selling point is "here is how well this is known, including the parts nobody
 # has settled" is doing something the genre does not do.
 
-id: honest-health
-handle: honesthealth
+id: root-health
+handle: roothealth
 
-name: Honest Health
+name: The Root Health
 
 # Fitness & Health is where the platform puts this, and it is right: the show is
 # about bodies and minds rather than about research as a subject. Educational
@@ -48,6 +48,11 @@ thesis: >
   One question about how people work a week - sleep, memory, grief, appetite,
   habit - answered as far as the evidence actually goes, including the size of
   the part nobody has settled.
+
+bio: >
+  Everyday health, explained simply. Coffee, gut health, cholesterol, PCOD
+  and the myths around them, in plain words, from what the evidence actually
+  says.
 
 audience: >
   Somebody with headphones in who has the question personally rather than

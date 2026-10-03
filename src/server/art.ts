@@ -17,8 +17,8 @@ import fs from 'fs';
 import path from 'path';
 import { loadPersona } from '../canon/load';
 import { repoRoot } from '../config';
-import { AVATAR_SIZE, COVER_SIZE } from '../art/generate';
-import { AUDIO_COVER_SIZE } from '../art/cover';
+import { AVATAR_SIZE, PROFILE_BANNER_SIZE } from '../art/generate';
+import { AUDIO_COVER_SIZE, SERIES_COVER_SIZE } from '../art/cover';
 import {
   ArtRefused,
   ArtShape,
@@ -29,7 +29,7 @@ import {
 import { Run } from '../run/store';
 import { HttpError } from './routes';
 
-export type ChannelArtKind = 'avatar' | 'cover';
+export type ChannelArtKind = 'avatar' | 'cover' | 'series';
 
 /**
  * What each picture has to be, and what to call it when refusing one.
@@ -40,7 +40,9 @@ export type ChannelArtKind = 'avatar' | 'cover';
  */
 export const SHAPES: Record<ChannelArtKind, ArtShape> = {
   avatar: { width: AVATAR_SIZE, height: AVATAR_SIZE, label: 'profile picture' },
-  cover: { width: COVER_SIZE.width, height: COVER_SIZE.height, label: 'cover image' },
+  cover: { width: PROFILE_BANNER_SIZE.width, height: PROFILE_BANNER_SIZE.height, label: 'cover image' },
+  // The shelf a serial's episodes sit on. Read once, by series setup.
+  series: { width: SERIES_COVER_SIZE.width, height: SERIES_COVER_SIZE.height, label: 'series cover' },
 };
 
 export const EPISODE_SHAPE: ArtShape = {
@@ -107,6 +109,7 @@ export const channelArtState = (channelId: string): Record<ChannelArtKind, ArtSt
   return {
     avatar: state(dir, 'avatar', SHAPES.avatar),
     cover: state(dir, 'cover', SHAPES.cover),
+    series: state(dir, 'series', SHAPES.series),
   };
 };
 
@@ -160,6 +163,6 @@ export const runArtFile = (runId: string): string | null => {
 
 /** The kind named in a query string, or a 400 saying which ones exist. */
 export const artKind = (raw: string | null): ChannelArtKind => {
-  if (raw === 'avatar' || raw === 'cover') return raw;
-  throw new HttpError(400, `kind has to be "avatar" or "cover", not ${JSON.stringify(raw)}`);
+  if (raw === 'avatar' || raw === 'cover' || raw === 'series') return raw;
+  throw new HttpError(400, `kind has to be "avatar", "cover" or "series", not ${JSON.stringify(raw)}`);
 };

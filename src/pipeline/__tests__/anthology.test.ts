@@ -30,7 +30,7 @@ import { Run } from '../../run/store';
 import { runEpisode, PipelineDeps } from '../episode';
 import { cutStories } from '../anthology';
 
-const PERSONA_ID = 'honest-health';
+const PERSONA_ID = 'root-health';
 const SOURCE_FORMAT_ID = 'ten-stories';
 const EPISODE_FORMAT_ID = 'what-we-know';
 

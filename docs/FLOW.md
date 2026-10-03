@@ -66,10 +66,10 @@ between 90p and 15p.
 
 ```bash
 # A 15-minute episode
-npm run foundry -- make --show myths-of-the-world --topic "..."
+npm run foundry -- make --show mythic-archives --topic "..."
 
 # A 3-minute short
-npm run foundry -- make --show myths-of-the-world --format myth-short --topic "..."
+npm run foundry -- make --show mythic-archives --format myth-short --topic "..."
 
 # Skip the approval break and voice it straight away
     ... --render-now

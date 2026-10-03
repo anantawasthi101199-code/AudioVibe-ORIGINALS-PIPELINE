@@ -344,7 +344,7 @@ describe('publish slots', () => {
             autoPublish: false,
             slot: { day: 'sun', hour: 10 },
           },
-          'honest-health': {
+          'root-health': {
             everyDays: 7,
             shortsPerEpisode: 0,
             autoPublish: false,
@@ -352,11 +352,11 @@ describe('publish slots', () => {
           },
         },
       },
-      personas: [persona('business-teardowns'), persona('honest-health')],
+      personas: [persona('business-teardowns'), persona('root-health')],
     });
 
     expect(result.waiting.map((w) => w.personaId)).toEqual([
-      'honest-health',
+      'root-health',
       'business-teardowns',
     ]);
   });

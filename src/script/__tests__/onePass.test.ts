@@ -14,7 +14,7 @@ import { loadFormat } from '../../formats/load';
 import { Claim } from '../../evidence/claim';
 import { writeScriptOnePass, MAX_SCRIPT_REVISIONS } from '../onePass';
 
-const persona = loadPersona('honest-health');
+const persona = loadPersona('root-health');
 const format = loadFormat('what-we-know');
 
 const claims: Claim[] = format.beats.flatMap((beat, bi) =>

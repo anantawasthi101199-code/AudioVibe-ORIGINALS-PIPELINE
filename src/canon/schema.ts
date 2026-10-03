@@ -228,6 +228,15 @@ export const personaSchema = z.object({
   /** One sentence on what the show is for. Kept to one on purpose. */
   thesis: z.string().min(1),
 
+  /**
+   * What the profile says, when it should not be the thesis.
+   *
+   * The thesis is written for the writer model and goes into every prompt; a
+   * bio is written for a listener deciding whether to follow. Editing one to
+   * suit the other changed the scripts, so they are separate.
+   */
+  bio: z.string().min(1).optional(),
+
   /** Who it is talking to. Shapes assumed knowledge, not tone. */
   audience: z.string().min(1),
 

@@ -39,9 +39,9 @@ describe('startRun refuses a duplicate', () => {
 
     saveCatalogue({ entries: [] }, root);
     recordMade(
-      'myths-of-the-world',
+      'mythic-archives',
       'The Descent of Inanna to the Underworld, and the seven gates',
-      'myths-of-the-world/e008-20260925-descent-of-inanna',
+      'mythic-archives/e008-20260925-descent-of-inanna',
       new Date('2026-09-25T10:00:00.000Z'),
       root
     );
@@ -63,7 +63,7 @@ describe('startRun refuses a duplicate', () => {
   });
 
   const body = (over: Record<string, unknown> = {}) => ({
-    channelId: 'myths-of-the-world',
+    channelId: 'mythic-archives',
     formatId: 'myth-short',
     // Shorter than the recorded topic and contained in it, which is the shape
     // a real duplicate takes.

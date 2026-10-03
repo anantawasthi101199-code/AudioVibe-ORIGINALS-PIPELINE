@@ -63,7 +63,7 @@
  * real fetched sources and cannot be invented (see source.ts), and the
  * reference is checked once, whole, by `reviewReference`. For a myth - a claim
  * about a text rather than about the world - that is the right trade. For
- * Honest Health it is not, which is why this is a lane and not a replacement.
+ * The Root Health it is not, which is why this is a lane and not a replacement.
  */
 import { z } from 'zod';
 import { EpisodeFormat } from '../formats/schema';

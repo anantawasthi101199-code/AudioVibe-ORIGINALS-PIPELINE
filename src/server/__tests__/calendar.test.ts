@@ -26,14 +26,14 @@ const withRuns = <T>(fn: (root: string) => T): T => {
   }
 };
 
-/** A run of the honest-health ten-stories set, as a cut story. */
+/** A run of the root-health ten-stories set, as a cut story. */
 const story = (root: string, n: number): Run => {
   const run = Run.create(
-    { personaId: 'honest-health', formatId: 'ten-stories', topic: 'x', story: n, short: n },
+    { personaId: 'root-health', formatId: 'ten-stories', topic: 'x', story: n, short: n },
     { root }
   );
   run.writeArtifact('script', {
-    personaId: 'honest-health',
+    personaId: 'root-health',
     formatId: 'ten-stories',
     title: `Story ${n}`,
     description: 'd',
@@ -145,11 +145,11 @@ describe('getCalendar', () => {
   it('never draws a source script', () => {
     withRuns((root) => {
       const source = Run.create(
-        { personaId: 'honest-health', formatId: 'ten-stories', topic: 'x' },
+        { personaId: 'root-health', formatId: 'ten-stories', topic: 'x' },
         { root }
       );
       source.writeArtifact('script', {
-        personaId: 'honest-health',
+        personaId: 'root-health',
         formatId: 'ten-stories',
         title: 'The set',
         description: 'd',

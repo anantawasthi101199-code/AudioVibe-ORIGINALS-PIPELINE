@@ -20,7 +20,7 @@ import {
   ImageError,
 } from '../generate';
 
-const persona = loadPersona('honest-health');
+const persona = loadPersona('root-health');
 
 /** One pixel of PNG, which is all a test needs written to disk. */
 const PIXEL =

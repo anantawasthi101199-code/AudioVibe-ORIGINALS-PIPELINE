@@ -51,3 +51,10 @@ The premises in it are still good, and they are still usable:
 ```bash
 npm run foundry -- season --show night-shift --premise "a drug count comes up short"
 ```
+
+### `personas/business-teardowns.yaml`, `personas/night-shift.yaml`, their topics and season
+
+Archived on 2026-10-03: production carries exactly seven channels, and these two
+were not among them. They are still the only shows on the extensive-research and
+fiction lanes, so `src/pipeline/__tests__/{episode,short,fiction}.test.ts` point
+`FOUNDRY_PERSONAS_DIR` here and keep using them as fixtures.

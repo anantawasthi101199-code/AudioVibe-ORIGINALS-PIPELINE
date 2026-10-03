@@ -12,10 +12,10 @@ If this file disagrees with the code, the code is right and this is a bug.
 
 ```bash
 # An episode (the default format)
-npm run foundry -- make --show how-they-built-it --topic "how did reliance group ambani become the richest in asia"
+npm run foundry -- make --show business-decoded --topic "how did reliance group ambani become the richest in asia"
 
 # A short
-npm run foundry -- make --show how-they-built-it --format biz-short --topic "Haldiram's"
+npm run foundry -- make --show business-decoded --format biz-short --topic "Haldiram's"
 
 # Price it, spending nothing
     ... --dry-run
@@ -130,6 +130,6 @@ another lane (`biz-*`, `news-*`) is refused before anything is spent.
 | `src/business/check.ts` | The lane's checks. |
 | `src/qa/sourceText.ts` | Figure, quote, name and unknown checks shared with news. |
 | `src/pipeline/lanes.ts` | Which lane a run is on. |
-| `casebooks/how-they-built-it.yaml` | Queries, preferred and refused hosts, sizes. |
-| `personas/how-they-built-it.yaml` | Zara, the register, the goodbyes. |
+| `casebooks/business-decoded.yaml` | Queries, preferred and refused hosts, sizes. |
+| `personas/business-decoded.yaml` | Zara, the register, the goodbyes. |
 | `beatsheets/biz-episode.yaml`, `biz-short.yaml` | The shapes. |

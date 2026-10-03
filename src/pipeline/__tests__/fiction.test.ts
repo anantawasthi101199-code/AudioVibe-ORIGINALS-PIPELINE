@@ -26,6 +26,9 @@ import { renderResultSchema } from '../../render/assemble';
 import { PipelineDeps } from '../episode';
 import { runFiction } from '../fiction';
 
+// The only shows on this lane were archived on 2026-10-03; they stay as fixtures.
+process.env.FOUNDRY_PERSONAS_DIR = path.resolve(__dirname, '../../../archive/personas');
+
 const PERSONA_ID = 'night-shift';
 const FORMAT_ID = 'serial-episode';
 

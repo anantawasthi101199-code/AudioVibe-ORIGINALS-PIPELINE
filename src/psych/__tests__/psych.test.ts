@@ -31,13 +31,13 @@ import {
   unsupportedStats,
 } from '../check';
 
-const book = loadCurriculum('inside-your-head');
+const book = loadCurriculum('psyche-session');
 
 describe('the shipped channel', () => {
   it('is a psychology channel and nothing else', () => {
-    expect(hasCurriculum('inside-your-head')).toBe(true);
-    expect(laneOf(loadPersona('inside-your-head'))).toBe('psychology');
-    for (const id of loadPersona('inside-your-head').formats) loadFormat(id);
+    expect(hasCurriculum('psyche-session')).toBe(true);
+    expect(laneOf(loadPersona('psyche-session'))).toBe('psychology');
+    for (const id of loadPersona('psyche-session').formats) loadFormat(id);
   });
 
   it('keeps every lane to its own formats', () => {
@@ -46,8 +46,8 @@ describe('the shipped channel', () => {
     expect(() => assertFormatInLane('business', 'psych-episode')).toThrow(/psychology format/);
     expect(() => assertFormatInLane('story', 'psych-episode')).toThrow(/psychology format/);
     expect(() => assertFormatInLane('psychology', 'myth-story')).toThrow(/only runs its own/);
-    expect(laneOf(loadPersona('how-they-built-it'))).toBe('business');
-    expect(laneOf(loadPersona('myths-of-the-world'))).toBe('story');
+    expect(laneOf(loadPersona('business-decoded'))).toBe('business');
+    expect(laneOf(loadPersona('mythic-archives'))).toBe('story');
   });
 
   it('refuses a query with no topic in it', () => {
@@ -424,7 +424,7 @@ describe('runPsych', () => {
   });
 
   const makeRun = (formatId = 'psych-episode') =>
-    Run.create({ personaId: 'inside-your-head', formatId, topic: 'overwhelm' }, { root });
+    Run.create({ personaId: 'psyche-session', formatId, topic: 'overwhelm' }, { root });
 
   it('extracts, fuses, then writes: three calls, in that order, and passes', async () => {
     const run = makeRun();
@@ -434,7 +434,7 @@ describe('runPsych', () => {
     expect(writer.calls).toBe(3);
     expect(writer.systems[0]).toContain('reading research and clinical writing');
     expect(writer.systems[1]).toContain('turning notes taken from several documents');
-    expect(writer.systems[2]).toContain('SHOW: Inside Your Head');
+    expect(writer.systems[2]).toContain('SHOW: Psyche Session');
     // The writer is given the understanding and never the documents.
     expect(writer.prompts[2]).toContain('THE PICTURE THIS EPISODE IS BUILT ON');
     expect(writer.prompts[2]).not.toContain('according to the survey');

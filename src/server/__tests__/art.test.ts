@@ -10,8 +10,8 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { AUDIO_COVER_SIZE } from '../../art/cover';
-import { AVATAR_SIZE, COVER_SIZE } from '../../art/generate';
+import { AUDIO_COVER_SIZE, SERIES_COVER_SIZE } from '../../art/cover';
+import { AVATAR_SIZE, PROFILE_BANNER_SIZE } from '../../art/generate';
 import { EPISODE_SHAPE, SHAPES, artKind } from '../art';
 import { HttpError } from '../routes';
 
@@ -21,7 +21,16 @@ describe('the shapes a supplied picture has to match', () => {
     // ever disagree, one of the two is wrong on the profile and nothing says
     // which.
     expect(SHAPES.avatar).toMatchObject({ width: AVATAR_SIZE, height: AVATAR_SIZE });
-    expect(SHAPES.cover).toMatchObject({ width: COVER_SIZE.width, height: COVER_SIZE.height });
+    expect(SHAPES.cover).toMatchObject({
+      width: PROFILE_BANNER_SIZE.width,
+      height: PROFILE_BANNER_SIZE.height,
+    });
+    // The app's PROFILE_COVER_RATIO. A 3:2 banner here refused the right file.
+    expect(SHAPES.cover.width / SHAPES.cover.height).toBe(2.5);
+    expect(SHAPES.series).toMatchObject({
+      width: SERIES_COVER_SIZE.width,
+      height: SERIES_COVER_SIZE.height,
+    });
     expect(EPISODE_SHAPE).toMatchObject({
       width: AUDIO_COVER_SIZE.width,
       height: AUDIO_COVER_SIZE.height,
@@ -37,15 +46,16 @@ describe('the shapes a supplied picture has to match', () => {
 });
 
 describe('the kind in a query string', () => {
-  it('accepts the two that exist', () => {
+  it('accepts the three that exist', () => {
     expect(artKind('avatar')).toBe('avatar');
     expect(artKind('cover')).toBe('cover');
+    expect(artKind('series')).toBe('series');
   });
 
   it('refuses anything else by naming what is allowed', () => {
     for (const bad of [null, '', 'banner', 'AVATAR', '../../etc/passwd']) {
       expect(() => artKind(bad)).toThrow(HttpError);
-      expect(() => artKind(bad)).toThrow(/"avatar" or "cover"/);
+      expect(() => artKind(bad)).toThrow(/"avatar", "cover" or "series"/);
     }
   });
 });

@@ -10,7 +10,7 @@
  *   story       none of the above                  pipeline/episode.ts
  *
  * A channel that qualifies for two is refused outright, and so is a run whose
- * format belongs to another lane: `make --show myths-of-the-world --format
+ * format belongs to another lane: `make --show mythic-archives --format
  * biz-short` would otherwise hand a business beat sheet to the myth writer.
  */
 import { Persona } from '../canon/schema';
