@@ -24,6 +24,7 @@ import { suppliedArt } from '../art/supplied';
 import { claimSetSchema, corpusSchema } from '../evidence/research';
 import { loadBible } from '../fiction/bible';
 import { renderResultSchema } from '../render/assemble';
+import { mixedAudioFor } from '../render/backing';
 import { GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 import { scriptSchema } from '../script/write';
@@ -273,7 +274,11 @@ export const publishRun = async (
   // WHERE THE AUDIO IS, not where the record says it was. A renamed run
   // directory leaves the stored path pointing at a folder that no longer
   // exists, and publishing is the last place that should discover it.
-  const audioPath = run.audioFile(render.audioFile);
+  // YOUR MUSIC, WHEN THERE IS A CURRENT MIX. A mix made from an older render is
+  // stale and is not sent; the voice goes out instead. See render/backing.ts.
+  const mixed = mixedAudioFor(run);
+  if (mixed) say('publishing the version with your background music');
+  const audioPath = mixed ?? run.audioFile(render.audioFile);
   if (!audioPath) {
     throw new PublishRefused(
       `no audio in ${run.dir}`,

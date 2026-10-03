@@ -12,6 +12,7 @@
  * is a mode you enter, not the default, because a page full of text boxes reads
  * as data entry and nobody reads data entry.
  */
+import { MusicPanel } from '../components/MusicPanel';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   api,
@@ -70,6 +71,21 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   }, [id]);
 
   useEffect(() => void loadArt(), [loadArt]);
+
+  // A named series' cover, set on the episode that starts it.
+  const [seriesArt, setSeriesArt] = useState<
+    (ArtState & { title: string; created: boolean }) | null
+  >(null);
+  const seriesTitle = data?.manifest.seriesTitle;
+  const loadSeriesArt = useCallback(async () => {
+    if (!seriesTitle) return setSeriesArt(null);
+    try {
+      setSeriesArt(await api.runSeriesArtState(id));
+    } catch {
+      setSeriesArt(null);
+    }
+  }, [id, seriesTitle]);
+  useEffect(() => void loadSeriesArt(), [loadSeriesArt]);
 
   useEffect(() => {
     void api
@@ -318,6 +334,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         </section>
       )}
 
+      {/* --- Your own music under it, after the voice is made. Free. ------- */}
+      {hasAudio && !isSource && (
+        <section className="mt2">
+          <h2>Background music</h2>
+          <MusicPanel runId={id} disabled={live} />
+        </section>
+      )}
+
       {/*
         --- The picture -----------------------------------------------------
 
@@ -348,6 +372,34 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 await loadArt();
               }}
             />
+            {/* THE SERIES' COVER, beside the episode's, because this is the
+                step where it is used: the series is created when its first
+                episode publishes, and its cover goes up with it. */}
+            {seriesArt && (
+              <ImagePicker
+                title={`Series cover: ${seriesArt.title}`}
+                note={
+                  seriesArt.created
+                    ? 'This series already exists on the platform, so its cover is set. A new one here applies only if the series is made again.'
+                    : 'The shelf this episode joins, at 16:9. Used when the series is created, which is when this episode publishes. Without one, a cover is drawn.'
+                }
+                state={seriesArt}
+                src={
+                  seriesArt.supplied
+                    ? `/api/run/series-art?id=${encodeURIComponent(id)}`
+                    : null
+                }
+                disabled={busy !== null || live}
+                onUpload={async (image) => {
+                  await api.uploadRunSeriesArt(id, image);
+                  await loadSeriesArt();
+                }}
+                onRemove={async () => {
+                  await api.removeRunSeriesArt(id);
+                  await loadSeriesArt();
+                }}
+              />
+            )}
           </div>
         </section>
       )}

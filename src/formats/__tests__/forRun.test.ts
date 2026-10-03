@@ -36,8 +36,8 @@ describe('formatForRun: the series intro', () => {
 describe('musicFor', () => {
   const bd = loadPersona('business-decoded');
 
-  it('follows the channel sheet: music under shorts, none under long form', () => {
-    expect(musicFor(undefined, bd, 'biz-short')).toBe(true);
+  it("is off by default, shorts included", () => {
+    expect(musicFor(undefined, bd, 'biz-short')).toBe(false);
     expect(musicFor(undefined, bd, 'biz-episode')).toBe(false);
     expect(musicFor(undefined, loadPersona('mythic-archives'), 'myth-short')).toBe(false);
   });

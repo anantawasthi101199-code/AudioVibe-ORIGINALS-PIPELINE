@@ -33,6 +33,17 @@ import {
   sessionUser,
   tooManyAttempts,
 } from './auth';
+import {
+  makeMix,
+  mixedFile,
+  musicLibrary,
+  readTrack,
+  removeMix,
+  removeTrack,
+  runMixState,
+  trackFileFor,
+  uploadTrack,
+} from './music';
 import { jobs } from './jobs';
 import {
   HttpError,
@@ -83,6 +94,10 @@ import {
   channelArtState,
   removeChannelArt,
   removeRunArt,
+  removeRunSeriesArt,
+  runSeriesArtFile,
+  runSeriesArtState,
+  saveRunSeriesArt,
   runArtFile,
   runArtState,
   saveChannelArt,
@@ -450,6 +465,45 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/art' && req.method === 'DELETE') {
         return send(res, 200, removeRunArt(id ?? ''));
+      }
+      if (pathname === '/api/run/series-art/state') return send(res, 200, runSeriesArtState(id ?? ''));
+      if (pathname === '/api/run/series-art' && req.method === 'GET') {
+        const file = runSeriesArtFile(id ?? '');
+        if (!file) return send(res, 404, { error: 'no cover chosen for this series' });
+        serveFile(res, file);
+        return;
+      }
+      if (pathname === '/api/run/series-art' && req.method === 'POST') {
+        return send(res, 200, saveRunSeriesArt(id ?? '', await readImage(req)));
+      }
+      if (pathname === '/api/run/series-art' && req.method === 'DELETE') {
+        return send(res, 200, removeRunSeriesArt(id ?? ''));
+      }
+
+      // --- Music: your own tracks, mixed under a finished episode ------------
+      if (pathname === '/api/music' && req.method === 'GET') return send(res, 200, musicLibrary());
+      if (pathname === '/api/music' && req.method === 'POST') {
+        return send(res, 200, await uploadTrack(url.searchParams.get('name'), await readTrack(req)));
+      }
+      if (pathname === '/api/music' && req.method === 'DELETE') {
+        return send(res, 200, removeTrack(url.searchParams.get('name')));
+      }
+      if (pathname === '/api/music/file') {
+        const file = trackFileFor(url.searchParams.get('name'));
+        if (!file) return send(res, 404, { error: 'no such track' });
+        serveFile(res, file);
+        return;
+      }
+      if (pathname === '/api/run/mix' && req.method === 'GET') return send(res, 200, runMixState(id ?? ''));
+      if (pathname === '/api/run/mix' && req.method === 'POST') {
+        return send(res, 200, await makeMix(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run/mix' && req.method === 'DELETE') return send(res, 200, removeMix(id ?? ''));
+      if (pathname === '/api/run/mix/audio') {
+        const file = mixedFile(id ?? '');
+        if (!file) return send(res, 404, { error: 'this run has no mix yet' });
+        serveFile(res, file, 'episode-with-music.wav');
+        return;
       }
 
       // --- Writing ----------------------------------------------------------

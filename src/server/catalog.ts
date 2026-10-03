@@ -30,7 +30,7 @@ import { loadTopics } from '../schedule/load';
 import { Run } from '../run/store';
 import { loadVoiceRegistry } from '../canon/voiceRegistry';
 import { loadAccounts } from '../publish/account';
-import { findSeries } from '../publish/seriesRegistry';
+import { findSeries, loadRegistry } from '../publish/seriesRegistry';
 import { platformUrl } from '../config';
 
 export interface LaneSummary {
@@ -44,6 +44,8 @@ export interface LaneSummary {
 export interface RouteSummary {
   /** `episode` makes one thing to publish; `shorts` makes ten. */
   kind: 'episode' | 'shorts';
+  /** Long form, which is what can go into a named series. */
+  long: boolean;
   formatId: string;
   formatName: string;
   intent: string;
@@ -65,6 +67,11 @@ export interface ChannelSummary {
   /** The one voice this channel is committed to, or null before first use. */
   voice: { provider: string; voiceId: string; since: string } | null;
   routes: RouteSummary[];
+  /**
+   * The named series this channel already has, for the start form to offer:
+   * the ones on the platform, and the ones runs have been made for.
+   */
+  seriesTitles: string[];
   /** Queued subjects, for the two queues a channel can have. */
   queued: { topics: number; sets: number };
   runs: { total: number; awaitingApproval: number; lastAt: string | null };
@@ -108,6 +115,7 @@ const routesFor = (persona: Persona): RouteSummary[] =>
 
       return {
         kind: isShorts ? ('shorts' as const) : ('episode' as const),
+        long: format.kind !== 'short' && !isShorts,
         formatId: format.id,
         formatName: format.name,
         intent: format.intent.trim().replace(/\s+/g, ' '),
@@ -118,6 +126,23 @@ const routesFor = (persona: Persona): RouteSummary[] =>
       };
     })
     .filter((r): r is RouteSummary => r !== null);
+
+const seriesTitlesFor = (channelId: string): string[] => {
+  const titles = new Set<string>();
+  for (const [key, envs] of Object.entries(loadRegistry())) {
+    if (!key.startsWith(`${channelId}#`)) continue;
+    for (const record of Object.values(envs)) titles.add(record.title);
+  }
+  for (const id of Run.list().filter((r) => r.startsWith(`${channelId}/`))) {
+    try {
+      const title = Run.open(id).manifest.seriesTitle;
+      if (title) titles.add(title);
+    } catch {
+      // An unreadable run is reported where runs are listed, not here.
+    }
+  }
+  return [...titles].sort((a, b) => a.localeCompare(b));
+};
 
 const runsFor = (channelId: string): ChannelSummary['runs'] => {
   const ids = Run.list().filter((id) => id.startsWith(`${channelId}/`));
@@ -190,6 +215,7 @@ export const channelSummary = (persona: Persona): ChannelSummary => {
       ? { provider: committed.provider, voiceId: committed.voiceId, since: committed.firstUsedAt }
       : null,
     routes: routesFor(persona),
+    seriesTitles: seriesTitlesFor(persona.id),
     queued: { topics: queue.topics.length, sets: queue.sets.length },
     runs: runsFor(persona.id),
     account: accountState(persona),

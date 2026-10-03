@@ -284,8 +284,9 @@ canon:
 # enough surviving text to carry fifteen minutes, and most of the world's myths
 # do not have that. A tradition with four surviving paragraphs is not a bad
 # episode, it is a good ninety seconds, and this is where those go.
-# From the owner's channel sheet: shorts with background music, long form
-# without. A run's --music / --no-music wins.
+# No music by default, shorts included (owner, 2026-10-03): add your own track
+# after the voice is made, in the studio's Background music panel. A run's
+# --music still adds the synthesised bed.
 music:
   short: false
   long: false

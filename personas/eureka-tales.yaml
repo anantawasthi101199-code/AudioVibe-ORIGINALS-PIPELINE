@@ -120,10 +120,11 @@ canon:
       Open on the question or the mystery that needed solving, in one or two
       sentences, then tell the story that answered it.
 
-# From the owner's channel sheet: shorts with background music, long form
-# without. A run's --music / --no-music wins.
+# No music by default, shorts included (owner, 2026-10-03): add your own track
+# after the voice is made, in the studio's Background music panel. A run's
+# --music still adds the synthesised bed.
 music:
-  short: true
+  short: false
   long: false
 
 formats:

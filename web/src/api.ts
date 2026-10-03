@@ -16,6 +16,8 @@
 
 export interface Route {
   kind: 'episode' | 'shorts';
+  /** Long form: can be filed into a named series. */
+  long: boolean;
   formatId: string;
   formatName: string;
   intent: string;
@@ -34,6 +36,8 @@ export interface Channel {
   fiction: boolean;
   voice: { provider: string; voiceId: string; since: string } | null;
   routes: Route[];
+  /** Named series this channel already has, to pick from. */
+  seriesTitles: string[];
   queued: { topics: number; sets: number };
   runs: { total: number; awaitingApproval: number; lastAt: string | null };
   account: {
@@ -199,6 +203,17 @@ export interface Platform {
 
 export type ArtKind = 'avatar' | 'cover' | 'series';
 
+export interface Track {
+  name: string;
+  bytes: number;
+}
+
+export interface MixState {
+  mix: { track: string; volume: number; duck: boolean; mixedAt: string } | null;
+  /** Made from a voice file that has since been re-rendered. */
+  stale: boolean;
+}
+
 /** A picture's provenance, and the shape a replacement has to be. */
 export interface ArtState {
   /** True when this is one somebody chose, rather than one the studio made. */
@@ -244,6 +259,8 @@ export interface RunDetail {
     approvedAt?: string;
     spentPence: number;
     topic: string;
+    /** The named series a long episode is filed into. */
+    seriesTitle?: string;
   };
   script: Script | null;
   gate: Gate | null;
@@ -486,6 +503,20 @@ export const api = {
       { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
     ),
 
+  runSeriesArtState: (id: string) =>
+    call<ArtState & { title: string; created: boolean }>(
+      `/api/run/series-art/state?id=${encodeURIComponent(id)}`
+    ),
+  uploadRunSeriesArt: (id: string, image: Blob) =>
+    call<{ ok: true; width: number; height: number }>(
+      `/api/run/series-art?id=${encodeURIComponent(id)}`,
+      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
+    ),
+  removeRunSeriesArt: (id: string) =>
+    call<{ ok: true; removed: boolean }>(`/api/run/series-art?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    }),
+
   removeRunArt: (id: string) =>
     call<{ ok: true; removed: boolean }>(`/api/run/art?id=${encodeURIComponent(id)}`, {
       method: 'DELETE',
@@ -561,6 +592,8 @@ export const api = {
     renderNow?: boolean;
     /** Make it even though this channel has covered the subject. */
     again?: boolean;
+    /** The named series a long episode is filed into. */
+    seriesTitle?: string;
   }) =>
     call<{ runId: string; jobId: string }>('/api/runs', {
       method: 'POST',
@@ -591,6 +624,30 @@ export const api = {
     ),
 
   audioUrl: (id: string) => `/api/run/audio?id=${encodeURIComponent(id)}`,
+
+  // --- Your own background music ------------------------------------------
+  musicLibrary: () => call<{ tracks: Track[] }>('/api/music'),
+  uploadTrack: (name: string, file: Blob) =>
+    call<{ ok: true; track: Track }>(`/api/music?name=${encodeURIComponent(name)}`, {
+      method: 'POST',
+      body: file,
+      headers: { 'content-type': 'audio/mpeg' },
+    }),
+  removeTrack: (name: string) =>
+    call<{ ok: true; removed: boolean }>(`/api/music?name=${encodeURIComponent(name)}`, {
+      method: 'DELETE',
+    }),
+  trackUrl: (name: string) => `/api/music/file?name=${encodeURIComponent(name)}`,
+  mixState: (id: string) => call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`),
+  mix: (id: string, body: { track: string; volume: number; duck: boolean }) =>
+    call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  removeMix: (id: string) =>
+    call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  mixUrl: (id: string, version: number) =>
+    `/api/run/mix/audio?id=${encodeURIComponent(id)}&v=${version}`,
 };
 
 /**

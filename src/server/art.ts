@@ -27,6 +27,8 @@ import {
   suppliedArt,
 } from '../art/supplied';
 import { Run } from '../run/store';
+import { findSeries, seriesKey } from '../publish/seriesRegistry';
+import { platformUrl } from '../config';
 import { HttpError } from './routes';
 
 export type ChannelArtKind = 'avatar' | 'cover' | 'series';
@@ -165,4 +167,46 @@ export const runArtFile = (runId: string): string | null => {
 export const artKind = (raw: string | null): ChannelArtKind => {
   if (raw === 'avatar' || raw === 'cover' || raw === 'series') return raw;
   throw new HttpError(400, `kind has to be "avatar", "cover" or "series", not ${JSON.stringify(raw)}`);
+};
+
+// --- A named series' cover, from the episode that starts it ------------------
+//
+// SET ON THE EPISODE'S PAGE because that is the step where it is used: a named
+// series is created when its first episode publishes, and the cover goes up
+// with it. Stored per channel and title, so every later episode of the series
+// finds it, at art/<channel>/series-<slug>.supplied.<ext> - the path publish
+// reads.
+
+const seriesArtTarget = (runId: string) => {
+  const run = Run.open(runId);
+  const title = run.manifest.seriesTitle;
+  if (!title) throw new HttpError(400, 'this episode is not in a series');
+  const key = seriesKey(run.manifest.personaId, title);
+  return {
+    title,
+    dir: path.join(repoRoot(), 'art', run.manifest.personaId),
+    name: `series-${key.split('#')[1]}`,
+    created: Boolean(findSeries(key, platformUrl().url)),
+  };
+};
+
+export const runSeriesArtState = (runId: string) => {
+  const t = seriesArtTarget(runId);
+  return { ...state(t.dir, t.name, SHAPES.series), title: t.title, created: t.created };
+};
+
+export const saveRunSeriesArt = (runId: string, bytes: Buffer) => {
+  const t = seriesArtTarget(runId);
+  const { size } = asHttp(() => saveSuppliedArt(t.dir, t.name, bytes, SHAPES.series));
+  return { ok: true as const, width: size.width, height: size.height };
+};
+
+export const removeRunSeriesArt = (runId: string) => {
+  const t = seriesArtTarget(runId);
+  return { ok: true as const, removed: removeSuppliedArt(t.dir, t.name) };
+};
+
+export const runSeriesArtFile = (runId: string): string | null => {
+  const t = seriesArtTarget(runId);
+  return suppliedArt(t.dir, t.name);
 };

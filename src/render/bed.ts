@@ -94,7 +94,7 @@ export const BED_GAIN = 0.14;
  * Nine, alongside a lower base gain. Six was tried first and was too present:
  * the bed has to get out of the way of a sentence, not merely stand behind it.
  */
-const DUCK = 'threshold=0.03:ratio=5:attack=25:release=900:makeup=1:level_sc=9';
+export const DUCK = 'threshold=0.03:ratio=5:attack=25:release=900:makeup=1:level_sc=9';
 
 /** Seconds of fade at each end of a part. Long, so neither edge is an event. */
 export const BED_FADE_IN_S = 4;

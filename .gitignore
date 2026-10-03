@@ -69,3 +69,6 @@ art/
 .release.lock
 release.log
 release.log.old
+
+# Your own background tracks, uploaded in the studio. Not the repo's to keep.
+music/

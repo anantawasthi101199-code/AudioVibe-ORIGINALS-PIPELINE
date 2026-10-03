@@ -404,6 +404,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
   const [topic, setTopic] = useState('');
+  const [seriesTitle, setSeriesTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
@@ -505,6 +506,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         formatId: route.formatId,
         topic: topic.trim(),
         again,
+        seriesTitle: route.long && seriesTitle.trim() ? seriesTitle.trim() : undefined,
       });
       go(`/r/${runId}`);
     } catch (e) {
@@ -757,7 +759,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   className={`chip${route?.formatId === r.formatId ? ' on' : ''}`}
                   onClick={() => setRoute(r)}
                 >
-                  {r.kind === 'episode' ? 'Episode' : `${r.produces} shorts`}
+                  {r.kind === 'shorts' ? `${r.produces} shorts` : r.long ? 'Episode' : 'Short'}
                   <span className="faint tiny">
                     {r.seconds[0] < 60
                       ? `${r.seconds[0]}-${r.seconds[1]}s`
@@ -780,6 +782,34 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                 />
+
+                {/* THE SERIES, long form only: the episode opens by naming it
+                    and publishes onto its shelf, which is created the first
+                    time a title is used. Pick an existing one or type a new
+                    one; leave it empty for a loose episode. */}
+                {route.long && (
+                  <div className="stack tight">
+                    <input
+                      className="field"
+                      list={`series-${channel.id}`}
+                      placeholder="Series (optional), e.g. Founder Stories"
+                      value={seriesTitle}
+                      onChange={(e) => setSeriesTitle(e.target.value)}
+                    />
+                    <datalist id={`series-${channel.id}`}>
+                      {channel.seriesTitles.map((t) => (
+                        <option key={t} value={t} />
+                      ))}
+                    </datalist>
+                    <span className="faint tiny">
+                      {seriesTitle.trim()
+                        ? channel.seriesTitles.includes(seriesTitle.trim())
+                          ? `Joins "${seriesTitle.trim()}".`
+                          : `Starts a new series, "${seriesTitle.trim()}". Its cover can be set on the episode's page before publishing.`
+                        : 'No series: publishes as a loose episode.'}
+                    </span>
+                  </div>
+                )}
 
                 {clash.length > 0 && (
                   <div className="stack tight">
