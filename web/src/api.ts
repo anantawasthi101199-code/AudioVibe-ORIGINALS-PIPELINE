@@ -157,6 +157,8 @@ export interface Finding {
   check: string;
   detail: string;
   blocking: boolean;
+  /** A blocking finding a person chose to ignore, and who. */
+  ignored?: { by: string | null; at: string };
 }
 
 export interface Gate {
@@ -526,6 +528,13 @@ export const api = {
       `/api/channel/art?id=${encodeURIComponent(id)}&kind=${kind}`,
       { method: 'DELETE' }
     ),
+
+  /** Ignore one blocking gate finding (or, with ignore=false, stop ignoring it). */
+  overrideFinding: (id: string, finding: { check: string; detail: string }, ignore: boolean) =>
+    call<{ ok: true; run: RunSummary }>(`/api/run/override?id=${encodeURIComponent(id)}`, {
+      method: ignore ? 'POST' : 'DELETE',
+      body: JSON.stringify({ check: finding.check, detail: finding.detail }),
+    }),
 
   runArtState: (id: string) => call<ArtState>(`/api/run/art/state?id=${encodeURIComponent(id)}`),
 

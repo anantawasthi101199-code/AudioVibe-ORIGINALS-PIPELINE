@@ -62,6 +62,7 @@ import {
   getRun,
   getRuns,
   saveScript,
+  setOverride,
   startRun,
   suggest,
 } from './routes';
@@ -549,6 +550,12 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/script' && req.method === 'PUT') {
         return send(res, 200, saveScript(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run/override' && req.method === 'POST') {
+        return send(res, 200, setOverride(id ?? '', await readBody(req), true, user));
+      }
+      if (pathname === '/api/run/override' && req.method === 'DELETE') {
+        return send(res, 200, setOverride(id ?? '', await readBody(req), false, user));
       }
       if (pathname === '/api/run/approve' && req.method === 'POST') {
         return send(res, 202, approveRun(id ?? '', user));

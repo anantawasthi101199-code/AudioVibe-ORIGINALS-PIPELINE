@@ -33,6 +33,7 @@ import { loadAccounts } from '../publish/account';
 import { findSeries, loadRegistry } from '../publish/seriesRegistry';
 import { platformUrl } from '../config';
 import { jobs } from './jobs';
+import { withOverrides } from '../qa/overrides';
 import { finalAudioFor, musicLock } from '../render/backing';
 
 export interface LaneSummary {
@@ -385,11 +386,16 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
       .passthrough()
   );
 
-  const gate: RunSummary['gate'] = report
+  // With any findings a person chose to ignore applied, so an overridden run
+  // reads as passed and lands in To decide.
+  const ruled = report
+    ? withOverrides(run, report as unknown as { passed: boolean; findings: Array<{ check: string; detail: string; blocking: boolean }> })
+    : null;
+  const gate: RunSummary['gate'] = ruled
     ? {
-        passed: report.passed,
-        blocking: report.findings.filter((f) => f.blocking).length,
-        needsHumanReview: report.needsHumanReview,
+        passed: ruled.passed,
+        blocking: ruled.findings.filter((f) => f.blocking).length,
+        needsHumanReview: report!.needsHumanReview,
       }
     : null;
 

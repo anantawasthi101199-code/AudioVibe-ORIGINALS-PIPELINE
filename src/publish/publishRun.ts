@@ -26,6 +26,7 @@ import { loadBible } from '../fiction/bible';
 import { renderResultSchema } from '../render/assemble';
 import { finalAudioFor, mixedAudioFor } from '../render/backing';
 import { GateReport } from '../qa/gate';
+import { withOverrides } from '../qa/overrides';
 import { Run } from '../run/store';
 import { scriptSchema } from '../script/write';
 import { AudioVibeClient } from './ingest';
@@ -86,6 +87,8 @@ export const publishRun = async (
   options: PublishOptions
 ): Promise<Published> => {
   const say = options.report ?? (() => undefined);
+  // Whoever called, findings a person chose to ignore stop blocking here.
+  gate = withOverrides(run, gate);
 
   if (!gate.passed) {
     throw new PublishRefused(

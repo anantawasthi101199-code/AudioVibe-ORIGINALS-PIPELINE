@@ -18,6 +18,7 @@
  * a run, approve a run - are POSTs that return a job to watch, and both are
  * refused if one is already in flight for that run.
  */
+import { ignoreFinding, unignoreFinding, withOverrides } from '../qa/overrides';
 import { finalAudioFor } from '../render/backing';
 import { runProcess } from '../render/assemble';
 import fs from 'fs';
@@ -112,7 +113,10 @@ export const getRun = (id: string) => {
     run: runSummary(run, jobs.liveRunIds()),
     manifest: run.manifest,
     script: read('script', scriptSchema),
-    gate: read('qa', loose),
+    gate: (() => {
+      const g = read('qa', loose) as { passed: boolean; findings: Array<{ check: string; detail: string; blocking: boolean }> } | null;
+      return g ? withOverrides(run, g) : null;
+    })(),
     brief: read('brief', loose),
     claims: read('claims', z.object({ claims: z.array(loose).default([]) }).passthrough()),
     corpus: read(
@@ -463,4 +467,22 @@ export const suggest = async (channelId: string, body: unknown) => {
   );
 
   return { suggestions };
+};
+
+const findingBody = z.object({ check: z.string().min(1), detail: z.string().min(1) });
+
+/**
+ * Ignore one blocking gate finding, or stop ignoring it. A person's ruling,
+ * recorded with who and when; refused once the run has gone out, because a
+ * published episode's record is settled.
+ */
+export const setOverride = (id: string, body: unknown, ignore: boolean, who: string | null) => {
+  const run = openRun(id);
+  if (run.manifest.completed.includes('publish')) {
+    throw new HttpError(409, 'this is already published, so its checks are settled');
+  }
+  const finding = findingBody.parse(body);
+  if (ignore) ignoreFinding(run, finding, who);
+  else unignoreFinding(run, finding, who);
+  return { ok: true as const, run: runSummary(run, jobs.liveRunIds()) };
 };

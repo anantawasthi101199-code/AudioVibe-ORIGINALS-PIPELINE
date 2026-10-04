@@ -172,7 +172,23 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   };
 
   const blocking = (gate?.findings ?? []).filter((f) => f.blocking);
-  const advisory = (gate?.findings ?? []).filter((f) => !f.blocking);
+  const ignored = (gate?.findings ?? []).filter((f) => f.ignored);
+  const advisory = (gate?.findings ?? []).filter((f) => !f.blocking && !f.ignored);
+  const published = run.state === 'published';
+
+  // Ignore (or stop ignoring) one blocking finding, then reload so every part
+  // of the page - the gate, Publish, the lists - sees the ruling.
+  const rule = async (f: { check: string; detail: string }, ignore: boolean) => {
+    setBusy(`rule-${f.check}`);
+    try {
+      await api.overrideFinding(id, f, ignore);
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
 
   return (
     <div className="page">
@@ -428,7 +444,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="panel-head">
             <h3>The gate</h3>
             {gate.passed ? (
-              <span className="pill pass">passed</span>
+              <span className="pill pass">{ignored.length ? 'passed (overridden)' : 'passed'}</span>
             ) : (
               <span className="pill fail">{blocking.length} blocking</span>
             )}
@@ -444,9 +460,48 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 <span className="check" style={{ color: 'var(--fail)' }}>
                   {f.check}
                 </span>
-                <span>{f.detail}</span>
+                <span style={{ flex: 1 }}>{f.detail}</span>
+                {!published && (
+                  <button
+                    className="btn ghost small"
+                    disabled={busy !== null || live}
+                    onClick={() => void rule(f, true)}
+                    title="You have checked this yourself and it is right. Recorded with your name."
+                  >
+                    Ignore
+                  </button>
+                )}
               </div>
             ))}
+            {ignored.map((f, i) => (
+              <div className="finding" key={`i${i}`} style={{ opacity: 0.7 }}>
+                <span className="check" style={{ textDecoration: 'line-through' }}>
+                  {f.check}
+                </span>
+                <span style={{ flex: 1 }}>
+                  <span className="muted" style={{ textDecoration: 'line-through' }}>
+                    {f.detail}
+                  </span>
+                  <span className="faint tiny"> ignored by {f.ignored?.by ?? 'somebody'}</span>
+                </span>
+                {!published && (
+                  <button
+                    className="btn ghost small"
+                    disabled={busy !== null || live}
+                    onClick={() => void rule(f, false)}
+                  >
+                    Undo
+                  </button>
+                )}
+              </div>
+            ))}
+            {blocking.length > 0 && !published && (
+              <p className="faint tiny" style={{ margin: '0.5rem 0 0' }}>
+                Ignore a finding only after checking it yourself, for example after adding facts by
+                hand. Once nothing is blocking, it passes and goes to To decide. An edit that changes
+                a finding makes it block again.
+              </p>
+            )}
             {advisory.map((f, i) => (
               <div className="finding" key={`a${i}`}>
                 <span className="check">{f.check}</span>

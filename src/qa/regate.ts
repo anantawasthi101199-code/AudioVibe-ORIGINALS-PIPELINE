@@ -17,6 +17,7 @@
  * next full run paid for research and a script to reveal it - and a fever
  * episode was re-gated against a claim floor that had already been lowered.
  */
+import { withOverrides } from './overrides';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat, oneBeatFormat } from '../formats/load';
@@ -36,7 +37,16 @@ import { regateBusiness } from '../pipeline/business';
 import { regateNews } from '../pipeline/news';
 import { regatePsych } from '../pipeline/psych';
 
+/**
+ * Re-run the gate, with any findings a person chose to ignore applied. Every
+ * caller - publish, release, the studio - gets the same ruling.
+ */
 export const regate = (run: Run, script: Script): GateReport | null => {
+  const report = regateRaw(run, script);
+  return report ? withOverrides(run, report) : null;
+};
+
+const regateRaw = (run: Run, script: Script): GateReport | null => {
   // A NEWS RUN HAS ITS OWN CHECKS, including the one that refuses a report
   // that has gone stale since it was made. See pipeline/news.ts.
   if (hasNewsDesk(run.manifest.personaId)) return regateNews(run, script);
