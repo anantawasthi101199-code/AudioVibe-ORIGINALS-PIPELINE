@@ -1919,7 +1919,13 @@ const cmdTick = async (argv: string[]): Promise<number> => {
     // show retries the same subject on every tick forever, spending money each
     // time. Consumed up front, a failure costs that topic, which is visible in
     // the diff and recoverable by putting it back.
-    topic = persona.fiction ? persona.thesis.trim().replace(/\s+/g, ' ') : takeTopic(persona.id);
+    // News takes no topic from a queue: the desk picks the day's story, and
+    // the run is labelled with the desk's beat.
+    topic = persona.fiction
+      ? persona.thesis.trim().replace(/\s+/g, ' ')
+      : hasNewsDesk(persona.id)
+        ? loadDesk(persona.id).beat
+        : takeTopic(persona.id);
     if (!topic) {
       console.error(`${persona.name} has nothing queued to cover.`);
       return 1;

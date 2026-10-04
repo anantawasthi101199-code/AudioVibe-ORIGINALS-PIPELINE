@@ -76,3 +76,36 @@ shows:
   #
   # A show absent from this file never comes up as due, so leaving it out is
   # the off switch rather than a gap.
+
+  # Added 2026-10-04 so every launch channel has a cadence. The days and hours
+  # are starting defaults - one channel per day so they never collide - and
+  # are the owner's to change. Shorts here are counted by format, so a short
+  # made directly (science, health) fills a short's slot.
+  business-decoded:
+    everyDays: 7
+    slot: { day: mon, hour: 8 }
+    perWeek: { episodes: 1, shorts: 3 }
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  eureka-tales:
+    everyDays: 7
+    slot: { day: wed, hour: 17 }
+    perWeek: { episodes: 1, shorts: 3 }
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  psyche-session:
+    everyDays: 7
+    slot: { day: thu, hour: 19 }
+    perWeek: { episodes: 1, shorts: 3 }
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  # Daily news, shorts only: one report a day. No fixed slot - a report goes
+  # out when it is approved, because news a day late is not news.
+  global-thread:
+    everyDays: 1
+    perWeek: { episodes: 0, shorts: 7 }
+    shortsPerEpisode: 0
+    autoPublish: false

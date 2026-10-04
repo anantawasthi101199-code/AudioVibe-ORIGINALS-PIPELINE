@@ -14,6 +14,7 @@ import { loadAllPersonas } from '../canon/load';
 import { loadFormat } from '../formats/load';
 import { Run } from '../run/store';
 import { loadSchedule, loadTopics } from './load';
+import { hasNewsDesk } from '../news/desk';
 import { Plan, buildPlan, historyFor, runSummary } from './plan';
 
 export const currentPlan = (now = new Date()): Plan => {
@@ -41,7 +42,9 @@ export const currentPlan = (now = new Date()): Plan => {
     schedule: loadSchedule(),
     personas: personas.filter((p) => known.has(p.id)),
     history: (personaId) => historyFor(personaId, summaries),
-    topicsQueued: (personaId) => loadTopics(personaId).topics.length,
+    // A news desk finds its own story every time; its queue is never empty.
+    topicsQueued: (personaId) =>
+      hasNewsDesk(personaId) ? Number.POSITIVE_INFINITY : loadTopics(personaId).topics.length,
     now,
   });
 };

@@ -43,6 +43,7 @@ import { allocate, type ItemKind, type Taken } from '../schedule/allocate';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
+import { loadFormat } from '../formats/load';
 import { scriptSchema } from '../script/write';
 import { HttpError } from './routes';
 import { runs } from './catalog';
@@ -318,9 +319,16 @@ export const approveForRelease = (
   }
 
   const mine = runs({ channelId, limit: 400 });
+  // BY FORMAT, not only by being cut from an episode: a short made directly
+  // (a science or health short) is a short, and fills a short's slot.
   const kindOf = (runId: string): ItemKind => {
     const summary = mine.find((r) => r.id === runId);
-    return summary && summary.short !== null ? 'short' : 'episode';
+    if (summary && summary.short !== null) return 'short';
+    try {
+      return loadFormat(Run.open(runId).manifest.formatId).kind === 'short' ? 'short' : 'episode';
+    } catch {
+      return 'episode';
+    }
   };
 
   // Weeks already spoken for stay spoken for.
