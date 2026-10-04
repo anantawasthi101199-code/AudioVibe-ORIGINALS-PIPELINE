@@ -332,6 +332,8 @@ export interface RunSummary {
   contentRating: 'general' | 'mature';
   /** True when this run overrides its channel's rating. */
   contentRatingOverridden: boolean;
+  /** Stopped partway with nothing working on it: offer Resume. */
+  stalled: boolean;
 }
 
 /**
@@ -433,6 +435,8 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     channelName,
     contentRating: m.contentRating ?? channelRating,
     contentRatingOverridden: m.contentRating !== undefined,
+    // 'running' is the fallback for "no gate yet"; with no live job, it stopped.
+    stalled: state === 'running' && !liveIds.has(run.id),
     formatId: m.formatId,
     topic: m.topic,
     title,

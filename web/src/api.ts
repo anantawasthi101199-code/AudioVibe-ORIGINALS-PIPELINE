@@ -78,6 +78,8 @@ export interface RunSummary {
   /** Sent as the platform's content_rating: the run's own, else the channel's. */
   contentRating: 'general' | 'mature';
   contentRatingOverridden: boolean;
+  /** Stopped partway with nothing working on it. */
+  stalled: boolean;
   id: string;
   channelId: string;
   channelName: string;
@@ -603,6 +605,11 @@ export const api = {
 
   cancelRelease: (runId: string) =>
     call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
+
+  resume: (runId: string) =>
+    call<{ runId: string; jobId: string }>(`/api/run/resume?id=${encodeURIComponent(runId)}`, {
+      method: 'POST',
+    }),
 
   /** null goes back to the channel's rating. */
   setContentRating: (runId: string, rating: 'general' | 'mature' | null) =>

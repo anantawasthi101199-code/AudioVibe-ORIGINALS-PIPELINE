@@ -52,6 +52,7 @@ import { jobs } from './jobs';
 import {
   HttpError,
   approveRun,
+  resumeRun,
   audioDownloadFile,
   audioDownloadName,
   audioPath,
@@ -557,6 +558,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/override' && req.method === 'DELETE') {
         return send(res, 200, setOverride(id ?? '', await readBody(req), false, user));
+      }
+      if (pathname === '/api/run/resume' && req.method === 'POST') {
+        return send(res, 202, resumeRun(id ?? '', user));
       }
       if (pathname === '/api/run/approve' && req.method === 'POST') {
         return send(res, 202, approveRun(id ?? '', user));

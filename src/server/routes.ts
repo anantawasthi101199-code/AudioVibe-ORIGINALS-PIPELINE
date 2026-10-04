@@ -293,6 +293,14 @@ export const startRun = (body: unknown, who: string | null = null) => {
   // say which of them started something that costs money.
   if (who) run.journal({ stage: 'pipeline', event: `started by ${who}` });
 
+  return runLaneJob(run);
+};
+
+/**
+ * Run (or carry on) a run's own lane as a studio job. Every stage is
+ * checkpointed, so on a run that already has work it picks up where it stopped.
+ */
+const runLaneJob = (run: Run) => {
   const job = jobs.start({
     id: jobId('run', run.id),
     kind: 'run',
@@ -311,6 +319,21 @@ export const startRun = (body: unknown, who: string | null = null) => {
   });
 
   return { runId: run.id, jobId: job.id };
+};
+
+/**
+ * Carry on a run that stopped partway: the studio was closed, the machine
+ * slept, a call failed. Same as the command line's `resume`, from a button.
+ */
+export const resumeRun = (id: string, who: string | null = null) => {
+  const run = openRun(id);
+  if (jobs.isRunning(jobs.forRun(run.id)?.id ?? '')) {
+    throw new HttpError(409, `run "${id}" is already working`);
+  }
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
+  if (run.manifest.abandoned) throw new HttpError(400, 'that run was discarded');
+  run.journal({ stage: 'pipeline', event: who ? `resumed in the studio by ${who}` : 'resumed in the studio' });
+  return runLaneJob(run);
 };
 
 /**
@@ -337,24 +360,7 @@ export const approveRun = (id: string, who: string | null = null) => {
     });
   }
 
-  const job = jobs.start({
-    id: jobId('run', run.id),
-    kind: 'run',
-    runId: run.id,
-    work: async (report) => {
-      const deps = buildDeps({
-        log: (message, stage) => report(stage ?? 'pipeline', message),
-        next: (lines) => lines.forEach((line) => report('next', line)),
-      });
-      deps.priorTexts = priorEpisodeTexts(run.id);
-
-      // The channel's own lane, as the command line runs it. See runLane.ts.
-      await runLane(run, deps);
-      return [run.id];
-    },
-  });
-
-  return { runId: run.id, jobId: job.id };
+  return runLaneJob(run);
 };
 
 /** Cut every story out of a source run, each into its own run. */

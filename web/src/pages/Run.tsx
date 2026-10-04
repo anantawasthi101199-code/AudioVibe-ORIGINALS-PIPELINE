@@ -235,6 +235,27 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         )}
       </div>
 
+      {/* --- STOPPED PARTWAY: carry on from the last finished step. ------- */}
+      {run.stalled && !live && (
+        <section className="panel mt2">
+          <div className="panel-body row">
+            <h2 style={{ fontSize: '1.05rem' }}>Stopped partway</h2>
+            <Info label="What resume does">
+              This run stopped before it finished, usually because the studio was closed while it
+              worked. Every finished step is kept, so resuming only redoes the step it stopped in.
+            </Info>
+            <span className="spacer" />
+            <button
+              className="btn"
+              disabled={busy !== null}
+              onClick={() => act('resume', () => api.resume(id))}
+            >
+              {busy === 'resume' ? 'Resuming...' : 'Resume'}
+            </button>
+          </div>
+        </section>
+      )}
+
       {/* --- THE DECISION ------------------------------------------------- */}
       {held && script && !live && (
         <section className="panel mt2" style={{ borderColor: 'var(--hold-dim)' }}>
