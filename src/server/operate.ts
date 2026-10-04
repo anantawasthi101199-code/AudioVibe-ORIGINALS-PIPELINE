@@ -202,6 +202,7 @@ export const createSeriesJob = (channelId: string) => {
         title: persona.name,
         description: persona.thesis.trim().replace(/\s+/g, ' '),
         category: persona.category,
+        contentRating: persona.contentRating,
         coverPath,
       });
 
@@ -489,6 +490,19 @@ export const setHold = (runId: string, body: unknown) => {
 
   run.setHeld(held);
   return { ok: true as const, runId, held };
+};
+
+/**
+ * Who a run is for, before it goes out. Null goes back to the channel's rating.
+ * LOCKED ONCE PUBLISHED: the platform owns the rating then, and an upgrade
+ * there is a moderation decision rather than a studio setting.
+ */
+export const setContentRating = (runId: string, body: unknown) => {
+  const { rating } = z.object({ rating: z.enum(['general', 'mature']).nullable() }).parse(body ?? {});
+  const run = Run.open(runId);
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
+  run.setContentRating(rating);
+  return { ok: true as const, runId, rating };
 };
 
 /**

@@ -351,6 +351,32 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="player mt">
             <FinalAudio run={run} onChanged={() => void load()} player />
           </div>
+          <div className="mt row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <strong className="tiny">Who it is for</strong>
+            {(['general', 'mature'] as const).map((r) => (
+              <button
+                key={r}
+                className={run.contentRating === r ? 'btn ghost on' : 'btn ghost'}
+                disabled={published || live}
+                onClick={() => void api.setContentRating(run.id, r).then(load)}
+              >
+                {r === 'general' ? 'Everyone' : 'Mature themes'}
+              </button>
+            ))}
+            {run.contentRatingOverridden && !published && (
+              <button className="btn ghost" onClick={() => void api.setContentRating(run.id, null).then(load)}>
+                Use channel default
+              </button>
+            )}
+            <span className="faint tiny">
+              {published
+                ? 'Sent with the episode; change it in the app now.'
+                : run.contentRatingOverridden
+                  ? 'Set for this one only.'
+                  : "The channel's default."}{' '}
+              Mature hides it from listeners under 18.
+            </span>
+          </div>
         </section>
       )}
 

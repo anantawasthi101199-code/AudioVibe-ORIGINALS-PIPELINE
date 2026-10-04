@@ -221,6 +221,7 @@ export const publishRun = async (
         title: seriesTitle,
         description: `${seriesTitle}, from ${persona.name}. ${(persona.bio ?? persona.thesis).trim().replace(/\s+/g, ' ')}`,
         category: persona.category,
+        contentRating: persona.contentRating,
         coverPath,
       });
       recordSeries(key, {
@@ -297,6 +298,7 @@ export const publishRun = async (
     description: script.description,
     audioPath,
     category: persona.category,
+    contentRating: run.manifest.contentRating ?? persona.contentRating,
     // A sped-up final audio moves every part earlier: divide each time by it.
     beatMap: scaleBeatMap(render.beatMap, mixed ? finalAudioFor(run)?.speed ?? 1 : 1),
     provenance,

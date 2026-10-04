@@ -35,6 +35,8 @@ name: The Crime Files
 # what this show mostly is. Not Educational: that is where a documentary about a
 # subject goes, and this is a story about people.
 category: True Crime
+# Mature: real crimes, violence described. Hidden from under-18 listeners.
+contentRating: mature
 
 fiction: false
 

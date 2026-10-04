@@ -90,6 +90,7 @@ import {
   recordToken,
   releaseNow,
   releaseStatus,
+  setContentRating,
   setHold,
   setUpChannelJob,
   verifyPublished,
@@ -574,6 +575,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/cancel' && req.method === 'POST') {
         return send(res, 200, cancelRelease(id ?? ''));
+      }
+      if (pathname === '/api/run/rating' && req.method === 'POST') {
+        return send(res, 200, setContentRating(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/hold' && req.method === 'POST') {
         return send(res, 200, setHold(id ?? '', await readBody(req)));

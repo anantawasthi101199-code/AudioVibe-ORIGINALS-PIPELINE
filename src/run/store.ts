@@ -93,6 +93,9 @@ export const runManifestSchema = z.object({
    */
   seriesTitle: z.string().min(1).optional(),
 
+  /** Overrides the channel's content rating for this one. Unset = the channel's. */
+  contentRating: z.enum(['general', 'mature']).optional(),
+
   /**
    * Which episode of the channel this is.
    *
@@ -638,6 +641,12 @@ export class Run {
    * say when it is due. A schedule that stopped a person publishing would be a
    * schedule somebody works around.
    */
+  setContentRating(rating: 'general' | 'mature' | null): void {
+    if (rating) this.manifestData.contentRating = rating;
+    else delete this.manifestData.contentRating;
+    this.save();
+  }
+
   setReleaseAt(when: Date | null, approvedAt?: Date): void {
     if (when) {
       this.manifestData.releaseAt = when.toISOString();

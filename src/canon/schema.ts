@@ -225,6 +225,14 @@ export const personaSchema = z.object({
   /** Which AudioVibe category its content belongs in. */
   category: z.string().min(1),
 
+  /**
+   * Who the channel's content is for, sent as the platform's content_rating.
+   * 'mature' (true crime, violence described) hides it from under-18 listeners;
+   * 'explicit' is not offered because the platform's 18+ tier is closed.
+   * A run may raise or lower it before it is published.
+   */
+  contentRating: z.enum(['general', 'mature']).default('general'),
+
   /** One sentence on what the show is for. Kept to one on purpose. */
   thesis: z.string().min(1),
 

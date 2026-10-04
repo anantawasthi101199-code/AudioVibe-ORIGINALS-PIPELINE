@@ -1781,6 +1781,7 @@ const cmdSeriesSetup = async (argv: string[]): Promise<number> => {
     title: persona.name,
     description: persona.thesis.trim().replace(/\s+/g, ' '),
     category: persona.category,
+    contentRating: persona.contentRating,
     coverPath,
   });
 

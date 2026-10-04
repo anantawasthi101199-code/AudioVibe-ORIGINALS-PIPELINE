@@ -328,6 +328,10 @@ export interface RunSummary {
   audioKey: string | null;
   /** Why its music cannot be changed now (approved or published), or null. */
   musicLock: string | null;
+  /** Sent to the platform as content_rating: the run's own, else the channel's. */
+  contentRating: 'general' | 'mature';
+  /** True when this run overrides its channel's rating. */
+  contentRatingOverridden: boolean;
 }
 
 /**
@@ -414,8 +418,11 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
             : 'running';
 
   let channelName = m.personaId;
+  let channelRating: 'general' | 'mature' = 'general';
   try {
-    channelName = loadPersona(m.personaId).name;
+    const persona = loadPersona(m.personaId);
+    channelName = persona.name;
+    channelRating = persona.contentRating;
   } catch {
     /* the id is a serviceable name */
   }
@@ -424,6 +431,8 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     id: run.id,
     channelId: m.personaId,
     channelName,
+    contentRating: m.contentRating ?? channelRating,
+    contentRatingOverridden: m.contentRating !== undefined,
     formatId: m.formatId,
     topic: m.topic,
     title,

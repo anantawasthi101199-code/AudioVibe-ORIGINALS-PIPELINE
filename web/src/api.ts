@@ -75,6 +75,9 @@ export interface RunSummary {
   audioKey: string | null;
   /** Why its music cannot change now (approved or published), or null. */
   musicLock: string | null;
+  /** Sent as the platform's content_rating: the run's own, else the channel's. */
+  contentRating: 'general' | 'mature';
+  contentRatingOverridden: boolean;
   id: string;
   channelId: string;
   channelName: string;
@@ -600,6 +603,13 @@ export const api = {
 
   cancelRelease: (runId: string) =>
     call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
+
+  /** null goes back to the channel's rating. */
+  setContentRating: (runId: string, rating: 'general' | 'mature' | null) =>
+    call<{ ok: true }>(`/api/run/rating?id=${encodeURIComponent(runId)}`, {
+      method: 'POST',
+      body: JSON.stringify({ rating }),
+    }),
 
   setHold: (runId: string, held: boolean) =>
     call<{ ok: true; held: boolean }>(`/api/run/hold?id=${encodeURIComponent(runId)}`, {
