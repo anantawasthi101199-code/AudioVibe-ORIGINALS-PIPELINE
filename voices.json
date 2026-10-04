@@ -18,5 +18,15 @@
         "firstRunId": "business-decoded/e001-20261004-did-airbnb-go-from-renting-air"
       }
     }
+  },
+  "mythic-archives": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "fable",
+        "firstUsedAt": "2026-10-04T21:51:55.686Z",
+        "firstRunId": "mythic-archives/e001-20261004-vetala-and-king-vikramaditya-from-the"
+      }
+    }
   }
 }
