@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 import { Run } from '../../run/store';
 import {
+  chooseMix,
   clearMix,
   looksLikeMp3,
   mixRun,
@@ -10,6 +11,7 @@ import {
   mixedAudioFor,
   saveTrack,
   trackSlug,
+  unchooseMix,
 } from '../backing';
 
 const MP3 = Buffer.concat([Buffer.from('ID3'), Buffer.alloc(64)]);
@@ -26,6 +28,7 @@ describe('your own background music', () => {
     return { code: 0, stdout: '', stderr: '' };
   };
   const deps = { run: fakeFfmpeg, probe: async () => 120 };
+  const tick = () => new Promise((r) => setTimeout(r, 5));
 
   beforeEach(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'backing-'));
@@ -33,6 +36,7 @@ describe('your own background music', () => {
     run = Run.create({ personaId: 'business-decoded', formatId: 'biz-short', topic: 'Zara' }, { root });
     fs.writeFileSync(run.mediaPath('episode.wav'), 'voice');
     graphs = [];
+    saveTrack('Calm Piano', MP3);
   });
   afterAll(() => delete process.env.FOUNDRY_MUSIC_DIR);
 
@@ -44,7 +48,6 @@ describe('your own background music', () => {
   });
 
   it('mixes at the chosen level, ducked under speech unless asked not to', async () => {
-    saveTrack('Calm Piano', MP3);
     await mixRun(run, { track: 'calm-piano', volume: 25, duck: true }, deps);
     expect(graphs[0]).toContain('volume=0.250');
     expect(graphs[0]).toContain('sidechaincompress');
@@ -52,40 +55,55 @@ describe('your own background music', () => {
     await mixRun(run, { track: 'calm-piano', volume: 10, duck: false }, deps);
     expect(graphs[1]).toContain('volume=0.100');
     expect(graphs[1]).not.toContain('sidechaincompress');
-    expect(mixState(run).mix).toMatchObject({ track: 'calm-piano', volume: 10, duck: false });
+    expect(mixState(run).preview).toMatchObject({ track: 'calm-piano', volume: 10, duck: false });
   });
 
-  it('publishes the mix only while it matches the voice it was made from', async () => {
-    saveTrack('calm-piano', MP3);
+  it('NEVER changes what publishes just by mixing: only "use this version" does', async () => {
     await mixRun(run, { track: 'calm-piano', volume: 15, duck: true }, deps);
-    expect(mixedAudioFor(run)).toMatch(/episode\.mixed-\d+\.wav$/);
-
-    // Re-voiced: the old mix is stale and the voice goes out instead.
-    fs.writeFileSync(run.mediaPath('episode.wav'), 'a new, longer voice track');
-    expect(mixState(run).stale).toBe(true);
     expect(mixedAudioFor(run)).toBeNull();
 
-    clearMix(run);
-    expect(mixState(run)).toEqual({ mix: null, stale: false });
+    const used = chooseMix(run);
+    expect(mixedAudioFor(run)).toBe(run.mediaPath(used.file));
+
+    // Trying another level replaces the preview and leaves the choice alone.
+    await tick();
+    await mixRun(run, { track: 'calm-piano', volume: 40, duck: true }, deps);
+    expect(mixState(run).chosen?.volume).toBe(15);
+    expect(mixState(run).preview?.volume).toBe(40);
+    expect(mixedAudioFor(run)).toBe(run.mediaPath(used.file));
+    expect(fs.existsSync(run.mediaPath(used.file))).toBe(true);
+
+    unchooseMix(run);
+    expect(mixedAudioFor(run)).toBeNull();
   });
 
-  it('mixes again even while the last mix is still open, by never reusing its name', async () => {
-    saveTrack('calm-piano', MP3);
+  it('publishes the chosen mix only while it matches the voice it was made from', async () => {
     await mixRun(run, { track: 'calm-piano', volume: 15, duck: true }, deps);
-    const first = mixedAudioFor(run)!;
-    await new Promise((r) => setTimeout(r, 5));
-    await mixRun(run, { track: 'calm-piano', volume: 30, duck: true }, deps);
-    const second = mixedAudioFor(run)!;
-    expect(second).not.toBe(first);
-    expect(mixState(run).mix?.volume).toBe(30);
-    // The old one is swept once nothing holds it.
-    expect(fs.existsSync(first)).toBe(false);
+    chooseMix(run);
+    // Re-voiced: the choice is stale and the voice goes out instead.
+    fs.writeFileSync(run.mediaPath('episode.wav'), 'a new, longer voice track');
+    expect(mixState(run).chosenStale).toBe(true);
+    expect(mixedAudioFor(run)).toBeNull();
+    expect(() => chooseMix(run)).toThrow(/voiced again/);
+
+    clearMix(run);
+    expect(mixState(run)).toEqual({ preview: null, chosen: null, previewStale: false, chosenStale: false });
   });
 
-  it('refuses a run with no audio, and a track that is not in the library', async () => {
-    fs.rmSync(run.mediaPath('episode.wav'));
-    await expect(mixRun(run, { track: 'x', volume: 10, duck: true }, deps)).rejects.toThrow(/no audio yet/);
-    fs.writeFileSync(run.mediaPath('episode.wav'), 'voice');
+  it('reads a mix from before choosing existed as a preview, not as a choice', () => {
+    fs.writeFileSync(run.mediaPath('episode.mixed.wav'), 'mixed');
+    fs.writeFileSync(
+      run.mediaPath('mix.json'),
+      JSON.stringify({ track: 'calm-piano', volume: 15, duck: true, voiceBytes: 5, voiceMtimeMs: 0, mixedAt: 'x' })
+    );
+    expect(mixState(run).preview?.file).toBe('episode.mixed.wav');
+    expect(mixedAudioFor(run)).toBeNull();
+  });
+
+  it('refuses a run with no audio, a track not in the library, and choosing nothing', async () => {
+    expect(() => chooseMix(run)).toThrow(/no mix to use/);
     await expect(mixRun(run, { track: 'missing', volume: 10, duck: true }, deps)).rejects.toThrow(/no track/);
+    fs.rmSync(run.mediaPath('episode.wav'));
+    await expect(mixRun(run, { track: 'calm-piano', volume: 10, duck: true }, deps)).rejects.toThrow(/no audio yet/);
   });
 });

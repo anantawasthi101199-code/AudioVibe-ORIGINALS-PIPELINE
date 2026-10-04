@@ -97,6 +97,12 @@ export const deleteTrack = (name: string): boolean => {
 };
 
 // --- The mix ----------------------------------------------------------------
+//
+// TWO SLOTS, BECAUSE TRYING IS NOT DECIDING. `preview` is the last mix made,
+// there to listen to and nothing else. `chosen` is the one somebody pressed
+// "use this version" on, and it is the only thing publishing reads. Mixing
+// again replaces the preview and leaves the choice alone, so experimenting can
+// never change what goes out.
 
 export const mixSchema = z.object({
   track: z.string().min(1),
@@ -111,35 +117,20 @@ export const mixSchema = z.object({
   /**
    * The mixed file's name in media/. A NEW NAME FOR EVERY MIX, because on
    * Windows a file cannot be replaced while anything holds it open - and the
-   * studio's player holds the last mix open while it streams. Defaults to the
-   * single name the first version used.
+   * studio's player holds a mix open while it streams.
    */
   file: z.string().default('episode.mixed.wav'),
 });
 
 export type Mix = z.infer<typeof mixSchema>;
 
-/** Every mixed file this run has ever had: the current one and leftovers. */
-const isMixedFile = (name: string): boolean => /^episode\.mixed.*\.wav$/.test(name);
+const recordSchema = z.object({
+  preview: mixSchema.nullable().default(null),
+  chosen: mixSchema.nullable().default(null),
+});
 
-/**
- * Delete every mixed file except `keep`, quietly skipping any still open.
- *
- * A file the player is streaming cannot be deleted on Windows (EPERM/EBUSY).
- * It is harmless to leave: it is not the recorded mix, and the next mix or a
- * removal tries again once the player has let go.
- */
-const sweepMixes = (run: Run, keep?: string): void => {
-  const dir = path.dirname(run.mediaPath('mix.json'));
-  for (const name of fs.readdirSync(dir)) {
-    if (!isMixedFile(name) || name === keep) continue;
-    try {
-      fs.rmSync(path.join(dir, name), { force: true });
-    } catch {
-      // Still open somewhere. Next time.
-    }
-  }
-};
+type MixRecord = z.infer<typeof recordSchema>;
+
 const FADE_IN_S = 3;
 const FADE_OUT_S = 4;
 
@@ -149,39 +140,85 @@ const voiceSignature = (file: string) => {
 };
 
 export interface MixState {
-  mix: Mix | null;
-  /** The mix exists but was made from a voice file that has since changed. */
-  stale: boolean;
+  /** The last mix made, to listen to. Never published by itself. */
+  preview: Mix | null;
+  /** The mix that publishing sends. Null means the voice alone. */
+  chosen: Mix | null;
+  /** Made from a voice file that has since been re-rendered. */
+  previewStale: boolean;
+  chosenStale: boolean;
 }
 
 // Its own small file beside the audio, not a pipeline artifact: mixing is not a
 // stage, and a resume must never think it has one to redo.
 const recordPath = (run: Run): string => run.mediaPath('mix.json');
 
-const readMix = (run: Run): Mix | null => {
+const readRecord = (run: Run): MixRecord => {
   const file = recordPath(run);
-  if (!fs.existsSync(file)) return null;
-  const parsed = mixSchema.safeParse(JSON.parse(fs.readFileSync(file, 'utf8')));
-  return parsed.success ? parsed.data : null;
+  if (!fs.existsSync(file)) return { preview: null, chosen: null };
+  const raw = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, unknown>;
+  if (raw && typeof raw === 'object' && ('preview' in raw || 'chosen' in raw)) {
+    const both = recordSchema.safeParse(raw);
+    if (both.success) return both.data;
+  }
+  // The first version kept one flat mix, which publishing used without being
+  // asked. It is read as a preview: nothing goes out until somebody chooses.
+  const flat = mixSchema.safeParse(raw);
+  return { preview: flat.success ? flat.data : null, chosen: null };
+};
+
+/** Every mixed file this run has ever had: the current ones and leftovers. */
+const isMixedFile = (name: string): boolean => /^episode\.mixed.*\.wav$/.test(name);
+
+/**
+ * Delete every mixed file not in `keep`, quietly skipping any still open.
+ *
+ * A file the player is streaming cannot be deleted on Windows (EPERM/EBUSY).
+ * It is harmless to leave: it is not recorded, and the next change tries again.
+ */
+const sweepMixes = (run: Run, keep: Array<string | undefined>): void => {
+  const dir = path.dirname(recordPath(run));
+  for (const name of fs.readdirSync(dir)) {
+    if (!isMixedFile(name) || keep.includes(name)) continue;
+    try {
+      fs.rmSync(path.join(dir, name), { force: true });
+    } catch {
+      // Still open somewhere. Next time.
+    }
+  }
+};
+
+const writeRecord = (run: Run, record: MixRecord): void => {
+  if (!record.preview && !record.chosen) fs.rmSync(recordPath(run), { force: true });
+  else fs.writeFileSync(recordPath(run), JSON.stringify(record, null, 2));
+  sweepMixes(run, [record.preview?.file, record.chosen?.file]);
+};
+
+const isStale = (run: Run, mix: Mix | null): boolean => {
+  if (!mix) return false;
+  const voice = run.audioFile();
+  if (!voice || !fs.existsSync(run.mediaPath(mix.file))) return true;
+  const now = voiceSignature(voice);
+  return now.voiceBytes !== mix.voiceBytes || now.voiceMtimeMs !== mix.voiceMtimeMs;
 };
 
 export const mixState = (run: Run): MixState => {
-  const mix = readMix(run);
-  if (!mix) return { mix: null, stale: false };
-  const voice = run.audioFile();
-  if (!voice || !fs.existsSync(run.mediaPath(mix.file))) return { mix, stale: true };
-  const now = voiceSignature(voice);
-  return { mix, stale: now.voiceBytes !== mix.voiceBytes || now.voiceMtimeMs !== mix.voiceMtimeMs };
+  const { preview, chosen } = readRecord(run);
+  return { preview, chosen, previewStale: isStale(run, preview), chosenStale: isStale(run, chosen) };
 };
 
-/** The file to publish: the mix when there is a current one, else null. */
+/**
+ * The file to publish: the CHOSEN mix, when it still matches the voice.
+ * Otherwise null, and the voice goes out alone.
+ */
 export const mixedAudioFor = (run: Run): string | null => {
-  const state = mixState(run);
-  return state.mix && !state.stale ? run.mediaPath(state.mix.file) : null;
+  const { chosen } = readRecord(run);
+  return chosen && !isStale(run, chosen) ? run.mediaPath(chosen.file) : null;
 };
 
-export const mixedFileFor = (run: Run): string | null => {
-  const mix = readMix(run);
+/** A mix's file, for the player: the preview or the chosen version. */
+export const mixedFileFor = (run: Run, which: 'preview' | 'chosen' = 'preview'): string | null => {
+  const mix = readRecord(run)[which];
   if (!mix) return null;
   const file = run.mediaPath(mix.file);
   return fs.existsSync(file) ? file : null;
@@ -194,11 +231,12 @@ export interface MixDeps {
 }
 
 /**
- * Mix a library track under the episode's voice, at a chosen level.
+ * Mix a library track under the episode's voice, as a PREVIEW.
  *
  * The track loops if it is shorter than the episode and is cut if longer,
  * with a fade at each end. Ducking, when on, is the same sidechain the
- * synthesised bed uses, so speech always wins.
+ * synthesised bed uses, so speech always wins. Nothing here changes what
+ * publishes; see chooseMix.
  */
 export const mixRun = async (
   run: Run,
@@ -230,18 +268,18 @@ export const mixRun = async (
   // Written straight to a fresh name: nothing to rename over, so nothing an
   // open player can block.
   const name = `episode.mixed-${Date.now()}.wav`;
-  const tmp = run.mediaPath(name);
+  const out = run.mediaPath(name);
   const res = await (deps.run ?? runProcess)(deps.ffmpeg ?? process.env.FFMPEG_PATH ?? 'ffmpeg', [
     '-y', '-loglevel', 'error',
     '-stream_loop', '-1', '-i', track,
     '-i', voice,
     '-filter_complex', graph,
     '-map', '[out]',
-    tmp,
+    out,
   ]);
-  if (res.code !== 0 || !fs.existsSync(tmp) || fs.statSync(tmp).size === 0) {
+  if (res.code !== 0 || !fs.existsSync(out) || fs.statSync(out).size === 0) {
     try {
-      fs.rmSync(tmp, { force: true });
+      fs.rmSync(out, { force: true });
     } catch {
       // Left for the next sweep.
     }
@@ -256,15 +294,27 @@ export const mixRun = async (
     mixedAt: new Date().toISOString(),
     file: name,
   };
-  fs.writeFileSync(recordPath(run), JSON.stringify(mix, null, 2));
-  sweepMixes(run, name);
+  writeRecord(run, { ...readRecord(run), preview: mix });
   return mix;
 };
 
-/** Back to voice only. */
+/** "Use this version": the preview becomes what publishing sends. */
+export const chooseMix = (run: Run): Mix => {
+  const record = readRecord(run);
+  if (!record.preview) throw new BackingRefused('there is no mix to use yet. Mix one first.');
+  if (isStale(run, record.preview)) {
+    throw new BackingRefused('the episode was voiced again after this mix. Mix again, then use it.');
+  }
+  writeRecord(run, { ...record, chosen: record.preview });
+  return record.preview;
+};
+
+/** Publish the voice alone again. The preview stays to listen to. */
+export const unchooseMix = (run: Run): void => {
+  writeRecord(run, { ...readRecord(run), chosen: null });
+};
+
+/** Back to nothing at all: no preview, voice only. */
 export const clearMix = (run: Run): void => {
-  // The record goes first: once it is gone, publish sends the voice whatever
-  // happens to the files.
-  fs.rmSync(recordPath(run), { force: true });
-  sweepMixes(run);
+  writeRecord(run, { preview: null, chosen: null });
 };

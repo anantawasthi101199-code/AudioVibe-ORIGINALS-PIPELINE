@@ -210,10 +210,21 @@ export interface Track {
   bytes: number;
 }
 
+export interface Mix {
+  track: string;
+  volume: number;
+  duck: boolean;
+  mixedAt: string;
+  file: string;
+}
+
 export interface MixState {
-  mix: { track: string; volume: number; duck: boolean; mixedAt: string } | null;
-  /** Made from a voice file that has since been re-rendered. */
-  stale: boolean;
+  /** The last mix made, to listen to. Never published by itself. */
+  preview: Mix | null;
+  /** What publishing sends. Null means the voice alone. */
+  chosen: Mix | null;
+  previewStale: boolean;
+  chosenStale: boolean;
 }
 
 /** A picture's provenance, and the shape a replacement has to be. */
@@ -650,8 +661,12 @@ export const api = {
     }),
   removeMix: (id: string) =>
     call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
-  mixUrl: (id: string, version: number) =>
-    `/api/run/mix/audio?id=${encodeURIComponent(id)}&v=${version}`,
+  useMix: (id: string) =>
+    call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, { method: 'POST' }),
+  voiceOnly: (id: string) =>
+    call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  mixUrl: (id: string, which: 'preview' | 'chosen', file: string) =>
+    `/api/run/mix/audio?id=${encodeURIComponent(id)}&which=${which}&f=${encodeURIComponent(file)}`,
 };
 
 /**

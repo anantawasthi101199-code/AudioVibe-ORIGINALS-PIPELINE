@@ -2,15 +2,17 @@
  * The music library and a run's mix, from the studio.
  *
  * Nothing here touches the platform. Uploads land in music/ on this machine and
- * a mix is ffmpeg over files already here; publishing sends whatever mix is
- * current. See render/backing.ts for the rules.
+ * a mix is ffmpeg over files already here; publishing sends only the mix somebody chose
+ * with "use this version". See render/backing.ts for the rules.
  */
 import http from 'http';
 import { z } from 'zod';
 import {
   BackingRefused,
   MAX_TRACK_BYTES,
+  chooseMix,
   clearMix,
+  unchooseMix,
   deleteTrack,
   listTracks,
   mixRun,
@@ -84,4 +86,20 @@ export const removeMix = (runId: string) => {
   return mixState(run);
 };
 
-export const mixedFile = (runId: string): string | null => mixedFileFor(Run.open(runId));
+/** "Use this version": the preview becomes what publishing sends. */
+export const useMix = (runId: string) =>
+  asHttp(() => {
+    const run = Run.open(runId);
+    chooseMix(run);
+    return mixState(run);
+  });
+
+/** Publish the voice alone again. */
+export const voiceOnly = (runId: string) => {
+  const run = Run.open(runId);
+  unchooseMix(run);
+  return mixState(run);
+};
+
+export const mixedFile = (runId: string, which: string | null): string | null =>
+  mixedFileFor(Run.open(runId), which === 'chosen' ? 'chosen' : 'preview');

@@ -43,6 +43,8 @@ import {
   runMixState,
   trackFileFor,
   uploadTrack,
+  useMix,
+  voiceOnly,
 } from './music';
 import { jobs } from './jobs';
 import {
@@ -499,8 +501,10 @@ export const createServer = (): http.Server =>
         return send(res, 200, await makeMix(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/mix' && req.method === 'DELETE') return send(res, 200, removeMix(id ?? ''));
+      if (pathname === '/api/run/mix/use' && req.method === 'POST') return send(res, 200, await useMix(id ?? ''));
+      if (pathname === '/api/run/mix/use' && req.method === 'DELETE') return send(res, 200, voiceOnly(id ?? ''));
       if (pathname === '/api/run/mix/audio') {
-        const file = mixedFile(id ?? '');
+        const file = mixedFile(id ?? '', url.searchParams.get('which'));
         if (!file) return send(res, 404, { error: 'this run has no mix yet' });
         serveFile(res, file, 'episode-with-music.wav');
         return;
