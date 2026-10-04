@@ -254,6 +254,8 @@ music:
 
 formats:
   - case-in-full
+  # Shorts back on (owner, 2026-10-04).
+  - case-short
 
 # Thirteen to seventeen minutes. Long enough to tell something properly, short
 # enough for one walk.

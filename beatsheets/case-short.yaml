@@ -28,7 +28,8 @@ intent: >
   One true case, whole, in under three minutes. Who it happened to, what
   happened, how it ended.
 
-targetSeconds: [150, 185]
+# STANDARD SHORT LENGTH (owner, 2026-10-04): 2:20 to 3:00, capped at three minutes.
+targetSeconds: [140, 180]
 
 research: casefile
 
@@ -50,7 +51,7 @@ beats:
 
   - id: ending
     type: payoff
-    seconds: [60, 85]
+    seconds: [60, 80]
     function: >
       How it ended, what was never settled, and a last line about the person it
       happened to.
