@@ -15,7 +15,7 @@
  */
 
 export interface Route {
-  kind: "episode" | "shorts";
+  kind: 'episode' | 'shorts';
   /** Long form: can be filed into a named series. */
   long: boolean;
   formatId: string;
@@ -50,19 +50,19 @@ export interface Channel {
 }
 
 export interface Lane {
-  id: "factual" | "fiction";
+  id: 'factual' | 'fiction';
   name: string;
   basis: string;
   channels: Channel[];
 }
 
 export type RunState =
-  | "running"
-  | "awaiting-approval"
-  | "ready"
-  | "failed"
-  | "published"
-  | "abandoned";
+  | 'running'
+  | 'awaiting-approval'
+  | 'ready'
+  | 'failed'
+  | 'published'
+  | 'abandoned';
 
 export interface RunSummary {
   /** While working: the stage the pipeline last reported. */
@@ -76,7 +76,7 @@ export interface RunSummary {
   /** Why its music cannot change now (approved or published), or null. */
   musicLock: string | null;
   /** Sent as the platform's content_rating: the run's own, else the channel's. */
-  contentRating: "general" | "mature";
+  contentRating: 'general' | 'mature';
   contentRatingOverridden: boolean;
   /** Stopped partway with nothing working on it. */
   stalled: boolean;
@@ -106,7 +106,7 @@ export interface RunSummary {
 export interface QueueItem {
   channelId: string;
   channelName: string;
-  kind: "episode" | "short";
+  kind: 'episode' | 'short';
   reason: string;
   overdueDays?: number;
   at?: string;
@@ -155,10 +155,7 @@ export interface Script {
   description: string;
   beats: Beat[];
   writerModel: string;
-  plan?: {
-    spine: string;
-    cast: Array<{ name: string; who: string; introducedIn: string }>;
-  };
+  plan?: { spine: string; cast: Array<{ name: string; who: string; introducedIn: string }> };
 }
 
 export interface Finding {
@@ -195,8 +192,8 @@ export interface CalendarEntry {
   channelId: string;
   channelName: string;
   title: string;
-  kind: "episode" | "short";
-  state: "published" | "approved";
+  kind: 'episode' | 'short';
+  state: 'published' | 'approved';
   at: string;
   durationS: number | null;
   short: number | null;
@@ -221,7 +218,7 @@ export interface Platform {
   configured: boolean;
 }
 
-export type ArtKind = "avatar" | "cover" | "series";
+export type ArtKind = 'avatar' | 'cover' | 'series';
 
 export interface Track {
   name: string;
@@ -264,7 +261,7 @@ export interface ArtState {
 
 export interface Job {
   id: string;
-  kind: "run" | "shorts" | "channel" | "series" | "publish";
+  kind: 'run' | 'shorts' | 'channel' | 'series' | 'publish';
   runId: string;
   startedAt: string;
   finishedAt: string | null;
@@ -304,11 +301,7 @@ export interface RunDetail {
   };
   script: Script | null;
   gate: Gate | null;
-  brief: {
-    angle?: string;
-    mustEstablish?: string[];
-    queries?: string[];
-  } | null;
+  brief: { angle?: string; mustEstablish?: string[]; queries?: string[] } | null;
   claims: { claims: Claim[] } | null;
   corpus: { sources: Source[]; rejected: unknown[] } | null;
   render: { durationS?: number } | null;
@@ -324,7 +317,7 @@ export interface RunDetail {
 export class ApiError extends Error {
   constructor(
     readonly status: number,
-    message: string,
+    message: string
   ) {
     super(message);
   }
@@ -338,24 +331,21 @@ export const whenSignedOut = (fn: () => void): void => {
 
 const call = async <T>(path: string, init?: RequestInit): Promise<T> => {
   const res = await fetch(path, {
-    credentials: "same-origin",
-    headers: init?.body ? { "content-type": "application/json" } : undefined,
+    credentials: 'same-origin',
+    headers: init?.body ? { 'content-type': 'application/json' } : undefined,
     ...init,
   });
 
   if (res.status === 401) {
     onSignedOut?.();
-    throw new ApiError(401, "sign in");
+    throw new ApiError(401, 'sign in');
   }
 
   const text = await res.text();
   const body = text ? (JSON.parse(text) as unknown) : null;
 
   if (!res.ok) {
-    throw new ApiError(
-      res.status,
-      (body as { error?: string })?.error ?? `HTTP ${res.status}`,
-    );
+    throw new ApiError(res.status, (body as { error?: string })?.error ?? `HTTP ${res.status}`);
   }
   return body as T;
 };
@@ -364,7 +354,7 @@ export interface SynthControl {
   id: string;
   label: string;
   group: string;
-  kind: "toggles" | "choice" | "slider";
+  kind: 'toggles' | 'choice' | 'slider';
   help: string;
   options?: Array<{ value: string; label: string; help?: string }>;
   min?: number;
@@ -431,65 +421,52 @@ export interface CoveredView {
 }
 
 export const api = {
-  me: () => call<{ signedIn: boolean; name?: string }>("/api/me"),
+  me: () => call<{ signedIn: boolean; name?: string }>('/api/me'),
   signIn: (password: string) =>
-    call<{ ok: true; name: string }>("/api/session", {
-      method: "POST",
+    call<{ ok: true; name: string }>('/api/session', {
+      method: 'POST',
       body: JSON.stringify({ password }),
     }),
-  signOut: () => call<{ ok: true }>("/api/session", { method: "DELETE" }),
+  signOut: () => call<{ ok: true }>('/api/session', { method: 'DELETE' }),
 
-  catalogue: () => call<{ lanes: Lane[] }>("/api/catalogue"),
+  catalogue: () => call<{ lanes: Lane[] }>('/api/catalogue'),
 
   /* --- The library: beats, season plans, and what has been covered ------- */
 
   beats: () =>
-    call<{ controls: SynthControl[]; defaults: SynthSettings; beats: Beat[] }>(
-      "/api/beats",
-    ),
+    call<{ controls: SynthControl[]; defaults: SynthSettings; beats: Beat[] }>('/api/beats'),
 
   makeBeat: (body: { name: string; note: string; settings: SynthSettings }) =>
-    call<{ beat: Beat }>("/api/beats", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
+    call<{ beat: Beat }>('/api/beats', { method: 'POST', body: JSON.stringify(body) }),
 
   /**
    * Settings for a description. Fills the form in and stops, so whoever asked
    * can see what was chosen and change it before anything is synthesised.
    */
   suggestBeat: (describe: string) =>
-    call<{
-      settings: SynthSettings;
-      reading: string;
-      summary: string;
-      pence: number;
-    }>("/api/beats/suggest", {
-      method: "POST",
-      body: JSON.stringify({ describe }),
-    }),
+    call<{ settings: SynthSettings; reading: string; summary: string; pence: number }>(
+      '/api/beats/suggest',
+      { method: 'POST', body: JSON.stringify({ describe }) }
+    ),
 
   /**
    * Not a fetch. It is the src of an audio element, and the point of the whole
    * beat library is that somebody hears one before choosing it.
    */
-  beatAudio: (name: string) =>
-    `/api/beats/audio?name=${encodeURIComponent(name)}`,
+  beatAudio: (name: string) => `/api/beats/audio?name=${encodeURIComponent(name)}`,
 
   season: (channel: string, season = 1) =>
-    call<SeasonView>(
-      `/api/season?id=${encodeURIComponent(channel)}&season=${season}`,
-    ),
+    call<SeasonView>(`/api/season?id=${encodeURIComponent(channel)}&season=${season}`),
 
   covered: (channel?: string, topic?: string) =>
     call<CoveredView>(
-      `/api/covered${channel ? `?channel=${encodeURIComponent(channel)}` : ""}` +
-        `${channel && topic ? `&topic=${encodeURIComponent(topic)}` : ""}`,
+      `/api/covered${channel ? `?channel=${encodeURIComponent(channel)}` : ''}` +
+        `${channel && topic ? `&topic=${encodeURIComponent(topic)}` : ''}`
     ),
 
-  queue: () => call<QueueView>("/api/queue"),
+  queue: () => call<QueueView>('/api/queue'),
 
-  platform: () => call<Platform>("/api/platform"),
+  platform: () => call<Platform>('/api/platform'),
 
   freshness: () =>
     call<{
@@ -497,55 +474,43 @@ export const api = {
       stale: boolean;
       newestFile: string | null;
       changedAt: string | null;
-    }>("/api/freshness"),
+    }>('/api/freshness'),
 
   calendar: (month?: string) =>
-    call<CalendarView>(
-      `/api/calendar${month ? `?month=${encodeURIComponent(month)}` : ""}`,
-    ),
+    call<CalendarView>(`/api/calendar${month ? `?month=${encodeURIComponent(month)}` : ''}`),
 
   releaseStatus: () =>
     call<{
       enabled: boolean;
-      due: Array<{
-        runId: string;
-        channelName: string;
-        title: string;
-        releaseAt: string;
-      }>;
+      due: Array<{ runId: string; channelName: string; title: string; releaseAt: string }>;
       held: Array<{ runId: string; reason: string }>;
-    }>("/api/release"),
+    }>('/api/release'),
 
   releaseNow: () =>
     call<{
       released: Array<{ runId: string; audioId: string; url: string }>;
       failed: Array<{ runId: string; reason: string }>;
       remaining: number;
-    }>("/api/release/now", { method: "POST" }),
+    }>('/api/release/now', { method: 'POST' }),
 
   /* --- The things that reach the platform ------------------------------- */
 
   publish: (id: string, confirmed: boolean) =>
     call<{ jobId: string }>(`/api/run/publish?id=${encodeURIComponent(id)}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({ confirmed }),
     }),
 
-  setUpChannel: (
-    id: string,
-    adminEmail?: string,
-    adminPassword?: string,
-    redraw = false,
-  ) =>
+  setUpChannel: (id: string, adminEmail?: string, adminPassword?: string, redraw = false) =>
     call<{ jobId: string }>(`/api/channel/setup?id=${encodeURIComponent(id)}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({ adminEmail, adminPassword, redraw }),
     }),
 
   recordToken: (id: string, token: string) =>
     call<{ ok: true; handle: string; file: string }>(
       `/api/channel/token?id=${encodeURIComponent(id)}`,
-      { method: "POST", body: JSON.stringify({ token }) },
+      { method: 'POST', body: JSON.stringify({ token }) }
     ),
 
   // --- Artwork somebody chose ---------------------------------------------
@@ -555,110 +520,73 @@ export const api = {
   // content-type has to be set explicitly because `call` otherwise stamps
   // every request that has a body as JSON.
   channelArtState: (id: string) =>
-    call<Record<ArtKind, ArtState>>(
-      `/api/channel/art/state?id=${encodeURIComponent(id)}`,
-    ),
+    call<Record<ArtKind, ArtState>>(`/api/channel/art/state?id=${encodeURIComponent(id)}`),
 
   uploadChannelArt: (id: string, kind: ArtKind, image: Blob) =>
     call<{ ok: true; width: number; height: number }>(
       `/api/channel/art?id=${encodeURIComponent(id)}&kind=${kind}`,
-      {
-        method: "POST",
-        body: image,
-        headers: { "content-type": image.type || "image/png" },
-      },
+      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
     ),
 
   removeChannelArt: (id: string, kind: ArtKind) =>
     call<{ ok: true; removed: boolean }>(
       `/api/channel/art?id=${encodeURIComponent(id)}&kind=${kind}`,
-      { method: "DELETE" },
+      { method: 'DELETE' }
     ),
 
   /** Ignore one blocking gate finding (or, with ignore=false, stop ignoring it). */
-  overrideFinding: (
-    id: string,
-    finding: { check: string; detail: string },
-    ignore: boolean,
-  ) =>
-    call<{ ok: true; run: RunSummary }>(
-      `/api/run/override?id=${encodeURIComponent(id)}`,
-      {
-        method: ignore ? "POST" : "DELETE",
-        body: JSON.stringify({ check: finding.check, detail: finding.detail }),
-      },
-    ),
+  overrideFinding: (id: string, finding: { check: string; detail: string }, ignore: boolean) =>
+    call<{ ok: true; run: RunSummary }>(`/api/run/override?id=${encodeURIComponent(id)}`, {
+      method: ignore ? 'POST' : 'DELETE',
+      body: JSON.stringify({ check: finding.check, detail: finding.detail }),
+    }),
 
-  runArtState: (id: string) =>
-    call<ArtState>(`/api/run/art/state?id=${encodeURIComponent(id)}`),
+  runArtState: (id: string) => call<ArtState>(`/api/run/art/state?id=${encodeURIComponent(id)}`),
 
   uploadRunArt: (id: string, image: Blob) =>
     call<{ ok: true; width: number; height: number }>(
       `/api/run/art?id=${encodeURIComponent(id)}`,
-      {
-        method: "POST",
-        body: image,
-        headers: { "content-type": image.type || "image/png" },
-      },
+      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
     ),
 
   runSeriesArtState: (id: string) =>
     call<ArtState & { title: string; created: boolean }>(
-      `/api/run/series-art/state?id=${encodeURIComponent(id)}`,
+      `/api/run/series-art/state?id=${encodeURIComponent(id)}`
     ),
   uploadRunSeriesArt: (id: string, image: Blob) =>
     call<{ ok: true; width: number; height: number }>(
       `/api/run/series-art?id=${encodeURIComponent(id)}`,
-      {
-        method: "POST",
-        body: image,
-        headers: { "content-type": image.type || "image/png" },
-      },
+      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
     ),
   removeRunSeriesArt: (id: string) =>
-    call<{ ok: true; removed: boolean }>(
-      `/api/run/series-art?id=${encodeURIComponent(id)}`,
-      {
-        method: "DELETE",
-      },
-    ),
+    call<{ ok: true; removed: boolean }>(`/api/run/series-art?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    }),
 
   removeRunArt: (id: string) =>
-    call<{ ok: true; removed: boolean }>(
-      `/api/run/art?id=${encodeURIComponent(id)}`,
-      {
-        method: "DELETE",
-      },
-    ),
+    call<{ ok: true; removed: boolean }>(`/api/run/art?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    }),
 
   createSeries: (id: string) =>
-    call<{ jobId: string }>(
-      `/api/channel/series?id=${encodeURIComponent(id)}`,
-      { method: "POST" },
-    ),
+    call<{ jobId: string }>(`/api/channel/series?id=${encodeURIComponent(id)}`, { method: 'POST' }),
 
   recheck: (channelId: string) =>
-    call<{
-      rechecked: true;
-      changed: Array<{ runId: string; from: boolean; to: boolean }>;
-    }>(`/api/channel/recheck?id=${encodeURIComponent(channelId)}`, {
-      method: "POST",
-    }),
+    call<{ rechecked: true; changed: Array<{ runId: string; from: boolean; to: boolean }> }>(
+      `/api/channel/recheck?id=${encodeURIComponent(channelId)}`,
+      { method: 'POST' }
+    ),
 
   // NOT `approve`: that already means releasing a held run so it can be
   // rendered. This one approves finished episodes to go out.
   approveForRelease: (channelId: string, runIds: string[]) =>
     call<{
-      approved: Array<{
-        runId: string;
-        releaseAt: string;
-        kind: "episode" | "short";
-      }>;
+      approved: Array<{ runId: string; releaseAt: string; kind: 'episode' | 'short' }>;
       unscheduled: string[];
       perWeek: { episodes: number; shorts: number };
       timezone: string;
     }>(`/api/channel/approve?id=${encodeURIComponent(channelId)}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({ runIds }),
     }),
 
@@ -676,38 +604,28 @@ export const api = {
     }>(`/api/run/verify?id=${encodeURIComponent(runId)}`),
 
   cancelRelease: (runId: string) =>
-    call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, {
-      method: "POST",
-    }),
+    call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
 
   resume: (runId: string) =>
-    call<{ runId: string; jobId: string }>(
-      `/api/run/resume?id=${encodeURIComponent(runId)}`,
-      {
-        method: "POST",
-      },
-    ),
+    call<{ runId: string; jobId: string }>(`/api/run/resume?id=${encodeURIComponent(runId)}`, {
+      method: 'POST',
+    }),
 
   /** null goes back to the channel's rating. */
-  setContentRating: (runId: string, rating: "general" | "mature" | null) =>
+  setContentRating: (runId: string, rating: 'general' | 'mature' | null) =>
     call<{ ok: true }>(`/api/run/rating?id=${encodeURIComponent(runId)}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({ rating }),
     }),
 
   setHold: (runId: string, held: boolean) =>
-    call<{ ok: true; held: boolean }>(
-      `/api/run/hold?id=${encodeURIComponent(runId)}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ held }),
-      },
-    ),
+    call<{ ok: true; held: boolean }>(`/api/run/hold?id=${encodeURIComponent(runId)}`, {
+      method: 'POST',
+      body: JSON.stringify({ held }),
+    }),
 
   discard: (id: string) =>
-    call<{ ok: true }>(`/api/run?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    }),
+    call<{ ok: true }>(`/api/run?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
   channel: (id: string) =>
     call<{
@@ -720,7 +638,7 @@ export const api = {
 
   runs: (channelId?: string) =>
     call<{ runs: RunSummary[] }>(
-      `/api/runs${channelId ? `?channel=${encodeURIComponent(channelId)}` : ""}`,
+      `/api/runs${channelId ? `?channel=${encodeURIComponent(channelId)}` : ''}`
     ),
 
   run: (id: string) => call<RunDetail>(`/api/run?id=${encodeURIComponent(id)}`),
@@ -737,90 +655,63 @@ export const api = {
     /** A blank template to write by hand: no research, no paid writing. */
     blank?: boolean;
   }) =>
-    call<{ runId: string; jobId: string | null }>("/api/runs", {
-      method: "POST",
+    call<{ runId: string; jobId: string | null }>('/api/runs', {
+      method: 'POST',
       body: JSON.stringify(body),
     }),
 
   approve: (id: string) =>
-    call<{ runId: string; jobId: string }>(
-      `/api/run/approve?id=${encodeURIComponent(id)}`,
-      {
-        method: "POST",
-      },
-    ),
+    call<{ runId: string; jobId: string }>(`/api/run/approve?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+    }),
 
   cut: (id: string, only: number[] = []) =>
-    call<{ runId: string; jobId: string }>(
-      `/api/run/shorts?id=${encodeURIComponent(id)}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ only }),
-      },
-    ),
+    call<{ runId: string; jobId: string }>(`/api/run/shorts?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+      body: JSON.stringify({ only }),
+    }),
 
-  saveScript: (
-    id: string,
-    script: Pick<Script, "title" | "description" | "beats">,
-  ) =>
+  saveScript: (id: string, script: Pick<Script, 'title' | 'description' | 'beats'>) =>
     call<{ run: RunSummary; gate: Gate | null; audioStale: boolean }>(
       `/api/run/script?id=${encodeURIComponent(id)}`,
-      { method: "PUT", body: JSON.stringify(script) },
+      { method: 'PUT', body: JSON.stringify(script) }
     ),
 
   suggest: (channelId: string, formatId: string, count = 6) =>
     call<{ suggestions: Array<{ topic: string; why: string }> }>(
       `/api/channel/suggest?id=${encodeURIComponent(channelId)}`,
-      { method: "POST", body: JSON.stringify({ formatId, count }) },
+      { method: 'POST', body: JSON.stringify({ formatId, count }) }
     ),
 
   /** The FINAL audio: what publishing sends. `key` makes a player reload it. */
   audioUrl: (id: string, key?: string | null) =>
-    `/api/run/audio?id=${encodeURIComponent(id)}${key ? `&k=${encodeURIComponent(key)}` : ""}`,
-  downloadUrl: (id: string) =>
-    `/api/run/audio?id=${encodeURIComponent(id)}&download=1`,
+    `/api/run/audio?id=${encodeURIComponent(id)}${key ? `&k=${encodeURIComponent(key)}` : ''}`,
+  downloadUrl: (id: string) => `/api/run/audio?id=${encodeURIComponent(id)}&download=1`,
 
   // --- Your own background music ------------------------------------------
-  musicLibrary: () => call<{ tracks: Track[] }>("/api/music"),
+  musicLibrary: () => call<{ tracks: Track[] }>('/api/music'),
   uploadTrack: (name: string, file: Blob) =>
-    call<{ ok: true; track: Track }>(
-      `/api/music?name=${encodeURIComponent(name)}`,
-      {
-        method: "POST",
-        body: file,
-        headers: { "content-type": "audio/mpeg" },
-      },
-    ),
+    call<{ ok: true; track: Track }>(`/api/music?name=${encodeURIComponent(name)}`, {
+      method: 'POST',
+      body: file,
+      headers: { 'content-type': 'audio/mpeg' },
+    }),
   removeTrack: (name: string) =>
-    call<{ ok: true; removed: boolean }>(
-      `/api/music?name=${encodeURIComponent(name)}`,
-      {
-        method: "DELETE",
-      },
-    ),
-  trackUrl: (name: string) =>
-    `/api/music/file?name=${encodeURIComponent(name)}`,
+    call<{ ok: true; removed: boolean }>(`/api/music?name=${encodeURIComponent(name)}`, {
+      method: 'DELETE',
+    }),
+  trackUrl: (name: string) => `/api/music/file?name=${encodeURIComponent(name)}`,
   /** The exact loop the mix will repeat: section, speed (pitch kept), blended join. */
-  loopPreviewUrl: (
-    name: string,
-    l: { start: number; end: number; speed?: number },
-  ) =>
+  loopPreviewUrl: (name: string, l: { start: number; end: number; speed?: number }) =>
     `/api/music/preview?name=${encodeURIComponent(name)}&start=${l.start.toFixed(3)}&end=${l.end.toFixed(3)}${
-      l.speed && l.speed !== 1 ? `&speed=${l.speed}` : ""
+      l.speed && l.speed !== 1 ? `&speed=${l.speed}` : ''
     }`,
-  mixState: (id: string) =>
-    call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`),
-  setTrackLoop: (
-    name: string,
-    loop: { start: number; end: number; speed?: number } | null,
-  ) =>
-    call<{ ok: true; track: Track }>(
-      `/api/music/loop?name=${encodeURIComponent(name)}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ loop }),
-      },
-    ),
+  mixState: (id: string) => call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`),
+  setTrackLoop: (name: string, loop: { start: number; end: number; speed?: number } | null) =>
+    call<{ ok: true; track: Track }>(`/api/music/loop?name=${encodeURIComponent(name)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ loop }),
+    }),
   mix: (
     id: string,
     body: {
@@ -829,25 +720,19 @@ export const api = {
       volume: number;
       duck: boolean;
       loop?: { start: number; end: number; speed?: number } | null;
-    },
+    }
   ) =>
     call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(body),
     }),
   removeMix: (id: string) =>
-    call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    }),
+    call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
   useMix: (id: string) =>
-    call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, {
-      method: "POST",
-    }),
+    call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, { method: 'POST' }),
   voiceOnly: (id: string) =>
-    call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    }),
-  mixUrl: (id: string, which: "preview" | "chosen", file: string) =>
+    call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  mixUrl: (id: string, which: 'preview' | 'chosen', file: string) =>
     `/api/run/mix/audio?id=${encodeURIComponent(id)}&which=${which}&f=${encodeURIComponent(file)}`,
 };
 
@@ -860,19 +745,12 @@ export const api = {
  */
 export const watchJob = (
   jobId: string,
-  handlers: {
-    onEvent: (e: JobEvent) => void;
-    onDone: (r: { error: string | null; produced: string[] }) => void;
-  },
+  handlers: { onEvent: (e: JobEvent) => void; onDone: (r: { error: string | null; produced: string[] }) => void }
 ): (() => void) => {
-  const source = new EventSource(
-    `/api/job/events?id=${encodeURIComponent(jobId)}`,
-  );
+  const source = new EventSource(`/api/job/events?id=${encodeURIComponent(jobId)}`);
 
-  source.addEventListener("progress", (e) =>
-    handlers.onEvent(JSON.parse((e as MessageEvent).data)),
-  );
-  source.addEventListener("done", (e) => {
+  source.addEventListener('progress', (e) => handlers.onEvent(JSON.parse((e as MessageEvent).data)));
+  source.addEventListener('done', (e) => {
     handlers.onDone(JSON.parse((e as MessageEvent).data));
     source.close();
   });
@@ -886,14 +764,14 @@ export const money = (p: number): string =>
   p >= 100 ? `£${(p / 100).toFixed(2)}` : `${Math.round(p)}p`;
 
 export const clock = (seconds: number | null): string => {
-  if (seconds === null) return "-";
+  if (seconds === null) return '-';
   const s = Math.round(seconds);
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 };
 
 export const ago = (iso: string): string => {
   const mins = Math.round((Date.now() - Date.parse(iso)) / 60000);
-  if (mins < 1) return "just now";
+  if (mins < 1) return 'just now';
   if (mins < 60) return `${mins}m ago`;
   const hours = Math.round(mins / 60);
   if (hours < 24) return `${hours}h ago`;
@@ -908,19 +786,19 @@ export const ago = (iso: string): string => {
  * happens to be in would quietly show the wrong hour.
  */
 export const when = (iso: string, timeZone: string): string =>
-  new Date(iso).toLocaleString("en-GB", {
+  new Date(iso).toLocaleString('en-GB', {
     timeZone,
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 
 /** "in 3 days", "in 4 hours", for something that has not happened yet. */
 export const until = (iso: string): string => {
   const mins = Math.round((Date.parse(iso) - Date.now()) / 60000);
-  if (mins <= 0) return "now";
+  if (mins <= 0) return 'now';
   if (mins < 60) return `in ${mins}m`;
   const hours = Math.round(mins / 60);
   if (hours < 36) return `in ${hours}h`;
