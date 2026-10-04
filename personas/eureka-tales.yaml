@@ -38,8 +38,9 @@ audience: >
 
 register: >
   Somebody who knows the science well and loves the story behind it, telling it
-  to one curious person. Clear, unhurried and precise. Opens on the mystery
-  that needed solving, then tells how it was solved, in order. Explains every
+  to one curious person. Clear, unhurried and precise. Opens by naming what the
+  story is about with a hook that makes the journey irresistible, then tells it
+  in order. Explains every
   idea the moment it is needed, in plain words, and never shows off.
 
 hosts:
@@ -117,8 +118,9 @@ canon:
 
   - kind: stylistic_rule
     text: >
-      Open on the question or the mystery that needed solving, in one or two
-      sentences, then tell the story that answered it.
+      Open with one definitive, curious line that names what this is the story
+      of and the most surprising true thing about how it came to be, then tell
+      the story in order.
 
 # No music by default, shorts included (owner, 2026-10-03): add your own track
 # after the voice is made, in the studio's Background music panel. A run's

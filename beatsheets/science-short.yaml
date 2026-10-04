@@ -16,7 +16,8 @@ kind: short
 intent: >
   One true story from science - an invention, an accident that became a
   discovery, a race to be first - told complete in under three minutes,
-  opening on the mystery and ending on how it was solved.
+  opening on a line that names the subject and hooks, ending on how it was
+  solved.
 
 targetSeconds: [150, 185]
 
@@ -31,17 +32,30 @@ beats:
     type: cold_open
     seconds: [20, 30]
     function: >
-      The mystery, in two or three sentences, so the listener wants the answer.
+      A banger first line that says exactly what this is the story of, and
+      makes the journey to it sound impossible to skip. Then the first scene.
     opens: [the_mystery]
     constraints:
       - >
-        OPEN ON THE PUZZLE, NOT THE ANSWER. What did nobody understand, or what
-        went strangely wrong, or what did somebody notice that should not have
-        happened? Concrete: a place, a year, a thing you could see.
+        THE FIRST SENTENCE NAMES THE THING, DEFINITIVELY, AND HOOKS. Say what
+        this is the story of - the invention or discovery, by name - joined to
+        the most surprising true fact about how it came to be: how long it
+        took, how unlikely the start was, what it was copied from. For example:
+        "This is the story of Velcro, and of the nearly twenty years it took one
+        Swiss engineer to copy a weed." A listener should know the subject in
+        the first five seconds and want the journey. (Owner, 2026-10-04: a
+        short that hid its subject until the end lost people who did not know
+        what they were listening to.)
+      - >
+        THEN DROP INTO THE FIRST SCENE: a place, a year, a person, a thing you
+        could see. Two or three sentences.
+      - >
+        Every fact in the hook comes from the article. Never invent a number
+        to make it punchier.
       - >
         No greeting, no naming the show, no "today we are going to look at". A
         listener in a feed gave you about three seconds.
-      - Never give away the discovery here. This part only asks.
+      - Name the subject, but keep HOW it was solved for later. This part only opens the journey.
     minClaims: 0
 
   - id: story
