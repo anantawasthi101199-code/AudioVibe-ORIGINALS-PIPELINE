@@ -20,6 +20,7 @@ import { isIndexPage, isLiveBlog, isOpinion, isSportOrShowbiz, parseWhen, screen
 import { clusterStories, headlineOverlap, headlineTokens, pickArticle } from '../pick';
 import { draftProblems, unfamiliarNames, unsupportedFigures } from '../check';
 import { spokenDate } from '../newsScript';
+import { namesRegion } from '../roundup';
 
 const desk = deskSchema.parse({
   id: 'global-thread',
@@ -585,7 +586,11 @@ describe('the rapid-fire roundup', () => {
   };
 
   it('only takes a story that names its region', () => {
-    expect(new RegExp('\b(US|Trump)\b').test('Talks with us resume')).toBe(false);
+    expect(namesRegion('Talks with us resume', ['US', 'Trump'])).toBe(false);
+    expect(namesRegion('U.S. Senate passes budget', ['US', 'U.S.'])).toBe(true);
+    expect(namesRegion('Modi meets farmers in Delhi', ['India', 'Delhi'])).toBe(true);
+    expect(namesRegion('Ukraine talks by October', ['India', 'Delhi'])).toBe(false);
+    expect(namesRegion('Anything at all', [])).toBe(true);
   });
 
   it('makes no topic the roundup and a topic the in-depth short', () => {

@@ -33,6 +33,14 @@ export const ROUNDUP_ARTICLE_CHARS = 4_000;
 /** Fewer than this and it is not a roundup, so the run stops before paying. */
 export const MIN_ROUNDUP_STORIES = 3;
 
+/**
+ * Whether a headline names the region. CASE-SENSITIVE on purpose: these are
+ * proper nouns, and "US" must not match the word "us". No words: any headline.
+ */
+export const namesRegion = (headline: string, words: string[]): boolean =>
+  !words.length ||
+  words.some((w) => new RegExp(`(^|[^A-Za-z])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z])`).test(headline));
+
 export interface RoundupItem {
   region: string;
   outlet: string;
@@ -60,10 +68,7 @@ export const gatherRoundup = async (
     const { kept } = screenWire(raw, desk);
     // ABOUT THE REGION. The first live roundup filled India's slot with a
     // Ukraine story an "India" search returned.
-    const about = region.match.length
-      ? new RegExp(`\\b(${region.match.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![A-Za-z])`)
-      : null;
-    const stories = clusterStories(about ? kept.filter((k) => about.test(k.title)) : kept);
+    const stories = clusterStories(kept.filter((k) => namesRegion(k.title, region.match)));
     if (!stories.length) {
       say(`${region.name}: nothing from a desk outlet in the last 24 hours`);
       continue;
