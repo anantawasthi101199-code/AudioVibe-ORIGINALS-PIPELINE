@@ -114,7 +114,9 @@ between a list of events and a story.
 
 OPEN BY SAYING WHAT THIS IS IN ONE OR TWO SENTENCES, THEN START. Whose story it
 is, roughly how old, and go. No greeting, no naming the show, no "today we are
-looking at". You have about three seconds.`;
+looking at". You have about three seconds. IF THE FIRST PART'S CONSTRAINTS BELOW
+SET A DIFFERENT OPENING, FOLLOW THEM INSTEAD: that format's opening was chosen
+on purpose.`;
 
 /**
  * Write a short from a single article.
