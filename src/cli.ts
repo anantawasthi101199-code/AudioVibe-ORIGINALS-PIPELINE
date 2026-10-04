@@ -40,7 +40,7 @@ import { cutStories } from './pipeline/anthology';
 import { runLane } from './pipeline/runLane';
 import { budgetFor } from './pipeline/budget';
 import { assertFormatInLane, laneOf } from './pipeline/lanes';
-import { hasNewsDesk, loadDesk } from './news/desk';
+import { hasNewsDesk, loadDesk, newsFormatFor } from './news/desk';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
 import {
   SEASON_EPISODES,
@@ -400,7 +400,10 @@ const cmdMake = async (argv: string[]): Promise<number> => {
   }
 
   const persona = loadPersona(showId);
-  const formatId = arg(argv, 'format') ?? persona.formats[0]!;
+  // NEWS: no topic is the rapid-fire roundup, a topic the in-depth short.
+  const formatId =
+    arg(argv, 'format') ??
+    (news ? newsFormatFor(loadDesk(showId), topic, persona.formats[0]!) : persona.formats[0]!);
   const format = loadFormat(formatId); // Fail now, not after the first API call.
 
   if (news && flag(argv, 'dry-run')) {
@@ -1922,7 +1925,11 @@ const cmdTick = async (argv: string[]): Promise<number> => {
       return 1;
     }
 
-    const formatId = persona.formats.find((f) => loadFormat(f).kind !== 'short') ?? persona.formats[0]!;
+    const fallbackFormat =
+      persona.formats.find((f) => loadFormat(f).kind !== 'short') ?? persona.formats[0]!;
+    const formatId = hasNewsDesk(persona.id)
+      ? newsFormatFor(loadDesk(persona.id), topic, fallbackFormat)
+      : fallbackFormat;
 
     // A tick is unattended, so a duplicate here would never be seen by anybody.
     // The topic goes back on the queue rather than being silently consumed.

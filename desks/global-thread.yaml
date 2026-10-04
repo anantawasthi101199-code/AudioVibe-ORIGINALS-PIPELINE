@@ -76,3 +76,19 @@ excludeWords:
 country: ALL
 language: en
 music: false
+
+# THE RAPID-FIRE ROUNDUP, made when no topic is given (owner, 2026-10-05): the
+# most-carried story from each of these, one article each, under three minutes.
+# A typed topic makes the in-depth short on that one story instead.
+roundup:
+  regions:
+    - name: India
+      query: India
+    - name: the US
+      query: United States
+    - name: the UK
+      query: United Kingdom
+    - name: China
+      query: China
+    - name: the world
+      query: world news

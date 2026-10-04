@@ -1,0 +1,73 @@
+# Rapid fire: the day's top news, one story per region, under three minutes.
+#
+# RUN WHEN NO TOPIC IS GIVEN (owner, 2026-10-05). A topic gets news-short, the
+# in-depth report on that one story; no topic gets this. Which one is decided in
+# news/desk.ts (newsFormatFor), and the stories are chosen in news/roundup.ts:
+# one search per region on the desk, the most-carried story from each, ONE
+# article each, the same outlet rules and free checks as the single report.
+#
+# Written by the news lane (src/pipeline/news.ts), never by the story writers.
+
+id: news-roundup
+name: Rapid fire, today's top news
+
+research: single
+
+kind: short
+intent: >
+  The day's top stories, one from each region the desk covers, each told in a
+  few quick sentences from one named source: what happened and why it matters.
+  Under three minutes.
+
+targetSeconds: [140, 180]
+
+serialised: false
+
+loops:
+  - id: the_day
+    question: What happened in the world today?
+
+beats:
+  - id: hello
+    type: stakes
+    seconds: [10, 15]
+    function: >
+      A one-line hello and what this is: today's top news, rapid fire.
+    opens: [the_day]
+    constraints:
+      - >
+        ONE OR TWO SENTENCES. "Hi, it's Rowan, and here's your rapid fire on
+        today's top news." Then straight into the first story.
+
+  - id: headlines
+    type: mechanism
+    seconds: [115, 140]
+    function: >
+      The stories, one after another, in the order given. For each: where,
+      what happened, who reported it, and one line on why it matters.
+    constraints:
+      - >
+        ONE TURN PER STORY, in the order given, each about 25 to 30 seconds:
+        three or four short sentences.
+      - >
+        SIGNPOST EACH ONE by place so the listener always knows where they are:
+        "First, India." "Over in the US..." "In the UK..." "And in China..."
+      - >
+        NAME THE SOURCE in each story, once: "the BBC reports...".
+      - >
+        WHAT HAPPENED, THEN WHY IT MATTERS in one line. No background beyond a
+        clause, no side stories, no opinion.
+
+  - id: close
+    type: outro
+    seconds: [15, 25]
+    function: >
+      A quick wrap and the goodbye, asking the listener to follow.
+    closes: [the_day]
+    constraints:
+      - >
+        ONE LINE to wrap ("That's your rapid fire for today"), then the goodbye
+        asking the listener to follow. The last thing said.
+      - No opinion, no moral, no "only time will tell".
+
+tensionCurve: [0.7, 1.0, 0.5]

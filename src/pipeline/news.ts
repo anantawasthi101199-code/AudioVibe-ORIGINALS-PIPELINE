@@ -45,8 +45,9 @@ import { GateReport } from '../qa/gate';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { Run } from '../run/store';
 import { Script, scriptSchema } from '../script/write';
-import { draftProblems, estimatedSeconds, newsGate } from '../news/check';
-import { Desk, loadDesk } from '../news/desk';
+import { draftProblems, estimatedSeconds, namesSource, newsGate } from '../news/check';
+import { Desk, ROUNDUP_FORMAT, loadDesk } from '../news/desk';
+import { MIN_ROUNDUP_STORIES, RoundupItem, buildRoundupPrompt, gatherRoundup } from '../news/roundup';
 import { writeNewsScript } from '../news/newsScript';
 import {
   AlreadyCovered,
@@ -87,6 +88,33 @@ export const newsRecordSchema = z.object({
 
 export type NewsRecord = z.infer<typeof newsRecordSchema>['news'];
 
+/** A roundup's stories, kept beside `news` (which holds the first, for old readers). */
+const roundupRecordSchema = z.object({
+  roundup: z
+    .array(
+      z.object({
+        region: z.string(),
+        outlet: z.string(),
+        publishedAt: z.string(),
+        headline: z.string(),
+        url: z.string(),
+      })
+    )
+    .default([]),
+});
+
+/** A roundup reads several articles; the checks treat them as one text. */
+const combined = (sources: Source[]): Source => ({
+  ...sources[0]!,
+  text: sources.map((s) => s.text).join('\n\n'),
+});
+
+const outletsOf = (items: RoundupItem[]): string[] => [...new Set(items.map((i) => i.outlet))];
+
+/** The oldest article sets how stale the whole roundup is. */
+const oldest = (items: RoundupItem[]): string =>
+  [...items].sort((a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt))[0]!.publishedAt;
+
 const corpusArtifactSchema = z.object({
   sources: z.array(sourceSchema),
   rejected: z.array(z.object({ url: z.string(), reason: z.string() })),
@@ -110,6 +138,10 @@ export const coveredBy = (personaId: string, now: Date): AlreadyCovered => {
       const { news } = run.readArtifact('reference', newsRecordSchema);
       covered.urls.add(normaliseUrl(news.url));
       covered.titles.push(headlineTokens(news.headline));
+      for (const item of run.readArtifact('reference', roundupRecordSchema).roundup) {
+        covered.urls.add(normaliseUrl(item.url));
+        covered.titles.push(headlineTokens(item.headline));
+      }
     } catch {
       // A half-made or foreign run says nothing about what was reported.
     }
@@ -133,9 +165,9 @@ const firstSentence = (text: string): string => {
  * opposite of the truth. `unverified`, because nothing checked it semantically,
  * and saying so is the point of the field.
  */
-const anchorClaim = (source: Source, headline: string, beatId: string) =>
+const anchorClaim = (source: Source, headline: string, beatId: string, n = 1) =>
   claimSchema.parse({
-    id: 'news-1',
+    id: `news-${n}`,
     text: headline,
     type: 'attribution',
     beatId,
@@ -173,9 +205,68 @@ export const runNews = async (
   assertVoiceUnchanged(persona, deps.tts.name, loadVoiceRegistry());
 
   // --- 1. The wire, the story and the one article ---------------------------
+  // OR THE ROUNDUP: one story per region, one article each. See news/roundup.ts.
+  const roundup = format.id === ROUNDUP_FORMAT;
   let source: Source;
   let record: NewsRecord;
-  if (run.hasArtifact('corpus') && run.hasArtifact('reference')) {
+  let items: RoundupItem[] = [];
+  let sources: Source[] = [];
+  if (roundup) {
+    if (run.hasArtifact('corpus') && run.hasArtifact('reference')) {
+      sources = run.readArtifact('corpus', corpusArtifactSchema).sources;
+      items = run.readArtifact('reference', roundupRecordSchema).roundup;
+      say('wire')(`reusing ${items.length} stories`);
+    } else {
+      stage = 'wire';
+      const key = retrievalKeys().brave;
+      const wire = newsDeps.wire ?? (key ? new BraveNews(key) : null);
+      if (!wire) throw new Error('the news lane needs BRAVE_SEARCH_API_KEY in .env');
+      if (!desk.roundup) throw new Error(`${persona.name}'s desk has no roundup regions`);
+      say('wire')(`rapid fire: the top story from ${desk.roundup.regions.map((r) => r.name).join(', ')}`);
+      const picked = await gatherRoundup(
+        desk,
+        wire,
+        deps.fetchDeps,
+        now(),
+        coveredBy(persona.id, now()),
+        say('wire'),
+        newsDeps.sleep
+      );
+      if (picked.length < MIN_ROUNDUP_STORIES) {
+        const reason =
+          `only ${picked.length} region(s) had a fresh story from a desk outlet; ` +
+          `a roundup needs ${MIN_ROUNDUP_STORIES}`;
+        run.abandon(reason);
+        throw new Error(`abandoned ${run.id}: ${reason}`);
+      }
+      sources = picked.map((x) => x.source);
+      items = picked.map((x) => x.item);
+      run.writeArtifact('corpus', { sources, rejected: [] });
+      run.markComplete('corpus');
+      run.writeArtifact('reference', {
+        news: { ...items[0]!, alsoCarrying: [], queries: desk.roundup.regions.map((r) => r.query) },
+        roundup: items,
+      });
+      run.markComplete('reference');
+      run.writeArtifact('claims', {
+        claims: sources.map((s, i) => anchorClaim(s, items[i]!.headline, format.beats[1]!.id, i + 1)),
+        unsupported: [],
+      });
+      run.markComplete('claims');
+      run.writeArtifact('verification', {
+        verification: {
+          results: [],
+          blocking: [],
+          costPence: 0,
+          verifierModel: 'none: each story from one named source, figures checked deterministically',
+        },
+        counterEvidence: [],
+      });
+      run.markComplete('verification');
+    }
+    source = combined(sources);
+    record = { ...items[0]!, publishedAt: oldest(items), alsoCarrying: [], queries: [] };
+  } else if (run.hasArtifact('corpus') && run.hasArtifact('reference')) {
     source = run.readArtifact('corpus', corpusArtifactSchema).sources[0]!;
     record = run.readArtifact('reference', newsRecordSchema).news;
     say('wire')(`reusing ${record.outlet}: "${record.headline}"`);
@@ -278,11 +369,22 @@ export const runNews = async (
     say('script')(`reusing "${script.title}"`);
   } else {
     stage = 'script';
-    say('script')(`writing the report from ${record.outlet}`);
+    say('script')(
+      roundup ? `writing the rapid fire from ${items.length} stories` : `writing the report from ${record.outlet}`
+    );
     const written = await writeNewsScript(
       {
         persona,
         format,
+        prompt: roundup
+          ? buildRoundupPrompt({
+              persona,
+              format,
+              beat: desk.beat,
+              now: now(),
+              stories: items.map((item, i) => ({ item, text: sources[i]!.text })),
+            })
+          : undefined,
         article: {
           title: record.headline,
           url: source.url,
@@ -294,13 +396,19 @@ export const runNews = async (
         now: now(),
       },
       deps.writer,
-      (draft) =>
-        draftProblems(draft.beats, {
+      (draft) => [
+        ...draftProblems(draft.beats, {
           article: source.text,
           outlet: record.outlet,
           now: now(),
           closingBeatId,
         }),
+        // A roundup names every outlet it reports from, not only the first.
+        ...outletsOf(items)
+          .filter((o) => o !== record.outlet)
+          .filter((o) => !namesSource(draft.beats.flatMap((b) => b.turns.map((t) => t.text)).join(' '), o))
+          .map((o) => `the report never says a story comes from ${o}`),
+      ],
       spend,
       say('script'),
       flags.scriptRevisions
@@ -322,6 +430,7 @@ export const runNews = async (
       script,
       source,
       outlet: record.outlet,
+      outlets: roundup ? outletsOf(items) : undefined,
       publishedAt: record.publishedAt,
       durationS,
       measured,
@@ -415,9 +524,11 @@ export const regateNews = (run: Run, script: Script, now: Date = new Date()): Ga
     const persona = loadPersona(run.manifest.personaId);
     const format = loadFormat(run.manifest.formatId);
     const desk = loadDesk(persona.id);
-    const source = run.readArtifact('corpus', corpusArtifactSchema).sources[0];
-    if (!source) return null;
+    const sources = run.readArtifact('corpus', corpusArtifactSchema).sources;
+    if (!sources.length) return null;
     const { news } = run.readArtifact('reference', newsRecordSchema);
+    const items = run.readArtifact('reference', roundupRecordSchema).roundup;
+    const source = items.length ? combined(sources) : sources[0]!;
     const render = run.hasArtifact('render') ? run.readArtifact('render', renderResultSchema) : null;
 
     return newsGate({
@@ -427,7 +538,8 @@ export const regateNews = (run: Run, script: Script, now: Date = new Date()): Ga
       script,
       source,
       outlet: news.outlet,
-      publishedAt: news.publishedAt,
+      outlets: items.length ? outletsOf(items) : undefined,
+      publishedAt: items.length ? oldest(items) : news.publishedAt,
       durationS: render?.durationS ?? estimatedSeconds(script),
       measured: !!render,
       now,

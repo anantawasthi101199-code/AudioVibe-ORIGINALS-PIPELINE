@@ -149,6 +149,8 @@ export interface NewsScriptInput {
   article: { title: string; url: string; text: string; outlet: string; publishedAt: string };
   beat: string;
   now: Date;
+  /** A ready-made prompt, for the rapid-fire roundup. See news/roundup.ts. */
+  prompt?: string;
 }
 
 export const buildNewsSystem = (persona: Persona): string => {
@@ -267,7 +269,7 @@ export const writeNewsScript = async (
   allowRevisions = false
 ): Promise<{ script: Script; problems: string[] }> => {
   const system = buildNewsSystem(input.persona);
-  const prompt = buildNewsPrompt(input);
+  const prompt = input.prompt ?? buildNewsPrompt(input);
   const speaker = input.persona.hosts[0]!.id;
   const budget = allowRevisions ? 1 : 0;
 

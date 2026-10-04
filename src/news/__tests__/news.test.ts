@@ -15,7 +15,7 @@ import { runNews, regateNews } from '../../pipeline/news';
 import { PipelineDeps } from '../../pipeline/episode';
 import { regate } from '../../qa/regate';
 import { scriptSchema } from '../../script/write';
-import { deskSchema, hasNewsDesk, loadDesk, outletFor } from '../desk';
+import { deskSchema, hasNewsDesk, loadDesk, newsFormatFor, outletFor } from '../desk';
 import { isIndexPage, isLiveBlog, isOpinion, parseWhen, screenWire, stripSiteSuffix, WireItem } from '../wire';
 import { clusterStories, headlineOverlap, headlineTokens, pickArticle } from '../pick';
 import { draftProblems, unfamiliarNames, unsupportedFigures } from '../check';
@@ -528,5 +528,92 @@ describe('runNews', () => {
     const second = makeRun();
     // Both wire items are the story already reported, so there is nothing left.
     await expect(runNews(second, deps(), newsDeps)).rejects.toThrow(/abandoned/);
+  });
+});
+
+describe('the rapid-fire roundup', () => {
+  let root: string;
+  beforeEach(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-roundup-'));
+    process.env.FOUNDRY_RUNS_DIR = root;
+    process.env.FOUNDRY_VOICES_FILE = path.join(root, 'voices.json');
+    jest.spyOn(assemble, 'probeDuration').mockResolvedValue(50);
+    jest.spyOn(assemble, 'concatBeats').mockImplementation(async (_f: string[], out: string) => {
+      fs.writeFileSync(out, Buffer.alloc(16));
+    });
+  });
+  afterEach(() => {
+    jest.restoreAllMocks();
+    fs.rmSync(root, { recursive: true, force: true });
+    delete process.env.FOUNDRY_RUNS_DIR;
+    delete process.env.FOUNDRY_VOICES_FILE;
+  });
+
+  // One story per region, each on a different outlet, plus one repeat that
+  // must not be picked twice.
+  const byQuery: Record<string, Array<{ url: string; title: string }>> = {
+    India: [{ url: 'https://www.bbc.co.uk/news/india-1', title: 'Monsoon floods close schools across Kerala' }],
+    'United States': [{ url: 'https://apnews.com/article/senate-1', title: 'Senate passes stopgap budget bill' }],
+    'United Kingdom': [{ url: 'https://www.theguardian.com/uk/rail-1', title: 'Rail strike called off after pay offer' }],
+    China: [{ url: 'https://www.bbc.co.uk/news/india-1', title: 'Monsoon floods close schools across Kerala' }],
+    'world news': [{ url: 'https://www.bbc.co.uk/news/world-1', title: 'Ministers agree ceasefire framework in Geneva' }],
+  };
+  const roundupWire = {
+    name: 'fake-wire',
+    latest: jest.fn(async (q: string) =>
+      (byQuery[q] ?? []).map((i) => ({ ...i, description: '', seenAt: '2026-09-29T07:00:00' }))
+    ),
+  };
+
+  const ROUNDUP = {
+    title: "India, US, UK and the world: today's top news",
+    description: 'Floods in Kerala, a budget vote, a called-off strike and a Geneva framework.',
+    beats: [
+      { beatId: 'hello', turns: [{ speaker: 'reporter', text: "Hi, it's Rowan, with your rapid fire." }] },
+      {
+        beatId: 'headlines',
+        turns: [
+          { speaker: 'reporter', text: 'First, India. The BBC reports floods have closed schools.' },
+          { speaker: 'reporter', text: 'In the US, the Associated Press reports the Senate passed a budget bill.' },
+          { speaker: 'reporter', text: 'In the UK, the Guardian reports a rail strike was called off.' },
+          { speaker: 'reporter', text: 'And around the world, ministers from 12 countries agreed a framework.' },
+        ],
+      },
+      { beatId: 'close', turns: [{ speaker: 'reporter', text: "That's your rapid fire. Follow me for more. Bye." }] },
+    ],
+  };
+
+  it('makes no topic the roundup and a topic the in-depth short', () => {
+    const d = loadDesk('global-thread');
+    expect(newsFormatFor(d, 'geopolitics', 'news-short')).toBe('news-roundup');
+    expect(newsFormatFor(d, 'India China border talks', 'news-short')).toBe('news-short');
+  });
+
+  it('takes one story per region, never the same one twice, and passes its gate', async () => {
+    const run = Run.create({ personaId: 'global-thread', formatId: 'news-roundup', topic: 'geopolitics' }, { root });
+    const writer = fakeWriter(ROUNDUP);
+    const { gate } = await runNews(
+      run,
+      {
+        music: false,
+        writer,
+        verifier: writer,
+        search: { name: 'unused', search: async () => [] },
+        tts: fakeTts(),
+        fetchDeps: {
+          httpGet: async (url: string) => ({ status: 200, body: ARTICLE_HTML, finalUrl: url, contentType: 'text/html' }),
+        },
+      },
+      { wire: roundupWire, now: () => NOW, sleep: async () => undefined }
+    );
+
+    const corpus = run.readArtifact('corpus', z.object({ sources: z.array(z.any()) }).passthrough());
+    // Five regions, and China's only story was India's: four stories.
+    expect(corpus.sources).toHaveLength(4);
+    expect(writer.calls).toBe(1);
+    expect(writer.prompts[0]).toContain('RAPID-FIRE ROUNDUP');
+    expect(writer.prompts[0]).toContain('STORY 4 OF 4');
+    expect(gate.findings.filter((f) => f.blocking)).toEqual([]);
+    expect(regateNews(run, run.readArtifact('script', scriptSchema), NOW)?.passed).toBe(true);
   });
 });

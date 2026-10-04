@@ -634,6 +634,8 @@ export const api = {
       sets: string[];
       runs: RunSummary[];
       budgetPence: number;
+      /** A news channel: an empty topic makes today's rapid-fire roundup. */
+      newsRoundup: boolean;
     }>(`/api/channel?id=${encodeURIComponent(id)}`),
 
   runs: (channelId?: string) =>

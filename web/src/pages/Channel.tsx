@@ -400,6 +400,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
     sets: string[];
     runs: RunSummary[];
     budgetPence: number;
+    newsRoundup: boolean;
   } | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
@@ -489,6 +490,8 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   if (!data) return <div className="page faint">...</div>;
 
   const { channel, runs, budgetPence } = data;
+  // News: no topic is today's rapid fire; a topic is the in-depth short.
+  const rapidFire = data.newsRoundup && !topic.trim();
   const queue = route?.kind === 'shorts' ? data.sets : data.topics;
   const ready = runs.filter((r) => r.state === 'ready' && !r.isSource).length;
 
@@ -497,7 +500,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const refused = clash.some((m) => m.sameShow && m.score >= 0.6);
 
   const start = async (again = false, blank = false) => {
-    if (!route || !topic.trim()) return;
+    if (!route || (!topic.trim() && !data?.newsRoundup)) return;
     setStarting(true);
     setError(null);
     try {
@@ -785,9 +788,11 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   className="field"
                   rows={2}
                   placeholder={
-                    route.kind === 'shorts'
-                      ? 'A body of material with ten different stories in it...'
-                      : 'A subject, not a title. The research is planned from these words.'
+                    data.newsRoundup
+                      ? "Leave empty for today's rapid fire (India, US, UK, China, world). Type a story to go in depth on it."
+                      : route.kind === 'shorts'
+                        ? 'A body of material with ten different stories in it...'
+                        : 'A subject, not a title. The research is planned from these words.'
                   }
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
@@ -847,10 +852,16 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                 <div className="row">
                   <button
                     className="btn spend"
-                    disabled={!topic.trim() || starting || refused}
+                    disabled={(!topic.trim() && !rapidFire) || starting || refused}
                     onClick={() => void start(false)}
                   >
-                    {starting ? 'Starting...' : 'Research and write'}
+                    {starting
+                      ? 'Starting...'
+                      : rapidFire
+                        ? "Rapid fire: today's top news"
+                        : data.newsRoundup
+                          ? 'Go in depth on this story'
+                          : 'Research and write'}
                   </button>
                   {/* THE OVERRIDE IS A SEPARATE BUTTON, not a checkbox beside
                       the first. A checkbox can be left ticked from the last

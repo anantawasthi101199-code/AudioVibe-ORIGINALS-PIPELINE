@@ -95,6 +95,8 @@ export interface NewsGateInput {
   script: Script;
   source: Source;
   outlet: string;
+  /** Every outlet reported from, for a roundup. Defaults to [outlet]. */
+  outlets?: string[];
   /** When the article was published, as the run recorded it. */
   publishedAt: string;
   /** Measured if there is audio, else estimated from the words. */
@@ -119,10 +121,11 @@ export const newsGate = (input: NewsGateInput): GateReport => {
   const article = input.source.text;
   const host = input.persona.hosts[0]!;
 
+  const outlets = input.outlets ?? [input.outlet];
   const names = unfamiliarNames(text, article, [
     input.persona.name,
     host.name,
-    input.outlet,
+    ...outlets,
     input.desk.beat,
   ]);
 
@@ -163,10 +166,10 @@ export const newsGate = (input: NewsGateInput): GateReport => {
     );
   }
 
-  if (!namesSource(text, input.outlet)) {
+  for (const outlet of outlets.filter((o) => !namesSource(text, o))) {
     add(
       'newsSource',
-      `the report never says it comes from ${input.outlet}. One source, named on air, is the ` +
+      `the report never says it comes from ${outlet}. One source, named on air, is the ` +
         `whole basis on which this channel reports.`
     );
   }

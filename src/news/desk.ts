@@ -81,9 +81,30 @@ export const deskSchema = z.object({
    * editorialising.
    */
   music: z.boolean().default(false),
+
+  /**
+   * THE RAPID-FIRE ROUNDUP, run when no topic is given (owner, 2026-10-05). One
+   * search per region, the most-carried story from each, one article each.
+   * Absent: this desk has no roundup and an empty topic means the top story.
+   */
+  roundup: z
+    .object({
+      regions: z.array(z.object({ name: z.string().min(2), query: z.string().min(2) })).min(2).max(8),
+    })
+    .optional(),
 });
 
 export type Desk = z.infer<typeof deskSchema>;
+
+export const ROUNDUP_FORMAT = 'news-roundup';
+
+/**
+ * Which format a news run takes, decided in ONE place for the studio, `make`
+ * and the schedule: no topic (the desk's beat) is the rapid-fire roundup when
+ * the desk has one; a topic is the in-depth short on that story.
+ */
+export const newsFormatFor = (desk: Desk, topic: string, fallback: string): string =>
+  desk.roundup && topic.trim().toLowerCase() === desk.beat.toLowerCase() ? ROUNDUP_FORMAT : fallback;
 
 export const desksDir = (): string => path.resolve(__dirname, '..', '..', 'desks');
 

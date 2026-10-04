@@ -36,7 +36,7 @@ import { Run } from '../run/store';
 import { startHandwritten } from '../pipeline/handwritten';
 import { loadTopics } from '../schedule/load';
 import { blocking, findCovered, loadCatalogue, recordMade, refusal } from '../catalogue/covered';
-import { hasNewsDesk } from '../news/desk';
+import { hasNewsDesk, ROUNDUP_FORMAT, loadDesk, newsFormatFor } from '../news/desk';
 import { Script, scriptBeatSchema, scriptSchema } from '../script/write';
 import { catalogue, channel, runs, runSummary } from './catalog';
 import { jobs, jobId } from './jobs';
@@ -74,6 +74,8 @@ export const getChannel = (id: string) => {
   const queue = loadTopics(id);
   return {
     channel: summary,
+    // A news channel takes an empty topic: today's rapid-fire roundup.
+    newsRoundup: hasNewsDesk(id) && !!loadDesk(id).roundup,
     // BOTH QUEUES, because they are different kinds of thing and the interface
     // has to offer the right one for the route being taken.
     topics: queue.topics,
@@ -239,7 +241,8 @@ export const audioDownloadFile = async (id: string): Promise<string> => {
 export const startRunSchema = z.object({
   channelId: z.string().min(1),
   formatId: z.string().min(1),
-  topic: z.string().min(1),
+  /** Empty only on a news channel, where it means today's rapid fire. */
+  topic: z.string(),
   /** Off by default here, unlike the command line: a web button is easy to press. */
   renderNow: z.boolean().default(false),
   /** The interface's `--again`. Off by default, for the same reason. */
@@ -261,9 +264,15 @@ export const startRunSchema = z.object({
 export const startRun = (body: unknown, who: string | null = null) => {
   const input = startRunSchema.parse(body);
   const persona = loadPersona(input.channelId);
-  const format = loadFormat(input.formatId);
 
-  if (!persona.formats.includes(format.id)) {
+  // NEWS: no topic means the desk's beat, which is the rapid-fire roundup; a
+  // topic is the in-depth short on that one story. See news/desk.ts.
+  const desk = hasNewsDesk(persona.id) ? loadDesk(persona.id) : null;
+  if (desk && !input.topic.trim()) input.topic = desk.beat;
+  if (!input.topic.trim()) throw new HttpError(400, 'give it a topic');
+  const format = loadFormat(desk ? newsFormatFor(desk, input.topic, input.formatId) : input.formatId);
+
+  if (format.id !== ROUNDUP_FORMAT && !persona.formats.includes(format.id)) {
     throw new HttpError(400, `${persona.name} does not make "${format.id}"`);
   }
   if (input.blank && format.sourceOnly) {
