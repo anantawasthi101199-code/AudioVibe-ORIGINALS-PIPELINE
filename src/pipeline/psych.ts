@@ -38,7 +38,7 @@ import {
   recordVoices,
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import { stageFlags, stagesOff } from '../config/stages';
 import { claimSchema } from '../evidence/claim';
 import { gatherCorpus } from '../evidence/research';
@@ -175,7 +175,7 @@ export const runPsych = async (
   deps: PipelineDeps,
   psychDeps: PsychDeps = {}
 ): Promise<{ run: Run; script: Script; gate: GateReport }> => {
-  const budget = episodeBudgetPence();
+  const budget = budgetFor(run);
   const say = (stage: string) => (message: string) => {
     (deps.log ?? (() => undefined))(message, stage);
     run.journal({ stage, event: message });

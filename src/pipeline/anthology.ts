@@ -27,7 +27,7 @@
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat, oneBeatFormat } from '../formats/load';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import { Claim, checkLedger, claimSchema } from '../evidence/claim';
 import { corpusSchema, counterEvidenceSchema } from '../evidence/research';
 import { verificationReportSchema } from '../evidence/verify';
@@ -135,7 +135,7 @@ export const cutStories = async (
         story,
       });
 
-    const budget = episodeBudgetPence();
+    const budget = budgetFor(run);
     const spend = (pence: number) => run.spend(pence, budget);
     // The stage IS the story, so the terminal can group ten cuts into ten
     // sections instead of forty indistinguishable indented lines.

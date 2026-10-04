@@ -119,6 +119,8 @@ export const runManifestSchema = z.object({
    * about a published episode six weeks later.
    */
   holdForApproval: z.boolean().default(false),
+  /** How many times the voice was discarded by an edit and has to be made again. */
+  revoicings: z.number().int().nonnegative().default(0),
   approvedAt: z.string().datetime().optional(),
 
   /**
@@ -617,6 +619,12 @@ export class Run {
    * approval is a fact about the run that outlives the moment: a published
    * episode should be able to say when somebody read it.
    */
+  /** The script changed after it was voiced: one more voicing is allowed for. */
+  noteRevoicing(): void {
+    this.manifestData.revoicings = (this.manifestData.revoicings ?? 0) + 1;
+    this.save();
+  }
+
   approve(now = new Date()): void {
     this.manifestData.approvedAt = now.toISOString();
     this.save();

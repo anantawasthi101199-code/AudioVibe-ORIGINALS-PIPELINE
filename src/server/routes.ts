@@ -29,8 +29,7 @@ import { loadFormat } from '../formats/load';
 import { episodeBudgetPence, writerConfig } from '../config';
 import { AnthropicClient } from '../models/client';
 import { buildDeps, priorEpisodeTexts } from '../deps';
-import { runEpisode } from '../pipeline/episode';
-import { runFiction } from '../pipeline/fiction';
+import { runLane } from '../pipeline/runLane';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
@@ -305,8 +304,8 @@ export const startRun = (body: unknown, who: string | null = null) => {
       });
       deps.priorTexts = priorEpisodeTexts(run.id);
 
-      if (persona.fiction) await runFiction({ run }, deps);
-      else await runEpisode(run, deps);
+      // The channel's own lane, as the command line runs it. See runLane.ts.
+      await runLane(run, deps);
       return [run.id];
     },
   });
@@ -338,7 +337,6 @@ export const approveRun = (id: string, who: string | null = null) => {
     });
   }
 
-  const persona = loadPersona(run.manifest.personaId);
   const job = jobs.start({
     id: jobId('run', run.id),
     kind: 'run',
@@ -350,8 +348,8 @@ export const approveRun = (id: string, who: string | null = null) => {
       });
       deps.priorTexts = priorEpisodeTexts(run.id);
 
-      if (persona.fiction) await runFiction({ run }, deps);
-      else await runEpisode(run, deps);
+      // The channel's own lane, as the command line runs it. See runLane.ts.
+      await runLane(run, deps);
       return [run.id];
     },
   });
@@ -430,6 +428,7 @@ export const saveScript = (id: string, body: unknown) => {
     fs.rmSync(path.join(run.dir, 'render.json'), { force: true });
     run.uncomplete('render');
     run.uncomplete('qa');
+    run.noteRevoicing();
     run.journal({ stage: 'render', event: 'discarded: the script changed under it' });
   }
 

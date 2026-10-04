@@ -45,7 +45,7 @@ import {
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
 import { loadFormat } from '../formats/load';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { Script, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
 import { runGate, GateReport } from '../qa/gate';
@@ -134,7 +134,7 @@ export const runFiction = async (
     );
   }
 
-  const budget = episodeBudgetPence();
+  const budget = budgetFor(run);
   let stage = 'pipeline';
   const spend = (pence: number) => {
     run.journal({ stage, event: 'spend', pence });

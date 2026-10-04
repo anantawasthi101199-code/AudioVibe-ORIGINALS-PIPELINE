@@ -30,7 +30,7 @@ import {
   recordVoices,
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import { stageFlags, stagesOff } from '../config/stages';
 import { claimSchema } from '../evidence/claim';
 import { Source, sourceSchema } from '../evidence/source';
@@ -87,7 +87,7 @@ export const runBusiness = async (
   deps: PipelineDeps,
   bizDeps: BusinessDeps = {}
 ): Promise<{ run: Run; script: Script; gate: GateReport }> => {
-  const budget = episodeBudgetPence();
+  const budget = budgetFor(run);
   const now = bizDeps.now ?? (() => new Date());
   const say = (stage: string) => (message: string) => {
     (deps.log ?? (() => undefined))(message, stage);

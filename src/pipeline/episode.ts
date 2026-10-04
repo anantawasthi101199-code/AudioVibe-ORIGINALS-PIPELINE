@@ -26,7 +26,7 @@ import {
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
 import { nominalSeconds } from '../formats/schema';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import {
   OptionalStage,
   StageFlags,
@@ -59,6 +59,8 @@ import {
   ReferenceReview,
   reviewReference,
   selectStorySources,
+  SHORT_ARTICLE_CHARS,
+  SHORT_SELECT_PREVIEW_CHARS,
   SOURCE_CHARS_PER_SECOND,
   StoryResearch,
   topUpSelection,
@@ -204,7 +206,7 @@ export interface EpisodeResult {
  * everything.
  */
 export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeResult> => {
-  const budget = episodeBudgetPence();
+  const budget = budgetFor(run);
 
   // EVERY LINE THE PIPELINE PRINTS ALSO GOES TO THE RUN'S JOURNAL. A run that
   // dies leaves a journal ending exactly where it died, which is the single
@@ -282,11 +284,21 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
     // ONLY ON A SHORT. An episode has a pound to spend and a real brief is
     // worth two pence of it, because a fifteen-minute case does benefit from
     // queries aimed at the investigation and the aftermath separately.
-    if (caseLane && format.kind === 'short') {
+    // EVERY SINGLE-STORY SHORT, since 2026-10-04: a short's topic is a specific
+    // story ("How the microwave oven was invented after a melted chocolate
+    // bar"), so it is its own query too, and the 1.7p brief was most of what
+    // put a short over its 10p ceiling.
+    if (format.kind === 'short' && (caseLane || researchMode === 'single')) {
       brief = {
         angle: run.manifest.topic,
-        mustEstablish: ['who it happened to', 'what happened', 'how it ended'],
-        queries: [run.manifest.topic, `${run.manifest.topic} case`],
+        mustEstablish: caseLane
+          ? ['who it happened to', 'what happened', 'how it ended']
+          : ['what this is the story of', 'what happened, in order', 'how it turned out'],
+        // THREE, because the brief schema requires at least three and a resume
+        // re-reads this artifact through it.
+        queries: caseLane
+          ? [run.manifest.topic, `${run.manifest.topic} case`, `${run.manifest.topic} investigation`]
+          : [run.manifest.topic, `${run.manifest.topic} history`, `${run.manifest.topic} story`],
         // EMPTY, AND IT IS HONEST. This field exists for the counter-evidence
         // pass to aim at, that pass does not run on this lane, and guessing
         // what is contested without having read anything would be worse than
@@ -296,7 +308,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
       };
       run.writeArtifact('brief', brief);
       run.markComplete('brief');
-      report('brief', 'the case is its own query, so no brief was paid for');
+      report('brief', 'a short is its own query, so no brief was paid for');
     } else {
       log('brief: planning the research');
       brief = await buildBrief(run.manifest.topic, persona, format, deps.writer, spend);
@@ -402,7 +414,10 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         // ONE DOCUMENT ON THE CASE LANE. It reads only the first anyway, so
         // picking three meant paying to reason about two the episode never
         // opened and logging "using" them, which was untrue.
-        caseLane ? 1 : undefined
+        caseLane ? 1 : undefined,
+        // A SHORTER LOOK FOR A SHORT: it needs one complete account, and the
+        // opening 700 characters show that as well as 1,200 do, for less.
+        format.kind === 'short' ? SHORT_SELECT_PREVIEW_CHARS : undefined
       );
 
       // ENOUGH OF IT, NOT JUST THE RIGHT ONE. The selector judges which document
@@ -1094,7 +1109,9 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
           article: {
             title: shortArticle.title,
             url: shortArticle.url,
-            text: shortArticle.text,
+            // 20,000 characters is about nine times the script it becomes,
+            // and the rest of a long article was most of a short's writing cost.
+            text: shortArticle.text.slice(0, SHORT_ARTICLE_CHARS),
           },
           topic: run.manifest.topic,
           isoDate: new Date().toISOString().slice(0, 10),

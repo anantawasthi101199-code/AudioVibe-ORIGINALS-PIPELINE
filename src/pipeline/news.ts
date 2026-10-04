@@ -35,7 +35,7 @@ import {
   recordVoices,
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import { stageFlags, stagesOff } from '../config/stages';
 import { claimSchema } from '../evidence/claim';
 import { retrievalKeys } from '../evidence/providers';
@@ -149,7 +149,7 @@ export const runNews = async (
   deps: PipelineDeps,
   newsDeps: NewsDeps = {}
 ): Promise<{ run: Run; script: Script; gate: GateReport }> => {
-  const budget = episodeBudgetPence();
+  const budget = budgetFor(run);
   const now = newsDeps.now ?? (() => new Date());
   const say = (stage: string) => (message: string) => {
     (deps.log ?? (() => undefined))(message, stage);

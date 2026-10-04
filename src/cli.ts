@@ -17,6 +17,7 @@ import {
   clerkConfig,
   screenerConfig,
   episodeBudgetPence,
+  shortBudgetPence,
   platformUrl,
   repoRoot,
   ttsProvider,
@@ -34,13 +35,10 @@ import {
   voiceRegistryPath,
 } from './canon/voiceRegistry';
 import { describeRetrieval, retrievalKeys } from './evidence/providers';
-import { runEpisode } from './pipeline/episode';
 import { runShort } from './pipeline/short';
 import { cutStories } from './pipeline/anthology';
-import { runFiction } from './pipeline/fiction';
-import { runNews } from './pipeline/news';
-import { runBusiness } from './pipeline/business';
-import { runPsych } from './pipeline/psych';
+import { runLane } from './pipeline/runLane';
+import { budgetFor } from './pipeline/budget';
 import { assertFormatInLane, laneOf } from './pipeline/lanes';
 import { hasNewsDesk, loadDesk } from './news/desk';
 import { castBrief, loadBible, storySoFar } from './fiction/bible';
@@ -767,7 +765,7 @@ const describeRun = (
   }
   console.log(`  ${'TOTAL'.padEnd(13)} ${`${total.toFixed(0)}p`.padStart(6)}   about £${(total / 100).toFixed(2)}`);
   console.log('');
-  console.log(`Budget ceiling is ${episodeBudgetPence()}p. A run that would exceed it stops.`);
+  console.log(`Budget ceiling is ${format.kind === 'short' ? shortBudgetPence() : episodeBudgetPence()}p for a ${format.kind === 'short' ? 'short' : 'long episode'}. A run that would exceed it stops.`);
   console.log('These are estimates from call counts and list prices, not a quote.');
   console.log('');
   if (format.sourceOnly) {
@@ -818,7 +816,7 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
   ui.header(`${persona.name} · ${format.name}`, [
     ['run', run.id],
     ['topic', run.manifest.topic],
-    ['budget', `${episodeBudgetPence()}p`],
+    ['budget', `${budgetFor(run)}p`],
     ['writing', run.manifest.onePass === false ? `${writerConfig().model}, beat by beat` : writerConfig().model],
     ['checking', screenerConfig()
       ? `${screenerConfig()!.model}, escalating to ${verifierConfig().model}`
@@ -872,15 +870,7 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
   // which run is being gated, so it is narrowed here, where that is known.
   deps.priorTexts = priorEpisodeTexts(run.id);
 
-  const { gate } = persona.fiction
-    ? await runFiction({ run }, deps)
-    : lane === 'news'
-      ? await runNews(run, deps)
-      : lane === 'business'
-        ? await runBusiness(run, deps)
-        : lane === 'psychology'
-          ? await runPsych(run, deps)
-          : await runEpisode(run, deps);
+  const { gate } = await runLane(run, deps);
 
   ui.finish([
     ['spent', `${run.manifest.spentPence.toFixed(1)}p`],
@@ -1945,15 +1935,7 @@ const cmdTick = async (argv: string[]): Promise<number> => {
     console.log(`run ${run.id}: ${topic}`);
 
     try {
-      result = persona.fiction
-        ? await runFiction({ run }, buildDeps())
-        : laneOf(persona) === 'news'
-          ? await runNews(run, buildDeps())
-          : laneOf(persona) === 'business'
-            ? await runBusiness(run, buildDeps())
-            : laneOf(persona) === 'psychology'
-              ? await runPsych(run, buildDeps())
-              : await runEpisode(run, buildDeps());
+      result = await runLane(run, buildDeps());
     } catch (err) {
       if (!persona.fiction && topic) returnTopic(persona.id, topic);
       throw err;
@@ -2049,7 +2031,7 @@ const cmdStatus = (argv: string[]): number => {
   console.log(`  show:    ${m.personaId} / ${m.formatId}`);
   console.log(`  topic:   ${m.topic}`);
   console.log(`  created: ${m.createdAt}`);
-  console.log(`  spent:   ${m.spentPence.toFixed(1)}p of ${episodeBudgetPence()}p`);
+  console.log(`  spent:   ${m.spentPence.toFixed(1)}p of ${budgetFor(run)}p`);
   console.log(`  stages:  ${m.completed.join(' -> ') || '(none)'}`);
   if (m.abandoned) console.log(`  ABANDONED: ${m.abandoned}`);
 

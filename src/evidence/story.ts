@@ -114,6 +114,10 @@ export const REFERENCE_CHARS_PER_SOURCE = 100_000;
  * made the choice this step exists to make.
  */
 export const SELECT_PREVIEW_CHARS = 1_200;
+/** What the selector reads of each candidate for a short. See runEpisode. */
+export const SHORT_SELECT_PREVIEW_CHARS = 700;
+/** What a short's writer reads of its one article. See runEpisode. */
+export const SHORT_ARTICLE_CHARS = 20_000;
 
 /**
  * Source characters needed per second of finished episode.
@@ -229,14 +233,14 @@ that would contribute a paragraph is a document that contributes a seam.
 Return JSON only:
 {"chosen": ["sourceId", "..."], "reasoning": "one sentence"}`;
 
-const previewOf = (source: Source, index: number): string =>
+const previewOf = (source: Source, index: number, chars: number = SELECT_PREVIEW_CHARS): string =>
   [
     `--- CANDIDATE ${index + 1} | sourceId: ${source.id} | tier: ${source.tier}`,
     `TITLE: ${source.title}`,
     `URL: ${source.url}`,
     `LENGTH: ${source.text.length.toLocaleString()} characters`,
     `OPENS:`,
-    source.text.slice(0, SELECT_PREVIEW_CHARS).replace(/\s+/g, ' ').trim(),
+    source.text.slice(0, chars).replace(/\s+/g, ' ').trim(),
   ].join('\n');
 
 /**
@@ -263,7 +267,9 @@ export const selectStorySources = async (
    * reads only the first document anyway. Without this the selector chose three
    * and the log said "using" all of them, which was simply untrue.
    */
-  max: number = MAX_STORY_SOURCES
+  max: number = MAX_STORY_SOURCES,
+  /** How much of each candidate the selector reads. */
+  previewChars: number = SELECT_PREVIEW_CHARS
 ): Promise<{ chosen: Source[]; reasoning: string; fellBack: boolean }> => {
   const keep = Math.max(1, Math.min(max, MAX_STORY_SOURCES));
   // BY SIZE AND TIER, and it is the fallback as well as the tie-break. A
@@ -300,7 +306,7 @@ export const selectStorySources = async (
           '',
           `THE CANDIDATES, ${sources.length} of them:`,
           '',
-          sources.map(previewOf).join('\n\n'),
+          sources.map((s, i) => previewOf(s, i, previewChars)).join('\n\n'),
         ].join('\n'),
         maxTokens: 1_500,
         // A judgement, not a transcription, and a cheap one either way.

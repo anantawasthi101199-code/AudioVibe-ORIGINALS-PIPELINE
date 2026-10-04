@@ -262,28 +262,16 @@ canon:
       Tell it from inside the world of the story. What the tellers believed,
       stated as what they believed, without stopping to rule on it.
 
-# THREE FORMATS, AND THE ORDER MATTERS - the first is what `make` uses by default.
+# TWO FORMATS (owner, 2026-10-04): one episode, one short, each made on its
+# own. The first is what `make` uses by default.
 #
-# myth-story is the show now. Same five beats as myth-told, on the single-story
-# research lane, and it is the default because of what e008 sounded like: an
-# accurate episode that spent half its payoff on which Sumerian fragment might
-# belong to which poem and ended on an open scholarly question. See the header
-# of beatsheets/myth-story.yaml for the three specific rules that produced that
-# and where each one now lives.
+# myth-story is the episode: one myth told in full and in order, on the
+# single-story research lane. myth-short is the short: one myth in three
+# minutes from one article.
 #
-# myth-told is kept and is still the right sheet for a myth whose transmission
-# genuinely IS the story - where which manuscript survived, and who changed it,
-# is more interesting than the events. Choose it explicitly:
-#   npm run foundry -- make --show mythic-archives --format myth-told --topic "..."
-#
-# ten-stories is a SOURCE
-# and never goes out whole - ten short myths from one research pass, cut
-# afterwards into ten standalone shorts.
-#
-# Why a story show gets an anthology at all: the long form needs a myth with
-# enough surviving text to carry fifteen minutes, and most of the world's myths
-# do not have that. A tradition with four surviving paragraphs is not a bad
-# episode, it is a good ninety seconds, and this is where those go.
+# Removed: myth-told (an older long sheet for myths whose transmission is the
+# story; now in archive/beatsheets) and ten-stories (ten shorts from one
+# research pass, never published whole) - shorts are made one at a time now.
 # No music by default, shorts included (owner, 2026-10-03): add your own track
 # after the voice is made, in the studio's Background music panel. A run's
 # --music still adds the synthesised bed.
@@ -294,8 +282,6 @@ music:
 formats:
   - myth-story
   - myth-short
-  - myth-told
-  - ten-stories
 
 episodeSeconds: [600, 1200]
 

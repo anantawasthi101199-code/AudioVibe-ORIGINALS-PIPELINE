@@ -26,7 +26,7 @@
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
-import { episodeBudgetPence } from '../config';
+import { budgetFor } from './budget';
 import { checkLedger, Claim, claimSchema } from '../evidence/claim';
 import { corpusSchema } from '../evidence/research';
 import { Source } from '../evidence/source';
@@ -146,7 +146,7 @@ export const runShort = async (
 
   log(existing ? `short: resuming ${run.id}` : `short: ${run.id}, derived from ${parent.id}`);
 
-  const budget = episodeBudgetPence();
+  const budget = budgetFor(run);
   const spend = (pence: number) => run.spend(pence, budget);
 
   // --- 1. Selection -------------------------------------------------------
