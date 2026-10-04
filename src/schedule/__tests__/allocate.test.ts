@@ -60,6 +60,15 @@ describe('daysFor', () => {
     expect(days).not.toContain(1);
     expect(new Set(days).size).toBe(3);
   });
+
+  it('spreads shorts after the episode, not from Monday', () => {
+    // Tuesday episode: Thursday, Saturday, Sunday (Monday-based indices).
+    expect(daysFor(cadence(), 'short', 3)).toEqual([3, 5, 6]);
+    // Thursday episode: Saturday, Monday, Tuesday.
+    expect(daysFor(cadence({ slot: { day: 'thu', hour: 19 } }), 'short', 3)).toEqual([5, 0, 1]);
+    // No episodes: all seven days.
+    expect(new Set(daysFor(cadence({ perWeek: { episodes: 0, shorts: 7 } }), 'short', 7)).size).toBe(7);
+  });
 });
 
 describe('allocate', () => {

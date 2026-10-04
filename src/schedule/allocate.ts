@@ -87,14 +87,21 @@ export const daysFor = (cadence: Cadence, kind: ItemKind, count: number): number
     );
   }
 
-  // Shorts: walk the week from the day after the episode, stepping evenly and
-  // skipping the episode's own day.
-  const free = [0, 1, 2, 3, 4, 5, 6].filter((d) => d !== slotDay);
-  const step = free.length / Math.max(1, count);
-  return Array.from(
-    { length: count },
-    (_, i) => free[Math.min(free.length - 1, Math.round(i * step))]!
-  );
+  // Shorts: evenly through the gap AFTER the episode, counted from its day.
+  // Counting from Monday put every channel's first short on a Monday.
+  // A channel with no episodes has no day to keep clear, so it uses all seven.
+  const n = Math.max(1, count);
+  const offsets: number[] = [];
+  for (let i = 0; i < n; i++) {
+    const want =
+      cadence.perWeek.episodes > 0
+        ? Math.min(6, Math.max(1, Math.round((7 * (i + 1)) / (n + 1))))
+        : Math.round((7 * i) / n) % 7;
+    // Strictly increasing where the week allows, so two shorts never share a day.
+    const prev = offsets[offsets.length - 1];
+    offsets.push(prev !== undefined && want <= prev && prev < 6 ? prev + 1 : want);
+  }
+  return offsets.slice(0, count).map((o) => (slotDay + o) % 7);
 };
 
 export interface AllocateInput {
