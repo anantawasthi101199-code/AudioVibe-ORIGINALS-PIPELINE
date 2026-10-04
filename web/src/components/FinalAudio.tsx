@@ -41,7 +41,7 @@ export const FinalAudio = ({
           {run.music ? `with music: ${run.music.track} at ${run.music.volume}%` : 'voice only'}
         </span>
         <a className="btn ghost small" href={api.downloadUrl(run.id)} download>
-          Download final audio
+          Download MP3
         </a>
         {run.music && !run.musicLock && (
           <button className="btn ghost small" disabled={busy} onClick={voiceOnly}>

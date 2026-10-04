@@ -19,6 +19,7 @@
  * refused if one is already in flight for that run.
  */
 import { finalAudioFor } from '../render/backing';
+import { runProcess } from '../render/assemble';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
@@ -184,7 +185,47 @@ export const audioDownloadName = (id: string): string => {
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
   const num = `e${String(m.episode).padStart(3, '0')}${m.short ? `-s${String(m.short).padStart(2, '0')}` : ''}`;
   const music = finalAudioFor(run)?.music ? '-with-music' : '';
-  return `${m.personaId}-${num}-${slug}${music}.wav`;
+  return `${m.personaId}-${num}-${slug}${music}.mp3`;
+};
+
+/**
+ * The final audio as an MP3, for downloading.
+ *
+ * Encoded from the final WAV on request, at 192 kbps, and CACHED BY ITS KEY in
+ * media/: a second download of the same audio is instant, and choosing other
+ * music changes the key, so a stale MP3 is never handed out.
+ */
+export const audioDownloadFile = async (id: string): Promise<string> => {
+  const run = openRun(id);
+  const final = finalAudioFor(run);
+  if (!final) throw new HttpError(404, `run "${id}" has no audio yet`);
+
+  const media = path.dirname(final.file);
+  const out = path.join(media, `download-${final.key.replace(/[^a-z0-9-]/gi, '')}.mp3`);
+  if (fs.existsSync(out) && fs.statSync(out).size > 0) return out;
+
+  const tmp = `${out}.${Date.now()}.part.mp3`;
+  const res = await runProcess(process.env.FFMPEG_PATH ?? 'ffmpeg', [
+    '-y', '-loglevel', 'error', '-i', final.file,
+    '-codec:a', 'libmp3lame', '-b:a', '192k', tmp,
+  ]);
+  if (res.code !== 0 || !fs.existsSync(tmp) || fs.statSync(tmp).size === 0) {
+    fs.rmSync(tmp, { force: true });
+    throw new HttpError(500, `could not make the MP3: ${res.stderr.slice(0, 200) || `ffmpeg exited ${res.code}`}`);
+  }
+  fs.renameSync(tmp, out);
+
+  // Earlier downloads of audio that has since changed: tidy, quietly.
+  for (const name of fs.readdirSync(media)) {
+    if (name.startsWith('download-') && path.join(media, name) !== out) {
+      try {
+        fs.rmSync(path.join(media, name), { force: true });
+      } catch {
+        // Still being sent somewhere. Next time.
+      }
+    }
+  }
+  return out;
 };
 
 // ---------------------------------------------------------------------------

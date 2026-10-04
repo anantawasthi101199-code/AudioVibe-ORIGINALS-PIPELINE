@@ -50,6 +50,7 @@ import { jobs } from './jobs';
 import {
   HttpError,
   approveRun,
+  audioDownloadFile,
   audioDownloadName,
   audioPath,
   cutShorts,
@@ -436,8 +437,12 @@ export const createServer = (): http.Server =>
 
       if (pathname === '/api/run/audio') {
         // The final audio. `download=1` saves it under a real name.
-        const download = url.searchParams.get('download') === '1';
-        serveFile(res, audioPath(id ?? ''), audioDownloadName(id ?? ''), download);
+        // `download=1` saves it as an MP3 under a real name; playing stays WAV.
+        if (url.searchParams.get('download') === '1') {
+          serveFile(res, await audioDownloadFile(id ?? ''), audioDownloadName(id ?? ''), true);
+        } else {
+          serveFile(res, audioPath(id ?? ''), 'episode.wav');
+        }
         return;
       }
 
