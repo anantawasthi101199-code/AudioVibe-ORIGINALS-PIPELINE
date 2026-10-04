@@ -58,7 +58,7 @@ describe('your own background music', () => {
   it('publishes the mix only while it matches the voice it was made from', async () => {
     saveTrack('calm-piano', MP3);
     await mixRun(run, { track: 'calm-piano', volume: 15, duck: true }, deps);
-    expect(mixedAudioFor(run)).toBe(run.mediaPath('episode.mixed.wav'));
+    expect(mixedAudioFor(run)).toMatch(/episode\.mixed-\d+\.wav$/);
 
     // Re-voiced: the old mix is stale and the voice goes out instead.
     fs.writeFileSync(run.mediaPath('episode.wav'), 'a new, longer voice track');
@@ -67,6 +67,19 @@ describe('your own background music', () => {
 
     clearMix(run);
     expect(mixState(run)).toEqual({ mix: null, stale: false });
+  });
+
+  it('mixes again even while the last mix is still open, by never reusing its name', async () => {
+    saveTrack('calm-piano', MP3);
+    await mixRun(run, { track: 'calm-piano', volume: 15, duck: true }, deps);
+    const first = mixedAudioFor(run)!;
+    await new Promise((r) => setTimeout(r, 5));
+    await mixRun(run, { track: 'calm-piano', volume: 30, duck: true }, deps);
+    const second = mixedAudioFor(run)!;
+    expect(second).not.toBe(first);
+    expect(mixState(run).mix?.volume).toBe(30);
+    // The old one is swept once nothing holds it.
+    expect(fs.existsSync(first)).toBe(false);
   });
 
   it('refuses a run with no audio, and a track that is not in the library', async () => {

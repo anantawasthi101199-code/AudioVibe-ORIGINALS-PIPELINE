@@ -108,11 +108,38 @@ export const mixSchema = z.object({
   voiceBytes: z.number(),
   voiceMtimeMs: z.number(),
   mixedAt: z.string(),
+  /**
+   * The mixed file's name in media/. A NEW NAME FOR EVERY MIX, because on
+   * Windows a file cannot be replaced while anything holds it open - and the
+   * studio's player holds the last mix open while it streams. Defaults to the
+   * single name the first version used.
+   */
+  file: z.string().default('episode.mixed.wav'),
 });
 
 export type Mix = z.infer<typeof mixSchema>;
 
-const MIXED = 'episode.mixed.wav';
+/** Every mixed file this run has ever had: the current one and leftovers. */
+const isMixedFile = (name: string): boolean => /^episode\.mixed.*\.wav$/.test(name);
+
+/**
+ * Delete every mixed file except `keep`, quietly skipping any still open.
+ *
+ * A file the player is streaming cannot be deleted on Windows (EPERM/EBUSY).
+ * It is harmless to leave: it is not the recorded mix, and the next mix or a
+ * removal tries again once the player has let go.
+ */
+const sweepMixes = (run: Run, keep?: string): void => {
+  const dir = path.dirname(run.mediaPath('mix.json'));
+  for (const name of fs.readdirSync(dir)) {
+    if (!isMixedFile(name) || name === keep) continue;
+    try {
+      fs.rmSync(path.join(dir, name), { force: true });
+    } catch {
+      // Still open somewhere. Next time.
+    }
+  }
+};
 const FADE_IN_S = 3;
 const FADE_OUT_S = 4;
 
@@ -142,8 +169,7 @@ export const mixState = (run: Run): MixState => {
   const mix = readMix(run);
   if (!mix) return { mix: null, stale: false };
   const voice = run.audioFile();
-  const mixed = path.join(path.dirname(run.mediaPath(MIXED)), MIXED);
-  if (!voice || !fs.existsSync(mixed)) return { mix, stale: true };
+  if (!voice || !fs.existsSync(run.mediaPath(mix.file))) return { mix, stale: true };
   const now = voiceSignature(voice);
   return { mix, stale: now.voiceBytes !== mix.voiceBytes || now.voiceMtimeMs !== mix.voiceMtimeMs };
 };
@@ -151,11 +177,13 @@ export const mixState = (run: Run): MixState => {
 /** The file to publish: the mix when there is a current one, else null. */
 export const mixedAudioFor = (run: Run): string | null => {
   const state = mixState(run);
-  return state.mix && !state.stale ? run.mediaPath(MIXED) : null;
+  return state.mix && !state.stale ? run.mediaPath(state.mix.file) : null;
 };
 
 export const mixedFileFor = (run: Run): string | null => {
-  const file = run.mediaPath(MIXED);
+  const mix = readMix(run);
+  if (!mix) return null;
+  const file = run.mediaPath(mix.file);
   return fs.existsSync(file) ? file : null;
 };
 
@@ -199,8 +227,10 @@ export const mixRun = async (
       `[voice][ducked]amix=inputs=2:duration=first:normalize=0[out]`
     : `${bed}[1:a][bed]amix=inputs=2:duration=first:normalize=0[out]`;
 
-  const out = run.mediaPath(MIXED);
-  const tmp = `${out}.tmp.wav`;
+  // Written straight to a fresh name: nothing to rename over, so nothing an
+  // open player can block.
+  const name = `episode.mixed-${Date.now()}.wav`;
+  const tmp = run.mediaPath(name);
   const res = await (deps.run ?? runProcess)(deps.ffmpeg ?? process.env.FFMPEG_PATH ?? 'ffmpeg', [
     '-y', '-loglevel', 'error',
     '-stream_loop', '-1', '-i', track,
@@ -210,10 +240,13 @@ export const mixRun = async (
     tmp,
   ]);
   if (res.code !== 0 || !fs.existsSync(tmp) || fs.statSync(tmp).size === 0) {
-    fs.rmSync(tmp, { force: true });
+    try {
+      fs.rmSync(tmp, { force: true });
+    } catch {
+      // Left for the next sweep.
+    }
     throw new BackingRefused(`the mix failed: ${res.stderr.slice(0, 200) || `ffmpeg exited ${res.code}`}`);
   }
-  fs.renameSync(tmp, out);
 
   const mix: Mix = {
     track: path.basename(track, '.mp3'),
@@ -221,13 +254,17 @@ export const mixRun = async (
     duck: input.duck,
     ...voiceSignature(voice),
     mixedAt: new Date().toISOString(),
+    file: name,
   };
   fs.writeFileSync(recordPath(run), JSON.stringify(mix, null, 2));
+  sweepMixes(run, name);
   return mix;
 };
 
 /** Back to voice only. */
 export const clearMix = (run: Run): void => {
-  fs.rmSync(run.mediaPath(MIXED), { force: true });
+  // The record goes first: once it is gone, publish sends the voice whatever
+  // happens to the files.
   fs.rmSync(recordPath(run), { force: true });
+  sweepMixes(run);
 };
