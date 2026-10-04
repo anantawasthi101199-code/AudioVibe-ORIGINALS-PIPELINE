@@ -12,9 +12,9 @@
  * is a mode you enter, not the default, because a page full of text boxes reads
  * as data entry and nobody reads data entry.
  */
-import { MusicPanel } from '../components/MusicPanel';
-import { FinalAudio } from '../components/FinalAudio';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { MusicPanel } from "../components/MusicPanel";
+import { FinalAudio } from "../components/FinalAudio";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   api,
   clock,
@@ -26,24 +26,31 @@ import {
   type JobEvent,
   type Platform,
   type RunDetail,
-} from '../api';
-import { CostBar, ErrorNote, LiveLog, StageRail, StatePill, NowBanner } from '../components/bits';
-import { Count, Info } from '../components/Info';
-import { ImagePicker } from '../components/ImagePicker';
+} from "../api";
+import {
+  CostBar,
+  ErrorNote,
+  LiveLog,
+  StageRail,
+  StatePill,
+  NowBanner,
+} from "../components/bits";
+import { Count, Info } from "../components/Info";
+import { ImagePicker } from "../components/ImagePicker";
 
 /** Delivery tags are part of the script and are not part of the sentence. */
-const Prose = ({ turns }: { turns: Beat['turns'] }) => (
+const Prose = ({ turns }: { turns: Beat["turns"] }) => (
   <div className="prose">
     {turns.map((t, i) => (
-      <p key={i} style={{ margin: i ? '1.1rem 0 0' : 0 }}>
+      <p key={i} style={{ margin: i ? "1.1rem 0 0" : 0 }}>
         {t.text.split(/(\[[a-z ]{1,24}\])/gi).map((part, j) =>
           /^\[[a-z ]{1,24}\]$/i.test(part) ? (
             <span className="tag" key={j}>
-              {part}{' '}
+              {part}{" "}
             </span>
           ) : (
             <span key={j}>{part}</span>
-          )
+          ),
         )}
       </p>
     ))}
@@ -124,7 +131,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         },
       });
     },
-    [load]
+    [load],
   );
 
   useEffect(() => {
@@ -134,10 +141,31 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
     return () => stop.current?.();
   }, [load, follow]);
 
-  if (error && !data) return <div className="page"><ErrorNote>{error}</ErrorNote></div>;
-  if (!data) return <div className="page"><div className="empty">Reading the run.</div></div>;
+  if (error && !data)
+    return (
+      <div className="page">
+        <ErrorNote>{error}</ErrorNote>
+      </div>
+    );
+  if (!data)
+    return (
+      <div className="page">
+        <div className="empty">Reading the run.</div>
+      </div>
+    );
 
-  const { run, script, gate, manifest, claims, corpus, cuts, hasAudio, isSource, inSeries } = data;
+  const {
+    run,
+    script,
+    gate,
+    manifest,
+    claims,
+    corpus,
+    cuts,
+    hasAudio,
+    isSource,
+    inSeries,
+  } = data;
   const held = manifest.holdForApproval && !manifest.approvedAt;
   const currentStage = live ? (events[events.length - 1]?.stage ?? null) : null;
 
@@ -154,7 +182,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
   const save = async () => {
     if (!script) return;
-    setBusy('save');
+    setBusy("save");
     setError(null);
     try {
       await api.saveScript(id, {
@@ -173,12 +201,17 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
   const blocking = (gate?.findings ?? []).filter((f) => f.blocking);
   const ignored = (gate?.findings ?? []).filter((f) => f.ignored);
-  const advisory = (gate?.findings ?? []).filter((f) => !f.blocking && !f.ignored);
-  const published = run.state === 'published';
+  const advisory = (gate?.findings ?? []).filter(
+    (f) => !f.blocking && !f.ignored,
+  );
+  const published = run.state === "published";
 
   // Ignore (or stop ignoring) one blocking finding, then reload so every part
   // of the page - the gate, Publish, the lists - sees the ruling.
-  const rule = async (f: { check: string; detail: string }, ignore: boolean) => {
+  const rule = async (
+    f: { check: string; detail: string },
+    ignore: boolean,
+  ) => {
     setBusy(`rule-${f.check}`);
     try {
       await api.overrideFinding(id, f, ignore);
@@ -192,17 +225,43 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
   return (
     <div className="page">
-      <div className="row between" style={{ marginBottom: '0.9rem' }}>
-        <h1 style={{ fontSize: '1.4rem' }}>{script?.title ?? run.topic}</h1>
+      <div className="row between" style={{ marginBottom: "0.9rem" }}>
+        <h1 style={{ fontSize: "1.4rem" }}>{script?.title ?? run.topic}</h1>
         <div className="row nowrap">
-          <StatePill state={live ? 'running' : run.state} stage={currentStage} />
+          <StatePill
+            state={live ? "running" : run.state}
+            stage={currentStage}
+          />
           <Info label="What this run was asked for">
-            {run.channelName} · e{String(run.episode).padStart(3, '0')}
-            {run.short ? `-s${String(run.short).padStart(2, '0')}` : ''} · {run.formatId}
+            {run.channelName} · e{String(run.episode).padStart(3, "0")}
+            {run.short ? `-s${String(run.short).padStart(2, "0")}` : ""} ·{" "}
+            {run.formatId}
             <br />
             <br />
             {run.topic}
           </Info>
+          {!published && !live && (
+            <button
+              className="btn ghost small"
+              disabled={busy !== null}
+              onClick={async () => {
+                if (
+                  !window.confirm(
+                    "Discard this run? Its script and audio are deleted, and the topic is free to make again.",
+                  )
+                )
+                  return;
+                try {
+                  await api.discard(id);
+                  go(`/c/${run.channelId}`);
+                } catch (e) {
+                  setError((e as Error).message);
+                }
+              }}
+            >
+              Discard run
+            </button>
+          )}
         </div>
       </div>
 
@@ -212,13 +271,13 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         <StageRail
           completed={run.completed}
           live={currentStage}
-          skip={isSource ? ['render', 'qa'] : []}
+          skip={isSource ? ["render", "qa"] : []}
         />
 
         {(live || events.length > 0) && (
           <div className="panel">
             <div className="panel-head">
-              <h3>{live ? 'Working' : 'What happened'}</h3>
+              <h3>{live ? "Working" : "What happened"}</h3>
               <span className="spacer" />
               {live && (
                 <span className="pill live">
@@ -227,7 +286,9 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               )}
             </div>
             <div className="panel-body stack">
-              {live && <NowBanner events={events} startedAt={data.job?.startedAt} />}
+              {live && (
+                <NowBanner events={events} startedAt={data.job?.startedAt} />
+              )}
               <LiveLog events={events} />
               <CostBar events={events} total={run.spentPence} />
             </div>
@@ -239,18 +300,19 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {run.stalled && !live && (
         <section className="panel mt2">
           <div className="panel-body row">
-            <h2 style={{ fontSize: '1.05rem' }}>Stopped partway</h2>
+            <h2 style={{ fontSize: "1.05rem" }}>Stopped partway</h2>
             <Info label="What resume does">
-              This run stopped before it finished, usually because the studio was closed while it
-              worked. Every finished step is kept, so resuming only redoes the step it stopped in.
+              This run stopped before it finished, usually because the studio
+              was closed while it worked. Every finished step is kept, so
+              resuming only redoes the step it stopped in.
             </Info>
             <span className="spacer" />
             <button
               className="btn"
               disabled={busy !== null}
-              onClick={() => act('resume', () => api.resume(id))}
+              onClick={() => act("resume", () => api.resume(id))}
             >
-              {busy === 'resume' ? 'Resuming...' : 'Resume'}
+              {busy === "resume" ? "Resuming..." : "Resume"}
             </button>
           </div>
         </section>
@@ -258,22 +320,26 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
       {/* --- THE DECISION ------------------------------------------------- */}
       {held && script && !live && (
-        <section className="panel mt2" style={{ borderColor: 'var(--hold-dim)' }}>
+        <section
+          className="panel mt2"
+          style={{ borderColor: "var(--hold-dim)" }}
+        >
           <div className="panel-body">
             <div className="row">
-              <h2 style={{ fontSize: '1.05rem' }}>Held</h2>
+              <h2 style={{ fontSize: "1.05rem" }}>Held</h2>
               <Info label="What held means">
-                Nothing has been voiced. Read it below, change anything that needs changing, and
-                approve it when you are happy. Approving is the only step here that spends real
-                money, and it is the last point at which the words are free to change.
+                Nothing has been voiced. Read it below, change anything that
+                needs changing, and approve it when you are happy. Approving is
+                the only step here that spends real money, and it is the last
+                point at which the words are free to change.
               </Info>
               <span className="spacer" />
               <button
                 className="btn spend"
                 disabled={busy !== null}
-                onClick={() => act('approve', () => api.approve(id))}
+                onClick={() => act("approve", () => api.approve(id))}
               >
-                {busy === 'approve' ? 'Voicing...' : 'Approve and voice'}
+                {busy === "approve" ? "Voicing..." : "Approve and voice"}
               </button>
             </div>
           </div>
@@ -283,23 +349,24 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {isSource && script && !live && (
         <section className="panel mt2">
           <div className="panel-body row">
-            <h2 style={{ fontSize: '1.05rem' }}>
-              {cuts.length > 0 ? `${cuts.length} cut` : 'Not cut yet'}
+            <h2 style={{ fontSize: "1.05rem" }}>
+              {cuts.length > 0 ? `${cuts.length} cut` : "Not cut yet"}
             </h2>
             <Info label="What a source script is">
-              This is a source script. It is never voiced or published whole; each story becomes
-              its own short, with its own audio, its own ledger and its own gate.
+              This is a source script. It is never voiced or published whole;
+              each story becomes its own short, with its own audio, its own
+              ledger and its own gate.
             </Info>
             <span className="spacer" />
             <button
               className="btn spend"
               disabled={busy !== null}
-              onClick={() => act('cut', () => api.cut(id))}
+              onClick={() => act("cut", () => api.cut(id))}
             >
-              {busy === 'cut'
-                ? 'Cutting...'
+              {busy === "cut"
+                ? "Cutting..."
                 : cuts.length
-                  ? 'Cut again'
+                  ? "Cut again"
                   : `Cut ${script.beats.length} shorts`}
             </button>
           </div>
@@ -313,9 +380,9 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 Approve them for publishing
               </button>
               <Info label="What happens next">
-                Every story that passed its gate is on the channel&apos;s publishing page. Approve
-                the ones you want and they get days there, within what the channel publishes in a
-                week.
+                Every story that passed its gate is on the channel&apos;s
+                publishing page. Approve the ones you want and they get days
+                there, within what the channel publishes in a week.
               </Info>
             </div>
           )}
@@ -334,12 +401,19 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 </thead>
                 <tbody>
                   {cuts.map((c) => (
-                    <tr key={c.id} style={{ cursor: 'pointer' }} onClick={() => go(`/r/${c.id}`)}>
+                    <tr
+                      key={c.id}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => go(`/r/${c.id}`)}
+                    >
                       <td>
-                        <span className="faint mono" style={{ marginRight: '0.6rem' }}>
-                          {String(c.story ?? 0).padStart(2, '0')}
+                        <span
+                          className="faint mono"
+                          style={{ marginRight: "0.6rem" }}
+                        >
+                          {String(c.story ?? 0).padStart(2, "0")}
                         </span>
-                        {c.title ?? '(untitled)'}
+                        {c.title ?? "(untitled)"}
                       </td>
                       <td>
                         <StatePill state={c.state} stage={c.liveStage} />
@@ -366,35 +440,45 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {hasAudio && (
         <section className="mt2">
           <h2>Final audio</h2>
-          <p className="faint tiny" style={{ margin: '0.25rem 0 0' }}>
+          <p className="faint tiny" style={{ margin: "0.25rem 0 0" }}>
             Exactly what publishing sends, as every other page plays it.
           </p>
           <div className="player mt">
             <FinalAudio run={run} onChanged={() => void load()} player />
           </div>
-          <div className="mt row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div
+            className="mt row"
+            style={{ gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}
+          >
             <strong className="tiny">Who it is for</strong>
-            {(['general', 'mature'] as const).map((r) => (
+            {(["general", "mature"] as const).map((r) => (
               <button
                 key={r}
-                className={run.contentRating === r ? 'btn ghost on' : 'btn ghost'}
+                className={
+                  run.contentRating === r ? "btn ghost on" : "btn ghost"
+                }
                 disabled={published || live}
                 onClick={() => void api.setContentRating(run.id, r).then(load)}
               >
-                {r === 'general' ? 'Everyone' : 'Mature themes'}
+                {r === "general" ? "Everyone" : "Mature themes"}
               </button>
             ))}
             {run.contentRatingOverridden && !published && (
-              <button className="btn ghost" onClick={() => void api.setContentRating(run.id, null).then(load)}>
+              <button
+                className="btn ghost"
+                onClick={() =>
+                  void api.setContentRating(run.id, null).then(load)
+                }
+              >
                 Use channel default
               </button>
             )}
             <span className="faint tiny">
               {published
-                ? 'Sent with the episode; change it in the app now.'
+                ? "Sent with the episode; change it in the app now."
                 : run.contentRatingOverridden
-                  ? 'Set for this one only.'
-                  : "The channel's default."}{' '}
+                  ? "Set for this one only."
+                  : "The channel's default."}{" "}
               Mature hides it from listeners under 18.
             </span>
           </div>
@@ -405,7 +489,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {hasAudio && !isSource && (
         <section className="mt2">
           <h2>Background music</h2>
-          <MusicPanel runId={id} disabled={live} onChanged={() => void load()} />
+          <MusicPanel
+            runId={id}
+            disabled={live}
+            onChanged={() => void load()}
+          />
         </section>
       )}
 
@@ -425,11 +513,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <h2>The picture</h2>
           <div className="mt">
             <ImagePicker
-              title={inSeries ? 'Episode image' : 'Audiocard image'}
+              title={inSeries ? "Episode image" : "Audiocard image"}
               note={
                 inSeries
-                  ? 'What shows on this episode in its series, and on the lock screen while it plays.'
-                  : 'What shows on the audiocard in the feed, and on the lock screen while it plays.'
+                  ? "What shows on this episode in its series, and on the lock screen while it plays."
+                  : "What shows on the audiocard in the feed, and on the lock screen while it plays."
               }
               state={art}
               src={`/api/run/art?id=${encodeURIComponent(id)}`}
@@ -451,8 +539,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 title={`Series cover: ${seriesArt.title}`}
                 note={
                   seriesArt.created
-                    ? 'This series already exists on the platform, so its cover is set. A new one here applies only if the series is made again.'
-                    : 'The shelf this episode joins, at 16:9. Used when the series is created, which is when this episode publishes. Without one, a cover is drawn.'
+                    ? "This series already exists on the platform, so its cover is set. A new one here applies only if the series is made again."
+                    : "The shelf this episode joins, at 16:9. Used when the series is created, which is when this episode publishes. Without one, a cover is drawn."
                 }
                 state={seriesArt}
                 src={
@@ -476,12 +564,15 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       )}
 
       {/* --- Numbers ------------------------------------------------------- */}
-      <div className="counts" style={{ margin: '1.5rem 0' }}>
+      <div className="counts" style={{ margin: "1.5rem 0" }}>
         <Count n={money(run.spentPence)} label="spent" />
         <Count n={clock(run.durationS)} label="length" />
         <Count n={claims?.claims.length ?? 0} label="facts" />
         <Count n={corpus?.sources.length ?? 0} label="sources" />
-        <Count n={script?.beats.length ?? 0} label={isSource ? 'stories' : 'beats'} />
+        <Count
+          n={script?.beats.length ?? 0}
+          label={isSource ? "stories" : "beats"}
+        />
         <Count n={gate?.measurement?.words ?? 0} label="words" />
       </div>
 
@@ -491,20 +582,27 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="panel-head">
             <h3>The gate</h3>
             {gate.passed ? (
-              <span className="pill pass">{ignored.length ? 'passed (overridden)' : 'passed'}</span>
+              <span className="pill pass">
+                {ignored.length ? "passed (overridden)" : "passed"}
+              </span>
             ) : (
               <span className="pill fail">{blocking.length} blocking</span>
             )}
             <span className="spacer" />
-            {advisory.length > 0 && <span className="faint mono" style={{ fontSize: '0.72rem' }}>{advisory.length} advisory</span>}
+            {advisory.length > 0 && (
+              <span className="faint mono" style={{ fontSize: "0.72rem" }}>
+                {advisory.length} advisory
+              </span>
+            )}
           </div>
           <div className="panel-body">
-            {gate.findings.length === 0 && gate.humanReviewReasons.length === 0 && (
-              <p className="muted">Nothing to report.</p>
-            )}
+            {gate.findings.length === 0 &&
+              gate.humanReviewReasons.length === 0 && (
+                <p className="muted">Nothing to report.</p>
+              )}
             {blocking.map((f, i) => (
               <div className="finding" key={`b${i}`}>
-                <span className="check" style={{ color: 'var(--fail)' }}>
+                <span className="check" style={{ color: "var(--fail)" }}>
                   {f.check}
                 </span>
                 <span style={{ flex: 1 }}>{f.detail}</span>
@@ -522,14 +620,23 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             ))}
             {ignored.map((f, i) => (
               <div className="finding" key={`i${i}`} style={{ opacity: 0.7 }}>
-                <span className="check" style={{ textDecoration: 'line-through' }}>
+                <span
+                  className="check"
+                  style={{ textDecoration: "line-through" }}
+                >
                   {f.check}
                 </span>
                 <span style={{ flex: 1 }}>
-                  <span className="muted" style={{ textDecoration: 'line-through' }}>
+                  <span
+                    className="muted"
+                    style={{ textDecoration: "line-through" }}
+                  >
                     {f.detail}
                   </span>
-                  <span className="faint tiny"> ignored by {f.ignored?.by ?? 'somebody'}</span>
+                  <span className="faint tiny">
+                    {" "}
+                    ignored by {f.ignored?.by ?? "somebody"}
+                  </span>
                 </span>
                 {!published && (
                   <button
@@ -543,10 +650,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               </div>
             ))}
             {blocking.length > 0 && !published && (
-              <p className="faint tiny" style={{ margin: '0.5rem 0 0' }}>
-                Ignore a finding only after checking it yourself, for example after adding facts by
-                hand. Once nothing is blocking, it passes and goes to To decide. An edit that changes
-                a finding makes it block again.
+              <p className="faint tiny" style={{ margin: "0.5rem 0 0" }}>
+                Ignore a finding only after checking it yourself, for example
+                after adding facts by hand. Once nothing is blocking, it passes
+                and goes to To decide. An edit that changes a finding makes it
+                block again.
               </p>
             )}
             {advisory.map((f, i) => (
@@ -557,7 +665,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             ))}
             {gate.humanReviewReasons.map((r, i) => (
               <div className="finding" key={`h${i}`}>
-                <span className="check" style={{ color: 'var(--hold)' }}>
+                <span className="check" style={{ color: "var(--hold)" }}>
                   a human
                 </span>
                 <span className="muted">{r}</span>
@@ -572,28 +680,33 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           in this studio can be redone; a publish notifies followers, warms
           feed caches and writes the seen ledger, and none of that comes back.
       */}
-      {gate?.passed && !isSource && run.state !== 'published' && !live && (
-        <section className="panel mt2" style={{ borderColor: 'var(--line)' }}>
+      {gate?.passed && !isSource && run.state !== "published" && !live && (
+        <section className="panel mt2" style={{ borderColor: "var(--line)" }}>
           <div className="panel-body row">
-            <h2 style={{ fontSize: '1.05rem' }}>Publish</h2>
+            <h2 style={{ fontSize: "1.05rem" }}>Publish</h2>
             <Info label="What publishing does">
-              It goes out as the channel&apos;s own account, through the same upload the platform
-              gives every creator, carrying the AI label and the list of what it read. Followers
-              are notified, feeds cache it and the seen ledger records it. None of that can be
-              taken back.
+              It goes out as the channel&apos;s own account, through the same
+              upload the platform gives every creator, carrying the AI label and
+              the list of what it read. Followers are notified, feeds cache it
+              and the seen ledger records it. None of that can be taken back.
             </Info>
             <span className="spacer" />
 
             {platform?.configured && (
-              <span className={`where${platform.isProduction ? ' live' : ''}`}>
+              <span className={`where${platform.isProduction ? " live" : ""}`}>
                 <span className="dot" />
-                {platform.isProduction ? 'production' : new URL(platform.url!).hostname}
+                {platform.isProduction
+                  ? "production"
+                  : new URL(platform.url!).hostname}
               </span>
             )}
 
             {confirming ? (
               <>
-                <button className="btn ghost" onClick={() => setConfirming(false)}>
+                <button
+                  className="btn ghost"
+                  onClick={() => setConfirming(false)}
+                >
                   Cancel
                 </button>
                 <button
@@ -601,12 +714,12 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   disabled={busy !== null}
                   onClick={() => {
                     setConfirming(false);
-                    void act('publish', () => api.publish(id, true));
+                    void act("publish", () => api.publish(id, true));
                   }}
                 >
-                  {busy === 'publish'
-                    ? 'Publishing...'
-                    : `Yes, publish to ${platform?.isProduction ? 'production' : 'staging'}`}
+                  {busy === "publish"
+                    ? "Publishing..."
+                    : `Yes, publish to ${platform?.isProduction ? "production" : "staging"}`}
                 </button>
               </>
             ) : (
@@ -624,7 +737,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             <div className="panel-body" style={{ paddingTop: 0 }}>
               {gate.humanReviewReasons.map((r, i) => (
                 <div className="finding" key={i}>
-                  <span className="check" style={{ color: 'var(--hold)' }}>
+                  <span className="check" style={{ color: "var(--hold)" }}>
                     read first
                   </span>
                   <span className="muted">{r}</span>
@@ -635,7 +748,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         </section>
       )}
 
-      {run.state === 'published' && (
+      {run.state === "published" && (
         <section className="panel mt2">
           <div className="panel-body row">
             <span className="pill pass">published</span>
@@ -648,7 +761,10 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             >
               What is next
             </button>
-            <button className="btn ghost small" onClick={() => go(`/c/${run.channelId}`)}>
+            <button
+              className="btn ghost small"
+              onClick={() => go(`/c/${run.channelId}`)}
+            >
               {run.channelName}
             </button>
           </div>
@@ -658,13 +774,13 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {/* --- The script ---------------------------------------------------- */}
       {script && (
         <section className="mt2">
-          <div className="row" style={{ marginBottom: '1rem' }}>
-            <h2>{isSource ? 'The stories' : 'The script'}</h2>
+          <div className="row" style={{ marginBottom: "1rem" }}>
+            <h2>{isSource ? "The stories" : "The script"}</h2>
             <span className="spacer" />
             {editing ? (
               <>
                 <button className="btn" disabled={busy !== null} onClick={save}>
-                  {busy === 'save' ? 'Saving...' : 'Save and re-check'}
+                  {busy === "save" ? "Saving..." : "Save and re-check"}
                 </button>
                 <button
                   className="btn ghost"
@@ -684,9 +800,9 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           </div>
 
           {editing && hasAudio && (
-            <div className="error" style={{ marginBottom: '1rem' }}>
-              This run has already been voiced. Saving a change here discards that audio, because it
-              would be about different words.
+            <div className="error" style={{ marginBottom: "1rem" }}>
+              This run has already been voiced. Saving a change here discards
+              that audio, because it would be about different words.
             </div>
           )}
 
@@ -695,27 +811,32 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               <article className="beat" key={beat.beatId}>
                 <div className="beat-head">
                   <span className="beat-id">{beat.beatId}</span>
-                  <span className="faint mono" style={{ fontSize: '0.7rem' }}>
+                  <span className="faint mono" style={{ fontSize: "0.7rem" }}>
                     {beat.beatType}
                   </span>
                   <span className="spacer" />
-                  <span className="faint mono" style={{ fontSize: '0.7rem' }}>
-                    {beat.claimIds.length} {beat.claimIds.length === 1 ? 'fact' : 'facts'}
+                  <span className="faint mono" style={{ fontSize: "0.7rem" }}>
+                    {beat.claimIds.length}{" "}
+                    {beat.claimIds.length === 1 ? "fact" : "facts"}
                   </span>
                 </div>
                 <div className="beat-body">
                   {editing ? (
                     <textarea
                       className="beat-edit"
-                      value={beat.turns.map((t) => t.text).join('\n\n')}
+                      value={beat.turns.map((t) => t.text).join("\n\n")}
                       onChange={(e) => {
-                        const speaker = beat.turns[0]?.speaker ?? 'narrator';
+                        const speaker = beat.turns[0]?.speaker ?? "narrator";
                         const turns = e.target.value
                           .split(/\n{2,}/)
                           .map((text) => ({ speaker, text: text.trim() }))
                           .filter((t) => t.text.length > 0);
                         setDraft((prev) =>
-                          prev.map((b, j) => (j === i ? { ...b, turns: turns.length ? turns : b.turns } : b))
+                          prev.map((b, j) =>
+                            j === i
+                              ? { ...b, turns: turns.length ? turns : b.turns }
+                              : b,
+                          ),
                         );
                       }}
                     />
@@ -735,20 +856,25 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="panel-head">
             <h3>What it read</h3>
             <span className="spacer" />
-            <span className="faint mono" style={{ fontSize: '0.72rem' }}>
+            <span className="faint mono" style={{ fontSize: "0.72rem" }}>
               {corpus.sources.length} documents
             </span>
           </div>
           <div className="panel-body">
             {corpus.sources.map((s) => (
               <div className="finding" key={s.id}>
-                <span className="check">{s.tier ?? '-'}</span>
+                <span className="check">{s.tier ?? "-"}</span>
                 <span>
-                  <a href={s.url} target="_blank" rel="noreferrer" style={{ color: 'var(--hold)' }}>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: "var(--hold)" }}
+                  >
                     {s.title || s.url}
                   </a>
-                  <div className="faint mono" style={{ fontSize: '0.7rem' }}>
-                    {s.url.replace(/^https?:\/\//, '').slice(0, 88)}
+                  <div className="faint mono" style={{ fontSize: "0.7rem" }}>
+                    {s.url.replace(/^https?:\/\//, "").slice(0, 88)}
                   </div>
                 </span>
               </div>

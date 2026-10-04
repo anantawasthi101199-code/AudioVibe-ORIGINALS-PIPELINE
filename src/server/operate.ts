@@ -43,6 +43,7 @@ import { allocate, type ItemKind, type Taken } from '../schedule/allocate';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
+import { loadCatalogue, saveCatalogue } from '../catalogue/covered';
 import { loadFormat } from '../formats/load';
 import { scriptSchema } from '../script/write';
 import { HttpError } from './routes';
@@ -570,7 +571,17 @@ export const discardRun = (id: string) => {
   if (jobs.isRunning(jobs.forRun(id)?.id ?? '')) {
     throw new HttpError(409, `run "${id}" is working. Let it finish first.`);
   }
+  // A published run's folder is the only record of what went out and its id.
+  if (Run.open(id).isComplete('publish')) {
+    throw new HttpError(400, 'that is already published; take it down in the app instead');
+  }
 
   fs.rmSync(dir, { recursive: true, force: true });
+
+  // FREE THE SUBJECT. A discarded run never went out, so its topic must not
+  // keep blocking the same subject on this or any other channel.
+  const catalogue = loadCatalogue();
+  const kept = catalogue.entries.filter((e) => e.runId !== id);
+  if (kept.length !== catalogue.entries.length) saveCatalogue({ ...catalogue, entries: kept });
   return { ok: true as const };
 };
