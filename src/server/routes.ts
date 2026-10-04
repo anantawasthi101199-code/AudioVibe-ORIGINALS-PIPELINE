@@ -18,6 +18,7 @@
  * a run, approve a run - are POSTs that return a job to watch, and both are
  * refused if one is already in flight for that run.
  */
+import { finalAudioFor } from '../render/backing';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
@@ -159,11 +160,31 @@ export const getJob = (id: string) => {
 };
 
 /** The rendered episode, streamed, so a page can put it in an audio element. */
+/**
+ * The FINAL audio: exactly what publishing will send - the chosen music
+ * version, or the voice alone. Every page plays this, so choosing music on one
+ * page is what every other page hears.
+ */
 export const audioPath = (id: string): string => {
+  const final = finalAudioFor(openRun(id));
+  if (!final) throw new HttpError(404, `run "${id}" has no audio yet`);
+  return final.file;
+};
+
+/** A name worth saving the final file under. */
+export const audioDownloadName = (id: string): string => {
   const run = openRun(id);
-  const file = path.join(run.dir, 'media', 'episode.wav');
-  if (!fs.existsSync(file)) throw new HttpError(404, `run "${id}" has no audio yet`);
-  return file;
+  const m = run.manifest;
+  let title = m.topic;
+  try {
+    title = run.readArtifact('script', scriptSchema).title;
+  } catch {
+    // No script title yet; the topic will do.
+  }
+  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
+  const num = `e${String(m.episode).padStart(3, '0')}${m.short ? `-s${String(m.short).padStart(2, '0')}` : ''}`;
+  const music = finalAudioFor(run)?.music ? '-with-music' : '';
+  return `${m.personaId}-${num}-${slug}${music}.wav`;
 };
 
 // ---------------------------------------------------------------------------

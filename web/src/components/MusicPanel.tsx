@@ -12,7 +12,16 @@ const describe = (m: Mix) =>
  * and the top of the panel always says what that is. All of it is ffmpeg on
  * this machine, so it costs nothing.
  */
-export const MusicPanel = ({ runId, disabled }: { runId: string; disabled: boolean }) => {
+export const MusicPanel = ({
+  runId,
+  disabled,
+  onChanged,
+}: {
+  runId: string;
+  disabled: boolean;
+  /** The final audio changed: everything showing it should reload. */
+  onChanged?: () => void;
+}) => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [state, setState] = useState<MixState | null>(null);
   const [track, setTrack] = useState('');
@@ -60,6 +69,8 @@ export const MusicPanel = ({ runId, disabled }: { runId: string; disabled: boole
     });
 
   const off = disabled || busy !== null;
+  // Approved or published: the music is fixed until it is back in To decide.
+  const locked = Boolean(state?.lock);
   const preview = state?.preview && !state.previewStale ? state.preview : null;
   const chosen = state?.chosen && !state.chosenStale ? state.chosen : null;
   // The preview is already the published version: nothing to save.
@@ -79,6 +90,7 @@ export const MusicPanel = ({ runId, disabled }: { runId: string; disabled: boole
           </span>
           <strong>Publishing will send: {chosen ? `the version with ${describe(chosen)}` : 'the voice alone'}</strong>
         </div>
+        {state?.lock && <span className="faint tiny">Music is locked: {state.lock}</span>}
         {state?.chosenStale && (
           <span className="tiny" style={{ color: 'var(--amber)' }}>
             The episode was voiced again after you chose a music version, so it is not used. Mix and
@@ -90,8 +102,13 @@ export const MusicPanel = ({ runId, disabled }: { runId: string; disabled: boole
             <audio controls preload="none" src={api.mixUrl(runId, 'chosen', chosen.file)} />
             <button
               className="btn ghost small"
-              disabled={off}
-              onClick={() => act('voice', async () => setState(await api.voiceOnly(runId)))}
+              disabled={off || locked}
+              onClick={() =>
+                act('voice', async () => {
+                  setState(await api.voiceOnly(runId));
+                  onChanged?.();
+                })
+              }
             >
               Publish voice only
             </button>
@@ -204,8 +221,13 @@ export const MusicPanel = ({ runId, disabled }: { runId: string; disabled: boole
             <div className="row mt" style={{ gap: '0.5rem', alignItems: 'center' }}>
               <button
                 className="btn spend"
-                disabled={off || previewIsChosen}
-                onClick={() => act('use', async () => setState(await api.useMix(runId)))}
+                disabled={off || previewIsChosen || locked}
+                onClick={() =>
+                  act('use', async () => {
+                    setState(await api.useMix(runId));
+                    onChanged?.();
+                  })
+                }
               >
                 {previewIsChosen ? 'This version will be published' : 'Use this version for publishing'}
               </button>

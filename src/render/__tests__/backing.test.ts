@@ -5,6 +5,7 @@ import { Run } from '../../run/store';
 import {
   chooseMix,
   clearMix,
+  finalAudioFor,
   looksLikeMp3,
   mixRun,
   mixState,
@@ -98,6 +99,37 @@ describe('your own background music', () => {
     );
     expect(mixState(run).preview?.file).toBe('episode.mixed.wav');
     expect(mixedAudioFor(run)).toBeNull();
+  });
+
+  it('gives every page one final audio: the chosen mix, else the voice', async () => {
+    expect(finalAudioFor(run)).toMatchObject({ file: run.mediaPath('episode.wav'), music: null });
+    await mixRun(run, { track: 'calm-piano', volume: 20, duck: true }, deps);
+    // A preview is not final.
+    expect(finalAudioFor(run)?.music).toBeNull();
+    const before = finalAudioFor(run)!.key;
+    const used = chooseMix(run);
+    const after = finalAudioFor(run)!;
+    expect(after).toMatchObject({ file: run.mediaPath(used.file), music: { track: 'calm-piano', volume: 20 } });
+    // The key changes, so every player on every page reloads it.
+    expect(after.key).not.toBe(before);
+  });
+
+  it('LOCKS the music once approved for release or published', async () => {
+    await mixRun(run, { track: 'calm-piano', volume: 20, duck: true }, deps);
+    chooseMix(run);
+    run.setReleaseAt(new Date('2026-10-10T10:00:00Z'), new Date());
+    expect(() => unchooseMix(run)).toThrow(/approved for release/);
+    expect(() => chooseMix(run)).toThrow(/approved for release/);
+    expect(() => clearMix(run)).toThrow(/approved for release/);
+    expect(mixedAudioFor(run)).not.toBeNull();
+
+    // Back to To decide: changeable again.
+    run.setReleaseAt(null);
+    unchooseMix(run);
+    expect(mixedAudioFor(run)).toBeNull();
+
+    run.markComplete('publish');
+    expect(() => chooseMix(run)).toThrow(/already published/);
   });
 
   it('refuses a run with no audio, a track not in the library, and choosing nothing', async () => {

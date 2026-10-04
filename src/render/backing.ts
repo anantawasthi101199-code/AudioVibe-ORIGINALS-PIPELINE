@@ -298,8 +298,53 @@ export const mixRun = async (
   return mix;
 };
 
+/**
+ * Why this run's music cannot be changed right now, or null if it can.
+ *
+ * LOCKED ONCE IT IS ON ITS WAY OUT. Approved for release (it sits in the
+ * Approved tab, on the calendar) or already published: what goes out was
+ * decided when it was approved, and changing it underneath that decision is
+ * how the wrong version ships. Take it back to To decide first.
+ */
+export const musicLock = (run: Run): string | null => {
+  if (run.manifest.completed.includes('publish')) {
+    return 'this is already published, so its audio cannot change.';
+  }
+  if (run.manifest.releaseApprovedAt) {
+    return 'this is approved for release. Take it back to To decide (from the calendar) to change its music.';
+  }
+  return null;
+};
+
+const assertUnlocked = (run: Run): void => {
+  const lock = musicLock(run);
+  if (lock) throw new BackingRefused(lock);
+};
+
+/** What a run will publish, for every page that shows it. */
+export interface FinalAudio {
+  /** The file publishing sends: the chosen mix, or the voice. */
+  file: string;
+  /** The chosen music, when there is current music. */
+  music: { track: string; volume: number } | null;
+  /** Changes whenever the final audio does, so a player reloads. */
+  key: string;
+}
+
+export const finalAudioFor = (run: Run): FinalAudio | null => {
+  const voice = run.audioFile();
+  if (!voice) return null;
+  const { chosen } = readRecord(run);
+  const mixed = mixedAudioFor(run);
+  if (mixed && chosen) {
+    return { file: mixed, music: { track: chosen.track, volume: chosen.volume }, key: chosen.file };
+  }
+  return { file: voice, music: null, key: `voice-${Math.round(fs.statSync(voice).mtimeMs)}` };
+};
+
 /** "Use this version": the preview becomes what publishing sends. */
 export const chooseMix = (run: Run): Mix => {
+  assertUnlocked(run);
   const record = readRecord(run);
   if (!record.preview) throw new BackingRefused('there is no mix to use yet. Mix one first.');
   if (isStale(run, record.preview)) {
@@ -311,10 +356,12 @@ export const chooseMix = (run: Run): Mix => {
 
 /** Publish the voice alone again. The preview stays to listen to. */
 export const unchooseMix = (run: Run): void => {
+  assertUnlocked(run);
   writeRecord(run, { ...readRecord(run), chosen: null });
 };
 
 /** Back to nothing at all: no preview, voice only. */
 export const clearMix = (run: Run): void => {
+  assertUnlocked(run);
   writeRecord(run, { preview: null, chosen: null });
 };

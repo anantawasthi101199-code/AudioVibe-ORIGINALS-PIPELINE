@@ -33,6 +33,7 @@ import { loadAccounts } from '../publish/account';
 import { findSeries, loadRegistry } from '../publish/seriesRegistry';
 import { platformUrl } from '../config';
 import { jobs } from './jobs';
+import { finalAudioFor, musicLock } from '../render/backing';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -318,6 +319,12 @@ export interface RunSummary {
    * say "writing" rather than only "running". Null when nothing is in flight.
    */
   liveStage: string | null;
+  /** The chosen music, when the final audio has some. Null: voice only. */
+  music: { track: string; volume: number } | null;
+  /** Changes whenever the final audio does, so players reload it. */
+  audioKey: string | null;
+  /** Why its music cannot be changed now (approved or published), or null. */
+  musicLock: string | null;
 }
 
 /**
@@ -416,6 +423,14 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     spentPence: m.spentPence,
     completed: [...m.completed],
     state,
+    ...(() => {
+      try {
+        const final = finalAudioFor(run);
+        return { music: final?.music ?? null, audioKey: final?.key ?? null, musicLock: musicLock(run) };
+      } catch {
+        return { music: null, audioKey: null, musicLock: null };
+      }
+    })(),
     liveStage: liveIds.has(run.id) ? (jobs.forRun(run.id)?.events.at(-1)?.stage ?? null) : null,
     episode: m.episode,
     short: m.short ?? null,

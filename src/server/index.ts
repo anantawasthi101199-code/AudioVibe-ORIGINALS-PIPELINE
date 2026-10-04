@@ -50,6 +50,7 @@ import { jobs } from './jobs';
 import {
   HttpError,
   approveRun,
+  audioDownloadName,
   audioPath,
   cutShorts,
   getCatalogue,
@@ -261,13 +262,20 @@ const cacheFor = (file: string): string =>
     ? 'public, max-age=31536000, immutable'
     : 'no-store';
 
-const serveFile = (res: http.ServerResponse, file: string, download?: string): void => {
+const serveFile = (
+  res: http.ServerResponse,
+  file: string,
+  download?: string,
+  attachment = false
+): void => {
   const stat = fs.statSync(file);
   res.writeHead(200, {
     'content-type': MIME[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
     'content-length': stat.size,
     'cache-control': cacheFor(file),
-    ...(download ? { 'content-disposition': `inline; filename="${download}"` } : {}),
+    ...(download
+      ? { 'content-disposition': `${attachment ? 'attachment' : 'inline'}; filename="${download}"` }
+      : {}),
   });
   fs.createReadStream(file).pipe(res);
 };
@@ -427,7 +435,9 @@ export const createServer = (): http.Server =>
       }
 
       if (pathname === '/api/run/audio') {
-        serveFile(res, audioPath(id ?? ''), 'episode.wav');
+        // The final audio. `download=1` saves it under a real name.
+        const download = url.searchParams.get('download') === '1';
+        serveFile(res, audioPath(id ?? ''), audioDownloadName(id ?? ''), download);
         return;
       }
 
@@ -500,9 +510,9 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/run/mix' && req.method === 'POST') {
         return send(res, 200, await makeMix(id ?? '', await readBody(req)));
       }
-      if (pathname === '/api/run/mix' && req.method === 'DELETE') return send(res, 200, removeMix(id ?? ''));
+      if (pathname === '/api/run/mix' && req.method === 'DELETE') return send(res, 200, await removeMix(id ?? ''));
       if (pathname === '/api/run/mix/use' && req.method === 'POST') return send(res, 200, await useMix(id ?? ''));
-      if (pathname === '/api/run/mix/use' && req.method === 'DELETE') return send(res, 200, voiceOnly(id ?? ''));
+      if (pathname === '/api/run/mix/use' && req.method === 'DELETE') return send(res, 200, await voiceOnly(id ?? ''));
       if (pathname === '/api/run/mix/audio') {
         const file = mixedFile(id ?? '', url.searchParams.get('which'));
         if (!file) return send(res, 404, { error: 'this run has no mix yet' });

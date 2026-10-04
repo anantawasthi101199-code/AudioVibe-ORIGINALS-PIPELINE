@@ -11,6 +11,7 @@ import {
   BackingRefused,
   MAX_TRACK_BYTES,
   chooseMix,
+  musicLock,
   clearMix,
   unchooseMix,
   deleteTrack,
@@ -64,7 +65,10 @@ export const removeTrack = (name: string | null) => ({
 
 export const trackFileFor = (name: string | null): string | null => (name ? trackFile(name) : null);
 
-export const runMixState = (runId: string) => mixState(Run.open(runId));
+export const runMixState = (runId: string) => {
+  const run = Run.open(runId);
+  return { ...mixState(run), lock: musicLock(run) };
+};
 
 const mixBody = z.object({
   track: z.string().min(1),
@@ -77,29 +81,31 @@ export const makeMix = (runId: string, body: unknown) =>
     const input = mixBody.parse(body);
     const run = Run.open(runId);
     await mixRun(run, input);
-    return mixState(run);
+    return { ...mixState(run), lock: musicLock(run) };
   });
 
-export const removeMix = (runId: string) => {
-  const run = Run.open(runId);
-  clearMix(run);
-  return mixState(run);
-};
+export const removeMix = (runId: string) =>
+  asHttp(() => {
+    const run = Run.open(runId);
+    clearMix(run);
+    return { ...mixState(run), lock: musicLock(run) };
+  });
 
 /** "Use this version": the preview becomes what publishing sends. */
 export const useMix = (runId: string) =>
   asHttp(() => {
     const run = Run.open(runId);
     chooseMix(run);
-    return mixState(run);
+    return { ...mixState(run), lock: musicLock(run) };
   });
 
 /** Publish the voice alone again. */
-export const voiceOnly = (runId: string) => {
-  const run = Run.open(runId);
-  unchooseMix(run);
-  return mixState(run);
-};
+export const voiceOnly = (runId: string) =>
+  asHttp(() => {
+    const run = Run.open(runId);
+    unchooseMix(run);
+    return { ...mixState(run), lock: musicLock(run) };
+  });
 
 export const mixedFile = (runId: string, which: string | null): string | null =>
   mixedFileFor(Run.open(runId), which === 'chosen' ? 'chosen' : 'preview');

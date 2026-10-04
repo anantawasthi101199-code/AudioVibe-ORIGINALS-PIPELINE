@@ -920,7 +920,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             <div className="queue-list">
               {runs.map((r) => (
                 <button key={r.id} className="queue-row" onClick={() => go(`/r/${r.id}`)}>
-                  {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id)} /> : null}
+                  {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id, r.audioKey)} /> : null}
                   <span className="queue-main">
                     <span className="queue-title">{r.title ?? r.topic}</span>
                     <span className="muted">

@@ -67,6 +67,12 @@ export type RunState =
 export interface RunSummary {
   /** While working: the stage the pipeline last reported. */
   liveStage: string | null;
+  /** The chosen music in the final audio, or null for voice only. */
+  music: { track: string; volume: number } | null;
+  /** Changes whenever the final audio does, so players reload. */
+  audioKey: string | null;
+  /** Why its music cannot change now (approved or published), or null. */
+  musicLock: string | null;
   id: string;
   channelId: string;
   channelName: string;
@@ -225,6 +231,8 @@ export interface MixState {
   chosen: Mix | null;
   previewStale: boolean;
   chosenStale: boolean;
+  /** Why the choice cannot change now (approved or published), or null. */
+  lock?: string | null;
 }
 
 /** A picture's provenance, and the shape a replacement has to be. */
@@ -638,7 +646,10 @@ export const api = {
       { method: 'POST', body: JSON.stringify({ formatId, count }) }
     ),
 
-  audioUrl: (id: string) => `/api/run/audio?id=${encodeURIComponent(id)}`,
+  /** The FINAL audio: what publishing sends. `key` makes a player reload it. */
+  audioUrl: (id: string, key?: string | null) =>
+    `/api/run/audio?id=${encodeURIComponent(id)}${key ? `&k=${encodeURIComponent(key)}` : ''}`,
+  downloadUrl: (id: string) => `/api/run/audio?id=${encodeURIComponent(id)}&download=1`,
 
   // --- Your own background music ------------------------------------------
   musicLibrary: () => call<{ tracks: Track[] }>('/api/music'),

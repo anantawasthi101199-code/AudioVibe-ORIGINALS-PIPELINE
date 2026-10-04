@@ -13,6 +13,7 @@
  * as data entry and nobody reads data entry.
  */
 import { MusicPanel } from '../components/MusicPanel';
+import { FinalAudio } from '../components/FinalAudio';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   api,
@@ -327,10 +328,12 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {/* --- Audio --------------------------------------------------------- */}
       {hasAudio && (
         <section className="mt2">
-          <h2>Listen</h2>
+          <h2>Final audio</h2>
+          <p className="faint tiny" style={{ margin: '0.25rem 0 0' }}>
+            Exactly what publishing sends, as every other page plays it.
+          </p>
           <div className="player mt">
-            {/* metadata, so the length is on screen before anybody presses play */}
-            <audio controls preload="metadata" src={api.audioUrl(id)} />
+            <FinalAudio run={run} onChanged={() => void load()} player />
           </div>
         </section>
       )}
@@ -339,7 +342,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       {hasAudio && !isSource && (
         <section className="mt2">
           <h2>Background music</h2>
-          <MusicPanel runId={id} disabled={live} />
+          <MusicPanel runId={id} disabled={live} onChanged={() => void load()} />
         </section>
       )}
 

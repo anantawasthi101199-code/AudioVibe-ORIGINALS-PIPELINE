@@ -33,20 +33,32 @@ import {
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
 import { Count, Info, PlayButton, stopAudio } from '../components/Info';
+import { FinalAudio } from '../components/FinalAudio';
 
 type Tab = 'ready' | 'approved' | 'hold';
 
 /** The script, the gate, and the two things you can do about them. */
-const Opened = ({ id, go }: { id: string; go: (path: string) => void }) => {
+const Opened = ({
+  id,
+  go,
+  onChanged,
+}: {
+  id: string;
+  go: (path: string) => void;
+  onChanged: () => void;
+}) => {
   const [detail, setDetail] = useState<RunDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    api
-      .run(id)
-      .then(setDetail)
-      .catch((e: Error) => setError(e.message));
-  }, [id]);
+  const fetchDetail = useCallback(
+    () =>
+      api
+        .run(id)
+        .then(setDetail)
+        .catch((e: Error) => setError(e.message)),
+    [id]
+  );
+  useEffect(() => void fetchDetail(), [fetchDetail]);
 
   if (error) return <ErrorNote>{error}</ErrorNote>;
   if (!detail) return <p className="panel-body faint">Reading it...</p>;
@@ -55,6 +67,15 @@ const Opened = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
   return (
     <div className="card-open">
+      {detail.hasAudio && (
+        <FinalAudio
+          run={detail.run}
+          onChanged={() => {
+            void fetchDetail();
+            onChanged();
+          }}
+        />
+      )}
       <div className="script-read">
         {detail.script?.beats.flatMap((b) =>
           b.turns.map((t, i) => <p key={`${b.beatId}-${i}`}>{t.text}</p>)
@@ -103,7 +124,7 @@ const Row = ({
 }) => (
   <div className={`pub-row${dim ? ' dim' : ''}`}>
     {run.hasAudio ? (
-      <PlayButton id={run.id} src={api.audioUrl(run.id)} />
+      <PlayButton id={run.id} src={api.audioUrl(run.id, run.audioKey)} />
     ) : (
       <span className="play empty" aria-hidden />
     )}
@@ -113,6 +134,7 @@ const Row = ({
       <span className="muted">
         {run.short !== null ? `short ${run.short} · ` : 'episode · '}
         {clock(run.durationS)} · {money(run.spentPence)} · {ago(run.createdAt)}
+        {run.music ? ' · with music' : ''}
       </span>
     </button>
 
@@ -390,7 +412,7 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
                 </Row>
               )}
 
-              {open === r.id && <Opened id={r.id} go={go} />}
+              {open === r.id && <Opened id={r.id} go={go} onChanged={() => void load()} />}
             </div>
           ))}
         </div>
@@ -421,7 +443,7 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
           <div className="queue-list">
             {out.map((r) => (
               <button key={r.id} className="queue-row" onClick={() => go(`/r/${r.id}`)}>
-                {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id)} /> : null}
+                {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id, r.audioKey)} /> : null}
                 <span className="queue-main">
                   <span className="queue-title">{r.title ?? r.topic}</span>
                   <span className="muted">{ago(r.createdAt)}</span>
