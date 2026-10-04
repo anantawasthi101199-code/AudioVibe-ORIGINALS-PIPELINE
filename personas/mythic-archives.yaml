@@ -93,16 +93,24 @@ hosts:
       # The owner's ask, 2026-10-03: "a little slow yet heavy". onyx is the
       # deepest OpenAI voice, and the pace comes from speed plus direction,
       # because gpt-4o-mini-tts mostly listens to the direction.
-      draftVoiceId: onyx
+      # verse, since 2026-10-04: onyx read the myths flat ("boring and bland,
+      # no ups and lows"). Measured on the same passage with the same note,
+      # verse rises and falls about 70% more (loudness range 5.6 LU against
+      # onyx's 3.3). fable (5.8 LU) is the lighter alternative.
+      draftVoiceId: verse
       direction: >
-        A deep, heavy, low voice telling an old story by lamplight. Slow and
-        deliberate, with weight on the names and a real pause at the end of
-        each sentence. Grave rather than gloomy, and never theatrical.
-      speed: 0.88
+        A captivating storyteller telling an ancient legend by firelight to
+        people leaning in. Rich and warm, with real rise and fall: slow down and
+        drop your voice for mystery and dread, lift and quicken as the tension
+        builds, and land each reveal with a beat of silence before it. Vary the
+        pace and pitch the way a gifted storyteller does. Never flat, never
+        monotone, and never a hammy movie-trailer voice.
+      speed: 0.95
       settings:
-        stability: 0.4
+        # Lower stability and higher style ask the engine for movement.
+        stability: 0.3
         similarity_boost: 0.75
-        style: 0.5
+        style: 0.6
 
 styleCard:
   # MEASURED AGAINST TRANSCRIPTS OF A SHOW THIS ONE IS MEANT TO STAND BESIDE,

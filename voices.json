@@ -8,5 +8,15 @@
         "firstRunId": "eureka-tales/e001-20261003-velcro-was-invented-after-a-walk"
       }
     }
+  },
+  "business-decoded": {
+    "host": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "echo",
+        "firstUsedAt": "2026-10-04T14:11:40.681Z",
+        "firstRunId": "business-decoded/e001-20261004-did-airbnb-go-from-renting-air"
+      }
+    }
   }
 }
