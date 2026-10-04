@@ -138,7 +138,16 @@ const Row = ({
       </span>
     </button>
 
-    <span className="row nowrap">{children}</span>
+    <span className="row nowrap">
+      {/* On the row itself, not only inside the opened card, where it was
+          easy to miss. The final audio, as an MP3. */}
+      {run.hasAudio && (
+        <a className="btn ghost small" href={api.downloadUrl(run.id)} download>
+          Download MP3
+        </a>
+      )}
+      {children}
+    </span>
     <span className={`caret${open ? ' open' : ''}`}>›</span>
   </div>
 );
