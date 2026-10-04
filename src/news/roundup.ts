@@ -56,9 +56,14 @@ export const gatherRoundup = async (
   const seen: AlreadyCovered = { urls: new Set(covered.urls), titles: [...covered.titles] };
 
   for (const region of desk.roundup?.regions ?? []) {
-    const raw = await sweepWire([region.query], desk, wire, sleep, say);
+    const raw = await sweepWire(region.queries, desk, wire, sleep, say);
     const { kept } = screenWire(raw, desk);
-    const stories = clusterStories(kept);
+    // ABOUT THE REGION. The first live roundup filled India's slot with a
+    // Ukraine story an "India" search returned.
+    const about = region.match.length
+      ? new RegExp(`\\b(${region.match.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![A-Za-z])`)
+      : null;
+    const stories = clusterStories(about ? kept.filter((k) => about.test(k.title)) : kept);
     if (!stories.length) {
       say(`${region.name}: nothing from a desk outlet in the last 24 hours`);
       continue;

@@ -89,7 +89,21 @@ export const deskSchema = z.object({
    */
   roundup: z
     .object({
-      regions: z.array(z.object({ name: z.string().min(2), query: z.string().min(2) })).min(2).max(8),
+      regions: z
+        .array(
+          z.object({
+            name: z.string().min(2),
+            queries: z.array(z.string().min(2)).min(1).max(4),
+            /**
+             * Words one of which the headline must contain, so an "India"
+             * search that returns a Ukraine story is not India's story. Empty:
+             * any story (the world slot).
+             */
+            match: z.array(z.string().min(2)).default([]),
+          })
+        )
+        .min(2)
+        .max(8),
     })
     .optional(),
 });

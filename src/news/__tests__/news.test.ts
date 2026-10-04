@@ -16,7 +16,7 @@ import { PipelineDeps } from '../../pipeline/episode';
 import { regate } from '../../qa/regate';
 import { scriptSchema } from '../../script/write';
 import { deskSchema, hasNewsDesk, loadDesk, newsFormatFor, outletFor } from '../desk';
-import { isIndexPage, isLiveBlog, isOpinion, parseWhen, screenWire, stripSiteSuffix, WireItem } from '../wire';
+import { isIndexPage, isLiveBlog, isOpinion, isSportOrShowbiz, parseWhen, screenWire, stripSiteSuffix, WireItem } from '../wire';
 import { clusterStories, headlineOverlap, headlineTokens, pickArticle } from '../pick';
 import { draftProblems, unfamiliarNames, unsupportedFigures } from '../check';
 import { spokenDate } from '../newsScript';
@@ -87,7 +87,7 @@ describe('the wire screen', () => {
     expect(kept.map((k) => k.outlet)).toEqual(['the Associated Press']);
     expect(rejected.map((r) => r.reason)).toEqual([
       'not one of the desk outlets',
-      'off the desk\'s beat ("football")',
+      'sport or entertainment, not news on the beat',
     ]);
   });
 
@@ -552,10 +552,11 @@ describe('the rapid-fire roundup', () => {
   // One story per region, each on a different outlet, plus one repeat that
   // must not be picked twice.
   const byQuery: Record<string, Array<{ url: string; title: string }>> = {
-    India: [{ url: 'https://www.bbc.co.uk/news/india-1', title: 'Monsoon floods close schools across Kerala' }],
+    India: [{ url: 'https://www.bbc.co.uk/news/india-1', title: 'Monsoon floods close schools across India' }],
     'United States': [{ url: 'https://apnews.com/article/senate-1', title: 'Senate passes stopgap budget bill' }],
-    'United Kingdom': [{ url: 'https://www.theguardian.com/uk/rail-1', title: 'Rail strike called off after pay offer' }],
-    China: [{ url: 'https://www.bbc.co.uk/news/india-1', title: 'Monsoon floods close schools across Kerala' }],
+    'United Kingdom': [{ url: 'https://www.theguardian.com/uk/rail-1', title: 'UK rail strike called off after pay offer' }],
+    // India's story again, naming China: already in the roundup, so not taken twice.
+    China: [{ url: 'https://www.bbc.co.uk/news/india-1', title: 'China sends aid as floods close schools across India' }],
     'world news': [{ url: 'https://www.bbc.co.uk/news/world-1', title: 'Ministers agree ceasefire framework in Geneva' }],
   };
   const roundupWire = {
@@ -582,6 +583,10 @@ describe('the rapid-fire roundup', () => {
       { beatId: 'close', turns: [{ speaker: 'reporter', text: "That's your rapid fire. Follow me for more. Bye." }] },
     ],
   };
+
+  it('only takes a story that names its region', () => {
+    expect(new RegExp('\b(US|Trump)\b').test('Talks with us resume')).toBe(false);
+  });
 
   it('makes no topic the roundup and a topic the in-depth short', () => {
     const d = loadDesk('global-thread');
@@ -615,5 +620,13 @@ describe('the rapid-fire roundup', () => {
     expect(writer.prompts[0]).toContain('STORY 4 OF 4');
     expect(gate.findings.filter((f) => f.blocking)).toEqual([]);
     expect(regateNews(run, run.readArtifact('script', scriptSchema), NOW)?.passed).toBe(true);
+  });
+});
+
+describe('sport and entertainment', () => {
+  it('is screened out by the section it was filed in', () => {
+    expect(isSportOrShowbiz('https://www.hindustantimes.com/sports/nfl/what-happened-to-parker')).toBe(true);
+    expect(isSportOrShowbiz('https://www.bbc.co.uk/sport/tennis/123')).toBe(true);
+    expect(isSportOrShowbiz('https://www.bbc.co.uk/news/world-123')).toBe(false);
   });
 });

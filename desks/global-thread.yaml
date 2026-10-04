@@ -56,6 +56,23 @@ outlets:
     onAir: the Financial Times
   - host: economist.com
     onAir: the Economist
+  # REGIONAL OUTLETS FOR THE ROUNDUP (2026-10-05). The first live roundup found
+  # no India or China story because every outlet above is Western, and most of
+  # a day's Indian news is carried by Indian newsrooms.
+  - host: thehindu.com
+    onAir: the Hindu
+  - host: indianexpress.com
+    onAir: the Indian Express
+  - host: ndtv.com
+    onAir: NDTV
+  - host: hindustantimes.com
+    onAir: the Hindustan Times
+  - host: scmp.com
+    onAir: the South China Morning Post
+  - host: independent.co.uk
+    onAir: the Independent
+  - host: cnn.com
+    onAir: CNN
 
 maxAgeHours: 30
 publishWithinHours: 48
@@ -81,14 +98,21 @@ music: false
 # most-carried story from each of these, one article each, under three minutes.
 # A typed topic makes the in-depth short on that one story instead.
 roundup:
+  # SEVERAL SEARCHES PER REGION. One bare "United Kingdom" search returned
+  # nothing from a desk outlet on the first live run; the region's capital and
+  # government find what its outlets actually headline.
   regions:
     - name: India
-      query: India
+      queries: [India, India government, New Delhi]
+      match: [India, Indian, Delhi, Modi, Mumbai]
     - name: the US
-      query: United States
+      queries: [United States, White House, Washington]
+      match: [US, U.S., America, American, Trump, White House, Washington, Congress, Senate]
     - name: the UK
-      query: United Kingdom
+      queries: [United Kingdom, UK government, Britain]
+      match: [UK, Britain, British, England, London, Starmer, Westminster, Scotland, Wales]
     - name: China
-      query: China
+      queries: [China, Beijing]
+      match: [China, Chinese, Beijing, Xi, Taiwan, Hong Kong]
     - name: the world
-      query: world news
+      queries: [world news]

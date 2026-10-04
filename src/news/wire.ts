@@ -121,7 +121,7 @@ export const stripSiteSuffix = (title: string): string => {
 /** A rolling live page. By URL first, because the URL does not get rewritten. */
 export const isLiveBlog = (url: string, title: string): boolean =>
   /\/(live|live-news|live-updates|liveblog|live-blog)(\/|-|$)/i.test(url) ||
-  /\blive[- ]?(updates?|blog|coverage)\b|^live:|\bas it happened\b/i.test(title);
+  /\blive[- ]?(updates?|blog|coverage|results)\b|^live:|\bas it happened\b/i.test(title);
 
 /**
  * A section front or headlines page, not an article. Seen live: "News: U.S. and
@@ -145,6 +145,16 @@ export const isOpinion = (url: string, title: string): boolean =>
   /\/(opinion|opinions|commentisfree|comment|commentary|editorial|editorials|analysis|explainers?|ht-explainers|podcasts?|video|videos|av)\//i.test(
     url
   ) || /^(opinion|analysis|comment|explainer|watch|listen)\s*[:|]/i.test(title);
+
+/**
+ * Sport and entertainment, by where the outlet filed it. The first live
+ * roundup picked an NFL match and the China Open tennis because their
+ * headlines named neither "football" nor "tennis"; the URL section does.
+ */
+export const isSportOrShowbiz = (url: string): boolean =>
+  /\/(sport|sports|cricket|football|soccer|tennis|golf|f1|formula-1|nfl|nba|mlb|rugby|olympics|entertainment|showbiz|lifestyle|culture|celebrity|tv-and-radio|film|music)(\/|-)/i.test(
+    url
+  );
 
 export interface WireRejection {
   url: string;
@@ -186,6 +196,10 @@ export const screenWire = (
     }
     if (isOpinion(item.url, item.title)) {
       rejected.push({ url: item.url, reason: 'opinion, analysis or video rather than a report' });
+      continue;
+    }
+    if (isSportOrShowbiz(item.url)) {
+      rejected.push({ url: item.url, reason: 'sport or entertainment, not news on the beat' });
       continue;
     }
     const headline = item.title.toLowerCase();
