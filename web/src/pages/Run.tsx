@@ -109,6 +109,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       setData(d);
       setEvents(d.job?.events ?? []);
       setDraft(d.script?.beats ?? []);
+      // A blank template opens ready to write in.
+      if (
+        d.script?.beats.some((b) =>
+          b.turns.some((t) => t.text.includes("[WRITE:")),
+        )
+      ) {
+        setEditing(true);
+      }
       return d;
     } catch (e) {
       setError((e as Error).message);

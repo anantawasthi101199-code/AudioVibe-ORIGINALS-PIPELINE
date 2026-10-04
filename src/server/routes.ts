@@ -33,6 +33,7 @@ import { runLane } from '../pipeline/runLane';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
+import { startHandwritten } from '../pipeline/handwritten';
 import { loadTopics } from '../schedule/load';
 import { blocking, findCovered, loadCatalogue, recordMade, refusal } from '../catalogue/covered';
 import { hasNewsDesk } from '../news/desk';
@@ -245,6 +246,8 @@ export const startRunSchema = z.object({
   again: z.boolean().default(false),
   /** The interface's `--series`: the series a long episode is filed into. */
   seriesTitle: z.string().trim().min(1).optional(),
+  /** A blank template to fill in by hand, instead of paying for research and writing. */
+  blank: z.boolean().default(false),
 });
 
 /**
@@ -263,6 +266,9 @@ export const startRun = (body: unknown, who: string | null = null) => {
   if (!persona.formats.includes(format.id)) {
     throw new HttpError(400, `${persona.name} does not make "${format.id}"`);
   }
+  if (input.blank && format.sourceOnly) {
+    throw new HttpError(400, 'a set is cut into shorts; write the shorts instead');
+  }
 
   // THE SAME REFUSAL THE COMMAND LINE MAKES, and it has to be here rather than
   // only in the page. A check that lives in one front end is a rule the other
@@ -280,8 +286,9 @@ export const startRun = (body: unknown, who: string | null = null) => {
     formatId: format.id,
     topic: input.topic,
     onePass: true,
-    holdForApproval: !input.renderNow && !format.sourceOnly,
+    holdForApproval: input.blank || (!input.renderNow && !format.sourceOnly),
     seriesTitle: format.kind === 'short' ? undefined : input.seriesTitle,
+    handwritten: input.blank,
   });
 
   // Recorded at creation rather than on success, as the command line does: a
@@ -292,6 +299,12 @@ export const startRun = (body: unknown, who: string | null = null) => {
   // WHO ASKED FOR IT. A studio several people can reach needs its journal to
   // say which of them started something that costs money.
   if (who) run.journal({ stage: 'pipeline', event: `started by ${who}` });
+
+  // A BLANK IS MADE HERE AND NOW: there is nothing to run, so no job.
+  if (input.blank) {
+    startHandwritten(run);
+    return { runId: run.id, jobId: null };
+  }
 
   return runLaneJob(run);
 };

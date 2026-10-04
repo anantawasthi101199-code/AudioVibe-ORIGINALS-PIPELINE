@@ -14,11 +14,14 @@ import { Run } from '../run/store';
 import { runBusiness } from './business';
 import { PipelineDeps, runEpisode } from './episode';
 import { runFiction } from './fiction';
+import { runHandwritten } from './handwritten';
 import { laneOf } from './lanes';
 import { runNews } from './news';
 import { runPsych } from './psych';
 
 export const runLane = async (run: Run, deps: PipelineDeps): Promise<{ run: Run; gate: GateReport }> => {
+  // Written by hand: whatever the channel, nothing to research or write.
+  if (run.manifest.handwritten) return runHandwritten(run, deps);
   const persona = loadPersona(run.manifest.personaId);
   if (persona.fiction) return runFiction({ run }, deps);
   switch (laneOf(persona)) {

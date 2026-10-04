@@ -93,6 +93,9 @@ export const runManifestSchema = z.object({
    */
   seriesTitle: z.string().min(1).optional(),
 
+  /** Written by hand from a blank template: no research, no paid writing. */
+  handwritten: z.boolean().default(false),
+
   /** Overrides the channel's content rating for this one. Unset = the channel's. */
   contentRating: z.enum(['general', 'mature']).optional(),
 
@@ -389,6 +392,8 @@ export class Run {
       holdForApproval?: boolean;
       /** The series a long episode belongs to. */
       seriesTitle?: string;
+      /** A blank template to be written by hand. See pipeline/handwritten.ts. */
+      handwritten?: boolean;
     },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
@@ -423,6 +428,7 @@ export class Run {
       stages: input.stages,
       research: input.research,
       holdForApproval: input.holdForApproval ?? false,
+      handwritten: input.handwritten ?? false,
     });
 
     const run = new Run(dir, manifest);
