@@ -159,6 +159,22 @@ describe('your own background music', () => {
     expect(() => checkLoop({ start: 0, end: 3, speed: 2 })).toThrow(/play for at least 2 seconds/);
   });
 
+  it('speeds up the whole episode, with music or without, pitch kept', async () => {
+    await mixRun(run, { track: 'calm-piano', volume: 20, duck: true, speed: 1.2 }, deps);
+    expect(graphs[graphs.length - 1]).toMatch(/amix=[^;]*,atempo=1\.200\[out\]$/);
+    expect(mixState(run).preview).toMatchObject({ track: 'calm-piano', speed: 1.2 });
+
+    await mixRun(run, { track: null, volume: 0, duck: false, speed: 0.9 }, deps);
+    expect(graphs[graphs.length - 1]).toBe('[0:a]atempo=0.900[out]');
+    expect(mixState(run).preview?.track).toBeUndefined();
+
+    await expect(mixRun(run, { track: null, volume: 0, duck: false }, deps)).rejects.toThrow(/nothing to mix/);
+    await expect(mixRun(run, { track: null, volume: 0, duck: false, speed: 2 }, deps)).rejects.toThrow(/between 0.75x and 1.5x/);
+
+    chooseMix(run);
+    expect(finalAudioFor(run)).toMatchObject({ music: null, speed: 0.9 });
+  });
+
   it('refuses a loop too short to blend, or past the end of the track', async () => {
     expect(() => checkLoop({ start: 5, end: 6 })).toThrow(/at least 2 seconds/);
     expect(() => checkLoop({ start: 9, end: 5 })).toThrow(/end after it starts/);

@@ -39,13 +39,14 @@ export const FinalAudio = ({
         <span className={`pill ${run.music ? 'pass' : ''}`}>
           <span className="dot" />
           {run.music ? `with music: ${run.music.track} at ${run.music.volume}%` : 'voice only'}
+          {run.audioSpeed && run.audioSpeed !== 1 ? `, ${run.audioSpeed}x speed` : ''}
         </span>
         <a className="btn ghost small" href={api.downloadUrl(run.id)} download>
           Download MP3
         </a>
-        {run.music && !run.musicLock && (
+        {(run.music || (run.audioSpeed ?? 1) !== 1) && !run.musicLock && (
           <button className="btn ghost small" disabled={busy} onClick={voiceOnly}>
-            {busy ? 'Changing...' : 'Use voice only'}
+            {busy ? 'Changing...' : 'Back to the plain voice'}
           </button>
         )}
       </div>

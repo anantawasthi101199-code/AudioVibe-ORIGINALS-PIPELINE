@@ -69,6 +69,8 @@ export interface RunSummary {
   liveStage: string | null;
   /** The chosen music in the final audio, or null for voice only. */
   music: { track: string; volume: number } | null;
+  /** The final audio's speed, voice and music together. */
+  audioSpeed: number;
   /** Changes whenever the final audio does, so players reload. */
   audioKey: string | null;
   /** Why its music cannot change now (approved or published), or null. */
@@ -219,7 +221,10 @@ export interface Track {
 }
 
 export interface Mix {
-  track: string;
+  /** Absent: no music, the voice alone. */
+  track?: string;
+  /** The whole episode's speed. Absent: 1. */
+  speed?: number;
   volume: number;
   duck: boolean;
   mixedAt: string;
@@ -682,7 +687,8 @@ export const api = {
   mix: (
     id: string,
     body: {
-      track: string;
+      track: string | null;
+      speed?: number;
       volume: number;
       duck: boolean;
       loop?: { start: number; end: number; speed?: number } | null;

@@ -24,7 +24,7 @@ import { suppliedArt } from '../art/supplied';
 import { claimSetSchema, corpusSchema } from '../evidence/research';
 import { loadBible } from '../fiction/bible';
 import { renderResultSchema } from '../render/assemble';
-import { mixedAudioFor } from '../render/backing';
+import { finalAudioFor, mixedAudioFor } from '../render/backing';
 import { GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 import { scriptSchema } from '../script/write';
@@ -294,7 +294,8 @@ export const publishRun = async (
     description: script.description,
     audioPath,
     category: persona.category,
-    beatMap: render.beatMap,
+    // A sped-up final audio moves every part earlier: divide each time by it.
+    beatMap: scaleBeatMap(render.beatMap, mixed ? finalAudioFor(run)?.speed ?? 1 : 1),
     provenance,
     seriesId,
     coverPath,
@@ -313,3 +314,13 @@ export const publishRun = async (
 
 /** Kept so the series cover path has somewhere neutral to live. */
 export const tmpCover = (id: string): string => path.join(os.tmpdir(), `foundry-${id}.png`);
+
+/** Chapter times for audio played at `speed`: every second arrives sooner. */
+export const scaleBeatMap = <T extends { startS: number; endS: number }>(map: T[], speed: number): T[] =>
+  speed === 1
+    ? map
+    : map.map((b) => ({
+        ...b,
+        startS: Number((b.startS / speed).toFixed(3)),
+        endS: Number((b.endS / speed).toFixed(3)),
+      }));

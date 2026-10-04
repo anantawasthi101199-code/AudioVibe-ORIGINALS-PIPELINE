@@ -321,6 +321,8 @@ export interface RunSummary {
   liveStage: string | null;
   /** The chosen music, when the final audio has some. Null: voice only. */
   music: { track: string; volume: number } | null;
+  /** The final audio's speed, voice and music together. 1 when unchanged. */
+  audioSpeed: number;
   /** Changes whenever the final audio does, so players reload it. */
   audioKey: string | null;
   /** Why its music cannot be changed now (approved or published), or null. */
@@ -426,9 +428,14 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     ...(() => {
       try {
         const final = finalAudioFor(run);
-        return { music: final?.music ?? null, audioKey: final?.key ?? null, musicLock: musicLock(run) };
+        return {
+          music: final?.music ?? null,
+          audioSpeed: final?.speed ?? 1,
+          audioKey: final?.key ?? null,
+          musicLock: musicLock(run),
+        };
       } catch {
-        return { music: null, audioKey: null, musicLock: null };
+        return { music: null, audioSpeed: 1, audioKey: null, musicLock: null };
       }
     })(),
     liveStage: liveIds.has(run.id) ? (jobs.forRun(run.id)?.events.at(-1)?.stage ?? null) : null,

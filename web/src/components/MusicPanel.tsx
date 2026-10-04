@@ -4,7 +4,13 @@ import { Trimmer, type Loop } from './Trimmer';
 
 const clockS = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 
-const describe = (m: Mix) =>
+const describe = (m: Mix) => {
+  const speed = m.speed && m.speed !== 1 ? `, episode at ${m.speed}x` : '';
+  if (!m.track) return `no music${speed}`;
+  return describeMusic(m) + speed;
+};
+
+const describeMusic = (m: Mix) =>
   `${m.track}${
     m.loop
       ? ` (${clockS(m.loop.start)} to ${clockS(m.loop.end)}, repeating${
@@ -46,6 +52,8 @@ export const MusicPanel = ({
   const [track, setTrack] = useState('');
   const [volume, setVolume] = useState(15);
   const [duck, setDuck] = useState(true);
+  // The whole episode's speed, voice and music together, pitch kept.
+  const [speed, setSpeed] = useState(1);
   // This episode's section of the track. Starts as the track's saved loop.
   const [loop, setLoop] = useState<Loop | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -58,10 +66,11 @@ export const MusicPanel = ({
     setState(mix);
     const last = mix.preview ?? mix.chosen;
     if (last) {
-      setTrack(last.track);
+      setTrack(last.track ?? '');
       setVolume(last.volume);
       setDuck(last.duck);
       setLoop(last.loop ?? null);
+      setSpeed(last.speed ?? 1);
     } else {
       const first = lib.tracks[0];
       setTrack((t) => {
@@ -106,7 +115,8 @@ export const MusicPanel = ({
   // The sliders no longer match the preview, so the preview is not what they say.
   const changed =
     !preview ||
-    preview.track !== track ||
+    (preview.track ?? '') !== track ||
+    (preview.speed ?? 1) !== speed ||
     preview.volume !== volume ||
     preview.duck !== duck ||
     !sameLoop(preview.loop, loop);
@@ -119,9 +129,11 @@ export const MusicPanel = ({
         <div className="now-step">
           <span className={`pill ${chosen ? 'pass' : ''}`}>
             <span className="dot" />
-            {chosen ? 'with music' : 'voice only'}
+            {chosen ? (chosen.track ? 'with music' : 'adjusted') : 'voice only'}
           </span>
-          <strong>Publishing will send: {chosen ? `the version with ${describe(chosen)}` : 'the voice alone'}</strong>
+          <strong>
+            Publishing will send: {chosen ? `the mixed version (${describe(chosen)})` : 'the plain voice'}
+          </strong>
         </div>
         {state?.lock && <span className="faint tiny">Music is locked: {state.lock}</span>}
         {state?.chosenStale && (
@@ -143,7 +155,7 @@ export const MusicPanel = ({
                 })
               }
             >
-              Publish voice only
+              Back to the plain voice
             </button>
           </div>
         )}
@@ -159,10 +171,10 @@ export const MusicPanel = ({
               setTrack(e.target.value);
               setLoop(tracks.find((t) => t.name === e.target.value)?.loop ?? null);
             }}
-            disabled={off || tracks.length === 0}
+            disabled={off}
             aria-label="Background track"
           >
-            {tracks.length === 0 && <option value="">No tracks yet - upload an mp3</option>}
+            <option value="">{tracks.length === 0 ? 'No music (upload an mp3 to add some)' : 'No music'}</option>
             {tracks.map((t) => (
               <option key={t.name} value={t.name}>
                 {t.name}
@@ -237,6 +249,26 @@ export const MusicPanel = ({
         )}
 
         <label className="row" style={{ gap: '0.75rem', alignItems: 'center' }}>
+          <span style={{ minWidth: '9rem' }}>Episode speed {speed.toFixed(2)}x</span>
+          <input
+            type="range"
+            min={0.75}
+            max={1.5}
+            step={0.05}
+            value={speed}
+            disabled={off}
+            onChange={(e) => setSpeed(Number(e.target.value))}
+            style={{ flex: 1 }}
+          />
+          <button className="btn ghost small" disabled={off || speed === 1} onClick={() => setSpeed(1)}>
+            1x
+          </button>
+        </label>
+        <span className="faint tiny" style={{ marginTop: '-0.4rem' }}>
+          The whole episode, voice and music together, pitch kept. Works with no music too.
+        </span>
+
+        <label className="row" style={{ gap: '0.75rem', alignItems: 'center' }}>
           <span style={{ minWidth: '9rem' }}>Music volume {volume}%</span>
           <input
             type="range"
@@ -244,7 +276,7 @@ export const MusicPanel = ({
             max={60}
             step={1}
             value={volume}
-            disabled={off}
+            disabled={off || !track}
             onChange={(e) => setVolume(Number(e.target.value))}
             style={{ flex: 1 }}
           />
@@ -253,7 +285,7 @@ export const MusicPanel = ({
           <input
             type="checkbox"
             checked={duck}
-            disabled={off}
+            disabled={off || !track}
             onChange={(e) => setDuck(e.target.checked)}
           />
           <span>Lower the music while someone is speaking</span>
@@ -262,9 +294,19 @@ export const MusicPanel = ({
         <div className="row" style={{ gap: '0.5rem' }}>
           <button
             className="btn"
-            disabled={off || !track || !changed}
+            disabled={off || (!track && speed === 1) || !changed}
             onClick={() =>
-              act('mix', async () => setState(await api.mix(runId, { track, volume, duck, loop })))
+              act('mix', async () =>
+                setState(
+                  await api.mix(runId, {
+                    track: track || null,
+                    speed: speed !== 1 ? speed : undefined,
+                    volume,
+                    duck,
+                    loop: track ? loop : undefined,
+                  })
+                )
+              )
             }
           >
             {busy === 'mix' ? 'Mixing...' : preview ? 'Mix preview again' : 'Mix preview'}

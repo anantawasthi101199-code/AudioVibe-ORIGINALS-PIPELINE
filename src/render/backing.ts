@@ -77,6 +77,9 @@ export const LOOP_CROSSFADE_S = 0.5;
 export const MIN_LOOP_S = 2;
 export const MIN_SPEED = 0.5;
 export const MAX_SPEED = 2;
+/** The whole finished episode's speed: voice and music together, pitch kept. */
+export const MIN_EPISODE_SPEED = 0.75;
+export const MAX_EPISODE_SPEED = 1.5;
 
 const loopSchema = z.object({
   start: z.number().min(0),
@@ -227,7 +230,8 @@ export const loopUnit = async (
 // never change what goes out.
 
 export const mixSchema = z.object({
-  track: z.string().min(1),
+  /** The music track. Absent: no music, the voice alone (sped up, say). */
+  track: z.string().min(1).optional(),
   /** Music level, 0 to 100. 15 sits under speech; 30 is clearly present. */
   volume: z.number().min(0).max(100),
   /** Push the music down while somebody is speaking. */
@@ -244,6 +248,11 @@ export const mixSchema = z.object({
   file: z.string().default('episode.mixed.wav'),
   /** The section of the track that repeated. Absent: the whole track. */
   loop: loopSchema.optional(),
+  /**
+   * The whole episode's speed, voice and music together, pitch kept. Absent: 1.
+   * Publishing divides every chapter time by it.
+   */
+  speed: z.number().min(MIN_EPISODE_SPEED).max(MAX_EPISODE_SPEED).optional(),
 });
 
 export type Mix = z.infer<typeof mixSchema>;
@@ -364,13 +373,28 @@ export interface MixDeps {
  */
 export const mixRun = async (
   run: Run,
-  input: { track: string; volume: number; duck: boolean; loop?: Loop | null },
+  input: {
+    /** Null or absent: no music, just the voice (at `speed`). */
+    track?: string | null;
+    volume: number;
+    duck: boolean;
+    loop?: Loop | null;
+    /** The whole episode's speed, pitch kept. */
+    speed?: number;
+  },
   deps: MixDeps = {}
 ): Promise<Mix> => {
   const voice = run.audioFile();
   if (!voice) throw new BackingRefused('this run has no audio yet. Voice it first, then add music.');
-  const track = trackFile(input.track);
-  if (!track) throw new BackingRefused(`no track called "${input.track}" in the music library`);
+  const speed = input.speed ?? 1;
+  if (!(speed >= MIN_EPISODE_SPEED && speed <= MAX_EPISODE_SPEED)) {
+    throw new BackingRefused(`the episode speed has to be between ${MIN_EPISODE_SPEED}x and ${MAX_EPISODE_SPEED}x`);
+  }
+  const track = input.track ? trackFile(input.track) : null;
+  if (input.track && !track) throw new BackingRefused(`no track called "${input.track}" in the music library`);
+  if (!track && speed === 1) {
+    throw new BackingRefused('nothing to mix: choose a track, or change the episode speed');
+  }
   if (!(input.volume >= 0 && input.volume <= 100)) {
     throw new BackingRefused('the volume is a number from 0 to 100');
   }
@@ -380,9 +404,9 @@ export const mixRun = async (
 
   // WHICH PART OF THE TRACK REPEATS: this episode's own choice, else the
   // track's saved loop, else the whole track.
-  const loop = input.loop === undefined ? readLoop(track) : input.loop;
+  const loop = track ? (input.loop === undefined ? readLoop(track) : input.loop) : null;
   if (loop) checkLoop(loop);
-  const source = loop ? await loopUnit(track, loop, deps) : track;
+  const source = track ? (loop ? await loopUnit(track, loop, deps) : track) : null;
 
   const gain = (input.volume / 100).toFixed(3);
   const fadeOutAt = Math.max(0, d - FADE_OUT_S).toFixed(3);
@@ -390,10 +414,15 @@ export const mixRun = async (
     `[0:a]atrim=0:${d.toFixed(3)},asetpts=PTS-STARTPTS,` +
     `afade=t=in:st=0:d=${FADE_IN_S},afade=t=out:st=${fadeOutAt}:d=${FADE_OUT_S},` +
     `volume=${gain}[bed];`;
-  const graph = input.duck
-    ? `[1:a]asplit=2[voice][key];${bed}[bed][key]sidechaincompress=${DUCK}[ducked];` +
-      `[voice][ducked]amix=inputs=2:duration=first:normalize=0[out]`
-    : `${bed}[1:a][bed]amix=inputs=2:duration=first:normalize=0[out]`;
+  // The episode speed goes on LAST, over voice and music together, so the
+  // music keeps its place under the words. atempo keeps the pitch.
+  const tempo = speed !== 1 ? `atempo=${speed.toFixed(3)}` : 'anull';
+  const graph = !source
+    ? `[0:a]${tempo}[out]`
+    : input.duck
+      ? `[1:a]asplit=2[voice][key];${bed}[bed][key]sidechaincompress=${DUCK}[ducked];` +
+        `[voice][ducked]amix=inputs=2:duration=first:normalize=0,${tempo}[out]`
+      : `${bed}[1:a][bed]amix=inputs=2:duration=first:normalize=0,${tempo}[out]`;
 
   // Written straight to a fresh name: nothing to rename over, so nothing an
   // open player can block.
@@ -401,7 +430,7 @@ export const mixRun = async (
   const out = run.mediaPath(name);
   const res = await (deps.run ?? runProcess)(deps.ffmpeg ?? process.env.FFMPEG_PATH ?? 'ffmpeg', [
     '-y', '-loglevel', 'error',
-    '-stream_loop', '-1', '-i', source,
+    ...(source ? ['-stream_loop', '-1', '-i', source] : []),
     '-i', voice,
     '-filter_complex', graph,
     '-map', '[out]',
@@ -417,13 +446,14 @@ export const mixRun = async (
   }
 
   const mix: Mix = {
-    track: path.basename(track, '.mp3'),
+    ...(track ? { track: path.basename(track, '.mp3') } : {}),
     volume: input.volume,
     duck: input.duck,
     ...voiceSignature(voice),
     mixedAt: new Date().toISOString(),
     file: name,
     ...(loop ? { loop } : {}),
+    ...(speed !== 1 ? { speed } : {}),
   };
   writeRecord(run, { ...readRecord(run), preview: mix });
   return mix;
@@ -458,6 +488,8 @@ export interface FinalAudio {
   file: string;
   /** The chosen music, when there is current music. */
   music: { track: string; volume: number } | null;
+  /** The whole episode's speed in the final audio. 1 when unchanged. */
+  speed: number;
   /** Changes whenever the final audio does, so a player reloads. */
   key: string;
 }
@@ -468,9 +500,14 @@ export const finalAudioFor = (run: Run): FinalAudio | null => {
   const { chosen } = readRecord(run);
   const mixed = mixedAudioFor(run);
   if (mixed && chosen) {
-    return { file: mixed, music: { track: chosen.track, volume: chosen.volume }, key: chosen.file };
+    return {
+      file: mixed,
+      music: chosen.track ? { track: chosen.track, volume: chosen.volume } : null,
+      speed: chosen.speed ?? 1,
+      key: chosen.file,
+    };
   }
-  return { file: voice, music: null, key: `voice-${Math.round(fs.statSync(voice).mtimeMs)}` };
+  return { file: voice, music: null, speed: 1, key: `voice-${Math.round(fs.statSync(voice).mtimeMs)}` };
 };
 
 /** "Use this version": the preview becomes what publishing sends. */

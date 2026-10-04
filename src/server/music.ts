@@ -81,7 +81,10 @@ const loopBody = z.object({
 });
 
 const mixBody = z.object({
-  track: z.string().min(1),
+  /** Null: no music, the voice alone at `speed`. */
+  track: z.string().min(1).nullable(),
+  /** The whole episode's speed, voice and music together. */
+  speed: z.number().min(0.75).max(1.5).optional(),
   volume: z.number().min(0).max(100),
   duck: z.boolean().default(true),
   /** This episode's section of the track; omitted means the track's saved loop. */
