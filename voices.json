@@ -1,1 +1,12 @@
-{}
+{
+  "eureka-tales": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "ash",
+        "firstUsedAt": "2026-10-03T22:13:43.587Z",
+        "firstRunId": "eureka-tales/e001-20261003-velcro-was-invented-after-a-walk"
+      }
+    }
+  }
+}
