@@ -13,13 +13,15 @@ name: Science story, in three minutes
 research: single
 
 kind: short
+# STANDARD SHORT LENGTH (owner, 2026-10-04): 2:20 to 3:00, capped at three
+# minutes. Each part scaled to fit; word targets follow the seconds.
 intent: >
   One true story from science - an invention, an accident that became a
   discovery, a race to be first - told complete in under three minutes,
   opening on a line of pure curiosity and a line that names the subject,
   ending on how it was solved.
 
-targetSeconds: [150, 185]
+targetSeconds: [140, 180]
 
 serialised: false
 
@@ -30,7 +32,7 @@ loops:
 beats:
   - id: mystery
     type: cold_open
-    seconds: [25, 40]
+    seconds: [25, 35]
     function: >
       Three moves: a first line that is pure curiosity, a second line that says
       plainly what this is the story of, then the first scene.
@@ -63,7 +65,7 @@ beats:
 
   - id: story
     type: escalation
-    seconds: [85, 105]
+    seconds: [80, 100]
     function: >
       Who was there and what they did, in order, up to the moment it clicked.
     constraints:
@@ -84,7 +86,7 @@ beats:
 
   - id: close
     type: payoff
-    seconds: [35, 50]
+    seconds: [35, 45]
     function: >
       How it was solved, what it changed, then the goodbye.
     closes: [the_mystery]

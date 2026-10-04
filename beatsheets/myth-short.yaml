@@ -39,11 +39,13 @@ name: Myth, in three minutes
 research: single
 
 kind: short
+# STANDARD SHORT LENGTH (owner, 2026-10-04): 2:20 to 3:00, capped at three
+# minutes. Each part scaled to fit; word targets follow the seconds.
 intent: >
   One myth told complete in under three minutes to somebody who has never heard
   of it, from a single article, ending on a reason to follow.
 
-targetSeconds: [150, 185]
+targetSeconds: [140, 180]
 
 serialised: false
 
@@ -54,7 +56,7 @@ loops:
 beats:
   - id: story
     type: escalation
-    seconds: [95, 115]
+    seconds: [90, 110]
     function: >
       Say what this is in a sentence, then tell the story from the beginning up
       to the point where it turns.
@@ -115,7 +117,7 @@ beats:
 
   - id: close
     type: outro
-    seconds: [20, 25]
+    seconds: [15, 25]
     function: >
       One line that lands, then the goodbye.
     closes: [the_story]

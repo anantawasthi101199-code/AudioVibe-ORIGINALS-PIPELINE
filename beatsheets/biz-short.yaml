@@ -16,13 +16,15 @@ name: The whole story, in three minutes
 research: single
 
 kind: short
+# STANDARD SHORT LENGTH (owner, 2026-10-04): 2:20 to 3:00, capped at three
+# minutes. Each part scaled to fit; word targets follow the seconds.
 intent: >
   How one business was built, beginning to success, in under three minutes,
   told simply and in order, ending on a reason to follow.
 
 # The parts below allowed 182s in the first version, and the first live short
 # came back at 171s estimated. The budget sits ten per cent under the line.
-targetSeconds: [125, 160]
+targetSeconds: [140, 180]
 
 serialised: false
 
@@ -33,7 +35,7 @@ loops:
 beats:
   - id: story
     type: escalation
-    seconds: [75, 90]
+    seconds: [84, 104]
     function: >
       A hooking first line, then the story in order from the beginning to the
       turning point.
@@ -50,7 +52,7 @@ beats:
 
   - id: rise
     type: payoff
-    seconds: [38, 48]
+    seconds: [43, 55]
     function: >
       The break, why it worked in one plain sentence, and where it stands now.
     constraints:
@@ -62,7 +64,7 @@ beats:
 
   - id: close
     type: outro
-    seconds: [12, 18]
+    seconds: [13, 21]
     function: >
       One line on what it took, then the goodbye.
     closes: [how_they_did_it]

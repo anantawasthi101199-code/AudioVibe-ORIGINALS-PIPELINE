@@ -26,6 +26,8 @@ name: One thing about your mind
 research: single
 
 kind: short
+# STANDARD SHORT LENGTH (owner, 2026-10-04): 2:20 to 3:00, capped at three
+# minutes. Each part scaled to fit; word targets follow the seconds.
 intent: >
   One true thing about how the mind works, explained in under three minutes so
   kindly and so plainly that somebody living it feels understood and has one
@@ -33,7 +35,7 @@ intent: >
 
 # The parts allow 166s; the budget sits under the line because speech rate is
 # an estimate and the writer tends to overshoot by about ten per cent.
-targetSeconds: [125, 160]
+targetSeconds: [140, 180]
 
 serialised: false
 
@@ -44,7 +46,7 @@ loops:
 beats:
   - id: moment
     type: cold_open
-    seconds: [55, 72]
+    seconds: [62, 78]
     function: >
       The moment they will recognise, the blame taken off, and the name of the
       thing.
@@ -61,7 +63,7 @@ beats:
 
   - id: why
     type: mechanism
-    seconds: [48, 62]
+    seconds: [54, 68]
     function: >
       The one thing that explains it, through one everyday comparison.
     constraints:
@@ -79,7 +81,7 @@ beats:
 
   - id: one_thing
     type: outro
-    seconds: [22, 32]
+    seconds: [24, 34]
     function: >
       One small thing to try, then the goodbye.
     closes: [one_thing]

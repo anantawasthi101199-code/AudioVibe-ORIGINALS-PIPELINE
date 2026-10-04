@@ -15,12 +15,14 @@ name: Health question, in three minutes
 research: single
 
 kind: short
+# STANDARD SHORT LENGTH (owner, 2026-10-04): 2:20 to 3:00, capped at three
+# minutes. Each part scaled to fit; word targets follow the seconds.
 intent: >
   One everyday health question answered in under three minutes: a hook, the
   real story of what is known, then either the myth's verdict or what a named
   health body recommends, said as theirs.
 
-targetSeconds: [150, 185]
+targetSeconds: [140, 180]
 
 serialised: false
 
@@ -70,7 +72,7 @@ beats:
 
   - id: verdict
     type: payoff
-    seconds: [35, 50]
+    seconds: [35, 45]
     function: >
       The answer: the myth's verdict, or what a named health body recommends,
       then the goodbye.
