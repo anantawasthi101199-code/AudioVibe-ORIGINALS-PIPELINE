@@ -1,8 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, type Mix, type MixState, type Track } from '../api';
+import { Trimmer, type Loop } from './Trimmer';
+
+const clockS = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 
 const describe = (m: Mix) =>
-  `${m.track} at ${m.volume}%${m.duck ? ', lowered under speech' : ''}`;
+  `${m.track}${
+    m.loop
+      ? ` (${clockS(m.loop.start)} to ${clockS(m.loop.end)}, repeating${
+          m.loop.speed && m.loop.speed !== 1 ? `, ${m.loop.speed}x` : ''
+        })`
+      : ''
+  } at ${m.volume}%${
+    m.duck ? ', lowered under speech' : ''
+  }`;
+
+const sameLoop = (a: Loop | null | undefined, b: Loop | null | undefined) =>
+  (!a && !b) ||
+  (!!a &&
+    !!b &&
+    Math.abs(a.start - b.start) < 0.05 &&
+    Math.abs(a.end - b.end) < 0.05 &&
+    (a.speed ?? 1) === (b.speed ?? 1));
 
 /**
  * Your own music under a finished episode.
@@ -27,6 +46,8 @@ export const MusicPanel = ({
   const [track, setTrack] = useState('');
   const [volume, setVolume] = useState(15);
   const [duck, setDuck] = useState(true);
+  // This episode's section of the track. Starts as the track's saved loop.
+  const [loop, setLoop] = useState<Loop | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const file = useRef<HTMLInputElement>(null);
@@ -40,8 +61,14 @@ export const MusicPanel = ({
       setTrack(last.track);
       setVolume(last.volume);
       setDuck(last.duck);
+      setLoop(last.loop ?? null);
     } else {
-      setTrack((t) => t || lib.tracks[0]?.name || '');
+      const first = lib.tracks[0];
+      setTrack((t) => {
+        const name = t || first?.name || '';
+        setLoop(lib.tracks.find((x) => x.name === name)?.loop ?? null);
+        return name;
+      });
     }
   }, [runId]);
 
@@ -66,6 +93,7 @@ export const MusicPanel = ({
       const { track: added } = await api.uploadTrack(f.name, f);
       await load();
       setTrack(added.name);
+      setLoop(null);
     });
 
   const off = disabled || busy !== null;
@@ -77,7 +105,12 @@ export const MusicPanel = ({
   const previewIsChosen = Boolean(preview && chosen && preview.file === chosen.file);
   // The sliders no longer match the preview, so the preview is not what they say.
   const changed =
-    !preview || preview.track !== track || preview.volume !== volume || preview.duck !== duck;
+    !preview ||
+    preview.track !== track ||
+    preview.volume !== volume ||
+    preview.duck !== duck ||
+    !sameLoop(preview.loop, loop);
+  const saved = tracks.find((t) => t.name === track)?.loop ?? null;
 
   return (
     <div className="stack mt" style={{ gap: '1rem' }}>
@@ -122,7 +155,10 @@ export const MusicPanel = ({
         <div className="row" style={{ gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <select
             value={track}
-            onChange={(e) => setTrack(e.target.value)}
+            onChange={(e) => {
+              setTrack(e.target.value);
+              setLoop(tracks.find((t) => t.name === e.target.value)?.loop ?? null);
+            }}
             disabled={off || tracks.length === 0}
             aria-label="Background track"
           >
@@ -165,9 +201,32 @@ export const MusicPanel = ({
         </div>
 
         {track && (
-          <div className="player">
-            <span className="faint tiny">The track on its own</span>
-            <audio controls preload="none" src={api.trackUrl(track)} />
+          <div className="trim-box stack tight">
+            <span className="faint tiny">
+              The section that repeats under the episode. Drag the bars, play it on loop, then mix.
+            </span>
+            <Trimmer src={api.trackUrl(track)} value={loop} onChange={setLoop} disabled={off} />
+            <div className="row mt" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                className="btn ghost small"
+                disabled={off || sameLoop(saved, loop)}
+                onClick={() =>
+                  act('saveloop', async () => {
+                    await api.setTrackLoop(track, loop);
+                    await load();
+                  })
+                }
+              >
+                {busy === 'saveloop' ? 'Saving...' : "Save as this track's loop"}
+              </button>
+              <span className="faint tiny">
+                {sameLoop(saved, loop)
+                  ? saved
+                    ? "This is the track's saved loop, used by every episode by default."
+                    : 'Whole track. Saving a loop makes it the default for every episode.'
+                  : 'Changed for this episode only, until you save it to the track.'}
+              </span>
+            </div>
           </div>
         )}
 
@@ -199,7 +258,7 @@ export const MusicPanel = ({
             className="btn"
             disabled={off || !track || !changed}
             onClick={() =>
-              act('mix', async () => setState(await api.mix(runId, { track, volume, duck })))
+              act('mix', async () => setState(await api.mix(runId, { track, volume, duck, loop })))
             }
           >
             {busy === 'mix' ? 'Mixing...' : preview ? 'Mix preview again' : 'Mix preview'}

@@ -214,6 +214,8 @@ export type ArtKind = 'avatar' | 'cover' | 'series';
 export interface Track {
   name: string;
   bytes: number;
+  /** The track's saved loop (seconds); null means the whole track. */
+  loop: { start: number; end: number; speed?: number } | null;
 }
 
 export interface Mix {
@@ -222,6 +224,8 @@ export interface Mix {
   duck: boolean;
   mixedAt: string;
   file: string;
+  /** The section that repeated; absent means the whole track. */
+  loop?: { start: number; end: number; speed?: number };
 }
 
 export interface MixState {
@@ -665,7 +669,20 @@ export const api = {
     }),
   trackUrl: (name: string) => `/api/music/file?name=${encodeURIComponent(name)}`,
   mixState: (id: string) => call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`),
-  mix: (id: string, body: { track: string; volume: number; duck: boolean }) =>
+  setTrackLoop: (name: string, loop: { start: number; end: number; speed?: number } | null) =>
+    call<{ ok: true; track: Track }>(`/api/music/loop?name=${encodeURIComponent(name)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ loop }),
+    }),
+  mix: (
+    id: string,
+    body: {
+      track: string;
+      volume: number;
+      duck: boolean;
+      loop?: { start: number; end: number; speed?: number } | null;
+    }
+  ) =>
     call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, {
       method: 'POST',
       body: JSON.stringify(body),

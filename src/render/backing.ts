@@ -56,10 +56,60 @@ export const looksLikeMp3 = (bytes: Buffer): boolean =>
   (bytes.length > 3 && bytes.subarray(0, 3).toString('latin1') === 'ID3') ||
   (bytes.length > 2 && bytes[0] === 0xff && (bytes[1]! & 0xe0) === 0xe0);
 
+/** A section of a track, in seconds, that repeats under an episode. */
+export interface Loop {
+  start: number;
+  end: number;
+  /** Playback speed of the section, 0.5 to 2. The pitch stays put. Absent: 1. */
+  speed?: number;
+}
+
 export interface Track {
   name: string;
   bytes: number;
+  /** The track's saved loop, its default for every episode. Null: the whole track. */
+  loop: Loop | null;
 }
+
+/** The blend where a loop's end runs back into its start, so no repeat clicks. */
+export const LOOP_CROSSFADE_S = 0.5;
+/** Shortest section worth looping: room for the crossfade at both ends and some music. */
+export const MIN_LOOP_S = 2;
+export const MIN_SPEED = 0.5;
+export const MAX_SPEED = 2;
+
+const loopSchema = z.object({
+  start: z.number().min(0),
+  end: z.number().positive(),
+  speed: z.number().min(MIN_SPEED).max(MAX_SPEED).optional(),
+});
+
+// Beside the mp3, under the same name: music/<slug>.json.
+const loopPath = (file: string): string => file.replace(/\.mp3$/, '.json');
+
+const readLoop = (file: string): Loop | null => {
+  const meta = loopPath(file);
+  if (!fs.existsSync(meta)) return null;
+  const parsed = loopSchema.safeParse(JSON.parse(fs.readFileSync(meta, 'utf8')).loop);
+  return parsed.success ? parsed.data : null;
+};
+
+export const checkLoop = (loop: Loop, trackSeconds?: number | null): void => {
+  if (!(loop.start >= 0 && loop.end > loop.start)) {
+    throw new BackingRefused('the loop has to end after it starts');
+  }
+  const speed = loop.speed ?? 1;
+  if (!(speed >= MIN_SPEED && speed <= MAX_SPEED)) {
+    throw new BackingRefused(`the speed has to be between ${MIN_SPEED}x and ${MAX_SPEED}x`);
+  }
+  // Long enough once sped up: a 3 second section at 2x plays for 1.5.
+  if ((loop.end - loop.start) / speed < MIN_LOOP_S) {
+    throw new BackingRefused(`the loop has to play for at least ${MIN_LOOP_S} seconds`);
+  }
+  if (trackSeconds && loop.end > trackSeconds + 0.05) {
+    throw new BackingRefused(`the loop ends after the track does (${trackSeconds.toFixed(1)}s)`);
+  }
+};
 
 export const listTracks = (): Track[] => {
   const dir = musicDir();
@@ -68,7 +118,27 @@ export const listTracks = (): Track[] => {
     .readdirSync(dir)
     .filter((f) => f.endsWith('.mp3'))
     .sort()
-    .map((f) => ({ name: f.replace(/\.mp3$/, ''), bytes: fs.statSync(path.join(dir, f)).size }));
+    .map((f) => {
+      const file = path.join(dir, f);
+      return { name: f.replace(/\.mp3$/, ''), bytes: fs.statSync(file).size, loop: readLoop(file) };
+    });
+};
+
+/** Save a track's loop: the section every episode uses unless it picks its own. */
+export const saveTrackLoop = async (
+  name: string,
+  loop: Loop | null,
+  probe: (file: string) => Promise<number | null> = probeDuration
+): Promise<Track> => {
+  const file = trackFile(name);
+  if (!file) throw new BackingRefused(`no track called "${name}" in the music library`);
+  if (loop) {
+    checkLoop(loop, await probe(file));
+    fs.writeFileSync(loopPath(file), JSON.stringify({ loop }, null, 2));
+  } else {
+    fs.rmSync(loopPath(file), { force: true });
+  }
+  return { name: path.basename(file, '.mp3'), bytes: fs.statSync(file).size, loop };
 };
 
 export const saveTrack = (name: string, bytes: Buffer): Track => {
@@ -81,7 +151,9 @@ export const saveTrack = (name: string, bytes: Buffer): Track => {
   const file = trackPath(name);
   fs.mkdirSync(musicDir(), { recursive: true });
   fs.writeFileSync(file, bytes);
-  return { name: path.basename(file, '.mp3'), bytes: bytes.length };
+  // A new file under an old name is a new piece of music: its old loop goes.
+  fs.rmSync(loopPath(file), { force: true });
+  return { name: path.basename(file, '.mp3'), bytes: bytes.length, loop: null };
 };
 
 export const trackFile = (name: string): string | null => {
@@ -93,7 +165,57 @@ export const deleteTrack = (name: string): boolean => {
   const file = trackFile(name);
   if (!file) return false;
   fs.rmSync(file);
+  fs.rmSync(loopPath(file), { force: true });
   return true;
+};
+
+/**
+ * One seamless loop unit cut from a track, cached under music/.loops/.
+ *
+ * HOW THE JOIN IS HIDDEN. The section, after any speed change, is S long. The unit is S - X long (X is
+ * the crossfade): it plays the section from X to the end, and over its last X
+ * seconds the section's first X seconds fade in while the end fades out. So
+ * when the unit repeats, what follows its last sample is the section at X -
+ * exactly what the faded-in head was about to play. No click, no jump.
+ */
+export const loopUnit = async (
+  track: string,
+  loop: Loop,
+  deps: { run?: typeof runProcess; ffmpeg?: string } = {}
+): Promise<string> => {
+  const dir = path.join(musicDir(), '.loops');
+  fs.mkdirSync(dir, { recursive: true });
+  const speed = loop.speed ?? 1;
+  const key =
+    `${path.basename(track, '.mp3')}-${Math.round(loop.start * 1000)}-${Math.round(loop.end * 1000)}` +
+    (speed !== 1 ? `-x${Math.round(speed * 100)}` : '');
+  const out = path.join(dir, `${key}.wav`);
+  if (fs.existsSync(out) && fs.statSync(out).size > 0) return out;
+
+  // The section's length AS PLAYED: the tempo change comes before the join, so
+  // the crossfade is measured on what is actually heard.
+  const S = (loop.end - loop.start) / speed;
+  const X = LOOP_CROSSFADE_S;
+  const tmp = `${out}.${Date.now()}.part.wav`;
+  const graph =
+    `[0:a]atrim=start=${loop.start.toFixed(3)}:end=${loop.end.toFixed(3)},asetpts=PTS-STARTPTS,` +
+    // atempo changes speed and keeps the pitch.
+    (speed !== 1 ? `atempo=${speed.toFixed(3)},` : '') +
+    `asplit=2[a][b];` +
+    `[a]atrim=start=${X}:end=${S.toFixed(3)},asetpts=PTS-STARTPTS,` +
+    `afade=t=out:st=${(S - 2 * X).toFixed(3)}:d=${X}[body];` +
+    `[b]atrim=start=0:end=${X},asetpts=PTS-STARTPTS,afade=t=in:st=0:d=${X},` +
+    `adelay=${Math.round((S - 2 * X) * 1000)}:all=1[head];` +
+    `[body][head]amix=inputs=2:duration=first:normalize=0[out]`;
+  const res = await (deps.run ?? runProcess)(deps.ffmpeg ?? process.env.FFMPEG_PATH ?? 'ffmpeg', [
+    '-y', '-loglevel', 'error', '-i', track, '-filter_complex', graph, '-map', '[out]', tmp,
+  ]);
+  if (res.code !== 0 || !fs.existsSync(tmp) || fs.statSync(tmp).size === 0) {
+    fs.rmSync(tmp, { force: true });
+    throw new BackingRefused(`could not cut the loop: ${res.stderr.slice(0, 200) || `ffmpeg exited ${res.code}`}`);
+  }
+  fs.renameSync(tmp, out);
+  return out;
 };
 
 // --- The mix ----------------------------------------------------------------
@@ -120,6 +242,8 @@ export const mixSchema = z.object({
    * studio's player holds a mix open while it streams.
    */
   file: z.string().default('episode.mixed.wav'),
+  /** The section of the track that repeated. Absent: the whole track. */
+  loop: loopSchema.optional(),
 });
 
 export type Mix = z.infer<typeof mixSchema>;
@@ -240,7 +364,7 @@ export interface MixDeps {
  */
 export const mixRun = async (
   run: Run,
-  input: { track: string; volume: number; duck: boolean },
+  input: { track: string; volume: number; duck: boolean; loop?: Loop | null },
   deps: MixDeps = {}
 ): Promise<Mix> => {
   const voice = run.audioFile();
@@ -253,6 +377,12 @@ export const mixRun = async (
 
   const d = await (deps.probe ?? probeDuration)(voice);
   if (!d) throw new BackingRefused('could not measure the episode audio');
+
+  // WHICH PART OF THE TRACK REPEATS: this episode's own choice, else the
+  // track's saved loop, else the whole track.
+  const loop = input.loop === undefined ? readLoop(track) : input.loop;
+  if (loop) checkLoop(loop);
+  const source = loop ? await loopUnit(track, loop, deps) : track;
 
   const gain = (input.volume / 100).toFixed(3);
   const fadeOutAt = Math.max(0, d - FADE_OUT_S).toFixed(3);
@@ -271,7 +401,7 @@ export const mixRun = async (
   const out = run.mediaPath(name);
   const res = await (deps.run ?? runProcess)(deps.ffmpeg ?? process.env.FFMPEG_PATH ?? 'ffmpeg', [
     '-y', '-loglevel', 'error',
-    '-stream_loop', '-1', '-i', track,
+    '-stream_loop', '-1', '-i', source,
     '-i', voice,
     '-filter_complex', graph,
     '-map', '[out]',
@@ -293,6 +423,7 @@ export const mixRun = async (
     ...voiceSignature(voice),
     mixedAt: new Date().toISOString(),
     file: name,
+    ...(loop ? { loop } : {}),
   };
   writeRecord(run, { ...readRecord(run), preview: mix });
   return mix;

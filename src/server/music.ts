@@ -20,6 +20,7 @@ import {
   mixState,
   mixedFileFor,
   saveTrack,
+  saveTrackLoop,
   trackFile,
 } from '../render/backing';
 import { Run } from '../run/store';
@@ -70,11 +71,27 @@ export const runMixState = (runId: string) => {
   return { ...mixState(run), lock: musicLock(run) };
 };
 
+const loopBody = z.object({
+  start: z.number().min(0),
+  end: z.number().positive(),
+  speed: z.number().min(0.5).max(2).optional(),
+});
+
 const mixBody = z.object({
   track: z.string().min(1),
   volume: z.number().min(0).max(100),
   duck: z.boolean().default(true),
+  /** This episode's section of the track; omitted means the track's saved loop. */
+  loop: loopBody.nullable().optional(),
 });
+
+/** Save a track's loop as its default for every episode; null clears it. */
+export const setTrackLoop = (name: string | null, body: unknown) =>
+  asHttp(async () => {
+    if (!name) throw new HttpError(400, 'which track?');
+    const loop = z.object({ loop: loopBody.nullable() }).parse(body).loop;
+    return { ok: true as const, track: await saveTrackLoop(name, loop) };
+  });
 
 export const makeMix = (runId: string, body: unknown) =>
   asHttp(async () => {

@@ -41,6 +41,7 @@ import {
   removeMix,
   removeTrack,
   runMixState,
+  setTrackLoop,
   trackFileFor,
   uploadTrack,
   useMix,
@@ -504,6 +505,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/music' && req.method === 'DELETE') {
         return send(res, 200, removeTrack(url.searchParams.get('name')));
+      }
+      if (pathname === '/api/music/loop' && req.method === 'PUT') {
+        return send(res, 200, await setTrackLoop(url.searchParams.get('name'), await readBody(req)));
       }
       if (pathname === '/api/music/file') {
         const file = trackFileFor(url.searchParams.get('name'));
