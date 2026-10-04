@@ -758,12 +758,21 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   key={r.formatId}
                   className={`chip${route?.formatId === r.formatId ? ' on' : ''}`}
                   onClick={() => setRoute(r)}
+                  // The full description on hover: two formats of the same kind
+                  // differ in what they are for, not in their length.
+                  title={r.intent}
                 >
                   {r.kind === 'shorts' ? `${r.produces} shorts` : r.long ? 'Episode' : 'Short'}
+                  {/* The format's own name, so two Episodes or two Shorts on
+                      one channel can be told apart. */}
+                  <span className="muted tiny">{r.formatName}</span>
                   <span className="faint tiny">
                     {r.seconds[0] < 60
                       ? `${r.seconds[0]}-${r.seconds[1]}s`
-                      : `${Math.round(r.seconds[0] / 60)}-${Math.round(r.seconds[1] / 60)}m`}
+                      : r.seconds[1] < 300
+                        ? // Half-minutes for shorts, or 150-185s reads as "3-3m".
+                          `${Math.round(r.seconds[0] / 30) / 2}-${Math.round(r.seconds[1] / 30) / 2}m`
+                        : `${Math.round(r.seconds[0] / 60)}-${Math.round(r.seconds[1] / 60)}m`}
                   </span>
                 </button>
               ))}
