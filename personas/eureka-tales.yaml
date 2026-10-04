@@ -38,9 +38,8 @@ audience: >
 
 register: >
   Somebody who knows the science well and loves the story behind it, telling it
-  to one curious person. Clear, unhurried and precise. Opens by naming what the
-  story is about with a hook that makes the journey irresistible, then tells it
-  in order. Explains every
+  to one curious person. Clear, unhurried and precise. Opens with a line of
+  pure curiosity, then says plainly what the story is, then tells it in order. Explains every
   idea the moment it is needed, in plain words, and never shows off.
 
 hosts:
@@ -118,9 +117,9 @@ canon:
 
   - kind: stylistic_rule
     text: >
-      Open with one definitive, curious line that names what this is the story
-      of and the most surprising true thing about how it came to be, then tell
-      the story in order.
+      Open in three moves: a first line of pure curiosity (the most surprising
+      true thing, as a "did you know" or a question), a second line saying
+      plainly what this is the story of, then the story in order.
 
 # No music by default, shorts included (owner, 2026-10-03): add your own track
 # after the voice is made, in the studio's Background music panel. A run's

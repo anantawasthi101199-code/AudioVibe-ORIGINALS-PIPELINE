@@ -16,8 +16,8 @@ kind: short
 intent: >
   One true story from science - an invention, an accident that became a
   discovery, a race to be first - told complete in under three minutes,
-  opening on a line that names the subject and hooks, ending on how it was
-  solved.
+  opening on a line of pure curiosity and a line that names the subject,
+  ending on how it was solved.
 
 targetSeconds: [150, 185]
 
@@ -30,32 +30,35 @@ loops:
 beats:
   - id: mystery
     type: cold_open
-    seconds: [20, 30]
+    seconds: [25, 40]
     function: >
-      A banger first line that says exactly what this is the story of, and
-      makes the journey to it sound impossible to skip. Then the first scene.
+      Three moves: a first line that is pure curiosity, a second line that says
+      plainly what this is the story of, then the first scene.
     opens: [the_mystery]
     constraints:
       - >
-        THE FIRST SENTENCE NAMES THE THING, DEFINITIVELY, AND HOOKS. Say what
-        this is the story of - the invention or discovery, by name - joined to
-        the most surprising true fact about how it came to be: how long it
-        took, how unlikely the start was, what it was copied from. For example:
-        "This is the story of Velcro, and of the nearly twenty years it took one
-        Swiss engineer to copy a weed." A listener should know the subject in
-        the first five seconds and want the journey. (Owner, 2026-10-04: a
-        short that hid its subject until the end lost people who did not know
-        what they were listening to.)
+        LINE ONE IS CURIOSITY. One sentence the listener cannot leave
+        unanswered: the most surprising true thing in the story, put as a "did
+        you know" or a question, joined to something they use or know. For
+        example: "Did you know the strip that holds your shoes shut was copied
+        from a weed, and that nobody wanted it until NASA came looking?" It may
+        tease how it ends; it must not explain it.
       - >
-        THEN DROP INTO THE FIRST SCENE: a place, a year, a person, a thing you
+        LINE TWO IS DEFINITIVE. Say exactly what this is the story of, by name,
+        and the shape of the journey: "This is the story of Velcro, and of the
+        nearly twenty years one Swiss engineer spent teaching a burr to work for
+        him." After two lines the listener knows the subject and wants the rest.
+      - >
+        THEN START: "It begins in..." - a place, a year, a person, a thing you
         could see. Two or three sentences.
       - >
-        Every fact in the hook comes from the article. Never invent a number
-        to make it punchier.
+        EVERY FACT IN LINES ONE AND TWO COMES FROM THE ARTICLE. Never invent a
+        year, a number or a first use to make it punchier; a hook that turns out
+        to be false loses the listener for good.
       - >
         No greeting, no naming the show, no "today we are going to look at". A
-        listener in a feed gave you about three seconds.
-      - Name the subject, but keep HOW it was solved for later. This part only opens the journey.
+        listener in a feed gave you about three seconds. (Owner, 2026-10-04:
+        curiosity first, then what it is, then the story.)
     minClaims: 0
 
   - id: story
