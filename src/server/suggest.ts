@@ -60,6 +60,36 @@ WHAT MAKES A GOOD ONE HERE:
 The "why" is one line, and it says what is actually in the subject - the
 finding, the document, the disagreement - rather than why it is interesting.`;
 
+/**
+ * THE SIZE OF THE STORY, by length (owner, 2026-10-05). A short and an episode
+ * need different subjects, not the same subject cut down: a three-minute short
+ * of a story that needs fifteen minutes is a summary, and fifteen minutes of a
+ * three-minute story is padding. Every channel gets one of these.
+ */
+export const LENGTH_RULES = {
+  short: `THIS IS A SHORT: 2 to 3 minutes, about 400 words, heard in a feed by somebody
+who knows nothing about it.
+
+- ONE INCIDENT, ONE TURN. A single event, discovery, decision or reveal that
+  makes complete sense on its own, with a clear ending.
+- TWO OR THREE PEOPLE AT MOST. More than that and the short spends its time
+  introducing them.
+- A HOOK IN THE FIRST LINE. Something surprising, specific and true that makes
+  somebody keep listening.
+- NOT A SUMMARY OF SOMETHING BIG. If telling it properly needs background,
+  several stages or a long aftermath, it is an episode subject; leave it out.`,
+  long: `THIS IS A FULL EPISODE: long form, told start to finish with time to breathe.
+
+- A STORY WITH DEPTH. Several stages: a before, a build-up, a turning point and
+  an aftermath worth hearing about. Something that unfolds over months or years.
+- ENOUGH DOCUMENTED MATERIAL TO FILL IT. Trials, inquiries, reports, books or
+  long-form journalism with real detail, not one article's worth.
+- PEOPLE AND COMPLICATIONS. More than one person who matters, a wrong turn, a
+  missed chance, a disagreement, something that was not obvious at the time.
+- NOT A ONE-FACT STORY. If the whole thing can be told in three minutes, it is
+  a short subject; leave it out.`,
+} as const;
+
 export const SET_SUGGEST_SYSTEM = `You propose subjects for a SET of short, self-contained pieces.
 
 You are not writing anything. You are handing somebody a short list to choose
@@ -110,6 +140,8 @@ export const suggestTopics = async (
           `AUDIENCE: ${input.persona.audience.trim().replace(/\s+/g, ' ')}`,
           `FORMAT: ${input.format.name} - ${input.format.intent.trim().replace(/\s+/g, ' ')}`,
           '',
+          // A set's size rule is already its whole system prompt.
+          ...(input.format.sourceOnly ? [] : [LENGTH_RULES[input.format.kind === 'short' ? 'short' : 'long'], '']),
           // WHAT IT MUST NOT SAY BACK TO US. Cheap to include and the single
           // biggest difference between a usable list and a list of near-misses.
           `ALREADY QUEUED, do not suggest these:\n${listOrNone(input.queued)}`,
