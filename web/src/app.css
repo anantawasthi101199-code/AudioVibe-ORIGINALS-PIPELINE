@@ -2153,3 +2153,30 @@ table.runs .num {
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.02);
 }
+.trim-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.trim-row .trimmer {
+  flex: 1;
+  min-width: 0;
+}
+.trim-play {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--line, #2a3554);
+  background: #5fb3ff;
+  color: #0b1020;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.trim-play.on {
+  background: #4ade80;
+}
+.trim-play:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

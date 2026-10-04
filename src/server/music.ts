@@ -21,6 +21,9 @@ import {
   mixedFileFor,
   saveTrack,
   saveTrackLoop,
+  checkLoop,
+  loopUnit,
+  LOOP_CROSSFADE_S,
   trackFile,
 } from '../render/backing';
 import { Run } from '../run/store';
@@ -126,3 +129,22 @@ export const voiceOnly = (runId: string) =>
 
 export const mixedFile = (runId: string, which: string | null): string | null =>
   mixedFileFor(Run.open(runId), which === 'chosen' ? 'chosen' : 'preview');
+
+/**
+ * The loop exactly as the mix will repeat it - the section, at its speed with
+ * the pitch kept, the end blended into the start - for the trimmer to play.
+ * Built by the same code as the mix and cached, so the preview IS the mix's
+ * loop, not an imitation of it.
+ */
+export const loopPreview = (name: string | null, q: URLSearchParams) =>
+  asHttp(async () => {
+    const file = name ? trackFile(name) : null;
+    if (!file) throw new HttpError(404, 'no such track');
+    const loop = {
+      start: Number(q.get('start')),
+      end: Number(q.get('end')),
+      ...(q.get('speed') && Number(q.get('speed')) !== 1 ? { speed: Number(q.get('speed')) } : {}),
+    };
+    checkLoop(loop);
+    return { file: await loopUnit(file, loop), crossfade: LOOP_CROSSFADE_S };
+  });

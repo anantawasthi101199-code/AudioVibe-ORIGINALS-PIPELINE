@@ -34,6 +34,7 @@ import {
   tooManyAttempts,
 } from './auth';
 import {
+  loopPreview,
   makeMix,
   mixedFile,
   musicLibrary,
@@ -508,6 +509,11 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/music/loop' && req.method === 'PUT') {
         return send(res, 200, await setTrackLoop(url.searchParams.get('name'), await readBody(req)));
+      }
+      if (pathname === '/api/music/preview') {
+        const { file } = await loopPreview(url.searchParams.get('name'), url.searchParams);
+        serveFile(res, file);
+        return;
       }
       if (pathname === '/api/music/file') {
         const file = trackFileFor(url.searchParams.get('name'));

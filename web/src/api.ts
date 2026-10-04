@@ -668,6 +668,11 @@ export const api = {
       method: 'DELETE',
     }),
   trackUrl: (name: string) => `/api/music/file?name=${encodeURIComponent(name)}`,
+  /** The exact loop the mix will repeat: section, speed (pitch kept), blended join. */
+  loopPreviewUrl: (name: string, l: { start: number; end: number; speed?: number }) =>
+    `/api/music/preview?name=${encodeURIComponent(name)}&start=${l.start.toFixed(3)}&end=${l.end.toFixed(3)}${
+      l.speed && l.speed !== 1 ? `&speed=${l.speed}` : ''
+    }`,
   mixState: (id: string) => call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`),
   setTrackLoop: (name: string, loop: { start: number; end: number; speed?: number } | null) =>
     call<{ ok: true; track: Track }>(`/api/music/loop?name=${encodeURIComponent(name)}`, {

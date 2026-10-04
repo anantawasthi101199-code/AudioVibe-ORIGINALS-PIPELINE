@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface Loop {
   start: number;
   end: number;
-  /** 0.5 to 2. The mix keeps the pitch; this browser preview does not. */
+  /** 0.5 to 2. Tempo only: the pitch stays put, in the preview and the mix. */
   speed?: number;
 }
 
@@ -16,39 +16,55 @@ const fmt = (s: number) => {
 };
 
 /**
- * Pick the section of a track that repeats under an episode.
+ * Pick the section of a track that repeats under an episode, and hear it.
  *
- * The track is drawn as a waveform; drag the start and end bars, play the
- * selection on loop to hear the join, and save it as the track's default if
- * you want every episode to use it. In the browser the preview loop is a hard
- * cut; the real mix blends the end into the start over half a second.
+ * The track is drawn as a waveform. Drag the start and end bars; press play
+ * and it plays from the start bar to the end bar and round again, with a
+ * playhead moving across, at the chosen speed with the pitch kept - exactly
+ * what the mix will repeat. Moving a bar or the speed while it plays changes
+ * what you hear straight away. The one difference from the mix: there the end
+ * blends into the start over half a second; here it jumps.
  */
+/** Half a second: the blend where the loop's end runs into its start. */
+const CROSSFADE_S = 0.5;
+
 export const Trimmer = ({
   src,
+  previewUrl,
   value,
   onChange,
   disabled,
 }: {
   src: string;
+  /** Where the studio serves this exact loop, as the mix will repeat it. */
+  previewUrl: (loop: Loop) => string;
   /** The selected section; null means the whole track. */
   value: Loop | null;
   onChange: (loop: Loop) => void;
   disabled?: boolean;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const ctx = useRef<AudioContext | null>(null);
+  const node = useRef<AudioBufferSourceNode | null>(null);
+  const startedAt = useRef(0);
+  const frame = useRef<number | null>(null);
+  const [preparing, setPreparing] = useState(false);
   const [peaks, setPeaks] = useState<number[] | null>(null);
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
+  const [head, setHead] = useState<number | null>(null);
   const [drag, setDrag] = useState<'start' | 'end' | null>(null);
-  const ctx = useRef<AudioContext | null>(null);
-  const buffer = useRef<AudioBuffer | null>(null);
-  const source = useRef<AudioBufferSourceNode | null>(null);
 
   const loop: Loop = value ?? { start: 0, end: duration };
   const speed = value?.speed ?? 1;
-  // Every change carries the speed along, so moving a bar never resets it.
-  const emit = (next: Loop) => onChange(speed !== 1 ? { ...next, speed } : { start: next.start, end: next.end });
+  // The play loop reads these every frame, so it always follows the latest bars.
+  const live = useRef({ start: loop.start, end: loop.end });
+  live.current = { start: loop.start, end: loop.end };
+
+  // Every bar move carries the speed along, so moving a bar never resets it.
+  const emit = (next: Loop) =>
+    onChange(speed !== 1 ? { ...next, speed } : { start: next.start, end: next.end });
 
   // Decode once per track and reduce it to a few hundred peaks to draw.
   useEffect(() => {
@@ -58,11 +74,11 @@ export const Trimmer = ({
     (async () => {
       const res = await fetch(src);
       const data = await res.arrayBuffer();
-      ctx.current ??= new AudioContext();
-      const audio = await ctx.current.decodeAudioData(data);
+      const ctx = new AudioContext();
+      const decoded = await ctx.decodeAudioData(data);
+      void ctx.close();
       if (cancelled) return;
-      buffer.current = audio;
-      const ch = audio.getChannelData(0);
+      const ch = decoded.getChannelData(0);
       const step = Math.max(1, Math.floor(ch.length / BUCKETS));
       const out: number[] = [];
       for (let i = 0; i < BUCKETS; i++) {
@@ -70,7 +86,7 @@ export const Trimmer = ({
         for (let j = i * step; j < Math.min(ch.length, (i + 1) * step); j++) max = Math.max(max, Math.abs(ch[j]!));
         out.push(max);
       }
-      setDuration(audio.duration);
+      setDuration(decoded.duration);
       setPeaks(out);
     })().catch((e) => !cancelled && setError(`could not read the track: ${(e as Error).message}`));
     return () => {
@@ -78,7 +94,79 @@ export const Trimmer = ({
     };
   }, [src]);
 
-  // Draw: the waveform, the unselected parts dimmed, two bars.
+  // What is playing, so the playhead can be placed on the track.
+  const playingLoop = useRef<Loop | null>(null);
+
+  const halt = () => {
+    try {
+      node.current?.stop();
+    } catch {
+      // Already stopped.
+    }
+    node.current = null;
+    if (frame.current) cancelAnimationFrame(frame.current);
+    frame.current = null;
+  };
+
+  const tick = () => {
+    const l = playingLoop.current;
+    const n = node.current;
+    if (!l || !n || !ctx.current || !n.buffer) return;
+    const sp = l.speed ?? 1;
+    const len = l.end - l.start;
+    // The clip starts CROSSFADE_S into the section (as heard) and wraps.
+    const p = (ctx.current.currentTime - startedAt.current) % n.buffer.duration;
+    setHead(l.start + (((CROSSFADE_S + p) * sp) % len));
+    frame.current = requestAnimationFrame(tick);
+  };
+
+  const play = async (l: Loop = { ...loop, ...(speed !== 1 ? { speed } : {}) }) => {
+    setPreparing(true);
+    try {
+      ctx.current ??= new AudioContext();
+      await ctx.current.resume();
+      const res = await fetch(previewUrl(l));
+      if (!res.ok) throw new Error((await res.json().catch(() => null))?.error ?? `HTTP ${res.status}`);
+      const buf = await ctx.current.decodeAudioData(await res.arrayBuffer());
+      halt();
+      const n = ctx.current.createBufferSource();
+      n.buffer = buf;
+      // The clip is already seamless: looping it whole is the mix's loop.
+      n.loop = true;
+      n.connect(ctx.current.destination);
+      n.start();
+      startedAt.current = ctx.current.currentTime;
+      node.current = n;
+      playingLoop.current = l;
+      setPlaying(true);
+      frame.current = requestAnimationFrame(tick);
+    } catch (e) {
+      setError(`could not play the selection: ${(e as Error).message}`);
+    } finally {
+      setPreparing(false);
+    }
+  };
+
+  const stop = () => {
+    halt();
+    playingLoop.current = null;
+    setPlaying(false);
+    setHead(null);
+  };
+
+  // A new track: stop whatever was playing.
+  useEffect(() => stop, [src]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Bars or speed moved while playing: once they settle, play the new loop.
+  useEffect(() => {
+    if (!playing || drag) return;
+    const l = playingLoop.current;
+    if (l && l.start === loop.start && l.end === loop.end && (l.speed ?? 1) === speed) return;
+    const t = window.setTimeout(() => void play(), 350);
+    return () => window.clearTimeout(t);
+  }, [loop.start, loop.end, speed, drag, playing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Draw: the waveform, the unselected parts dimmed, the two bars, the playhead.
   useEffect(() => {
     const c = canvas.current;
     if (!c || !peaks || !duration) return;
@@ -91,53 +179,28 @@ export const Trimmer = ({
     const bw = w / peaks.length;
     peaks.forEach((p, i) => {
       const x = i * bw;
-      const inside = x >= x0 && x <= x1;
-      g.fillStyle = inside ? '#5fb3ff' : '#2a3554';
+      const played = head !== null && x >= x0 && x <= (head / duration) * w;
+      g.fillStyle = x >= x0 && x <= x1 ? (played ? '#9fd4ff' : '#5fb3ff') : '#2a3554';
       const bh = Math.max(1, p * h * 0.92);
       g.fillRect(x, (h - bh) / 2, Math.max(1, bw - 1), bh);
     });
     g.fillStyle = '#ffffff';
     g.fillRect(x0 - devicePixelRatio, 0, 2 * devicePixelRatio, h);
     g.fillRect(x1 - devicePixelRatio, 0, 2 * devicePixelRatio, h);
-  }, [peaks, duration, loop.start, loop.end]);
-
-  const stop = useCallback(() => {
-    try {
-      source.current?.stop();
-    } catch {
-      // Already stopped.
+    if (head !== null) {
+      g.fillStyle = '#4ade80';
+      g.fillRect((head / duration) * w - devicePixelRatio, 0, 2 * devicePixelRatio, h);
     }
-    source.current = null;
-    setPlaying(false);
-  }, []);
-
-  useEffect(() => stop, [stop, src]);
-
-  const play = () => {
-    if (!ctx.current || !buffer.current) return;
-    stop();
-    const node = ctx.current.createBufferSource();
-    node.buffer = buffer.current;
-    node.loop = true;
-    node.loopStart = loop.start;
-    node.loopEnd = loop.end;
-    node.playbackRate.value = speed;
-    node.connect(ctx.current.destination);
-    void ctx.current.resume();
-    node.start(0, loop.start);
-    source.current = node;
-    setPlaying(true);
-  };
-
-  // Restart the preview when the selection moves, so you hear the new join.
-  useEffect(() => {
-    if (playing && !drag) play();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loop.start, loop.end, speed, drag]);
+  }, [peaks, duration, loop.start, loop.end, head]);
 
   const timeAt = (clientX: number) => {
     const r = canvas.current!.getBoundingClientRect();
     return Math.min(duration, Math.max(0, ((clientX - r.left) / r.width) * duration));
+  };
+
+  const move = (which: 'start' | 'end', t: number) => {
+    if (which === 'start') emit({ start: Math.min(t, loop.end - MIN_LOOP_S), end: loop.end });
+    else emit({ start: loop.start, end: Math.max(t, loop.start + MIN_LOOP_S) });
   };
 
   const onDown = (e: React.PointerEvent) => {
@@ -150,31 +213,38 @@ export const Trimmer = ({
     move(which, t);
   };
 
-  const move = (which: 'start' | 'end', t: number) => {
-    if (which === 'start') emit({ start: Math.min(t, loop.end - MIN_LOOP_S), end: loop.end });
-    else emit({ start: loop.start, end: Math.max(t, loop.start + MIN_LOOP_S) });
-  };
-
   if (error) return <span className="fail tiny">{error}</span>;
   if (!peaks) return <span className="faint tiny">Reading the track...</span>;
 
   return (
     <div className="stack tight">
-      <canvas
-        ref={canvas}
-        className="trimmer"
-        onPointerDown={onDown}
-        onPointerMove={(e) => drag && move(drag, timeAt(e.clientX))}
-        onPointerUp={() => setDrag(null)}
-        aria-label="Drag the start and end bars to choose the section that repeats"
-      />
+      <div className="trim-row">
+        <button
+          className={`trim-play${playing ? ' on' : ''}`}
+          disabled={disabled}
+          onClick={playing ? stop : () => void play()}
+          aria-busy={preparing}
+          aria-label={playing ? 'Stop the preview' : 'Play from the start bar to the end bar, on loop'}
+          title={playing ? 'Stop' : 'Play the selection on loop'}
+        >
+          {preparing ? '…' : playing ? '■' : '▶'}
+        </button>
+        <canvas
+          ref={canvas}
+          className="trimmer"
+          onPointerDown={onDown}
+          onPointerMove={(e) => drag && move(drag, timeAt(e.clientX))}
+          onPointerUp={() => setDrag(null)}
+          aria-label="Drag the start and end bars to choose the section that repeats"
+        />
+      </div>
       <div className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <span className="mono tiny">
+          {playing && head !== null ? `${fmt(head)} · ` : ''}
           {fmt(loop.start)} to {fmt(loop.end)} · {(loop.end - loop.start).toFixed(1)}s of the track
+          {speed !== 1 ? `, plays ${((loop.end - loop.start) / speed).toFixed(1)}s at ${speed.toFixed(2)}x` : ''}
         </span>
-        <button className="btn small" disabled={disabled} onClick={playing ? stop : play}>
-          {playing ? 'Stop' : 'Play selection on loop'}
-        </button>
+        <span className="spacer" />
         <button
           className="btn ghost small"
           disabled={disabled || (loop.start === 0 && loop.end === duration)}
@@ -206,12 +276,11 @@ export const Trimmer = ({
           1x
         </button>
       </label>
-      {speed !== 1 && (
-        <span className="faint tiny">
-          Each repeat plays for {((loop.end - loop.start) / speed).toFixed(1)}s. This preview shifts
-          the pitch with the speed; the mix keeps the pitch.
-        </span>
-      )}
+      <span className="faint tiny">
+        Press play to hear exactly what the mix will repeat: this section, at this speed with the
+        pitch kept, the end blending into the start. Move the bars or the speed while it plays and
+        it follows.
+      </span>
     </div>
   );
 };

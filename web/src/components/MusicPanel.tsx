@@ -205,7 +205,13 @@ export const MusicPanel = ({
             <span className="faint tiny">
               The section that repeats under the episode. Drag the bars, play it on loop, then mix.
             </span>
-            <Trimmer src={api.trackUrl(track)} value={loop} onChange={setLoop} disabled={off} />
+            <Trimmer
+              src={api.trackUrl(track)}
+              previewUrl={(l) => api.loopPreviewUrl(track, l)}
+              value={loop}
+              onChange={setLoop}
+              disabled={off}
+            />
             <div className="row mt" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
               <button
                 className="btn ghost small"
