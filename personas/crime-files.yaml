@@ -40,9 +40,15 @@ contentRating: mature
 
 fiction: false
 
+# WHAT THE SHOW COVERS, said here because the topic suggester and the writer
+# both read it (owner, 2026-10-04): real crimes, mostly murder - serial killers,
+# twisted cases, killers nobody suspected - and how they were caught. Accidents
+# and disasters are not crimes and do not belong here.
 thesis: >
-  One true story a week, told start to finish by somebody who went and read the
-  files - the long way round rather than the short version everybody repeats.
+  One true crime case at a time - murders, serial killers, twisted cases and the
+  killers nobody suspected, and how they were finally caught - told start to
+  finish by somebody who went and read the case files, the long way round rather
+  than the short version everybody repeats.
 
 bio: >
   Every case has a story. One real case at a time, told from the files: the
