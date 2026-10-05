@@ -1,0 +1,12 @@
+node_modules
+web/node_modules
+web/dist
+runs
+music
+art
+archive
+.env
+.env.local
+accounts.json
+*.log
+.release.lock

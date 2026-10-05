@@ -334,6 +334,14 @@ export const createServer = (): http.Server =>
     const { pathname } = url;
     const id = url.searchParams.get('id');
 
+    // SHOWN INSIDE THE ADMIN DASHBOARD AND NOWHERE ELSE (2026-10-05). A page
+    // that can publish to production must not be framable by any site, or a
+    // stranger's page could dress it up and borrow a teammate's click.
+    res.setHeader(
+      'content-security-policy',
+      `frame-ancestors 'self' ${process.env.FOUNDRY_FRAME_ANCESTORS ?? 'https://admin.audiovibe.co'}`
+    );
+
     // WHAT REACHED US, for the "Failed to fetch" with the studio up (2026-10-05):
     // every upload, any error status, and any connection that dropped before the
     // answer was sent. A request missing here never arrived.
