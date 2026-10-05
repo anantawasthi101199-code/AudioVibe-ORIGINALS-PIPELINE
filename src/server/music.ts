@@ -5,7 +5,9 @@
  * a mix is ffmpeg over files already here; publishing sends only the mix somebody chose
  * with "use this version". See render/backing.ts for the rules.
  */
+import fs from 'fs';
 import http from 'http';
+import path from 'path';
 import { z } from 'zod';
 import {
   BackingRefused,
@@ -19,6 +21,7 @@ import {
   mixRun,
   mixState,
   mixedFileFor,
+  musicDir,
   saveTrack,
   saveTrackLoop,
   checkLoop,
@@ -27,6 +30,7 @@ import {
   trackFile,
 } from '../render/backing';
 import { Run } from '../run/store';
+import { loadFormat } from '../formats/load';
 import { HttpError } from './routes';
 
 const asHttp = async <T>(fn: () => T | Promise<T>): Promise<T> => {
@@ -71,7 +75,14 @@ export const trackFileFor = (name: string | null): string | null => (name ? trac
 
 export const runMixState = (runId: string) => {
   const run = Run.open(runId);
-  return { ...mixState(run), lock: musicLock(run) };
+  return {
+    ...mixState(run),
+    lock: musicLock(run),
+    // For the "use the channel default" and "make this the default" buttons.
+    channelId: run.manifest.personaId,
+    short: kindOf(run) === 'short',
+    channelDefault: defaultFor(run),
+  };
 };
 
 const loopBody = z.object({
@@ -97,6 +108,59 @@ export const setTrackLoop = (name: string | null, body: unknown) =>
     if (!name) throw new HttpError(400, 'which track?');
     const loop = z.object({ loop: loopBody.nullable() }).parse(body).loop;
     return { ok: true as const, track: await saveTrackLoop(name, loop) };
+  });
+
+// --- A channel's default music, for its shorts (owner, 2026-10-05) ----------
+//
+// ONE CLICK INSTEAD OF SIX. A channel's shorts nearly always want the same bed:
+// the same track, section, level and speed. The default is those settings,
+// kept per channel in music/defaults.json (on the volume, beside the tracks),
+// and "use default" mixes them and makes that the version publishing sends.
+// Choosing other music works exactly as before.
+const defaultsSchema = z.record(z.object({ short: mixBody.extend({ track: z.string().min(1) }).optional() }));
+type MusicDefaults = z.infer<typeof defaultsSchema>;
+
+const defaultsFile = () => path.join(musicDir(), 'defaults.json');
+
+export const musicDefaults = (): MusicDefaults => {
+  try {
+    return defaultsSchema.parse(JSON.parse(fs.readFileSync(defaultsFile(), 'utf8')));
+  } catch {
+    return {};
+  }
+};
+
+const kindOf = (run: Run): 'short' | 'long' => (loadFormat(run.manifest.formatId).kind === 'short' ? 'short' : 'long');
+
+/** This run's channel default, when it is a short and the channel has one. */
+export const defaultFor = (run: Run) =>
+  kindOf(run) === 'short' ? musicDefaults()[run.manifest.personaId]?.short ?? null : null;
+
+/** Make a channel's default for shorts; the body is the same as a mix's. */
+export const setMusicDefault = (channelId: string, body: unknown) =>
+  asHttp(() => {
+    if (!channelId) throw new HttpError(400, 'which channel?');
+    const settings = mixBody.extend({ track: z.string().min(1) }).parse(body);
+    if (!trackFile(settings.track)) throw new HttpError(400, `no track called "${settings.track}" in the library`);
+    const all = musicDefaults();
+    all[channelId] = { ...all[channelId], short: settings };
+    fs.mkdirSync(musicDir(), { recursive: true });
+    fs.writeFileSync(defaultsFile(), JSON.stringify(all, null, 2));
+    return { ok: true as const, channelId, short: settings };
+  });
+
+/** Mix a short with its channel's default, and make it the version that publishes. */
+export const useMusicDefault = (runId: string) =>
+  asHttp(async () => {
+    const run = Run.open(runId);
+    const settings = defaultFor(run);
+    if (!settings) throw new HttpError(400, 'this channel has no default music for shorts yet');
+    if (!trackFile(settings.track)) {
+      throw new HttpError(400, `the default track "${settings.track}" is not in the library any more`);
+    }
+    await mixRun(run, settings);
+    chooseMix(run);
+    return { ...mixState(run), lock: musicLock(run) };
   });
 
 export const makeMix = (runId: string, body: unknown) =>

@@ -142,6 +142,56 @@ export const MusicPanel = ({
             choose again to add music back.
           </span>
         )}
+        {/* THE CHANNEL'S DEFAULT, for shorts: one click instead of six settings. */}
+        {state?.short && (
+          <div className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            {state.channelDefault ? (
+              <button
+                className="btn small"
+                disabled={off || locked}
+                onClick={() =>
+                  act('default', async () => {
+                    setState(await api.useMusicDefault(runId));
+                    onChanged?.();
+                  })
+                }
+              >
+                {busy === 'default' ? 'Mixing...' : 'Use the channel default'}
+              </button>
+            ) : (
+              <span className="faint tiny">This channel has no default music for shorts yet.</span>
+            )}
+            {state.channelDefault && (
+              <span className="faint tiny">
+                {state.channelDefault.track}, {state.channelDefault.volume}% under the voice
+                {state.channelDefault.speed && state.channelDefault.speed !== 1
+                  ? `, ${state.channelDefault.speed}x`
+                  : ''}
+              </span>
+            )}
+            {chosen?.track && state.channelId && (
+              <button
+                className="btn ghost small"
+                disabled={off}
+                title="Every short on this channel can then use this music in one click"
+                onClick={() =>
+                  act('make-default', async () => {
+                    await api.setMusicDefault(state.channelId!, {
+                      track: chosen.track!,
+                      volume: chosen.volume,
+                      duck: chosen.duck,
+                      speed: chosen.speed ?? undefined,
+                      loop: chosen.loop ?? null,
+                    });
+                    setState(await api.mixState(runId));
+                  })
+                }
+              >
+                Make this the channel default
+              </button>
+            )}
+          </div>
+        )}
         {chosen && (
           <div className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <audio controls preload="none" src={api.mixUrl(runId, 'chosen', chosen.file)} />

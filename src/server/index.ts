@@ -36,6 +36,9 @@ import {
 import {
   loopPreview,
   makeMix,
+  musicDefaults,
+  setMusicDefault,
+  useMusicDefault,
   mixedFile,
   musicLibrary,
   readTrack,
@@ -578,6 +581,13 @@ export const createServer = (): http.Server =>
         return send(res, 200, await makeMix(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/mix' && req.method === 'DELETE') return send(res, 200, await removeMix(id ?? ''));
+      if (pathname === '/api/music/defaults' && req.method === 'GET') return send(res, 200, musicDefaults());
+      if (pathname === '/api/channel/music-default' && req.method === 'PUT') {
+        return send(res, 200, await setMusicDefault(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run/mix/default' && req.method === 'POST') {
+        return send(res, 200, await useMusicDefault(id ?? ''));
+      }
       if (pathname === '/api/run/mix/use' && req.method === 'POST') return send(res, 200, await useMix(id ?? ''));
       if (pathname === '/api/run/mix/use' && req.method === 'DELETE') return send(res, 200, await voiceOnly(id ?? ''));
       if (pathname === '/api/run/mix/audio') {

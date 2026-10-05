@@ -251,6 +251,20 @@ export interface MixState {
   chosenStale: boolean;
   /** Why the choice cannot change now (approved or published), or null. */
   lock?: string | null;
+  channelId?: string;
+  /** Defaults are for shorts. */
+  short?: boolean;
+  /** This channel's default music for shorts, or null. */
+  channelDefault?: MusicSettings | null;
+}
+
+/** What a mix is made from; a channel's default is one of these. */
+export interface MusicSettings {
+  track: string;
+  speed?: number;
+  volume: number;
+  duck: boolean;
+  loop?: { start: number; end: number; speed?: number } | null;
 }
 
 /** A picture's provenance, and the shape a replacement has to be. */
@@ -778,6 +792,14 @@ export const api = {
     call<MixState>(`/api/run/mix?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
   useMix: (id: string) =>
     call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, { method: 'POST' }),
+  /** Mix with the channel's default and make it what publishing sends. */
+  useMusicDefault: (id: string) =>
+    call<MixState>(`/api/run/mix/default?id=${encodeURIComponent(id)}`, { method: 'POST' }),
+  setMusicDefault: (channelId: string, settings: MusicSettings) =>
+    call<{ ok: true }>(`/api/channel/music-default?id=${encodeURIComponent(channelId)}`, {
+      method: 'PUT',
+      body: JSON.stringify(settings),
+    }),
   voiceOnly: (id: string) =>
     call<MixState>(`/api/run/mix/use?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
   mixUrl: (id: string, which: 'preview' | 'chosen', file: string) =>
