@@ -8,7 +8,7 @@ dist/
 # corpus, claims, script, renders. Deliberately NOT committed: it is large,
 # it is reproducible from the inputs that ARE committed, and a rejected take
 # is not something the history needs to carry forever.
-runs/
+/runs/
 
 # LIBRARY.md and library.json are rebuilt from the run directories by
 # `foundry library`, and runs/ is ignored - so on any machine but the one that
@@ -43,6 +43,9 @@ library.json
 # Scratch audio
 *.wav
 *.mp3
+# The 4-byte stand-ins the publish readiness test needs. See src/publish/__tests__.
+!src/publish/__tests__/fixtures/**/media/*.wav
+!src/publish/__tests__/fixtures/**/media/*.mp3
 
 # The beat library. The RECIPES in beds/*.json are committed and are a few
 # hundred bytes each; the rendered loops beside them are not, and are covered by
@@ -63,7 +66,7 @@ web/tsconfig.tsbuildinfo
 accounts.json
 
 # Generated channel artwork. Rebuilt by `channel-setup`.
-art/
+/art/
 
 # The cross-process release lock. Runtime state, never committed.
 .release.lock
@@ -71,4 +74,4 @@ release.log
 release.log.old
 
 # Your own background tracks, uploaded in the studio. Not the repo's to keep.
-music/
+/music/
