@@ -603,6 +603,13 @@ export const api = {
       reason?: string;
     }>(`/api/run/verify?id=${encodeURIComponent(runId)}`),
 
+  /** `wall` is the calendar's own clock: "2026-10-08T18:00". */
+  reschedule: (runId: string, wall: string) =>
+    call<{ ok: true; releaseAt: string }>(`/api/run/reschedule?id=${encodeURIComponent(runId)}`, {
+      method: 'POST',
+      body: JSON.stringify({ wall }),
+    }),
+
   cancelRelease: (runId: string) =>
     call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
 

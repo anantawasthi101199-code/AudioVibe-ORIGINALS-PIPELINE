@@ -40,6 +40,7 @@ import { dueForRelease, releaseDue } from '../publish/release';
 import { releasingEnabled } from './calendar';
 import { loadSchedule } from '../schedule/load';
 import { allocate, type ItemKind, type Taken } from '../schedule/allocate';
+import { instantOfWallClock } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
@@ -369,6 +370,30 @@ export const approveForRelease = (
     perWeek: cadence.perWeek,
     timezone: schedule.timezone,
   };
+};
+
+/**
+ * Move an approved run to another day and time, from the calendar.
+ *
+ * THE WALL CLOCK, IN THE SCHEDULE'S ZONE. "Thursday 18:00" means 18:00 where the
+ * calendar says it is, so it is converted here rather than trusting whatever
+ * zone the browser happens to be in. The approval stands: moving a day is not
+ * a new decision about whether it goes out.
+ */
+export const rescheduleRelease = (runId: string, body: unknown, now: Date = new Date()) => {
+  const { wall } = z
+    .object({ wall: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'a date and time, like 2026-10-08T18:00') })
+    .parse(body ?? {});
+  const run = Run.open(runId);
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
+  if (!run.manifest.releaseAt) throw new HttpError(400, 'that is not scheduled; approve it first');
+
+  const at = instantOfWallClock(`${wall}:00`, loadSchedule().timezone);
+  if (at.getTime() <= now.getTime()) throw new HttpError(400, 'that time has already passed');
+
+  run.setReleaseAt(at);
+  run.journal({ stage: 'publish', event: `moved to ${at.toISOString()}` });
+  return { ok: true as const, runId, releaseAt: at.toISOString() };
 };
 
 /**

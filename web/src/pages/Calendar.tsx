@@ -117,6 +117,10 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
   const [open, setOpen] = useState<CalendarEntry | null>(null);
   const [acting, setActing] = useState<string | null>(null);
   const [confirming, setConfirming] = useState<string | null>(null);
+  /** The new date and time being typed for the open card, in the calendar's zone. */
+  const [moveTo, setMoveTo] = useState('');
+  // A new card starts from its own date, never the last one typed.
+  useEffect(() => setMoveTo(''), [open]);
   /** What the publish is doing right now, so the button is never silent. */
   const [step, setStep] = useState<string | null>(null);
   const [checked, setChecked] = useState<Awaited<ReturnType<typeof api.verifyPublished>> | null>(
@@ -496,6 +500,38 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
               the publishing page: cancelling and jumping the queue are both
               decisions you make while looking at what else is around it.
             */}
+            {/* MOVE IT: a new day and time, in the calendar's own zone. */}
+            {open.state === 'approved' && (
+              <div className="row" style={{ gap: '0.5rem', flexWrap: 'wrap' }}>
+                <input
+                  type="datetime-local"
+                  className="field"
+                  style={{ maxWidth: '15rem' }}
+                  value={
+                    moveTo ||
+                    new Date(open.at)
+                      .toLocaleString('sv-SE', { timeZone: view.timezone })
+                      .slice(0, 16)
+                      .replace(' ', 'T')
+                  }
+                  onChange={(e) => setMoveTo(e.target.value)}
+                />
+                <button
+                  className="btn small"
+                  disabled={acting !== null || !moveTo}
+                  onClick={() =>
+                    void run(open.runId, async () => {
+                      await api.reschedule(open.runId, moveTo);
+                      setMoveTo('');
+                    })
+                  }
+                >
+                  Move
+                </button>
+                <span className="faint tiny">{view.timezone} time</span>
+              </div>
+            )}
+
             {open.state === 'approved' && (
               <div className="row" style={{ borderTop: '1px solid var(--line-soft)', paddingTop: '0.85rem' }}>
                 <button

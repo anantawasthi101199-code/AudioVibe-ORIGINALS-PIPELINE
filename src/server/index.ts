@@ -92,6 +92,7 @@ import {
   releaseNow,
   releaseStatus,
   setContentRating,
+  rescheduleRelease,
   setHold,
   setUpChannelJob,
   verifyPublished,
@@ -576,6 +577,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/channel/approve' && req.method === 'POST') {
         return send(res, 200, approveForRelease(id ?? '', await readBody(req), user));
+      }
+      if (pathname === '/api/run/reschedule' && req.method === 'POST') {
+        return send(res, 200, rescheduleRelease(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/cancel' && req.method === 'POST') {
         return send(res, 200, cancelRelease(id ?? ''));
