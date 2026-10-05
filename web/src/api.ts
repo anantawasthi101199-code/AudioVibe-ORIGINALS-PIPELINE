@@ -794,14 +794,37 @@ export const watchJob = (
   handlers: { onEvent: (e: JobEvent) => void; onDone: (r: { error: string | null; produced: string[] }) => void }
 ): (() => void) => {
   const source = new EventSource(`/api/job/events?id=${encodeURIComponent(jobId)}`);
+  let finished = false;
+  const finish = (r: { error: string | null; produced: string[] }) => {
+    if (finished) return;
+    finished = true;
+    clearInterval(backstop);
+    source.close();
+    handlers.onDone(r);
+  };
 
   source.addEventListener('progress', (e) => handlers.onEvent(JSON.parse((e as MessageEvent).data)));
-  source.addEventListener('done', (e) => {
-    handlers.onDone(JSON.parse((e as MessageEvent).data));
-    source.close();
-  });
+  source.addEventListener('done', (e) => finish(JSON.parse((e as MessageEvent).data)));
 
-  return () => source.close();
+  // A BACKSTOP FOR EVERY PAGE (2026-10-05). The stream is how a page hears a
+  // job finish; when it dropped quietly, a voicing that took two minutes and a
+  // publish that took eighteen seconds both showed as still working. So ask
+  // the studio directly every ten seconds as well, whichever page is watching.
+  const backstop = setInterval(() => {
+    void call<{ job: { finishedAt: string | null; error: string | null; produced: string[] } }>(
+      `/api/job?id=${encodeURIComponent(jobId)}`
+    )
+      .then(({ job }) => {
+        if (job.finishedAt) finish({ error: job.error, produced: job.produced });
+      })
+      .catch(() => undefined);
+  }, 10_000);
+
+  return () => {
+    finished = true;
+    clearInterval(backstop);
+    source.close();
+  };
 };
 
 /* --- Formatting, shared because these appear on every page ---------------- */

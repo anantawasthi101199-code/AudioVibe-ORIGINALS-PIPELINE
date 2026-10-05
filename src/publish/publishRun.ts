@@ -88,6 +88,16 @@ export const publishRun = async (
   options: PublishOptions
 ): Promise<Published> => {
   const say = options.report ?? (() => undefined);
+  // ONCE ONLY. A page that missed the "done" and showed a publish as still
+  // working invites a second press, and a second press was a second copy on
+  // production. Every route to publishing comes through here.
+  if (run.isComplete('publish')) {
+    throw new PublishRefused(
+      'this is already published',
+      'Check it in the app. To put it out again, take the live one down first.'
+    );
+  }
+
   // Whoever called, findings a person chose to ignore stop blocking here.
   gate = withOverrides(run, gate);
 
@@ -266,6 +276,7 @@ export const publishRun = async (
     url: platform.url,
   });
   run.markComplete('publish');
+  run.journal({ stage: 'publish', event: `published: audio ${result.audioId} on ${platform.url}` });
 
   say(`published: audio ${result.audioId} (${result.status})`);
   return { audioId: result.audioId, status: result.status, url: platform.url, seriesId };

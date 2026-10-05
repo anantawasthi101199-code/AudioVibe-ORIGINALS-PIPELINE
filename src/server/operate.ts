@@ -235,6 +235,7 @@ export const publishRunJob = (runId: string, body: unknown, who: string | null =
   const confirmed = z.object({ confirmed: z.boolean().default(false) }).parse(body ?? {}).confirmed;
 
   const run = Run.open(runId);
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
   const gate = regate(run, run.readArtifact('script', scriptSchema));
   if (!gate) throw new HttpError(400, `run "${runId}" cannot be gated, so it cannot be published`);
 
@@ -254,7 +255,8 @@ export const publishRunJob = (runId: string, body: unknown, who: string | null =
     throw new HttpError(428, `${getPlatform().url} is PRODUCTION`);
   }
 
-  if (who) run.journal({ stage: 'publish', event: `published by ${who}` });
+  // REQUESTED, not done: this is the button press. publishRun journals the outcome.
+  if (who) run.journal({ stage: 'publish', event: `publish requested by ${who}` });
 
   const job = jobs.start({
     id,
