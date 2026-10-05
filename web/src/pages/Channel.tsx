@@ -506,7 +506,10 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   // An episode cannot start without its series. See the series picker.
   const needsSeries = Boolean(route?.long) && !seriesTitle.trim();
   const queue = route?.kind === 'shorts' ? data.sets : data.topics;
-  const ready = runs.filter((r) => r.state === 'ready' && !r.isSource).length;
+  // TO DECIDE ONLY: passed, and not yet given a day. Once approved it is on
+  // the calendar, and counting it here as "ready to publish" kept it on this
+  // page after it had been scheduled (2026-10-05).
+  const ready = runs.filter((r) => r.state === 'ready' && !r.isSource && !r.releaseApprovedAt).length;
 
   // Whether the topic as typed would be refused. Same threshold the server
   // uses, and the server is still the one that decides.
@@ -658,9 +661,9 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             <span className="step-n done">{ready}</span>
             <span className="stack" style={{ gap: '0.15rem', flex: 1, minWidth: 0 }}>
               <span className="queue-title">
-                {ready} ready to publish as @{channel.account.handle ?? channel.handle}
+                {ready} to decide for @{channel.account.handle ?? channel.handle}
               </span>
-              <span className="muted tiny">Read them, listen, order them, publish</span>
+              <span className="muted tiny">Listen, then approve each for a day on the calendar</span>
             </span>
             <span className="caret">›</span>
           </button>
