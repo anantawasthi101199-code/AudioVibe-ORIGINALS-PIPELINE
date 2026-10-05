@@ -19,8 +19,6 @@
  * Read-only and derived. Nothing here is stored; it is the persona files, the
  * beat sheets and the runs directory, arranged.
  */
-import fs from 'fs';
-import path from 'path';
 import { z } from 'zod';
 import { loadAllPersonas, loadPersona } from '../canon/load';
 import { Persona } from '../canon/schema';
@@ -472,7 +470,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     releaseApprovedAt: m.releaseApprovedAt ?? null,
     heldAt: m.heldAt ?? null,
     isSource,
-    hasAudio: fs.existsSync(path.join(run.dir, 'media', 'episode.wav')),
+    hasAudio: run.audioFile() !== null, // archive-aware: see archive/record.ts
   };
 };
 

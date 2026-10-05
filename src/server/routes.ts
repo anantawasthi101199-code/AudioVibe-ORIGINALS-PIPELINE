@@ -146,7 +146,7 @@ export const getRun = (id: string) => {
     // run cut out of one has its own.
     isSource: loadFormat(run.manifest.formatId).sourceOnly && run.manifest.story === undefined,
     job: job ?? null,
-    hasAudio: fs.existsSync(path.join(run.dir, 'media', 'episode.wav')),
+    hasAudio: run.audioFile() !== null, // archive-aware: see archive/record.ts
     // WHERE IT WILL SIT ON THE APP, so the page can name its picture right: an
     // episode of a series, or a loose audiocard. Shorts are always cards.
     inSeries: inSeriesFor(run),

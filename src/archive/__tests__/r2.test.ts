@@ -5,6 +5,7 @@ import { Run } from '../../run/store';
 import { finalAudioFor } from '../../render/backing';
 import { ArchiveStore, archiveRun, runKey, sweepArchive } from '../r2';
 import { archivedOwner, readArchive } from '../record';
+import { runSummary } from '../../server/catalog';
 
 const FIXTURE = path.join(__dirname, '..', '..', 'publish', '__tests__', 'fixtures', 'story-single-short');
 const RUN_ID = 'root-health/e001-20261005-sleep-loss-makes-unhealthy-food-look';
@@ -78,5 +79,21 @@ describe('the rolling archive to R2', () => {
     run.markComplete('publish');
     expect((await sweepArchive({ store })).archived).toEqual([RUN_ID]);
     expect((await sweepArchive({ store })).archived).toEqual([]);
+  });
+});
+
+describe('an archived run in the studio', () => {
+  it('still shows as having audio in the run list', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'archive-ui-'));
+    fs.cpSync(FIXTURE, root, { recursive: true });
+    process.env.FOUNDRY_RUNS_DIR = root;
+    const run = Run.open(RUN_ID, { root });
+    run.markComplete('publish');
+    await archiveRun(run, { store: memoryStore() });
+    const summary = runSummary(Run.open(RUN_ID, { root }));
+    expect(summary.hasAudio).toBe(true);
+    expect(summary.archivedAt).not.toBeNull();
+    delete process.env.FOUNDRY_RUNS_DIR;
+    fs.rmSync(root, { recursive: true, force: true });
   });
 });
