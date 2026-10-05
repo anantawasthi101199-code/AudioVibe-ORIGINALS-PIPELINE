@@ -146,7 +146,12 @@ export const ImagePicker = ({
 
   return (
     <div className="art-picker">
-      <div className={`art-thumb${state?.supplied ? ' chosen' : ''}`}>
+      {/* THE PICTURE'S OWN SHAPE (2026-10-05): a 16:9 series cover was shown
+          squeezed into a square. Same height, width from the real ratio. */}
+      <div
+        className={`art-thumb${state?.supplied ? ' chosen' : ''}`}
+        style={state ? { width: `calc(5.5rem * ${state.width / state.height})` } : undefined}
+      >
         {src ? (
           <img src={`${src}${src.includes('?') ? '&' : '?'}v=${version}`} alt="" />
         ) : (
