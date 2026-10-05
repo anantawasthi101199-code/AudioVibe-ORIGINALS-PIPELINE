@@ -410,6 +410,13 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const [countries, setCountries] = useState<string[]>(['', '', '']);
   const [seriesTitle, setSeriesTitle] = useState('');
   const [newSeries, setNewSeries] = useState(false);
+  // SUGGESTIONS BELONG TO THE FORMAT THEY WERE ASKED FOR: shorts get compact
+  // stories, episodes deep ones. Switching format clears them, so an episode
+  // is never started from a short's idea.
+  useEffect(() => setIdeas([]), [route?.formatId]);
+  // NOTHING STARTS ON ONE CLICK (owner, 2026-10-05): the dialog says exactly
+  // what is about to be made, and only Confirm starts it.
+  const [confirming, setConfirming] = useState<{ again: boolean; blank: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
@@ -505,6 +512,28 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   // uses, and the server is still the one that decides.
   const refused = clash.some((m) => m.sameShow && m.score >= 0.6);
 
+  /** What the confirm dialog says is about to be made. */
+  const plan = (blank: boolean) => {
+    if (!route) return null;
+    const what = rapidFire
+      ? "A rapid fire of today's top news"
+      : route.long
+        ? 'An episode'
+        : route.kind === 'shorts'
+          ? `A set of ${route.produces} shorts, written to be cut apart later`
+          : 'A short';
+    const [lo, hi] = route.seconds;
+    const length = `${Math.round(lo / 60 * 10) / 10}-${Math.round(hi / 60 * 10) / 10} minutes`;
+    const cost = blank
+      ? 'Nothing now: a blank template you write yourself. Only voicing costs, after you approve it.'
+      : rapidFire
+        ? 'About 3-5p to search and write now. Voicing only after you approve it.'
+        : route.long
+          ? 'Usually 20-60p to research and write now. Voicing only after you approve it.'
+          : 'Usually 3-10p to research and write now. Voicing only after you approve it.';
+    return { what, length, cost };
+  };
+
   const start = async (again = false, blank = false) => {
     if (!route || (!topic.trim() && !data?.newsRoundup)) return;
     setStarting(true);
@@ -542,6 +571,46 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
 
   return (
     <div className="page">
+      {confirming && route && (() => {
+        const p = plan(confirming.blank)!;
+        const chosen = rapidFire ? countries.filter(Boolean) : [];
+        return (
+          <div className="cal-detail" onClick={() => setConfirming(null)}>
+            <div className="cal-card" onClick={(e) => e.stopPropagation()}>
+              <h2 style={{ fontSize: '1.15rem', margin: 0 }}>Make this?</h2>
+              <table className="tiny" style={{ borderSpacing: '0.75rem 0.35rem', marginLeft: '-0.75rem' }}>
+                <tbody>
+                  <tr><td className="faint">Channel</td><td>{channel.name}</td></tr>
+                  <tr><td className="faint">What</td><td>{confirming.blank ? `${p.what}, as a blank script` : p.what}</td></tr>
+                  <tr><td className="faint">Format</td><td>{route.formatName}</td></tr>
+                  <tr><td className="faint">Length</td><td>{p.length}</td></tr>
+                  <tr>
+                    <td className="faint">About</td>
+                    <td>{rapidFire ? (chosen.length ? chosen.join(', ') : "India, the US, the UK, China and the world") : topic.trim()}</td>
+                  </tr>
+                  {route.long && <tr><td className="faint">Series</td><td>{seriesTitle.trim()}{newSeries ? ' (new)' : ''}</td></tr>}
+                  {confirming.again && <tr><td className="faint">Note</td><td>Made even though the channel covered something close.</td></tr>}
+                  <tr><td className="faint">Cost</td><td>{p.cost}</td></tr>
+                </tbody>
+              </table>
+              <div className="row" style={{ justifyContent: 'flex-end', gap: '0.5rem' }}>
+                <button className="btn ghost" onClick={() => setConfirming(null)}>Back</button>
+                <button
+                  className="btn spend"
+                  disabled={starting}
+                  onClick={() => {
+                    const c = confirming;
+                    setConfirming(null);
+                    void start(c.again, c.blank);
+                  }}
+                >
+                  {starting ? 'Starting...' : 'Confirm and start'}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       <div className="row between" style={{ marginBottom: '1.2rem' }}>
         <h1 style={{ fontSize: '1.5rem' }}>
           {channel.name} <span className="faint mono tiny">@{channel.handle}</span>
@@ -918,7 +987,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   <button
                     className="btn spend"
                     disabled={(!topic.trim() && !rapidFire) || starting || refused || needsSeries}
-                    onClick={() => void start(false)}
+                    onClick={() => setConfirming({ again: false, blank: false })}
                   >
                     {starting
                       ? 'Starting...'
@@ -936,7 +1005,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                     <button
                       className="btn ghost"
                       disabled={starting || needsSeries}
-                      onClick={() => void start(true)}
+                      onClick={() => setConfirming({ again: true, blank: false })}
                     >
                       {starting ? 'Starting...' : 'Make it anyway'}
                     </button>
@@ -946,7 +1015,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                       className="btn ghost"
                       title="A blank template with one box per part. You write it; only the voice costs anything."
                       disabled={!topic.trim() || starting || refused || needsSeries}
-                      onClick={() => void start(false, true)}
+                      onClick={() => setConfirming({ again: false, blank: true })}
                     >
                       Blank script
                     </button>
