@@ -61,6 +61,12 @@ export interface QueueView {
    * one a day at a time.
    */
   ready: RunSummary[];
+  /**
+   * APPROVED AND ITS TIME HAS COME, not yet out. Split from `ready`
+   * (2026-10-05), which had counted runs nobody had approved as "ready to
+   * publish" while the publishing page called the same runs "to decide".
+   */
+  dueToPublish: RunSummary[];
   /** Gate passed, waiting for a release time that has not arrived. */
   scheduled: Array<RunSummary & { releaseAt: string }>;
   /**
@@ -132,8 +138,14 @@ export const getQueue = (now = new Date()): QueueView => {
     // WHOSE TURN IT IS. A run with no release time is ready the moment it
     // passes, which is what an episode is; one with a time in the future is
     // finished and waiting, which is what a story in a cut set is.
-    ready: inState('ready').filter(
-      (r) => !r.isSource && (!r.releaseAt || Date.parse(r.releaseAt) <= now.getTime())
+    // TO DECIDE: passed, and nobody has approved it. The publishing page's
+    // "To decide" tab, under the same name.
+    ready: inState('ready').filter((r) => !r.isSource && !r.releaseApprovedAt),
+    dueToPublish: inState('ready').filter(
+      (r) =>
+        !r.isSource &&
+        Boolean(r.releaseApprovedAt) &&
+        (!r.releaseAt || Date.parse(r.releaseAt) <= now.getTime())
     ),
     scheduled: inState('ready')
       .filter((r): r is RunSummary & { releaseAt: string } =>

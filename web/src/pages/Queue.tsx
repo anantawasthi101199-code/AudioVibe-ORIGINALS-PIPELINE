@@ -32,7 +32,7 @@ import { Count, Info, PlayButton } from '../components/Info';
 
 const REFRESH_MS = 20_000;
 
-type Key = 'held' | 'stuck' | 'due' | 'soon' | 'ready' | 'lined' | 'out';
+type Key = 'held' | 'stuck' | 'due' | 'soon' | 'dueNow' | 'ready' | 'lined' | 'out';
 
 const Row = ({
   title,
@@ -123,12 +123,14 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
   const headline =
     queue.paused
       ? { text: 'Paused', tone: 'fail' as const }
+      : queue.dueToPublish.length
+        ? { text: `${queue.dueToPublish.length} due to publish`, tone: 'pass' as const }
       : queue.held.length
         ? { text: `${queue.held.length} to read`, tone: 'hold' as const }
         : queue.blocked.length
           ? { text: `${queue.blocked.length} waiting on you`, tone: 'hold' as const }
           : queue.ready.length
-            ? { text: `${queue.ready.length} ready to publish`, tone: 'pass' as const }
+            ? { text: `${queue.ready.length} to decide`, tone: 'pass' as const }
             : queue.due.length
               ? { text: `${queue.due.length} due to make`, tone: undefined }
               : { text: 'Nothing to do', tone: undefined };
@@ -167,11 +169,19 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
       )),
     },
     {
+      key: 'dueNow',
+      title: 'Due to publish',
+      tone: 'pass',
+      count: queue.dueToPublish.length,
+      why: 'Approved, and its day has come, but not out yet. Releasing is off, so publish it from the calendar or its channel.',
+      rows: queue.dueToPublish.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+    {
       key: 'ready',
-      title: 'Ready to publish',
+      title: 'To decide',
       tone: 'pass',
       count: queue.ready.length,
-      why: 'Gate passed clean and nothing is waiting on a person. Open one to hear it and publish it.',
+      why: "Passed its checks and nobody has decided yet: the publishing page's To decide tab. Listen, then approve it for a day.",
       rows: queue.ready.map((r) => <RunRow key={r.id} run={r} go={go} />),
     },
     {
@@ -290,7 +300,7 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
                 go(busiest ? `/c/${busiest[0]}/publish` : '/channels');
               }}
             >
-              Publish {queue.ready.length}
+              Decide {queue.ready.length}
             </button>
           )}
           <button
@@ -306,7 +316,7 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
 
       <div className="counts" style={{ margin: '1.4rem 0 1.6rem' }}>
         <Count n={queue.held.length} label="to read" tone="hold" />
-        <Count n={queue.ready.length} label="ready" tone="pass" />
+        <Count n={queue.ready.length} label="to decide" tone="pass" />
         <Count n={queue.scheduled.length} label="lined up" />
         <Count n={queue.due.length + queue.blocked.length} label="due" />
         <Count n={queue.publishedTotal} label="out" />

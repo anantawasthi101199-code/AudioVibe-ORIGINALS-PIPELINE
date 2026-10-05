@@ -129,6 +129,8 @@ export interface QueueView {
   blocked: QueueBlocker[];
   held: RunSummary[];
   ready: RunSummary[];
+  /** Approved, and its time has come. */
+  dueToPublish: RunSummary[];
   scheduled: Array<RunSummary & { releaseAt: string }>;
   failed: RunSummary[];
   failedTotal: number;
