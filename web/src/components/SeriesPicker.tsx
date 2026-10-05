@@ -26,6 +26,19 @@ export const SeriesPicker = ({
   const [value, setValue] = useState(current ?? '');
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [renaming, setRenaming] = useState(false);
+  const [newName, setNewName] = useState('');
+
+  const rename = async () => {
+    setError(null);
+    try {
+      await api.renameSeries(channelId, current!, newName.trim());
+      setRenaming(false);
+      onSaved();
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  };
 
   useEffect(() => {
     void api
@@ -55,6 +68,36 @@ export const SeriesPicker = ({
           Series
         </span>
         <strong style={{ fontSize: '1.05rem' }}>{current ?? 'None yet'}</strong>
+        {current && !locked && !renaming && (
+          <button
+            className="btn ghost small"
+            title="Renames it on every episode in it. Only before the series is on AudioVibe."
+            onClick={() => {
+              setNewName(current);
+              setRenaming(true);
+            }}
+          >
+            Rename series
+          </button>
+        )}
+        {renaming && (
+          <span className="row" style={{ gap: '0.4rem' }}>
+            <input
+              className="field"
+              style={{ maxWidth: '18rem' }}
+              autoFocus
+              maxLength={80}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            <button className="btn small" disabled={!newName.trim()} onClick={() => void rename()}>
+              Save
+            </button>
+            <button className="btn ghost small" onClick={() => setRenaming(false)}>
+              Cancel
+            </button>
+          </span>
+        )}
         <span className="faint tiny">
           {locked
             ? 'Published into this series on AudioVibe.'

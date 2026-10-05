@@ -33,7 +33,8 @@ import {
   publishTokenFor,
   saveAccounts,
 } from '../publish/account';
-import { findSeries, recordSeries } from '../publish/seriesRegistry';
+import { findSeries, recordSeries, seriesKey } from '../publish/seriesRegistry';
+import { blockedBy } from './holds';
 import { paletteFor, renderCover, SERIES_COVER_SIZE } from '../art/cover';
 import { currentPlan } from '../schedule/current';
 import { dueForRelease, releaseDue } from '../publish/release';
@@ -539,6 +540,48 @@ export const setRunSeries = (runId: string, body: unknown) => {
   run.setSeriesTitle(seriesTitle);
   run.journal({ stage: 'publish', event: `filed under the series "${seriesTitle}"` });
   return { ok: true as const, runId, seriesTitle };
+};
+
+/**
+ * Rename a series on every episode filed under it, and move its cover with it
+ * (owner, 2026-10-05). Only BEFORE it exists on AudioVibe: once created there,
+ * its name is the platform's, and renaming it here would file later episodes
+ * into a second, new series.
+ */
+export const renameSeries = (channelId: string, body: unknown, who: string | null = null) => {
+  const { from, to } = z
+    .object({ from: z.string().trim().min(1), to: z.string().trim().min(1).max(80) })
+    .parse(body ?? {});
+  if (from === to) return { ok: true as const, renamed: 0 };
+
+  const fromKey = seriesKey(channelId, from);
+  if (findSeries(fromKey, platformUrl().url)) {
+    throw new HttpError(400, `"${from}" is already on AudioVibe, so its name is fixed there`);
+  }
+
+  const episodes = Run.list()
+    .filter((id) => id.startsWith(`${channelId}/`))
+    .map((id) => Run.open(id))
+    .filter((r) => r.manifest.seriesTitle === from);
+  const held = episodes.map((r) => ({ r, by: who ? blockedBy(r.id, who) : null })).find((x) => x.by);
+  if (held) throw new HttpError(423, `${held.by} is working on ${held.r.id}; rename it when they leave`);
+  if (episodes.some((r) => r.isComplete('publish'))) {
+    throw new HttpError(400, `an episode of "${from}" is already published, so the series name is fixed`);
+  }
+
+  for (const r of episodes) {
+    r.setSeriesTitle(to);
+    r.journal({ stage: 'publish', event: `series renamed from "${from}" to "${to}"` });
+  }
+
+  // The cover moves with the name, unless the new name already has one.
+  const dir = path.join(repoRoot(), 'art', channelId);
+  const slug = (title: string) => `series-${seriesKey(channelId, title).split('#')[1]}`;
+  const old = suppliedArt(dir, slug(from));
+  if (old && !suppliedArt(dir, slug(to))) {
+    fs.renameSync(old, path.join(dir, `${slug(to)}.supplied${path.extname(old)}`));
+  }
+  return { ok: true as const, renamed: episodes.length };
 };
 
 /**

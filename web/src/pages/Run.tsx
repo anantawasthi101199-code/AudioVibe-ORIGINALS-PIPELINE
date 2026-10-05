@@ -14,6 +14,7 @@
  */
 import { MusicPanel } from '../components/MusicPanel';
 import { SeriesPicker } from '../components/SeriesPicker';
+import { TitleEditor } from '../components/TitleEditor';
 import { useHold } from '../useHold';
 import { FinalAudio } from '../components/FinalAudio';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -252,6 +253,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         disabled={Boolean(hold?.holder && !hold.mine)}
         style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}
       >
+      {/* What listeners see: editable until it is published. */}
+      {script && !isSource && (
+        <TitleEditor runId={id} script={script} locked={published} onSaved={() => void load()} />
+      )}
+
       {/* Every episode belongs to a series; changeable until it is published. */}
       {long && !isSource && (
         <div style={{ marginBottom: '0.75rem' }}>

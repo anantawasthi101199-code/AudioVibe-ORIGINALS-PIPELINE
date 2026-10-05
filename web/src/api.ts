@@ -680,6 +680,13 @@ export const api = {
     }),
 
   /** null goes back to the channel's rating. */
+  /** Rename a series on every episode in it; refused once it is on AudioVibe. */
+  renameSeries: (channelId: string, from: string, to: string) =>
+    call<{ ok: true; renamed: number }>(`/api/channel/series/rename?id=${encodeURIComponent(channelId)}`, {
+      method: 'POST',
+      body: JSON.stringify({ from, to }),
+    }),
+
   setRunSeries: (runId: string, seriesTitle: string) =>
     call<{ ok: true }>(`/api/run/series?id=${encodeURIComponent(runId)}`, {
       method: 'PUT',

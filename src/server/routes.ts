@@ -462,6 +462,9 @@ export const saveScriptSchema = z.object({
  */
 export const saveScript = (id: string, body: unknown) => {
   const run = openRun(id);
+  // WHAT WENT OUT IS FIXED: a title edited after publishing would never reach
+  // the platform, and the studio would then disagree with the app.
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published, so its script and title are fixed');
   const edited = saveScriptSchema.parse(body);
 
   const before = run.readArtifact('script', scriptSchema);
