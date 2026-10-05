@@ -294,7 +294,12 @@ const serveFile = (
       return;
     }
     void store
-      .url(runKey(path.relative(runsDir(), owner.runDir).split(path.sep).join('/'), owner.rel), attachment ? download : undefined)
+      .url(
+        owner.record.prefix
+          ? `${owner.record.prefix}/${owner.rel}`
+          : runKey(path.relative(runsDir(), owner.runDir).split(path.sep).join('/'), owner.rel),
+        attachment ? download : undefined
+      )
       .then((url) => {
         res.writeHead(302, { location: url, 'cache-control': 'no-store' });
         res.end();

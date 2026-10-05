@@ -177,6 +177,7 @@ export const archiveRun = async (run: Run, deps: ArchiveDeps): Promise<ArchiveRe
   const record: ArchiveRecord = {
     archivedAt,
     bucket: store.bucket,
+    prefix: `runs/${run.id}`,
     files: sizes,
     final: final
       ? { file: rel(final.file)!, key: final.key, music: final.music, speed: final.speed }

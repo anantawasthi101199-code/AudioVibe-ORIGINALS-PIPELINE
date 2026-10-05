@@ -13,6 +13,12 @@ import path from 'path';
 export interface ArchiveRecord {
   archivedAt: string;
   bucket: string;
+  /**
+   * Where its files are in R2, e.g. runs/root-health/e001-.... Recorded so a
+   * run renamed after archiving (shorts became s001, 2026-10-05) still finds
+   * them. Absent on records written before this: runs/<current id>.
+   */
+  prefix?: string;
   /** Every file uploaded, path inside the run folder -> bytes. */
   files: Record<string, number>;
   /** What the final-audio code would have said, frozen at archive time. */
