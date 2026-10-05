@@ -150,6 +150,8 @@ export const getRun = (id: string) => {
     // WHERE IT WILL SIT ON THE APP, so the page can name its picture right: an
     // episode of a series, or a loose audiocard. Shorts are always cards.
     inSeries: inSeriesFor(run),
+    /** Long form: belongs to a series. */
+    long: loadFormat(run.manifest.formatId).kind !== 'short',
   };
 };
 
@@ -294,6 +296,12 @@ export const startRun = (body: unknown, who: string | null = null) => {
   if (format.id !== ROUNDUP_FORMAT && !persona.formats.includes(format.id)) {
     throw new HttpError(400, `${persona.name} does not make "${format.id}"`);
   }
+  // EVERY EPISODE BELONGS TO A SERIES (owner, 2026-10-05), so a listener who
+  // finishes one finds the next. Shorts and news reports stay loose.
+  if (format.kind !== 'short' && !format.sourceOnly && !input.seriesTitle?.trim()) {
+    throw new HttpError(400, 'an episode needs a series: choose one, or name a new one');
+  }
+
   if (input.blank && format.sourceOnly) {
     throw new HttpError(400, 'a set is cut into shorts; write the shorts instead');
   }

@@ -524,6 +524,24 @@ export const setHold = (runId: string, body: unknown) => {
 };
 
 /**
+ * File an episode under a series, or move it to another, before it is
+ * published. After that its shelf on the platform is fixed.
+ */
+export const setRunSeries = (runId: string, body: unknown) => {
+  const { seriesTitle } = z
+    .object({ seriesTitle: z.string().trim().min(1, 'name the series').max(80) })
+    .parse(body ?? {});
+  const run = Run.open(runId);
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published, so its series is fixed');
+  if (loadFormat(run.manifest.formatId).kind === 'short') {
+    throw new HttpError(400, 'shorts are not filed under a series');
+  }
+  run.setSeriesTitle(seriesTitle);
+  run.journal({ stage: 'publish', event: `filed under the series "${seriesTitle}"` });
+  return { ok: true as const, runId, seriesTitle };
+};
+
+/**
  * Who a run is for, before it goes out. Null goes back to the channel's rating.
  * LOCKED ONCE PUBLISHED: the platform owns the rating then, and an upgrade
  * there is a moderation decision rather than a studio setting.

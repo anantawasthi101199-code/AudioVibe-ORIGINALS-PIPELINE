@@ -328,6 +328,8 @@ export interface RunDetail {
   hasAudio: boolean;
   /** Publishes as an episode of a series, rather than a loose audiocard. */
   inSeries: boolean;
+  /** Long form: belongs to a series. */
+  long: boolean;
 }
 
 export class ApiError extends Error {
@@ -668,6 +670,12 @@ export const api = {
     }),
 
   /** null goes back to the channel's rating. */
+  setRunSeries: (runId: string, seriesTitle: string) =>
+    call<{ ok: true }>(`/api/run/series?id=${encodeURIComponent(runId)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ seriesTitle }),
+    }),
+
   setContentRating: (runId: string, rating: 'general' | 'mature' | null) =>
     call<{ ok: true }>(`/api/run/rating?id=${encodeURIComponent(runId)}`, {
       method: 'POST',

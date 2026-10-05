@@ -13,6 +13,7 @@
  * as data entry and nobody reads data entry.
  */
 import { MusicPanel } from '../components/MusicPanel';
+import { SeriesPicker } from '../components/SeriesPicker';
 import { FinalAudio } from '../components/FinalAudio';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -141,7 +142,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   if (error && !data) return <div className="page"><ErrorNote>{error}</ErrorNote></div>;
   if (!data) return <div className="page"><div className="empty">Reading the run.</div></div>;
 
-  const { run, script, gate, manifest, claims, corpus, cuts, hasAudio, isSource, inSeries } = data;
+  const { run, script, gate, manifest, claims, corpus, cuts, hasAudio, isSource, inSeries, long } = data;
   const held = manifest.holdForApproval && !manifest.approvedAt;
   const currentStage = live ? (events[events.length - 1]?.stage ?? null) : null;
 
@@ -231,6 +232,19 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           )}
         </div>
       </div>
+
+      {/* Every episode belongs to a series; changeable until it is published. */}
+      {long && !isSource && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <SeriesPicker
+            runId={id}
+            channelId={run.channelId}
+            current={manifest.seriesTitle}
+            locked={published}
+            onSaved={() => void load()}
+          />
+        </div>
+      )}
 
       <ErrorNote>{error}</ErrorNote>
 

@@ -409,6 +409,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   // The rapid fire's three country boxes. Empty: the desk's own regions.
   const [countries, setCountries] = useState<string[]>(['', '', '']);
   const [seriesTitle, setSeriesTitle] = useState('');
+  const [newSeries, setNewSeries] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
@@ -495,6 +496,8 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const { channel, runs, budgetPence } = data;
   // News: no topic is today's rapid fire; a topic is the in-depth short.
   const rapidFire = data.newsRoundup && !topic.trim();
+  // An episode cannot start without its series. See the series picker.
+  const needsSeries = Boolean(route?.long) && !seriesTitle.trim();
   const queue = route?.kind === 'shorts' ? data.sets : data.topics;
   const ready = runs.filter((r) => r.state === 'ready' && !r.isSource).length;
 
@@ -834,30 +837,56 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   </div>
                 )}
 
-                {/* THE SERIES, long form only: the episode opens by naming it
-                    and publishes onto its shelf, which is created the first
-                    time a title is used. Pick an existing one or type a new
-                    one; leave it empty for a loose episode. */}
+                {/* THE SERIES, long form only, and REQUIRED (owner, 2026-10-05):
+                    every episode joins a series so a listener who finishes one
+                    finds the next. Pick one of this channel's series, or start
+                    a new one; its shelf is created the first time it publishes. */}
                 {route.long && (
                   <div className="stack tight">
-                    <input
+                    <select
                       className="field"
-                      list={`series-${channel.id}`}
-                      placeholder="Series (optional), e.g. Founder Stories"
-                      value={seriesTitle}
-                      onChange={(e) => setSeriesTitle(e.target.value)}
-                    />
-                    <datalist id={`series-${channel.id}`}>
+                      value={
+                        newSeries
+                          ? '__new__'
+                          : channel.seriesTitles.includes(seriesTitle)
+                            ? seriesTitle
+                            : ''
+                      }
+                      onChange={(e) => {
+                        if (e.target.value === '__new__') {
+                          setNewSeries(true);
+                          setSeriesTitle('');
+                        } else {
+                          setNewSeries(false);
+                          setSeriesTitle(e.target.value);
+                        }
+                      }}
+                    >
+                      <option value="" disabled>
+                        Choose the series (required)
+                      </option>
                       {channel.seriesTitles.map((t) => (
-                        <option key={t} value={t} />
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
                       ))}
-                    </datalist>
+                      <option value="__new__">New series...</option>
+                    </select>
+                    {newSeries && (
+                      <input
+                        className="field"
+                        autoFocus
+                        placeholder="Name the new series, e.g. Greek Mythology"
+                        value={seriesTitle}
+                        onChange={(e) => setSeriesTitle(e.target.value)}
+                      />
+                    )}
                     <span className="faint tiny">
-                      {seriesTitle.trim()
-                        ? channel.seriesTitles.includes(seriesTitle.trim())
+                      {!seriesTitle.trim()
+                        ? 'An episode needs a series. Pick one, or start a new one.'
+                        : channel.seriesTitles.includes(seriesTitle.trim())
                           ? `Joins "${seriesTitle.trim()}".`
-                          : `Starts a new series, "${seriesTitle.trim()}". Its cover can be set on the episode's page before publishing.`
-                        : 'No series: publishes as a loose episode.'}
+                          : `Starts a new series, "${seriesTitle.trim()}". Its cover can be set on the episode's page before publishing.`}
                     </span>
                   </div>
                 )}
@@ -888,7 +917,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                 <div className="row">
                   <button
                     className="btn spend"
-                    disabled={(!topic.trim() && !rapidFire) || starting || refused}
+                    disabled={(!topic.trim() && !rapidFire) || starting || refused || needsSeries}
                     onClick={() => void start(false)}
                   >
                     {starting
@@ -906,7 +935,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   {refused && (
                     <button
                       className="btn ghost"
-                      disabled={starting}
+                      disabled={starting || needsSeries}
                       onClick={() => void start(true)}
                     >
                       {starting ? 'Starting...' : 'Make it anyway'}
@@ -916,7 +945,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                     <button
                       className="btn ghost"
                       title="A blank template with one box per part. You write it; only the voice costs anything."
-                      disabled={!topic.trim() || starting || refused}
+                      disabled={!topic.trim() || starting || refused || needsSeries}
                       onClick={() => void start(false, true)}
                     >
                       Blank script

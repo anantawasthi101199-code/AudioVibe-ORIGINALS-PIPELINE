@@ -657,6 +657,12 @@ export class Run {
    * say when it is due. A schedule that stopped a person publishing would be a
    * schedule somebody works around.
    */
+  /** File this episode under a series. Only before it is published. */
+  setSeriesTitle(title: string): void {
+    this.manifestData.seriesTitle = title;
+    this.save();
+  }
+
   setContentRating(rating: 'general' | 'mature' | null): void {
     if (rating) this.manifestData.contentRating = rating;
     else delete this.manifestData.contentRating;
