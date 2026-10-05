@@ -101,13 +101,24 @@ export const App = () => {
     whenSignedOut(() => setSignedIn(false));
     api
       .me()
+      // Who and where load in the effect below, which runs on every sign-in.
+      .then(() => setSignedIn(true))
+      .catch(() => setSignedIn(false));
+  }, []);
+
+  // WHO AND WHERE, ON EVERY SIGN-IN, not only when the page first opens:
+  // signing in from the gate left the name and the production marker blank
+  // until a reload (2026-10-05), on a studio three people now share.
+  useEffect(() => {
+    if (!signedIn) return;
+    void api
+      .me()
       .then((me) => {
-        setSignedIn(true);
         setWho(me.name ?? null);
         return api.platform().then(setPlatform);
       })
-      .catch(() => setSignedIn(false));
-  }, []);
+      .catch(() => undefined);
+  }, [signedIn]);
 
   useEffect(() => {
     if (!signedIn) return;
@@ -273,7 +284,11 @@ export const App = () => {
           </span>
         )}
 
-        {who && <span className="whoami">{who}</span>}
+        {who && (
+          <span className="whoami" title="Your name goes in the journal of anything you approve or publish">
+            Signed in as <strong>{who}</strong>
+          </span>
+        )}
         <button
           className="btn ghost small"
           onClick={() => {
