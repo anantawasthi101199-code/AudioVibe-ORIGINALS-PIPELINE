@@ -280,6 +280,24 @@ export class AudioVibeClient {
     return { seriesId, title: body?.data?.series?.title ?? input.title };
   }
 
+  /**
+   * Replace a series' cover on the platform, after it exists (2026-10-05). The
+   * platform only lets a channel change its own series.
+   */
+  async updateSeriesCover(seriesId: string, coverPath: string): Promise<void> {
+    const form = new FormData();
+    form.append('cover', fileBlob(fs.readFileSync(coverPath), coverPath), path.basename(coverPath));
+    const res = await this.post(
+      `${this.baseUrl}/api/series/${encodeURIComponent(seriesId)}/cover/ingest`,
+      { authorization: `Bearer ${this.token}` },
+      form
+    );
+    if (res.status < 200 || res.status >= 300) {
+      const body = res.json as { message?: string } | null;
+      throw new PublishError(res.status, body?.message ?? res.text.slice(0, 300));
+    }
+  }
+
   async publish(input: PublishInput): Promise<PublishResult> {
     if (!fs.existsSync(input.audioPath)) {
       throw new PublishError(null, `no audio at ${input.audioPath}`);

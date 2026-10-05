@@ -615,7 +615,7 @@ export const api = {
       `/api/run/series-art/state?id=${encodeURIComponent(id)}`
     ),
   uploadRunSeriesArt: (id: string, image: Uint8Array<ArrayBuffer>) =>
-    call<{ ok: true; width: number; height: number }>(
+    call<{ ok: true; width: number; height: number; platform: string }>(
       `/api/run/series-art?id=${encodeURIComponent(id)}`,
       { method: 'POST', body: image, headers: { 'content-type': 'image/png' } }
     ),

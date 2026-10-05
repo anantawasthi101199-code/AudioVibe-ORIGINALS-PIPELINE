@@ -261,7 +261,32 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             current={manifest.seriesTitle}
             locked={published}
             onSaved={() => void load()}
-          />
+          >
+            {/* THE SERIES COVER, 1920x1080: one picture for the whole series,
+                set here when the series is new and changeable here afterwards. */}
+            {seriesArt && (
+              <ImagePicker
+                title={`Series cover: ${seriesArt.title}`}
+                note={
+                  seriesArt.created
+                    ? 'Shared by every episode in this series. Changing it here changes it on AudioVibe straight away.'
+                    : 'A new series: give it a 1920x1080 cover. Every episode in it shares this, and it goes up when the first episode publishes. Without one, a cover is drawn.'
+                }
+                state={seriesArt}
+                src={seriesArt.supplied ? `/api/run/series-art?id=${encodeURIComponent(id)}` : null}
+                disabled={busy !== null || live}
+                onUpload={async (image) => {
+                  const r = await api.uploadRunSeriesArt(id, image);
+                  await loadSeriesArt();
+                  if (r.platform !== 'updated' && r.platform !== 'not created yet') throw new Error(r.platform);
+                }}
+                onRemove={async () => {
+                  await api.removeRunSeriesArt(id);
+                  await loadSeriesArt();
+                }}
+              />
+            )}
+          </SeriesPicker>
         </div>
       )}
 
@@ -502,34 +527,6 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 await loadArt();
               }}
             />
-            {/* THE SERIES' COVER, beside the episode's, because this is the
-                step where it is used: the series is created when its first
-                episode publishes, and its cover goes up with it. */}
-            {seriesArt && (
-              <ImagePicker
-                title={`Series cover: ${seriesArt.title}`}
-                note={
-                  seriesArt.created
-                    ? 'This series already exists on the platform, so its cover is set. A new one here applies only if the series is made again.'
-                    : 'The shelf this episode joins, at 16:9. Used when the series is created, which is when this episode publishes. Without one, a cover is drawn.'
-                }
-                state={seriesArt}
-                src={
-                  seriesArt.supplied
-                    ? `/api/run/series-art?id=${encodeURIComponent(id)}`
-                    : null
-                }
-                disabled={busy !== null || live}
-                onUpload={async (image) => {
-                  await api.uploadRunSeriesArt(id, image);
-                  await loadSeriesArt();
-                }}
-                onRemove={async () => {
-                  await api.removeRunSeriesArt(id);
-                  await loadSeriesArt();
-                }}
-              />
-            )}
           </div>
         </section>
       )}

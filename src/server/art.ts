@@ -27,6 +27,8 @@ import {
   suppliedArt,
 } from '../art/supplied';
 import { Run } from '../run/store';
+import { AudioVibeClient } from '../publish/ingest';
+import { publishTokenFor } from '../publish/account';
 import { findSeries, seriesKey } from '../publish/seriesRegistry';
 import { platformUrl } from '../config';
 import { HttpError } from './routes';
@@ -187,6 +189,7 @@ const seriesArtTarget = (runId: string) => {
     dir: path.join(repoRoot(), 'art', run.manifest.personaId),
     name: `series-${key.split('#')[1]}`,
     created: Boolean(findSeries(key, platformUrl().url)),
+    record: findSeries(key, platformUrl().url),
   };
 };
 
@@ -195,10 +198,28 @@ export const runSeriesArtState = (runId: string) => {
   return { ...state(t.dir, t.name, SHAPES.series), title: t.title, created: t.created };
 };
 
-export const saveRunSeriesArt = (runId: string, bytes: Buffer) => {
+export const saveRunSeriesArt = async (runId: string, bytes: Buffer) => {
   const t = seriesArtTarget(runId);
   const { size } = asHttp(() => saveSuppliedArt(t.dir, t.name, bytes, SHAPES.series));
-  return { ok: true as const, width: size.width, height: size.height };
+
+  // ONE COVER FOR THE WHOLE SERIES, so changing it here changes it on
+  // AudioVibe too once the series exists there (2026-10-05). Before that, it is
+  // simply the cover the series is created with.
+  let platform: 'not created yet' | 'updated' | string = 'not created yet';
+  if (t.record) {
+    const file = suppliedArt(t.dir, t.name);
+    try {
+      const run = Run.open(runId);
+      await new AudioVibeClient(platformUrl().url, publishTokenFor(run.manifest.personaId)).updateSeriesCover(
+        t.record.seriesId,
+        file!
+      );
+      platform = 'updated';
+    } catch (e) {
+      platform = `saved here, but AudioVibe did not take it: ${(e as Error).message}`;
+    }
+  }
+  return { ok: true as const, width: size.width, height: size.height, platform };
 };
 
 export const removeRunSeriesArt = (runId: string) => {

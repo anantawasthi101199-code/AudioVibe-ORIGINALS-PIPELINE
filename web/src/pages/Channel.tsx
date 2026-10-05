@@ -591,7 +591,19 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                     <td className="faint">About</td>
                     <td>{rapidFire ? (chosen.length ? chosen.join(', ') : "India, the US, the UK, China and the world") : topic.trim()}</td>
                   </tr>
-                  {route.long && <tr><td className="faint">Series</td><td>{seriesTitle.trim()}{newSeries ? ' (new)' : ''}</td></tr>}
+                  {route.long && (
+                    <tr>
+                      <td className="faint">Series</td>
+                      <td>
+                        {seriesTitle.trim()}
+                        {newSeries && (
+                          <span className="faint">
+                            {' '}(new: add its 1920x1080 cover in the Series panel at the top of the episode's page)
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  )}
                   {confirming.again && <tr><td className="faint">Note</td><td>Made even though the channel covered something close.</td></tr>}
                   <tr><td className="faint">Cost</td><td>{p.cost}</td></tr>
                 </tbody>

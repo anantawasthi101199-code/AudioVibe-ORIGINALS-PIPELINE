@@ -2,7 +2,7 @@
  * Which series an episode belongs to, changeable until it is published
  * (owner, 2026-10-05: every episode belongs to a series).
  */
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { api } from '../api';
 
 export const SeriesPicker = ({
@@ -11,6 +11,7 @@ export const SeriesPicker = ({
   current,
   locked,
   onSaved,
+  children,
 }: {
   runId: string;
   channelId: string;
@@ -18,6 +19,8 @@ export const SeriesPicker = ({
   /** Published: its shelf is fixed. */
   locked: boolean;
   onSaved: () => void;
+  /** The series cover, shown in the same panel: one cover for the whole series. */
+  children?: ReactNode;
 }) => {
   const [titles, setTitles] = useState<string[]>([]);
   const [value, setValue] = useState(current ?? '');
@@ -115,6 +118,7 @@ export const SeriesPicker = ({
           )}
         </div>
       )}
+      {children && <div className="mt">{children}</div>}
     </section>
   );
 };

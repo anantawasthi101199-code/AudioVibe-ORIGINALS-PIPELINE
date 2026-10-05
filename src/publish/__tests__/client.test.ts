@@ -275,4 +275,24 @@ describe('AudioVibeClient', () => {
       ).rejects.toThrow(/no id/);
     });
   });
+
+  describe('updateSeriesCover', () => {
+    it('sends the cover to the live series with the channel credential', async () => {
+      const cover = path.join(os.tmpdir(), `series-cover-${Date.now()}.png`);
+      fs.writeFileSync(cover, Buffer.from('PNG fake'));
+      const t = spyTransport([{ status: 200, json: { success: true }, text: '' }]);
+      await client(t).updateSeriesCover('series-7', cover);
+      expect(t.posts[0]!.url).toBe('https://staging.example.com/api/series/series-7/cover/ingest');
+      expect(t.posts[0]!.form.get('cover')).toBeTruthy();
+      fs.rmSync(cover, { force: true });
+    });
+
+    it('reports a refusal rather than pretending it worked', async () => {
+      const cover = path.join(os.tmpdir(), `series-cover-${Date.now()}-b.png`);
+      fs.writeFileSync(cover, Buffer.from('PNG fake'));
+      const t = spyTransport([{ status: 404, json: { message: 'Not found' }, text: 'Not found' }]);
+      await expect(client(t).updateSeriesCover('series-7', cover)).rejects.toThrow(/Not found/);
+      fs.rmSync(cover, { force: true });
+    });
+  });
 });

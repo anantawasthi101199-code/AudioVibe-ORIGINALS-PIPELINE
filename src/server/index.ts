@@ -594,7 +594,7 @@ export const createServer = (): http.Server =>
         return;
       }
       if (pathname === '/api/run/series-art' && req.method === 'POST') {
-        return send(res, 200, saveRunSeriesArt(id ?? '', await readImage(req)));
+        return send(res, 200, await saveRunSeriesArt(id ?? '', await readImage(req)));
       }
       if (pathname === '/api/run/series-art' && req.method === 'DELETE') {
         return send(res, 200, removeRunSeriesArt(id ?? ''));
