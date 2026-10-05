@@ -1,0 +1,1 @@
+[{"check": "style:sentenceWordsStdDevMin", "detail": "sentence length varies by 6.3 words, under the 8 minimum. Uniform sentence length is the clearest sign of generated prose.", "by": "operator", "at": "2026-10-04T23:32:33.569Z"}]

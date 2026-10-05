@@ -38,7 +38,7 @@ import { regateNews } from '../pipeline/news';
 import { regatePsych } from '../pipeline/psych';
 import { handwrittenGate } from '../pipeline/handwritten';
 import { storyResearchSchema } from '../evidence/story';
-import { caseFileSchema } from '../evidence/casefile';
+import { writtenFrom } from '../evidence/writtenFrom';
 import { stageFlags, stagesOff } from '../config/stages';
 
 /**
@@ -86,10 +86,7 @@ const regateRaw = (run: Run, script: Script): GateReport | null => {
     if (!claims.length && (run.hasArtifact('reference') || run.hasArtifact('casefile'))) {
       const corpus = run.readArtifact('corpus', corpusSchema);
       const stored = run.hasArtifact('reference')
-        ? run.readArtifact('reference', storyResearchSchema)
-        : undefined;
-      const caseFile = run.hasArtifact('casefile')
-        ? run.readArtifact('casefile', caseFileSchema)
+        ? storyResearchSchema.safeParse(run.readArtifact('reference', z.unknown())).data
         : undefined;
       const render = run.hasArtifact('render') ? run.readArtifact('render', renderResultSchema) : null;
       return runGate({
@@ -108,12 +105,7 @@ const regateRaw = (run: Run, script: Script): GateReport | null => {
         evidence: 'reference',
         referenceReview: stored?.review,
         // Only what the story was written from, exactly as the pipeline gated it.
-        sources: corpus.sources.filter(
-          (src) =>
-            stored?.reference?.sourceIds.includes(src.id) ||
-            caseFile?.sourceIds.includes(src.id) ||
-            src.id === stored?.article?.id
-        ),
+        sources: writtenFrom(run),
       });
     }
 

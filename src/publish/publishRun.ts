@@ -22,6 +22,7 @@ import { platformUrl } from '../config';
 import { paletteFor, renderCover } from '../art/cover';
 import { suppliedArt } from '../art/supplied';
 import { claimSetSchema, corpusSchema } from '../evidence/research';
+import { anchorClaims } from '../evidence/writtenFrom';
 import { loadBible } from '../fiction/bible';
 import { renderResultSchema } from '../render/assemble';
 import { finalAudioFor, mixedAudioFor } from '../render/backing';
@@ -31,7 +32,7 @@ import { Run } from '../run/store';
 import { scriptSchema } from '../script/write';
 import { AudioVibeClient } from './ingest';
 import { publishTokenFor } from './account';
-import { buildFictionProvenance, buildProvenance } from './provenance';
+import { ProvenancePayload, buildFictionProvenance, buildProvenance } from './provenance';
 import { findSeries, recordSeries, seriesKey } from './seriesRegistry';
 import { SERIES_COVER_SIZE } from '../art/cover';
 import { repoRoot } from '../config';
@@ -140,54 +141,7 @@ export const publishRun = async (
   // arrays because a fiction episode with no sources needs none, while a
   // reported episode with no sources has failed - and the Sources sheet must
   // not render those two the same way.
-  const provenance = persona.fiction
-    ? (() => {
-        const continuity = run.readArtifact(
-          'verification',
-          z.object({ findings: z.array(z.unknown()), checkerModel: z.string() }).passthrough()
-        );
-        return buildFictionProvenance({
-          personaId: persona.id,
-          factsChecked: continuity.findings.length,
-          priorEpisodes: loadBible(persona.id).episodes.length,
-          models: {
-            writer: script.writerModel,
-            continuityChecker: continuity.checkerModel,
-            tts: `${render.provider}/${render.model}`,
-            voice: render.voiceId,
-          },
-          renderedAt: new Date(),
-        });
-      })()
-    : (() => {
-        const corpus = run.readArtifact('corpus', corpusSchema);
-        const claims = run.readArtifact('claims', claimSetSchema);
-        const verification = run.readArtifact(
-          'verification',
-          z
-            .object({
-              verification: z.object({ verifierModel: z.string() }).passthrough().optional(),
-              counterEvidence: z.array(z.unknown()).default([]),
-            })
-            .passthrough()
-        );
-
-        return buildProvenance({
-          personaId: persona.id,
-          claims: claims.claims,
-          sources: corpus.sources,
-          counterEvidence: verification.counterEvidence as never,
-          // The person confirmed it by passing the review check above.
-          counterEvidenceAddressed: options.confirmed,
-          models: {
-            writer: script.writerModel,
-            verifier: verification.verification?.verifierModel ?? 'unknown',
-            tts: `${render.provider}/${render.model}`,
-            voice: render.voiceId,
-          },
-          renderedAt: new Date(),
-        });
-      })();
+  const provenance = provenanceFor(run, { confirmed: options.confirmed });
 
   // WHICH SHELF, IF ANY.
   //
@@ -329,3 +283,71 @@ export const scaleBeatMap = <T extends { startS: number; endS: number }>(map: T[
         startS: Number((b.startS / speed).toFixed(3)),
         endS: Number((b.endS / speed).toFixed(3)),
       }));
+
+/**
+ * The receipts a run publishes with. Its own function so the readiness check
+ * (publish/readiness.ts) builds exactly what a publish would, without sending.
+ */
+export const provenanceFor = (
+  run: Run,
+  options: { confirmed?: boolean } = {}
+): ProvenancePayload => {
+  const persona = loadPersona(run.manifest.personaId);
+  const script = run.readArtifact('script', scriptSchema);
+  const render = run.readArtifact('render', renderResultSchema);
+return persona.fiction
+  ? (() => {
+      const continuity = run.readArtifact(
+        'verification',
+        z.object({ findings: z.array(z.unknown()), checkerModel: z.string() }).passthrough()
+      );
+      return buildFictionProvenance({
+        personaId: persona.id,
+        factsChecked: continuity.findings.length,
+        priorEpisodes: loadBible(persona.id).episodes.length,
+        models: {
+          writer: script.writerModel,
+          continuityChecker: continuity.checkerModel,
+          tts: `${render.provider}/${render.model}`,
+          voice: render.voiceId,
+        },
+        renderedAt: new Date(),
+      });
+    })()
+  : (() => {
+      const corpus = run.readArtifact('corpus', corpusSchema);
+      // NO LEDGER ON THE SINGLE-STORY AND CASE-FILE LANES: one unverified
+      // claim per document the story was written from, so the Sources sheet
+      // lists them rather than refusing to publish. See evidence/writtenFrom.ts.
+      const claims = run.hasArtifact('claims')
+        ? run.readArtifact('claims', claimSetSchema).claims
+        : anchorClaims(run, script.title, script.beats[0]!.beatId);
+      const verification = run.hasArtifact('verification')
+        ? run.readArtifact(
+            'verification',
+            z
+              .object({
+                verification: z.object({ verifierModel: z.string() }).passthrough().optional(),
+                counterEvidence: z.array(z.unknown()).default([]),
+              })
+              .passthrough()
+          )
+        : { verification: { verifierModel: 'none: written from its documents, not claim by claim' }, counterEvidence: [] };
+
+      return buildProvenance({
+        personaId: persona.id,
+        claims,
+        sources: corpus.sources,
+        counterEvidence: verification.counterEvidence as never,
+        // The person confirmed it by passing the review check above.
+        counterEvidenceAddressed: options.confirmed ?? false,
+        models: {
+          writer: script.writerModel,
+          verifier: verification.verification?.verifierModel ?? 'unknown',
+          tts: `${render.provider}/${render.model}`,
+          voice: render.voiceId,
+        },
+        renderedAt: new Date(),
+      });
+    })();
+};

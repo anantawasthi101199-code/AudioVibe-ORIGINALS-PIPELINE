@@ -1,0 +1,1 @@
+[{"check": "style:bannedPhrases", "detail": "uses \"here's the thing\"", "by": "operator", "at": "2026-10-04T22:27:15.512Z"}, {"check": "psychLength", "detail": "would run about 182s. A short is under three minutes.", "by": "operator", "at": "2026-10-04T22:27:16.310Z"}]
