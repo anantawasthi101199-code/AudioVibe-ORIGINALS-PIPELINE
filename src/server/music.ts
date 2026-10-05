@@ -73,8 +73,14 @@ export const removeTrack = (name: string | null) => ({
 
 export const trackFileFor = (name: string | null): string | null => (name ? trackFile(name) : null);
 
-export const runMixState = (runId: string) => {
-  const run = Run.open(runId);
+export const runMixState = (runId: string) => panelState(Run.open(runId));
+
+/**
+ * EVERYTHING THE MUSIC PANEL SHOWS, from every action. The actions used to
+ * return less than the first load did, so after "Back to the plain voice" the
+ * panel forgot it was a short and the default button vanished (2026-10-05).
+ */
+const panelState = (run: Run) => {
   return {
     ...mixState(run),
     lock: musicLock(run),
@@ -160,7 +166,7 @@ export const useMusicDefault = (runId: string) =>
     }
     await mixRun(run, settings);
     chooseMix(run);
-    return { ...mixState(run), lock: musicLock(run) };
+    return panelState(run);
   });
 
 export const makeMix = (runId: string, body: unknown) =>
@@ -168,14 +174,14 @@ export const makeMix = (runId: string, body: unknown) =>
     const input = mixBody.parse(body);
     const run = Run.open(runId);
     await mixRun(run, input);
-    return { ...mixState(run), lock: musicLock(run) };
+    return panelState(run);
   });
 
 export const removeMix = (runId: string) =>
   asHttp(() => {
     const run = Run.open(runId);
     clearMix(run);
-    return { ...mixState(run), lock: musicLock(run) };
+    return panelState(run);
   });
 
 /** "Use this version": the preview becomes what publishing sends. */
@@ -183,7 +189,7 @@ export const useMix = (runId: string) =>
   asHttp(() => {
     const run = Run.open(runId);
     chooseMix(run);
-    return { ...mixState(run), lock: musicLock(run) };
+    return panelState(run);
   });
 
 /** Publish the voice alone again. */
@@ -191,7 +197,7 @@ export const voiceOnly = (runId: string) =>
   asHttp(() => {
     const run = Run.open(runId);
     unchooseMix(run);
-    return { ...mixState(run), lock: musicLock(run) };
+    return panelState(run);
   });
 
 export const mixedFile = (runId: string, which: string | null): string | null =>

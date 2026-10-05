@@ -309,14 +309,33 @@ const serveFile = (
     return;
   }
   const stat = fs.statSync(file);
-  res.writeHead(200, {
+  const headers = {
     'content-type': MIME[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
-    'content-length': stat.size,
     'cache-control': cacheFor(file),
+    'accept-ranges': 'bytes',
     ...(download
       ? { 'content-disposition': `${attachment ? 'attachment' : 'inline'}; filename="${download}"` }
       : {}),
-  });
+  };
+
+  // PARTIAL REQUESTS, which audio players use to start and to seek. Without
+  // them the studio sent the whole file every time, and a mixed short (a 27MB
+  // WAV) sat silent in the player until it gave up (2026-10-05).
+  const range = /^bytes=(\d*)-(\d*)$/.exec(String(res.req?.headers.range ?? ''));
+  if (range && (range[1] || range[2])) {
+    const start = range[1] ? Number(range[1]) : Math.max(0, stat.size - Number(range[2]));
+    const end = range[1] && range[2] ? Math.min(Number(range[2]), stat.size - 1) : stat.size - 1;
+    if (start >= stat.size || start > end) {
+      res.writeHead(416, { 'content-range': `bytes */${stat.size}` });
+      res.end();
+      return;
+    }
+    res.writeHead(206, { ...headers, 'content-range': `bytes ${start}-${end}/${stat.size}`, 'content-length': end - start + 1 });
+    fs.createReadStream(file, { start, end }).pipe(res);
+    return;
+  }
+
+  res.writeHead(200, { ...headers, 'content-length': stat.size });
   fs.createReadStream(file).pipe(res);
 };
 
