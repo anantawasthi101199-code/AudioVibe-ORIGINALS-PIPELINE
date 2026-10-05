@@ -202,8 +202,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         <div className="row nowrap">
           <StatePill state={live ? 'running' : run.state} stage={currentStage} />
           <Info label="What this run was asked for">
-            {run.channelName} · e{String(run.episode).padStart(3, '0')}
-            {run.short ? `-s${String(run.short).padStart(2, '0')}` : ''} · {run.formatId}
+            {run.channelName} · {run.label} · {run.formatId}
             <br />
             <br />
             {run.topic}

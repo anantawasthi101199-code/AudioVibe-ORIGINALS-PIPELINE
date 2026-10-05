@@ -1020,8 +1020,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   <span className="queue-main">
                     <span className="queue-title">{r.title ?? r.topic}</span>
                     <span className="muted">
-                      e{String(r.episode).padStart(3, '0')}
-                      {r.short ? `-s${String(r.short).padStart(2, '0')}` : ''} · {ago(r.createdAt)}
+                      {r.label} · {ago(r.createdAt)}
                     </span>
                   </span>
                   <span className="row nowrap">

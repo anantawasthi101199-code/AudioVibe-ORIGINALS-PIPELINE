@@ -19,6 +19,15 @@
  */
 import fs from 'fs';
 import { readArchive } from '../archive/record';
+import { loadFormat } from '../formats/load';
+
+const isShortFormat = (formatId: string): boolean => {
+  try {
+    return loadFormat(formatId).kind === 'short';
+  } catch {
+    return false;
+  }
+};
 import path from 'path';
 import { z } from 'zod';
 import { runsDir } from '../config';
@@ -329,6 +338,26 @@ const nextShortNumber = (root: string, channelId: string, episode: number): numb
   return numbers.length ? Math.max(...numbers) + 1 : 1;
 };
 
+/**
+ * SHORTS ARE NUMBERED APART FROM EPISODES (owner, 2026-10-05): s001, s002 for a
+ * channel's shorts, e001, e002 for its episodes. A short made on its own used
+ * to take the next episode number, so a channel's first episode could be
+ * "e004". A short CUT FROM an episode keeps e001-s01: it belongs to that one.
+ */
+export const nextStandaloneShortNumber = (root: string, channelId: string): number => {
+  const dir = path.join(root, channelId);
+  if (!fs.existsSync(dir)) return 1;
+  const numbers = fs
+    .readdirSync(dir)
+    .filter((d) => /^s\d{3}-/.test(d))
+    .map((d) => Number(d.slice(1, 4)));
+  return numbers.length ? Math.max(...numbers) + 1 : 1;
+};
+
+/** e001, s001 or e001-s01, from a run's folder name. */
+export const runLabel = (runId: string): string =>
+  runId.split('/')[1]?.match(/^(e\d{3}-s\d{2}|[es]\d{3})/)?.[1] ?? runId;
+
 export interface RunName {
   /** `<channel>/<folder>` - the id, and the path under runs/. */
   id: string;
@@ -339,7 +368,7 @@ export interface RunName {
 }
 
 export const newRunName = (
-  input: { personaId: string; topic: string; parentEpisode?: number },
+  input: { personaId: string; topic: string; parentEpisode?: number; short?: boolean },
   root: string,
   now = new Date()
 ): RunName => {
@@ -354,6 +383,11 @@ export const newRunName = (
       episode: input.parentEpisode,
       short: n,
     };
+  }
+
+  if (input.short) {
+    const n = nextStandaloneShortNumber(root, input.personaId);
+    return { id: `${input.personaId}/s${String(n).padStart(3, '0')}-${stamp}-${slug}`, episode: n };
   }
 
   const episode = nextEpisodeNumber(root, input.personaId);
@@ -408,7 +442,13 @@ export class Run {
     // ONE CALL. It reads the directory to decide the next number, so calling it
     // twice invites two different answers for one run.
     const name = newRunName(
-      { personaId: input.personaId, topic: input.topic, parentEpisode: input.parentEpisode },
+      {
+        personaId: input.personaId,
+        topic: input.topic,
+        parentEpisode: input.parentEpisode,
+        // A short made on its own is numbered among the channel's shorts.
+        short: input.parentEpisode === undefined && isShortFormat(input.formatId),
+      },
       root,
       now
     );

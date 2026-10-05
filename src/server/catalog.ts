@@ -25,7 +25,7 @@ import { Persona } from '../canon/schema';
 import { loadFormat } from '../formats/load';
 import { EpisodeFormat, minClaimsFor, nominalSeconds } from '../formats/schema';
 import { loadTopics } from '../schedule/load';
-import { Run } from '../run/store';
+import { Run, runLabel } from '../run/store';
 import { loadVoiceRegistry } from '../canon/voiceRegistry';
 import { loadAccounts } from '../publish/account';
 import { findSeries, loadRegistry } from '../publish/seriesRegistry';
@@ -284,6 +284,8 @@ export interface RunSummary {
   /** Where the run is, in the words the interface uses. */
   state: 'running' | 'awaiting-approval' | 'ready' | 'failed' | 'published' | 'abandoned';
   episode: number;
+  /** e001, s001 or e001-s01: what to call it. */
+  label: string;
   short: number | null;
   story: number | null;
   derivedFrom: string | null;
@@ -461,6 +463,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     })(),
     liveStage: liveIds.has(run.id) ? (jobs.forRun(run.id)?.events.at(-1)?.stage ?? null) : null,
     episode: m.episode,
+    label: runLabel(run.id),
     short: m.short ?? null,
     story: m.story ?? null,
     derivedFrom: m.derivedFrom ?? null,

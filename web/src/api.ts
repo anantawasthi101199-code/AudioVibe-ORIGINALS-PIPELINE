@@ -93,6 +93,8 @@ export interface RunSummary {
   completed: string[];
   state: RunState;
   episode: number;
+  /** e001, s001 or e001-s01. */
+  label: string;
   short: number | null;
   story: number | null;
   derivedFrom: string | null;

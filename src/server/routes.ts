@@ -32,7 +32,7 @@ import { buildDeps, priorEpisodeTexts } from '../deps';
 import { runLane } from '../pipeline/runLane';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
-import { Run } from '../run/store';
+import { Run, runLabel } from '../run/store';
 import { readArchive } from '../archive/record';
 import { COUNTRIES, MAX_COUNTRIES, countriesByName } from '../news/countries';
 import { startHandwritten } from '../pipeline/handwritten';
@@ -195,7 +195,7 @@ export const audioDownloadName = (id: string): string => {
     // No script title yet; the topic will do.
   }
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
-  const num = `e${String(m.episode).padStart(3, '0')}${m.short ? `-s${String(m.short).padStart(2, '0')}` : ''}`;
+  const num = runLabel(run.id);
   const music = finalAudioFor(run)?.music ? '-with-music' : '';
   return `${m.personaId}-${num}-${slug}${music}.mp3`;
 };
