@@ -6,7 +6,9 @@ and inside the admin dashboard on its **Foundry** tab.
 ## Where it lives
 
 - Railway project `audiovibe-foundry`, service `foundry`, built from this repo's
-  `Dockerfile`. **Every push to `main` deploys it.**
+  `Dockerfile`. **Every push to `main` deploys it**, through a deploy trigger on
+  `main`. If pushes stop deploying, check the trigger exists: a service created
+  before Railway had GitHub access to the repo gets the repo but no trigger.
 - Everything the studio writes (runs/, art/, music/, voices.json,
   catalogue.json, series.json, accounts.json, bibles/, seasons/) is on the
   volume `foundry-volume` at `/data`. `scripts/start.sh` links each into place,
