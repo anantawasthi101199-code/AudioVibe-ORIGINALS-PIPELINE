@@ -1021,6 +1021,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                     <span className="queue-title">{r.title ?? r.topic}</span>
                     <span className="muted">
                       {r.label} · {ago(r.createdAt)}
+                      {r.heldBy ? ` · ${r.heldBy} is working on it` : ''}
                     </span>
                   </span>
                   <span className="row nowrap">

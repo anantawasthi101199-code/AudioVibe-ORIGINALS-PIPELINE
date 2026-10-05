@@ -81,6 +81,7 @@ import {
 import { getQueue } from './queue';
 import { getCalendar, releasingEnabled } from './calendar';
 import { freshness } from './freshness';
+import { blockedBy, heartbeat, release } from './holds';
 import { archivedOwner } from '../archive/record';
 import { repoRoot, runsDir } from '../config';
 import { backUpRecords, r2Store, runKey, sweepArchive } from '../archive/r2';
@@ -450,6 +451,26 @@ export const createServer = (): http.Server =>
         return;
       }
 
+      // --- Holds: who is working on which run. See holds.ts. ---------------
+      if (pathname === '/api/run/hold' && req.method === 'POST') {
+        const { active } = (await readBody(req)) as { active?: boolean };
+        return send(res, 200, heartbeat(id ?? '', user!, active !== false));
+      }
+      // POST, so the page can send it as a beacon while it is closing.
+      if (pathname === '/api/run/release' && req.method === 'POST') {
+        release(id ?? '', user!);
+        return send(res, 200, { ok: true });
+      }
+      // THE SERVER REFUSES, not only the page: any change to a run somebody
+      // else is holding. Reads (GET) stay open to everybody.
+      if (pathname.startsWith('/api/run') && req.method !== 'GET' && id) {
+        const holder = blockedBy(id, user!);
+        if (holder) {
+          send(res, 423, { error: `${holder} is working on this right now. It opens up when they leave it.` });
+          return;
+        }
+      }
+
       // --- Reading ----------------------------------------------------------
       //
       // EVERY ROUTE HERE THAT ALSO HAS A WRITE MUST SAY `req.method === 'GET'`.
@@ -640,7 +661,14 @@ export const createServer = (): http.Server =>
         return send(res, 200, recheckChannel(id ?? ''));
       }
       if (pathname === '/api/channel/approve' && req.method === 'POST') {
-        return send(res, 200, approveForRelease(id ?? '', await readBody(req), user));
+        const body = await readBody(req);
+        const held = ((body as { runIds?: string[] })?.runIds ?? [])
+          .map((r) => ({ r, holder: blockedBy(r, user!) }))
+          .find((x) => x.holder);
+        if (held) {
+          return send(res, 423, { error: `${held.holder} is working on ${held.r} right now.` });
+        }
+        return send(res, 200, approveForRelease(id ?? '', body, user));
       }
       if (pathname === '/api/run/reschedule' && req.method === 'POST') {
         return send(res, 200, rescheduleRelease(id ?? '', await readBody(req)));

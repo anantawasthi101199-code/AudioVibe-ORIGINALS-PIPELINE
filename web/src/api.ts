@@ -82,6 +82,8 @@ export interface RunSummary {
   stalled: boolean;
   /** When its files went to R2 (its audio now plays from there), or null. */
   archivedAt: string | null;
+  /** Who is working on it right now, or null. */
+  heldBy: string | null;
   id: string;
   channelId: string;
   channelName: string;

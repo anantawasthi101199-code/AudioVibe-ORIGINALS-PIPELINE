@@ -130,7 +130,10 @@ const Row = ({
     )}
 
     <button className="order-main" onClick={onToggle}>
-      <span className="queue-title">{run.title ?? run.topic}</span>
+      <span className="queue-title">
+        {run.title ?? run.topic}
+        {run.heldBy && <span className="pill hold" style={{ marginLeft: '0.5rem' }}>{run.heldBy} is on it</span>}
+      </span>
       <span className="muted">
         {run.short !== null ? `short ${run.short} · ` : 'episode · '}
         {clock(run.durationS)} · {money(run.spentPence)} · {ago(run.createdAt)}
@@ -454,7 +457,10 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
               <button key={r.id} className="queue-row" onClick={() => go(`/r/${r.id}`)}>
                 {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id, r.audioKey)} /> : null}
                 <span className="queue-main">
-                  <span className="queue-title">{r.title ?? r.topic}</span>
+                  <span className="queue-title">
+                    {r.title ?? r.topic}
+                    {r.heldBy && <span className="pill hold" style={{ marginLeft: '0.5rem' }}>{r.heldBy} is on it</span>}
+                  </span>
                   <span className="muted">{ago(r.createdAt)}</span>
                 </span>
                 <StatePill state={r.state} stage={r.liveStage} />

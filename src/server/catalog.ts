@@ -34,6 +34,7 @@ import { jobs } from './jobs';
 import { withOverrides } from '../qa/overrides';
 import { finalAudioFor, musicLock } from '../render/backing';
 import { readArchive } from '../archive/record';
+import { holderOf } from './holds';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -337,6 +338,8 @@ export interface RunSummary {
   stalled: boolean;
   /** When its files went to R2 (its audio now plays from there), or null. */
   archivedAt: string | null;
+  /** Who is working on it right now, or null. See holds.ts. */
+  heldBy: string | null;
 }
 
 /**
@@ -441,6 +444,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     // 'running' is the fallback for "no gate yet"; with no live job, it stopped.
     stalled: state === 'running' && !liveIds.has(run.id),
     archivedAt: readArchive(run.dir)?.archivedAt ?? null,
+    heldBy: holderOf(run.id),
     formatId: m.formatId,
     topic: m.topic,
     title,

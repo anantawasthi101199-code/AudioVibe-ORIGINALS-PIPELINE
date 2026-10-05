@@ -14,6 +14,7 @@
  */
 import { MusicPanel } from '../components/MusicPanel';
 import { SeriesPicker } from '../components/SeriesPicker';
+import { useHold } from '../useHold';
 import { FinalAudio } from '../components/FinalAudio';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -57,6 +58,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [events, setEvents] = useState<JobEvent[]>([]);
   const [live, setLive] = useState(false);
   const [editing, setEditing] = useState(false);
+  // Who is working on this run. Somebody else: read and listen only.
+  const hold = useHold(id);
   const [draft, setDraft] = useState<Beat[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
@@ -207,7 +210,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             <br />
             {run.topic}
           </Info>
-          {!published && !live && (
+          {!published && !live && !(hold?.holder && !hold.mine) && (
             <button
               className="btn ghost small"
               disabled={busy !== null}
@@ -232,6 +235,23 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         </div>
       </div>
 
+      {hold?.holder && !hold.mine && (
+        <div className="stale-bar" style={{ position: 'static', marginBottom: '0.9rem', borderRadius: 8 }}>
+          {hold.holder} is working on this right now
+          {hold.since
+            ? ` (since ${new Date(hold.since).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })})`
+            : ''}
+          . You can read and listen; editing opens when they leave it, or after 30 minutes without
+          them touching it.
+        </div>
+      )}
+
+      {/* HELD BY SOMEBODY ELSE: every control below is disabled at once, natively.
+          The studio refuses their edits too; this is only so nobody tries. */}
+      <fieldset
+        disabled={Boolean(hold?.holder && !hold.mine)}
+        style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}
+      >
       {/* Every episode belongs to a series; changeable until it is published. */}
       {long && !isSource && (
         <div style={{ marginBottom: '0.75rem' }}>
@@ -803,6 +823,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           </div>
         </section>
       )}
+      </fieldset>
     </div>
   );
 };
