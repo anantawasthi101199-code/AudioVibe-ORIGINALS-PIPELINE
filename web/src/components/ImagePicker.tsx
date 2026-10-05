@@ -96,7 +96,14 @@ export const ImagePicker = ({
   useEffect(() => setVersion((v) => v + 1), [state?.supplied]);
 
   const choose = async (file: File | undefined) => {
-    if (!file || !state) return;
+    if (!file) return;
+    // NEVER IGNORE A CHOSEN PHOTO SILENTLY. Without the box's details (its
+    // size) there is nothing to crop to; say so instead of doing nothing.
+    if (!state) {
+      setError('this picture box did not load from the studio. Refresh the page, then choose the file again.');
+      if (input.current) input.current.value = '';
+      return;
+    }
     setError(null);
     setBusy(true);
     try {

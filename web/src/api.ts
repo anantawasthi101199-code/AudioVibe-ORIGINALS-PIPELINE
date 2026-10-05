@@ -329,8 +329,41 @@ export const whenSignedOut = (fn: () => void): void => {
   onSignedOut = fn;
 };
 
+/**
+ * RETRY A REQUEST THAT NEVER GOT AN ANSWER, where doing it twice is harmless.
+ *
+ * Seen 2026-10-05: requests from the browser to the studio intermittently
+ * failed instantly ("Failed to fetch") while the studio itself was up and
+ * answering. An uploaded photo was simply lost, with no sign of why. Reads and
+ * file uploads (which overwrite the same file) are retried; anything that
+ * starts, publishes or spends is never retried, because a request can reach
+ * the server and lose only its answer.
+ */
+const RETRY_DELAYS_MS = [300, 1000, 2500];
+
+const retryable = (init?: RequestInit): boolean => {
+  const method = (init?.method ?? 'GET').toUpperCase();
+  return method === 'GET' || method === 'HEAD' || init?.body instanceof Blob;
+};
+
+const fetchWithRetry = async (path: string, init: RequestInit): Promise<Response> => {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      return await fetch(path, init);
+    } catch (e) {
+      // A TypeError is "no answer at all". Anything else, or out of retries, is real.
+      if (!(e instanceof TypeError) || !retryable(init) || attempt >= RETRY_DELAYS_MS.length) {
+        throw new Error(
+          `the studio did not answer (${(e as Error).message}). Check it is still running and try again.`
+        );
+      }
+      await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+    }
+  }
+};
+
 const call = async <T>(path: string, init?: RequestInit): Promise<T> => {
-  const res = await fetch(path, {
+  const res = await fetchWithRetry(path, {
     credentials: 'same-origin',
     headers: init?.body ? { 'content-type': 'application/json' } : undefined,
     ...init,
