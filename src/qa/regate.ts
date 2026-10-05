@@ -37,6 +37,9 @@ import { regateBusiness } from '../pipeline/business';
 import { regateNews } from '../pipeline/news';
 import { regatePsych } from '../pipeline/psych';
 import { handwrittenGate } from '../pipeline/handwritten';
+import { storyResearchSchema } from '../evidence/story';
+import { caseFileSchema } from '../evidence/casefile';
+import { stageFlags, stagesOff } from '../config/stages';
 
 /**
  * Re-run the gate, with any findings a person chose to ignore applied. Every
@@ -74,6 +77,45 @@ const regateRaw = (run: Run, script: Script): GateReport | null => {
       : run.hasArtifact('claims')
         ? run.readArtifact('claims', z.object({ claims: z.array(claimSchema) })).claims
         : [];
+
+    // THE SINGLE-STORY AND CASE-FILE LANES HAVE NO LEDGER (2026-10-05). They
+    // write from one reference article or case file, and the pipeline gates
+    // them with evidence: 'reference'. Returning null here made every one of
+    // them "cannot be gated, so it cannot be published" - every short on
+    // Eureka Tales, Mythic Archives, The Root Health and The Crime Files.
+    if (!claims.length && (run.hasArtifact('reference') || run.hasArtifact('casefile'))) {
+      const corpus = run.readArtifact('corpus', corpusSchema);
+      const stored = run.hasArtifact('reference')
+        ? run.readArtifact('reference', storyResearchSchema)
+        : undefined;
+      const caseFile = run.hasArtifact('casefile')
+        ? run.readArtifact('casefile', caseFileSchema)
+        : undefined;
+      const render = run.hasArtifact('render') ? run.readArtifact('render', renderResultSchema) : null;
+      return runGate({
+        persona,
+        format,
+        script,
+        claims: [],
+        ledger: checkLedger([], corpus.sources),
+        verification: { results: [], blocking: [], costPence: 0, verifierModel: '' },
+        counterEvidence: [],
+        durationS: render?.durationS ?? countWords(fullText(script)) / WORDS_PER_SECOND,
+        corpusText: corpus.sources.map((src) => src.text).join('\n'),
+        castNames: script.plan?.cast.map((c) => c.name) ?? [],
+        priorTexts: priorEpisodeTexts(run.id),
+        stagesOff: stagesOff(stageFlags(run.manifest.stages as never)),
+        evidence: 'reference',
+        referenceReview: stored?.review,
+        // Only what the story was written from, exactly as the pipeline gated it.
+        sources: corpus.sources.filter(
+          (src) =>
+            stored?.reference?.sourceIds.includes(src.id) ||
+            caseFile?.sourceIds.includes(src.id) ||
+            src.id === stored?.article?.id
+        ),
+      });
+    }
 
     if (!claims.length || !run.hasArtifact('verification')) return null;
 
