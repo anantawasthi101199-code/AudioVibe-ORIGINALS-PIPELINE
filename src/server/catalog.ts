@@ -19,6 +19,8 @@
  * Read-only and derived. Nothing here is stored; it is the persona files, the
  * beat sheets and the runs directory, arranged.
  */
+import fs from 'fs';
+import path from 'path';
 import { z } from 'zod';
 import { loadAllPersonas, loadPersona } from '../canon/load';
 import { Persona } from '../canon/schema';
@@ -35,6 +37,7 @@ import { withOverrides } from '../qa/overrides';
 import { finalAudioFor, musicLock } from '../render/backing';
 import { readArchive } from '../archive/record';
 import { holderOf } from './holds';
+import { suppliedArt } from '../art/supplied';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -340,6 +343,11 @@ export interface RunSummary {
   archivedAt: string | null;
   /** Who is working on it right now, or null. See holds.ts. */
   heldBy: string | null;
+  /**
+   * Its own picture (audiocard or episode image), as a key that changes when
+   * the picture does, or null when none has been set.
+   */
+  artKey: string | null;
 }
 
 /**
@@ -451,6 +459,10 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
       (state === 'running' || (state === 'awaiting-approval' && !run.hasArtifact('script'))),
     archivedAt: readArchive(run.dir)?.archivedAt ?? null,
     heldBy: holderOf(run.id),
+    artKey: (() => {
+      const art = suppliedArt(path.join(run.dir, 'media'), 'cover');
+      return art ? String(Math.round(fs.statSync(art).mtimeMs)) : null;
+    })(),
     formatId: m.formatId,
     topic: m.topic,
     title,

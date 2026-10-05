@@ -2180,3 +2180,23 @@ table.runs .num {
   opacity: 0.5;
   cursor: default;
 }
+
+/* A run's picture beside it in the publishing lists. */
+.pub-thumb {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+.pub-thumb.none {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  color: var(--text-dim);
+  font-size: 0.6rem;
+  text-align: center;
+  line-height: 1.1;
+}

@@ -129,13 +129,27 @@ const Row = ({
       <span className="play empty" aria-hidden />
     )}
 
+    {/* ITS PICTURE, so a missing one is obvious before deciding (2026-10-05). */}
+    {run.artKey ? (
+      <img
+        className="pub-thumb"
+        src={`/api/run/art?id=${encodeURIComponent(run.id)}&v=${run.artKey}`}
+        alt=""
+        loading="lazy"
+      />
+    ) : (
+      <span className="pub-thumb none" title="No audiocard or episode image set yet">
+        no picture
+      </span>
+    )}
+
     <button className="order-main" onClick={onToggle}>
       <span className="queue-title">
         {run.title ?? run.topic}
         {run.heldBy && <span className="pill hold" style={{ marginLeft: '0.5rem' }}>{run.heldBy} is on it</span>}
       </span>
       <span className="muted">
-        {run.short !== null ? `short ${run.short} · ` : 'episode · '}
+        {run.label} · {/^s|-s\d/.test(run.label) ? 'short' : 'episode'} · 
         {clock(run.durationS)} · {money(run.spentPence)} · {ago(run.createdAt)}
         {run.music ? ' · with music' : ''}
       </span>

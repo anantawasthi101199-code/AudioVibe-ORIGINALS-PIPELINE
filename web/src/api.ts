@@ -84,6 +84,8 @@ export interface RunSummary {
   archivedAt: string | null;
   /** Who is working on it right now, or null. */
   heldBy: string | null;
+  /** Its own picture, as a key that changes with it; null when none is set. */
+  artKey: string | null;
   id: string;
   channelId: string;
   channelName: string;
