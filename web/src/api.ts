@@ -80,6 +80,8 @@ export interface RunSummary {
   contentRatingOverridden: boolean;
   /** Stopped partway with nothing working on it. */
   stalled: boolean;
+  /** When its files went to R2 (its audio now plays from there), or null. */
+  archivedAt: string | null;
   id: string;
   channelId: string;
   channelName: string;

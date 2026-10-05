@@ -16,6 +16,21 @@ and inside the admin dashboard on its **Foundry** tab.
 - Config the repo owns (personas, beatsheets, topics, desks, schedule) comes
   from the image, so a push updates it.
 
+## Published runs move to R2
+
+Once a run is published, every file in its folder is uploaded to the private
+R2 bucket in `FOUNDRY_ARCHIVE_BUCKET` (under `runs/<run id>/`, with a history
+entry at `index/<run id>.json`). After R2 confirms each file at its exact size,
+the run's AUDIO is removed from the volume; its text and cover stay, so every
+page and the history work as before, and the audio plays and downloads from R2
+through one-hour private links. A sweep on start-up and every 30 minutes
+catches anything a publish did not archive, and keeps `state/` (voices,
+catalogue, series) current.
+
+Settings: `FOUNDRY_ARCHIVE_ENDPOINT` (https://<account id>.r2.cloudflarestorage.com),
+`FOUNDRY_ARCHIVE_BUCKET`, `FOUNDRY_ARCHIVE_ACCESS_KEY_ID`,
+`FOUNDRY_ARCHIVE_SECRET_ACCESS_KEY`. Unset, archiving is off.
+
 ## Who can sign in
 
 `FOUNDRY_USERS` on the Railway service, as `name:password` pairs separated by

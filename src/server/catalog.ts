@@ -35,6 +35,7 @@ import { platformUrl } from '../config';
 import { jobs } from './jobs';
 import { withOverrides } from '../qa/overrides';
 import { finalAudioFor, musicLock } from '../render/backing';
+import { readArchive } from '../archive/record';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -334,6 +335,8 @@ export interface RunSummary {
   contentRatingOverridden: boolean;
   /** Stopped partway with nothing working on it: offer Resume. */
   stalled: boolean;
+  /** When its files went to R2 (its audio now plays from there), or null. */
+  archivedAt: string | null;
 }
 
 /**
@@ -437,6 +440,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     contentRatingOverridden: m.contentRating !== undefined,
     // 'running' is the fallback for "no gate yet"; with no live job, it stopped.
     stalled: state === 'running' && !liveIds.has(run.id),
+    archivedAt: readArchive(run.dir)?.archivedAt ?? null,
     formatId: m.formatId,
     topic: m.topic,
     title,

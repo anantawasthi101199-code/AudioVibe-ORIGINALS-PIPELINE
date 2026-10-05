@@ -33,6 +33,7 @@ import { runLane } from '../pipeline/runLane';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
+import { readArchive } from '../archive/record';
 import { COUNTRIES, MAX_COUNTRIES, countriesByName } from '../news/countries';
 import { startHandwritten } from '../pipeline/handwritten';
 import { loadTopics } from '../schedule/load';
@@ -206,6 +207,9 @@ export const audioDownloadName = (id: string): string => {
  */
 export const audioDownloadFile = async (id: string): Promise<string> => {
   const run = openRun(id);
+  // ARCHIVED: the MP3 was made before the audio went to R2.
+  const archivedDownload = readArchive(run.dir)?.download;
+  if (archivedDownload) return path.join(run.dir, archivedDownload);
   const final = finalAudioFor(run);
   if (!final) throw new HttpError(404, `run "${id}" has no audio yet`);
 

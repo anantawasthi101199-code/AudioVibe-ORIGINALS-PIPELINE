@@ -42,6 +42,7 @@ import { loadSchedule } from '../schedule/load';
 import { allocate, type ItemKind, type Taken } from '../schedule/allocate';
 import { instantOfWallClock } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
+import { archiveSoon } from './archiveNow';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
 import { loadCatalogue, saveCatalogue } from '../catalogue/covered';
@@ -264,6 +265,8 @@ export const publishRunJob = (runId: string, body: unknown, who: string | null =
     runId,
     work: async (report) => {
       await publishRun(run, gate, { confirmed, report: (m) => report('publish', m) });
+      // Then to R2, in the background. See server/archiveNow.ts.
+      archiveSoon(run);
       return [runId];
     },
   });

@@ -78,6 +78,10 @@ import {
 import { getQueue } from './queue';
 import { getCalendar, releasingEnabled } from './calendar';
 import { freshness } from './freshness';
+import { archivedOwner } from '../archive/record';
+import { repoRoot, runsDir } from '../config';
+import { backUpRecords, r2Store, runKey, sweepArchive } from '../archive/r2';
+import { archiveDownload } from './archiveNow';
 import { releaseDue } from '../publish/release';
 import {
   createSeriesJob,
@@ -275,6 +279,25 @@ const serveFile = (
   download?: string,
   attachment = false
 ): void => {
+  // MOVED TO R2 (an archived run's audio): a private link, valid for an hour.
+  // A redirect rather than streaming it through here, so seeking and the
+  // download's speed are R2's, and the server's bandwidth is not spent on it.
+  if (!fs.existsSync(file)) {
+    const owner = archivedOwner(file);
+    const store = owner ? r2Store() : null;
+    if (!owner || !store) {
+      send(res, 404, { error: 'that file is not here' });
+      return;
+    }
+    void store
+      .url(runKey(path.relative(runsDir(), owner.runDir).split(path.sep).join('/'), owner.rel), attachment ? download : undefined)
+      .then((url) => {
+        res.writeHead(302, { location: url, 'cache-control': 'no-store' });
+        res.end();
+      })
+      .catch((e: Error) => send(res, 502, { error: `could not reach the archive: ${e.message}` }));
+    return;
+  }
   const stat = fs.statSync(file);
   res.writeHead(200, {
     'content-type': MIME[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
@@ -679,6 +702,21 @@ export const serve = async (opts: ServeOptions = {}): Promise<http.Server> => {
     console.log('  Put it behind a tunnel with its own access control rather than');
     console.log('  opening a port: see docs/REMOTE.md.');
   }
+  // THE ROLLING ARCHIVE: published runs to R2, on start-up and every 30
+  // minutes, so one whose archive failed is never forgotten. See archive/r2.ts.
+  const archive = r2Store();
+  if (archive) {
+    const sweep = () =>
+      void sweepArchive({ store: archive, makeDownload: archiveDownload }, (m) => console.log(`  ${m}`))
+        .then(() => backUpRecords(archive, repoRoot()))
+        .catch((e: Error) => console.log(`  archive sweep failed: ${e.message}`));
+    sweep();
+    setInterval(sweep, 30 * 60_000).unref();
+    console.log(`  Archive ON: published runs move to R2 bucket ${archive.bucket}.`);
+  } else {
+    console.log('  Archive off: FOUNDRY_ARCHIVE_* are not set, so everything stays on this disk.');
+  }
+
   if (releasingEnabled()) {
     startReleasing();
     console.log(`  Releasing is ON. Approved episodes publish themselves at their time,`);

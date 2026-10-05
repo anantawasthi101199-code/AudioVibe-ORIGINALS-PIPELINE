@@ -18,6 +18,7 @@
  * reading rather than by instrumenting.
  */
 import fs from 'fs';
+import { readArchive } from '../archive/record';
 import path from 'path';
 import { z } from 'zod';
 import { runsDir } from '../config';
@@ -618,6 +619,9 @@ export class Run {
       const resolved = path.resolve(this.dir, stored);
       if (fs.existsSync(resolved)) return resolved;
     }
+    // ARCHIVED TO R2: the path still names the audio; the file server fetches
+    // it from R2. See archive/record.ts.
+    if (readArchive(this.dir)?.files['media/episode.wav'] !== undefined) return own;
     return null;
   }
 

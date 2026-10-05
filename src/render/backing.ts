@@ -15,6 +15,7 @@
  * the voice file it was made from. Re-render the episode and the mix no longer
  * matches, so publish falls back to the voice and the page says to mix again.
  */
+import { readArchive } from '../archive/record';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
@@ -329,6 +330,8 @@ const writeRecord = (run: Run, record: MixRecord): void => {
 
 const isStale = (run: Run, mix: Mix | null): boolean => {
   if (!mix) return false;
+  // An archived run's mix is whatever it was when it was published.
+  if (readArchive(run.dir)) return false;
   const voice = run.audioFile();
   if (!voice || !fs.existsSync(run.mediaPath(mix.file))) return true;
   const now = voiceSignature(voice);
@@ -354,6 +357,7 @@ export const mixedFileFor = (run: Run, which: 'preview' | 'chosen' = 'preview'):
   const mix = readRecord(run)[which];
   if (!mix) return null;
   const file = run.mediaPath(mix.file);
+  if (readArchive(run.dir)?.files[`media/${mix.file}`] !== undefined) return file;
   return fs.existsSync(file) ? file : null;
 };
 
@@ -495,6 +499,9 @@ export interface FinalAudio {
 }
 
 export const finalAudioFor = (run: Run): FinalAudio | null => {
+  // ARCHIVED: what it was when it went to R2, frozen (the files are gone).
+  const archived = readArchive(run.dir)?.final;
+  if (archived) return { ...archived, file: path.join(run.dir, archived.file) };
   const voice = run.audioFile();
   if (!voice) return null;
   const { chosen } = readRecord(run);

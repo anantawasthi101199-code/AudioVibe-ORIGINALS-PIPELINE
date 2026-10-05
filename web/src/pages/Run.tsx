@@ -666,6 +666,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="panel-body row">
             <span className="pill pass">published</span>
             <span className="muted">Out in the world.</span>
+            {run.archivedAt && (
+              <span
+                className="pill"
+                title="Every file is kept in the R2 archive; its audio plays and downloads from there."
+              >
+                archived to R2 {new Date(run.archivedAt).toLocaleDateString('en-GB')}
+              </span>
+            )}
             <span className="spacer" />
             {/* Somewhere to go next, rather than a dead end. */}
             <button

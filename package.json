@@ -16,6 +16,8 @@
     "web": "npm --prefix web run dev"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1146.0",
+    "@aws-sdk/s3-request-presigner": "^3.1146.0",
     "@resvg/resvg-js": "^2.6.2",
     "dotenv": "^16.4.5",
     "pdf-parse": "^2.4.5",
