@@ -334,6 +334,23 @@ export const createServer = (): http.Server =>
     const { pathname } = url;
     const id = url.searchParams.get('id');
 
+    // WHAT REACHED US, for the "Failed to fetch" with the studio up (2026-10-05):
+    // every upload, any error status, and any connection that dropped before the
+    // answer was sent. A request missing here never arrived.
+    const started = Date.now();
+    let received = 0;
+    req.on('data', (chunk: Buffer) => (received += chunk.length));
+    res.on('close', () => {
+      const upload = req.method === 'POST' && /\/art$|^\/api\/music$/.test(pathname);
+      const dropped = !res.writableFinished;
+      if (!upload && !dropped && res.statusCode < 400) return;
+      console.log(
+        `  ${new Date().toISOString().slice(11, 19)} ${req.method} ${pathname} -> ` +
+          `${dropped ? 'DROPPED before answering' : res.statusCode} ` +
+          `(${Math.round(received / 1024)}KB in, ${Date.now() - started}ms)`
+      );
+    });
+
     try {
       if (!pathname.startsWith('/api/')) {
         serveWeb(res, pathname);
