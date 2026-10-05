@@ -138,6 +138,29 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
     return () => stop.current?.();
   }, [load, follow]);
 
+  // A BACKSTOP FOR THE LIVE STREAM (2026-10-05). The stream is how the page
+  // hears a run finish; when it dropped quietly, a run that finished in two
+  // minutes still showed "voicing" eleven minutes later. While working, ask
+  // the studio directly every ten seconds as well.
+  useEffect(() => {
+    if (!live) return;
+    const timer = setInterval(() => {
+      void api
+        .run(id)
+        .then((d) => {
+          if (d.job?.finishedAt) {
+            stop.current?.();
+            setLive(false);
+            setBusy(null);
+            if (d.job.error) setError(d.job.error);
+            void load();
+          }
+        })
+        .catch(() => undefined);
+    }, 10_000);
+    return () => clearInterval(timer);
+  }, [live, id, load]);
+
   if (error && !data) return <div className="page"><ErrorNote>{error}</ErrorNote></div>;
   if (!data) return <div className="page"><div className="empty">Reading the run.</div></div>;
 
