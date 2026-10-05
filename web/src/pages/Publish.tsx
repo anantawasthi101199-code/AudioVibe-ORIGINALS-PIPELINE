@@ -149,7 +149,8 @@ const Row = ({
         {run.heldBy && <span className="pill hold" style={{ marginLeft: '0.5rem' }}>{run.heldBy} is on it</span>}
       </span>
       <span className="muted">
-        {run.label} · {/^s|-s\d/.test(run.label) ? 'short' : 'episode'} · 
+        {run.label} · {/^s|-s\d/.test(run.label) ? 'short' : 'episode'} ·{' '}
+        {run.seriesTitle ? `${run.seriesTitle} · ` : ''}
         {clock(run.durationS)} · {money(run.spentPence)} · {ago(run.createdAt)}
         {run.music ? ' · with music' : ''}
       </span>

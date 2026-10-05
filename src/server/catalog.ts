@@ -348,6 +348,8 @@ export interface RunSummary {
    * the picture does, or null when none has been set.
    */
   artKey: string | null;
+  /** The series an episode publishes into, or null (shorts have none). */
+  seriesTitle: string | null;
 }
 
 /**
@@ -459,6 +461,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
       (state === 'running' || (state === 'awaiting-approval' && !run.hasArtifact('script'))),
     archivedAt: readArchive(run.dir)?.archivedAt ?? null,
     heldBy: holderOf(run.id),
+    seriesTitle: m.seriesTitle ?? null,
     artKey: (() => {
       const art = suppliedArt(path.join(run.dir, 'media'), 'cover');
       return art ? String(Math.round(fs.statSync(art).mtimeMs)) : null;
