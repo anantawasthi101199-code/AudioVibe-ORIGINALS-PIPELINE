@@ -25,4 +25,6 @@ mkdir -p "$DATA/runs" "$DATA/art" "$DATA/music"
 export FOUNDRY_PORT="${PORT:-4317}"
 
 cd /app
-exec npx ts-node --transpile-only src/cli.ts studio
+# Run directly (not through npx) so the stop signal reaches the studio, which
+# then waits for work in progress before exiting. See server/index.ts.
+exec node_modules/.bin/ts-node --transpile-only src/cli.ts studio

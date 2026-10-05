@@ -442,7 +442,13 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     contentRating: m.contentRating ?? channelRating,
     contentRatingOverridden: m.contentRating !== undefined,
     // 'running' is the fallback for "no gate yet"; with no live job, it stopped.
-    stalled: state === 'running' && !liveIds.has(run.id),
+    // STOPPED PARTWAY, either way: no gate yet, or held for a script it never
+    // saved (a restart mid-write left one "waiting to read" with nothing to
+    // read and no Resume, 2026-10-05). Nothing working on it, so offer Resume.
+    stalled:
+      !liveIds.has(run.id) &&
+      !m.abandoned &&
+      (state === 'running' || (state === 'awaiting-approval' && !run.hasArtifact('script'))),
     archivedAt: readArchive(run.dir)?.archivedAt ?? null,
     heldBy: holderOf(run.id),
     formatId: m.formatId,

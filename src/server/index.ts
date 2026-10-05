@@ -735,6 +735,22 @@ export const serve = async (opts: ServeOptions = {}): Promise<http.Server> => {
   const server = createServer();
   await new Promise<void>((resolve) => server.listen(port, host, resolve));
 
+  // A DEPLOY WAITS FOR WORK IN PROGRESS (2026-10-05). A push to main replaced
+  // the studio mid-write and a teammate's short lost its paid-for script. On
+  // the stop signal: take no new requests, let running jobs finish (up to
+  // FOUNDRY_DRAIN_MS), then exit. Railway must allow at least that long:
+  // RAILWAY_DEPLOYMENT_DRAINING_SECONDS on the service.
+  process.once('SIGTERM', () => {
+    const deadline = Date.now() + Number(process.env.FOUNDRY_DRAIN_MS ?? 270_000);
+    console.log(`  stopping: waiting for ${jobs.liveRunIds().size} job(s) to finish first`);
+    server.close();
+    const wait = () => {
+      if (jobs.liveRunIds().size === 0 || Date.now() > deadline) process.exit(0);
+      else setTimeout(wait, 2_000);
+    };
+    wait();
+  });
+
   console.log('');
   console.log(`  Foundry studio on http://${host}:${port}`);
   console.log(
