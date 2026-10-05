@@ -93,6 +93,9 @@ export const runManifestSchema = z.object({
    */
   seriesTitle: z.string().min(1).optional(),
 
+  /** A rapid fire's chosen countries, by name. Unset: the desk's own regions. */
+  countries: z.array(z.string()).optional(),
+
   /** Written by hand from a blank template: no research, no paid writing. */
   handwritten: z.boolean().default(false),
 
@@ -394,6 +397,8 @@ export class Run {
       seriesTitle?: string;
       /** A blank template to be written by hand. See pipeline/handwritten.ts. */
       handwritten?: boolean;
+      /** A rapid fire's chosen countries. See news/countries.ts. */
+      countries?: string[];
     },
     opts: { root?: string; now?: () => Date } = {}
   ): Run {
@@ -429,6 +434,7 @@ export class Run {
       research: input.research,
       holdForApproval: input.holdForApproval ?? false,
       handwritten: input.handwritten ?? false,
+      countries: input.countries?.length ? input.countries : undefined,
     });
 
     const run = new Run(dir, manifest);

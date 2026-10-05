@@ -636,6 +636,8 @@ export const api = {
       budgetPence: number;
       /** A news channel: an empty topic makes today's rapid-fire roundup. */
       newsRoundup: boolean;
+      /** What the rapid fire's country boxes offer. */
+      countries: string[];
     }>(`/api/channel?id=${encodeURIComponent(id)}`),
 
   runs: (channelId?: string) =>
@@ -656,6 +658,8 @@ export const api = {
     seriesTitle?: string;
     /** A blank template to write by hand: no research, no paid writing. */
     blank?: boolean;
+    /** A rapid fire's countries, up to three. None: the desk's own regions. */
+    countries?: string[];
   }) =>
     call<{ runId: string; jobId: string | null }>('/api/runs', {
       method: 'POST',

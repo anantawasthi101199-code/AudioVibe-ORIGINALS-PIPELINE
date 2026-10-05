@@ -21,6 +21,7 @@ import { clusterStories, headlineOverlap, headlineTokens, pickArticle } from '..
 import { draftProblems, unfamiliarNames, unsupportedFigures } from '../check';
 import { spokenDate } from '../newsScript';
 import { namesRegion } from '../roundup';
+import { countriesByName } from '../countries';
 
 const desk = deskSchema.parse({
   id: 'global-thread',
@@ -591,6 +592,38 @@ describe('the rapid-fire roundup', () => {
     expect(namesRegion('Modi meets farmers in Delhi', ['India', 'Delhi'])).toBe(true);
     expect(namesRegion('Ukraine talks by October', ['India', 'Delhi'])).toBe(false);
     expect(namesRegion('Anything at all', [])).toBe(true);
+  });
+
+  it('uses only the chosen countries, and two of them are enough', async () => {
+    const run = Run.create(
+      { personaId: 'global-thread', formatId: 'news-roundup', topic: 'geopolitics', countries: ['India', 'the UK'] },
+      { root }
+    );
+    const writer = fakeWriter(ROUNDUP);
+    roundupWire.latest.mockClear();
+    await runNews(
+      run,
+      {
+        music: false,
+        writer,
+        verifier: writer,
+        search: { name: 'unused', search: async () => [] },
+        tts: fakeTts(),
+        fetchDeps: {
+          httpGet: async (url: string) => ({ status: 200, body: ARTICLE_HTML, finalUrl: url, contentType: 'text/html' }),
+        },
+      },
+      { wire: roundupWire, now: () => NOW, sleep: async () => undefined }
+    );
+    const asked = roundupWire.latest.mock.calls.map((c) => (c as unknown[])[0]);
+    expect(asked).toEqual(['India', 'New Delhi', 'United Kingdom', 'UK government', 'Britain']);
+    const corpus = run.readArtifact('corpus', z.object({ sources: z.array(z.any()) }).passthrough());
+    expect(corpus.sources).toHaveLength(2);
+    expect(writer.prompts[0]).toContain('2 STORIES');
+  });
+
+  it('refuses a country it does not know', () => {
+    expect(() => countriesByName(['Atlantis'])).toThrow(/no country called/);
   });
 
   it('makes no topic the roundup and a topic the in-depth short', () => {

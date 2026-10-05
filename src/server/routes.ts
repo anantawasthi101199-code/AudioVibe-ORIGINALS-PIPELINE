@@ -33,6 +33,7 @@ import { runLane } from '../pipeline/runLane';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run } from '../run/store';
+import { COUNTRIES, MAX_COUNTRIES, countriesByName } from '../news/countries';
 import { startHandwritten } from '../pipeline/handwritten';
 import { loadTopics } from '../schedule/load';
 import { blocking, findCovered, loadCatalogue, recordMade, refusal } from '../catalogue/covered';
@@ -76,6 +77,8 @@ export const getChannel = (id: string) => {
     channel: summary,
     // A news channel takes an empty topic: today's rapid-fire roundup.
     newsRoundup: hasNewsDesk(id) && !!loadDesk(id).roundup,
+    /** What the three country boxes offer. */
+    countries: COUNTRIES.map((x) => x.name),
     // BOTH QUEUES, because they are different kinds of thing and the interface
     // has to offer the right one for the route being taken.
     topics: queue.topics,
@@ -251,6 +254,8 @@ export const startRunSchema = z.object({
   seriesTitle: z.string().trim().min(1).optional(),
   /** A blank template to fill in by hand, instead of paying for research and writing. */
   blank: z.boolean().default(false),
+  /** A rapid fire's countries, up to three. None: the desk's own regions. */
+  countries: z.array(z.string().min(1)).max(MAX_COUNTRIES).default([]),
 });
 
 /**
@@ -271,6 +276,16 @@ export const startRun = (body: unknown, who: string | null = null) => {
   if (desk && !input.topic.trim()) input.topic = desk.beat;
   if (!input.topic.trim()) throw new HttpError(400, 'give it a topic');
   const format = loadFormat(desk ? newsFormatFor(desk, input.topic, input.formatId) : input.formatId);
+
+  const countries = [...new Set(input.countries)];
+  if (countries.length && format.id !== ROUNDUP_FORMAT) {
+    throw new HttpError(400, 'countries are for the rapid fire: leave the topic empty');
+  }
+  try {
+    countriesByName(countries);
+  } catch (e) {
+    throw new HttpError(400, (e as Error).message);
+  }
 
   if (format.id !== ROUNDUP_FORMAT && !persona.formats.includes(format.id)) {
     throw new HttpError(400, `${persona.name} does not make "${format.id}"`);
@@ -298,6 +313,7 @@ export const startRun = (body: unknown, who: string | null = null) => {
     holdForApproval: input.blank || (!input.renderNow && !format.sourceOnly),
     seriesTitle: format.kind === 'short' ? undefined : input.seriesTitle,
     handwritten: input.blank,
+    countries,
   });
 
   // Recorded at creation rather than on success, as the command line does: a

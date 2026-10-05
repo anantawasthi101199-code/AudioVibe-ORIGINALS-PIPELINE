@@ -48,6 +48,7 @@ import { Script, scriptSchema } from '../script/write';
 import { draftProblems, estimatedSeconds, namesSource, newsGate } from '../news/check';
 import { Desk, ROUNDUP_FORMAT, loadDesk } from '../news/desk';
 import { MIN_ROUNDUP_STORIES, RoundupItem, buildRoundupPrompt, gatherRoundup } from '../news/roundup';
+import { countriesByName } from '../news/countries';
 import { writeNewsScript } from '../news/newsScript';
 import {
   AlreadyCovered,
@@ -221,10 +222,17 @@ export const runNews = async (
       const key = retrievalKeys().brave;
       const wire = newsDeps.wire ?? (key ? new BraveNews(key) : null);
       if (!wire) throw new Error('the news lane needs BRAVE_SEARCH_API_KEY in .env');
-      if (!desk.roundup) throw new Error(`${persona.name}'s desk has no roundup regions`);
-      say('wire')(`rapid fire: the top story from ${desk.roundup.regions.map((r) => r.name).join(', ')}`);
+      // THE COUNTRIES CHOSEN FOR THIS RUN, or the desk's own regions.
+      const chosen = run.manifest.countries?.length ? countriesByName(run.manifest.countries) : null;
+      const regions = chosen ?? desk.roundup?.regions;
+      if (!regions?.length) throw new Error(`${persona.name}'s desk has no roundup regions`);
+      // Three chosen countries make a roundup of whichever of them had news;
+      // the desk's five need three, as before.
+      const needed = chosen ? Math.min(2, chosen.length) : MIN_ROUNDUP_STORIES;
+      say('wire')(`rapid fire: the top story from ${regions.map((r) => r.name).join(', ')}`);
       const picked = await gatherRoundup(
         desk,
+        regions,
         wire,
         deps.fetchDeps,
         now(),
@@ -232,10 +240,10 @@ export const runNews = async (
         say('wire'),
         newsDeps.sleep
       );
-      if (picked.length < MIN_ROUNDUP_STORIES) {
+      if (picked.length < needed) {
         const reason =
           `only ${picked.length} region(s) had a fresh story from a desk outlet; ` +
-          `a roundup needs ${MIN_ROUNDUP_STORIES}`;
+          `this roundup needs ${needed}`;
         run.abandon(reason);
         throw new Error(`abandoned ${run.id}: ${reason}`);
       }
@@ -244,7 +252,7 @@ export const runNews = async (
       run.writeArtifact('corpus', { sources, rejected: [] });
       run.markComplete('corpus');
       run.writeArtifact('reference', {
-        news: { ...items[0]!, alsoCarrying: [], queries: desk.roundup.regions.map((r) => r.query) },
+        news: { ...items[0]!, alsoCarrying: [], queries: regions.flatMap((r) => r.queries) },
         roundup: items,
       });
       run.markComplete('reference');

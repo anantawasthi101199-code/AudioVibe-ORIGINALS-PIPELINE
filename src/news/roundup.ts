@@ -51,6 +51,7 @@ export interface RoundupItem {
 
 export const gatherRoundup = async (
   desk: Desk,
+  regions: Array<{ name: string; queries: string[]; match: string[] }>,
   wire: NewsSearch,
   fetchDeps: FetchDeps,
   now: Date,
@@ -63,7 +64,7 @@ export const gatherRoundup = async (
   // searches cannot both lead with the same summit.
   const seen: AlreadyCovered = { urls: new Set(covered.urls), titles: [...covered.titles] };
 
-  for (const region of desk.roundup?.regions ?? []) {
+  for (const region of regions) {
     const raw = await sweepWire(region.queries, desk, wire, sleep, say);
     const { kept } = screenWire(raw, desk);
     // ABOUT THE REGION. The first live roundup filled India's slot with a
@@ -144,6 +145,9 @@ export const buildRoundupPrompt = (input: {
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${speaker}", "text": "..."}]}]}`,
     `THE ONLY SPEAKER ID IS "${speaker}". In "headlines", one turn per story, in the order below.`,
+    `${input.stories.length} STORIES: give each about ${Math.round(125 / input.stories.length)} seconds ` +
+      `(about ${Math.round((125 / input.stories.length) * 2.85)} words). Fewer stories means more on each, ` +
+      'not a shorter roundup.',
     `THE TITLE names the places and says it is today's top news, about eight words, no date.`,
     '',
     `THE WHOLE ROUNDUP IS AT MOST ${ceiling} WORDS, goodbye included. Over that it runs past three ` +

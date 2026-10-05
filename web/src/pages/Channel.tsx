@@ -401,10 +401,13 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
     runs: RunSummary[];
     budgetPence: number;
     newsRoundup: boolean;
+    countries: string[];
   } | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
   const [topic, setTopic] = useState('');
+  // The rapid fire's three country boxes. Empty: the desk's own regions.
+  const [countries, setCountries] = useState<string[]>(['', '', '']);
   const [seriesTitle, setSeriesTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
@@ -510,6 +513,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         topic: topic.trim(),
         again,
         blank,
+        countries: topic.trim() ? [] : countries.filter(Boolean),
         seriesTitle: route.long && seriesTitle.trim() ? seriesTitle.trim() : undefined,
       });
       go(`/r/${runId}`);
@@ -797,6 +801,38 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                 />
+
+                {/* RAPID FIRE COUNTRIES: one story from each chosen country.
+                    All empty keeps the desk's default regions. */}
+                {rapidFire && (
+                  <div className="row" style={{ gap: '0.5rem', flexWrap: 'wrap' }}>
+                    {countries.map((value, i) => (
+                      <select
+                        key={i}
+                        className="field"
+                        style={{ flex: '1 1 10rem' }}
+                        value={value}
+                        onChange={(e) =>
+                          setCountries((prev) => prev.map((v, j) => (j === i ? e.target.value : v)))
+                        }
+                      >
+                        <option value="">{`Country ${i + 1}: any`}</option>
+                        {data.countries
+                          .filter((n) => n === value || !countries.includes(n))
+                          .map((n) => (
+                            <option key={n} value={n}>
+                              {n}
+                            </option>
+                          ))}
+                      </select>
+                    ))}
+                    <span className="faint tiny">
+                      {countries.some(Boolean)
+                        ? 'One top story from each chosen country.'
+                        : 'None chosen: India, the US, the UK, China and the world.'}
+                    </span>
+                  </div>
+                )}
 
                 {/* THE SERIES, long form only: the episode opens by naming it
                     and publishes onto its shelf, which is created the first
