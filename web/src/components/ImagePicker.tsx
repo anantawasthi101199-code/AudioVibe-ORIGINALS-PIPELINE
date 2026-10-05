@@ -29,7 +29,7 @@ import { Info } from './Info';
  * encoding by the time this runs, so re-encoding as JPEG would be a second
  * generation of loss to save bytes on a file that is uploaded once.
  */
-const cropTo = (file: File, width: number, height: number): Promise<Blob> =>
+const cropTo = (file: File, width: number, height: number): Promise<Uint8Array<ArrayBuffer>> =>
   new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -53,10 +53,19 @@ const cropTo = (file: File, width: number, height: number): Promise<Blob> =>
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, (width - w) / 2, (height - h) / 2, w, h);
 
-      canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error('the image could not be re-encoded'))),
-        'image/png'
-      );
+      // BYTES, NEVER A BLOB (2026-10-05). On this machine Chrome could not read
+      // back the temporary file it keeps a large Blob in ("could not be read,
+      // typically due to permission problems"), so every photo over ~150KB
+      // failed inside the browser and never reached the studio. A data URL
+      // decoded into memory never touches that store.
+      try {
+        const encoded = atob(canvas.toDataURL('image/png').split(',')[1] ?? '');
+        const bytes = new Uint8Array(encoded.length);
+        for (let i = 0; i < encoded.length; i += 1) bytes[i] = encoded.charCodeAt(i);
+        resolve(bytes);
+      } catch {
+        reject(new Error('the image could not be re-encoded'));
+      }
     };
 
     img.onerror = () => {
@@ -81,7 +90,8 @@ export const ImagePicker = ({
   state: ArtState | null;
   /** Where to fetch the current picture. Null while there is not one yet. */
   src: string | null;
-  onUpload: (image: Blob) => Promise<void>;
+  /** The cropped picture as PNG bytes. */
+  onUpload: (image: Uint8Array<ArrayBuffer>) => Promise<void>;
   onRemove: () => Promise<void>;
   disabled?: boolean;
 }) => {

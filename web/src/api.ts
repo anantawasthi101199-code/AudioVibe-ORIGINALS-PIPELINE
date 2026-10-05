@@ -343,7 +343,7 @@ const RETRY_DELAYS_MS = [300, 1000, 2500];
 
 const retryable = (init?: RequestInit): boolean => {
   const method = (init?.method ?? 'GET').toUpperCase();
-  return method === 'GET' || method === 'HEAD' || init?.body instanceof Blob;
+  return method === 'GET' || method === 'HEAD' || init?.body instanceof Blob || init?.body instanceof Uint8Array;
 };
 
 const fetchWithRetry = async (path: string, init: RequestInit): Promise<Response> => {
@@ -555,10 +555,10 @@ export const api = {
   channelArtState: (id: string) =>
     call<Record<ArtKind, ArtState>>(`/api/channel/art/state?id=${encodeURIComponent(id)}`),
 
-  uploadChannelArt: (id: string, kind: ArtKind, image: Blob) =>
+  uploadChannelArt: (id: string, kind: ArtKind, image: Uint8Array<ArrayBuffer>) =>
     call<{ ok: true; width: number; height: number }>(
       `/api/channel/art?id=${encodeURIComponent(id)}&kind=${kind}`,
-      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
+      { method: 'POST', body: image, headers: { 'content-type': 'image/png' } }
     ),
 
   removeChannelArt: (id: string, kind: ArtKind) =>
@@ -576,20 +576,20 @@ export const api = {
 
   runArtState: (id: string) => call<ArtState>(`/api/run/art/state?id=${encodeURIComponent(id)}`),
 
-  uploadRunArt: (id: string, image: Blob) =>
+  uploadRunArt: (id: string, image: Uint8Array<ArrayBuffer>) =>
     call<{ ok: true; width: number; height: number }>(
       `/api/run/art?id=${encodeURIComponent(id)}`,
-      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
+      { method: 'POST', body: image, headers: { 'content-type': 'image/png' } }
     ),
 
   runSeriesArtState: (id: string) =>
     call<ArtState & { title: string; created: boolean }>(
       `/api/run/series-art/state?id=${encodeURIComponent(id)}`
     ),
-  uploadRunSeriesArt: (id: string, image: Blob) =>
+  uploadRunSeriesArt: (id: string, image: Uint8Array<ArrayBuffer>) =>
     call<{ ok: true; width: number; height: number }>(
       `/api/run/series-art?id=${encodeURIComponent(id)}`,
-      { method: 'POST', body: image, headers: { 'content-type': image.type || 'image/png' } }
+      { method: 'POST', body: image, headers: { 'content-type': 'image/png' } }
     ),
   removeRunSeriesArt: (id: string) =>
     call<{ ok: true; removed: boolean }>(`/api/run/series-art?id=${encodeURIComponent(id)}`, {
