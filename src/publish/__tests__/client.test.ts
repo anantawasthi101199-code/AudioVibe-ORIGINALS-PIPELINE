@@ -261,7 +261,8 @@ describe('AudioVibeClient', () => {
       });
 
       expect(t.posts[0]!.url).toBe('https://staging.example.com/api/series/ingest');
-      expect(t.posts[0]!.form.get('category_ids')).toBe('cat-fic');
+      // A JSON list: the series route JSON.parse()s it, and a bare id threw.
+      expect(JSON.parse(t.posts[0]!.form.get('category_ids') as string)).toEqual(['cat-fic']);
       expect(t.posts[0]!.form.get('content_rating')).toBe('general');
       expect(res.seriesId).toBe('series-7');
     });

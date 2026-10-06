@@ -257,6 +257,11 @@ export class AudioVibeClient {
   async createSeries(input: SeriesInput): Promise<{ seriesId: string; title: string }> {
     const form = await this.baseForm(input);
     form.append('is_public', 'true');
+    // THE SERIES ROUTE READS CATEGORIES AS A JSON LIST (2026-10-05): it
+    // JSON.parse()s the field, so the bare id the audio route accepts made it
+    // throw, and every first episode of a new series failed with "500: An
+    // unexpected error occurred".
+    form.set('category_ids', JSON.stringify([form.get('category_ids')]));
 
     const res = await this.post(
       `${this.baseUrl}/api/series/ingest`,
