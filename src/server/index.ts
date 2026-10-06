@@ -81,6 +81,7 @@ import {
 import { getQueue } from './queue';
 import { getCalendar, releasingEnabled } from './calendar';
 import { freshness } from './freshness';
+import { playbackFile } from './playback';
 import { blockedBy, heartbeat, release } from './holds';
 import { archivedOwner } from '../archive/record';
 import { repoRoot, runsDir } from '../config';
@@ -546,7 +547,8 @@ export const createServer = (): http.Server =>
         if (url.searchParams.get('download') === '1') {
           serveFile(res, await audioDownloadFile(id ?? ''), audioDownloadName(id ?? ''), true);
         } else {
-          serveFile(res, audioPath(id ?? ''), 'episode.wav');
+          // The players get a compressed copy; see playback.ts.
+          serveFile(res, await playbackFile(audioPath(id ?? '')), 'episode.mp3');
         }
         return;
       }
@@ -641,7 +643,7 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/run/mix/audio') {
         const file = mixedFile(id ?? '', url.searchParams.get('which'));
         if (!file) return send(res, 404, { error: 'this run has no mix yet' });
-        serveFile(res, file, 'episode-with-music.wav');
+        serveFile(res, await playbackFile(file), 'episode-with-music.mp3');
         return;
       }
 
