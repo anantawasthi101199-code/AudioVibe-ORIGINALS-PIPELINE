@@ -102,6 +102,7 @@ import {
   setContentRating,
   setRunSeries,
   renameSeries,
+  setListing,
   rescheduleRelease,
   setHold,
   setUpChannelJob,
@@ -695,6 +696,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/cancel' && req.method === 'POST') {
         return send(res, 200, cancelRelease(id ?? ''));
+      }
+      if (pathname === '/api/run/listing' && req.method === 'PUT') {
+        return send(res, 200, await setListing(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/channel/series/rename' && req.method === 'POST') {
         return send(res, 200, renameSeries(id ?? '', await readBody(req), user));

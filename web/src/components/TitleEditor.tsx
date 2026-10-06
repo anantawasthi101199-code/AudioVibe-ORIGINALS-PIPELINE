@@ -1,10 +1,15 @@
 /**
- * The title and description a listener sees on AudioVibe, editable until the
- * run is published (owner, 2026-10-05). Saved with the script's words exactly
- * as they are, so changing a title never discards the voiced audio.
+ * The title and short description a listener sees on AudioVibe (owner,
+ * 2026-10-05/06). Editable before AND after publishing: once published the
+ * change goes to AudioVibe first and is saved here only if it took. The
+ * script's words are never touched, so the voiced audio stays.
  */
 import { useState } from 'react';
 import { api, type Script } from '../api';
+
+/** The studio enforces the same limit. */
+const MAX_WORDS = 50;
+const wordsIn = (text: string) => text.split(/\s+/).filter(Boolean).length;
 
 export const TitleEditor = ({
   runId,
@@ -14,7 +19,7 @@ export const TitleEditor = ({
 }: {
   runId: string;
   script: Script;
-  /** Published: what went out is fixed. */
+  /** Published: changes go to AudioVibe too. */
   locked: boolean;
   onSaved: () => void;
 }) => {
@@ -33,18 +38,16 @@ export const TitleEditor = ({
         <span className="muted tiny" style={{ flex: 1, minWidth: 0 }}>
           {script.description}
         </span>
-        {!locked && (
-          <button
-            className="btn ghost small"
-            onClick={() => {
-              setTitle(script.title);
-              setDescription(script.description);
-              setOpen(true);
-            }}
-          >
-            Edit title and description
-          </button>
-        )}
+        <button
+          className="btn ghost small"
+          onClick={() => {
+            setTitle(script.title);
+            setDescription(script.description);
+            setOpen(true);
+          }}
+        >
+          {locked ? 'Edit title and description on AudioVibe' : 'Edit title and description'}
+        </button>
       </div>
     );
   }
@@ -54,11 +57,7 @@ export const TitleEditor = ({
     setError(null);
     try {
       // The words go back unchanged, so the audio stays.
-      await api.saveScript(runId, {
-        title: title.trim(),
-        description: description.trim(),
-        beats: script.beats,
-      });
+      await api.setListing(runId, { title: title.trim(), description: description.trim() });
       setOpen(false);
       onSaved();
     } catch (e) {
@@ -74,11 +73,16 @@ export const TitleEditor = ({
         <label className="tiny faint">Title, as listeners see it</label>
         <input
           className="field"
-          maxLength={120}
+          maxLength={100}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <label className="tiny faint">Description</label>
+        <label className="tiny faint">
+          Short description: {wordsIn(description)} of {MAX_WORDS} words
+          {wordsIn(description) > MAX_WORDS && (
+            <span style={{ color: 'var(--amber)' }}> (too long)</span>
+          )}
+        </label>
         <textarea
           className="field"
           rows={3}
@@ -89,7 +93,9 @@ export const TitleEditor = ({
         <div className="row" style={{ gap: '0.5rem' }}>
           <button
             className="btn"
-            disabled={busy || !title.trim() || !description.trim()}
+            disabled={
+              busy || !title.trim() || !description.trim() || wordsIn(description) > MAX_WORDS
+            }
             onClick={() => void save()}
           >
             {busy ? 'Saving...' : 'Save'}
@@ -97,7 +103,11 @@ export const TitleEditor = ({
           <button className="btn ghost" disabled={busy} onClick={() => setOpen(false)}>
             Cancel
           </button>
-          <span className="faint tiny">Changing these never touches the voiced audio.</span>
+          <span className="faint tiny">
+            {locked
+              ? 'Published: this changes it on AudioVibe straight away. The audio is untouched.'
+              : 'Changing these never touches the voiced audio.'}
+          </span>
         </div>
         {error && (
           <span className="tiny" style={{ color: 'var(--red, #e5484d)' }}>

@@ -287,6 +287,28 @@ describe('AudioVibeClient', () => {
     });
   });
 
+  describe('updateListing', () => {
+    it("puts the new title and description to the channel's own audio", async () => {
+      const puts: Array<{ url: string; headers: Record<string, string>; body: unknown }> = [];
+      const c = new AudioVibeClient(
+        'https://staging.example.com',
+        'tok',
+        undefined,
+        undefined,
+        async (url, headers, body) => {
+          puts.push({ url, headers, body });
+          return { status: 200, json: { success: true }, text: '' };
+        }
+      );
+      await c.updateListing('audio-9', { title: 'T', description: 'D' });
+      expect(puts[0]).toEqual({
+        url: 'https://staging.example.com/api/audio/audio-9/ingest',
+        headers: { authorization: 'Bearer tok' },
+        body: { title: 'T', description: 'D' },
+      });
+    });
+  });
+
   describe('updateSeriesCover', () => {
     it('sends the cover to the live series with the channel credential', async () => {
       const cover = path.join(os.tmpdir(), `series-cover-${Date.now()}.png`);

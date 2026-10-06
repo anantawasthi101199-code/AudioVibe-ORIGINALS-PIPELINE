@@ -112,6 +112,29 @@ export const nodeMultipartPost: MultipartPost = async (url, headers, form) => {
   return { status: res.status, json, text };
 };
 
+/** A JSON PUT, injected like the others so tests never reach the network. */
+export type JsonPut = (
+  url: string,
+  headers: Record<string, string>,
+  body: unknown
+) => Promise<{ status: number; json: unknown; text: string }>;
+
+export const nodeJsonPut: JsonPut = async (url, headers, body) => {
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { ...headers, 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  let json: unknown = null;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    /* raw text is reported */
+  }
+  return { status: res.status, json, text };
+};
+
 /** Injected so the unit suite never reaches the network. */
 export type HttpGet = (
   url: string,
@@ -144,8 +167,25 @@ export class AudioVibeClient {
     private baseUrl: string,
     private token: string,
     private post: MultipartPost = nodeMultipartPost,
-    private get: HttpGet = nodeHttpGet
+    private get: HttpGet = nodeHttpGet,
+    private put: JsonPut = nodeJsonPut
   ) {}
+
+  /**
+   * Change a published audio's title and description (2026-10-06). The
+   * platform only lets a channel edit its own audio.
+   */
+  async updateListing(audioId: string, listing: { title: string; description: string }): Promise<void> {
+    const res = await this.put(
+      `${this.baseUrl}/api/audio/${encodeURIComponent(audioId)}/ingest`,
+      { authorization: `Bearer ${this.token}` },
+      listing
+    );
+    if (res.status < 200 || res.status >= 300) {
+      const body = res.json as { message?: string; error?: string } | null;
+      throw new PublishError(res.status, body?.message ?? body?.error ?? res.text.slice(0, 300));
+    }
+  }
 
   /**
    * Resolve a category NAME to the id the API wants.

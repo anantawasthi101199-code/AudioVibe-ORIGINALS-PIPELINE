@@ -253,11 +253,6 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         disabled={Boolean(hold?.holder && !hold.mine)}
         style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}
       >
-      {/* What listeners see: editable until it is published. */}
-      {script && !isSource && (
-        <TitleEditor runId={id} script={script} locked={published} onSaved={() => void load()} />
-      )}
-
       {/* Every episode belongs to a series; changeable until it is published. */}
       {long && !isSource && (
         <div style={{ marginBottom: '0.75rem' }}>
@@ -512,7 +507,13 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       */}
       {!isSource && (
         <section className="mt2">
-          <h2>The picture</h2>
+          <h2>What listeners see</h2>
+          {/* Title and a short description, beside the picture they go out with. */}
+          {script && (
+            <div className="mt">
+              <TitleEditor runId={id} script={script} locked={published} onSaved={() => void load()} />
+            </div>
+          )}
           <div className="mt">
             <ImagePicker
               title={inSeries ? 'Episode image' : 'Audiocard image'}

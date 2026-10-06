@@ -680,6 +680,13 @@ export const api = {
     }),
 
   /** null goes back to the channel's rating. */
+  /** The title and short description listeners see; after publishing, AudioVibe first. */
+  setListing: (runId: string, listing: { title: string; description: string }) =>
+    call<{ ok: true }>(`/api/run/listing?id=${encodeURIComponent(runId)}`, {
+      method: 'PUT',
+      body: JSON.stringify(listing),
+    }),
+
   /** Rename a series on every episode in it; refused once it is on AudioVibe. */
   renameSeries: (channelId: string, from: string, to: string) =>
     call<{ ok: true; renamed: number }>(`/api/channel/series/rename?id=${encodeURIComponent(channelId)}`, {

@@ -542,6 +542,47 @@ export const setRunSeries = (runId: string, body: unknown) => {
   return { ok: true as const, runId, seriesTitle };
 };
 
+/** A short description: the most words one may have (owner, 2026-10-06). */
+export const DESCRIPTION_MAX_WORDS = 50;
+
+/**
+ * The title and description a listener sees, before or after publishing.
+ *
+ * AFTER PUBLISHING, AUDIOVIBE FIRST: the change goes to the platform, and only
+ * once it has accepted it is it saved here, so the studio and the app never
+ * disagree about what an episode is called. The script's words are untouched
+ * either way, so the voiced audio stays.
+ */
+export const setListing = async (runId: string, body: unknown) => {
+  const { title, description } = z
+    .object({
+      title: z.string().trim().min(1, 'give it a title').max(100, 'a title is at most 100 characters'),
+      description: z.string().trim().min(1, 'give it a description'),
+    })
+    .parse(body ?? {});
+  const words = description.split(/\s+/).filter(Boolean).length;
+  if (words > DESCRIPTION_MAX_WORDS) {
+    throw new HttpError(400, `the description is ${words} words; keep it to ${DESCRIPTION_MAX_WORDS}`);
+  }
+
+  const run = Run.open(runId);
+  const script = run.readArtifact('script', scriptSchema);
+  if (run.isComplete('publish')) {
+    const published = run.readArtifact('publish', z.object({ audioId: z.string() }).passthrough());
+    try {
+      await new AudioVibeClient(platformUrl().url, publishTokenFor(run.manifest.personaId)).updateListing(
+        published.audioId,
+        { title, description }
+      );
+    } catch (e) {
+      throw new HttpError(502, `AudioVibe did not take the change, so nothing was saved: ${(e as Error).message}`);
+    }
+  }
+  run.writeArtifact('script', { ...script, title, description });
+  run.journal({ stage: 'publish', event: `title and description edited${run.isComplete('publish') ? ' on AudioVibe too' : ''}` });
+  return { ok: true as const, title, description };
+};
+
 /**
  * Rename a series on every episode filed under it, and move its cover with it
  * (owner, 2026-10-05). Only BEFORE it exists on AudioVibe: once created there,
