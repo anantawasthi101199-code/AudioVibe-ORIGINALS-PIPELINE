@@ -267,6 +267,16 @@ describe('AudioVibeClient', () => {
       expect(res.seriesId).toBe('series-7');
     });
 
+    it('reads the id the platform actually returns, at data.id', async () => {
+      // The live response: the series is `data` itself. Missing it reported a
+      // created series as a failure, inviting a second one.
+      const t = spyTransport([
+        { status: 201, json: { success: true, data: { id: 'series-9', title: 'The Story Behind the Discovery' } }, text: '' },
+      ]);
+      const res = await client(t).createSeries({ title: 'The Story Behind the Discovery', description: 'd', category: 'Fiction' });
+      expect(res).toEqual({ seriesId: 'series-9', title: 'The Story Behind the Discovery' });
+    });
+
     it('treats a 2xx with no series id as a failure', async () => {
       // A caller that recorded an undefined id would create a second series on
       // the next publish and fork the show.

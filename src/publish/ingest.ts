@@ -274,15 +274,22 @@ export class AudioVibeClient {
       throw new PublishError(res.status, body?.message ?? res.text.slice(0, 300));
     }
 
-    const body = res.json as { data?: { series?: { id?: string; title?: string } } } | null;
-    const seriesId = body?.data?.series?.id;
+    // THE PLATFORM RETURNS THE SERIES AS `data` ITSELF ({ data: { id, title } }),
+    // not under `data.series`, so a created series was reported as "no id"
+    // and the next publish would have made a second one (2026-10-06). Either
+    // shape is read.
+    const body = res.json as {
+      data?: { id?: string; title?: string; series?: { id?: string; title?: string } };
+    } | null;
+    const created = body?.data?.series ?? body?.data;
+    const seriesId = created?.id;
     if (!seriesId) {
       throw new PublishError(
         res.status,
         `created a series but returned no id: ${res.text.slice(0, 200)}`
       );
     }
-    return { seriesId, title: body?.data?.series?.title ?? input.title };
+    return { seriesId, title: created?.title ?? input.title };
   }
 
   /**
