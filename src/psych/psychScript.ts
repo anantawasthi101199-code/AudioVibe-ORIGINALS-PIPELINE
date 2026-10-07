@@ -52,6 +52,7 @@ import { EAR_RULES, Script, ScriptBeat, wordsForBeat } from '../script/write';
 import { NETWORK_BANNED_PHRASES } from '../script/style';
 import { signoffFor } from '../script/storyScript';
 import { OUTRO_RULE } from '../script/outro';
+import { tagGuidance } from '../script/narration';
 import { turnSchema } from '../script/dialogue';
 import { Understanding, renderUnderstanding } from './understand';
 
@@ -250,6 +251,7 @@ const shell = (input: {
     signoff
       ? OUTRO_RULE
       : 'The last part ends by asking the listener to follow the show.',
+    tagGuidance(input.persona),
     '',
     `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +
       (kind === 'short'

@@ -106,18 +106,19 @@ channels:
       figures crisp, and speeds up only when the story does. Sounds like a
       friend explaining over coffee, not a presenter selling anything.
     tags:
-      use: [thoughtful, curious, wry, warmly, pause, "short pause", snappy, slowly]
-      never: [shouts, shouting, laughs, crying, whispers, sings, excited]
+      use: [warmly, curious, thoughtful, wry, "dry, amused", delighted, "matter-of-fact", quietly impressed, emphatic, pause, short pause, snappy, slowly]
+      never: [shouts, laughs, crying, whispers, sings, gasps, sarcastic, excited]
     pronounce: []
     outros:
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode:
-        - And that's the story, decoded. If you enjoyed this one, follow Business Decoded for more business stories from around the world. I'm Adrian, see you next time.
-        - That's where we'll leave it. Thanks for spending the time with me. Follow for more deep dives into how the world's businesses were really built. Until next time.
-        - And that is how it happened. If you want more stories like this, follow the show. I'll see you in the next one.
+        - "And that's the story, decoded. This is Adrian on Business Decoded. Follow the show for more business stories from around the world, and I'll see you next time."
+        - "That's where we'll leave it. This has been Adrian on Business Decoded. Follow for more deep dives into how the world's businesses were really built. I'll see you next time."
+        - "And that is how it happened. I'm Adrian, this is Business Decoded, and if you want more stories like this, follow the show. See you in the next one."
       short:
-        - Follow for more business stories like this one. See you next time.
-        - Want more stories of how the world's businesses were built? Follow along. Until next time.
-        - That's the story, decoded. Follow for more, and I'll see you in the next one.
+        - "This is Adrian on Business Decoded. Follow for more business stories like this one, and I'll see you next time."
+        - "That's the story, decoded. I'm Adrian on Business Decoded. Follow along, and I'll see you in the next one."
+        - "Want more stories of how the world's businesses were built? This is Adrian on Business Decoded. Follow along, and I'll see you next time."
 
   # -------------------------------------------------------------------------
   eureka-tales:
@@ -158,18 +159,19 @@ channels:
       with names and dates; the wonder is in what happened, not in the voice
       performing it.
     tags:
-      use: [curious, thoughtful, amazed, excited, warmly, pause, "short pause", slowly]
-      never: [grim, whispers, shouts, crying, sarcastic, laughs]
+      use: [curious, amazed, delighted, "excited, but controlled", thoughtful, playful, lightly amused, warmly, pause, short pause, slowly, rushed]
+      never: [grim, whispers, shouts, crying, sarcastic, ominous]
     pronounce:
       - word: tetrafluoroethylene
         sayAs: TET-ruh-FLOOR-oh-ETH-uh-leen
     outros:
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode:
-        - That is where I will leave it. Thanks for spending the time with me. There is another story from science coming soon. Until then, stay curious.
-        - And that is how it was found. Thank you for listening. Follow for more stories like this one, and I will see you in the next.
+        - "And that is how it was found. This is Ethan on Eureka Tales. Thanks for spending the time with me. Follow for more stories from science, and I'll see you next time. Stay curious."
+        - "That is where I'll leave it. I'm Ethan, and this has been Eureka Tales. There's another discovery coming soon, so follow along. Until then, stay curious."
       short:
-        - Follow for more stories from science. Until next time, stay curious.
-        - There are plenty more where that came from, so follow along.
+        - "This is Ethan on Eureka Tales. Follow for more stories from science, and I'll see you next time. Stay curious."
+        - "There are plenty more where that came from. I'm Ethan on Eureka Tales, so follow along, and stay curious."
 
   # -------------------------------------------------------------------------
   global-thread:
@@ -207,17 +209,17 @@ channels:
       said plainly ("The Guardian reports"), contested claims sound exactly as
       neutral as settled ones, and nothing is dramatised.
     tags:
-      use: [serious, thoughtful, warmly, pause, "short pause"]
-      never: [excited, grim, whispers, shouts, laughs, crying, sarcastic, amazed, gasps, sighs]
+      use: [serious, thoughtful, warmly, "matter-of-fact", "calm, clear", concerned, pause, short pause]
+      never: [excited, grim, whispers, shouts, laughs, crying, sarcastic, amazed, gasps, sighs, playful, ominous]
     pronounce: []
     outros:
-      # The channel makes shorts only; no episode format exists.
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode: []
       short:
-        - To keep yourself updated on geopolitics, follow me. I'll see you next time.
-        - If you want to stay on top of what's happening in the world, follow me for more. Until next time.
-        - That's the report. Follow me to keep up with geopolitics every day. See you next time.
-        - For more on world affairs as it happens, follow along. Until next time, take care.
+        - "This is Eva on The Global Thread. Follow me to keep up with world affairs every day, and I'll see you next time."
+        - "That's the report. I'm Eva on The Global Thread. If you want to stay on top of what's happening in the world, follow for more. Until next time."
+        - "This has been Eva on The Global Thread. Follow along for the world's biggest stories, explained simply. See you next time."
+        - "For more on world affairs as it happens, follow The Global Thread. I'm Eva, and I'll see you next time. Take care."
 
   # -------------------------------------------------------------------------
   root-health:
@@ -261,17 +263,17 @@ channels:
       builds suspense, never dramatises, never softens. Warm in manner, exact in
       substance; the trust comes from precision.
     tags:
-      use: [thoughtful, softly, warmly, pause, "short pause"]
-      never: [excited, whispers, grim, shouts, laughs, crying, gasps, amazed, sarcastic]
+      use: [thoughtful, softly, warmly, "calm, clear", "matter-of-fact", reassuring, "dry, understated", pause, short pause]
+      never: [excited, whispers, grim, shouts, laughs, crying, gasps, amazed, sarcastic, ominous, dramatic]
     pronounce: []
     outros:
-      # Owner-approved 2026-10-07. No advice in them, per the channel's taboo.
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode:
-        - That's what the evidence shows so far. If you'd like more of what the research actually says, follow The Root Health. Until next time.
-        - That's where the science stands today. Follow the show for more, and I'll see you in the next one.
+        - "That's what the evidence shows so far. This is Julia on The Root Health. Follow for more of what the research actually says, and I'll see you next time."
+        - "That's where the science stands today. I'm Julia, and this has been The Root Health. Follow the show for more, and I'll see you in the next one."
       short:
-        - Follow for more of what the research actually says. Until next time.
-        - That's the evidence, as it stands. Follow for more.
+        - "This is Julia on The Root Health. Follow for more of what the research actually says. Until next time."
+        - "That's the evidence, as it stands. I'm Julia on The Root Health. Follow for more, and I'll see you next time."
 
   # -------------------------------------------------------------------------
   crime-files:
@@ -310,16 +312,15 @@ channels:
       name and a life, said with care. No performed dread, no ominous pauses
       the facts have not earned.
     tags:
-      use: [serious, quietly, thoughtful, "low, steady", pause, "long pause", slowly]
-      never: [excited, laughs, shouts, amazed, sarcastic, playful, crying, gasps, whispers]
+      use: [serious, quietly, somber, "low, steady", hushed, thoughtful, "measured, restrained", compassionate, pause, long pause, slowly]
+      never: [excited, laughs, shouts, amazed, sarcastic, playful, crying, gasps, whispers, mischievously]
     pronounce: []
     outros:
-      # Owner-approved 2026-10-07: short and neutral, said after the story has
-      # ended, never a goodbye inside it (the beat sheet still forbids that).
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode:
-        - This has been The Crime Files. Follow the channel for the next case.
+        - "This has been Daemon on The Crime Files. Follow the channel for the next case. I'll see you next time."
       short:
-        - Follow for more cases, told in full.
+        - "This is Daemon on The Crime Files. Follow for more cases, told in full."
 
   # -------------------------------------------------------------------------
   mythic-archives:
@@ -368,8 +369,8 @@ channels:
       after a beat of silence. Tells it from inside the world of the story,
       never amused by the people who told it and never a movie-trailer voice.
     tags:
-      use: [hushed, quietly, slowly, "drawn out", whispers, serious, grim, warmly, pause, "long pause", "low, steady"]
-      never: [excited, laughs, shouts, sarcastic, playful, snappy, crying]
+      use: [hushed, quietly, whispers, slowly, drawn out, awed, mischievously, tender, ominous, building tension, warmly, serious, "low, steady", pause, long pause]
+      never: [laughs, shouts, sarcastic, crying, snappy, excited]
     pronounce:
       - word: Vetala
         sayAs: vay-TAH-lah
@@ -384,15 +385,16 @@ channels:
       - word: Vainamoinen
         sayAs: VY-nuh-moy-nen
     outros:
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode:
-        - That is where I will leave it. Thanks for spending the time with me, and with them. There will be another story next week, from somewhere else entirely. Until then, take care of yourself.
-        - Thank you for listening. Somebody told that story for the first time a very long time ago, and you have just heard it. I will have another one for you next week. Until then, take care.
-        - And that is the whole of it. Thanks for staying to the end with me. Next week there is another one, from another part of the world. See you then, and take care of yourself.
-        - That is the story. Thank you for listening to it. I will be back next week with another, from somewhere completely different. Until then, bye for now.
+        - "That is where I will leave it. This is Akira on Mythic Archives. Thanks for spending the time with me. There will be another story next week, from somewhere else entirely. Until then, take care of yourself."
+        - "Thank you for listening. Somebody told that story for the first time a very long time ago, and you have just heard it. This is Akira on Mythic Archives, and I'll have another one for you next week. Until then, take care."
+        - "And that is the whole of it. I'm Akira, and this has been Mythic Archives. Thanks for staying to the end with me. Next week there's another one, from another part of the world. See you then."
+        - "That is the story. This is Akira on Mythic Archives. Thank you for listening. I'll be back next week with another, from somewhere completely different. Until then, bye for now."
       short:
-        - Follow for more stories like this one, from every corner of the world. Until next time, take care.
-        - There are a lot more of these where that came from, so follow along if you want them. See you next time.
-        - Follow for more myths, properly told. Until next time, bye for now.
+        - "This is Akira on Mythic Archives. Follow for more stories like this one, from every corner of the world. Until next time, take care."
+        - "There are a lot more of these where that came from. I'm Akira on Mythic Archives, so follow along. See you next time."
+        - "This is Akira on Mythic Archives. Follow for more myths, properly told. Until next time, bye for now."
 
   # -------------------------------------------------------------------------
   psyche-session:
@@ -430,15 +432,16 @@ channels:
       hard. Kind without pity: the steadiness of the voice is part of what
       helps.
     tags:
-      use: [softly, warmly, thoughtful, sighs, pause, "short pause", slowly]
-      never: [shouts, grim, excited, laughs, sarcastic, crying, gasps, amazed]
+      use: [softly, warmly, gently, thoughtful, reassuring, "knowing, lightly amused", sighs, exhales, pause, short pause, slowly]
+      never: [shouts, grim, excited, laughs, sarcastic, crying, gasps, amazed, ominous]
     pronounce: []
     outros:
+      # Owner, 2026-10-07: every outro says who is talking and on which channel.
       episode:
-        - That's what I've got for you today. If this made something make sense, pass it to somebody who needs it, and follow the show for more of how your mind works. Be kind to yourself this week. I'll see you next time.
-        - Thanks for staying with me. If you recognised yourself in this, you are genuinely not the only one. Follow along for more, share it with somebody who would feel better for hearing it, and take care of yourself.
-        - That's where we'll leave it today. Follow the show if you'd like more of this, and send it to the person you were thinking about while you listened. Go gently. I'll see you soon.
+        - "That's what I've got for you today. This is Sarah on Psyche Session. If this made something make sense, pass it to somebody who needs it, and follow for more of how your mind works. Be kind to yourself this week. I'll see you next time."
+        - "Thanks for staying with me. If you recognised yourself in this, you are genuinely not the only one. I'm Sarah, and this has been Psyche Session. Follow along for more, and take care of yourself."
+        - "That's where we'll leave it today. This is Sarah on Psyche Session. Follow the show if you'd like more of this, and send it to the person you were thinking about while you listened. Go gently. I'll see you soon."
       short:
-        - If that sounded like you, follow for more of how your mind works. Take care.
-        - There's more where that came from, so follow along. Be kind to yourself.
-        - Follow for more little explanations like this one. See you next time.
+        - "If that sounded like you, follow for more of how your mind works. This is Sarah on Psyche Session. Take care."
+        - "This is Sarah on Psyche Session. There's more where that came from, so follow along. Be kind to yourself."
+        - "I'm Sarah on Psyche Session. Follow for more little explanations like this one, and I'll see you next time."

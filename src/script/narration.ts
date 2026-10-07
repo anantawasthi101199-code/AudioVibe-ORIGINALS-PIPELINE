@@ -31,6 +31,7 @@
  * instruction twice. Found by rendering the assembled prompt with
  * `foundry prompts` and reading it, and pinned by prompts/registry.test.ts.
  */
+import { Persona } from '../canon/schema';
 
 export const NARRATION_GUIDANCE = [
   // THE RULE THE WHOLE THING RESTS ON, and it was missing entirely.
@@ -137,3 +138,28 @@ export const NARRATION_TAGS = [
   // already carry it into the same prompt.
   'Use them where the delivery genuinely changes, three to six times in a beat. A tag on every line is a tag on nothing.',
 ];
+
+const bracket = (tags: string[]) => tags.map((t) => `[${t}]`).join(' ');
+
+/** NARRATION_TAGS with this host's own vocabulary (voice-master.yaml) where it has one. */
+export const narrationTagsFor = (persona: Persona): string[] =>
+  persona.audioTags
+    ? [
+        NARRATION_TAGS[0]!,
+        `The available tags for this voice: ${bracket(persona.audioTags.use)}. Anything else is discarded.`,
+        NARRATION_TAGS[2]!,
+      ]
+    : NARRATION_TAGS;
+
+/**
+ * One instruction for the writers that never had a tag vocabulary (story,
+ * business, news, psychology, shorts): the host's tags, sparingly. ElevenLabs
+ * performs them; GPT has them removed before it speaks, so they cost nothing.
+ */
+export const tagGuidance = (persona: Persona): string =>
+  persona.audioTags
+    ? `DELIVERY TAGS. You may mark how a line is said with a tag in square brackets, ` +
+      `placed right before the words it changes, from THIS LIST ONLY: ${bracket(persona.audioTags.use)}. ` +
+      `Use one only where the delivery genuinely changes, about one every three or four ` +
+      `sentences and never more than one per sentence. Most sentences get none.`
+    : '';

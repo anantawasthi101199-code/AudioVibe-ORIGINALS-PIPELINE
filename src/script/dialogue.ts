@@ -81,10 +81,11 @@ export type AudioTag = (typeof AUDIO_TAGS)[number];
 const TAG_PATTERN = /\[([a-z][a-z ,'-]*)\]/gi;
 
 /** Remove tags the renderer does not know, leaving the words untouched. */
-export const stripUnknownTags = (text: string): string =>
-  text.replace(TAG_PATTERN, (whole, inner: string) =>
-    (AUDIO_TAGS as readonly string[]).includes(inner.trim().toLowerCase()) ? whole : ''
-  );
+export const stripUnknownTags = (text: string, alsoAllowed: readonly string[] = []): string =>
+  text.replace(TAG_PATTERN, (whole, inner: string) => {
+    const tag = inner.trim().toLowerCase();
+    return (AUDIO_TAGS as readonly string[]).includes(tag) || alsoAllowed.includes(tag) ? whole : '';
+  });
 
 /** Text with every tag removed, which is what style scoring must measure. */
 export const withoutTags = (text: string): string =>

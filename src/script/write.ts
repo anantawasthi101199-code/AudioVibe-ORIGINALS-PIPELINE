@@ -37,7 +37,7 @@ import { loopBrief, openBefore } from './loops';
 import { checkVoices, voiceBrief } from './voices';
 import { writeHook } from './hooks';
 import { SHORT_FORM_GUIDANCE } from './shorts';
-import { NARRATION_GUIDANCE, NARRATION_TAGS } from './narration';
+import { NARRATION_GUIDANCE, narrationTagsFor } from './narration';
 import { StoryPlan, checkCast, planBrief, planStory, storyPlanSchema } from './plan';
 import { FORWARD_GUIDANCE, checkBridge, checkForward, checkRepetition } from './forward';
 import { PLAIN_GUIDANCE, checkPlainWords } from './plain';
@@ -242,7 +242,7 @@ ${
       // none of that, so every one of those effects has to be written in - and a
       // model handed the dialogue rules and one speaker writes an essay.
       `\nWRITING NARRATION FOR ONE VOICE\n${NARRATION_GUIDANCE.map((r) => `- ${r}`).join('\n')}` +
-      `\n\nDELIVERY\n${NARRATION_TAGS.map((r) => `- ${r}`).join('\n')}`
+      `\n\nDELIVERY\n${narrationTagsFor(persona).map((r) => `- ${r}`).join('\n')}`
 }
 ${
   kind === 'short'
@@ -477,7 +477,7 @@ const beatReplySchema = z.object({
   claimIds: z.array(z.string()).default([]),
 });
 
-const parseTurns = (raw: unknown): { turns: Turn[]; claimIds: string[] } => {
+const parseTurns = (raw: unknown, hostTags: readonly string[] = []): { turns: Turn[]; claimIds: string[] } => {
   const parsed = beatReplySchema.parse(raw);
 
   return {
@@ -486,7 +486,7 @@ const parseTurns = (raw: unknown): { turns: Turn[]; claimIds: string[] } => {
     // host saying "thoughtful" out loud mid-sentence.
     turns: parsed.turns.map((t) => ({
       speaker: t.speaker.trim(),
-      text: stripUnknownTags(t.text).replace(/\s+/g, ' ').trim(),
+      text: stripUnknownTags(t.text, hostTags).replace(/\s+/g, ' ').trim(),
     })),
     claimIds: parsed.claimIds,
   };
@@ -826,7 +826,7 @@ export const writeBeat = async (
       { parse: (v) => beatReplySchema.parse(v), label: `the "${ctx.beat.id}" beat` }
     );
 
-    current = parseTurns(parsed);
+    current = parseTurns(parsed, ctx.persona.audioTags?.use);
     const { blocking } = critiqueBeat(
       current.turns,
       ctx.persona,

@@ -13,6 +13,12 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Named outros and each host's own voice tags** (2026-10-07). Every outro now
+  says who is talking and on which channel ("This is Adrian on Business
+  Decoded..."). Each host has a personality-matched tag set in voice-master.yaml
+  that every writer is given (narrationTagsFor / tagGuidance) and that the
+  unknown-tag strip keeps; the network-wide list stays the fallback.
+
 - **ElevenLabs per run, and one master file for how every channel sounds**
   (2026-10-07). GPT voices were hoarse and dropped words, and could not carry a
   persona. Now:

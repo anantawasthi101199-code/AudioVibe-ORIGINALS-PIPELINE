@@ -33,7 +33,7 @@ import { z } from 'zod';
 import { Persona, isDialogueShow } from '../canon/schema';
 import { EpisodeFormat } from '../formats/schema';
 import { completeJson, LlmClient } from '../models/client';
-import { NARRATION_TAGS } from './narration';
+import { narrationTagsFor } from './narration';
 import { StoryPlan } from './plan';
 import { Script, ScriptBeat, beatText, scriptSchema } from './write';
 import { Turn, stripUnknownTags, turnSchema, withoutTags } from './dialogue';
@@ -96,7 +96,7 @@ HOW IT SHOULD SOUND
 ${PERFORMANCE_GUIDANCE.map((r) => `- ${r}`).join('\n')}
 
 DELIVERY
-${NARRATION_TAGS.map((r) => `- ${r}`).join('\n')}
+${narrationTagsFor(persona).map((r) => `- ${r}`).join('\n')}
 ${dialogue ? '\nThis show has more than one host. Keep every line with the speaker who says it.\n' : ''}
 THE SPEAKER IDS ARE FIXED AND THERE ARE ONLY THESE: ${persona.hosts.map((h) => `"${h.id}"`).join(', ')}.
 Use them exactly. Do not invent a label, do not translate one into a role name.
@@ -424,7 +424,7 @@ export const performScript = async (
       ...original,
       turns: reply.beats[i]!.turns.map((t, j) => ({
         speaker: speakerFor(t.speaker, original.turns[j]),
-        text: stripUnknownTags(t.text).replace(/\s+/g, ' ').trim(),
+        text: stripUnknownTags(t.text, input.persona.audioTags?.use).replace(/\s+/g, ' ').trim(),
       })) as Turn[],
     }));
 

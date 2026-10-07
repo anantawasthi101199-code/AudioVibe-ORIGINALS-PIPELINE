@@ -338,6 +338,15 @@ export const personaSchema = z.object({
   signoffShort: z.union([z.string(), z.array(z.string().min(1)).min(1)]).optional(),
 
   /**
+   * The host's own ElevenLabs delivery tags, from voice-master.yaml. `use` is
+   * the vocabulary every writer is given for this channel; `never` is removed
+   * before the voice reads the text. Absent means the network-wide list.
+   */
+  audioTags: z
+    .object({ use: z.array(z.string().min(1)).min(1), never: z.array(z.string().min(1)).default([]) })
+    .optional(),
+
+  /**
    * The weakest source this show will rest a claim on.
    *
    * WHY A SHOW NEEDS ITS OWN FLOOR. Tiers are recorded on every claim already,

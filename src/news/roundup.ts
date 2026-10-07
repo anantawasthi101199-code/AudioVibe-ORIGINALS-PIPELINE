@@ -18,6 +18,7 @@ import { Source } from '../evidence/source';
 import { EpisodeFormat } from '../formats/schema';
 import { signoffFor } from '../script/storyScript';
 import { OUTRO_RULE } from '../script/outro';
+import { tagGuidance } from '../script/narration';
 import { wordsForBeat } from '../script/write';
 import { Desk } from './desk';
 import { NEWS_INSTRUCTION, spokenDate, ukClock } from './newsScript';
@@ -142,6 +143,7 @@ export const buildRoundupPrompt = (input: {
     signoff
       ? OUTRO_RULE
       : `The last part asks the listener to follow for more, then goodbye.`,
+    tagGuidance(input.persona),
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${speaker}", "text": "..."}]}]}`,

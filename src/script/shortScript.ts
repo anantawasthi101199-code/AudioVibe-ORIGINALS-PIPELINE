@@ -40,6 +40,7 @@ import { completeJson, LlmClient } from '../models/client';
 import { Turn } from './dialogue';
 import { REVISE_SCRIPT } from './onePass';
 import { OUTRO_RULE } from './outro';
+import { tagGuidance } from './narration';
 import {
   findHedging,
   returnShape,
@@ -169,6 +170,7 @@ export const writeShortScript = async (
     said
       ? OUTRO_RULE
       : '',
+    tagGuidance(input.persona),
     '',
     returnShape(input.persona),
     '',

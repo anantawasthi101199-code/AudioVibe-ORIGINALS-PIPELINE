@@ -30,6 +30,7 @@ import { EAR_RULES, Script, ScriptBeat, wordsForBeat } from '../script/write';
 import { NETWORK_BANNED_PHRASES } from '../script/style';
 import { signoffFor } from '../script/storyScript';
 import { OUTRO_RULE } from '../script/outro';
+import { tagGuidance } from '../script/narration';
 import { turnSchema } from '../script/dialogue';
 
 export const BUSINESS_INSTRUCTION = `You are {HOST}, host of {SHOW}. You're a friendly,
@@ -164,6 +165,7 @@ export const buildBusinessPrompt = (input: BusinessScriptInput): string => {
     signoff
       ? OUTRO_RULE
       : 'The last part ends by asking the listener to follow for more business stories.',
+    tagGuidance(input.persona),
     '',
     `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +
       (kind === 'short'

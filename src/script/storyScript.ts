@@ -52,6 +52,7 @@
  */
 import { z } from 'zod';
 import { Persona } from '../canon/schema';
+import { tagGuidance } from './narration';
 import { Reference } from '../evidence/story';
 import { EpisodeFormat } from '../formats/schema';
 import { completeJson, LlmClient } from '../models/client';
@@ -375,6 +376,7 @@ export const buildStoryPrompt = (input: {
         ? OUTRO_RULE
         : '';
     })(),
+    tagGuidance(input.persona),
     '',
     'THE BEATS, in order:',
     '',

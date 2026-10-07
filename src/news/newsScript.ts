@@ -21,6 +21,7 @@ import { EAR_RULES, Script, ScriptBeat, wordsForBeat } from '../script/write';
 import { NETWORK_BANNED_PHRASES } from '../script/style';
 import { signoffFor } from '../script/storyScript';
 import { OUTRO_RULE } from '../script/outro';
+import { tagGuidance } from '../script/narration';
 import { turnSchema } from '../script/dialogue';
 
 /**
@@ -225,6 +226,7 @@ export const buildNewsPrompt = (input: NewsScriptInput): string => {
     signoff
       ? OUTRO_RULE
       : `The last part ends by asking the listener to follow for more on ${input.beat}, then goodbye.`,
+    tagGuidance(input.persona),
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${speaker}", "text": "..."}]}]}`,

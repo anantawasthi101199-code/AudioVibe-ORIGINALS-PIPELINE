@@ -163,6 +163,8 @@ export const applyVoiceMaster = (raw: unknown, entry: ChannelVoice, label: strin
     'It shows in how the host talks and reacts, never in an invented personal life: ' +
     'no memories, family, childhood or places they have been.';
 
+  persona.audioTags = { use: entry.tags.use, never: entry.tags.never };
+
   delete persona.signoff;
   delete persona.signoffShort;
   if (entry.outros.episode.length) persona.signoff = entry.outros.episode;
