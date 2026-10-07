@@ -70,7 +70,7 @@ register: >
 
 hosts:
   - id: narrator
-    name: Cal
+    name: Daemon
     role: >
       Has read the files and is telling you about them. Explains things without
       leaving anyone behind, admits what the record does not say, and is far

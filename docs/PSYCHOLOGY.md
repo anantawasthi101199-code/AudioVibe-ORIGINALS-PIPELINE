@@ -151,5 +151,5 @@ approving the render.
 | `src/psych/psychScript.ts` | The host prompt and the one-call writer. |
 | `src/psych/check.ts` | The safety floor and the craft checks. |
 | `curricula/psyche-session.yaml` | Queries, preferred and refused hosts, sizes. |
-| `personas/psyche-session.yaml` | Noor, the register, the goodbyes. |
+| `personas/psyche-session.yaml` | Sarah, the register, the goodbyes. |
 | `beatsheets/psych-episode.yaml`, `psych-short.yaml` | The shapes. |

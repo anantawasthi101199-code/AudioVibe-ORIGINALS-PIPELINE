@@ -70,10 +70,10 @@ channels:
   # -------------------------------------------------------------------------
   business-decoded:
     host: host
-    name: Arjun
+    name: Adrian
     elevenlabs:
       voiceId: au1TZr908yAZa8WNGcua  # Voice Design option 3, picked by ear 2026-10-07
-      voiceName: Arjun (Business Decoded)
+      voiceName: Adrian (Business Decoded)
       # Mid: a friendly storyteller wants some lift on the good bits, but it is
       # a long listen and the numbers must sound sure.
       stability: 0.5
@@ -89,7 +89,7 @@ channels:
       stability: 0.5
       style: 0.4
     personality: >
-      Arjun is the friend who reads company histories for fun and cannot wait to
+      Adrian is the friend who reads company histories for fun and cannot wait to
       tell you the twist. Endlessly curious about how money actually moves and
       why one bet worked when ten others failed. Loves an underdog and a comeback,
       admires grit and timing more than genius, and is quietly sceptical of hype,
@@ -111,7 +111,7 @@ channels:
     pronounce: []
     outros:
       episode:
-        - And that's the story, decoded. If you enjoyed this one, follow Business Decoded for more business stories from around the world. I'm Arjun, see you next time.
+        - And that's the story, decoded. If you enjoyed this one, follow Business Decoded for more business stories from around the world. I'm Adrian, see you next time.
         - That's where we'll leave it. Thanks for spending the time with me. Follow for more deep dives into how the world's businesses were really built. Until next time.
         - And that is how it happened. If you want more stories like this, follow the show. I'll see you in the next one.
       short:
@@ -122,10 +122,10 @@ channels:
   # -------------------------------------------------------------------------
   eureka-tales:
     host: narrator
-    name: Kabir
+    name: Ethan
     elevenlabs:
       voiceId: WlCloMVQ5y7HFiKJSCdv  # Voice Design option 3, picked by ear 2026-10-07
-      voiceName: Kabir (Eureka Tales)
+      voiceName: Ethan (Eureka Tales)
       # A shade lower: the channel lives on the moment of discovery, and that
       # moment needs real lift in the voice.
       stability: 0.45
@@ -141,7 +141,7 @@ channels:
       stability: 0.5
       style: 0.4
     personality: >
-      Kabir is a cheerful science nerd who still gets goosebumps at the moment
+      Ethan is a cheerful science nerd who still gets goosebumps at the moment
       something is figured out. Loves the accident, the wrong turn, the stubborn
       person who would not let a strange result go, and treats failed experiments
       with real affection because that is where the discovery usually hides.
@@ -174,10 +174,10 @@ channels:
   # -------------------------------------------------------------------------
   global-thread:
     host: reporter
-    name: Rowan
+    name: Eva
     elevenlabs:
       voiceId: XFbm4WkDQVmh4KOpzXgE  # Voice Design option 3, picked by ear 2026-10-07
-      voiceName: Rowan (The Global Thread)
+      voiceName: Eva (The Global Thread)
       # High: news must sound even and fair from the first story to the last.
       # Drama in a news voice reads as a view.
       stability: 0.65
@@ -192,7 +192,7 @@ channels:
       stability: 0.55
       style: 0.35
     personality: >
-      Rowan is calm, grounded and unflappable: the well-read friend you call when
+      Eva is calm, grounded and unflappable: the well-read friend you call when
       the headlines are confusing. Curious about WHY things happen and what they
       mean for an ordinary person, not about who is winning. Empathetic towards
       the people a story affects, neutral towards every side in it. Warm at the
@@ -222,10 +222,10 @@ channels:
   # -------------------------------------------------------------------------
   root-health:
     host: narrator
-    name: Sena
+    name: Julia
     elevenlabs:
       voiceId: nninA1AMWjEl35Rb0BE6  # Voice Design option 3, picked by ear 2026-10-07
-      voiceName: Sena (The Root Health)
+      voiceName: Julia (The Root Health)
       # High: the trust is in precision. A clinician who swoops sounds unsure.
       stability: 0.6
       similarity: 0.8
@@ -246,7 +246,7 @@ channels:
         anything and without reassurance. This is somebody imparting knowledge,
         not narrating a story.
     personality: >
-      Sena is a patient, precise clinician who finds the real numbers more
+      Julia is a patient, precise clinician who finds the real numbers more
       interesting than any headline. Gently sceptical of miracle claims and
       scary stories alike, and calmly unbothered by being the one to say "we do
       not know yet". Respects the listener's intelligence and never talks down.
@@ -276,10 +276,10 @@ channels:
   # -------------------------------------------------------------------------
   crime-files:
     host: narrator
-    name: Cal
+    name: Daemon
     elevenlabs:
       voiceId: r49kOW8YFtTJtwAlxQxa  # Voice Design option 1, picked by ear 2026-10-07
-      voiceName: Cal (The Crime Files)
+      voiceName: Daemon (The Crime Files)
       # Mid-high: restraint is the manners of this channel. Enough movement to
       # tell a story, never enough to sound thrilled by somebody's worst year.
       stability: 0.55
@@ -294,7 +294,7 @@ channels:
       stability: 0.35
       style: 0.55
     personality: >
-      Cal is steady, methodical and compassionate: someone who has read every page
+      Daemon is steady, methodical and compassionate: someone who has read every page
       of the file and will not round a single fact up. Patient with detail, and
       quietly dogged about the difference between what the record proves and
       what people assumed. Deeply respectful of victims and their families;
@@ -324,10 +324,10 @@ channels:
   # -------------------------------------------------------------------------
   mythic-archives:
     host: narrator
-    name: Wren
+    name: Akira
     elevenlabs:
       voiceId: vVhJjeT8XYaSMESMXlVD  # Voice Design American option 3, picked by ear 2026-10-07
-      voiceName: Wren (Mythic Archives)
+      voiceName: Akira (Mythic Archives)
       # The lowest here, on purpose: a storyteller needs the widest rise and
       # fall (onyx was rejected as "boring and bland"). 2026-10-07: the owner
       # found the first designs too heavy and old; now middle-aged and lighter.
@@ -352,7 +352,7 @@ channels:
         pace and pitch the way a gifted storyteller does. Never flat, never
         monotone, and never a hammy movie-trailer voice.
     personality: >
-      Wren is a warm, curious storyteller in the prime of life, the person at the
+      Akira is a warm, curious storyteller in the prime of life, the person at the
       gathering everyone drifts towards when a story starts. Lives inside the
       story while telling it and always brings it home to a proper ending. A
       glint of mischief when a trickster walks in, real tenderness for the
@@ -397,10 +397,10 @@ channels:
   # -------------------------------------------------------------------------
   psyche-session:
     host: host
-    name: Noor
+    name: Sarah
     elevenlabs:
       voiceId: G79rSWjbSNzv25Wn8SeA  # Voice Design option 1, picked by ear 2026-10-07
-      voiceName: Noor (Psyche Session)
+      voiceName: Sarah (Psyche Session)
       # Mid: gentle needs some movement to sound human, but a listener who is
       # struggling needs the voice to stay level and safe.
       stability: 0.5
@@ -415,7 +415,7 @@ channels:
       stability: 0.55
       style: 0.35
     personality: >
-      Noor is gentle, warm and emotionally sharp: the friend who makes you feel
+      Sarah is gentle, warm and emotionally sharp: the friend who makes you feel
       normal for having the thoughts you have. Validating without pity, honest
       without being harsh, and hopeful without promising anything. A little
       light self-including humour ("we all do this") that makes hard things

@@ -53,13 +53,13 @@ series' shelf, created the first time the title is used.
 
 | Channel | Short | Long | Default music | Voice |
 |---|---|---|---|---|
-| Business Decoded | `biz-short` | `biz-episode` + `--series` (Founder Stories, Startup School, Innovative Businesses) | none | Arjun, echo |
-| Eureka Tales | `science-short` (mystery, then the story) | `told-story` + `--series` | none | Kabir, ash |
-| The Global Thread | `news-short` (what happened, why it matters to you, what next) | none | none | Rowan, nova |
-| The Root Health | `health-short` (hook, story, myth verdict or attributed guidance) | later: `what-we-know` + `--series` | none | Sena, sage |
-| The Crime Files | none | `case-in-full` (hook, context, investigation, turning point, aftermath) + `--series "<the case>"` | none | Cal, ballad (ElevenLabs before publishing) |
-| Mythic Archives | `myth-short` | `myth-story` + `--series` | none | Wren, onyx, slow and heavy |
-| Psyche Session | `psych-short` | `psych-episode` + `--series` | none | Noor, shimmer |
+| Business Decoded | `biz-short` | `biz-episode` + `--series` (Founder Stories, Startup School, Innovative Businesses) | none | Adrian, echo |
+| Eureka Tales | `science-short` (mystery, then the story) | `told-story` + `--series` | none | Ethan, ash |
+| The Global Thread | `news-short` (what happened, why it matters to you, what next) | none | none | Eva, nova |
+| The Root Health | `health-short` (hook, story, myth verdict or attributed guidance) | later: `what-we-know` + `--series` | none | Julia, sage |
+| The Crime Files | none | `case-in-full` (hook, context, investigation, turning point, aftermath) + `--series "<the case>"` | none | Daemon, ballad (ElevenLabs before publishing) |
+| Mythic Archives | `myth-short` | `myth-story` + `--series` | none | Akira, onyx, slow and heavy |
+| Psyche Session | `psych-short` | `psych-episode` + `--series` | none | Sarah, shimmer |
 
 ```bash
 npm run foundry -- make --show business-decoded --format biz-short --topic "..."

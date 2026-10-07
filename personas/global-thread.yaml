@@ -41,7 +41,7 @@ register: >
 
 hosts:
   - id: reporter
-    name: Rowan
+    name: Eva
     role: >
       The channel's presenter. Tells you the day's most important world story
       from one named news organisation, explains what it actually means in

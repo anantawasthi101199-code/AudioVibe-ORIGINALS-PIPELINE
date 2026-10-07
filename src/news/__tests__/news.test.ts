@@ -240,7 +240,7 @@ describe('the figure check', () => {
 
   it('reports names the article never uses', () => {
     expect(
-      unfamiliarNames('The minister met Lavrov in Geneva. Rowan reporting.', 'The minister met in Geneva.', ['Rowan'])
+      unfamiliarNames('The minister met Lavrov in Geneva. Eva reporting.', 'The minister met in Geneva.', ['Eva'])
     ).toEqual(['Lavrov']);
     // Both seen live as false alarms.
     expect(
@@ -337,7 +337,7 @@ const REPORT = {
         {
           speaker: 'reporter',
           text:
-            "Hi, it's Rowan. On Tuesday, the BBC reported that foreign ministers from 12 countries have agreed a ceasefire framework in Geneva. " +
+            "Hi, it's Eva. On Tuesday, the BBC reported that foreign ministers from 12 countries have agreed a ceasefire framework in Geneva. " +
             'Officials say it covers 3 border regions. Russia says it was not consulted.',
         },
       ],
@@ -577,7 +577,7 @@ describe('the rapid-fire roundup', () => {
     title: "India, US, UK and the world: today's top news",
     description: 'Floods in Kerala, a budget vote, a called-off strike and a Geneva framework.',
     beats: [
-      { beatId: 'hello', turns: [{ speaker: 'reporter', text: "Hi, it's Rowan, with your rapid fire." }] },
+      { beatId: 'hello', turns: [{ speaker: 'reporter', text: "Hi, it's Eva, with your rapid fire." }] },
       {
         beatId: 'headlines',
         turns: [

@@ -89,7 +89,7 @@ register: >
 
 hosts:
   - id: narrator
-    name: Sena
+    name: Julia
     role: >
       Has read the studies and the arguments about the studies, and is telling
       you what they add up to. Says how many people were in a trial before

@@ -44,7 +44,7 @@ register: >
 
 hosts:
   - id: host
-    name: Noor
+    name: Sarah
     role: >
       The show's host. Has read the research properly and explains it the way a
       friend would: the moment you will recognise first, then one everyday

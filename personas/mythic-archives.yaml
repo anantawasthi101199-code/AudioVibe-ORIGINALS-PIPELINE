@@ -74,7 +74,7 @@ register: >
 
 hosts:
   - id: narrator
-    name: Wren
+    name: Akira
     role: >
       Knows the story inside out and is telling it to you. Explains the world as
       the story needs it so nothing lands as arbitrary, tells it in order, and

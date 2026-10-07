@@ -42,7 +42,7 @@ register: >
 
 hosts:
   - id: host
-    name: Arjun
+    name: Adrian
     role: >
       The show's host. Has read the whole story properly and tells it from the
       very beginning to where it stands today, in order, with the years, the

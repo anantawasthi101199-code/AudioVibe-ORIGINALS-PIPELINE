@@ -36,7 +36,7 @@ beats:
     opens: [the_day]
     constraints:
       - >
-        ONE OR TWO SENTENCES. "Hi, it's Rowan, and here's your rapid fire on
+        ONE OR TWO SENTENCES. "Hi, it's Eva, and here's your rapid fire on
         today's top news." Then straight into the first story.
 
   - id: headlines

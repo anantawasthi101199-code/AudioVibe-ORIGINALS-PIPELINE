@@ -44,7 +44,7 @@ register: >
 
 hosts:
   - id: narrator
-    name: Kabir
+    name: Ethan
     role: >
       Has read the papers and the biographies, and tells you how the thing was
       actually found out. Explains the idea before it matters so nothing lands
