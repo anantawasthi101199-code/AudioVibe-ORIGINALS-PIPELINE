@@ -204,8 +204,8 @@ beats:
     type: outro
     seconds: [45, 70]
     function: >
-      Land the episode on the picture, give one tiny thing to do today, then
-      the goodbye.
+      Land the episode on the picture and give one tiny thing to do today.
+      The channel's fixed outro follows.
     closes: [what_is_happening]
     constraints:
       - >
@@ -217,11 +217,10 @@ beats:
       - >
         ONE TINY THING TO DO TODAY, smaller than they expect, and only one.
       - >
-        A LINE WITH RHYTHM TO IT before the goodbye. Something short enough to
+        A LINE WITH RHYTHM TO IT to finish on. Something short enough to
         stay with somebody.
       - >
-        THEN THE GOODBYE, warm and unhurried, which asks them to follow and to
-        pass it to somebody who needs it. It is the last thing said.
+        STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
 
 # Settles in, builds through the science and the feelings, peaks on what
 # actually helps, and comes down gently to the close. Below its own peak at the

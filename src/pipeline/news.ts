@@ -59,6 +59,7 @@ import {
 } from '../news/pick';
 import { BraveNews, NewsSearch, screenWire, sweepWire } from '../news/wire';
 import type { PipelineDeps } from './episode';
+import { withOutro } from '../script/outro';
 
 export interface NewsDeps {
   /** The news index. Built from BRAVE_SEARCH_API_KEY when absent. */
@@ -405,7 +406,7 @@ export const runNews = async (
       },
       deps.writer,
       (draft) => [
-        ...draftProblems(draft.beats, {
+        ...draftProblems(withOutro(draft, persona, format.kind, run.manifest.topic).beats, {
           article: source.text,
           outlet: record.outlet,
           now: now(),
@@ -421,7 +422,7 @@ export const runNews = async (
       say('script'),
       flags.scriptRevisions
     );
-    script = written.script;
+    script = withOutro(written.script, persona, format.kind, run.manifest.topic);
     run.writeArtifact('script', script);
     run.markComplete('script');
     say('script')(`"${script.title}", about ${Math.round(estimatedSeconds(script))}s read aloud`);

@@ -92,7 +92,7 @@ beats:
     type: outro
     seconds: [25, 40]
     function: >
-      Step three, WHAT HAPPENS NEXT, then the goodbye and the follow.
+      Step three, WHAT HAPPENS NEXT. The channel's fixed outro follows.
     closes: [the_news]
     constraints:
       - >
@@ -100,8 +100,7 @@ beats:
         says is scheduled, threatened or expected. Never invent an unknown; if
         nothing is known, say what to watch for.
       - >
-        THEN THE GOODBYE, warm and quick, asking the listener to follow for more.
-        The last thing said.
+        STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
       - No opinion, no moral, no "only time will tell".
     minClaims: 0
 

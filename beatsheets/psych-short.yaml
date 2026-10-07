@@ -83,7 +83,7 @@ beats:
     type: outro
     seconds: [24, 34]
     function: >
-      One small thing to try, then the goodbye.
+      One small thing to try. The channel's fixed outro follows.
     closes: [one_thing]
     constraints:
       - >
@@ -93,7 +93,6 @@ beats:
         NO LIST. A second suggestion halves the chance of the first one
         happening.
       - >
-        THEN THE GOODBYE, warm and quick, asking them to follow. It is the last
-        thing said.
+        STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
 
 tensionCurve: [0.75, 1.0, 0.5]

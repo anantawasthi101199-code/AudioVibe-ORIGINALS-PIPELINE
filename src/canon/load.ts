@@ -17,6 +17,7 @@ import path from 'path';
 import YAML from 'yaml';
 import { Persona, personaSchema } from './schema';
 import { isKnownCategory, nearestCategory } from './categories';
+import { applyVoiceMaster, loadVoiceMaster } from './voiceMaster';
 
 export class PersonaLoadError extends Error {
   constructor(
@@ -36,6 +37,11 @@ export const parsePersona = (source: string, label = '<inline>'): Persona => {
   } catch (err) {
     throw new PersonaLoadError(label, [`invalid YAML: ${(err as Error).message}`]);
   }
+
+  // How the channel SOUNDS comes from voice-master.yaml when it is listed there.
+  const id = (raw as { id?: unknown } | null)?.id;
+  const entry = typeof id === 'string' ? loadVoiceMaster()?.channels[id] : undefined;
+  if (entry) raw = applyVoiceMaster(raw, entry, label);
 
   const result = personaSchema.safeParse(raw);
   if (!result.success) {

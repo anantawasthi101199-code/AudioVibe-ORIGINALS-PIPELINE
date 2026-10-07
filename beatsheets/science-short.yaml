@@ -88,7 +88,7 @@ beats:
     type: payoff
     seconds: [35, 45]
     function: >
-      How it was solved, what it changed, then the goodbye.
+      How it was solved and what it changed. The channel's fixed outro follows.
     closes: [the_mystery]
     constraints:
       - >
@@ -98,8 +98,7 @@ beats:
         ONE LINE ON WHAT IT CHANGED, concrete: a thing people use, a number, a
         place. Never "and the world was never the same".
       - >
-        A CLEAR END, then the goodbye, which is where the follow is asked for.
-        Warm and quick.
+        A CLEAR END. STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
       - Never call anybody a genius.
     minClaims: 0
 

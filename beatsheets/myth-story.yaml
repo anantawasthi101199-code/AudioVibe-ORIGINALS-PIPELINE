@@ -41,8 +41,8 @@ kind: long
 intent: >
   One myth from one culture, told in full and in order by somebody who has read
   it properly and is telling it to you: a short orientation, the story itself
-  with everything explained as it is needed, and an ending that says what it
-  meant and then says goodbye.
+  with everything explained as it is needed, and a proper ending. Only the
+  story: nothing about manuscripts, scholars or how the text reached us.
 
 targetSeconds: [600, 1140]
 
@@ -62,12 +62,15 @@ beats:
     opens: [the_story]
     constraints:
       - >
-        SAY WHAT THIS IS IN THE FIRST THREE SENTENCES. The story, whose it is,
-        and roughly how old. A listener with nothing to look at and no knowledge
-        of this pantheon cannot be dropped into a scene.
+        SAY WHAT THIS IS IN THE FIRST THREE SENTENCES. The story, and where it
+        comes from in a few words ("a story the K'iche' Maya of Guatemala have
+        told for centuries"). A listener with nothing to look at and no
+        knowledge of this pantheon cannot be dropped into a scene.
       - >
-        Say how old it is in a way a person can hold. "Older than the Iliad" is
-        worth more than a date, and a date on its own is worth almost nothing.
+        NOTHING ABOUT THE TEXT. No manuscript, no scribe or friar who wrote it
+        down, no translator, no library, no century it was recorded in, no
+        scholars. That is the story of the document, not the story, and it is
+        the filler listeners complained about (owner, 2026-10-07).
       - >
         GIVE THE SHAPE, NOT THE PLOT. Two or three sentences on what kind of
         journey this is and what is at stake. Knowing where a story is going
@@ -134,9 +137,8 @@ beats:
         differ", not "it is unclear". That was decided before you started
         writing. Tell what happened.
       - >
-        The one exception is a text that physically stops - a tablet broken off
-        mid-line, a manuscript burned. That is an event in the story of the
-        story, and it is worth one sentence where it bites.
+        NEVER STEP OUT INTO THE HISTORY OF THE TEXT. If the story's ending is
+        lost, end where it ends, in one sentence, as the story.
       - Do not explain the meaning as you go. The story carries it.
     minClaims: 0
 
@@ -144,8 +146,8 @@ beats:
     type: outro
     seconds: [90, 180]
     function: >
-      What it meant to the people who told it, one thing to walk away with, and
-      goodbye.
+      A proper conclusion: how it all ended for everyone in it, what the story
+      explained for the people who told it, and one thing to walk away with.
     closes: [the_story]
     constraints:
       - >
@@ -154,9 +156,13 @@ beats:
         framing - this is the same person still talking, changing register from
         telling to reflecting.
       - >
-        SAY WHAT IT MEANT TO THEM. What it explained, what it warned, what they
-        saw happen every year that this accounted for. From inside: what THEY
-        took from it, never what it might mean for us now.
+        LAND THE ENDING FIRST. What became of the main people in the story, said
+        plainly, so nobody is left wondering. A good conclusion feels finished.
+      - >
+        THEN, BRIEFLY, WHAT IT MEANT TO THEM. What it explained, what it warned,
+        what they saw happen every year that this accounted for. Two or three
+        sentences, from inside: what THEY took from it, never what it might mean
+        for us now.
       - >
         INTRODUCE NO NEW NAMES HERE. Not a place, not a person, not a shrine, not
         a scholar. Everything in this part is something the listener has already
@@ -175,10 +181,6 @@ beats:
         KEEP THE SENTENCES SHORT, like the opening. This is the other place a
         listener is most likely to drift, because the story is over and they are
         deciding whether it landed.
-      - >
-        THEN SAY GOODBYE. Name the show, and close the way the show closes. The
-        same person who has been talking for fifteen minutes finishing a
-        conversation, not an announcer reading a card.
       - No moral, and nothing about what it says about people or about us now.
     minClaims: 0
 

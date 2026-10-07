@@ -54,21 +54,7 @@ hosts:
       signature:
         - "so here's what happened"
         - "and here's why that matters"
-    voice:
-      provider: elevenlabs
-      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # The voice the channel actually uses. News shorts render on OpenAI or
-      # they do not fit the budget (see docs/FLOW.md), so this is the real one.
-      # A different voice from every other channel, so none are confused.
-      draftVoiceId: nova
-      settings:
-        # High stability reads as "even and controlled" to the OpenAI engine,
-        # which is the delivery a newsreader has.
-        # Lowered from 0.8 (even and controlled) when the owner heard the first
-        # report as robotic. Still steady, with room to sound like a person.
-        stability: 0.55
-        similarity_boost: 0.75
-        style: 0.35
+    # voice: in voice-master.yaml (both engines, delivery, tags, pronunciations).
 
 styleCard:
   # Spoken explainer pace: people talk in short sentences. Advisory.
@@ -165,21 +151,7 @@ formats:
 # this is the short's range.
 episodeSeconds: [120, 160]
 
-# SIGN-OFFS. One is picked per report, from the article's address, so it varies
-# between reports and stays the same on a re-render. The writer lands on it in
-# its own words. EDIT THEM HERE; nothing else hard-codes a goodbye.
-signoffShort:
-  - >
-    To keep yourself updated on geopolitics, follow me. I'll see you next time.
-  - >
-    If you want to stay on top of what's happening in the world, follow me for
-    more. Until next time.
-  - >
-    That's the report. Follow me to keep up with geopolitics every day. See you
-    next time.
-  - >
-    For more on world affairs as it happens, follow along. Until next time, take
-    care.
+# Outros: in voice-master.yaml, said word for word (owner, 2026-10-07).
 
 allowedRiskTiers:
   - general

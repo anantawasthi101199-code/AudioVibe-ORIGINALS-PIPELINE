@@ -20,6 +20,7 @@ import { completeJson, LlmClient } from '../models/client';
 import { EAR_RULES, Script, ScriptBeat, wordsForBeat } from '../script/write';
 import { NETWORK_BANNED_PHRASES } from '../script/style';
 import { signoffFor } from '../script/storyScript';
+import { OUTRO_RULE } from '../script/outro';
 import { turnSchema } from '../script/dialogue';
 
 /**
@@ -222,8 +223,7 @@ export const buildNewsPrompt = (input: NewsScriptInput): string => {
     `THIS CHANNEL'S BEAT: ${input.beat}`,
     '',
     signoff
-      ? `HOW THIS CHANNEL SIGNS OFF. The last part ends on this, in your own words rather than ` +
-        `word for word, and it is the last thing said:\n  ${signoff}`
+      ? OUTRO_RULE
       : `The last part ends by asking the listener to follow for more on ${input.beat}, then goodbye.`,
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +

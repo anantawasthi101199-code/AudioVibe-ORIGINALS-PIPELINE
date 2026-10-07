@@ -37,6 +37,7 @@ import { redistributeClaims, selectShortAngle, shortSelectionSchema } from '../s
 import { runGate, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
 import { PipelineDeps } from './episode';
+import { withOutro } from '../script/outro';
 
 export interface ShortResult {
   run: Run;
@@ -234,6 +235,7 @@ export const runShort = async (
       deps.writer,
       spend
     );
+    script = withOutro(script, persona, format.kind, run.manifest.topic);
     run.writeArtifact('script', script);
     run.markComplete('script');
     log(`script: "${script.title}", ${script.beats.length} beats`);

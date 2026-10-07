@@ -154,6 +154,13 @@ export const beatText = (beat: { turns: Turn[] }): string =>
 export const fullText = (script: Script): string =>
   script.beats.map((b) => beatText(b)).join('\n\n');
 
+/** What the writer wrote: fullText without fixed channel text (the outro). For style scoring. */
+export const writtenText = (script: Script): string =>
+  script.beats
+    .map((b) => beatText({ turns: b.turns.filter((t) => !t.fixed) }))
+    .filter(Boolean)
+    .join('\n\n');
+
 /**
  * The few things about audio a good writer would not otherwise know.
  *

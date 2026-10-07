@@ -167,6 +167,17 @@ export const voiceSchema = z.object({
    * default and the range the engines accept is roughly 0.25 to 2.
    */
   speed: z.number().min(0.5).max(2).optional(),
+
+  /**
+   * Respellings applied just before speaking, from voice-master.yaml. The
+   * script keeps the real spelling; only what the engine reads changes.
+   */
+  pronounce: z
+    .array(z.object({ word: z.string().min(1), sayAs: z.string().min(1), ipa: z.string().min(1).optional() }))
+    .default([]),
+
+  /** Tags this voice must never perform, removed before ElevenLabs reads the text. */
+  neverTags: z.array(z.string().min(1)).default([]),
 });
 
 export type Voice = z.infer<typeof voiceSchema>;

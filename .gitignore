@@ -75,3 +75,7 @@ release.log.old
 
 # Your own background tracks, uploaded in the studio. Not the repo's to keep.
 /music/
+
+# Voice auditions (ElevenLabs Voice Design previews). Local only: the chosen
+# voice ids are what matter, and they live in voice-master.yaml.
+/voice-samples/

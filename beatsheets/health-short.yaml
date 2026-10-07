@@ -74,8 +74,8 @@ beats:
     type: payoff
     seconds: [35, 45]
     function: >
-      The answer: the myth's verdict, or what a named health body recommends,
-      then the goodbye.
+      The answer: the myth's verdict, or what a named health body recommends.
+      The channel's fixed outro follows.
     closes: [the_question]
     constraints:
       - >
@@ -88,7 +88,7 @@ beats:
       - >
         IF IT CONCERNS SYMPTOMS, say that a doctor or pharmacist is the person
         to ask, in one plain sentence.
-      - Then a calm, warm goodbye, which is where the follow is asked for.
+      - STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
     minClaims: 0
 
 tensionCurve: [0.7, 0.9, 0.5]

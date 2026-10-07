@@ -51,6 +51,7 @@ import { completeJson, LlmClient } from '../models/client';
 import { EAR_RULES, Script, ScriptBeat, wordsForBeat } from '../script/write';
 import { NETWORK_BANNED_PHRASES } from '../script/style';
 import { signoffFor } from '../script/storyScript';
+import { OUTRO_RULE } from '../script/outro';
 import { turnSchema } from '../script/dialogue';
 import { Understanding, renderUnderstanding } from './understand';
 
@@ -247,8 +248,7 @@ const shell = (input: {
       .replace(/\{SHOW\}/g, input.persona.name),
     '',
     signoff
-      ? `HOW THIS SHOW SAYS GOODBYE. The last part lands on this, in your own words rather ` +
-        `than word for word, and it is the last thing said:\n  ${signoff}`
+      ? OUTRO_RULE
       : 'The last part ends by asking the listener to follow the show.',
     '',
     `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +

@@ -669,10 +669,10 @@ export const createServer = (): http.Server =>
         return send(res, 200, setOverride(id ?? '', await readBody(req), false, user));
       }
       if (pathname === '/api/run/resume' && req.method === 'POST') {
-        return send(res, 202, resumeRun(id ?? '', user));
+        return send(res, 202, resumeRun(id ?? '', user, await readBody(req)));
       }
       if (pathname === '/api/run/approve' && req.method === 'POST') {
-        return send(res, 202, approveRun(id ?? '', user));
+        return send(res, 202, approveRun(id ?? '', user, await readBody(req)));
       }
       if (pathname === '/api/run/shorts' && req.method === 'POST') {
         return send(res, 202, cutShorts(id ?? '', await readBody(req), user));

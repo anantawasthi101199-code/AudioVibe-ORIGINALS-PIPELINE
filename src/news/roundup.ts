@@ -17,6 +17,7 @@ import { FetchDeps } from '../evidence/fetch';
 import { Source } from '../evidence/source';
 import { EpisodeFormat } from '../formats/schema';
 import { signoffFor } from '../script/storyScript';
+import { OUTRO_RULE } from '../script/outro';
 import { wordsForBeat } from '../script/write';
 import { Desk } from './desk';
 import { NEWS_INSTRUCTION, spokenDate, ukClock } from './newsScript';
@@ -139,7 +140,7 @@ export const buildRoundupPrompt = (input: {
     `TODAY IS ${spokenDate(input.now)}, UK time.`,
     `THIS CHANNEL'S BEAT: ${input.beat}`,
     signoff
-      ? `HOW THIS CHANNEL SIGNS OFF, at the very end, in your own words:\n  ${signoff}`
+      ? OUTRO_RULE
       : `The last part asks the listener to follow for more, then goodbye.`,
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +

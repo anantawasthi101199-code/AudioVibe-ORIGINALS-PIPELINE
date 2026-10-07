@@ -461,7 +461,12 @@ describe('runNews', () => {
 
     expect(writer.calls).toBe(1);
     expect(writer.prompts[0]).toContain('THE SOURCE, AS YOU SAY IT ON AIR: the BBC');
-    expect(writer.prompts[0]).toMatch(/HOW THIS CHANNEL SIGNS OFF[\s\S]*follow/);
+    // The writer is told not to say goodbye; the channel's outro (from
+    // voice-master.yaml) is appended word for word as a fixed last turn.
+    expect(writer.prompts[0]).toContain('THE OUTRO IS FIXED');
+    const lastTurn = script.beats[script.beats.length - 1]!.turns.at(-1)!;
+    expect(lastTurn.fixed).toBe(true);
+    expect(lastTurn.text).toMatch(/follow/i);
     expect(script.title).toMatch(/Geneva/);
 
     expect(gate.findings.filter((f) => f.blocking)).toEqual([]);

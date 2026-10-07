@@ -60,11 +60,25 @@ export const AUDIO_TAGS = [
   'wry',
   'flat',
   'warmly',
+
+  // --- From ElevenLabs' own v4 tag list (2026-10). Narration-safe ones only;
+  // sound effects and accents are left out on purpose.
+  'softly',
+  'hushed',
+  'thoughtful',
+  'pause',
+  'long pause',
+  'gasps',
+  'clears throat',
 ] as const;
 
 export type AudioTag = (typeof AUDIO_TAGS)[number];
 
-const TAG_PATTERN = /\[([a-z ]+)\]/gi;
+// Commas, hyphens and apostrophes too: v4 takes combined and free-text tags
+// ("[low, threatening]", "[nervous, trying to sound confident]"), and a person
+// may type one into the script by hand. A narrower pattern left those in the
+// text for OpenAI to read aloud.
+const TAG_PATTERN = /\[([a-z][a-z ,'-]*)\]/gi;
 
 /** Remove tags the renderer does not know, leaving the words untouched. */
 export const stripUnknownTags = (text: string): string =>
@@ -84,6 +98,12 @@ export const turnSchema = z.object({
   /** Host id from the persona's cast. */
   speaker: z.string().min(1),
   text: z.string().min(1),
+  /**
+   * Fixed channel text (the outro), not the writer's prose. Spoken and shown
+   * like any line, but left out of style and self-similarity scoring: a
+   * verbatim outro repeated every episode is the channel's choice, not a tic.
+   */
+  fixed: z.boolean().optional(),
 });
 
 export type Turn = z.infer<typeof turnSchema>;

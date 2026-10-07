@@ -66,11 +66,11 @@ beats:
     type: outro
     seconds: [13, 21]
     function: >
-      One line on what it took, then the goodbye.
+      One line on what it took. The channel's fixed outro follows.
     closes: [how_they_did_it]
     constraints:
       - One sentence on what it took, drawn from the story just told.
-      - The goodbye asks the listener to follow, and is the last thing said.
+      - STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
     minClaims: 0
 
 tensionCurve: [0.8, 1.0, 0.45]

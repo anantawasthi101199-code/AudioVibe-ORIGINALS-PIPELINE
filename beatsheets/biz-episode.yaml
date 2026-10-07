@@ -107,8 +107,8 @@ beats:
     type: payoff
     seconds: [110, 150]
     function: >
-      Where it stands today, what it took, a proper ending of success, and the
-      goodbye.
+      Where it stands today, what it took, and a proper ending of success.
+      The channel's fixed outro follows.
     closes: [how_they_did_it]
     constraints:
       - >
@@ -117,8 +117,7 @@ beats:
         WHAT IT TOOK, in two or three sentences drawn from the real events
         already told, not generic advice. Motivational because it is true.
       - >
-        LAND THE SUCCESS, calling back to the opening contrast. Then the goodbye,
-        which asks the listener to follow, and is the last thing said.
+        LAND THE SUCCESS, calling back to the opening contrast. STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
     minClaims: 0
 
 # Hook below the peak; builds through the struggle to the rise; settles into

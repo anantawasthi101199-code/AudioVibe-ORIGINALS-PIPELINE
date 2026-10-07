@@ -19,7 +19,7 @@ import { Persona } from '../canon/schema';
 import { beatsBelowClaimFloor, Claim, LedgerReport } from '../evidence/claim';
 import { VerificationReport } from '../evidence/verify';
 import { CounterEvidence } from '../evidence/research';
-import { Script, fullText } from '../script/write';
+import { Script, fullText, writtenText } from '../script/write';
 import { checkStyle, StyleMeasurement, vocabularyOverlap } from '../script/style';
 import { ContinuityReport } from '../fiction/continuity';
 import { GroundingReport } from './grounding';
@@ -464,7 +464,7 @@ export const runGate = (input: GateInput): GateReport => {
   }
 
   // --- 5. Style. Deterministic; see script/style.ts. ---
-  const { measurement, violations } = checkStyle(fullText(input.script), input.persona.styleCard);
+  const { measurement, violations } = checkStyle(writtenText(input.script), input.persona.styleCard);
   for (const v of violations) {
     add(`style:${v.rule}`, v.detail, v.blocking);
   }
@@ -529,7 +529,7 @@ export const runGate = (input: GateInput): GateReport => {
 
   // --- 6. Self-similarity. ---
   for (const prior of input.priorTexts ?? []) {
-    const overlap = vocabularyOverlap(fullText(input.script), prior.text);
+    const overlap = vocabularyOverlap(writtenText(input.script), prior.text);
     if (overlap > MAX_VOCABULARY_OVERLAP) {
       add(
         'selfSimilarity',

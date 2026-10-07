@@ -150,6 +150,8 @@ export interface QueueView {
 export interface Turn {
   speaker: string;
   text: string;
+  /** The channel's fixed outro (voice-master.yaml), said word for word. */
+  fixed?: boolean;
 }
 
 export interface Beat {
@@ -315,11 +317,23 @@ export interface Source {
   tier?: string;
 }
 
+export type VoiceEngine = 'openai' | 'elevenlabs';
+
+/** What the run page sends with Approve or Resume. tagPass only matters on ElevenLabs. */
+export interface VoiceChoice {
+  engine: VoiceEngine;
+  tagPass: boolean;
+}
+
 export interface RunDetail {
   run: RunSummary;
   manifest: Record<string, unknown> & {
     holdForApproval: boolean;
     approvedAt?: string;
+    /** Absent on runs made before the engine was chosen per run: openai. */
+    voiceEngine?: VoiceEngine;
+    tagPass?: boolean;
+    tagPassAt?: string;
     spentPence: number;
     topic: string;
     /** The named series a long episode is filed into. */
@@ -674,9 +688,10 @@ export const api = {
   cancelRelease: (runId: string) =>
     call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
 
-  resume: (runId: string) =>
+  resume: (runId: string, voice?: VoiceChoice) =>
     call<{ runId: string; jobId: string }>(`/api/run/resume?id=${encodeURIComponent(runId)}`, {
       method: 'POST',
+      body: JSON.stringify(voice ?? {}),
     }),
 
   /** null goes back to the channel's rating. */
@@ -754,9 +769,10 @@ export const api = {
       body: JSON.stringify(body),
     }),
 
-  approve: (id: string) =>
+  approve: (id: string, voice?: VoiceChoice) =>
     call<{ runId: string; jobId: string }>(`/api/run/approve?id=${encodeURIComponent(id)}`, {
       method: 'POST',
+      body: JSON.stringify(voice ?? {}),
     }),
 
   cut: (id: string, only: number[] = []) =>

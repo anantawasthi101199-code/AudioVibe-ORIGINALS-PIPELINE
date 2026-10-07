@@ -64,9 +64,9 @@ beats:
     constraints:
       - >
         OPEN BY SAYING WHAT THIS IS, IN ONE OR TWO SENTENCES, AND THEN START.
-        Whose story it is and roughly how old, then straight into it. No
-        greeting, no naming the show, no "today we are going to look at". A
-        listener in a feed gave you about three seconds.
+        Whose story it is in a few words, then straight into it. No dates, no
+        manuscripts, no scholars, no greeting, no naming the show, no "today we
+        are going to look at". A listener in a feed gave you about three seconds.
       - >
         VISUAL, ALWAYS. Somebody is listening with nothing to look at. Say what
         a person would SEE - a stone rolled across a cave mouth, a body on a
@@ -119,7 +119,7 @@ beats:
     type: outro
     seconds: [15, 25]
     function: >
-      One line that lands, then the goodbye.
+      One line that lands. The channel's fixed outro follows it.
     closes: [the_story]
     constraints:
       - >
@@ -129,12 +129,8 @@ beats:
       - >
         LEAVE THEM ONE THING. An image or a detail that means something now they
         know how it ended. One sentence, and no new names.
-      - >
-        THEN THE GOODBYE, which is where the follow is asked for. Warm and
-        quick, the way a person ends a conversation, not an announcer reading a
-        card.
       - No moral, and nothing about what it says about us now.
-      - This whole part is twenty-five seconds. Two or three sentences, then go.
+      - This part is one or two sentences. The outro is added after it.
     minClaims: 0
 
 # Builds into the ending, then settles for the goodbye. The story opens below

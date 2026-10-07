@@ -106,6 +106,7 @@ import {
 } from '../script/write';
 import { runGate, GateFinding, GateReport } from '../qa/gate';
 import { Run } from '../run/store';
+import { withOutro } from '../script/outro';
 
 export interface PipelineDeps {
   writer: LlmClient;
@@ -1180,6 +1181,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         runs('scriptRevisions')
       );
     }
+    script = withOutro(script, persona, format.kind, run.manifest.topic);
     run.writeArtifact('script', script);
     run.markComplete('script');
     // The checkpoint has served its purpose the moment the stage artifact

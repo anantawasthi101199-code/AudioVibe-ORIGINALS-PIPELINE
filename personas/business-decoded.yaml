@@ -55,16 +55,7 @@ hosts:
       signature:
         - "so here's the thing"
         - "and this is where it gets good"
-    voice:
-      provider: elevenlabs
-      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # The owner's sheet: a man, clarity and calmness, a neutral tone. Unused
-      # by any other channel. The first render pins it for ever (voices.json).
-      draftVoiceId: echo
-      settings:
-        stability: 0.5
-        similarity_boost: 0.75
-        style: 0.4
+    # voice: in voice-master.yaml (both engines, delivery, tags, pronunciations).
 
 styleCard:
   # Spoken storytelling pace. Advisory.
@@ -149,27 +140,8 @@ formats:
 
 episodeSeconds: [620, 900]
 
-signoff:
-  - >
-    And that's the story, decoded. If you enjoyed this one, follow Business
-    Decoded for more business stories from around the world. I'm Arjun, see you
-    next time.
-  - >
-    That's where we'll leave it. Thanks for spending the time with me. Follow
-    for more deep dives into how the world's businesses were really built. Until
-    next time.
-  - >
-    And that is how it happened. If you want more stories like this, follow the
-    show. I'll see you in the next one.
+# Outros: in voice-master.yaml, said word for word (owner, 2026-10-07).
 
-signoffShort:
-  - >
-    Follow for more business stories like this one. See you next time.
-  - >
-    Want more stories of how the world's businesses were built? Follow along.
-    Until next time.
-  - >
-    That's the story, decoded. Follow for more, and I'll see you in the next one.
 
 allowedRiskTiers:
   - general

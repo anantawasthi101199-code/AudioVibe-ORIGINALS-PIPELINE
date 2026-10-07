@@ -68,6 +68,7 @@ import {
   understandingSchema,
 } from '../psych/understand';
 import type { PipelineDeps } from './episode';
+import { withOutro } from '../script/outro';
 
 export interface PsychDeps {
   now?: () => Date;
@@ -364,7 +365,7 @@ export const runPsych = async (
       { persona, format, prompt },
       deps.writer,
       (draft) =>
-        psychDraftProblems(draft.beats, {
+        psychDraftProblems(withOutro(draft, persona, format.kind, run.manifest.topic).beats, {
           topic,
           research,
           kind: short ? 'short' : 'long',
@@ -375,7 +376,7 @@ export const runPsych = async (
       say('script'),
       flags.scriptRevisions
     );
-    script = written.script;
+    script = withOutro(written.script, persona, format.kind, run.manifest.topic);
     run.writeArtifact('script', script);
     run.markComplete('script');
     say('script')(`"${script.title}", about ${Math.round(estimatedSeconds(script))}s read aloud`);

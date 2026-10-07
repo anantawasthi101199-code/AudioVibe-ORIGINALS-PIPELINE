@@ -143,6 +143,23 @@ export const runManifestSchema = z.object({
   approvedAt: z.string().datetime().optional(),
 
   /**
+   * Which engine voices this run, chosen per run in the studio.
+   *
+   * PER RUN, NOT PER DEPLOYMENT. FOUNDRY_TTS used to decide for every run at
+   * once; now a person picks at the point of spending. openai is the default
+   * because it is the cheap one, and a run never mixes the two: changing it
+   * deletes any beats the other engine already made.
+   */
+  voiceEngine: z.enum(['openai', 'elevenlabs']).default('openai'),
+  /**
+   * ElevenLabs only: run the tag pass (script/tagPass.ts) once before voicing.
+   * Off means the script is voiced exactly as written, hand-typed tags included.
+   */
+  tagPass: z.boolean().default(false),
+  /** When the tag pass ran, so a resume never pays for it twice. */
+  tagPassAt: z.string().datetime().optional(),
+
+  /**
    * This run's script was written in one call rather than beat by beat.
    *
    * RECORDED BECAUSE IT CHANGES WHAT THE RUN IS EVIDENCE OF. The two methods
@@ -681,6 +698,17 @@ export class Run {
   /** The script changed after it was voiced: one more voicing is allowed for. */
   noteRevoicing(): void {
     this.manifestData.revoicings = (this.manifestData.revoicings ?? 0) + 1;
+    this.save();
+  }
+
+  setVoiceEngine(engine: 'openai' | 'elevenlabs'): void {
+    this.manifestData.voiceEngine = engine;
+    this.save();
+  }
+
+  setTagPass(on: boolean, doneAt?: Date): void {
+    this.manifestData.tagPass = on;
+    if (doneAt) this.manifestData.tagPassAt = doneAt.toISOString();
     this.save();
   }
 

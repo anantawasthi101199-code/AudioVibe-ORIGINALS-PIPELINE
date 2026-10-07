@@ -57,16 +57,7 @@ hosts:
       signature:
         - "and that is the part nobody expected"
         - "here is what was actually going on"
-    voice:
-      provider: elevenlabs
-      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # The voice the channel actually uses: the sheet asks for no ElevenLabs.
-      # A different draft voice from every other channel, so none are confused.
-      draftVoiceId: ash
-      settings:
-        stability: 0.5
-        similarity_boost: 0.75
-        style: 0.4
+    # voice: in voice-master.yaml (both engines, delivery, tags, pronunciations).
 
 styleCard:
   sentenceWordsMean: 14
@@ -133,19 +124,8 @@ formats:
 
 episodeSeconds: [600, 1200]
 
-signoff:
-  - >
-    That is where I will leave it. Thanks for spending the time with me. There
-    is another story from science coming soon. Until then, stay curious.
-  - >
-    And that is how it was found. Thank you for listening. Follow for more
-    stories like this one, and I will see you in the next.
+# Outros: in voice-master.yaml, said word for word (owner, 2026-10-07).
 
-signoffShort:
-  - >
-    Follow for more stories from science. Until next time, stay curious.
-  - >
-    There are plenty more where that came from, so follow along.
 
 allowedRiskTiers:
   - general

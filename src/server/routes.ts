@@ -28,8 +28,12 @@ import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
 import { episodeBudgetPence, writerConfig } from '../config';
 import { AnthropicClient } from '../models/client';
-import { buildDeps, priorEpisodeTexts } from '../deps';
+import { buildDeps, buildTts, priorEpisodeTexts } from '../deps';
 import { runLane } from '../pipeline/runLane';
+import { PipelineDeps } from '../pipeline/episode';
+import { budgetFor } from '../pipeline/budget';
+import { channelVoice } from '../canon/voiceMaster';
+import { tagPass } from '../script/tagPass';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run, runLabel } from '../run/store';
@@ -350,7 +354,43 @@ export const startRun = (body: unknown, who: string | null = null) => {
  * Run (or carry on) a run's own lane as a studio job. Every stage is
  * checkpointed, so on a run that already has work it picks up where it stopped.
  */
+/**
+ * The optional tag pass, once, before the voice: only on ElevenLabs, only when
+ * asked, only on a script not yet voiced. See script/tagPass.ts.
+ */
+const tagPassIfAsked = async (run: Run, deps: PipelineDeps, say: (m: string) => void) => {
+  const m = run.manifest;
+  if (m.voiceEngine !== 'elevenlabs' || !m.tagPass || m.tagPassAt) return;
+  if (!run.hasArtifact('script') || run.isComplete('render')) return;
+  const sound = channelVoice(m.personaId);
+  if (!sound) {
+    say('tag pass skipped: this channel is not in voice-master.yaml');
+    return;
+  }
+
+  let pence = 0;
+  const before = run.readArtifact('script', scriptSchema);
+  const result = await tagPass(before, sound, deps.clerk ?? deps.writer, (p) => (pence += p));
+  run.spend(pence, budgetFor(run));
+  run.writeArtifact('script', result.script);
+  run.setTagPass(true, new Date());
+  const detail =
+    `${result.tagged} lines tagged, ${result.unchanged} left as written` +
+    (result.rejected ? `, ${result.rejected} rejected because a word changed (originals kept)` : '');
+  run.journal({ stage: 'script', event: 'tag pass', detail, pence });
+  say(`tag pass: ${detail} (${pence.toFixed(1)}p)`);
+};
+
+// Refused before anything starts, so the button says why instead of a run that
+// is approved, starts, and dies on its first voice call.
+const assertEngineReady = (engine: 'openai' | 'elevenlabs') => {
+  if (engine === 'elevenlabs' && !process.env.ELEVENLABS_API_KEY?.trim()) {
+    throw new HttpError(400, 'ElevenLabs is not set up: ELEVENLABS_API_KEY is empty on this studio');
+  }
+};
+
 const runLaneJob = (run: Run) => {
+  assertEngineReady(run.manifest.voiceEngine);
   const job = jobs.start({
     id: jobId('run', run.id),
     kind: 'run',
@@ -359,8 +399,11 @@ const runLaneJob = (run: Run) => {
       const deps = buildDeps({
         log: (message, stage) => report(stage ?? 'pipeline', message),
         next: (lines) => lines.forEach((line) => report('next', line)),
+        tts: buildTts(run.manifest.voiceEngine),
       });
       deps.priorTexts = priorEpisodeTexts(run.id);
+
+      await tagPassIfAsked(run, deps, (m) => report('script', m));
 
       // The channel's own lane, as the command line runs it. See runLane.ts.
       await runLane(run, deps);
@@ -375,13 +418,55 @@ const runLaneJob = (run: Run) => {
  * Carry on a run that stopped partway: the studio was closed, the machine
  * slept, a call failed. Same as the command line's `resume`, from a button.
  */
-export const resumeRun = (id: string, who: string | null = null) => {
+export const voiceEngineSchema = z
+  .object({
+    engine: z.enum(['openai', 'elevenlabs']).optional(),
+    /** ElevenLabs only: add tags with one cheap call before voicing. */
+    tagPass: z.boolean().optional(),
+  })
+  .default({});
+
+/**
+ * Switch the engine a run will be voiced on.
+ *
+ * NEVER TWO ENGINES IN ONE EPISODE. Beats already rendered are reused on a
+ * resume, so a run that half-rendered on one engine and finished on the other
+ * would change voice mid-episode. Changing the engine therefore deletes the
+ * other engine's beats and discards any finished render.
+ */
+export const applyVoiceEngine = (run: Run, body: unknown, who: string | null) => {
+  const { engine, tagPass } = voiceEngineSchema.parse(body ?? {});
+  assertEngineReady(engine ?? run.manifest.voiceEngine);
+  if (tagPass !== undefined && tagPass !== run.manifest.tagPass) run.setTagPass(tagPass);
+  if (!engine || engine === run.manifest.voiceEngine) return;
+
+  const media = path.join(run.dir, 'media');
+  if (fs.existsSync(media)) {
+    for (const name of fs.readdirSync(media)) {
+      if (/^\d{2}-.+\.mp3$/.test(name)) fs.rmSync(path.join(media, name), { force: true });
+    }
+  }
+  if (run.hasArtifact('render')) {
+    fs.rmSync(path.join(run.dir, 'render.json'), { force: true });
+    run.uncomplete('render');
+    run.uncomplete('qa');
+    run.noteRevoicing();
+  }
+  run.journal({
+    stage: 'render',
+    event: `voice engine set to ${engine}${who ? ` by ${who}` : ''}`,
+  });
+  run.setVoiceEngine(engine);
+};
+
+export const resumeRun = (id: string, who: string | null = null, body: unknown = {}) => {
   const run = openRun(id);
   if (jobs.isRunning(jobs.forRun(run.id)?.id ?? '')) {
     throw new HttpError(409, `run "${id}" is already working`);
   }
   if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
   if (run.manifest.abandoned) throw new HttpError(400, 'that run was discarded');
+  applyVoiceEngine(run, body, who);
   run.journal({ stage: 'pipeline', event: who ? `resumed in the studio by ${who}` : 'resumed in the studio' });
   return runLaneJob(run);
 };
@@ -393,7 +478,7 @@ export const resumeRun = (id: string, who: string | null = null) => {
  * Splitting them would leave a run approved but not started, which looks
  * finished in a listing and has no audio.
  */
-export const approveRun = (id: string, who: string | null = null) => {
+export const approveRun = (id: string, who: string | null = null, body: unknown = {}) => {
   const run = openRun(id);
 
   if (!run.manifest.holdForApproval) throw new HttpError(400, `run "${id}" was not held`);
@@ -402,6 +487,7 @@ export const approveRun = (id: string, who: string | null = null) => {
   }
   if (!run.hasArtifact('script')) throw new HttpError(400, `run "${id}" has no script to approve`);
 
+  applyVoiceEngine(run, body, who);
   if (!run.manifest.approvedAt) {
     run.approve();
     run.journal({

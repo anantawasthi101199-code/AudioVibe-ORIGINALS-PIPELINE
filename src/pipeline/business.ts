@@ -44,6 +44,7 @@ import { businessDraftProblems, businessGate, estimatedSeconds } from '../busine
 import { cleanStoryText, pickStorySource, searchStory, subjectOf } from '../business/pickSource';
 import { writeBusinessScript } from '../business/storyScript';
 import type { PipelineDeps } from './episode';
+import { withOutro } from '../script/outro';
 
 export interface BusinessDeps {
   now?: () => Date;
@@ -191,12 +192,12 @@ export const runBusiness = async (
         readChars: book.readChars[kind],
       },
       deps.writer,
-      (draft) => businessDraftProblems(draft.beats, { source: text, now: now(), kind }),
+      (draft) => businessDraftProblems(withOutro(draft, persona, format.kind, run.manifest.topic).beats, { source: text, now: now(), kind }),
       spend,
       say('script'),
       flags.scriptRevisions
     );
-    script = written.script;
+    script = withOutro(written.script, persona, format.kind, run.manifest.topic);
     run.writeArtifact('script', script);
     run.markComplete('script');
     say('script')(`"${script.title}", about ${Math.round(estimatedSeconds(script))}s read aloud`);

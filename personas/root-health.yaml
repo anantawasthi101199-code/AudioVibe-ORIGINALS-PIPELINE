@@ -104,35 +104,7 @@ hosts:
         - "that is one study"
         - "nobody has settled that"
         - "here is how well that is known"
-    voice:
-      provider: elevenlabs
-      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # A third draft voice, so three shows are never confused while drafting.
-      draftVoiceId: sage
-      # SENT TO THE ENGINE AS SPOKEN DIRECTION, and it is the single biggest
-      # lever on whether a listener trusts the voice. Without it every show in
-      # the studio was told to speak as "one half of a two-person conversation
-      # that is already underway", which is right for a two-hander and wrong for
-      # one person who has read the studies and is telling you what they say.
-      direction: >
-        Speak as an experienced clinician explaining findings to one person who
-        asked a real question. Assured, plain, and in order. The authority is in
-        the precision, so state things once, cleanly, without building to
-        anything and without reassurance. This is somebody imparting knowledge,
-        not narrating a story.
-      # A fraction quicker than the engine's own pace. At 1.0 this voice reads
-      # findings slowly enough to sound portentous, which is the wrong signal
-      # from somebody who simply knows the answer.
-      speed: 1.08
-      settings:
-        # Steadier than the storytelling shows. This one is not performing, and
-        # a voice that moves too much reads as reassurance rather than care.
-        stability: 0.55
-        similarity_boost: 0.75
-        # Lowered, but not to flat. Colour on a clinical explanation reads as
-        # selling; NO colour reads as indifference, and a listener trusts
-        # neither. This lands on "interested rather than enthusiastic".
-        style: 0.32
+    # voice: in voice-master.yaml (both engines, delivery, tags, pronunciations).
 
 styleCard:
   # Slightly shorter than the narrative shows. A listener holding a number and a

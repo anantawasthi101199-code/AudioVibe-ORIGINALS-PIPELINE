@@ -38,7 +38,7 @@ describe('ElevenLabsTts', () => {
   it('charges by character length', async () => {
     const tts = new ElevenLabsTts('k', 'eleven_v3', post(200, Buffer.alloc(5000)));
     const res = await tts.synthesise({ text: 'x'.repeat(1000), voice });
-    expect(res.costPence).toBeCloseTo(12);
+    expect(res.costPence).toBeCloseTo(6);
   });
 
   it('REFUSES the placeholder voice id a new persona ships with', async () => {

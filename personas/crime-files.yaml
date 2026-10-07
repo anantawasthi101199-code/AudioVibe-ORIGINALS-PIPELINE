@@ -91,22 +91,7 @@ hosts:
         - "here is the part that gets me"
         - "and that is where it stops making sense"
         - "nobody wrote that down"
-    voice:
-      provider: elevenlabs
-      voiceId: REPLACE_BEFORE_FIRST_PUBLISH
-      # Used only when FOUNDRY_TTS=openai, for hearing a script before any
-      # Eleven credits are bought. `ballad` and `fable` are the two OpenAI
-      # voices with any narrative warmth; the rest read as assistants.
-      draftVoiceId: ballad
-      settings:
-        # Lower stability than the dialogue shows on purpose. Stability is how
-        # much the delivery is allowed to move, and a narrator that never moves
-        # is the flat synthetic read this whole show is built to avoid.
-        stability: 0.35
-        similarity_boost: 0.75
-        # High style: this is where the enthusiasm lives. At 0.3 the voice is
-        # reading; at 0.55 it is telling.
-        style: 0.55
+    # voice: in voice-master.yaml (both engines, delivery, tags, pronunciations).
 
 styleCard:
   # RAISED FROM THIRTEEN, which was too short and made the show sound clipped.

@@ -62,12 +62,11 @@ beats:
     type: outro
     seconds: [15, 25]
     function: >
-      A quick wrap and the goodbye, asking the listener to follow.
+      A quick wrap. The channel's fixed outro follows.
     closes: [the_day]
     constraints:
       - >
-        ONE LINE to wrap ("That's your rapid fire for today"), then the goodbye
-        asking the listener to follow. The last thing said.
+        ONE LINE to wrap ("That's your rapid fire for today"). STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
       - No opinion, no moral, no "only time will tell".
 
 tensionCurve: [0.7, 1.0, 0.5]

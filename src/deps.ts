@@ -21,7 +21,7 @@ import { ElevenLabsTts, nodePostBinary } from './render/tts';
 import { OpenAiTts } from './render/openaiTts';
 import { PipelineDeps } from './pipeline/episode';
 import { Run } from './run/store';
-import { fullText, scriptSchema } from './script/write';
+import { writtenText, scriptSchema } from './script/write';
 
 export const httpGet = async (url: string): Promise<HttpResponse> => {
   const controller = new AbortController();
@@ -74,8 +74,8 @@ export const httpGet = async (url: string): Promise<HttpResponse> => {
  * listening to a draft and forgetting which engine made it is a real way to
  * reach a wrong conclusion about the writing.
  */
-const buildTts = () => {
-  if (ttsProvider() === 'openai') {
+export const buildTts = (engine: 'openai' | 'elevenlabs' = ttsProvider()) => {
+  if (engine === 'openai') {
     const cfg = openAiTtsConfig();
     return new OpenAiTts(cfg.apiKey, { post: nodePostBinary, model: cfg.model });
   }
@@ -122,7 +122,7 @@ export const buildDeps = (over: Partial<PipelineDeps> = {}): PipelineDeps => {
     clerk: new AnthropicClient(clerk.model, clerk.apiKey),
     screener: screener ? new OpenAiClient(screener.model, screener.apiKey) : undefined,
     search,
-    tts: buildTts(),
+    tts: over.tts ?? buildTts(),
     fetchDeps: { httpGet: get },
     // Narrowed per run in finishRun, which knows which run is being gated.
     priorTexts: priorEpisodeTexts(),
@@ -176,7 +176,7 @@ export const priorEpisodeTexts = (exclude?: string): Array<{ label: string; text
       // The set, whichever side of it this run is on.
       if (set && (id === set || run.manifest.derivedFrom === set)) continue;
 
-      out.push({ label: id, text: fullText(run.readArtifact('script', scriptSchema)) });
+      out.push({ label: id, text: writtenText(run.readArtifact('script', scriptSchema)) });
     } catch {
       // A malformed old run should not stop a new one.
     }

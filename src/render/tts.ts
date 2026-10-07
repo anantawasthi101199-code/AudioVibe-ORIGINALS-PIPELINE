@@ -163,7 +163,47 @@ export const nodePostBinary: HttpPostBinary = async (url, headers, body) => {
  * Approximate and will drift. Being roughly right and visible beats being
  * exactly right and absent, which is the same reasoning as the LLM price table.
  */
-export const ELEVENLABS_PENCE_PER_1K_CHARS = 12;
+// API pay-as-you-go, checked 2026-10-07: v4 is $0.08 per 1k characters ($0.022
+// on an offer ending 12 October). About 6p at the list price.
+export const ELEVENLABS_PENCE_PER_1K_CHARS = 6;
+
+/**
+ * The text as THIS voice should read it: the channel's respellings applied
+ * (whole word, case-sensitive, the script keeps the real spelling), and on
+ * ElevenLabs any tag the channel never uses removed. `ipa` prefers the /IPA/
+ * form where one is given, which only eleven_v4 reads.
+ */
+export const forVoice = (
+  text: string,
+  voice: Voice,
+  opts: { ipa?: boolean; neverTags?: boolean } = {}
+): string => {
+  let out = text;
+  for (const p of voice.pronounce ?? []) {
+    const escaped = p.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const whole = new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'gu');
+    out = out.replace(whole, opts.ipa && p.ipa ? p.ipa : p.sayAs);
+  }
+  if (opts.neverTags && voice.neverTags?.length) {
+    const never = new Set(voice.neverTags.map((t) => t.toLowerCase()));
+    out = out.replace(/\[([^\]]{1,48})\]\s*/g, (tag, inner: string) =>
+      never.has(inner.trim().toLowerCase()) ? '' : tag
+    );
+  }
+  return out;
+};
+
+/**
+ * eleven_v4 has exactly two voice settings. Anything else in a persona's
+ * settings (style from older personas, the gpt_* values) is not sent.
+ */
+const elevenSettings = (voice: Voice) => {
+  const n = (v: unknown, d: number) => (Number.isFinite(Number(v)) ? Number(v) : d);
+  return {
+    stability: n(voice.settings?.stability, 0.5),
+    similarity_boost: n(voice.settings?.similarity_boost, 0.75),
+  };
+};
 
 export class ElevenLabsTts implements TtsProvider {
   readonly name = 'elevenlabs';
@@ -185,12 +225,14 @@ export class ElevenLabsTts implements TtsProvider {
    * its own stage directions and nothing would flag it.
    */
   get understandsTags(): boolean {
-    return /v3/.test(this.model);
+    return /v[34]/.test(this.model);
   }
 
   constructor(
     private apiKey: string,
-    private model = 'eleven_v3',
+    // v4, not v3: v3 ignores previous_text/next_text (no request stitching),
+    // so every beat started from a standing start. v4 stitches and takes tags.
+    private model = process.env.FOUNDRY_ELEVEN_MODEL || 'eleven_v4',
     private post: HttpPostBinary = nodePostBinary
   ) {}
 
@@ -209,19 +251,15 @@ export class ElevenLabsTts implements TtsProvider {
       `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice.voiceId)}`,
       { 'xi-api-key': this.apiKey, accept: 'audio/mpeg' },
       {
-        text,
+        text: forVoice(text, voice, { ipa: true, neverTags: true }),
         model_id: this.model,
         // NOT SPOKEN. These condition the delivery so that a beat rendered as
         // its own request is voiced as the continuation it actually is, rather
-        // than from a standing start. See SynthesisRequest.
-        ...(previousText ? { previous_text: previousText } : {}),
-        ...(nextText ? { next_text: nextText } : {}),
-        // The persona owns these. Spread last so a show can override anything.
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
-          ...voice.settings,
-        },
+        // than from a standing start. See SynthesisRequest. v4 supports this;
+        // v3 did not.
+        ...(previousText ? { previous_text: forVoice(previousText, voice, { ipa: true, neverTags: true }) } : {}),
+        ...(nextText ? { next_text: forVoice(nextText, voice, { ipa: true, neverTags: true }) } : {}),
+        voice_settings: elevenSettings(voice),
       }
     );
 
@@ -271,9 +309,9 @@ export class ElevenLabsTts implements TtsProvider {
       {
         model_id: this.model,
         inputs: lines.map((l) => ({
-          text: l.text,
+          text: forVoice(l.text, l.voice, { ipa: true, neverTags: true }),
           voice_id: l.voice.voiceId,
-          voice_settings: { stability: 0.5, similarity_boost: 0.75, ...l.voice.settings },
+          voice_settings: elevenSettings(l.voice),
         })),
       }
     );

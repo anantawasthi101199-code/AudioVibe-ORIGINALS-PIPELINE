@@ -13,6 +13,35 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **ElevenLabs per run, and one master file for how every channel sounds**
+  (2026-10-07). GPT voices were hoarse and dropped words, and could not carry a
+  persona. Now:
+  - The run page picks the engine at the point of spending: `GPT (default)` or
+    `ElevenLabs`, stored on the run (`voiceEngine`). A run never mixes engines:
+    switching deletes the other engine's beats. FOUNDRY_TTS still decides for
+    the command line.
+  - ElevenLabs is `eleven_v4`, not v3: v3 ignores previous_text/next_text, so
+    every beat started cold. v4 has only stability and similarity; style and
+    speed are no longer sent.
+  - `voice-master.yaml` holds, per channel: the designed ElevenLabs voice (picked
+    by ear from Voice Design auditions), the GPT voice and direction, a
+    personality (added to the register, so every writer gets it), a delivery
+    guide, tags it may and may never use, pronunciations, and outros. Strictly
+    validated; the persona files no longer carry a voice or sign-off.
+  - Outros are said WORD FOR WORD, appended as a `fixed` turn; writers are told
+    not to say goodbye. Fixed turns are left out of style and self-similarity
+    scoring, since a repeated chosen outro is not a tic.
+  - Optional tag pass (ElevenLabs only): one Haiku call adds tags from the
+    channel's list; a line whose words changed is discarded, deterministically.
+  - GPT requests capped at 2,500 characters (was 6,000): long requests skipped
+    words on a Mythic Archives episode.
+  - Mythic Archives tells the story only. A live episode spent most of its
+    opening and close on friars, libraries and collectors. The provenance canon
+    is retired (until: 2026-10-07), the fusion no longer writes a "how the text
+    survived" section, the beat sheets ask for a proper ending, and a free check
+    flags manuscript talk. Rejected: keeping provenance "where it bites" - the
+    owner heard it as filler every time.
+
 - **A second research lane, for a story told rather than a subject assembled.**
   Formats declare `research: single | extensive`; a run overrides with
   `--research`. `myths-of-the-world` now defaults to a new `myth-story` sheet

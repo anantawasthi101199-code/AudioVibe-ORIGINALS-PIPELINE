@@ -473,17 +473,11 @@ disagree". Do not write "it is unclear". Record what you decided and what the
 alternative was in "variants", which the writer will never see, and write the
 body as a person who knows the story tells it.
 
-THIS APPLIES INSIDE A SECTION ABOUT HOW THE TEXT SURVIVED, WHICH IS WHERE IT
-GETS FORGOTTEN. How a story was lost, dug up, pieced back together and argued
-over is often the best material there is, and it belongs in the body. Tell it
-as EVENTS with people doing things: somebody went back to the closing lines in
-1996 and found something nobody had noticed, a tablet turned up in one museum
-and its other half in another, a translation published in 1974 settled a
-reading. That is a story. What is not a story, and does not go in the body, is
-the state of an argument: "some scholars count this as part of the poem, others
-treat it as separate" tells a listener that the experts are unsure and nothing
-else. Decide which reading the section is told on, tell it, and put the other
-one in "variants".
+NO SECTION ABOUT HOW THE TEXT SURVIVED. The owner's rule (2026-10-07): the
+listener came for the story, and manuscripts, scribes, collectors, translators,
+libraries, editions and dating are filler to them. Write only what happens in
+the story and what a listener needs to follow it. Where a document spends pages
+on its own history, take nothing from those pages.
 
 ANSWER THE OBVIOUS QUESTIONS. As you write, notice what a listener would ask -
 why did she do that, why was he punished, what was the reason - and go looking in

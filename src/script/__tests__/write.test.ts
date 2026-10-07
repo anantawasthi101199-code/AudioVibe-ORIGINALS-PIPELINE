@@ -313,8 +313,8 @@ describe('writeBeat', () => {
   it('strips audio tags the renderer does not know', async () => {
     // The provider speaks anything bracketed it does not recognise, so an
     // invented tag becomes a host saying "thoughtful" out loud mid-sentence.
-    const beat = await writeBeat(ctx(), fakeWriter(soloTurns(`[thoughtful] ${GOOD} [laughs]`)));
-    expect(beat.turns[0]!.text).not.toContain('[thoughtful]');
+    const beat = await writeBeat(ctx(), fakeWriter(soloTurns(`[ponderous] ${GOOD} [laughs]`)));
+    expect(beat.turns[0]!.text).not.toContain('[ponderous]');
     expect(beat.turns[0]!.text).toContain('[laughs]');
   });
 

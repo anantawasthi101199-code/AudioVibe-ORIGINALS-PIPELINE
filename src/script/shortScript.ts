@@ -39,6 +39,7 @@ import { EpisodeFormat } from '../formats/schema';
 import { completeJson, LlmClient } from '../models/client';
 import { Turn } from './dialogue';
 import { REVISE_SCRIPT } from './onePass';
+import { OUTRO_RULE } from './outro';
 import {
   findHedging,
   returnShape,
@@ -166,8 +167,7 @@ export const writeShortScript = async (
     SHORT_INSTRUCTION,
     '',
     said
-      ? 'HOW THIS SHOW SIGNS OFF. The last part lands on this, in your own words ' +
-        `rather than word for word, and it is the last thing said:\n  ${said}`
+      ? OUTRO_RULE
       : '',
     '',
     returnShape(input.persona),

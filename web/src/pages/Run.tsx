@@ -29,18 +29,69 @@ import {
   type JobEvent,
   type Platform,
   type RunDetail,
+  type VoiceChoice,
+  type VoiceEngine,
 } from '../api';
 import { CostBar, ErrorNote, LiveLog, StageRail, StatePill, NowBanner } from '../components/bits';
 import { Count, Info } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
+
+/**
+ * Which engine voices this run. GPT is the default and the cheap one.
+ * ElevenLabs reads the [tags] as direction; GPT has them removed first.
+ */
+const EnginePicker = ({
+  value,
+  onChange,
+  disabled,
+  tagPassDone,
+}: {
+  value: VoiceChoice;
+  onChange: (choice: VoiceChoice) => void;
+  disabled: boolean;
+  tagPassDone: boolean;
+}) => (
+  <span className="row" style={{ gap: '0.8rem' }}>
+    <label className="row" style={{ gap: '0.4rem' }}>
+      <span className="faint" style={{ fontSize: '0.8rem' }}>
+        Voice
+      </span>
+      <select
+        value={value.engine}
+        disabled={disabled}
+        onChange={(e) => onChange({ ...value, engine: e.target.value as VoiceEngine })}
+      >
+        <option value="openai">GPT (default)</option>
+        <option value="elevenlabs">ElevenLabs</option>
+      </select>
+    </label>
+    {value.engine === 'elevenlabs' && (
+      <label className="row" style={{ gap: '0.4rem' }}>
+        <select
+          value={value.tagPass ? 'tag' : 'asis'}
+          disabled={disabled || tagPassDone}
+          onChange={(e) => onChange({ ...value, tagPass: e.target.value === 'tag' })}
+        >
+          <option value="asis">Use script as written</option>
+          <option value="tag">Tag pass first (adds [tags], words unchanged)</option>
+        </select>
+        {tagPassDone && (
+          <span className="faint" style={{ fontSize: '0.75rem' }}>
+            tag pass done
+          </span>
+        )}
+      </label>
+    )}
+  </span>
+);
 
 /** Delivery tags are part of the script and are not part of the sentence. */
 const Prose = ({ turns }: { turns: Beat['turns'] }) => (
   <div className="prose">
     {turns.map((t, i) => (
       <p key={i} style={{ margin: i ? '1.1rem 0 0' : 0 }}>
-        {t.text.split(/(\[[a-z ]{1,24}\])/gi).map((part, j) =>
-          /^\[[a-z ]{1,24}\]$/i.test(part) ? (
+        {t.text.split(/(\[[a-z][a-z ,'-]{0,47}\])/gi).map((part, j) =>
+          /^\[[a-z][a-z ,'-]{0,47}\]$/i.test(part) ? (
             <span className="tag" key={j}>
               {part}{' '}
             </span>
@@ -63,6 +114,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const hold = useHold(id);
   const [draft, setDraft] = useState<Beat[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
+  // Which engine (and tag pass) the next voicing uses. Starts from the run's record.
+  const [voiceChoice, setVoiceChoice] = useState<VoiceChoice | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
   /** The second press. Publishing is the one thing here that cannot be undone. */
   const [confirming, setConfirming] = useState(false);
@@ -148,6 +201,10 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
   const { run, script, gate, manifest, claims, corpus, cuts, hasAudio, isSource, inSeries, long } = data;
   const held = manifest.holdForApproval && !manifest.approvedAt;
+  const chosenVoice: VoiceChoice = voiceChoice ?? {
+    engine: manifest.voiceEngine ?? 'openai',
+    tagPass: manifest.tagPass ?? false,
+  };
   const currentStage = live ? (events[events.length - 1]?.stage ?? null) : null;
 
   const act = async (what: string, fn: () => Promise<{ jobId: string }>) => {
@@ -330,10 +387,16 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               worked. Every finished step is kept, so resuming only redoes the step it stopped in.
             </Info>
             <span className="spacer" />
+            <EnginePicker
+              value={chosenVoice}
+              onChange={setVoiceChoice}
+              disabled={busy !== null}
+              tagPassDone={!!manifest.tagPassAt}
+            />
             <button
               className="btn"
               disabled={busy !== null}
-              onClick={() => act('resume', () => api.resume(id))}
+              onClick={() => act('resume', () => api.resume(id, chosenVoice))}
             >
               {busy === 'resume' ? 'Resuming...' : 'Resume'}
             </button>
@@ -353,10 +416,16 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 money, and it is the last point at which the words are free to change.
               </Info>
               <span className="spacer" />
+              <EnginePicker
+              value={chosenVoice}
+              onChange={setVoiceChoice}
+              disabled={busy !== null}
+              tagPassDone={!!manifest.tagPassAt}
+            />
               <button
                 className="btn spend"
                 disabled={busy !== null}
-                onClick={() => act('approve', () => api.approve(id))}
+                onClick={() => act('approve', () => api.approve(id, chosenVoice))}
               >
                 {busy === 'approve' ? 'Voicing...' : 'Approve and voice'}
               </button>
@@ -781,9 +850,17 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       value={beat.turns.map((t) => t.text).join('\n\n')}
                       onChange={(e) => {
                         const speaker = beat.turns[0]?.speaker ?? 'narrator';
+                        // The channel's outro stays marked as fixed while its words are unchanged.
+                        const fixed = new Set(
+                          (script.beats[i]?.turns ?? []).filter((t) => t.fixed).map((t) => t.text)
+                        );
                         const turns = e.target.value
                           .split(/\n{2,}/)
-                          .map((text) => ({ speaker, text: text.trim() }))
+                          .map((text) => ({
+                            speaker,
+                            text: text.trim(),
+                            ...(fixed.has(text.trim()) ? { fixed: true } : {}),
+                          }))
                           .filter((t) => t.text.length > 0);
                         setDraft((prev) =>
                           prev.map((b, j) => (j === i ? { ...b, turns: turns.length ? turns : b.turns } : b))

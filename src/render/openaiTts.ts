@@ -28,6 +28,7 @@
  */
 import { Voice } from '../canon/schema';
 import {
+  forVoice,
   HttpPostBinary,
   SynthesisRequest,
   SynthesisResult,
@@ -73,8 +74,9 @@ export const instructionsFor = (voice: Voice): string => {
     return Number.isFinite(n) ? n : fallback;
   };
 
-  const stability = num(voice.settings?.stability, 0.5);
-  const style = num(voice.settings?.style, 0.3);
+  // gpt_* first: voice-master.yaml keeps GPT's own values apart from Eleven's.
+  const stability = num(voice.settings?.gpt_stability ?? voice.settings?.stability, 0.5);
+  const style = num(voice.settings?.gpt_style ?? voice.settings?.style, 0.3);
 
   const steadiness =
     stability >= 0.6
@@ -155,8 +157,13 @@ export class OpenAiTts implements TtsProvider {
    * and a half characters each. It costs one extra seam on a long episode, which
    * is the trade the previous note already argued for and then got the wrong way
    * round.
+   *
+   * LOWERED AGAIN TO 2500, 2026-10-07. Under the token limit is not the same as
+   * spoken in full: a Mythic Archives episode rendered at 6000 skipped a word or
+   * two mid-request, which gpt-4o-mini-tts is known to do on long inputs. A
+   * missed word is worse than a seam, so this trades a few more seams for it.
    */
-  readonly maxInputChars = 6000;
+  readonly maxInputChars = 2500;
   private model: string;
 
   constructor(
@@ -195,7 +202,7 @@ export class OpenAiTts implements TtsProvider {
       {
         model: this.model,
         voice: voiceId,
-        input: req.text,
+        input: forVoice(req.text, req.voice),
         instructions: instructionsFor(req.voice),
         response_format: 'mp3',
         // BOTH THE PARAMETER AND THE WORDS, because the two engines behave

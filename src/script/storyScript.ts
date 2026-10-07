@@ -92,26 +92,32 @@ not go looking in your own memory for more events, more names or more detail.
 TEACH THE UNFAMILIAR THING, DO NOT TUCK IT INTO A COMMA. This is the most
 important instruction here and it is the one most likely to be ignored.
 
-  Not this:  "It was written down in cuneiform, wedge marks pressed into wet
-              clay, and it is older than the Iliad."
+  Not this:  "She poured mead on the barrow, the mound where the old kings
+              lay, and asked them for a sign."
 
-  This:      "It was written down in cuneiform. Cuneiform is the oldest writing
-              anybody has found. You take a reed, cut the end into a wedge, and
-              press it into a tablet of wet clay, over and over, and the marks
-              you leave behind are the words. Then the clay dries, and it keeps.
-              That is why we still have this story and not the thousand told
-              alongside it."
+  This:      "She poured mead on the barrow. A barrow is a burial mound, a hill
+              of earth heaped over the dead, and the old kings were inside this
+              one. People believed the dead could still hear you there, and
+              that they liked to be given a drink. So she poured the mead, and
+              she asked them for a sign."
 
 The second one is four sentences where the first is a clause, and the listener
-comes away knowing what cuneiform is instead of having heard the word. An
+comes away knowing what a barrow is instead of having heard the word. An
 explanation folded into an aside is an explanation nobody hears. When the
 GLOSSARY gives you something, spend real sentences on it at the moment the story
 first needs it - and then get straight back to the story.
 
 TELL IT AS SOMETHING THAT HAPPENED, NOT AS SOMETHING SOMEBODY WROTE. "She walked
 through the first gate and the gatekeeper stopped her" beats "the text describes
-her passing through the first gate". You may say where the story comes from and
-you should, once, near the front - after that, tell the story.
+her passing through the first gate". Say where the story comes from ONCE, near
+the front, in a few words ("a story the K'iche' Maya of Guatemala have told for
+centuries") - and after that, only the story.
+
+THE STORY, NOT THE STORY OF THE TEXT. Never talk about how it reached us: no
+manuscripts, scribes, friars, collectors, translators, libraries, editions, the
+century it was written down, or what scholars think. None of that is the story,
+and a listener who came for the story hears it as filler. If the reference
+mentions any of it, leave it out.
 
 NEVER SAY THE SOURCES DISAGREE. Not "some versions say", not "scholars are
 divided", not "the tablets do not agree", not "it is unclear", not "the text
@@ -119,10 +125,9 @@ does not explain why". Every one of those decisions has already been made for
 you and the reference states what happened. Tell it as what happened. If you
 find yourself about to hedge, the answer is in the reference - go and use it.
 
-THE ONLY EXCEPTION is where the reference's own ENDING or a section explicitly
-frames something as genuinely lost - a tablet that physically breaks off
-mid-line, a manuscript that was destroyed. That is an event in the story of the
-story, not a scholarly caveat, and it is worth one sentence where it bites.
+WHERE THE STORY IS GENUINELY UNFINISHED - the ending is lost - end it where it
+ends, as the story: "and here the story stops" in one sentence, no history of
+the document.
 
 EXPLAIN THE WORLD FREELY. Where a country is now, roughly when a century was,
 what a river or a desert or a harvest meant to people living there, what a
@@ -260,7 +265,18 @@ export const returnShape = (persona: Persona): string =>
  * A short gets `signoffShort` where the persona has one. A short is usually
  * somebody's first contact with the show and has ninety seconds to earn a
  * follow; spending the long goodbye there would eat a fifth of the episode.
+ *
+ * SINCE 2026-10-07 THE WRITER NEVER SEES THIS TEXT. It is appended word for word
+ * by script/outro.ts, and every writer is told OUTRO_RULE instead.
  */
+/** Told to every writer whose channel has an outro. Lives here to avoid an import cycle with outro.ts. */
+export const OUTRO_RULE =
+  'THE OUTRO IS FIXED. Do not write any goodbye, sign-off, "thanks for listening", ' +
+  "or call to follow: the channel's own outro is added, word for word, straight after " +
+  'your last sentence. Wherever the instructions or the beats ask for a goodbye or a ' +
+  'follow, that IS the outro: leave it out, it is added for you. End on the last real ' +
+  'sentence of the piece.';
+
 export const signoffFor = (
   persona: Persona,
   kind: 'long' | 'short',
@@ -356,8 +372,7 @@ export const buildStoryPrompt = (input: {
     (() => {
       const said = signoffFor(input.persona, input.format.kind, input.reference.subject);
       return said
-        ? `HOW THIS SHOW SIGNS OFF. The last part lands on this, in your own words ` +
-          `rather than word for word, and it is the last thing said:\n  ${said}`
+        ? OUTRO_RULE
         : '';
     })(),
     '',
@@ -571,6 +586,9 @@ export const HEDGE_PATTERNS: Array<{ pattern: RegExp; why: string }> = [
   { pattern: /\bthe (?:text|story|poem|source|record) does not (?:explain|say|tell)\b/i, why: 'declares an answer missing; the reference has it' },
   { pattern: /\ban? (?:alternative|different|separate|competing|rival) (?:version|ending|telling|account|reading)\b/i, why: 'introduces a variant the listener did not need' },
   { pattern: /\bwhat(?:'s| is) (?:left )?unsettled\b/i, why: 'ends on an open scholarly question' },
+  // Owner, 2026-10-07: the story, not the story of the text. A live episode
+  // spent most of its opening and close on friars, libraries and collectors.
+  { pattern: /\b(?:manuscripts?|scribes?|friars?|transcri(?:bed|ption)|copied (?:it )?by|surviving (?:copy|text|manuscript)|first (?:written down|published))\b/i, why: 'talks about how the text reached us instead of telling the story' },
 ];
 
 export const findHedging = (
