@@ -63,6 +63,18 @@ describe('a run whose voice is not made yet', () => {
     expect(() => publishRunJob(RUN_ID, { confirmed: true })).toThrow(/not been voiced/);
   });
 
+  it('a finished run, once approved, gets the next free day from tomorrow', () => {
+    const run = Run.open(RUN_ID, { root });
+    run.setReleaseAt(null);
+    const before = new Date();
+    const result = approveForRelease('root-health', { runIds: [RUN_ID] });
+    expect(result.unscheduled).toEqual([]);
+    const at = new Date(result.approved[0]!.releaseAt);
+    const days = (Date.parse(at.toISOString().slice(0, 10)) - Date.parse(before.toISOString().slice(0, 10))) / 86_400_000;
+    expect(days).toBeGreaterThanOrEqual(1);
+    expect(days).toBeLessThanOrEqual(2); // tomorrow, in London
+  });
+
   it('remembers why its last attempt failed, until the next one starts', () => {
     const run = unvoice();
     run.noteFailure('over the 15p ceiling', 'render');

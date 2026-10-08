@@ -13,6 +13,18 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Scheduling: one short and one episode a day per channel, on the earliest
+  free days** (2026-10-08). Approving used to fill a weekly quota from
+  schedule.yaml (one episode and three shorts for most channels) with a short
+  never allowed on an episode's day, so eight approved shorts went out over
+  three weeks with silent days between them. Now every channel can put out at
+  most one short and one episode on any day; each approval takes the earliest
+  free day for its kind from tomorrow (never today), already-approved runs keep
+  their days, and a full week rolls into the next. The episode goes out at the
+  channel's slot hour, the short at a different, varied hour. Publishing now is
+  not limited by any of this. `perWeek` in schedule.yaml now only feeds the
+  "due to make" plan.
+
 - **Approved-but-not-voiced runs are no longer "ready", targets no longer stop
   a run, and the run page is two columns** (2026-10-08).
   - The bug: a Business Decoded short approved on ElevenLabs had its GPT voice

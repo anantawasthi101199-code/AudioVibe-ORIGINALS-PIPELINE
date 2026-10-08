@@ -1,33 +1,35 @@
 /**
- * Giving approved episodes a day and an hour, within what a channel can hold.
+ * Giving approved episodes and shorts a day and an hour.
  *
- * A CHANNEL HAS A CAPACITY, AND IT IS THE POINT. A show that puts out one
- * episode and three shorts a week puts out one episode and three shorts a week:
- * approving twelve shorts does not make twelve go out on twelve days, it fills
- * the next four weeks. A studio that published everything the moment it was
- * ready would be a studio whose output is decided by how fast the pipeline runs
- * rather than by anybody, and a channel's cadence is a promise to a listener.
+ * ONE OF EACH KIND A DAY, PER CHANNEL, EVERY DAY (owner, 2026-10-08). The rule
+ * used to be a weekly quota from schedule.yaml (one episode and three shorts
+ * for most channels) with a short never allowed on an episode's day, so eight
+ * approved shorts went out over three weeks with silent days between them.
+ * Now something goes out on the regular:
  *
- * SO APPROVING IS NOT SCHEDULING. Approving says "this may go out". This file
- * decides when, and the answer is often "in three weeks" - which is the honest
- * answer and the one the calendar shows.
+ *   - At most ONE short and ONE episode on any day, for a channel. Both may go
+ *     out on the same day, at different hours.
+ *   - Each approval takes the EARLIEST FREE DAY for its kind, from tomorrow.
+ *     Approvals already on the calendar keep their days, so the stream stays
+ *     gap-free: a short approved when this week is full goes to next week,
+ *     and so on.
+ *   - Publishing now is not scheduling, and is not limited by any of this.
  *
- * THE EPISODE KEEPS THE CHANNEL'S SLOT. That is the day somebody who follows
- * the show learns to expect it, so it does not move. Shorts fill the days
- * around it, spread as evenly as the week allows, because a short's job is to
- * arrive on a day the show is otherwise silent.
+ * NEVER TODAY. A batch approved this afternoon publishing its first item an
+ * hour later is a burst in miniature, and nobody has listened to it yet.
  *
- * HOURS VARY, DAYS DO NOT. A channel posting at exactly its slot hour every
- * time reads as a machine even when the writing does not, so the hour walks
- * around a small civilised range anchored on the channel's own slot - which is
- * also what keeps two channels off the same hour.
+ * HOURS: the episode at the channel's slot hour; the short at a different,
+ * varied hour inside a civilised range, so a channel never posts twice at
+ * once and does not read as a machine posting at the same minute daily.
  */
 import { Cadence } from './schema';
-import { HOUR_SPREAD, WEEKDAYS, atHourOn, instantOfWallClock, weekdayAt } from './slots';
+import { HOUR_SPREAD, instantOfWallClock, weekdayAt } from './slots';
 
 const DAY_MS = 86_400_000;
 const FIRST_HOUR = 8;
-const HOUR_RANGE = 10;
+const HOUR_RANGE = 12; // 08:00 to 19:00
+/** How far ahead to look before giving up: two years of days. */
+const HORIZON_DAYS = 730;
 
 export type ItemKind = 'episode' | 'short';
 
@@ -36,7 +38,7 @@ export interface Allocatable {
   kind: ItemKind;
 }
 
-/** Something already approved, which uses up capacity in its week. */
+/** Something already approved for this channel, which holds its day. */
 export interface Taken {
   kind: ItemKind;
   at: Date;
@@ -48,12 +50,12 @@ export interface Allocated {
   at: Date;
 }
 
+/** The most of one kind a channel may put out on one day. */
+export const PER_DAY = 1;
+
 /**
- * The Monday of the week an instant falls in, at midnight, in the zone.
- *
- * Monday because the studio's week is a working week and because the calendar
- * draws it that way; a capacity of "three a week" has to mean the same week in
- * both places or the grid and the arithmetic disagree.
+ * The Monday of the week an instant falls in, at midnight, in the zone. Kept
+ * for the calendar, which draws Monday-first.
  */
 export const weekStart = (instant: Date, tz: string): Date => {
   const day = (weekdayAt(instant, tz) + 6) % 7;
@@ -62,138 +64,71 @@ export const weekStart = (instant: Date, tz: string): Date => {
   return new Date(midnight.getTime() - day * DAY_MS);
 };
 
-const sameWeek = (a: Date, b: Date, tz: string): boolean =>
-  weekStart(a, tz).getTime() === weekStart(b, tz).getTime();
+/** The zone's calendar date of an instant, as YYYY-MM-DD. */
+export const localDate = (instant: Date, tz: string): string =>
+  instant.toLocaleDateString('en-CA', { timeZone: tz });
 
-/**
- * Which days of a week this channel uses for a kind.
- *
- * The episode sits on the channel's slot day. Shorts are spread across the
- * remaining days, as far apart as the week allows, which for three shorts and a
- * Tuesday episode is Thursday, Saturday and Sunday rather than three days in a
- * row after it.
- */
-export const daysFor = (cadence: Cadence, kind: ItemKind, count: number): number[] => {
-  // MONDAY-BASED, because that is how a week is counted everywhere else here -
-  // the grid draws Monday first and `weekStart` returns a Monday. WEEKDAYS is
-  // Sunday-first, so using its index directly put every episode a day late.
-  const slotDay = cadence.slot ? (WEEKDAYS.indexOf(cadence.slot.day) + 6) % 7 : 1;
+/** A YYYY-MM-DD date plus n days, by the calendar rather than by 24 hours. */
+const addDays = (date: string, n: number): string => {
+  const [y, m, d] = date.split('-').map(Number) as [number, number, number];
+  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
+};
 
-  if (kind === 'episode') {
-    // Every episode this week goes on the slot day; a channel wanting two
-    // episodes a week gets the slot day and the day opposite it.
-    return Array.from({ length: count }, (_, i) =>
-      i === 0 ? slotDay : (slotDay + Math.round((7 * i) / count)) % 7
-    );
+const at = (date: string, hour: number, tz: string): Date =>
+  instantOfWallClock(`${date}T${String(hour).padStart(2, '0')}:00:00`, tz);
+
+/** The episode's hour: the channel's slot hour, else early evening. */
+const episodeHour = (cadence: Cadence): number => cadence.slot?.hour ?? 18;
+
+/** A short's hour: varied by day, never the episode's hour. */
+const shortHour = (cadence: Cadence, dayNumber: number): number => {
+  const base = cadence.slot?.hour ?? FIRST_HOUR;
+  const avoid = episodeHour(cadence);
+  for (let k = 0; k < HOUR_SPREAD.length; k++) {
+    const spread = HOUR_SPREAD[(dayNumber + k) % HOUR_SPREAD.length]!;
+    const hour = FIRST_HOUR + ((base - FIRST_HOUR + spread + 1) % HOUR_RANGE + HOUR_RANGE) % HOUR_RANGE;
+    if (hour !== avoid) return hour;
   }
-
-  // Shorts: evenly through the gap AFTER the episode, counted from its day.
-  // Counting from Monday put every channel's first short on a Monday.
-  // A channel with no episodes has no day to keep clear, so it uses all seven.
-  const n = Math.max(1, count);
-  const offsets: number[] = [];
-  for (let i = 0; i < n; i++) {
-    const want =
-      cadence.perWeek.episodes > 0
-        ? Math.min(6, Math.max(1, Math.round((7 * (i + 1)) / (n + 1))))
-        : Math.round((7 * i) / n) % 7;
-    // Strictly increasing where the week allows, so two shorts never share a day.
-    const prev = offsets[offsets.length - 1];
-    offsets.push(prev !== undefined && want <= prev && prev < 6 ? prev + 1 : want);
-  }
-  return offsets.slice(0, count).map((o) => (slotDay + o) % 7);
+  return avoid === FIRST_HOUR ? FIRST_HOUR + 1 : FIRST_HOUR;
 };
 
 export interface AllocateInput {
   cadence: Cadence;
   /** In the order they should go out. */
   items: Allocatable[];
-  /** Already approved for this channel, so their weeks are already spent. */
+  /** Already approved for this channel, so their days are already spent. */
   taken: Taken[];
   from: Date;
   timezone: string;
 }
 
-/**
- * Lay items out across as many weeks as their channel's capacity needs.
- *
- * NEVER TODAY. The first week considered is the one containing tomorrow: a
- * batch approved this afternoon publishing its first item an hour later is the
- * same burst in miniature, and nobody has listened to it yet.
- */
+/** Lay items out one of each kind a day, on the earliest free days from tomorrow. */
 export const allocate = (input: AllocateInput): Allocated[] => {
   const { cadence, items, taken, timezone: tz } = input;
 
-  const perWeek = {
-    episode: Math.max(0, cadence.perWeek.episodes),
-    short: Math.max(0, cadence.perWeek.shorts),
+  // How many of each kind each local day already holds.
+  const used = new Map<string, { episode: number; short: number }>();
+  const day = (date: string) => {
+    if (!used.has(date)) used.set(date, { episode: 0, short: 0 });
+    return used.get(date)!;
   };
+  for (const t of taken) day(localDate(t.at, tz))[t.kind] += 1;
 
-  const tomorrow = new Date(input.from.getTime() + DAY_MS);
+  const first = addDays(localDate(input.from, tz), 1); // never today
   const out: Allocated[] = [];
 
-  // Capacity already spent, and days already used, week by week.
-  const spent = new Map<number, { episode: number; short: number; days: Set<number> }>();
-  const weekOf = (d: Date) => weekStart(d, tz).getTime();
-
-  const bucket = (key: number) => {
-    if (!spent.has(key)) spent.set(key, { episode: 0, short: 0, days: new Set() });
-    return spent.get(key)!;
-  };
-
-  for (const t of taken) {
-    const b = bucket(weekOf(t.at));
-    b[t.kind] += 1;
-    b.days.add((weekdayAt(t.at, tz) + 6) % 7);
-  }
-
   for (const item of items) {
-    const capacity = perWeek[item.kind];
+    for (let n = 0; n < HORIZON_DAYS; n++) {
+      const date = addDays(first, n);
+      const d = day(date);
+      if (d[item.kind] >= PER_DAY) continue;
 
-    // A channel with no capacity for this kind cannot schedule it at all, and
-    // saying so by leaving it out is better than inventing a day.
-    if (capacity === 0) continue;
+      const dayNumber = Math.round(Date.parse(`${date}T00:00:00Z`) / DAY_MS);
+      const when = at(date, item.kind === 'episode' ? episodeHour(cadence) : shortHour(cadence, dayNumber), tz);
+      if (when.getTime() <= input.from.getTime()) continue;
 
-    // Walk forward until a week has room. Two years is not a limit anybody
-    // reaches; it stops a mistake in the capacity becoming an infinite loop.
-    for (let w = 0; w < 104; w++) {
-      const monday = new Date(weekStart(tomorrow, tz).getTime() + w * 7 * DAY_MS);
-      const key = monday.getTime();
-      const b = bucket(key);
-
-      if (b[item.kind] >= capacity) continue;
-
-      // Which day in this week: the nth of the days this channel uses for the
-      // kind, skipping any already occupied and anything already past.
-      const wanted = daysFor(cadence, item.kind, capacity);
-      const index = b[item.kind];
-
-      let placed: Date | null = null;
-      for (let probe = 0; probe < 7 && !placed; probe++) {
-        const dayIndex = wanted[(index + probe) % wanted.length]!;
-        if (b.days.has(dayIndex)) continue;
-
-        const midnight = new Date(monday.getTime() + dayIndex * DAY_MS);
-        const hour =
-          FIRST_HOUR +
-          ((((cadence.slot?.hour ?? FIRST_HOUR) - FIRST_HOUR) +
-            HOUR_SPREAD[out.length % HOUR_SPREAD.length]!) %
-            HOUR_RANGE);
-
-        const at = atHourOn(midnight, hour, tz);
-
-        // Never in the past, and never today.
-        if (at.getTime() < tomorrow.getTime() && !sameWeek(at, tomorrow, tz)) continue;
-        if (at.getTime() < input.from.getTime()) continue;
-
-        placed = at;
-        b.days.add(dayIndex);
-      }
-
-      if (!placed) continue;
-
-      b[item.kind] += 1;
-      out.push({ runId: item.runId, kind: item.kind, at: placed });
+      d[item.kind] += 1;
+      out.push({ runId: item.runId, kind: item.kind, at: when });
       break;
     }
   }
