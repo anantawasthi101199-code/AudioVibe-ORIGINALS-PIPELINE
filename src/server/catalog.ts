@@ -351,6 +351,8 @@ export interface RunSummary {
   /** What it was meant to cost (a warning) and the line that stops it, in pence. */
   targetPence: number;
   ceilingPence: number;
+  /** At or past the hard ceiling: nothing more may be spent on it. */
+  atCeiling: boolean;
   /** Which engine voices it. */
   voiceEngine: 'openai' | 'elevenlabs';
   /**
@@ -484,6 +486,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     workingBy: liveIds.has(run.id) ? (jobs.forRun(run.id)?.startedBy ?? null) : null,
     lastFailure: m.lastFailure ?? null,
     ...budgetsFor(run),
+    atCeiling: m.spentPence >= budgetsFor(run).ceilingPence,
     voiceEngine: m.voiceEngine,
     seriesTitle: m.seriesTitle ?? null,
     artKey: (() => {

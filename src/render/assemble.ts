@@ -555,6 +555,24 @@ export const renderScript = async (
     return voice;
   };
 
+  // A VOICING IN PROGRESS FINISHES (owner, 2026-10-08). Passing the hard
+  // ceiling mid-voice used to stop the render with the beats already paid for
+  // left unused. Now the ceiling is noted once and the rest of the voice is
+  // made; the run's page then refuses anything further that would spend. A
+  // person's Stop, and every other error, still stops it at once.
+  let overCeiling = false;
+  const charge = (pence: number): void => {
+    try {
+      onCost?.(pence);
+    } catch (e) {
+      if ((e as Error)?.name !== 'BudgetExceeded') throw e;
+      if (!overCeiling) {
+        overCeiling = true;
+        onProgress?.(`${(e as Error).message.split(', so it stopped')[0]}. Finishing this voicing anyway.`);
+      }
+    }
+  };
+
   const files: string[] = [];
   const timings: Array<{ id: string; type: string; durationS: number; endsFile: boolean }> = [];
   let costPence = 0;
@@ -833,7 +851,7 @@ export const renderScript = async (
         const retryFile = `${file}.retry`;
         write(retryFile, retry.audio);
         costPence += retry.costPence;
-        onCost?.(retry.costPence);
+        charge(retry.costPence);
 
         const retryDuration = await probe(retryFile);
         const retryTrailing =
@@ -873,7 +891,7 @@ export const renderScript = async (
     // Resume.
     write(keyFile, Buffer.from(`${key}\n`, 'utf8'));
     costPence += result.costPence;
-    onCost?.(result.costPence);
+    charge(result.costPence);
     files.push(file);
 
     const durationS = measured ?? (await probe(file));

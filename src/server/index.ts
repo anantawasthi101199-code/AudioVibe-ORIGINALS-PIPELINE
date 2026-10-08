@@ -68,6 +68,7 @@ import {
   approveRun,
   resumeRun,
   regenerateRun,
+  stopRun,
   audioDownloadFile,
   audioDownloadName,
   audioPath,
@@ -688,6 +689,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/resume' && req.method === 'POST') {
         return send(res, 202, resumeRun(id ?? '', user, await readBody(req)));
+      }
+      if (pathname === '/api/run/stop' && req.method === 'POST') {
+        return send(res, 200, stopRun(id ?? '', user));
       }
       if (pathname === '/api/run/regenerate' && req.method === 'POST') {
         return send(res, 202, regenerateRun(id ?? '', user, await readBody(req)));

@@ -74,6 +74,34 @@ export const STAGES = [
 
 export type Stage = (typeof STAGES)[number];
 
+/**
+ * Thrown by Run.spend past the hard ceiling. A NAMED CLASS so the renderer can
+ * recognise it and finish the voicing it is in the middle of rather than
+ * throwing away beats already paid for (owner, 2026-10-08); everything else
+ * stops on it as before.
+ */
+export class BudgetExceeded extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BudgetExceeded';
+  }
+}
+
+/** Thrown by Run.spend when a person pressed Stop. Never swallowed. */
+export class StoppedByPerson extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'StoppedByPerson';
+  }
+}
+
+/**
+ * Runs somebody asked to stop, and who asked. Checked at every paid call, so a
+ * job stops after the call it is in, keeping what that call bought. Cleared
+ * when a job on the run starts or ends (server/jobs.ts).
+ */
+export const stopRequests = new Map<string, string>();
+
 export const runManifestSchema = z.object({
   id: z.string().min(1),
   personaId: z.string().min(1),
@@ -843,8 +871,12 @@ export class Run {
         event: `over the ${targetPence}p target at ${after.toFixed(1)}p; carrying on, the hard ceiling is ${budgetPence}p`,
       });
     }
+    // A PERSON PRESSED STOP: halt here, after what was just paid for is kept.
+    if (stopRequests.has(this.id)) {
+      throw new StoppedByPerson(`stopped by ${stopRequests.get(this.id) ?? 'somebody'} at ${after.toFixed(1)}p`);
+    }
     if (after > budgetPence) {
-      throw new Error(
+      throw new BudgetExceeded(
         `run ${this.id} has spent ${after.toFixed(1)}p, over the ${budgetPence}p ceiling (the hard limit), ` +
           `so it stopped here. Everything paid for so far is kept: Resume carries on from this step ` +
           `once the ceiling is raised (FOUNDRY_SHORT_BUDGET_PENCE / FOUNDRY_EPISODE_BUDGET_PENCE).`

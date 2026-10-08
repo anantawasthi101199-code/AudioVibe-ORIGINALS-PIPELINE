@@ -114,8 +114,8 @@ const EnginePicker = ({
       {cost !== null && cost > left && (
         <div className="note warn tiny">
           This voicing is estimated at {money(cost)} and the run has {money(Math.max(0, left))} left
-          under its hard ceiling, so it may stop before the end. Everything voiced so far is kept and
-          Resume carries on.
+          under its hard ceiling. It will finish anyway, but after it nothing more can be spent on
+          this run (no regenerating).
         </div>
       )}
     </div>
@@ -159,6 +159,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [confirming, setConfirming] = useState(false);
   /** Regenerating: 0 closed, 1 choosing the engine, 2 the second confirmation. */
   const [regen, setRegen] = useState<0 | 1 | 2>(0);
+  const [stopping, setStopping] = useState(false);
   const [art, setArt] = useState<ArtState | null>(null);
 
   const loadArt = useCallback(async () => {
@@ -220,6 +221,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         onEvent: (e) => setEvents((prev) => [...prev, e]),
         onDone: (r) => {
           setLive(false);
+          setStopping(false);
           setBusy(null);
           if (r.error) setError(r.error);
           void load();
@@ -367,6 +369,19 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       </div>
     ) : null;
 
+  // AT THE HARD CEILING: the voicing that crossed it was allowed to finish,
+  // and nothing more is spent on this run. Its takes can still be published.
+  const CeilingLock = () =>
+    run.atCeiling ? (
+      <div className="note fail tiny">
+        <strong>
+          This run has reached its hard ceiling ({money(run.spentPence)} of {money(run.ceilingPence)}).
+        </strong>{' '}
+        Nothing more can be spent on it, so voicing and regenerating are off. Its takes can still be
+        chosen and published.
+      </div>
+    ) : null;
+
   /* --- THE NEXT STEP ----------------------------------------------------- */
   const nextStep = (() => {
     if (live) {
@@ -375,6 +390,23 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <div className="next-head">
             <span className="next-kicker">Working now</span>
             <span className="spacer" />
+            <button
+              className="btn ghost small"
+              disabled={stopping}
+              title="Stops after the paid step it is on; everything paid for is kept, and Resume carries on."
+              onClick={async () => {
+                if (!window.confirm('Stop this now? It stops after the step it is on; everything already paid for is kept, and Resume carries on later.')) return;
+                setStopping(true);
+                try {
+                  await api.stop(id);
+                } catch (e) {
+                  setError((e as Error).message);
+                  setStopping(false);
+                }
+              }}
+            >
+              {stopping ? 'Stopping after this step...' : 'Stop'}
+            </button>
             <span className="pill live">
               <span className="dot" /> live
             </span>
@@ -382,7 +414,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <NowBanner events={events} startedAt={data.job?.startedAt} startedBy={data.job?.startedBy} />
           <ProgressBars events={events} engine={manifest.voiceEngine} />
           <p className="faint tiny" style={{ margin: 0 }}>
-            You can leave this page; the work carries on and this card picks it back up.
+            You can leave this page; the work carries on and this card picks it back up. A
+            voicing that passes the hard ceiling finishes; nothing more is spent after it.
           </p>
         </section>
       );
@@ -426,10 +459,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <h2>Read the script, then approve and voice it</h2>
           {engineFor('approve')}
           <EditLock />
+          <CeilingLock />
           <div className="next-actions">
             <button
               className="btn spend"
-              disabled={busy !== null || editing}
+              disabled={busy !== null || editing || run.atCeiling}
               onClick={() => act('approve', () => api.approve(id, chosenVoice))}
             >
               {busy === 'approve' ? 'Starting...' : `Approve and voice on ${engineName(chosenVoice.engine)}`}
@@ -454,10 +488,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <FailureNote />
           {engineFor('resume')}
           <EditLock />
+          <CeilingLock />
           <div className="next-actions">
             <button
               className="btn spend"
-              disabled={busy !== null || editing}
+              disabled={busy !== null || editing || run.atCeiling}
               onClick={() => act('resume', () => api.resume(id, chosenVoice))}
             >
               {busy === 'resume'
@@ -824,7 +859,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   {regenAllowed && regen === 0 && (
                     <button
                       className="btn ghost small"
-                      disabled={busy !== null || editing}
+                      disabled={busy !== null || editing || run.atCeiling}
                       onClick={() => setRegen(1)}
                     >
                       Regenerate voice
@@ -901,11 +936,12 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                           </span>
                           {engineFor('regen')}
                           <EditLock />
+                          <CeilingLock />
                           <div className="next-actions">
                             <button className="btn ghost small" onClick={() => setRegen(0)}>
                               Cancel
                             </button>
-                            <button className="btn small" disabled={busy !== null || editing} onClick={() => setRegen(2)}>
+                            <button className="btn small" disabled={busy !== null || editing || run.atCeiling} onClick={() => setRegen(2)}>
                               Yes, make a new take
                             </button>
                           </div>
@@ -927,7 +963,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                             </button>
                             <button
                               className="btn spend small"
-                              disabled={busy !== null || editing}
+                              disabled={busy !== null || editing || run.atCeiling}
                               onClick={() => {
                                 setRegen(0);
                                 void act('regen', () => api.regenerate(id, chosenVoice));

@@ -93,6 +93,8 @@ export interface RunSummary {
   /** What it is meant to cost (only a warning) and the hard ceiling that stops it. */
   targetPence: number;
   ceilingPence: number;
+  /** At or past the hard ceiling: nothing more may be spent on it. */
+  atCeiling: boolean;
   voiceEngine: VoiceEngine;
   /** Its own picture, as a key that changes with it; null when none is set. */
   artKey: string | null;
@@ -824,6 +826,10 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ ...voice, confirm: true }),
     }),
+
+  /** Stop the job working on a run, after the paid step it is on. */
+  stop: (id: string) =>
+    call<{ ok: true; jobId: string }>(`/api/run/stop?id=${encodeURIComponent(id)}`, { method: 'POST' }),
 
   /** Choose which take publishes. */
   chooseTake: (id: string, take: number) =>
