@@ -72,16 +72,10 @@ export const cadenceSchema = z.object({
   /**
    * What this channel can put out in one week.
    *
-   * A CEILING, NOT A TARGET. Nothing fills it; it only stops approvals piling
-   * onto the same fortnight. Approving twelve shorts for a show that does three
-   * a week fills the next four weeks rather than publishing twelve in twelve
-   * days - because a cadence is a promise to somebody who follows the show, and
-   * a studio that published everything the moment it was ready would have its
-   * output decided by how fast the pipeline runs rather than by anybody.
-   *
-   * Zero for a kind means the channel does not publish that kind at all, and an
-   * approval of one is left unscheduled rather than given a day it should not
-   * have.
+   * WHAT THE PLAN EXPECTS TO MAKE, NOT A CEILING ON PUBLISHING. Since
+   * 2026-10-08 approvals are scheduled one short and one episode a day per
+   * channel, on the earliest free days (schedule/allocate.ts), so this no
+   * longer holds an approved run back to a later week.
    */
   perWeek: z
     .object({

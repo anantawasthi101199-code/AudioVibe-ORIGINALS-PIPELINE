@@ -40,7 +40,7 @@ import { currentPlan } from '../schedule/current';
 import { dueForRelease, releaseDue } from '../publish/release';
 import { releasingEnabled } from './calendar';
 import { loadSchedule } from '../schedule/load';
-import { allocate, type ItemKind, type Taken } from '../schedule/allocate';
+import { PER_DAY, allocate, type ItemKind, type Taken } from '../schedule/allocate';
 import { instantOfWallClock } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
 import { archiveSoon } from './archiveNow';
@@ -299,9 +299,10 @@ export const nextDue = () => {
  * Approve runs to go out, and give them days within what the channel can hold.
  *
  * APPROVING IS A DECISION, NOT A SCHEDULE. It says "this may go out"; when is
- * arithmetic, done here, and the answer is often "in three weeks" - because a
- * channel that publishes three shorts a week publishes three shorts a week
- * however many are approved at once.
+ * arithmetic, done here: one short and one episode a day at most for this
+ * channel, each on the earliest free day from tomorrow, rolling into the next
+ * week when this one is full. See schedule/allocate.ts. Publishing now is not
+ * limited by any of it.
  *
  * PER CHANNEL, AND IT REFUSES ANYTHING ELSE. Approving one show must never
  * reach into another's schedule, which an earlier version did by clearing
@@ -320,11 +321,14 @@ export const approveForRelease = (
 
   const persona = loadPersona(channelId);
   const schedule = loadSchedule();
-  const cadence = schedule.shows[channelId];
-
-  if (!cadence) {
-    throw new HttpError(400, `${persona.name} is not in schedule.yaml, so it has no cadence`);
-  }
+  // A CHANNEL NOT IN schedule.yaml STILL GETS DAYS: the rule is the same for
+  // every channel, and the cadence only supplies its hour.
+  const cadence = schedule.shows[channelId] ?? {
+    everyDays: 7,
+    shortsPerEpisode: 0,
+    autoPublish: false,
+    perWeek: { episodes: 1, shorts: 7 },
+  };
 
   const foreign = runIds.filter((id) => id.split('/')[0] !== channelId);
   if (foreign.length) {
@@ -360,7 +364,7 @@ export const approveForRelease = (
     }
   };
 
-  // Weeks already spoken for stay spoken for.
+  // Days already spoken for stay spoken for.
   const taken: Taken[] = mine
     .filter((r) => r.releaseAt && !runIds.includes(r.id) && r.state !== 'published')
     .map((r) => ({ kind: kindOf(r.id), at: new Date(r.releaseAt!) }));
@@ -386,14 +390,13 @@ export const approveForRelease = (
     });
   }
 
-  // A kind the channel has no capacity for gets no day at all, and saying so
-  // beats leaving somebody to wonder why it never reached the calendar.
+  // Only if the next two years are full. Reported rather than dropped.
   const unscheduled = runIds.filter((id) => !placed.some((p) => p.runId === id));
 
   return {
     approved: placed.map((p) => ({ runId: p.runId, releaseAt: p.at.toISOString(), kind: p.kind })),
     unscheduled,
-    perWeek: cadence.perWeek,
+    perDay: { episodes: PER_DAY, shorts: PER_DAY },
     timezone: schedule.timezone,
   };
 };

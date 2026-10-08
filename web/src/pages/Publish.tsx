@@ -13,9 +13,9 @@
  *            you decide while looking at a month rather than at an episode.
  *   On hold  passed everything and is not wanted now. Comes back whole.
  *
- * APPROVING IS NOT SCHEDULING. It says this may go out; the day comes from what
- * the channel publishes in a week, so approving eight shorts for a show that
- * does three a week fills the next three weeks.
+ * APPROVING IS NOT SCHEDULING. It says this may go out; the day comes from
+ * the earliest free days: at most one short and one episode a day per
+ * channel (2026-10-08), so eight approved shorts go out on the next eight days.
  */
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -251,7 +251,7 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
 
       setNote(
         result.unscheduled.length
-          ? `${result.approved.length} approved. ${result.unscheduled.length} could not be given a day: ${channel.name} publishes ${result.perWeek.shorts} shorts and ${result.perWeek.episodes} episode a week.`
+          ? `${result.approved.length} approved. ${result.unscheduled.length} could not be given a day in the next two years.`
           : first && last
             ? `${result.approved.length} approved, ${when(first.releaseAt, result.timezone)} to ${when(last.releaseAt, result.timezone)}.`
             : 'Approved.'
@@ -315,9 +315,10 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
           </span>
           .{' '}
           <Info label="What approving does">
-            Approving says this may go out. The day comes from what {channel.name} publishes in a
-            week, so approving more than a week&apos;s worth fills the following weeks rather than
-            putting it all out at once - a cadence is a promise to somebody who follows the show.
+            Approving says this may go out. Each one gets the earliest free day from tomorrow,
+            with at most one short and one episode a day for {channel.name}, so something goes
+            out every day. When this week is full, the next approval goes to the week after. Publishing
+            now is not limited by this.
             <br />
             <br />
             Once approved it moves to the Approved tab and is read-only here. It can only be taken
@@ -356,11 +357,8 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
       {tab === 'ready' && picked.size > 0 && (
         <div className="bar">
           <span className="muted">
-            {picked.size} chosen, {channel.name} publishes {/* the ceiling, named */}
-            <strong>
-              {' '}
-              {runs.some((r) => r.short !== null) ? 'shorts' : 'episodes'} on a weekly cadence
-            </strong>
+            {picked.size} chosen. Each gets the next free day from tomorrow:{' '}
+            <strong>at most one short and one episode a day</strong>
           </span>
           <span className="spacer" />
           <button className="btn ghost small" onClick={() => setPicked(new Set())}>

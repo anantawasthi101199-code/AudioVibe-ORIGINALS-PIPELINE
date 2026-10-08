@@ -676,7 +676,8 @@ export const api = {
     call<{
       approved: Array<{ runId: string; releaseAt: string; kind: 'episode' | 'short' }>;
       unscheduled: string[];
-      perWeek: { episodes: number; shorts: number };
+      /** The most of each kind a channel puts out on one day. */
+      perDay: { episodes: number; shorts: number };
       timezone: string;
     }>(`/api/channel/approve?id=${encodeURIComponent(channelId)}`, {
       method: 'POST',

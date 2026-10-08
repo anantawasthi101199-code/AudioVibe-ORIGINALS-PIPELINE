@@ -1,12 +1,9 @@
 /**
- * Laying approved episodes out across weeks.
- *
- * THE CEILING IS THE WHOLE POINT, so most of this is about what does NOT
- * happen: eight shorts do not go out in eight days for a show that does three
- * a week, a channel with no capacity for a kind gets no day for it at all, and
- * nothing lands today.
+ * Laying approved episodes and shorts out across days (owner, 2026-10-08):
+ * at most one short and one episode a day per channel, each on the earliest
+ * free day from tomorrow, rolling into the next week when a week is full.
  */
-import { allocate, daysFor, weekStart, type Allocatable } from '../allocate';
+import { allocate, weekStart, type Allocatable, type Taken } from '../allocate';
 import type { Cadence } from '../schema';
 
 const TZ = 'Europe/London';
@@ -49,169 +46,93 @@ describe('weekStart', () => {
   });
 });
 
-describe('daysFor', () => {
-  it('puts the episode on the channel slot day', () => {
-    // The day a follower learns to expect it, so it does not move.
-    expect(daysFor(cadence(), 'episode', 1)).toEqual([1]); // Tuesday
+const episodes = (n: number): Allocatable[] =>
+  Array.from({ length: n }, (_, i) => ({ runId: `e${i + 1}`, kind: 'episode' as const }));
+
+const run = (items: Allocatable[], taken: Taken[] = [], over: Partial<Cadence> = {}) =>
+  allocate({ cadence: cadence(over), items, taken, from: NOW, timezone: TZ });
+
+describe('allocate: one of each kind a day, earliest free day first', () => {
+  it('puts approved shorts on consecutive days from tomorrow, one a day', () => {
+    const out = run(shorts(8));
+    expect(out.map((o) => dayOf(o.at))).toEqual([
+      '2026-09-16', '2026-09-17', '2026-09-18', '2026-09-19',
+      '2026-09-20', '2026-09-21', '2026-09-22', '2026-09-23',
+    ]);
   });
 
-  it('keeps shorts off the episode day', () => {
-    const days = daysFor(cadence(), 'short', 3);
-    expect(days).not.toContain(1);
-    expect(new Set(days).size).toBe(3);
-  });
-
-  it('spreads shorts after the episode, not from Monday', () => {
-    // Tuesday episode: Thursday, Saturday, Sunday (Monday-based indices).
-    expect(daysFor(cadence(), 'short', 3)).toEqual([3, 5, 6]);
-    // Thursday episode: Saturday, Monday, Tuesday.
-    expect(daysFor(cadence({ slot: { day: 'thu', hour: 19 } }), 'short', 3)).toEqual([5, 0, 1]);
-    // No episodes: all seven days.
-    expect(new Set(daysFor(cadence({ perWeek: { episodes: 0, shorts: 7 } }), 'short', 7)).size).toBe(7);
-  });
-});
-
-describe('allocate', () => {
-  it('SPREADS EIGHT SHORTS ACROSS THREE WEEKS for a three-a-week channel', () => {
-    // The ceiling doing its job. Eight approved at once is not eight days of
-    // publishing; a cadence is a promise to somebody who follows the show.
-    const out = allocate({
-      cadence: cadence(),
-      items: shorts(8),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
-    expect(out).toHaveLength(8);
-
-    const weeks = new Map<string, number>();
-    for (const o of out) {
-      const w = dayOf(weekStart(o.at, TZ));
-      weeks.set(w, (weeks.get(w) ?? 0) + 1);
-    }
-
-    expect(weeks.size).toBe(3);
-    for (const n of weeks.values()) expect(n).toBeLessThanOrEqual(3);
-  });
-
-  it('never gives two of a channel the same day', () => {
-    const out = allocate({
-      cadence: cadence(),
-      items: shorts(8),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
-    const days = out.map((o) => dayOf(o.at));
-    expect(new Set(days).size).toBe(days.length);
-  });
-
-  it('never lands today', () => {
-    // A batch approved this afternoon publishing an hour later is the same
-    // burst in miniature, and nobody has listened to it yet.
-    const out = allocate({
-      cadence: cadence(),
-      items: shorts(3),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
-    for (const o of out) {
+  it('never lands today, or in the past', () => {
+    for (const o of run([...shorts(3), ...episodes(2)])) {
       expect(dayOf(o.at)).not.toBe(dayOf(NOW));
       expect(o.at.getTime()).toBeGreaterThan(NOW.getTime());
     }
   });
 
-  it('COUNTS WHAT IS ALREADY APPROVED, so a second approval does not double-book', () => {
-    const existing = allocate({
-      cadence: cadence(),
-      items: shorts(3),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
-    const more = allocate({
-      cadence: cadence(),
-      items: [{ runId: 'extra', kind: 'short' }],
-      taken: existing.map((e) => ({ kind: 'short' as const, at: e.at })),
-      from: NOW,
-      timezone: TZ,
-    });
-
-    expect(more).toHaveLength(1);
-    // The first week is full, so it goes into the next one.
-    expect(weekStart(more[0]!.at, TZ).getTime()).toBeGreaterThan(
-      weekStart(existing[0]!.at, TZ).getTime()
-    );
-  });
-
-  it('gives no day at all to a kind the channel does not publish', () => {
-    // Night Shift publishes no shorts: a short cut from a serial either spoils
-    // it or makes no sense out of order. Zero must mean zero rather than one.
-    const out = allocate({
-      cadence: cadence({ perWeek: { episodes: 1, shorts: 0 } }),
-      items: shorts(4),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
-    expect(out).toEqual([]);
-  });
-
-  it('keeps the hours civilised and varied', () => {
-    // A channel posting at exactly its slot hour every time reads as a machine
-    // even when the writing does not.
-    const out = allocate({
-      cadence: cadence(),
-      items: shorts(8),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
-    const hours = out.map((o) => hourOf(o.at));
-    for (const h of hours) {
-      expect(h).toBeGreaterThanOrEqual(8);
-      expect(h).toBeLessThan(18);
+  it('lets a short and an episode share a day, at different hours, but never two of one kind', () => {
+    const out = run([...shorts(3), ...episodes(3)]);
+    const byDay = new Map<string, string[]>();
+    for (const o of out) byDay.set(dayOf(o.at), [...(byDay.get(dayOf(o.at)) ?? []), o.kind]);
+    for (const kinds of byDay.values()) {
+      expect(kinds.filter((k) => k === 'short').length).toBeLessThanOrEqual(1);
+      expect(kinds.filter((k) => k === 'episode').length).toBeLessThanOrEqual(1);
     }
-    expect(new Set(hours).size).toBeGreaterThan(3);
+    expect([...byDay.values()].every((k) => k.length === 2)).toBe(true);
+    const tomorrow = out.filter((o) => dayOf(o.at) === '2026-09-16');
+    expect(new Set(tomorrow.map((o) => hourOf(o.at))).size).toBe(2);
+  });
+
+  it('KEEPS WHAT IS ALREADY APPROVED, and a full week sends the next one to the week after', () => {
+    // Shorts on every day of next week (Mon 21 to Sun 27) and the rest of this one.
+    const taken: Taken[] = Array.from({ length: 12 }, (_, i) => ({
+      kind: 'short' as const,
+      at: new Date(Date.UTC(2026, 8, 16 + i, 10)),
+    }));
+    const [next] = run(shorts(1), taken);
+    expect(dayOf(next!.at)).toBe('2026-09-28'); // the Monday after
+  });
+
+  it('fills a gap before going later', () => {
+    const taken: Taken[] = [
+      { kind: 'short', at: new Date('2026-09-16T10:00:00Z') },
+      { kind: 'short', at: new Date('2026-09-18T10:00:00Z') },
+    ];
+    expect(dayOf(run(shorts(1), taken)[0]!.at)).toBe('2026-09-17');
+  });
+
+  it('an episode is not held back by shorts on the same days', () => {
+    const taken: Taken[] = [{ kind: 'short', at: new Date('2026-09-16T10:00:00Z') }];
+    expect(dayOf(run(episodes(1), taken)[0]!.at)).toBe('2026-09-16');
+  });
+
+  it('schedules a kind even when schedule.yaml plans none of it', () => {
+    expect(run(episodes(1), [], { perWeek: { episodes: 0, shorts: 7 } })).toHaveLength(1);
+  });
+
+  it('puts the episode at the channel slot hour and keeps the short hours civilised', () => {
+    const out = run([...shorts(10), ...episodes(1)]);
+    expect(hourOf(out.find((o) => o.kind === 'episode')!.at)).toBe(8);
+    for (const o of out) {
+      expect(hourOf(o.at)).toBeGreaterThanOrEqual(8);
+      expect(hourOf(o.at)).toBeLessThanOrEqual(19);
+    }
+    expect(new Set(out.filter((o) => o.kind === 'short').map((o) => hourOf(o.at))).size).toBeGreaterThan(3);
   });
 
   it('comes back in the order it will go out', () => {
-    const out = allocate({
-      cadence: cadence(),
-      items: shorts(8),
-      taken: [],
-      from: NOW,
-      timezone: TZ,
-    });
-
+    const out = run([...episodes(2), ...shorts(2)]);
     const times = out.map((o) => o.at.getTime());
-    expect(times).toEqual([...times].sort((a, b) => a - b));
+    expect([...times].sort((a, b) => a - b)).toEqual(times);
   });
 
-  it('puts an episode on its slot day and shorts around it', () => {
+  it('counts days in the zone across the clock change', () => {
+    // British Summer Time ends on Sunday 25 October 2026.
     const out = allocate({
       cadence: cadence(),
-      items: [{ runId: 'ep', kind: 'episode' }, ...shorts(2)],
+      items: shorts(4),
       taken: [],
-      from: NOW,
+      from: new Date('2026-10-23T12:00:00Z'),
       timezone: TZ,
     });
-
-    const episode = out.find((o) => o.runId === 'ep')!;
-    // Tuesday.
-    expect(new Date(episode.at).toLocaleDateString('en-GB', { timeZone: TZ, weekday: 'short' })).toBe(
-      'Tue'
-    );
-
-    for (const s of out.filter((o) => o.kind === 'short')) {
-      expect(dayOf(s.at)).not.toBe(dayOf(episode.at));
-    }
+    expect(out.map((o) => dayOf(o.at))).toEqual(['2026-10-24', '2026-10-25', '2026-10-26', '2026-10-27']);
   });
 });

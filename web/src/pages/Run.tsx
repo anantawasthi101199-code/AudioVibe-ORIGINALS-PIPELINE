@@ -667,7 +667,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   <span className="spacer" />
                   <Info label="What happens next">
                     Every story that passed its gate is on the channel&apos;s publishing page. Approve the
-                    ones you want and they get days there, within what the channel publishes in a week.
+                    ones you want and each gets the next free day: at most one short and one episode a day.
                   </Info>
                 </div>
                 <div className="panel-body" style={{ paddingTop: 0 }}>
