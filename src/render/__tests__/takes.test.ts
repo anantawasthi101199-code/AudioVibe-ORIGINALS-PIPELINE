@@ -129,4 +129,10 @@ describe('takes', () => {
     expect(Run.open(RUN_ID, { root }).manifest.spentPence).toBe(before + 1);
     stopRequests.delete(run.id);
   });
+
+  it('every re-voice of a short (an edit or an engine switch) adds 15p too', () => {
+    const ceiling = budgetFor(run);
+    run.noteRevoicing();
+    expect(budgetFor(run) - ceiling).toBe(15);
+  });
 });

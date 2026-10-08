@@ -1199,8 +1199,9 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   Two numbers. The target ({money(run.targetPence)}) is what a{' '}
                   {isShort ? 'short' : 'n episode'} is meant to cost: passing it is noted and the work
                   carries on. The hard ceiling ({money(run.ceilingPence)}) is where it stops, keeping
-                  everything paid for so far. Every edit that makes it voice again adds a little room
-                  to both.
+                  everything paid for so far (a voicing already under way still finishes). Every
+                  re-voice after an edit or an engine switch, and every regeneration, adds{' '}
+                  {isShort ? '15p' : 'room'} to both.
                 </Info>
               </div>
               <div className="panel-body stack tight">

@@ -135,7 +135,9 @@ export const shortTargetPence = (): number => {
  * that counted the first voicing against the second would make every edit
  * impossible to hear.
  */
-export const REVOICE_ALLOWANCE_PENCE = { short: 5, long: 25 } as const;
+// 15p for a short (owner, 2026-10-08): the same room as a regeneration, since
+// re-voicing a short on ElevenLabs costs about that.
+export const REVOICE_ALLOWANCE_PENCE = { short: 15, long: 25 } as const;
 
 /**
  * What each regeneration adds to a run's target and ceiling (owner,
