@@ -339,6 +339,24 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       </div>
     ) : null;
 
+  // WORDS BEING EDITED ARE NOT WORDS TO VOICE (owner, 2026-10-08). Voicing
+  // reads the saved script, so while the editor is open every button that
+  // spends on it waits for Save and re-check, and says so beside itself.
+  const EditLock = () =>
+    editing ? (
+      <div className="note warn tiny edit-lock">
+        <strong>The script is open for editing.</strong> Save and re-check it first, so what is
+        voiced is what you wrote.{' '}
+        <button
+          type="button"
+          className="btn ghost small"
+          onClick={() => document.getElementById('script')?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          Go to Save
+        </button>
+      </div>
+    ) : null;
+
   /* --- THE NEXT STEP ----------------------------------------------------- */
   const nextStep = (() => {
     if (live) {
@@ -370,8 +388,9 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             </Info>
           </div>
           <h2>{cuts.length > 0 ? `${cuts.length} shorts cut from this` : 'Cut it into shorts'}</h2>
+          <EditLock />
           <div className="next-actions">
-            <button className="btn spend" disabled={busy !== null} onClick={() => act('cut', () => api.cut(id))}>
+            <button className="btn spend" disabled={busy !== null || editing} onClick={() => act('cut', () => api.cut(id))}>
               {busy === 'cut' ? 'Cutting...' : cuts.length ? 'Cut again' : `Cut ${script.beats.length} shorts`}
             </button>
             {cuts.length > 0 && (
@@ -396,10 +415,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           </div>
           <h2>Read the script, then approve and voice it</h2>
           {engineFor('approve')}
+          <EditLock />
           <div className="next-actions">
             <button
               className="btn spend"
-              disabled={busy !== null}
+              disabled={busy !== null || editing}
               onClick={() => act('approve', () => api.approve(id, chosenVoice))}
             >
               {busy === 'approve' ? 'Starting...' : `Approve and voice on ${engineName(chosenVoice.engine)}`}
@@ -423,10 +443,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <h2>{voiceOnly ? 'Approved, not voiced yet' : 'Carry on from where it stopped'}</h2>
           <FailureNote />
           {engineFor('resume')}
+          <EditLock />
           <div className="next-actions">
             <button
               className="btn spend"
-              disabled={busy !== null}
+              disabled={busy !== null || editing}
               onClick={() => act('resume', () => api.resume(id, chosenVoice))}
             >
               {busy === 'resume'
@@ -516,6 +537,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 <span className="muted">{r}</span>
               </div>
             ))}
+          <EditLock />
           <div className="next-actions">
             {!run.releaseApprovedAt && (
               <button className="btn" onClick={() => go(`/c/${run.channelId}/publish`)}>
@@ -529,7 +551,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 </button>
                 <button
                   className="btn spend"
-                  disabled={busy !== null}
+                  disabled={busy !== null || editing}
                   onClick={() => {
                     setConfirming(false);
                     void act('publish', () => api.publish(id, true));
@@ -543,7 +565,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
             ) : (
               <button
                 className="btn ghost"
-                disabled={busy !== null || !platform?.configured}
+                disabled={busy !== null || !platform?.configured || editing}
                 onClick={() => setConfirming(true)}
               >
                 Publish now
@@ -776,7 +798,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
 
             {/* --- The script ---------------------------------------------- */}
             {script && (
-              <section className="panel">
+              <section className="panel" id="script">
                 <div className="panel-head">
                   <h3>{isSource ? 'The stories' : 'The script'}</h3>
                   <span className="faint mono tiny">

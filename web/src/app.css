@@ -2659,3 +2659,11 @@ table.runs .num {
   width: 100%;
   height: 44px;
 }
+
+/* The script is being edited: the spend buttons wait for Save. */
+.edit-lock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
