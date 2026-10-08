@@ -25,7 +25,47 @@
         "provider": "openai",
         "voiceId": "fable",
         "firstUsedAt": "2026-10-04T21:51:55.686Z",
-        "firstRunId": "mythic-archives/e001-20261004-vetala-and-king-vikramaditya-from-the"
+        "firstRunId": "mythic-archives/s001-20261004-vetala-and-king-vikramaditya-from-the"
+      }
+    }
+  },
+  "psyche-session": {
+    "host": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "shimmer",
+        "firstUsedAt": "2026-10-04T22:28:18.989Z",
+        "firstRunId": "psyche-session/e001-20261004-saying-no-feels-so-hard-for"
+      }
+    }
+  },
+  "crime-files": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "ballad",
+        "firstUsedAt": "2026-10-04T23:21:31.688Z",
+        "firstRunId": "crime-files/e002-20261004-1978-traffic-stop-in-pensacola-that"
+      }
+    }
+  },
+  "global-thread": {
+    "reporter": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "nova",
+        "firstUsedAt": "2026-10-05T00:13:19.763Z",
+        "firstRunId": "global-thread/e002-20261004-geopolitics"
+      }
+    }
+  },
+  "root-health": {
+    "narrator": {
+      "openai": {
+        "provider": "openai",
+        "voiceId": "sage",
+        "firstUsedAt": "2026-10-05T10:39:52.145Z",
+        "firstRunId": "root-health/s001-20261005-sleep-loss-makes-unhealthy-food-look"
       }
     }
   }
