@@ -34,7 +34,7 @@ export const FinalAudio = ({
   };
 
   return (
-    <div className="stack tight">
+    <div className="stack tight final-audio">
       <div className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <span className={`pill ${run.music ? 'pass' : ''}`}>
           <span className="dot" />
@@ -51,7 +51,7 @@ export const FinalAudio = ({
         )}
       </div>
       {player && (
-        <audio controls preload="metadata" key={run.audioKey ?? ''} src={api.audioUrl(run.id, run.audioKey)} />
+        <audio className="final-player" controls preload="metadata" key={run.audioKey ?? ''} src={api.audioUrl(run.id, run.audioKey)} />
       )}
       {run.musicLock && <span className="faint tiny">Music is locked: {run.musicLock}</span>}
       {error && <span className="fail tiny">{error}</span>}

@@ -14,6 +14,7 @@
  * the same reasoning that makes the uploader's 64kbps Opus source a documented
  * mistake in the platform repo.
  */
+import { createHash } from 'crypto';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -602,7 +603,29 @@ export const renderScript = async (
     // Zero-length files are treated as absent rather than as done, because a
     // process killed mid-write leaves exactly that and it is the one case
     // where trusting the file would silently produce a silent beat.
-    if (deps.reuseExisting !== false && fs.existsSync(file) && fs.statSync(file).size > 0) {
+    // WHAT THIS FILE IS MADE FROM, written beside it as `<file>.key`: the
+    // engine, each speaker's voice and settings, and the exact text sent.
+    // A FILE IS REUSED ONLY WHEN THAT MATCHES. Reuse used to be by name alone,
+    // so a beat edited and saved kept its old recording on the next voicing,
+    // and ElevenLabs "read" words that were no longer in the script
+    // (2026-10-08). A file with no key, or the wrong one, is made again.
+    const keyFile = `${file}.key`;
+    const key = createHash('sha256')
+      .update(
+        JSON.stringify({
+          engine: tts.name,
+          lines: beat.turns.map((t) => ({ voice: input.voices[t.speaker] ?? null, text: speakable(t.text) })),
+          music: input.music === true ? (input.musicPhraseFile ?? input.musicSeed ?? true) : false,
+        })
+      )
+      .digest('hex');
+    const keyMatches = fs.existsSync(keyFile) && fs.readFileSync(keyFile, 'utf8').trim() === key;
+    if (fs.existsSync(file) && !keyMatches && deps.reuseExisting !== false) {
+      onProgress?.(`${i + 1}/${groups.length}: ${beat.beatId} changed since it was voiced, so it is voiced again`);
+      fs.rmSync(file, { force: true });
+    }
+
+    if (deps.reuseExisting !== false && keyMatches && fs.existsSync(file) && fs.statSync(file).size > 0) {
       onProgress?.(`${i + 1}/${groups.length}: ${beat.beatId} (already rendered)`);
       files.push(file);
 
@@ -848,6 +871,7 @@ export const renderScript = async (
     costPence += result.costPence;
     onCost?.(result.costPence);
     files.push(file);
+    write(keyFile, Buffer.from(`${key}\n`, 'utf8'));
 
     const durationS = measured ?? (await probe(file));
     if (durationS === null) {
