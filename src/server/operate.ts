@@ -50,7 +50,7 @@ import { loadCatalogue, saveCatalogue } from '../catalogue/covered';
 import { loadFormat } from '../formats/load';
 import { scriptSchema } from '../script/write';
 import { HttpError } from './routes';
-import { runs } from './catalog';
+import { RunSummary, runs } from './catalog';
 import { jobs } from './jobs';
 
 /** Where this studio is pointed, and whether that is the real thing. */
@@ -238,6 +238,9 @@ export const publishRunJob = (runId: string, body: unknown, who: string | null =
 
   const run = Run.open(runId);
   if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
+  if (!run.isComplete('render') || !run.audioFile()) {
+    throw new HttpError(400, 'this has not been voiced yet, so there is nothing to publish. Voice it first.');
+  }
   const gate = regate(run, run.readArtifact('script', scriptSchema));
   if (!gate) throw new HttpError(400, `run "${runId}" cannot be gated, so it cannot be published`);
 
@@ -264,6 +267,7 @@ export const publishRunJob = (runId: string, body: unknown, who: string | null =
     id,
     kind: 'publish',
     runId,
+    by: who,
     work: async (report) => {
       await publishRun(run, gate, { confirmed, report: (m) => report('publish', m) });
       // Then to R2, in the background. See server/archiveNow.ts.
@@ -328,6 +332,22 @@ export const approveForRelease = (
   }
 
   const mine = runs({ channelId, limit: 400 });
+
+  // ONLY WHAT IS FINISHED: voiced, gated over its audio, and passed. An
+  // approved run is released without anybody present, so one with no audio
+  // would only fail later, at its hour, with nobody watching.
+  const unfinished = runIds
+    .map((runId) => ({ runId, summary: mine.find((r) => r.id === runId) }))
+    .filter(({ summary }) => !summary || summary.state !== 'ready' || summary.isSource);
+  if (unfinished.length) {
+    const why = (s?: RunSummary) =>
+      !s ? 'not found' : s.state === 'needs-voice' ? 'not voiced yet' : s.isSource ? 'a source script' : s.state;
+    throw new HttpError(
+      400,
+      `only finished runs can be approved: ${unfinished.map((u) => `${u.runId} (${why(u.summary)})`).join(', ')}`
+    );
+  }
+
   // BY FORMAT, not only by being cut from an episode: a short made directly
   // (a science or health short) is a short, and fills a short's slot.
   const kindOf = (runId: string): ItemKind => {

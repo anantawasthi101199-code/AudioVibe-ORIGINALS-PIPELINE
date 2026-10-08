@@ -26,7 +26,7 @@ import {
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
 import { nominalSeconds } from '../formats/schema';
-import { budgetFor } from './budget';
+import { budgetFor, targetFor } from './budget';
 import {
   OptionalStage,
   StageFlags,
@@ -228,7 +228,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
   let stage = 'pipeline';
   const spend = (pence: number) => {
     run.journal({ stage, event: 'spend', pence });
-    run.spend(pence, budget);
+    run.spend(pence, budget, targetFor(run));
   };
 
   // WHICH OPTIONAL PASSES RUN, decided once and recorded, because a run that

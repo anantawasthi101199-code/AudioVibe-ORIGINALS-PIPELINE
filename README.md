@@ -218,10 +218,13 @@ writer, and "supports it more weakly than stated" blocks.
 
 ## Cost
 
-The budget ceiling is `FOUNDRY_EPISODE_BUDGET_PENCE`, checked after every costed
-call. A run that would exceed it stops rather than degrading, because a cost
-overrun should be visible as silence, which somebody notices, rather than as
-quietly worse output, which nobody does.
+Two numbers per kind, checked after every costed call. The **target** (15p a
+short, £1.20 an episode; `FOUNDRY_*_TARGET_PENCE`) is what a run is meant to
+cost: passing it is journalled and shown on the run's cost meter, and the work
+carries on. The **hard ceiling** (25p, £2; `FOUNDRY_*_BUDGET_PENCE`) is where a
+run stops rather than degrading, because a cost overrun should be visible as
+silence, which somebody notices, rather than as quietly worse output, which
+nobody does. Everything paid for is kept, and Resume carries on.
 
 ## Conventions
 

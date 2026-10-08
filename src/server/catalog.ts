@@ -38,6 +38,7 @@ import { finalAudioFor, musicLock } from '../render/backing';
 import { readArchive } from '../archive/record';
 import { holderOf } from './holds';
 import { suppliedArt } from '../art/supplied';
+import { budgetsFor } from '../pipeline/budget';
 
 export interface LaneSummary {
   id: 'factual' | 'fiction';
@@ -286,7 +287,7 @@ export interface RunSummary {
   spentPence: number;
   completed: string[];
   /** Where the run is, in the words the interface uses. */
-  state: 'running' | 'awaiting-approval' | 'ready' | 'failed' | 'published' | 'abandoned';
+  state: 'running' | 'awaiting-approval' | 'needs-voice' | 'ready' | 'failed' | 'published' | 'abandoned';
   episode: number;
   /** e001, s001 or e001-s01: what to call it. */
   label: string;
@@ -343,6 +344,15 @@ export interface RunSummary {
   archivedAt: string | null;
   /** Who is working on it right now, or null. See holds.ts. */
   heldBy: string | null;
+  /** Who started the work in flight on it, while something is. */
+  workingBy: string | null;
+  /** Why the last attempt on it failed, kept on disk; null after a clean one. */
+  lastFailure: { at: string; message: string; stage: string | null } | null;
+  /** What it was meant to cost (a warning) and the line that stops it, in pence. */
+  targetPence: number;
+  ceilingPence: number;
+  /** Which engine voices it. */
+  voiceEngine: 'openai' | 'elevenlabs';
   /**
    * Its own picture (audiocard or episode image), as a key that changes when
    * the picture does, or null when none has been set.
@@ -421,6 +431,14 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
       }
     : null;
 
+  // APPROVED, WRITTEN, NOT VOICED. A held run's gate is written BEFORE the
+  // render (it is what the person reads to decide), and it stays on disk when
+  // the voicing after approval fails or is discarded. Reading that report as
+  // the verdict put a Business Decoded short with no audio in To decide, with
+  // nothing to listen to and no button to voice it (2026-10-08). The verdict
+  // is only final once the voice is made and the gate has run over it.
+  const voiced = isSource || (run.isComplete('render') && run.isComplete('qa'));
+
   const state: RunSummary['state'] = m.abandoned
     ? 'abandoned'
     : liveIds.has(run.id)
@@ -429,11 +447,13 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
         ? 'awaiting-approval'
         : run.isComplete('publish')
           ? 'published'
-          : gate
-            ? gate.passed
-              ? 'ready'
-              : 'failed'
-            : 'running';
+          : !voiced && run.hasArtifact('script')
+            ? 'needs-voice'
+            : gate
+              ? gate.passed
+                ? 'ready'
+                : 'failed'
+              : 'running';
 
   let channelName = m.personaId;
   let channelRating: 'general' | 'mature' = 'general';
@@ -461,6 +481,10 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
       (state === 'running' || (state === 'awaiting-approval' && !run.hasArtifact('script'))),
     archivedAt: readArchive(run.dir)?.archivedAt ?? null,
     heldBy: holderOf(run.id),
+    workingBy: liveIds.has(run.id) ? (jobs.forRun(run.id)?.startedBy ?? null) : null,
+    lastFailure: m.lastFailure ?? null,
+    ...budgetsFor(run),
+    voiceEngine: m.voiceEngine,
     seriesTitle: m.seriesTitle ?? null,
     artKey: (() => {
       const art = suppliedArt(path.join(run.dir, 'media'), 'cover');

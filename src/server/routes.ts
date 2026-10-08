@@ -21,17 +21,25 @@
 import { ignoreFinding, unignoreFinding, withOverrides } from '../qa/overrides';
 import { finalAudioFor } from '../render/backing';
 import { runProcess } from '../render/assemble';
+import { ELEVENLABS_PENCE_PER_1K_CHARS } from '../render/tts';
+import { PENCE_PER_MCHAR as OPENAI_PENCE_PER_MCHAR } from '../render/openaiTts';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
-import { episodeBudgetPence, writerConfig } from '../config';
+import {
+  episodeBudgetPence,
+  episodeTargetPence,
+  shortBudgetPence,
+  shortTargetPence,
+  writerConfig,
+} from '../config';
 import { AnthropicClient } from '../models/client';
 import { buildDeps, buildTts, priorEpisodeTexts } from '../deps';
 import { runLane } from '../pipeline/runLane';
 import { PipelineDeps } from '../pipeline/episode';
-import { budgetFor } from '../pipeline/budget';
+import { budgetFor, targetFor } from '../pipeline/budget';
 import { channelVoice } from '../canon/voiceMaster';
 import { tagPass } from '../script/tagPass';
 import { cutStories } from '../pipeline/anthology';
@@ -90,6 +98,12 @@ export const getChannel = (id: string) => {
     sets: queue.sets,
     runs: runs({ channelId: id, limit: 50, live: jobs.liveRunIds() }),
     budgetPence: episodeBudgetPence(),
+    // BOTH NUMBERS, for both kinds: what each is meant to cost (a warning) and
+    // the hard ceiling that stops it. The start form shows the one it will use.
+    budgets: {
+      short: { targetPence: shortTargetPence(), ceilingPence: shortBudgetPence() },
+      episode: { targetPence: episodeTargetPence(), ceilingPence: episodeBudgetPence() },
+    },
   };
 };
 
@@ -156,6 +170,22 @@ export const getRun = (id: string) => {
     inSeries: inSeriesFor(run),
     /** Long form: belongs to a series. */
     long: loadFormat(run.manifest.formatId).kind !== 'short',
+    voiceEstimate: voiceEstimateFor(read('script', scriptSchema)),
+  };
+};
+
+/**
+ * Roughly what voicing the script costs on each engine, in pence, so the
+ * button that spends can say so - and say whether it fits under the ceiling -
+ * before it is pressed. Characters times each engine's own rate.
+ */
+const voiceEstimateFor = (script: Script | null): { chars: number; openai: number; elevenlabs: number } | null => {
+  if (!script) return null;
+  const chars = script.beats.reduce((n, b) => n + b.turns.reduce((m, t) => m + t.text.length, 0), 0);
+  return {
+    chars,
+    openai: (chars / 1_000_000) * OPENAI_PENCE_PER_MCHAR,
+    elevenlabs: (chars / 1000) * ELEVENLABS_PENCE_PER_1K_CHARS,
   };
 };
 
@@ -347,7 +377,7 @@ export const startRun = (body: unknown, who: string | null = null) => {
     return { runId: run.id, jobId: null };
   }
 
-  return runLaneJob(run);
+  return runLaneJob(run, who);
 };
 
 /**
@@ -371,7 +401,7 @@ const tagPassIfAsked = async (run: Run, deps: PipelineDeps, say: (m: string) => 
   let pence = 0;
   const before = run.readArtifact('script', scriptSchema);
   const result = await tagPass(before, sound, deps.clerk ?? deps.writer, (p) => (pence += p));
-  run.spend(pence, budgetFor(run));
+  run.spend(pence, budgetFor(run), targetFor(run));
   run.writeArtifact('script', result.script);
   run.setTagPass(true, new Date());
   const detail =
@@ -389,12 +419,13 @@ const assertEngineReady = (engine: 'openai' | 'elevenlabs') => {
   }
 };
 
-const runLaneJob = (run: Run) => {
+const runLaneJob = (run: Run, who: string | null = null) => {
   assertEngineReady(run.manifest.voiceEngine);
   const job = jobs.start({
     id: jobId('run', run.id),
     kind: 'run',
     runId: run.id,
+    by: who,
     work: async (report) => {
       const deps = buildDeps({
         log: (message, stage) => report(stage ?? 'pipeline', message),
@@ -468,7 +499,7 @@ export const resumeRun = (id: string, who: string | null = null, body: unknown =
   if (run.manifest.abandoned) throw new HttpError(400, 'that run was discarded');
   applyVoiceEngine(run, body, who);
   run.journal({ stage: 'pipeline', event: who ? `resumed in the studio by ${who}` : 'resumed in the studio' });
-  return runLaneJob(run);
+  return runLaneJob(run, who);
 };
 
 /**
@@ -496,7 +527,7 @@ export const approveRun = (id: string, who: string | null = null, body: unknown 
     });
   }
 
-  return runLaneJob(run);
+  return runLaneJob(run, who);
 };
 
 /** Cut every story out of a source run, each into its own run. */
@@ -514,6 +545,7 @@ export const cutShorts = (id: string, body: unknown, who: string | null = null) 
     id: jobId('shorts', run.id),
     kind: 'shorts',
     runId: run.id,
+    by: who,
     work: async (report) => {
       const results = await cutStories(
         { source: run, only },

@@ -82,31 +82,51 @@ export const seasonsDir = (): string => {
 };
 
 /**
- * Ceiling on what one episode may cost, in pence.
+ * HARD ceiling on what one episode may cost, in pence: £2 (owner, 2026-10-08).
  *
- * A run that would exceed it stops rather than degrading. A cost overrun should
+ * A run that would pass it stops rather than degrading. A cost overrun should
  * be visible as silence, which somebody notices, rather than as quietly worse
  * output, which nobody does until much later.
+ *
+ * TWO NUMBERS, NOT ONE. The target (episodeTargetPence) is what an episode is
+ * tuned to cost and is only a warning; this is the line that actually stops a
+ * run. They were the same number until a Business Decoded short voiced on
+ * ElevenLabs passed its 15p target halfway through its voice and stopped there,
+ * with nothing to listen to and nothing to press. FOUNDRY_EPISODE_BUDGET_PENCE
+ * moves it.
  */
 export const episodeBudgetPence = (): number => {
   const raw = process.env.FOUNDRY_EPISODE_BUDGET_PENCE;
-  const n = raw ? Number(raw) : 120;
-  return Number.isFinite(n) && n > 0 ? n : 120;
+  const n = raw ? Number(raw) : 200;
+  return Number.isFinite(n) && n > 0 ? n : 200;
 };
 
 /**
- * Ceiling on what one short may cost, in pence.
- *
- * A SAFETY NET, NOT THE TARGET. The owner's target (2026-10-04) is about 10p a
- * short and about a pound an episode, "near by is fine": the pipeline is tuned
- * to land there, and these ceilings sit above it so a one-off retry does not
- * stop a run halfway through its voice. Only a runaway hits them.
- * FOUNDRY_SHORT_BUDGET_PENCE moves it.
+ * HARD ceiling on what one short may cost, in pence: 25p (owner, 2026-10-08).
+ * FOUNDRY_SHORT_BUDGET_PENCE moves it. See episodeBudgetPence.
  */
 export const shortBudgetPence = (): number => {
   const raw = process.env.FOUNDRY_SHORT_BUDGET_PENCE;
+  const n = raw ? Number(raw) : 25;
+  return Number.isFinite(n) && n > 0 ? n : 25;
+};
+
+/**
+ * What an episode is MEANT to cost: £1.20. Passing it is noted in the journal
+ * and shown on the run's cost meter, and the run carries on to its ceiling.
+ * Never above the ceiling, whatever the environment says.
+ */
+export const episodeTargetPence = (): number => {
+  const raw = process.env.FOUNDRY_EPISODE_TARGET_PENCE;
+  const n = raw ? Number(raw) : 120;
+  return Math.min(Number.isFinite(n) && n > 0 ? n : 120, episodeBudgetPence());
+};
+
+/** What a short is MEANT to cost: 15p. A warning, never a stop. */
+export const shortTargetPence = (): number => {
+  const raw = process.env.FOUNDRY_SHORT_TARGET_PENCE;
   const n = raw ? Number(raw) : 15;
-  return Number.isFinite(n) && n > 0 ? n : 15;
+  return Math.min(Number.isFinite(n) && n > 0 ? n : 15, shortBudgetPence());
 };
 
 /**

@@ -51,6 +51,8 @@ export interface Job {
   error: string | null;
   /** Ids the job produced, for a cut: one per story. */
   produced: string[];
+  /** Who pressed the button, so every page can say who is working on what. */
+  startedBy: string | null;
 }
 
 /**
@@ -106,6 +108,8 @@ class JobRegistry extends EventEmitter {
     id: string;
     kind: JobKind;
     runId: string;
+    /** The signed-in person who started it, when there is one. */
+    by?: string | null;
     work: (report: (stage: string, message: string) => void) => Promise<string[]>;
   }): Job {
     const existing = [...this.jobs.values()].find(
@@ -122,8 +126,17 @@ class JobRegistry extends EventEmitter {
       events: [],
       error: null,
       produced: [],
+      startedBy: input.by ?? null,
     };
     this.jobs.set(job.id, job);
+
+    // A NEW ATTEMPT CLEARS THE OLD FAILURE, so the run's page never shows the
+    // last attempt's error over work that is going fine.
+    try {
+      Run.open(input.runId).clearFailure();
+    } catch {
+      // Not a run on disk (a channel job): nothing to clear.
+    }
 
     const spent = (): number => {
       try {
@@ -155,6 +168,15 @@ class JobRegistry extends EventEmitter {
         // rejection and take the server down with it, which is a poor way to
         // report that one run failed.
         job.error = (err as Error)?.message ?? String(err);
+        // ON THE RUN TOO, where it outlives this process. See Run.noteFailure.
+        const stage = job.events.at(-1)?.stage ?? null;
+        try {
+          const run = Run.open(input.runId);
+          run.noteFailure(job.error, stage);
+          run.journal({ stage: 'failed', event: job.error });
+        } catch {
+          // Not a run on disk, or one deleted while it worked.
+        }
         report('failed', job.error);
       })
       .finally(() => {

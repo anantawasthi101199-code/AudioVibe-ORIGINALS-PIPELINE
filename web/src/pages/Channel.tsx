@@ -26,7 +26,6 @@ import {
   type JobEvent,
   type Platform,
   type Route,
-  type RunSummary,
   type CoveredView,
   type SeasonView,
 } from '../api';
@@ -394,15 +393,7 @@ const Setup = ({
 };
 
 export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) => {
-  const [data, setData] = useState<{
-    channel: ChannelT;
-    topics: string[];
-    sets: string[];
-    runs: RunSummary[];
-    budgetPence: number;
-    newsRoundup: boolean;
-    countries: string[];
-  } | null>(null);
+  const [data, setData] = useState<Awaited<ReturnType<typeof api.channel>> | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
   const [topic, setTopic] = useState('');
@@ -500,7 +491,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   }
   if (!data) return <div className="page faint">...</div>;
 
-  const { channel, runs, budgetPence } = data;
+  const { channel, runs } = data;
   // News: no topic is today's rapid fire; a topic is the in-depth short.
   const rapidFire = data.newsRoundup && !topic.trim();
   // An episode cannot start without its series. See the series picker.
@@ -510,6 +501,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   // the calendar, and counting it here as "ready to publish" kept it on this
   // page after it had been scheduled (2026-10-05).
   const ready = runs.filter((r) => r.state === 'ready' && !r.isSource && !r.releaseApprovedAt).length;
+  const unfinished = runs.filter((r) => r.state === 'needs-voice' || r.stalled);
 
   // Whether the topic as typed would be refused. Same threshold the server
   // uses, and the server is still the one that decides.
@@ -573,7 +565,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   };
 
   return (
-    <div className="page">
+    <div className="page wide">
       {confirming && route && (() => {
         const p = plan(confirming.blank)!;
         const chosen = rapidFire ? countries.filter(Boolean) : [];
@@ -645,7 +637,16 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             the publishing page, and one word meaning two things on adjacent
             screens is how somebody reads the wrong number. */}
         <Count n={data.topics.length + data.sets.length} label="topics" />
-        <Count n={money(budgetPence)} label="budget" />
+        <Count n={unfinished.length} label="to finish" tone={unfinished.length ? 'hold' : undefined} />
+        {/* TARGET → HARD STOP, for both kinds: passing the first is allowed. */}
+        <Count
+          n={`${money(data.budgets.short.targetPence)} → ${money(data.budgets.short.ceilingPence)}`}
+          label="short: target → hard stop"
+        />
+        <Count
+          n={`${money(data.budgets.episode.targetPence)} → ${money(data.budgets.episode.ceilingPence)}`}
+          label="episode: target → hard stop"
+        />
       </div>
 
       <ErrorNote>{error}</ErrorNote>
@@ -681,6 +682,24 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </button>
         )}
 
+        {/* APPROVED, NOT VOICED, or stopped partway: one press each, on the run. */}
+        {unfinished.length > 0 && (
+          <button className="panel step-on finish" onClick={() => go(`/r/${unfinished[0]!.id}`)}>
+            <span className="step-n warn">{unfinished.length}</span>
+            <span className="stack" style={{ gap: '0.15rem', flex: 1, minWidth: 0 }}>
+              <span className="queue-title">
+                {unfinished.length} to finish: {unfinished.length === 1 ? (unfinished[0]!.title ?? unfinished[0]!.topic) : 'approved but not voiced, or stopped partway'}
+              </span>
+              <span className="muted tiny">Open it and press Voice it (or Resume). Everything already paid for is kept.</span>
+            </span>
+            <span className="caret">›</span>
+          </button>
+        )}
+
+      </div>
+
+      <div className="channel-grid">
+        <div className="stack tight">
         {/* --- The season plan, for a serial ---------------------------- */}
         {channel.fiction && (
           <section className="panel">
@@ -1081,6 +1100,9 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </div>
         </section>
 
+        </div>
+
+        <div className="channel-side">
         {/* --- What it has made ----------------------------------------- */}
         <section className="panel">
           <div className="panel-head">
@@ -1105,7 +1127,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                     <span className="queue-title">{r.title ?? r.topic}</span>
                     <span className="muted">
                       {r.label} · {r.seriesTitle ? `${r.seriesTitle} · ` : ''}{ago(r.createdAt)}
-                      {r.heldBy ? ` · ${r.heldBy} is working on it` : ''}
+                      {r.workingBy ? ` · ${r.workingBy} started it` : r.heldBy ? ` · ${r.heldBy} has it open` : ''}
                     </span>
                   </span>
                   <span className="row nowrap">
@@ -1118,6 +1140,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             </div>
           )}
         </section>
+        </div>
       </div>
     </div>
   );

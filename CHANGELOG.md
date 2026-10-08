@@ -13,6 +13,32 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Approved-but-not-voiced runs are no longer "ready", targets no longer stop
+  a run, and the run page is two columns** (2026-10-08).
+  - The bug: a Business Decoded short approved on ElevenLabs had its GPT voice
+    discarded, and the new voicing stopped at the 15p short ceiling. The gate
+    report written BEFORE the render was still on disk and passed, so the run
+    sat in To decide with no audio, no Approve and no Resume. A run is now only
+    `ready` once its render and its final gate are complete; otherwise it is
+    `needs-voice`, listed under "To finish", with a Voice it button on its page.
+    It cannot be approved for a day or published until it is voiced.
+  - Budgets are two numbers: a target (15p short, £1.20 episode) that is only
+    journalled and shown, and a hard ceiling (25p, £2) that stops the run.
+    FOUNDRY_*_TARGET_PENCE and FOUNDRY_*_BUDGET_PENCE move them.
+  - Why the last attempt failed is kept on the run (`lastFailure`), not only in
+    the in-memory job, so it survives a restart and shows on the page.
+  - Who started each job is recorded and shown ("Working now" on the queue,
+    the run page's banner), beside who has a run open.
+  - The publishing page's Hold button never parked anything: it posted to
+    /api/run/hold, the presence heartbeat's path, which answered first. Parking
+    is now /api/run/park, and routes.test.ts fails on a duplicate path+method.
+  - The run page: a single coloured Next step card (read / voice it / resume /
+    publish / blocked), progress bars while working (overall, and the voice
+    beat by beat with time left), a voice cost estimate per engine with a
+    warning when it will not fit under the ceiling, and a right-hand column for
+    cost (target and ceiling on one meter), listing, series and numbers. The
+    channel page puts Make beside its Runs.
+
 - **Named outros and each host's own voice tags** (2026-10-07). Every outro now
   says who is talking and on which channel ("This is Adrian on Business
   Decoded..."). Each host has a personality-matched tag set in voice-master.yaml

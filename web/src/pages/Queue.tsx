@@ -32,7 +32,7 @@ import { Count, Info, PlayButton } from '../components/Info';
 
 const REFRESH_MS = 20_000;
 
-type Key = 'held' | 'stuck' | 'due' | 'soon' | 'dueNow' | 'ready' | 'lined' | 'out';
+type Key = 'working' | 'unfinished' | 'held' | 'blocked' | 'stuck' | 'due' | 'soon' | 'dueNow' | 'ready' | 'lined' | 'out';
 
 const Row = ({
   title,
@@ -62,12 +62,21 @@ const Row = ({
 const RunRow = ({ run, go }: { run: RunSummary; go: (path: string) => void }) => (
   <Row
     title={run.title ?? run.topic}
-    detail={`${run.channelName}${run.short !== null ? ` · short ${run.short}` : ''} · ${ago(run.createdAt)}`}
+    detail={
+      `${run.channelName}${run.short !== null ? ` · short ${run.short}` : ''} · ${ago(run.createdAt)}` +
+      (run.state === 'needs-voice' || run.stalled
+        ? run.lastFailure
+          ? ` · stopped: ${run.lastFailure.message.slice(0, 90)}`
+          : ''
+        : '')
+    }
     onClick={() => go(`/r/${run.id}`)}
     play={run.hasAudio ? run.id : undefined}
     right={
       <>
-        {run.gate && run.gate.blocking > 0 && <span className="pill fail">{run.gate.blocking}</span>}
+        {run.workingBy && <span className="pill who">{run.workingBy} started it</span>}
+        {!run.workingBy && run.heldBy && <span className="pill who">{run.heldBy} has it open</span>}
+        {run.gate && run.gate.blocking > 0 && run.state === 'failed' && <span className="pill fail">{run.gate.blocking}</span>}
         <span className="muted mono tiny">{clock(run.durationS)}</span>
         <span className="muted mono tiny">{money(run.spentPence)}</span>
         <StatePill state={run.state} stage={run.liveStage} />
@@ -125,6 +134,8 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
       ? { text: 'Paused', tone: 'fail' as const }
       : queue.dueToPublish.length
         ? { text: `${queue.dueToPublish.length} due to publish`, tone: 'pass' as const }
+      : queue.unfinished.length
+        ? { text: `${queue.unfinished.length} to finish`, tone: 'hold' as const }
       : queue.held.length
         ? { text: `${queue.held.length} to read`, tone: 'hold' as const }
         : queue.blocked.length
@@ -145,6 +156,21 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
     rows: React.ReactNode;
   }> = [
     {
+      key: 'working',
+      title: 'Working now',
+      count: queue.working.length,
+      why: 'Every run with work in flight, and who started it. Nothing here needs you; open one to watch its progress.',
+      rows: queue.working.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+    {
+      key: 'unfinished',
+      title: 'To finish',
+      tone: 'hold',
+      count: queue.unfinished.length,
+      why: 'Approved and written but not voiced (a voicing that stopped, or audio that an edit or an engine change discarded), or stopped partway. Each needs one press on its page: Voice it, or Resume. Everything already paid for is kept.',
+      rows: queue.unfinished.map((r) => <RunRow key={r.id} run={r} go={go} />),
+    },
+    {
       key: 'held',
       title: 'To read',
       tone: 'hold',
@@ -153,7 +179,7 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
       rows: queue.held.map((r) => <RunRow key={r.id} run={r} go={go} />),
     },
     {
-      key: 'due',
+      key: 'blocked',
       title: 'Waiting on you',
       tone: 'hold',
       count: queue.blocked.length,
@@ -315,6 +341,8 @@ export const Queue = ({ go }: { go: (path: string) => void }) => {
       <ErrorNote>{error}</ErrorNote>
 
       <div className="counts" style={{ margin: '1.4rem 0 1.6rem' }}>
+        <Count n={queue.working.length} label="working" />
+        <Count n={queue.unfinished.length} label="to finish" tone="hold" />
         <Count n={queue.held.length} label="to read" tone="hold" />
         <Count n={queue.ready.length} label="to decide" tone="pass" />
         <Count n={queue.scheduled.length} label="lined up" />

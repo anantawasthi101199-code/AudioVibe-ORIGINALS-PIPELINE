@@ -44,7 +44,7 @@ import {
  * one that overestimates, because overestimating stops a run early and somebody
  * looks.
  */
-const PENCE_PER_MCHAR = 1200;
+export const PENCE_PER_MCHAR = 1200;
 // Roughly fifteen pence for a twelve-minute episode. Exact for tts-1, which is
 // billed per character; approximate for gpt-4o-mini-tts, which is billed per
 // audio token and lands in the same place. Close enough for a budget ceiling

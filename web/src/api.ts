@@ -59,6 +59,8 @@ export interface Lane {
 export type RunState =
   | 'running'
   | 'awaiting-approval'
+  /** Approved and written, but not voiced: a voicing that failed, or audio an edit dropped. */
+  | 'needs-voice'
   | 'ready'
   | 'failed'
   | 'published'
@@ -82,8 +84,16 @@ export interface RunSummary {
   stalled: boolean;
   /** When its files went to R2 (its audio now plays from there), or null. */
   archivedAt: string | null;
-  /** Who is working on it right now, or null. */
+  /** Who has it open right now (and so may edit it), or null. */
   heldBy: string | null;
+  /** Who started the work in flight on it, while something is. */
+  workingBy: string | null;
+  /** Why the last attempt failed, kept on disk; null after a clean one. */
+  lastFailure: { at: string; message: string; stage: string | null } | null;
+  /** What it is meant to cost (only a warning) and the hard ceiling that stops it. */
+  targetPence: number;
+  ceilingPence: number;
+  voiceEngine: VoiceEngine;
   /** Its own picture, as a key that changes with it; null when none is set. */
   artKey: string | null;
   /** The series an episode publishes into, or null. */
@@ -136,6 +146,10 @@ export interface QueueView {
   waiting: QueueItem[];
   blocked: QueueBlocker[];
   held: RunSummary[];
+  /** Work in flight, with who started it. */
+  working: RunSummary[];
+  /** Approved but not voiced, or stopped partway: one press to finish. */
+  unfinished: RunSummary[];
   ready: RunSummary[];
   /** Approved, and its time has come. */
   dueToPublish: RunSummary[];
@@ -296,6 +310,8 @@ export interface Job {
   events: JobEvent[];
   error: string | null;
   produced: string[];
+  /** Who pressed the button. */
+  startedBy: string | null;
 }
 
 export interface Claim {
@@ -354,6 +370,8 @@ export interface RunDetail {
   inSeries: boolean;
   /** Long form: belongs to a series. */
   long: boolean;
+  /** Roughly what voicing the script costs on each engine, in pence. */
+  voiceEstimate: { chars: number; openai: number; elevenlabs: number } | null;
 }
 
 export class ApiError extends Error {
@@ -721,8 +739,9 @@ export const api = {
       body: JSON.stringify({ rating }),
     }),
 
+  /** Park a finished run (On hold), or bring it back. Not the presence hold. */
   setHold: (runId: string, held: boolean) =>
-    call<{ ok: true; held: boolean }>(`/api/run/hold?id=${encodeURIComponent(runId)}`, {
+    call<{ ok: true; held: boolean }>(`/api/run/park?id=${encodeURIComponent(runId)}`, {
       method: 'POST',
       body: JSON.stringify({ held }),
     }),
@@ -737,6 +756,8 @@ export const api = {
       sets: string[];
       runs: RunSummary[];
       budgetPence: number;
+      /** Target (a warning) and hard ceiling, per kind. */
+      budgets: Record<'short' | 'episode', { targetPence: number; ceilingPence: number }>;
       /** A news channel: an empty topic makes today's rapid-fire roundup. */
       newsRoundup: boolean;
       /** What the rapid fire's country boxes offer. */

@@ -711,7 +711,10 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/run/rating' && req.method === 'POST') {
         return send(res, 200, setContentRating(id ?? '', await readBody(req)));
       }
-      if (pathname === '/api/run/hold' && req.method === 'POST') {
+      // PARKING (On hold on the publishing page), NOT /api/run/hold: that path
+      // is the presence heartbeat above, which answered every Hold press with a
+      // heartbeat and never parked anything (2026-10-08).
+      if (pathname === '/api/run/park' && req.method === 'POST') {
         return send(res, 200, setHold(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/run/publish' && req.method === 'POST') {

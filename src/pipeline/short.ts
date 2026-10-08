@@ -26,7 +26,7 @@
 import { z } from 'zod';
 import { loadPersona } from '../canon/load';
 import { loadFormat } from '../formats/load';
-import { budgetFor } from './budget';
+import { budgetFor, targetFor } from './budget';
 import { checkLedger, Claim, claimSchema } from '../evidence/claim';
 import { corpusSchema } from '../evidence/research';
 import { Source } from '../evidence/source';
@@ -148,7 +148,7 @@ export const runShort = async (
   log(existing ? `short: resuming ${run.id}` : `short: ${run.id}, derived from ${parent.id}`);
 
   const budget = budgetFor(run);
-  const spend = (pence: number) => run.spend(pence, budget);
+  const spend = (pence: number) => run.spend(pence, budget, targetFor(run));
 
   // --- 1. Selection -------------------------------------------------------
   // Stored under `brief` because that is what it is: the plan for this piece of

@@ -174,4 +174,16 @@ describe('route method guards', () => {
 
     expect(swallowed).toEqual([]);
   });
+
+  // THE SAME PATH AND METHOD TWICE: only the first ever runs. The publishing
+  // page's Hold button posted to /api/run/hold, which the presence heartbeat
+  // above answered, so nothing was ever parked (2026-10-08).
+  it('never handles the same path and method twice', () => {
+    const seen = new Map<string, number>();
+    for (const g of guards.filter((x) => x.method)) {
+      const key = `${g.method} ${g.path}`;
+      seen.set(key, (seen.get(key) ?? 0) + 1);
+    }
+    expect([...seen.entries()].filter(([, n]) => n > 1).map(([k]) => k)).toEqual([]);
+  });
 });
