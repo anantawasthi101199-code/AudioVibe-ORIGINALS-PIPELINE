@@ -140,6 +140,10 @@ export const runManifestSchema = z.object({
   holdForApproval: z.boolean().default(false),
   /** How many times the voice was discarded by an edit and has to be made again. */
   revoicings: z.number().int().nonnegative().default(0),
+  /** Why the last job on this run failed; cleared when the next one starts. */
+  lastFailure: z
+    .object({ at: z.string().datetime(), message: z.string(), stage: z.string().nullable().default(null) })
+    .optional(),
   approvedAt: z.string().datetime().optional(),
 
   /**
@@ -810,16 +814,47 @@ export class Run {
    *
    * Throwing rather than warning is the point: a run that quietly carries on
    * over budget produces an episode nobody decided to pay for.
+   *
+   * THE TARGET ONLY WARNS. Crossing it is journalled once, so the run's page
+   * and its record say it went over what it was meant to cost, and the work
+   * carries on to the ceiling (owner, 2026-10-08: "don't stop the generation").
    */
-  spend(pence: number, budgetPence: number): void {
+  spend(pence: number, budgetPence: number, targetPence?: number): void {
+    const before = this.manifestData.spentPence;
     this.manifestData.spentPence += pence;
     this.save();
-    if (this.manifestData.spentPence > budgetPence) {
+    const after = this.manifestData.spentPence;
+    if (targetPence !== undefined && before <= targetPence && after > targetPence && after <= budgetPence) {
+      this.journal({
+        stage: 'budget',
+        event: `over the ${targetPence}p target at ${after.toFixed(1)}p; carrying on, the hard ceiling is ${budgetPence}p`,
+      });
+    }
+    if (after > budgetPence) {
       throw new Error(
-        `run ${this.id} has spent ${this.manifestData.spentPence.toFixed(1)}p, over the ` +
-          `${budgetPence}p ceiling. Raise FOUNDRY_EPISODE_BUDGET_PENCE or start again.`
+        `run ${this.id} has spent ${after.toFixed(1)}p, over the ${budgetPence}p ceiling (the hard limit), ` +
+          `so it stopped here. Everything paid for so far is kept: Resume carries on from this step ` +
+          `once the ceiling is raised (FOUNDRY_SHORT_BUDGET_PENCE / FOUNDRY_EPISODE_BUDGET_PENCE).`
       );
     }
+  }
+
+  /**
+   * Why the last piece of work on this run failed, kept on the run.
+   *
+   * THE JOB'S ERROR LIVES IN MEMORY, so a restart (or fifty other jobs) lost
+   * the one sentence that explained a run with no audio. On disk, it survives
+   * and the run's page can say what went wrong and what to press.
+   */
+  noteFailure(message: string, stage: string | null = null, at = new Date()): void {
+    this.manifestData.lastFailure = { at: at.toISOString(), message: message.slice(0, 2000), stage };
+    this.save();
+  }
+
+  clearFailure(): void {
+    if (!this.manifestData.lastFailure) return;
+    delete this.manifestData.lastFailure;
+    this.save();
   }
 
   /**

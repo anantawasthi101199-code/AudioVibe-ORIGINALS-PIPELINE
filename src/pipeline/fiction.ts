@@ -45,7 +45,7 @@ import {
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
 import { loadFormat } from '../formats/load';
-import { budgetFor } from './budget';
+import { budgetFor, targetFor } from './budget';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { Script, scriptProgressSchema, scriptSchema, writeScript } from '../script/write';
 import { runGate, GateReport } from '../qa/gate';
@@ -138,7 +138,7 @@ export const runFiction = async (
   let stage = 'pipeline';
   const spend = (pence: number) => {
     run.journal({ stage, event: 'spend', pence });
-    run.spend(pence, budget);
+    run.spend(pence, budget, targetFor(run));
   };
 
   run.journal({ stage: 'pipeline', event: 'start', detail: run.manifest.topic });

@@ -51,6 +51,10 @@
   --fail-dim: #6d2b2f;
   --hold: #6f9ef0;
   --hold-dim: #2a4272;
+  /* UNFINISHED: approved and not voiced, or stopped partway. Orange rather
+     than amber, because amber is spend and this is a thing left undone. */
+  --warn: #f07a3a;
+  --warn-dim: #6e3a1c;
 
   --radius: 10px;
   --radius-sm: 6px;
@@ -2199,4 +2203,396 @@ table.runs .num {
   font-size: 0.6rem;
   text-align: center;
   line-height: 1.1;
+}
+
+
+/* =========================================================================
+   The run page, in two columns (2026-10-08)
+   ---------------------------------------------------------------------------
+   Left is the work (next step, sound, script, gate); right is the record
+   (cost, what listeners see, series, numbers). One column below 1000px, where
+   the record follows the work rather than squeezing beside it.
+   ========================================================================= */
+
+.page.wide {
+  max-width: 1400px;
+}
+
+.pill.warn {
+  color: var(--warn);
+  border-color: var(--warn-dim);
+  background: color-mix(in srgb, var(--warn) 9%, transparent);
+}
+.pill.who {
+  color: var(--text);
+  border-color: var(--ink-600);
+  background: var(--ink-750);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.run-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+.run-title {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  margin-top: 0.25rem;
+  overflow-wrap: anywhere;
+}
+.run-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  align-items: center;
+}
+.chip-static {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.16rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-size: 0.74rem;
+  background: var(--ink-850);
+}
+.chip-static.who {
+  color: var(--hold);
+  border-color: var(--hold-dim);
+}
+.chip-static.who.mine {
+  color: var(--pass);
+  border-color: var(--pass-dim);
+}
+
+/* Somebody else has this run: a calm bar, not an alarm. */
+.lockbar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--hold-dim);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--hold) 8%, var(--ink-850));
+  font-size: 0.88rem;
+}
+.lock-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--hold);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--hold) 20%, transparent);
+}
+
+.run-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  min-width: 0;
+}
+
+.run-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 1.25rem;
+  align-items: start;
+}
+.run-main,
+.run-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+.run-side {
+  position: sticky;
+  top: 1rem;
+}
+.side-card .panel-head {
+  padding: 0.7rem 1rem;
+}
+.side-card .panel-body {
+  padding: 0.9rem 1rem;
+}
+.side-card .art-picker {
+  flex-wrap: wrap;
+}
+.side-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem 0.6rem;
+}
+
+@media (max-width: 1000px) {
+  .run-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .run-side {
+    position: static;
+  }
+}
+
+/* --- The next step: one card, coloured by where the run is ---------------- */
+
+.next {
+  --tone: var(--ink-600);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.1rem 1.2rem 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--tone) 55%, var(--line));
+  border-left: 4px solid var(--tone);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tone) 10%, transparent), transparent 55%),
+    var(--ink-850);
+}
+.next h2 {
+  font-size: 1.2rem;
+}
+.next.working {
+  --tone: var(--amber);
+}
+.next.read {
+  --tone: var(--hold);
+}
+.next.finish {
+  --tone: var(--warn);
+}
+.next.pass,
+.next.done {
+  --tone: var(--pass);
+}
+.next.blocked {
+  --tone: var(--fail);
+}
+.next-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.next-kicker {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tone);
+}
+.next-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Choosing the engine: two cards rather than a dropdown, each with its cost. */
+.engine {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.engine-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.5rem;
+}
+.engine-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.engine-choice.on {
+  border-color: var(--amber);
+  box-shadow: inset 0 0 0 1px var(--amber);
+  background: linear-gradient(180deg, var(--amber-glow), transparent), var(--ink-800);
+}
+.engine-choice:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.note {
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+  overflow-wrap: anywhere;
+}
+.note.warn {
+  border-color: var(--warn-dim);
+  background: color-mix(in srgb, var(--warn) 8%, var(--ink-850));
+}
+.note.fail {
+  border-color: var(--fail-dim);
+  background: color-mix(in srgb, var(--fail) 8%, var(--ink-850));
+}
+
+/* --- Progress ------------------------------------------------------------- */
+
+.progress-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+.progress-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--ink-750);
+}
+.progress-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.14) 0 8px,
+      transparent 8px 16px
+    ),
+    var(--amber);
+  background-size: 22px 22px, auto;
+  animation: progress-stripes 900ms linear infinite;
+  transition: width 400ms ease;
+}
+.progress-track.voice > span {
+  background-color: var(--hold);
+}
+.progress-track.failed > span {
+  background: var(--fail);
+  animation: none;
+}
+@keyframes progress-stripes {
+  to {
+    background-position: 22px 0, 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-track > span {
+    animation: none;
+  }
+}
+
+/* --- Budget --------------------------------------------------------------- */
+
+.budget {
+  --tone: var(--pass);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.budget.warn {
+  --tone: var(--warn);
+}
+.budget.fail {
+  --tone: var(--fail);
+}
+.budget-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.budget-head strong {
+  font-size: 1.3rem;
+  color: var(--tone);
+}
+.budget.compact .budget-head strong {
+  font-size: 0.95rem;
+}
+.budget-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ink-750);
+  overflow: visible;
+}
+.budget-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--tone);
+  transition: width 400ms ease;
+}
+.budget-target {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--text);
+  opacity: 0.75;
+}
+.budget-say {
+  font-size: 0.75rem;
+  color: var(--tone);
+}
+
+/* Folded sections (background music). */
+.fold summary {
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+.fold[open] summary {
+  color: var(--text);
+}
+
+/* --- The channel page: making on the left, what it made on the right ------ */
+
+.channel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: start;
+  margin-top: 0.75rem;
+}
+.channel-side {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  border-radius: var(--radius);
+}
+@media (max-width: 1000px) {
+  .channel-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .channel-side {
+    position: static;
+    max-height: none;
+  }
+}
+
+.step-n.warn {
+  color: var(--warn);
+  border-color: var(--warn-dim);
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+}
+.step-on.finish {
+  border-color: var(--warn-dim);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--warn) 7%, transparent), transparent 60%),
+    var(--ink-850);
 }

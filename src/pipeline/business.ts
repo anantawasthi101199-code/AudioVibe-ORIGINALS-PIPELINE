@@ -30,7 +30,7 @@ import {
   recordVoices,
   saveVoiceRegistry,
 } from '../canon/voiceRegistry';
-import { budgetFor } from './budget';
+import { budgetFor, targetFor } from './budget';
 import { stageFlags, stagesOff } from '../config/stages';
 import { claimSchema } from '../evidence/claim';
 import { Source, sourceSchema } from '../evidence/source';
@@ -97,7 +97,7 @@ export const runBusiness = async (
   let stage = 'pipeline';
   const spend = (pence: number) => {
     run.journal({ stage, event: 'spend', pence });
-    run.spend(pence, budget);
+    run.spend(pence, budget, targetFor(run));
   };
 
   const flags = stageFlags(deps.stages);

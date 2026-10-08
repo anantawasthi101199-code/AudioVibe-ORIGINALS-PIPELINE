@@ -15,6 +15,7 @@ import { money } from '../api';
 const STATE: Record<RunState, { label: string; tone: string }> = {
   running: { label: 'running', tone: 'live' },
   'awaiting-approval': { label: 'held', tone: 'hold' },
+  'needs-voice': { label: 'needs voice', tone: 'warn' },
   ready: { label: 'passed', tone: 'pass' },
   failed: { label: 'blocked', tone: 'fail' },
   published: { label: 'published', tone: 'pass' },
@@ -124,7 +125,15 @@ const since = (from: string, now: number): string => {
  * What a working run is doing right now, in words: the step, the last thing it
  * reported, and how long each has taken. Ticks every second.
  */
-export const NowBanner = ({ events, startedAt }: { events: JobEvent[]; startedAt?: string }) => {
+export const NowBanner = ({
+  events,
+  startedAt,
+  startedBy,
+}: {
+  events: JobEvent[];
+  startedAt?: string;
+  startedBy?: string | null;
+}) => {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
     const t = window.setInterval(() => setNow(Date.now()), 1000);
@@ -153,8 +162,139 @@ export const NowBanner = ({ events, startedAt }: { events: JobEvent[]; startedAt
       <div className="now-line muted">{last ? last.message : 'Starting...'}</div>
       <div className="now-meta faint tiny">
         {startedAt && <>Running {since(startedAt, now)}</>}
+        {startedBy && <> · started by {startedBy}</>}
         {spent > 0 && <> · spent so far {money(spent)}</>}
       </div>
+    </div>
+  );
+};
+
+/* --- Progress ------------------------------------------------------------- */
+
+/**
+ * How far the voice is, read off the renderer's own lines ("3/8: hook ...").
+ *
+ * FROM THE LOG, NOT A SECOND CHANNEL. The renderer already says which beat it
+ * is on; a progress bar that counted something else would be a second account
+ * of the same work, and the two would disagree the first time a beat was
+ * reused from an earlier attempt.
+ */
+export const voiceProgress = (
+  events: JobEvent[]
+): { done: number; total: number; startedAt: string | null } | null => {
+  let done = 0;
+  let total = 0;
+  let startedAt: string | null = null;
+  for (const e of events) {
+    if (phaseOf(e.stage) !== 'voice') continue;
+    const m = /(?:^|\s)(\d+)\/(\d+):\s/.exec(e.message);
+    if (!m) continue;
+    startedAt ??= e.at;
+    // The line is written as a beat STARTS, so beat n means n-1 are finished.
+    done = Math.max(done, Number(m[1]) - 1);
+    total = Number(m[2]);
+  }
+  return total > 0 ? { done, total, startedAt } : null;
+};
+
+const MAKE_STEPS = PHASES.filter((p) => p.id !== 'publish');
+
+/** Overall and voice progress for a working run, as two bars. */
+export const ProgressBars = ({ events, engine }: { events: JobEvent[]; engine?: string }) => {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(t);
+  }, []);
+
+  const last = events[events.length - 1];
+  const phase = phaseOf(last?.stage) ?? 'plan';
+  const failed = last?.stage === 'failed';
+  const voice = voiceProgress(events);
+  const voicing = phase === 'voice' || (voice !== null && phase === 'check');
+
+  const stepIdx = Math.max(0, MAKE_STEPS.findIndex((p) => p.id === phase));
+  const within = phase === 'voice' && voice ? voice.done / voice.total : 0.35;
+  const overall = Math.min(0.99, (stepIdx + within) / MAKE_STEPS.length);
+
+  let eta: string | null = null;
+  if (voice && voice.startedAt && voice.done > 0 && voice.done < voice.total) {
+    const perBeat = (now - Date.parse(voice.startedAt)) / voice.done;
+    const left = Math.round((perBeat * (voice.total - voice.done)) / 1000);
+    eta = left < 60 ? `about ${left}s left` : `about ${Math.round(left / 60)} min left`;
+  }
+
+  return (
+    <div className="progress-pair">
+      <div className="progress">
+        <div className="progress-label">
+          <span>Overall</span>
+          <span className="mono">{failed ? 'stopped' : `${Math.round(overall * 100)}%`}</span>
+        </div>
+        <div className={`progress-track${failed ? ' failed' : ''}`}>
+          <span style={{ width: `${overall * 100}%` }} />
+        </div>
+      </div>
+      {voice && (
+        <div className="progress">
+          <div className="progress-label">
+            <span>
+              Voice{engine ? ` on ${engine === 'elevenlabs' ? 'ElevenLabs' : 'GPT'}` : ''}: beat{' '}
+              {Math.min(voice.total, voice.done + (voicing && voice.done < voice.total ? 1 : 0))} of{' '}
+              {voice.total}
+            </span>
+            <span className="mono">
+              {eta ?? (voice.done >= voice.total || phase === 'check' ? 'joining and checking' : '')}
+            </span>
+          </div>
+          <div className={`progress-track voice${failed ? ' failed' : ''}`}>
+            <span style={{ width: `${(phase === 'check' ? 1 : voice.done / voice.total) * 100}%` }} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
+ * What a run has spent against what it was meant to cost and where it stops.
+ *
+ * THREE NUMBERS, ONE BAR. The bar's full width is the hard ceiling; the tick is
+ * the target. Under the tick is on budget; past it is over target and still
+ * going, which is allowed; the end of the bar is where the run stops.
+ */
+export const BudgetMeter = ({
+  spent,
+  target,
+  ceiling,
+  compact = false,
+}: {
+  spent: number;
+  target: number;
+  ceiling: number;
+  compact?: boolean;
+}) => {
+  const pct = (n: number) => `${Math.min(100, Math.max(0, (n / ceiling) * 100))}%`;
+  const tone = spent > ceiling ? 'fail' : spent > target ? 'warn' : 'pass';
+  const say =
+    spent > ceiling
+      ? 'stopped at the hard ceiling'
+      : spent > target
+        ? 'over target, still allowed'
+        : 'within target';
+  return (
+    <div className={`budget ${tone}${compact ? ' compact' : ''}`}>
+      <div className="budget-head">
+        <strong className="mono">{money(spent)}</strong>
+        <span className="faint tiny">
+          target {money(target)} · hard stop {money(ceiling)}
+        </span>
+      </div>
+      <div className="budget-track" title={`${money(spent)} of a ${money(ceiling)} ceiling; target ${money(target)}`}>
+        <span className="budget-fill" style={{ width: pct(spent) }} />
+        <span className="budget-target" style={{ left: pct(target) }} />
+      </div>
+      {!compact && <div className={`budget-say ${tone}`}>{say}</div>}
     </div>
   );
 };

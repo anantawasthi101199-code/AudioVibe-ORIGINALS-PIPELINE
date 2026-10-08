@@ -26,7 +26,7 @@ import { musicFor } from '../render/musicFor';
 import { Run } from '../run/store';
 import { measure } from '../script/style';
 import { Script, WORDS_PER_SECOND, fullText, scriptSchema } from '../script/write';
-import { budgetFor } from './budget';
+import { budgetFor, targetFor } from './budget';
 import type { PipelineDeps } from './episode';
 import { Persona } from '../canon/schema';
 
@@ -136,7 +136,7 @@ export const runHandwritten = async (
   const budget = budgetFor(run);
   const spend = (pence: number) => {
     run.journal({ stage: 'render', event: 'spend', pence });
-    run.spend(pence, budget);
+    run.spend(pence, budget, targetFor(run));
   };
   assertVoiceUnchanged(persona, deps.tts.name, loadVoiceRegistry());
   const script = run.readArtifact('script', scriptSchema);

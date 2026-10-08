@@ -53,6 +53,18 @@ export interface QueueView {
   /** Made, gated, and waiting for somebody to say yes. THE IMPORTANT ONE. */
   held: RunSummary[];
   /**
+   * WORKING NOW: every run with a job in flight, with who started it, so three
+   * people sharing one studio can see who is spending on what.
+   */
+  working: RunSummary[];
+  /**
+   * STOPPED SHORT OF FINISHED, with nothing working on it: approved but not
+   * voiced (a voicing that failed, or audio an edit discarded), or stopped
+   * partway. Each needs one press: Voice it, or Resume. These used to be
+   * invisible, or worse, listed as ready.
+   */
+  unfinished: RunSummary[];
+  /**
    * Gate passed clean and its release time has come, or it has none.
    *
    * SPLIT FROM `scheduled` so the page can tell you what you could publish now
@@ -133,7 +145,9 @@ export const getQueue = (now = new Date()): QueueView => {
       reason: b.reason,
     })),
 
-    held: inState('awaiting-approval'),
+    held: inState('awaiting-approval').filter((r) => !r.stalled),
+    working: inState('running').filter((r) => !r.stalled),
+    unfinished: all.filter((r) => r.state === 'needs-voice' || r.stalled),
 
     // WHOSE TURN IT IS. A run with no release time is ready the moment it
     // passes, which is what an episode is; one with a time in the future is
