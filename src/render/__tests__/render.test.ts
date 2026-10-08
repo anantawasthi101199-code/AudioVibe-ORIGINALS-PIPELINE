@@ -635,4 +635,32 @@ describe('re-voicing after an edit', () => {
     await render(script('The end of it all.'));
     expect(said).toEqual(['The end of it all.']);
   });
+
+  it('FINISHES a voicing that passes the hard ceiling, and stops at once for a person', async () => {
+    const { BudgetExceeded, StoppedByPerson } = await import('../../run/store');
+    const three = [...script('The end of it all.'), { beatId: 'tag', beatType: 'button', turns: [{ speaker: 'host', text: 'Follow for more.' }] }];
+    const go = (onCost: (c: number) => void) =>
+      renderScript(
+        { beats: three, voices: { host: voice2 }, beatPathFor: (n) => path.join(dir, n), outputPath: path.join(dir, 'out.wav') },
+        tts,
+        { probe: async () => 5, trailing: async () => 0.2, concat: async () => undefined },
+        onCost,
+        () => undefined
+      );
+
+    said.length = 0;
+    await go(() => {
+      throw new BudgetExceeded('over the 50p ceiling (the hard limit), so it stopped here');
+    });
+    expect(said).toHaveLength(3); // every beat voiced, none thrown away
+
+    for (const f of fs.readdirSync(dir)) fs.rmSync(path.join(dir, f));
+    said.length = 0;
+    await expect(
+      go(() => {
+        throw new StoppedByPerson('stopped by anant');
+      })
+    ).rejects.toThrow(/stopped by anant/);
+    expect(said).toHaveLength(1);
+  });
 });

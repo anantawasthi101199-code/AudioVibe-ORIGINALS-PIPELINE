@@ -46,7 +46,7 @@ import { channelVoice } from '../canon/voiceMaster';
 import { tagPass } from '../script/tagPass';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
-import { Run, runLabel } from '../run/store';
+import { Run, runLabel, stopRequests } from '../run/store';
 import { readArchive } from '../archive/record';
 import { COUNTRIES, MAX_COUNTRIES, countriesByName } from '../news/countries';
 import { startHandwritten } from '../pipeline/handwritten';
@@ -422,6 +422,33 @@ const assertEngineReady = (engine: 'openai' | 'elevenlabs') => {
   }
 };
 
+/**
+ * AT ITS HARD CEILING, NOTHING MORE IS SPENT ON A RUN (owner, 2026-10-08). A
+ * voicing in progress is allowed to finish past it; after that every button
+ * that would spend again (approve, voice, resume, regenerate) is refused here
+ * and greyed on the page.
+ */
+export const assertUnderCeiling = (run: Run): void => {
+  const ceiling = budgetFor(run);
+  if (run.manifest.spentPence >= ceiling) {
+    throw new HttpError(
+      400,
+      `this run has reached its hard ceiling (${run.manifest.spentPence.toFixed(1)}p of ${ceiling}p), ` +
+        'so nothing more can be spent on it. Its takes can still be chosen and published.'
+    );
+  }
+};
+
+/** Stop the job working on a run, after the paid call it is in. */
+export const stopRun = (id: string, who: string | null = null) => {
+  const run = openRun(id);
+  const job = jobs.forRun(run.id);
+  if (!job || !jobs.isRunning(job.id)) throw new HttpError(409, 'nothing is working on this run');
+  stopRequests.set(run.id, who ?? 'somebody');
+  run.journal({ stage: 'pipeline', event: `stop requested${who ? ` by ${who}` : ''}` });
+  return { ok: true as const, jobId: job.id };
+};
+
 const runLaneJob = (run: Run, who: string | null = null) => {
   assertEngineReady(run.manifest.voiceEngine);
   const job = jobs.start({
@@ -509,6 +536,7 @@ export const resumeRun = (id: string, who: string | null = null, body: unknown =
   }
   if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
   if (run.manifest.abandoned) throw new HttpError(400, 'that run was discarded');
+  assertUnderCeiling(run);
   applyVoiceEngine(run, body, who);
   run.journal({ stage: 'pipeline', event: who ? `resumed in the studio by ${who}` : 'resumed in the studio' });
   return runLaneJob(run, who);
@@ -529,6 +557,7 @@ export const approveRun = (id: string, who: string | null = null, body: unknown 
     throw new HttpError(409, `run "${id}" is already working`);
   }
   if (!run.hasArtifact('script')) throw new HttpError(400, `run "${id}" has no script to approve`);
+  assertUnderCeiling(run);
 
   applyVoiceEngine(run, body, who);
   if (!run.manifest.approvedAt) {
@@ -562,6 +591,7 @@ export const regenerateRun = (id: string, who: string | null = null, body: unkno
   if (!run.isComplete('render') || !run.isComplete('qa')) {
     throw new HttpError(400, 'there is no finished voice to regenerate yet: voice it first');
   }
+  assertUnderCeiling(run);
 
   syncTakes(run, who); // the current voice is a take before anything changes
   applyVoiceEngine(run, body, who);

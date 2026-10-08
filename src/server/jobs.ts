@@ -18,7 +18,7 @@
  * would cost the web interface and nothing else.
  */
 import { EventEmitter } from 'events';
-import { Run } from '../run/store';
+import { Run, stopRequests } from '../run/store';
 
 /**
  * What a job is doing.
@@ -132,6 +132,7 @@ class JobRegistry extends EventEmitter {
 
     // A NEW ATTEMPT CLEARS THE OLD FAILURE, so the run's page never shows the
     // last attempt's error over work that is going fine.
+    stopRequests.delete(input.runId);
     try {
       Run.open(input.runId).clearFailure();
     } catch {
@@ -180,6 +181,7 @@ class JobRegistry extends EventEmitter {
         report('failed', job.error);
       })
       .finally(() => {
+        stopRequests.delete(input.runId);
         job.finishedAt = new Date().toISOString();
         this.running.delete(job.id);
         this.emit(job.id, null);

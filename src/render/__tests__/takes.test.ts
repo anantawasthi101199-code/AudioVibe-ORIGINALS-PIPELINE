@@ -113,4 +113,20 @@ describe('takes', () => {
     run.uncomplete('render');
     expect(() => regenerateRun(RUN_ID, null, { confirm: true })).toThrow(/voice it first/);
   });
+
+  it('at the hard ceiling nothing more is spent: voicing again and regenerating are refused', async () => {
+    const { resumeRun } = await import('../../server/routes');
+    run.spend(budgetFor(run) - run.manifest.spentPence, Number.POSITIVE_INFINITY);
+    expect(() => regenerateRun(RUN_ID, null, { confirm: true })).toThrow(/hard ceiling/);
+    expect(() => resumeRun(RUN_ID, null, {})).toThrow(/hard ceiling/);
+  });
+
+  it('a person can stop a run: the next paid call stops, keeping what was paid', async () => {
+    const { stopRequests } = await import('../../run/store');
+    stopRequests.set(run.id, 'anant');
+    const before = run.manifest.spentPence;
+    expect(() => run.spend(1, 1000)).toThrow(/stopped by anant/);
+    expect(Run.open(RUN_ID, { root }).manifest.spentPence).toBe(before + 1);
+    stopRequests.delete(run.id);
+  });
 });
