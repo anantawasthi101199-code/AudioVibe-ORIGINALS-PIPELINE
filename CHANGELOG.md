@@ -23,7 +23,7 @@ Building toward the first publishable episode.
     `needs-voice`, listed under "To finish", with a Voice it button on its page.
     It cannot be approved for a day or published until it is voiced.
   - Budgets are two numbers: a target (15p short, £1.20 episode) that is only
-    journalled and shown, and a hard ceiling (25p, £2) that stops the run.
+    journalled and shown, and a hard ceiling (50p short, £2 episode) that stops the run.
     FOUNDRY_*_TARGET_PENCE and FOUNDRY_*_BUDGET_PENCE move them.
   - Why the last attempt failed is kept on the run (`lastFailure`), not only in
     the in-memory job, so it survives a restart and shows on the page.
