@@ -54,4 +54,21 @@ describe('choosing the voice engine per run', () => {
     expect(() => applyVoiceEngine(run, { engine: 'elevenlabs' }, null)).toThrow(/ELEVENLABS_API_KEY/);
     expect(fs.existsSync(run.mediaPath('01-story.mp3'))).toBe(true);
   });
+
+  // THE TICK DECIDES (2026-10-08): a box that greyed out once a tag pass had
+  // run could never be used again on that run.
+  it('runs the tag pass only when ticked, and again when ticked again', () => {
+    const run = make();
+    applyVoiceEngine(run, { engine: 'elevenlabs', tagPass: true }, null);
+    run.setTagPass(true, new Date('2026-10-08T10:00:00Z'));
+    expect(Run.open(run.id, { root }).manifest.tagPassAt).toBeDefined();
+
+    applyVoiceEngine(run, { engine: 'elevenlabs', tagPass: false }, null);
+    expect(Run.open(run.id, { root }).manifest.tagPass).toBe(false);
+
+    applyVoiceEngine(run, { engine: 'elevenlabs', tagPass: true }, null);
+    const again = Run.open(run.id, { root }).manifest;
+    expect(again.tagPass).toBe(true);
+    expect(again.tagPassAt).toBeUndefined();
+  });
 });

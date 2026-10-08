@@ -2596,3 +2596,51 @@ table.runs .num {
   background: linear-gradient(180deg, color-mix(in srgb, var(--warn) 7%, transparent), transparent 60%),
     var(--ink-850);
 }
+
+/* --- What listeners see: title and description ------------------------- */
+
+.listing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink-800);
+}
+.listing-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.listing-label {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.listing-title {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.listing-text {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+.listing-edit {
+  align-self: flex-start;
+}
+.listing .field {
+  width: 100%;
+}
+.listing textarea.field {
+  resize: vertical;
+  min-height: 6rem;
+}
