@@ -868,10 +868,13 @@ export const renderScript = async (
     provider = result.provider;
     model = result.model;
     for (const id of result.voiceId.split('+')) voiceIds.add(id);
+    // THE KEY BEFORE THE BILL. onCost throws when this beat takes the run past
+    // its ceiling, and a beat paid for but unkeyed would be paid for again on
+    // Resume.
+    write(keyFile, Buffer.from(`${key}\n`, 'utf8'));
     costPence += result.costPence;
     onCost?.(result.costPence);
     files.push(file);
-    write(keyFile, Buffer.from(`${key}\n`, 'utf8'));
 
     const durationS = measured ?? (await probe(file));
     if (durationS === null) {

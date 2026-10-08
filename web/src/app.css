@@ -2659,3 +2659,63 @@ table.runs .num {
   width: 100%;
   height: 44px;
 }
+
+/* The script is being edited: the spend buttons wait for Save. */
+.edit-lock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+/* --- Takes ----------------------------------------------------------------- */
+
+.take {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'pick meta badge' 'player player player';
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ink-800);
+}
+.take.chosen {
+  border-color: var(--pass-dim);
+  box-shadow: inset 3px 0 0 var(--pass);
+}
+.take.old {
+  opacity: 0.6;
+}
+.take-pick {
+  grid-area: pick;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+.take-name {
+  font-weight: 600;
+}
+.take-meta {
+  grid-area: meta;
+  min-width: 0;
+}
+.take-badges {
+  grid-area: badge;
+}
+.take-player {
+  grid-area: player;
+  width: 100%;
+  height: 36px;
+}
+.regen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--amber-dim);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, var(--amber-glow), transparent), var(--ink-800);
+}

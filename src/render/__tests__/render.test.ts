@@ -615,4 +615,24 @@ describe('re-voicing after an edit', () => {
     await render(script('The end of it all.'));
     expect(said).toEqual(['The open.', 'The end of it all.']);
   });
+
+  it('keeps a beat that took the run past its ceiling, so Resume does not pay for it again', async () => {
+    said.length = 0;
+    const stopAt = (c: number) => {
+      throw new Error(`over the ceiling (${c})`);
+    };
+    await expect(
+      renderScript(
+        { beats: script('The end of it all.'), voices: { host: voice2 }, beatPathFor: (n) => path.join(dir, n), outputPath: path.join(dir, 'out.wav') },
+        tts,
+        { probe: async () => 5, trailing: async () => 0.2, concat: async () => undefined },
+        stopAt
+      )
+    ).rejects.toThrow(/ceiling/);
+    expect(said).toEqual(['The open.']);
+
+    said.length = 0;
+    await render(script('The end of it all.'));
+    expect(said).toEqual(['The end of it all.']);
+  });
 });

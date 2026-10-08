@@ -52,10 +52,22 @@ import {
   voiceOnly,
 } from './music';
 import { jobs } from './jobs';
+import { chooseTake, takeFile } from '../render/takes';
+import { Run } from '../run/store';
+
+/** A run by id for the takes routes, as a 404 when there is none. */
+const openRunForTakes = (id: string | null): Run => {
+  try {
+    return Run.open(id ?? '');
+  } catch {
+    throw new HttpError(404, `no run "${id}"`);
+  }
+};
 import {
   HttpError,
   approveRun,
   resumeRun,
+  regenerateRun,
   audioDownloadFile,
   audioDownloadName,
   audioPath,
@@ -541,6 +553,12 @@ export const createServer = (): http.Server =>
         return;
       }
 
+      if (pathname === '/api/run/take/audio') {
+        const file = takeFile(openRunForTakes(id), Number(url.searchParams.get('take')));
+        if (!file) return send(res, 404, { error: 'no such take' });
+        serveFile(res, await playbackFile(file), 'take.mp3');
+        return;
+      }
       if (pathname === '/api/run/audio') {
         // The final audio. `download=1` saves it under a real name.
         // `download=1` saves it as an MP3 under a real name; playing stays WAV.
@@ -670,6 +688,14 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/resume' && req.method === 'POST') {
         return send(res, 202, resumeRun(id ?? '', user, await readBody(req)));
+      }
+      if (pathname === '/api/run/regenerate' && req.method === 'POST') {
+        return send(res, 202, regenerateRun(id ?? '', user, await readBody(req)));
+      }
+      if (pathname === '/api/run/take' && req.method === 'POST') {
+        const { take } = ((await readBody(req)) ?? {}) as { take?: number };
+        chooseTake(openRunForTakes(id), Number(take), user);
+        return send(res, 200, getRun(id ?? '').takes);
       }
       if (pathname === '/api/run/approve' && req.method === 'POST') {
         return send(res, 202, approveRun(id ?? '', user, await readBody(req)));

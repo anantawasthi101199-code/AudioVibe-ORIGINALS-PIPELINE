@@ -138,6 +138,13 @@ export const shortTargetPence = (): number => {
 export const REVOICE_ALLOWANCE_PENCE = { short: 5, long: 25 } as const;
 
 /**
+ * What each regeneration adds to a run's target and ceiling (owner,
+ * 2026-10-08: 15p for a short). A regeneration voices the whole script again
+ * from nothing, so it needs a whole voicing's room; an episode's is a pound.
+ */
+export const REGENERATE_ALLOWANCE_PENCE = { short: 15, long: 100 } as const;
+
+/**
  * Which platform, and whether it is the real one.
  *
  * SEPARATE FROM THE INGEST TOKEN, because not everything that talks to the

@@ -1,4 +1,5 @@
 import {
+  REGENERATE_ALLOWANCE_PENCE,
   REVOICE_ALLOWANCE_PENCE,
   episodeBudgetPence,
   episodeTargetPence,
@@ -17,8 +18,14 @@ const isShort = (run: Run): boolean => {
 };
 
 /** One voicing's allowance for every time an edit made the run voice again. */
-const revoiceAllowance = (run: Run): number =>
-  (run.manifest.revoicings ?? 0) * REVOICE_ALLOWANCE_PENCE[isShort(run) ? 'short' : 'long'];
+const revoiceAllowance = (run: Run): number => {
+  const kind = isShort(run) ? 'short' : 'long';
+  return (
+    (run.manifest.revoicings ?? 0) * REVOICE_ALLOWANCE_PENCE[kind] +
+    // Plus a whole voicing's room for every regeneration: 15p for a short.
+    (run.manifest.regenerations ?? 0) * REGENERATE_ALLOWANCE_PENCE[kind]
+  );
+};
 
 /**
  * The HARD ceiling: 50p for a short, 200p for an episode (owner, 2026-10-08),
