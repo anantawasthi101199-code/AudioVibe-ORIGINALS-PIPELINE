@@ -21,7 +21,7 @@ const revoiceAllowance = (run: Run): number =>
   (run.manifest.revoicings ?? 0) * REVOICE_ALLOWANCE_PENCE[isShort(run) ? 'short' : 'long'];
 
 /**
- * The HARD ceiling: 25p for a short, 200p for an episode (owner, 2026-10-08),
+ * The HARD ceiling: 50p for a short, 200p for an episode (owner, 2026-10-08),
  * plus the re-voice allowance. A run that would pass it stops at the call
  * that passed it. See config's episodeBudgetPence for why there are two numbers.
  */

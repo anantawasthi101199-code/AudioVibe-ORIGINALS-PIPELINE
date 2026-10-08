@@ -99,12 +99,12 @@ describe('the budget: a target that warns and a ceiling that stops', () => {
     expect(() => run.spend(10, ceiling, target)).toThrow(/ceiling/);
   });
 
-  it('defaults to 15p/25p for a short and 120p/200p for an episode', async () => {
+  it('defaults to 15p/50p for a short and 120p/200p for an episode', async () => {
     const config = await import('../../config');
     const saved = { ...process.env };
     for (const k of Object.keys(process.env)) if (/^FOUNDRY_(SHORT|EPISODE)_(BUDGET|TARGET)_PENCE$/.test(k)) delete process.env[k];
     try {
-      expect([config.shortTargetPence(), config.shortBudgetPence()]).toEqual([15, 25]);
+      expect([config.shortTargetPence(), config.shortBudgetPence()]).toEqual([15, 50]);
       expect([config.episodeTargetPence(), config.episodeBudgetPence()]).toEqual([120, 200]);
     } finally {
       process.env = saved;

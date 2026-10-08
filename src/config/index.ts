@@ -102,13 +102,13 @@ export const episodeBudgetPence = (): number => {
 };
 
 /**
- * HARD ceiling on what one short may cost, in pence: 25p (owner, 2026-10-08).
+ * HARD ceiling on what one short may cost, in pence: 50p (owner, 2026-10-08).
  * FOUNDRY_SHORT_BUDGET_PENCE moves it. See episodeBudgetPence.
  */
 export const shortBudgetPence = (): number => {
   const raw = process.env.FOUNDRY_SHORT_BUDGET_PENCE;
-  const n = raw ? Number(raw) : 25;
-  return Number.isFinite(n) && n > 0 ? n : 25;
+  const n = raw ? Number(raw) : 50;
+  return Number.isFinite(n) && n > 0 ? n : 50;
 };
 
 /**
