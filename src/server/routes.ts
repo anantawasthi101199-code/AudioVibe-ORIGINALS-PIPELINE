@@ -468,7 +468,14 @@ export const voiceEngineSchema = z
 export const applyVoiceEngine = (run: Run, body: unknown, who: string | null) => {
   const { engine, tagPass } = voiceEngineSchema.parse(body ?? {});
   assertEngineReady(engine ?? run.manifest.voiceEngine);
-  if (tagPass !== undefined && tagPass !== run.manifest.tagPass) run.setTagPass(tagPass);
+  // THE TICK IS THE WHOLE ANSWER (owner, 2026-10-08). Unticked: voice the
+  // script exactly as it is. Ticked: run the tag pass first, even if one ran
+  // before - a box that greyed out once a pass had run could never be used
+  // again on that run.
+  if (tagPass !== undefined) {
+    run.setTagPass(tagPass);
+    if (tagPass && run.manifest.tagPassAt) run.forgetTagPass();
+  }
   if (!engine || engine === run.manifest.voiceEngine) return;
 
   const media = path.join(run.dir, 'media');

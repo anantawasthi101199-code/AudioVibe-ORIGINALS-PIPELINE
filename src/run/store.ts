@@ -716,6 +716,12 @@ export class Run {
     this.save();
   }
 
+  /** Asked for again: forget the last one, so the next voicing runs it. */
+  forgetTagPass(): void {
+    delete this.manifestData.tagPassAt;
+    this.save();
+  }
+
   approve(now = new Date()): void {
     this.manifestData.approvedAt = now.toISOString();
     this.save();

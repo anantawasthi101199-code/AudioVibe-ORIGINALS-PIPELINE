@@ -102,12 +102,12 @@ const EnginePicker = ({
           <input
             type="checkbox"
             checked={value.tagPass}
-            disabled={disabled || tagPassDone}
+            disabled={disabled}
             onChange={(e) => onChange({ ...value, tagPass: e.target.checked })}
           />
           <span>
             Tag pass first: one cheap call adds [tags] from the channel&apos;s list, words unchanged
-            {tagPassDone ? ' (already done)' : ''}
+            {tagPassDone ? '. One already ran on this script; ticking runs another.' : '. Unticked, the script is voiced exactly as written.'}
           </span>
         </label>
       )}
@@ -254,7 +254,9 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const held = manifest.holdForApproval && !manifest.approvedAt;
   const chosenVoice: VoiceChoice = voiceChoice ?? {
     engine: manifest.voiceEngine ?? 'openai',
-    tagPass: manifest.tagPass ?? false,
+    // UNTICKED BY DEFAULT: ElevenLabs voices the script as written, and the
+    // tag pass runs only when somebody ticks it for this voicing.
+    tagPass: false,
   };
   const currentStage = live ? (events[events.length - 1]?.stage ?? null) : null;
   const left = run.ceilingPence - run.spentPence;
