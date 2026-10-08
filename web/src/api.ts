@@ -372,6 +372,27 @@ export interface RunDetail {
   long: boolean;
   /** Roughly what voicing the script costs on each engine, in pence. */
   voiceEstimate: { chars: number; openai: number; elevenlabs: number } | null;
+  /** Every finished voicing, and which one publishes. */
+  takes: Takes;
+}
+
+export interface Take {
+  id: number;
+  createdAt: string;
+  engine: string;
+  durationS: number | null;
+  by: string | null;
+  /** Voiced an earlier version of the script: listen only. */
+  earlierScript: boolean;
+  audioKey: string;
+}
+
+export interface Takes {
+  takes: Take[];
+  /** The take that publishes. */
+  chosen: number | null;
+  /** Why the choice is fixed (approved or published), or null. */
+  locked: string | null;
 }
 
 export class ApiError extends Error {
@@ -796,6 +817,23 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(voice ?? {}),
     }),
+
+  /** Voice the saved script again as a new take. Never replaces the chosen one. */
+  regenerate: (id: string, voice: VoiceChoice) =>
+    call<{ runId: string; jobId: string }>(`/api/run/regenerate?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+      body: JSON.stringify({ ...voice, confirm: true }),
+    }),
+
+  /** Choose which take publishes. */
+  chooseTake: (id: string, take: number) =>
+    call<Takes>(`/api/run/take?id=${encodeURIComponent(id)}`, {
+      method: 'POST',
+      body: JSON.stringify({ take }),
+    }),
+
+  takeAudioUrl: (id: string, take: Take) =>
+    `/api/run/take/audio?id=${encodeURIComponent(id)}&take=${take.id}&k=${encodeURIComponent(take.audioKey)}`,
 
   cut: (id: string, only: number[] = []) =>
     call<{ runId: string; jobId: string }>(`/api/run/shorts?id=${encodeURIComponent(id)}`, {

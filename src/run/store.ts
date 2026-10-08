@@ -140,6 +140,8 @@ export const runManifestSchema = z.object({
   holdForApproval: z.boolean().default(false),
   /** How many times the voice was discarded by an edit and has to be made again. */
   revoicings: z.number().int().nonnegative().default(0),
+  /** How many times the voice was made again from nothing, as a new take. */
+  regenerations: z.number().int().nonnegative().default(0),
   /** Why the last job on this run failed; cleared when the next one starts. */
   lastFailure: z
     .object({ at: z.string().datetime(), message: z.string(), stage: z.string().nullable().default(null) })
@@ -702,6 +704,11 @@ export class Run {
   /** The script changed after it was voiced: one more voicing is allowed for. */
   noteRevoicing(): void {
     this.manifestData.revoicings = (this.manifestData.revoicings ?? 0) + 1;
+    this.save();
+  }
+
+  noteRegeneration(): void {
+    this.manifestData.regenerations = (this.manifestData.regenerations ?? 0) + 1;
     this.save();
   }
 

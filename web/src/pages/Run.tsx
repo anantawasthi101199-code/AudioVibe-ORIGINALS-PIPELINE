@@ -157,6 +157,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [platform, setPlatform] = useState<Platform | null>(null);
   /** The second press. Publishing is the one thing here that cannot be undone. */
   const [confirming, setConfirming] = useState(false);
+  /** Regenerating: 0 closed, 1 choosing the engine, 2 the second confirmation. */
+  const [regen, setRegen] = useState<0 | 1 | 2>(0);
   const [art, setArt] = useState<ArtState | null>(null);
 
   const loadArt = useCallback(async () => {
@@ -299,6 +301,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   // The gate on disk before the voice is made is the pre-voice check, which is
   // what a person reads to decide - not the verdict on the audio.
   const gateIsFinal = isSource || run.completed.includes('qa');
+  // A finished voice to regenerate, nothing working, and the choice not fixed.
+  const regenAllowed =
+    !isSource &&
+    !published &&
+    !live &&
+    !data.takes.locked &&
+    run.completed.includes('render') &&
+    run.completed.includes('qa');
 
   // Ignore (or stop ignoring) one blocking finding, then reload so every part
   // of the page - the gate, Publish, the lists - sees the ruling.
@@ -791,6 +801,144 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                         ? 'The voice is being made; the player appears here when it is done.'
                         : 'Nothing voiced yet. The card above says how to voice it.'}
                     </p>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* --- Takes: every voicing kept, one chosen to publish ---------- */}
+            {!isSource && (data.takes.takes.length > 0 || run.completed.includes('render')) && (
+              <section className="panel takes" id="takes">
+                <div className="panel-head">
+                  <h3>Takes</h3>
+                  <span className="faint mono tiny">{data.takes.takes.length}</span>
+                  <Info label="How takes work">
+                    Every finished voicing is kept as a take. Regenerating voices the same saved
+                    script again from scratch as a new take, and never replaces the one chosen:
+                    listen to both and choose which one publishes. Once it is approved for a day or
+                    published the choice is fixed, and the other takes stay as drafts. Choosing
+                    another take drops any music mix, so mix again after. Each regeneration of a
+                    short adds 15p to its budget.
+                  </Info>
+                  <span className="spacer" />
+                  {regenAllowed && regen === 0 && (
+                    <button
+                      className="btn ghost small"
+                      disabled={busy !== null || editing}
+                      onClick={() => setRegen(1)}
+                    >
+                      Regenerate voice
+                    </button>
+                  )}
+                </div>
+                <div className="panel-body stack tight">
+                  {data.takes.locked && data.takes.takes.length > 1 && (
+                    <div className="note tiny">The choice is fixed: {data.takes.locked}</div>
+                  )}
+                  {data.takes.takes.length === 0 && (
+                    <p className="faint tiny" style={{ margin: 0 }}>The current voice becomes take 1.</p>
+                  )}
+                  {[...data.takes.takes].reverse().map((t) => {
+                    const chosen = data.takes.chosen === t.id;
+                    const canChoose = !chosen && !t.earlierScript && !data.takes.locked && !live && !editing;
+                    return (
+                      <div key={t.id} className={`take${chosen ? ' chosen' : ''}${t.earlierScript ? ' old' : ''}`}>
+                        <label className="take-pick">
+                          <input
+                            type="radio"
+                            name="take"
+                            checked={chosen}
+                            disabled={!canChoose && !chosen}
+                            onChange={async () => {
+                              setBusy('take');
+                              setError(null);
+                              try {
+                                await api.chooseTake(id, t.id);
+                                await load();
+                              } catch (e) {
+                                setError((e as Error).message);
+                              } finally {
+                                setBusy(null);
+                              }
+                            }}
+                          />
+                          <span className="take-name">Take {t.id}</span>
+                        </label>
+                        <span className="take-meta faint tiny">
+                          {t.engine === 'elevenlabs' ? 'ElevenLabs' : t.engine === 'openai' ? 'GPT' : t.engine} ·{' '}
+                          {clock(t.durationS)} · {ago(t.createdAt)}
+                          {t.by ? ` · ${t.by}` : ''}
+                        </span>
+                        <span className="take-badges">
+                          {chosen ? (
+                            <span className="pill pass">{published ? 'published' : 'publishes'}</span>
+                          ) : t.earlierScript ? (
+                            <span className="pill">earlier script</span>
+                          ) : (
+                            <span className="pill">draft</span>
+                          )}
+                        </span>
+                        <audio
+                          className="take-player"
+                          controls
+                          preload="none"
+                          src={api.takeAudioUrl(id, t)}
+                        />
+                      </div>
+                    );
+                  })}
+
+                  {/* REGENERATING ASKS TWICE: once to choose the engine and see
+                      the cost, and once more to spend it. */}
+                  {regen > 0 && regenAllowed && (
+                    <div className="regen">
+                      {regen === 1 ? (
+                        <>
+                          <strong>Make a new take?</strong>
+                          <span className="muted tiny">
+                            The saved script is voiced again from scratch. Take{' '}
+                            {data.takes.chosen ?? 1} stays chosen until you pick another.
+                          </span>
+                          {engineFor('regen')}
+                          <EditLock />
+                          <div className="next-actions">
+                            <button className="btn ghost small" onClick={() => setRegen(0)}>
+                              Cancel
+                            </button>
+                            <button className="btn small" disabled={busy !== null || editing} onClick={() => setRegen(2)}>
+                              Yes, make a new take
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <strong>
+                            Really spend about{' '}
+                            {money(Math.max(1, data.voiceEstimate?.[chosenVoice.engine] ?? 0))} on{' '}
+                            {engineName(chosenVoice.engine)}?
+                          </strong>
+                          <span className="muted tiny">
+                            This cannot be taken back. The budget grows by{' '}
+                            {isShort ? '15p' : '£1'} for this regeneration.
+                          </span>
+                          <div className="next-actions">
+                            <button className="btn ghost small" onClick={() => setRegen(0)}>
+                              No, stop
+                            </button>
+                            <button
+                              className="btn spend small"
+                              disabled={busy !== null || editing}
+                              onClick={() => {
+                                setRegen(0);
+                                void act('regen', () => api.regenerate(id, chosenVoice));
+                              }}
+                            >
+                              {busy === 'regen' ? 'Starting...' : 'Confirm: regenerate'}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   )}
                 </div>
               </section>

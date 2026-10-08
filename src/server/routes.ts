@@ -21,6 +21,8 @@
 import { ignoreFinding, unignoreFinding, withOverrides } from '../qa/overrides';
 import { finalAudioFor } from '../render/backing';
 import { runProcess } from '../render/assemble';
+import { musicLock } from '../render/backing';
+import { syncTakes, takesView } from '../render/takes';
 import { ELEVENLABS_PENCE_PER_1K_CHARS } from '../render/tts';
 import { PENCE_PER_MCHAR as OPENAI_PENCE_PER_MCHAR } from '../render/openaiTts';
 import fs from 'fs';
@@ -171,6 +173,7 @@ export const getRun = (id: string) => {
     /** Long form: belongs to a series. */
     long: loadFormat(run.manifest.formatId).kind !== 'short',
     voiceEstimate: voiceEstimateFor(read('script', scriptSchema)),
+    takes: takesView(run),
   };
 };
 
@@ -438,6 +441,8 @@ const runLaneJob = (run: Run, who: string | null = null) => {
 
       // The channel's own lane, as the command line runs it. See runLane.ts.
       await runLane(run, deps);
+      // Every finished voicing is kept as a take. See render/takes.ts.
+      syncTakes(run, who);
       return [run.id];
     },
   });
@@ -533,6 +538,45 @@ export const approveRun = (id: string, who: string | null = null, body: unknown 
       event: who ? `approved in the studio by ${who}` : 'approved in the studio',
     });
   }
+
+  return runLaneJob(run, who);
+};
+
+/**
+ * Voice the same saved script again from nothing, as a new take.
+ *
+ * NEVER REPLACES: the current voice is kept as a take first, and the new one
+ * is recorded beside it for a person to choose between (render/takes.ts).
+ * Every beat is synthesised fresh - the files and their keys are deleted, or
+ * the renderer would reuse them and "regenerate" the same audio for nothing.
+ * Asked twice in the page; the server wants `confirm: true` as well.
+ */
+export const regenerateRun = (id: string, who: string | null = null, body: unknown = {}) => {
+  const run = openRun(id);
+  const { confirm } = z.object({ confirm: z.literal(true) }).passthrough().parse(body ?? {});
+  void confirm;
+  if (jobs.isRunning(jobs.forRun(run.id)?.id ?? '')) throw new HttpError(409, `run "${id}" is already working`);
+  if (run.manifest.abandoned) throw new HttpError(400, 'that run was discarded');
+  const lock = musicLock(run);
+  if (lock) throw new HttpError(400, lock.replace('to change its music', 'to regenerate it'));
+  if (!run.isComplete('render') || !run.isComplete('qa')) {
+    throw new HttpError(400, 'there is no finished voice to regenerate yet: voice it first');
+  }
+
+  syncTakes(run, who); // the current voice is a take before anything changes
+  applyVoiceEngine(run, body, who);
+
+  const media = path.join(run.dir, 'media');
+  if (fs.existsSync(media)) {
+    for (const name of fs.readdirSync(media)) {
+      if (/^\d{2}-.+\.mp3(\.key|\.retry)?$/.test(name)) fs.rmSync(path.join(media, name), { force: true });
+    }
+  }
+  fs.rmSync(path.join(run.dir, 'render.json'), { force: true });
+  run.uncomplete('render');
+  run.uncomplete('qa');
+  run.noteRegeneration();
+  run.journal({ stage: 'render', event: `regenerating as a new take${who ? `, asked by ${who}` : ''}` });
 
   return runLaneJob(run, who);
 };

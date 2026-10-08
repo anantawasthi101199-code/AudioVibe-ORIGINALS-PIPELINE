@@ -13,6 +13,17 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Regenerate, as takes** (2026-10-08). "Regenerate voice" voices the same
+  saved script again from scratch (every beat file and key deleted first), asked
+  twice in the page and refused by the server without `confirm: true`. It never
+  replaces: every finished voicing is kept in `takes/` with its render record
+  and gate report, and the Sound section lists them with a player each and a
+  radio button for the one that publishes. A new take waits as a draft; the
+  chosen take is copied back into `media/episode.wav`, so publishing, music and
+  players read the one place they always have. Takes of an earlier script are
+  listen-only; once approved for a day or published the choice is fixed. Each
+  regeneration adds 15p to a short's target and ceiling (£1 for an episode).
+
 - **Scheduling: one short and one episode a day per channel, on the earliest
   free days** (2026-10-08). Approving used to fill a weekly quota from
   schedule.yaml (one episode and three shorts for most channels) with a short
