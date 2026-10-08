@@ -1,3 +1,6 @@
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { Voice } from '../../canon/schema';
 import {
   apportion,
@@ -561,5 +564,55 @@ describe('the gap belongs between files, not between beats', () => {
       { id: 'b', type: 'x', durationS: 10 },
     ]);
     expect(map[1]!.startS).toBeCloseTo(10 + BEAT_GAP_S, 5);
+  });
+});
+
+// WHAT YOU SAVED IS WHAT IS READ (2026-10-08). Beat files used to be reused by
+// name alone, so an edited beat kept its old recording on the next voicing.
+describe('re-voicing after an edit', () => {
+  let dir: string;
+  beforeEach(() => (dir = fs.mkdtempSync(path.join(os.tmpdir(), 'revoice-'))));
+  afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const voice2: Voice = { provider: 'elevenlabs', voiceId: 'v123', settings: {} };
+  const said: string[] = [];
+  const tts: TtsProvider = {
+    name: 'fake',
+    async synthesise({ text }) {
+      said.push(text);
+      return { audio: Buffer.from(text), provider: 'fake', model: 'fake', voiceId: 'v123', costPence: 1 };
+    },
+  };
+  const render = (beats: Array<{ beatId: string; beatType: string; turns: Array<{ speaker: string; text: string }> }>) =>
+    renderScript(
+      { beats, voices: { host: voice2 }, beatPathFor: (n) => path.join(dir, n), outputPath: path.join(dir, 'out.wav') },
+      tts, // no size limit: one request per beat
+      { probe: async () => 5, trailing: async () => 0.2, concat: async () => undefined }
+    );
+  const script = (close: string) => [
+    { beatId: 'open', beatType: 'cold_open', turns: [{ speaker: 'host', text: 'The open.' }] },
+    { beatId: 'close', beatType: 'button', turns: [{ speaker: 'host', text: close }] },
+  ];
+
+  it('reuses an unchanged beat and voices an edited one again, with the new words', async () => {
+    said.length = 0;
+    await render(script('The old ending.'));
+    expect(said).toEqual(['The open.', 'The old ending.']);
+
+    said.length = 0;
+    await render(script('The new ending I saved.'));
+    expect(said).toEqual(['The new ending I saved.']);
+    expect(fs.readFileSync(path.join(dir, '02-close.mp3'), 'utf8')).toBe('The new ending I saved.');
+
+    said.length = 0;
+    await render(script('The new ending I saved.'));
+    expect(said).toEqual([]);
+  });
+
+  it('does not trust a beat file with no record of what it was made from', async () => {
+    fs.writeFileSync(path.join(dir, '01-open.mp3'), 'audio from before keys existed');
+    said.length = 0;
+    await render(script('The end of it all.'));
+    expect(said).toEqual(['The open.', 'The end of it all.']);
   });
 });

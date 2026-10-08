@@ -481,7 +481,7 @@ export const applyVoiceEngine = (run: Run, body: unknown, who: string | null) =>
   const media = path.join(run.dir, 'media');
   if (fs.existsSync(media)) {
     for (const name of fs.readdirSync(media)) {
-      if (/^\d{2}-.+\.mp3$/.test(name)) fs.rmSync(path.join(media, name), { force: true });
+      if (/^\d{2}-.+\.mp3(\.key)?$/.test(name)) fs.rmSync(path.join(media, name), { force: true });
     }
   }
   if (run.hasArtifact('render')) {
@@ -606,8 +606,11 @@ export const saveScript = (id: string, body: unknown) => {
   });
 
   // The audio is now about different words. Dropping the artifact is what makes
-  // the run honest about that; the media file is left alone, because
-  // renderScript compares the script before reusing it.
+  // the run honest about that. The beat files are left alone: renderScript
+  // reuses one only when its `.key` (engine, voice and exact text) still
+  // matches, so the unchanged beats cost nothing and the edited ones are made
+  // again. (Until 2026-10-08 it reused by file name alone, and this comment
+  // claimed otherwise.)
   if (changed && run.hasArtifact('render')) {
     fs.rmSync(path.join(run.dir, 'render.json'), { force: true });
     run.uncomplete('render');
