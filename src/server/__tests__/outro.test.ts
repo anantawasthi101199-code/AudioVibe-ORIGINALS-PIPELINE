@@ -86,4 +86,23 @@ describe('the outro', () => {
       expect([id, c.outros.episode.length, c.outros.short.length]).toEqual([id, 3, 3]);
     }
   });
+
+  it('an older script ending on one of the outros, typed out, shows it as attached', () => {
+    const { outro } = getRun(RUN_ID);
+    const s = script();
+    s.beats.at(-1)!.turns.push({ speaker: s.beats.at(-1)!.turns[0]!.speaker, text: outro.options[2]! });
+    Run.open(RUN_ID, { root }).writeArtifact('script', s);
+    const after = getRun(RUN_ID).outro;
+    expect(after.index).toBe(2);
+    expect(lastTurns().at(-1)!.fixed).toBe(true);
+  });
+
+  it('warns when the script already says goodbye in its own words, so ticking would say it twice', () => {
+    const s = script();
+    s.beats.at(-1)!.turns.at(-1)!.text += ' Follow for more stories like this, and I will see you next time.';
+    Run.open(RUN_ID, { root }).writeArtifact('script', s);
+    expect(getRun(RUN_ID).outro.signoffInText).toMatch(/see you next time/);
+    setRunOutro(RUN_ID, { enabled: true, index: 0 });
+    expect(getRun(RUN_ID).outro.signoffInText).toBeNull();
+  });
 });

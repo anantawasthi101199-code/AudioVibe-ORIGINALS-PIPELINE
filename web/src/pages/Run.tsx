@@ -430,6 +430,31 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
     />
   );
 
+  // THE OUTRO, WHERE THE DECISION IS MADE: one line in the next-step card,
+  // linking to the panel under the script.
+  const OutroLine = () =>
+    script && !isSource && data.outro.options.length > 0 ? (
+      <div className="outro-line tiny">
+        <span className="faint">Outro:</span>{' '}
+        {data.outro.current !== null ? (
+          <strong>
+            {data.outro.index !== null ? `outro ${data.outro.index + 1}` : 'the current one'}, attached
+          </strong>
+        ) : (
+          <span>none, the script is voiced alone</span>
+        )}{' '}
+        <a
+          href="#outro"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('outro')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+        >
+          {data.outro.current !== null ? 'change' : 'choose one'}
+        </a>
+      </div>
+    ) : null;
+
   const FailureNote = () =>
     failure ? (
       <div className="note fail">
@@ -546,6 +571,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           </div>
           <h2>Read the script, then approve and voice it</h2>
           {engineFor('approve')}
+          <OutroLine />
           <EditLock />
           <CeilingLock />
           <div className="next-actions">
@@ -575,6 +601,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           <h2>{voiceOnly ? 'Approved, not voiced yet' : 'Carry on from where it stopped'}</h2>
           <FailureNote />
           {engineFor('resume')}
+          <OutroLine />
           <EditLock />
           <CeilingLock />
           <div className="next-actions">
@@ -1076,6 +1103,20 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   <span className="faint mono tiny">
                     {script.beats.length} {isSource ? 'stories' : 'beats'} · {gate?.measurement?.words ?? '?'} words
                   </span>
+                  {!isSource && data.outro.options.length > 0 && (
+                    <a
+                      className={`chip-static${data.outro.current !== null ? ' who mine' : ''}`}
+                      href="#outro"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById('outro')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      {data.outro.current !== null
+                        ? `outro ${data.outro.index !== null ? data.outro.index + 1 : ''} attached`
+                        : 'no outro'}
+                    </a>
+                  )}
                   <span className="spacer" />
                   {editing ? (
                     <>
@@ -1218,9 +1259,16 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                     was voiced, only the last part needs voicing again.
                   </Info>
                 </div>
-                <div className={`panel-body stack tight${data.outro.current === null ? ' greyed' : ''}`}>
+                <div className="panel-body stack tight">
+                  {data.outro.current === null && data.outro.signoffInText && (
+                    <div className="note warn tiny">
+                      The script already ends on a goodbye (&ldquo;{data.outro.signoffInText}&rdquo;), so
+                      ticking would say goodbye twice. Edit the script to take that line out first, or leave
+                      the outro off.
+                    </div>
+                  )}
                   <select
-                    className="field"
+                    className={`field${data.outro.current === null ? ' greyed' : ''}`}
                     value={data.outro.index ?? (data.outro.current !== null ? -1 : 0)}
                     disabled={outroLocked || data.outro.current === null}
                     onChange={(e) => void changeOutro(true, Number(e.target.value))}
@@ -1236,7 +1284,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       </option>
                     ))}
                   </select>
-                  <p className="outro-text">
+                  <p className={`outro-text${data.outro.current === null ? ' greyed' : ''}`}>
                     &ldquo;
                     {data.outro.current ?? data.outro.options[data.outro.index ?? 0]}
                     &rdquo;

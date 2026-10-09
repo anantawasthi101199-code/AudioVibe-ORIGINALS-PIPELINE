@@ -406,6 +406,8 @@ export interface OutroState {
   current: string | null;
   /** Its place in options, or null (none, or no longer in the list). */
   index: number | null;
+  /** With no outro chosen: a goodbye already typed into the script's last lines, or null. */
+  signoffInText: string | null;
 }
 
 export interface Take {
