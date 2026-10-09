@@ -49,6 +49,24 @@ export interface Channel {
   };
 }
 
+export interface ChannelOverview {
+  bio: string | null;
+  thesis: string;
+  audience: string;
+  register: string;
+  category: string;
+  fiction: boolean;
+  host: { name: string; personality: string; delivery: string } | null;
+  cadence: { slot: string | null; perWeek: { episodes: number; shorts: number } } | null;
+}
+
+/** Money spent outside any run, e.g. on suggestions. */
+export interface StudioSpend {
+  totalPence: number;
+  last30Pence: number;
+  calls: number;
+}
+
 export interface Lane {
   id: 'factual' | 'fiction';
   name: string;
@@ -780,6 +798,10 @@ export const api = {
       sets: string[];
       runs: RunSummary[];
       budgetPence: number;
+      /** What this channel makes, for a person. */
+      overview: ChannelOverview;
+      /** Spent on this channel outside its runs (topic suggestions). */
+      studioSpend: StudioSpend;
       /** Target (a warning) and hard ceiling, per kind. */
       budgets: Record<'short' | 'episode', { targetPence: number; ceilingPence: number }>;
       /** A news channel: an empty topic makes today's rapid-fire roundup. */
@@ -854,7 +876,12 @@ export const api = {
     ),
 
   suggest: (channelId: string, formatId: string, count = 6) =>
-    call<{ suggestions: Array<{ topic: string; why: string }> }>(
+    call<{
+      suggestions: Array<{ topic: string; why: string }>;
+      /** What this press cost. */
+      pence: number;
+      spent: StudioSpend;
+    }>(
       `/api/channel/suggest?id=${encodeURIComponent(channelId)}`,
       { method: 'POST', body: JSON.stringify({ formatId, count }) }
     ),

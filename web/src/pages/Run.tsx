@@ -51,6 +51,7 @@ import {
 } from '../components/bits';
 import { Count, Info } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
+import { fromWhole, toWhole } from '../scriptText';
 
 const engineName = (e: VoiceEngine) => (e === 'elevenlabs' ? 'ElevenLabs' : 'GPT');
 
@@ -160,6 +161,10 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   /** Regenerating: 0 closed, 1 choosing the engine, 2 the second confirmation. */
   const [regen, setRegen] = useState<0 | 1 | 2>(0);
   const [stopping, setStopping] = useState(false);
+  /** How the script is being edited: part by part, or as one pasted box. Never both. */
+  const [editMode, setEditMode] = useState<'beats' | 'whole'>('beats');
+  const [wholeText, setWholeText] = useState('');
+  const [wholeError, setWholeError] = useState<string | null>(null);
   const [art, setArt] = useState<ArtState | null>(null);
 
   const loadArt = useCallback(async () => {
@@ -238,6 +243,18 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
     return () => stop.current?.();
   }, [load, follow]);
 
+  // UNSAVED WORDS ARE NOT LOST BY ACCIDENT: closing or reloading the tab while
+  // the script is open for editing asks first.
+  useEffect(() => {
+    if (!editing) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [editing]);
+
   // SOMEBODY ELSE'S WORK, seen from here: while they hold it, look again now
   // and then, so their voicing appears without a reload.
   const othersHold = Boolean(hold?.holder && !hold.mine);
@@ -277,17 +294,51 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
     }
   };
 
+  /** The beats as they will be saved, from whichever editor is open. */
+  const draftBeats = (): Beat[] | null => {
+    if (editMode === 'beats') return draft;
+    const parsed = fromWhole(wholeText, script?.beats ?? draft);
+    if (!parsed.ok) {
+      setWholeError(parsed.error);
+      return null;
+    }
+    setWholeError(null);
+    return parsed.beats;
+  };
+
+  const switchMode = (mode: 'beats' | 'whole') => {
+    if (mode === editMode) return;
+    if (mode === 'whole') {
+      setWholeText(toWhole(draft));
+      setWholeError(null);
+      setEditMode('whole');
+      return;
+    }
+    const beats = draftBeats();
+    if (!beats) return; // stay in the box until it reads as the script's parts
+    setDraft(beats);
+    setEditMode('beats');
+  };
+
+  const stopEditing = () => {
+    setEditing(false);
+    setEditMode('beats');
+    setWholeError(null);
+  };
+
   const save = async () => {
     if (!script) return;
+    const beats = draftBeats();
+    if (!beats) return;
     setBusy('save');
     setError(null);
     try {
       await api.saveScript(id, {
         title: script.title,
         description: script.description,
-        beats: draft,
+        beats,
       });
-      setEditing(false);
+      stopEditing();
       await load();
     } catch (e) {
       setError((e as Error).message);
@@ -991,6 +1042,25 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   <span className="spacer" />
                   {editing ? (
                     <>
+                      {/* EITHER OR: one editor open at a time. */}
+                      <div className="segmented" role="tablist" aria-label="How to edit">
+                        <button
+                          role="tab"
+                          aria-selected={editMode === 'beats'}
+                          className={editMode === 'beats' ? 'on' : ''}
+                          onClick={() => switchMode('beats')}
+                        >
+                          By part
+                        </button>
+                        <button
+                          role="tab"
+                          aria-selected={editMode === 'whole'}
+                          className={editMode === 'whole' ? 'on' : ''}
+                          onClick={() => switchMode('whole')}
+                        >
+                          Whole script
+                        </button>
+                      </div>
                       <button className="btn small" disabled={busy !== null} onClick={save}>
                         {busy === 'save' ? 'Saving...' : 'Save and re-check'}
                       </button>
@@ -998,7 +1068,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                         className="btn ghost small"
                         onClick={() => {
                           setDraft(script.beats);
-                          setEditing(false);
+                          stopEditing();
                         }}
                       >
                         Discard changes
@@ -1020,6 +1090,27 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                     </div>
                   )}
 
+                  {editing && editMode === 'whole' ? (
+                    <div className="stack tight">
+                      <p className="faint tiny" style={{ margin: 0 }}>
+                        Paste or write the whole script here. Each part starts with a line{' '}
+                        <code>## part</code> ({script.beats.map((b) => b.beatId).join(', ')}), and a blank
+                        line separates paragraphs. Pasted without any <code>##</code> lines, the
+                        paragraphs are shared out over the parts in order. Save and re-check before
+                        voicing.
+                      </p>
+                      <textarea
+                        className="beat-edit whole-edit"
+                        value={wholeText}
+                        spellCheck
+                        onChange={(e) => {
+                          setWholeText(e.target.value);
+                          setWholeError(null);
+                        }}
+                      />
+                      {wholeError && <div className="note fail tiny">{wholeError}</div>}
+                    </div>
+                  ) : (
                   <div className="stack">
                     {(editing ? draft : script.beats).map((beat, i) => (
                       <article className="beat" key={beat.beatId}>
@@ -1064,6 +1155,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       </article>
                     ))}
                   </div>
+                  )}
                 </div>
               </section>
             )}
