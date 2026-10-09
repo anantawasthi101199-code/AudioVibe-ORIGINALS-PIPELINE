@@ -165,6 +165,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   /** Regenerating: 0 closed, 1 choosing the engine, 2 the second confirmation. */
   const [regen, setRegen] = useState<0 | 1 | 2>(0);
   const [stopping, setStopping] = useState(false);
+  /** The outro list, open or shut. */
+  const [outroOpen, setOutroOpen] = useState(false);
   /** How the script is being edited: part by part, or as one pasted box. Never both. */
   const [editMode, setEditMode] = useState<'beats' | 'whole'>('beats');
   const [wholeText, setWholeText] = useState('');
@@ -1219,28 +1221,41 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   </Info>
                 </div>
                 <div className={`panel-body stack tight${data.outro.current === null ? ' greyed' : ''}`}>
-                  <select
-                    className="field"
-                    value={data.outro.index ?? (data.outro.current !== null ? -1 : 0)}
-                    disabled={outroLocked || data.outro.current === null}
-                    onChange={(e) => void changeOutro(true, Number(e.target.value))}
-                  >
-                    {data.outro.index === null && data.outro.current !== null && (
-                      <option value={-1} disabled>
-                        The current outro (no longer in the channel&apos;s list)
-                      </option>
+                  {/* A DROPDOWN THAT SHOWS EVERY OUTRO IN FULL (owner, 2026-10-09).
+                      A native select cannot wrap, so long outros were cut off. */}
+                  <div className={`outro-pick${outroOpen ? ' open' : ''}`}>
+                    <button
+                      type="button"
+                      className="outro-current"
+                      disabled={outroLocked || data.outro.current === null}
+                      aria-expanded={outroOpen}
+                      onClick={() => setOutroOpen((v) => !v)}
+                    >
+                      <span className="outro-words">
+                        {data.outro.current ?? data.outro.options[data.outro.index ?? 0]}
+                      </span>
+                      <span className="caret">›</span>
+                    </button>
+                    {outroOpen && (
+                      <div className="outro-options" role="listbox">
+                        {data.outro.options.map((o, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            role="option"
+                            aria-selected={data.outro.index === i}
+                            className={`outro-option${data.outro.index === i ? ' on' : ''}`}
+                            onClick={() => {
+                              setOutroOpen(false);
+                              if (data.outro.index !== i) void changeOutro(true, i);
+                            }}
+                          >
+                            {o}
+                          </button>
+                        ))}
+                      </div>
                     )}
-                    {data.outro.options.map((o, i) => (
-                      <option key={i} value={i}>
-                        {o.length > 90 ? `${o.slice(0, 90)}...` : o}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="outro-text">
-                    &ldquo;
-                    {data.outro.current ?? data.outro.options[data.outro.index ?? 0]}
-                    &rdquo;
-                  </p>
+                  </div>
                   {outroLockReason && <span className="faint tiny">{outroLockReason}</span>}
                 </div>
               </section>

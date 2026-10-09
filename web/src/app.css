@@ -2841,3 +2841,72 @@ textarea.beat-edit.whole-edit {
 .outro select.field {
   width: 100%;
 }
+
+/* The outro picker: every option shown in full, wrapping. */
+.outro-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.outro-current {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ink-900);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+.outro-current:disabled {
+  cursor: default;
+}
+.outro-words {
+  flex: 1;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.outro-current .caret {
+  transform: rotate(90deg);
+  transition: transform 150ms ease;
+}
+.outro-pick.open .outro-current .caret {
+  transform: rotate(-90deg);
+}
+.outro-options {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.outro-option {
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--ink-800);
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+.outro-option:last-child {
+  border-bottom: 0;
+}
+.outro-option:hover {
+  background: var(--ink-750);
+  color: var(--text);
+}
+.outro-option.on {
+  color: var(--text);
+  box-shadow: inset 3px 0 0 var(--pass);
+}
