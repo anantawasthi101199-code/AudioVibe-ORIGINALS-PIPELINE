@@ -41,7 +41,6 @@ import {
 } from '../api';
 import {
   BudgetMeter,
-  CostBar,
   ErrorNote,
   LiveLog,
   NowBanner,
@@ -51,6 +50,7 @@ import {
 } from '../components/bits';
 import { Count, Info } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
+import { CostBreakdown, VoiceLog } from '../components/CostBreakdown';
 import { fromWhole, toWhole } from '../scriptText';
 
 const engineName = (e: VoiceEngine) => (e === 'elevenlabs' ? 'ElevenLabs' : 'GPT');
@@ -472,6 +472,42 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       </div>
     ) : null;
 
+  // TOO LONG (owner, 2026-10-09): a loud warning past 15 min (episode) or 3 min
+  // (short); past 20 or 5 the voice is blocked until the script is cut down.
+  // WHILE EDITING, THE LENGTH FOLLOWS THE WORDS AS THEY ARE TYPED: the same
+  // count the studio makes (tags left out, the outro in), at its 2.85 words a second.
+  const liveLen = (() => {
+    const saved = data.length;
+    if (!editing || !saved) return saved;
+    const text =
+      (editMode === 'whole' ? wholeText.replace(/^##\s.*$/gm, ' ') : draft.flatMap((b) => b.turns.map((t) => t.text)).join(' ')) +
+      ' ' +
+      (data.outro.current ?? '');
+    const words = text
+      .replace(/\[[^\]]{1,48}\]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => /[a-z0-9]/i.test(w)).length;
+    const seconds = words / 2.85;
+    const level: 'ok' | 'warn' | 'block' = seconds > saved.blockSeconds ? 'block' : seconds > saved.warnSeconds ? 'warn' : 'ok';
+    return { ...saved, words, seconds, level };
+  })();
+  const len = liveLen;
+  const tooLong = len?.level === 'block';
+  const LengthNote = () =>
+    len && len.level !== 'ok' ? (
+      <div className={`length-alarm ${len.level}`}>
+        <strong>
+          {len.level === 'block' ? 'Too long to voice' : 'Running long'}: about {clock(len.seconds)} (
+          {len.words.toLocaleString()} words)
+        </strong>
+        <span>
+          {len.level === 'block'
+            ? `A ${len.kind} cannot be voiced past ${len.blockSeconds / 60} minutes (${len.blockWords.toLocaleString()} words). Cut it down and save, then voice it.`
+            : `A ${len.kind} should stay under ${len.warnSeconds / 60} minutes (${len.warnWords.toLocaleString()} words). It can still be voiced; past ${len.blockSeconds / 60} minutes it cannot.`}
+        </span>
+      </div>
+    ) : null;
+
   /* --- THE NEXT STEP ----------------------------------------------------- */
   const nextStep = (() => {
     if (live) {
@@ -550,10 +586,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           {engineFor('approve')}
           <EditLock />
           <CeilingLock />
+          <LengthNote />
           <div className="next-actions">
             <button
               className="btn spend"
-              disabled={busy !== null || editing || run.atCeiling}
+              disabled={busy !== null || editing || run.atCeiling || tooLong}
               onClick={() => act('approve', () => api.approve(id, chosenVoice))}
             >
               {busy === 'approve' ? 'Starting...' : `Approve and voice on ${engineName(chosenVoice.engine)}`}
@@ -579,10 +616,11 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
           {engineFor('resume')}
           <EditLock />
           <CeilingLock />
+          <LengthNote />
           <div className="next-actions">
             <button
               className="btn spend"
-              disabled={busy !== null || editing || run.atCeiling}
+              disabled={busy !== null || editing || run.atCeiling || tooLong}
               onClick={() => act('resume', () => api.resume(id, chosenVoice))}
             >
               {busy === 'resume'
@@ -931,6 +969,27 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               </section>
             )}
 
+            {/* --- The voice log: every call to the engine, and what it cost -- */}
+            {!isSource && (
+              <section className="panel" id="voice-log">
+                <details>
+                  <summary className="panel-head" style={{ cursor: 'pointer' }}>
+                    <h3>Voice log</h3>
+                    <span className="faint tiny">
+                      {data.costs.voice.sessions.length
+                        ? `${data.costs.voice.sessions.length} voicing${data.costs.voice.sessions.length === 1 ? '' : 's'}, ${money(
+                            data.costs.voice.sessions.reduce((a, x) => a + x.pence, 0)
+                          )}`
+                        : 'nothing logged yet'}
+                    </span>
+                  </summary>
+                  <div className="panel-body">
+                    <VoiceLog costs={data.costs} />
+                  </div>
+                </details>
+              </section>
+            )}
+
             {/* --- Takes: every voicing kept, one chosen to publish ---------- */}
             {!isSource && (data.takes.takes.length > 0 || run.completed.includes('render')) && (
               <section className="panel takes" id="takes">
@@ -949,7 +1008,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                   {regenAllowed && regen === 0 && (
                     <button
                       className="btn ghost small"
-                      disabled={busy !== null || editing || run.atCeiling}
+                      disabled={busy !== null || editing || run.atCeiling || tooLong}
                       onClick={() => setRegen(1)}
                     >
                       Regenerate voice
@@ -1027,11 +1086,12 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                           {engineFor('regen')}
                           <EditLock />
                           <CeilingLock />
+                          <LengthNote />
                           <div className="next-actions">
                             <button className="btn ghost small" onClick={() => setRegen(0)}>
                               Cancel
                             </button>
-                            <button className="btn small" disabled={busy !== null || editing || run.atCeiling} onClick={() => setRegen(2)}>
+                            <button className="btn small" disabled={busy !== null || editing || run.atCeiling || tooLong} onClick={() => setRegen(2)}>
                               Yes, make a new take
                             </button>
                           </div>
@@ -1053,7 +1113,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                             </button>
                             <button
                               className="btn spend small"
-                              disabled={busy !== null || editing || run.atCeiling}
+                              disabled={busy !== null || editing || run.atCeiling || tooLong}
                               onClick={() => {
                                 setRegen(0);
                                 void act('regen', () => api.regenerate(id, chosenVoice));
@@ -1076,7 +1136,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                 <div className="panel-head">
                   <h3>{isSource ? 'The stories' : 'The script'}</h3>
                   <span className="faint mono tiny">
-                    {script.beats.length} {isSource ? 'stories' : 'beats'} · {gate?.measurement?.words ?? '?'} words
+                    {script.beats.length} {isSource ? 'stories' : 'beats'} ·{' '}
+                    {len ? (
+                      <span className={`length-chip ${len.level}`}>
+                        about {clock(len.seconds)} · {len.words.toLocaleString()} words
+                      </span>
+                    ) : (
+                      `${gate?.measurement?.words ?? '?'} words`
+                    )}
                   </span>
                   <span className="spacer" />
                   {editing ? (
@@ -1399,7 +1466,17 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               </div>
               <div className="panel-body stack tight">
                 <BudgetMeter spent={run.spentPence} target={run.targetPence} ceiling={run.ceilingPence} />
-                <CostBar events={events} total={run.spentPence} />
+                <CostBreakdown costs={data.costs} />
+                <a
+                  className="tiny"
+                  href="#voice-log"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('voice-log')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  See every voice call
+                </a>
               </div>
             </section>
 

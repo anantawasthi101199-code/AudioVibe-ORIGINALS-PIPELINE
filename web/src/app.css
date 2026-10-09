@@ -2910,3 +2910,158 @@ textarea.beat-edit.whole-edit {
   color: var(--text);
   box-shadow: inset 3px 0 0 var(--pass);
 }
+
+/* Kept suggestions and topic pills, each removable. */
+.idea.on,
+.pick-pill.on {
+  border-color: var(--hold-dim);
+  color: var(--text);
+}
+.idea-pick {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+}
+.idea-x {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0.2rem;
+  cursor: pointer;
+}
+.idea-x:hover {
+  color: var(--fail);
+}
+.pick-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.25rem 0.4rem 0.25rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+.pick-pill > button:first-child {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* --- Length: loud when long, red when too long to voice -------------------- */
+
+.length-alarm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+.length-alarm.warn {
+  border: 2px solid var(--amber);
+  background: color-mix(in srgb, var(--amber) 14%, var(--ink-850));
+  color: var(--text);
+}
+.length-alarm.block {
+  border: 2px solid var(--fail);
+  background: color-mix(in srgb, var(--fail) 16%, var(--ink-850));
+  color: var(--text);
+}
+.length-alarm strong {
+  font-size: 0.95rem;
+}
+.length-chip.warn {
+  color: var(--amber);
+  font-weight: 600;
+}
+.length-chip.block {
+  color: var(--fail);
+  font-weight: 600;
+}
+
+/* --- Where the money went ---------------------------------------------------- */
+
+.breakdown-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--ink-750);
+}
+.breakdown-bar span {
+  display: block;
+  min-width: 3px;
+}
+.breakdown-key {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+}
+.breakdown-key li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.breakdown-key i {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  transform: translateY(1px);
+}
+.breakdown-label {
+  flex: 1;
+  color: var(--text-dim);
+}
+.voice-session + .voice-session {
+  margin-top: 0.8rem;
+}
+.voice-session-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+.voice-calls tr.retake td {
+  color: #f07aa8;
+}
+.voice-calls tr.reused td {
+  color: var(--text-faint);
+}
+#voice-log summary {
+  list-style: none;
+}
+#voice-log summary::-webkit-details-marker {
+  display: none;
+}
+
+.breakdown-findings {
+  margin: 0.7rem 0 0;
+  padding: 0.55rem 0.75rem 0.55rem 1.6rem;
+  border: 1px solid var(--warn-dim);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--warn) 7%, var(--ink-850));
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}

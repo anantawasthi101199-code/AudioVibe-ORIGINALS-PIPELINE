@@ -81,6 +81,7 @@ import {
   getRuns,
   saveScript,
   setRunOutro,
+  removeChannelTopic,
   setOverride,
   startRun,
   suggest,
@@ -768,6 +769,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/channel/series' && req.method === 'POST') {
         return send(res, 200, createSeriesJob(id ?? ''));
+      }
+      if (pathname === '/api/channel/topic' && req.method === 'DELETE') {
+        return send(res, 200, removeChannelTopic(id ?? '', await readBody(req)));
       }
       if (pathname === '/api/channel/suggest' && req.method === 'POST') {
         return send(res, 200, await suggest(id ?? '', await readBody(req), user));
