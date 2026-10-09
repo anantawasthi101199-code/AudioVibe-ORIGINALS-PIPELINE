@@ -163,7 +163,6 @@ export const getRuns = (channelId: string | null) => ({
 export const getRun = (id: string) => {
   const run = openRun(id);
   const job = jobs.forRun(run.id);
-  if (!jobs.isRunning(job?.id ?? '')) recogniseTypedOutro(run);
 
   const read = <T>(stage: Parameters<Run['hasArtifact']>[0], schema: z.ZodType<T, z.ZodTypeDef, unknown>): T | null => {
     try {
@@ -755,43 +754,7 @@ export const outroStateFor = (run: Run, script: Script | null) => {
   }
   const current = script ? currentOutro(script) : null;
   const index = current === null ? null : options.indexOf(current);
-  return { kind, options, current, index: index === -1 ? null : index, signoffInText: current ? null : signoffInText(script) };
-};
-
-/**
- * A goodbye typed into the script itself, from before the outro was chosen
- * (2026-10-09): the last sentence of the last part, when it reads like one.
- * Shown so ticking an outro does not make the episode say goodbye twice.
- */
-const SIGNOFF = /\b(follow (for|along|the (show|channel))|see you (next time|in the next|soon)|until next time|thanks for listening|this (is|has been) [A-Z][a-z]+ on)\b/i;
-const signoffInText = (script: Script | null): string | null => {
-  const last = script?.beats.at(-1)?.turns.filter((t) => !t.fixed).at(-1)?.text;
-  if (!last) return null;
-  const sentences = last.replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]+["']?/g) ?? [last];
-  const tail = sentences.slice(-2).join(' ').trim();
-  return SIGNOFF.test(tail) ? tail : null;
-};
-
-/**
- * An outro written out word for word as the last paragraph of an older script
- * IS that outro: mark it as the fixed outro so the panel shows it ticked. Only
- * an exact match, and the words are untouched, so its voice stays valid.
- */
-export const recogniseTypedOutro = (run: Run): void => {
-  if (run.isComplete('publish') || !run.hasArtifact('script')) return;
-  const script = run.readArtifact('script', scriptSchema);
-  if (currentOutro(script)) return;
-  const { options } = outroStateFor(run, null);
-  const last = script.beats.at(-1);
-  const turn = last?.turns.at(-1);
-  if (!last || !turn) return;
-  const flat = turn.text.replace(/\s+/g, ' ').trim();
-  if (!options.includes(flat)) return;
-  const beats = script.beats.map((b, i) =>
-    i === script.beats.length - 1 ? { ...b, turns: b.turns.map((t, j) => (j === b.turns.length - 1 ? { ...t, fixed: true } : t)) } : b
-  );
-  run.writeArtifact('script', { ...script, beats });
-  run.journal({ stage: 'script', event: 'recognised its last paragraph as the channel outro' });
+  return { kind, options, current, index: index === -1 ? null : index };
 };
 
 /**

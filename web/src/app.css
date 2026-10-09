@@ -2830,20 +2830,6 @@ textarea.beat-edit.whole-edit {
 .outro .greyed {
   opacity: 0.45;
 }
-.outro {
-  border-color: var(--ink-600);
-}
-.outro-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  align-items: baseline;
-}
-.outro-line a,
-a.chip-static {
-  color: var(--hold);
-  cursor: pointer;
-}
 .outro-text {
   margin: 0;
   padding: 0.6rem 0.8rem;
