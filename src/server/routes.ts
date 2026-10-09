@@ -44,6 +44,7 @@ import { PipelineDeps } from '../pipeline/episode';
 import { budgetFor, targetFor } from '../pipeline/budget';
 import { channelVoice } from '../canon/voiceMaster';
 import { tagPass } from '../script/tagPass';
+import { lengthCheck, lengthRefusal } from '../script/length';
 import { currentOutro, outroOptions, setOutro } from '../script/outro';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
@@ -218,6 +219,7 @@ export const getRun = (id: string) => {
     voiceEstimate: voiceEstimateFor(read('script', scriptSchema)),
     outro: outroStateFor(run, read('script', scriptSchema)),
     takes: takesView(run),
+    length: lengthFor(run),
   };
 };
 
@@ -484,6 +486,24 @@ export const assertUnderCeiling = (run: Run): void => {
   }
 };
 
+/** The script's length against its kind's limits, or null with no script yet. */
+export const lengthFor = (run: Run) => {
+  if (!run.hasArtifact('script')) return null;
+  try {
+    const format = loadFormat(run.manifest.formatId);
+    if (format.sourceOnly) return null; // a set is cut into shorts, never voiced whole
+    return lengthCheck(run.readArtifact('script', scriptSchema), format.kind === 'short' ? 'short' : 'episode');
+  } catch {
+    return null;
+  }
+};
+
+/** FAR TOO LONG IS NOT VOICED (owner, 2026-10-09): see script/length.ts. */
+export const assertNotTooLong = (run: Run): void => {
+  const check = lengthFor(run);
+  if (check?.level === 'block') throw new HttpError(400, lengthRefusal(check));
+};
+
 /** Stop the job working on a run, after the paid call it is in. */
 export const stopRun = (id: string, who: string | null = null) => {
   const run = openRun(id);
@@ -582,6 +602,8 @@ export const resumeRun = (id: string, who: string | null = null, body: unknown =
   if (run.isComplete('publish')) throw new HttpError(400, 'that is already published');
   if (run.manifest.abandoned) throw new HttpError(400, 'that run was discarded');
   assertUnderCeiling(run);
+  // Resuming a run that is approved and written goes straight to the voice.
+  if (!run.awaitingApproval) assertNotTooLong(run);
   applyVoiceEngine(run, body, who);
   run.journal({ stage: 'pipeline', event: who ? `resumed in the studio by ${who}` : 'resumed in the studio' });
   return runLaneJob(run, who);
@@ -603,6 +625,7 @@ export const approveRun = (id: string, who: string | null = null, body: unknown 
   }
   if (!run.hasArtifact('script')) throw new HttpError(400, `run "${id}" has no script to approve`);
   assertUnderCeiling(run);
+  assertNotTooLong(run);
 
   applyVoiceEngine(run, body, who);
   if (!run.manifest.approvedAt) {
@@ -637,6 +660,7 @@ export const regenerateRun = (id: string, who: string | null = null, body: unkno
     throw new HttpError(400, 'there is no finished voice to regenerate yet: voice it first');
   }
   assertUnderCeiling(run);
+  assertNotTooLong(run);
 
   syncTakes(run, who); // the current voice is a take before anything changes
   applyVoiceEngine(run, body, who);

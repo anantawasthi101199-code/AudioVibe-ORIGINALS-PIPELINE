@@ -404,6 +404,19 @@ export interface RunDetail {
   takes: Takes;
   /** The channel's outros for this kind, and which one (if any) the script ends on. */
   outro: OutroState;
+  /** How long the script will run against its kind's limits; null with no script. */
+  length: LengthCheck | null;
+}
+
+export interface LengthCheck {
+  kind: 'short' | 'episode';
+  words: number;
+  seconds: number;
+  warnSeconds: number;
+  blockSeconds: number;
+  warnWords: number;
+  blockWords: number;
+  level: 'ok' | 'warn' | 'block';
 }
 
 export interface OutroState {

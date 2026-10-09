@@ -2959,3 +2959,35 @@ textarea.beat-edit.whole-edit {
   cursor: pointer;
   padding: 0;
 }
+
+/* --- Length: loud when long, red when too long to voice -------------------- */
+
+.length-alarm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+.length-alarm.warn {
+  border: 2px solid var(--amber);
+  background: color-mix(in srgb, var(--amber) 14%, var(--ink-850));
+  color: var(--text);
+}
+.length-alarm.block {
+  border: 2px solid var(--fail);
+  background: color-mix(in srgb, var(--fail) 16%, var(--ink-850));
+  color: var(--text);
+}
+.length-alarm strong {
+  font-size: 0.95rem;
+}
+.length-chip.warn {
+  color: var(--amber);
+  font-weight: 600;
+}
+.length-chip.block {
+  color: var(--fail);
+  font-weight: 600;
+}
