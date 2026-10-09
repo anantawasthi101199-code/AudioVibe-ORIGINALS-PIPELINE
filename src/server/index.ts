@@ -52,6 +52,7 @@ import {
   voiceOnly,
 } from './music';
 import { jobs } from './jobs';
+import { recordStudioSpend } from './studioSpend';
 import { chooseTake, takeFile } from '../render/takes';
 import { Run } from '../run/store';
 
@@ -673,7 +674,9 @@ export const createServer = (): http.Server =>
       // Suggesting and making are separate calls so the form can be filled in,
       // looked at and changed before anything is synthesised. See beats.ts.
       if (pathname === '/api/beats/suggest' && req.method === 'POST') {
-        return send(res, 200, await suggestBeat(await readBody(req)));
+        const made = await suggestBeat(await readBody(req));
+        recordStudioSpend({ channelId: null, what: 'suggest a beat', pence: made.pence, who: user });
+        return send(res, 200, made);
       }
       if (pathname === '/api/runs' && req.method === 'POST') {
         return send(res, 201, startRun(await readBody(req), user));
@@ -763,7 +766,7 @@ export const createServer = (): http.Server =>
         return send(res, 200, createSeriesJob(id ?? ''));
       }
       if (pathname === '/api/channel/suggest' && req.method === 'POST') {
-        return send(res, 200, await suggest(id ?? '', await readBody(req)));
+        return send(res, 200, await suggest(id ?? '', await readBody(req), user));
       }
 
       send(res, 404, { error: `no route for ${req.method} ${pathname}` });

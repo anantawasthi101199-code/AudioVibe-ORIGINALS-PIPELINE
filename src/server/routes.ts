@@ -57,6 +57,10 @@ import { Script, scriptBeatSchema, scriptSchema } from '../script/write';
 import { catalogue, channel, runs, runSummary } from './catalog';
 import { jobs, jobId } from './jobs';
 import { suggestTopics } from './suggest';
+import { recordStudioSpend, studioSpendFor } from './studioSpend';
+import { channelVoice as voiceFor } from '../canon/voiceMaster';
+import { loadSchedule } from '../schedule/load';
+import { describeSlot } from '../schedule/slots';
 
 export class HttpError extends Error {
   constructor(
@@ -90,6 +94,9 @@ export const getChannel = (id: string) => {
   const queue = loadTopics(id);
   return {
     channel: summary,
+    overview: overviewFor(id),
+    /** Money spent on this channel outside its runs (topic suggestions). */
+    studioSpend: studioSpendFor(id),
     // A news channel takes an empty topic: today's rapid-fire roundup.
     newsRoundup: hasNewsDesk(id) && !!loadDesk(id).roundup,
     /** What the three country boxes offer. */
@@ -106,6 +113,37 @@ export const getChannel = (id: string) => {
       short: { targetPence: shortTargetPence(), ceilingPence: shortBudgetPence() },
       episode: { targetPence: episodeTargetPence(), ceilingPence: episodeBudgetPence() },
     },
+  };
+};
+
+/**
+ * WHAT THIS CHANNEL MAKES, for a person (owner, 2026-10-09): who it is for,
+ * who hosts it and how they sound, what it covers, how often it goes out.
+ * Read from the persona, voice-master.yaml and schedule.yaml, so it is never a
+ * second description to keep in step.
+ */
+const overviewFor = (id: string) => {
+  const persona = loadPersona(id);
+  const voice = voiceFor(id);
+  let cadence: { slot: string | null; perWeek: { episodes: number; shorts: number } } | null = null;
+  try {
+    const c = loadSchedule().shows[id];
+    if (c) cadence = { slot: c.slot ? describeSlot(c.slot) : null, perWeek: c.perWeek };
+  } catch {
+    // No schedule file: no cadence to show.
+  }
+  const flat = (t: string | undefined) => t?.trim().replace(/\s+/g, ' ') ?? null;
+  return {
+    bio: flat(persona.bio),
+    thesis: flat(persona.thesis)!,
+    audience: flat(persona.audience)!,
+    // The persona's register has the host's personality appended for the
+    // writers (voice-master.yaml); shown once, under Host, not twice.
+    register: flat(persona.register)!.split(/\s*THE HOST'S PERSONALITY:/)[0]!.trim(),
+    category: persona.category,
+    fiction: persona.fiction,
+    host: voice ? { name: voice.name, personality: flat(voice.personality)!, delivery: flat(voice.delivery)! } : null,
+    cadence,
   };
 };
 
@@ -703,7 +741,7 @@ export const saveScript = (id: string, body: unknown) => {
  * verification behind it has no ledger to check - rather than inventing a
  * passing report, which would be the most dangerous possible default.
  */
-export const suggest = async (channelId: string, body: unknown) => {
+export const suggest = async (channelId: string, body: unknown, who: string | null = null) => {
   const input = z
     .object({ formatId: z.string().min(1), count: z.number().int().min(1).max(10).default(6) })
     .parse(body ?? {});
@@ -715,6 +753,8 @@ export const suggest = async (channelId: string, body: unknown) => {
   const writer = writerConfig();
   const made = runs({ channelId }).map((r) => r.topic);
 
+  // THE CALL COSTS MONEY, so it is counted, shown and recorded (2026-10-09).
+  let pence = 0;
   const { suggestions } = await suggestTopics(
     {
       persona,
@@ -723,10 +763,12 @@ export const suggest = async (channelId: string, body: unknown) => {
       made: [...new Set(made)].slice(0, 30),
       count: input.count,
     },
-    new AnthropicClient(writer.model, writer.apiKey)
+    new AnthropicClient(writer.model, writer.apiKey),
+    (p) => (pence += p)
   );
+  recordStudioSpend({ channelId, what: `suggest topics (${format.name})`, pence, who });
 
-  return { suggestions };
+  return { suggestions, pence, spent: studioSpendFor(channelId) };
 };
 
 const findingBody = z.object({ check: z.string().min(1), detail: z.string().min(1) });

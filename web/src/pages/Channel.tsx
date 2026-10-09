@@ -33,6 +33,20 @@ import { ErrorNote, StatePill } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
 
+/** A long description: its first sentence, and the rest behind "more". */
+const Brief = ({ text }: { text: string }) => {
+  const m = /^(.{40,220}?[.!?])\s+(.+)$/s.exec(text);
+  if (!m) return <>{text}</>;
+  return (
+    <details className="brief">
+      <summary>
+        {m[1]} <span className="more">more</span>
+      </summary>
+      {m[2]}
+    </details>
+  );
+};
+
 /** The once-per-channel jobs, which is where everything platform-facing lives. */
 const Setup = ({
   channel,
@@ -412,6 +426,8 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   const [starting, setStarting] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
   const [ideas, setIdeas] = useState<Array<{ topic: string; why: string }>>([]);
+  /** What the last Suggest press cost, and the channel's running total. */
+  const [suggestCost, setSuggestCost] = useState<{ pence: number; totalPence: number } | null>(null);
   // THE SEASON PLAN AND THE COVERED LEDGER. Both are read-only here on purpose:
   // breaking a season costs money and editing a plan is a text edit that wants
   // a text editor, so the page shows them and points at the command rather than
@@ -555,8 +571,9 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
     setSuggesting(true);
     setError(null);
     try {
-      const { suggestions } = await api.suggest(channel.id, route.formatId);
+      const { suggestions, pence, spent } = await api.suggest(channel.id, route.formatId);
       setIdeas(suggestions);
+      setSuggestCost({ pence, totalPence: spent.totalPence });
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -624,6 +641,61 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         </h1>
         <Info label="What this show is">{channel.thesis}</Info>
       </div>
+
+      {/* WHAT IT MAKES, at a glance (owner, 2026-10-09): from the persona,
+          voice-master.yaml and schedule.yaml, so it never drifts from them. */}
+      <section className="overview">
+        <div className="overview-main">
+          <div className="eyebrow">
+            {data.overview.category} · {data.overview.fiction ? 'fiction' : 'factual'}
+          </div>
+          <p className="overview-lede">{data.overview.bio ?? data.overview.thesis}</p>
+          {data.overview.bio && <p className="muted tiny">{data.overview.thesis}</p>}
+          <div className="overview-routes">
+            {channel.routes.map((r) => (
+              <div key={r.formatId} className="overview-route">
+                <strong>{r.kind === 'shorts' ? `Set of ${r.produces} shorts` : r.long ? 'Episode' : 'Short'}</strong>
+                <span className="faint tiny">
+                  {r.formatName} · {Math.round((r.seconds[0] / 60) * 10) / 10}-{Math.round((r.seconds[1] / 60) * 10) / 10} min
+                </span>
+                <span className="muted tiny">{r.intent}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <dl className="overview-facts">
+          <dt>For</dt>
+          <dd>
+            <Brief text={data.overview.audience} />
+          </dd>
+          {data.overview.host && (
+            <>
+              <dt>Host</dt>
+              <dd>
+                <strong>{data.overview.host.name}</strong>. <Brief text={data.overview.host.personality} />
+              </dd>
+            </>
+          )}
+          <dt>Sounds</dt>
+          <dd>
+            <Brief text={data.overview.register} />
+          </dd>
+          {data.overview.cadence && (
+            <>
+              <dt>Goes out</dt>
+              <dd>
+                {data.overview.cadence.slot ? `${data.overview.cadence.slot}; ` : ''}up to one short and one
+                episode a day once approved
+              </dd>
+            </>
+          )}
+          <dt>Spent outside runs</dt>
+          <dd className="mono">
+            {money(data.studioSpend.totalPence)} on {data.studioSpend.calls} suggestion
+            {data.studioSpend.calls === 1 ? '' : 's'}
+          </dd>
+        </dl>
+      </section>
 
       <div className="counts" style={{ marginBottom: '1.4rem' }}>
         <Count n={runs.length} label="runs" />
@@ -1054,9 +1126,20 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                       Blank script
                     </button>
                   )}
-                  <button className="btn ghost" onClick={suggest} disabled={suggesting}>
+                  <button
+                    className="btn ghost"
+                    onClick={suggest}
+                    disabled={suggesting}
+                    title="Asks the writing model for subjects. It costs a few pence, shown after each press and counted for this channel."
+                  >
                     {suggesting ? 'Thinking...' : 'Suggest'}
                   </button>
+                  {suggestCost && (
+                    <span className="faint tiny mono" title="Suggestions are not part of any run, so they are counted for the channel">
+                      that cost {suggestCost.pence < 1 ? `${suggestCost.pence.toFixed(1)}p` : money(suggestCost.pence)} · suggestions so far{' '}
+                      {money(suggestCost.totalPence)}
+                    </span>
+                  )}
                   <span className="spacer" />
                   <span className="faint tiny">
                     {route.kind === 'shorts' ? 'Never voiced whole' : 'Stops before the audio'}
