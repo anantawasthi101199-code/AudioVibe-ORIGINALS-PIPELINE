@@ -573,6 +573,51 @@ export const renderScript = async (
     }
   };
 
+  // THE VOICE LOG (owner, 2026-10-09): every request to the engine, what it
+  // carried and what it cost, appended to media/voice-calls.jsonl beside the
+  // run's audio, so "why did this cost so much" has an answer: a re-take, a
+  // re-voice after an edit, a regeneration, or simply a long script. Reused
+  // beats are logged at no cost. Written only for a run's own media folder,
+  // so tests rendering to a temp path leave nothing behind.
+  const session = new Date().toISOString();
+  const logFile =
+    path.basename(path.dirname(input.outputPath)) === 'media'
+      ? path.join(path.dirname(input.outputPath), 'voice-calls.jsonl')
+      : null;
+  const logCall = (entry: {
+    beats: string[];
+    text: string;
+    attempt: 'voiced' | 'retake' | 'reused';
+    pence: number;
+    note?: string;
+  }): void => {
+    if (!logFile) return;
+    const tags = entry.text.match(/\[[^\]]{1,48}\]/g) ?? [];
+    try {
+      fs.appendFileSync(
+        logFile,
+        `${JSON.stringify({
+          at: new Date().toISOString(),
+          session,
+          engine: tts.name,
+          beats: entry.beats,
+          attempt: entry.attempt,
+          chars: entry.text.length,
+          tags: tags.length,
+          tagChars: tags.reduce((n, t) => n + t.length + 1, 0),
+          words: entry.text.replace(/\[[^\]]{1,48}\]/g, ' ').split(/\s+/).filter((w) => /[a-z0-9]/i.test(w)).length,
+          pence: Math.round(entry.pence * 100) / 100,
+          ...(entry.note ? { note: entry.note } : {}),
+        })}\n`,
+        'utf8'
+      );
+    } catch {
+      // The log must never fail a render.
+    }
+  };
+  const groupText = (group: Array<{ turns: Array<{ text: string }> }>) =>
+    speakable(group.flatMap((b) => b.turns.map((t) => t.text)).join('\n\n'));
+
   const files: string[] = [];
   const timings: Array<{ id: string; type: string; durationS: number; endsFile: boolean }> = [];
   let costPence = 0;
@@ -645,6 +690,7 @@ export const renderScript = async (
 
     if (deps.reuseExisting !== false && keyMatches && fs.existsSync(file) && fs.statSync(file).size > 0) {
       onProgress?.(`${i + 1}/${groups.length}: ${beat.beatId} (already rendered)`);
+      logCall({ beats: group.map((b) => b.beatId), text: groupText(group), attempt: 'reused', pence: 0 });
       files.push(file);
 
       const existing = await probe(file);
@@ -851,6 +897,13 @@ export const renderScript = async (
         const retryFile = `${file}.retry`;
         write(retryFile, retry.audio);
         costPence += retry.costPence;
+        logCall({
+          beats: group.map((b) => b.beatId),
+          text: groupText(group),
+          attempt: 'retake',
+          pence: retry.costPence,
+          note: `the first take ended on ${firstTrailing.toFixed(1)}s of silence, so it was voiced again in full`,
+        });
         charge(retry.costPence);
 
         const retryDuration = await probe(retryFile);
@@ -891,6 +944,7 @@ export const renderScript = async (
     // Resume.
     write(keyFile, Buffer.from(`${key}\n`, 'utf8'));
     costPence += result.costPence;
+    logCall({ beats: group.map((b) => b.beatId), text: groupText(group), attempt: 'voiced', pence: result.costPence });
     charge(result.costPence);
     files.push(file);
 

@@ -41,7 +41,6 @@ import {
 } from '../api';
 import {
   BudgetMeter,
-  CostBar,
   ErrorNote,
   LiveLog,
   NowBanner,
@@ -51,6 +50,7 @@ import {
 } from '../components/bits';
 import { Count, Info } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
+import { CostBreakdown, VoiceLog } from '../components/CostBreakdown';
 import { fromWhole, toWhole } from '../scriptText';
 
 const engineName = (e: VoiceEngine) => (e === 'elevenlabs' ? 'ElevenLabs' : 'GPT');
@@ -969,6 +969,27 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               </section>
             )}
 
+            {/* --- The voice log: every call to the engine, and what it cost -- */}
+            {!isSource && (
+              <section className="panel" id="voice-log">
+                <details>
+                  <summary className="panel-head" style={{ cursor: 'pointer' }}>
+                    <h3>Voice log</h3>
+                    <span className="faint tiny">
+                      {data.costs.voice.sessions.length
+                        ? `${data.costs.voice.sessions.length} voicing${data.costs.voice.sessions.length === 1 ? '' : 's'}, ${money(
+                            data.costs.voice.sessions.reduce((a, x) => a + x.pence, 0)
+                          )}`
+                        : 'nothing logged yet'}
+                    </span>
+                  </summary>
+                  <div className="panel-body">
+                    <VoiceLog costs={data.costs} />
+                  </div>
+                </details>
+              </section>
+            )}
+
             {/* --- Takes: every voicing kept, one chosen to publish ---------- */}
             {!isSource && (data.takes.takes.length > 0 || run.completed.includes('render')) && (
               <section className="panel takes" id="takes">
@@ -1445,7 +1466,17 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
               </div>
               <div className="panel-body stack tight">
                 <BudgetMeter spent={run.spentPence} target={run.targetPence} ceiling={run.ceilingPence} />
-                <CostBar events={events} total={run.spentPence} />
+                <CostBreakdown costs={data.costs} />
+                <a
+                  className="tiny"
+                  href="#voice-log"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('voice-log')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  See every voice call
+                </a>
               </div>
             </section>
 

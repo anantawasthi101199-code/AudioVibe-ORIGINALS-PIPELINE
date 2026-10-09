@@ -406,6 +406,33 @@ export interface RunDetail {
   outro: OutroState;
   /** How long the script will run against its kind's limits; null with no script. */
   length: LengthCheck | null;
+  /** Where the run's money went: by category, and every voice call. */
+  costs: CostBreakdown;
+}
+
+export interface VoiceCall {
+  at: string;
+  session: string;
+  engine: string;
+  beats: string[];
+  attempt: 'voiced' | 'retake' | 'reused';
+  chars: number;
+  tags: number;
+  tagChars: number;
+  words: number;
+  pence: number;
+  note?: string;
+}
+
+export interface CostBreakdown {
+  totalPence: number;
+  segments: Array<{ key: string; label: string; pence: number }>;
+  /** From the run's journal: what made part of the voice get paid for twice. */
+  findings: string[];
+  voice: {
+    sessions: Array<{ at: string; reason: string; engine: string; pence: number; calls: VoiceCall[] }>;
+    ratePer1k: { elevenlabs: number; openai: number };
+  };
 }
 
 export interface LengthCheck {

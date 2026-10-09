@@ -59,6 +59,7 @@ import { Script, scriptBeatSchema, scriptSchema } from '../script/write';
 import { catalogue, channel, runs, runSummary } from './catalog';
 import { jobs, jobId } from './jobs';
 import { suggestTopics } from './suggest';
+import { costBreakdown } from './costs';
 import { recordStudioSpend, studioSpendFor } from './studioSpend';
 import { isHidden, keepSuggestions, picksFor, removeTopic, topicUsed } from './topicPicks';
 import { channelVoice as voiceFor } from '../canon/voiceMaster';
@@ -220,6 +221,7 @@ export const getRun = (id: string) => {
     outro: outroStateFor(run, read('script', scriptSchema)),
     takes: takesView(run),
     length: lengthFor(run),
+    costs: costBreakdown(run),
   };
 };
 
