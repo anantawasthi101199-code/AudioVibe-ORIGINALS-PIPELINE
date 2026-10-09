@@ -13,6 +13,18 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **The outro is optional and chosen from a dropdown** (2026-10-09). Every
+  channel has exactly three outros for shorts and three for episodes in
+  voice-master.yaml (new ones written for Eureka Tales, The Root Health, The
+  Crime Files and The Global Thread's episodes; Mythic Archives and The Global
+  Thread trimmed to three). Below the script on the run page, a tick box and a
+  dropdown: ticked, the chosen outro is the fixed last turn of the SAVED
+  script, so it is voiced with it word for word; unticked, the script is voiced
+  alone and the dropdown is greyed. The script editors (by part and whole) hide
+  the outro and never change it; saving keeps it. Changing it is a script
+  change: re-checked at once, and a voiced run needs voicing again (only the
+  last part). Locked while editing, while working and once published.
+
 - **Regenerate, as takes** (2026-10-08). "Regenerate voice" voices the same
   saved script again from scratch (every beat file and key deleted first), asked
   twice in the page and refused by the server without `confirm: true`. It never

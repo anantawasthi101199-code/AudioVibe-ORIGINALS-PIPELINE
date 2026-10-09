@@ -394,6 +394,18 @@ export interface RunDetail {
   voiceEstimate: { chars: number; openai: number; elevenlabs: number } | null;
   /** Every finished voicing, and which one publishes. */
   takes: Takes;
+  /** The channel's outros for this kind, and which one (if any) the script ends on. */
+  outro: OutroState;
+}
+
+export interface OutroState {
+  kind: 'short' | 'episode';
+  /** Exactly the channel's outros for this kind, in order. */
+  options: string[];
+  /** The outro the saved script ends on, or null when it has none. */
+  current: string | null;
+  /** Its place in options, or null (none, or no longer in the list). */
+  index: number | null;
 }
 
 export interface Take {
@@ -847,6 +859,13 @@ export const api = {
     call<{ runId: string; jobId: string }>(`/api/run/regenerate?id=${encodeURIComponent(id)}`, {
       method: 'POST',
       body: JSON.stringify({ ...voice, confirm: true }),
+    }),
+
+  /** Attach one of the channel's outros (index), or none (enabled false). Changes the script. */
+  setOutro: (id: string, enabled: boolean, index?: number) =>
+    call<{ outro: OutroState; audioStale: boolean }>(`/api/run/outro?id=${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ enabled, index }),
     }),
 
   /** Stop the job working on a run, after the paid step it is on. */

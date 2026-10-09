@@ -2824,3 +2824,20 @@ textarea.beat-edit.whole-edit {
 .brief[open] .more {
   display: none;
 }
+
+/* --- Outro ------------------------------------------------------------------ */
+
+.outro .greyed {
+  opacity: 0.45;
+}
+.outro-text {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--line);
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.55;
+}
+.outro select.field {
+  width: 100%;
+}

@@ -111,6 +111,8 @@ channels:
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
       episode:
         - "And that's the story, decoded. This is Adrian on Business Decoded. Follow the show for more business stories from around the world, and I'll see you next time."
         - "That's where we'll leave it. This has been Adrian on Business Decoded. Follow for more deep dives into how the world's businesses were really built. I'll see you next time."
@@ -166,12 +168,16 @@ channels:
         sayAs: TET-ruh-FLOOR-oh-ETH-uh-leen
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
       episode:
         - "And that is how it was found. This is Ethan on Eureka Tales. Thanks for spending the time with me. Follow for more stories from science, and I'll see you next time. Stay curious."
         - "That is where I'll leave it. I'm Ethan, and this has been Eureka Tales. There's another discovery coming soon, so follow along. Until then, stay curious."
+        - "And that is how one good question changed what we know. I'm Ethan on Eureka Tales. Follow the show for the next discovery, and until then, stay curious."
       short:
         - "This is Ethan on Eureka Tales. Follow for more stories from science, and I'll see you next time. Stay curious."
         - "There are plenty more where that came from. I'm Ethan on Eureka Tales, so follow along, and stay curious."
+        - "That is how it was found. This is Ethan on Eureka Tales. Follow for more, and stay curious."
 
   # -------------------------------------------------------------------------
   global-thread:
@@ -214,12 +220,16 @@ channels:
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
-      episode: []
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
+      episode:
+        - "That's the full story, as it stands today. This is Eva on The Global Thread. Follow to keep up with world affairs as they happen, and I'll see you next time."
+        - "That's where things stand. I'm Eva, and this has been The Global Thread. Follow along for the world's biggest stories, explained simply. Until next time."
+        - "This has been Eva on The Global Thread. Thanks for staying with me through all of it. Follow for more, and take care."
       short:
         - "This is Eva on The Global Thread. Follow me to keep up with world affairs every day, and I'll see you next time."
         - "That's the report. I'm Eva on The Global Thread. If you want to stay on top of what's happening in the world, follow for more. Until next time."
         - "This has been Eva on The Global Thread. Follow along for the world's biggest stories, explained simply. See you next time."
-        - "For more on world affairs as it happens, follow The Global Thread. I'm Eva, and I'll see you next time. Take care."
 
   # -------------------------------------------------------------------------
   root-health:
@@ -268,12 +278,16 @@ channels:
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
       episode:
         - "That's what the evidence shows so far. This is Julia on The Root Health. Follow for more of what the research actually says, and I'll see you next time."
         - "That's where the science stands today. I'm Julia, and this has been The Root Health. Follow the show for more, and I'll see you in the next one."
+        - "And that's what the research really says. This is Julia on The Root Health. Follow for more evidence, without the hype, and I'll see you next time."
       short:
         - "This is Julia on The Root Health. Follow for more of what the research actually says. Until next time."
         - "That's the evidence, as it stands. I'm Julia on The Root Health. Follow for more, and I'll see you next time."
+        - "That's what the research says. This is Julia on The Root Health. Follow along for more, and take care."
 
   # -------------------------------------------------------------------------
   crime-files:
@@ -317,10 +331,16 @@ channels:
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
       episode:
         - "This has been Daemon on The Crime Files. Follow the channel for the next case. I'll see you next time."
+        - "And that is how the case was closed. I'm Daemon, and this has been The Crime Files. Follow the channel for the next one. Until then."
+        - "That is where the record ends. This is Daemon on The Crime Files. Follow for the next case, told in full. I'll see you next time."
       short:
         - "This is Daemon on The Crime Files. Follow for more cases, told in full."
+        - "That's the case. I'm Daemon on The Crime Files. Follow for the next one."
+        - "This is Daemon on The Crime Files. There are more cases where that came from, so follow along."
 
   # -------------------------------------------------------------------------
   mythic-archives:
@@ -386,11 +406,12 @@ channels:
         sayAs: VY-nuh-moy-nen
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
       episode:
         - "That is where I will leave it. This is Akira on Mythic Archives. Thanks for spending the time with me. There will be another story next week, from somewhere else entirely. Until then, take care of yourself."
         - "Thank you for listening. Somebody told that story for the first time a very long time ago, and you have just heard it. This is Akira on Mythic Archives, and I'll have another one for you next week. Until then, take care."
         - "And that is the whole of it. I'm Akira, and this has been Mythic Archives. Thanks for staying to the end with me. Next week there's another one, from another part of the world. See you then."
-        - "That is the story. This is Akira on Mythic Archives. Thank you for listening. I'll be back next week with another, from somewhere completely different. Until then, bye for now."
       short:
         - "This is Akira on Mythic Archives. Follow for more stories like this one, from every corner of the world. Until next time, take care."
         - "There are a lot more of these where that came from. I'm Akira on Mythic Archives, so follow along. See you next time."
@@ -437,6 +458,8 @@ channels:
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
+      # Exactly three of each (owner, 2026-10-09): the run page offers them in a
+      # dropdown, and an outro is optional per run.
       episode:
         - "That's what I've got for you today. This is Sarah on Psyche Session. If this made something make sense, pass it to somebody who needs it, and follow for more of how your mind works. Be kind to yourself this week. I'll see you next time."
         - "Thanks for staying with me. If you recognised yourself in this, you are genuinely not the only one. I'm Sarah, and this has been Psyche Session. Follow along for more, and take care of yourself."
