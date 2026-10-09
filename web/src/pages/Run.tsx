@@ -123,6 +123,10 @@ const EnginePicker = ({
   );
 };
 
+/** The script's parts without the outro: the editors never touch the outro. */
+const withoutOutro = (beats: Beat[]): Beat[] =>
+  beats.map((b) => ({ ...b, turns: b.turns.filter((t) => !t.fixed) }));
+
 /** Delivery tags are part of the script and are not part of the sentence. */
 const Prose = ({ turns }: { turns: Beat['turns'] }) => (
   <div className="prose">
@@ -205,7 +209,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
       const d = await api.run(id);
       setData(d);
       setEvents(d.job?.events ?? []);
-      setDraft(d.script?.beats ?? []);
+      setDraft(withoutOutro(d.script?.beats ?? []));
       // A blank template opens ready to write in.
       if (d.script?.beats.some((b) => b.turns.some((t) => t.text.includes('[WRITE:')))) {
         setEditing(true);
@@ -297,7 +301,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   /** The beats as they will be saved, from whichever editor is open. */
   const draftBeats = (): Beat[] | null => {
     if (editMode === 'beats') return draft;
-    const parsed = fromWhole(wholeText, script?.beats ?? draft);
+    const parsed = fromWhole(wholeText, script ? withoutOutro(script.beats) : draft);
     if (!parsed.ok) {
       setWholeError(parsed.error);
       return null;
@@ -354,6 +358,39 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   // The gate on disk before the voice is made is the pre-voice check, which is
   // what a person reads to decide - not the verdict on the audio.
   const gateIsFinal = isSource || run.completed.includes('qa');
+  // THE OUTRO IS PART OF THE SAVED SCRIPT, so it follows the script's rules:
+  // fixed once published, and not while the words are open for editing or the
+  // run is working.
+  const outroLockReason = published
+    ? 'Published: the outro is fixed.'
+    : live
+      ? 'Working: change the outro when it stops.'
+      : editing
+        ? 'Save and re-check the script first, then choose the outro.'
+        : null;
+  const outroLocked = outroLockReason !== null || busy !== null;
+
+  const changeOutro = async (enabled: boolean, index: number) => {
+    const voiced = run.completed.includes('render');
+    if (
+      voiced &&
+      !window.confirm(
+        'This run is voiced. Changing the outro changes the script, so it will need voicing again (only the last part is re-voiced). Go ahead?'
+      )
+    )
+      return;
+    setBusy('outro');
+    setError(null);
+    try {
+      await api.setOutro(id, enabled, index);
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
   // A finished voice to regenerate, nothing working, and the choice not fixed.
   const regenAllowed =
     !isSource &&
@@ -1067,7 +1104,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       <button
                         className="btn ghost small"
                         onClick={() => {
-                          setDraft(script.beats);
+                          setDraft(withoutOutro(script.beats));
                           stopEditing();
                         }}
                       >
@@ -1112,7 +1149,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                     </div>
                   ) : (
                   <div className="stack">
-                    {(editing ? draft : script.beats).map((beat, i) => (
+                    {(editing ? draft : withoutOutro(script.beats)).map((beat, i) => (
                       <article className="beat" key={beat.beatId}>
                         <div className="beat-head">
                           <span className="beat-id">{beat.beatId}</span>
@@ -1130,18 +1167,12 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                               className="beat-edit"
                               value={beat.turns.map((t) => t.text).join('\n\n')}
                               onChange={(e) => {
-                                const speaker = beat.turns[0]?.speaker ?? 'narrator';
-                                // The channel's outro stays marked as fixed while its words are unchanged.
-                                const fixed = new Set(
-                                  (script.beats[i]?.turns ?? []).filter((t) => t.fixed).map((t) => t.text)
-                                );
+                                const speaker =
+                                  beat.turns[0]?.speaker ?? script.beats[i]?.turns[0]?.speaker ?? 'narrator';
+                                // The outro is not here: the Outro panel below owns it.
                                 const turns = e.target.value
                                   .split(/\n{2,}/)
-                                  .map((text) => ({
-                                    speaker,
-                                    text: text.trim(),
-                                    ...(fixed.has(text.trim()) ? { fixed: true } : {}),
-                                  }))
+                                  .map((text) => ({ speaker, text: text.trim() }))
                                   .filter((t) => t.text.length > 0);
                                 setDraft((prev) =>
                                   prev.map((b, j) => (j === i ? { ...b, turns: turns.length ? turns : b.turns } : b))
@@ -1156,6 +1187,61 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                     ))}
                   </div>
                   )}
+                </div>
+              </section>
+            )}
+
+            {/* --- The outro: optional, one of the channel's three --------- */}
+            {script && !isSource && data.outro.options.length > 0 && (
+              <section className="panel outro" id="outro">
+                <div className="panel-head">
+                  <label className="row" style={{ gap: '0.5rem', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={data.outro.current !== null}
+                      disabled={outroLocked}
+                      onChange={(e) =>
+                        void changeOutro(e.target.checked, data.outro.index ?? 0)
+                      }
+                    />
+                    <h3>Outro</h3>
+                  </label>
+                  <span className="faint tiny">
+                    {data.outro.current !== null ? 'attached to the end of the script' : 'none: the script is voiced alone'}
+                  </span>
+                  <span className="spacer" />
+                  <Info label="How the outro works">
+                    Optional. Ticked, the chosen outro is attached to the end of the saved script and
+                    voiced with it, word for word. Unticked, only the script is voiced. It works the
+                    same whether you edit by part or as the whole script, and the editors leave it
+                    alone. Changing it changes the script: it is re-checked at once and, if the run
+                    was voiced, only the last part needs voicing again.
+                  </Info>
+                </div>
+                <div className={`panel-body stack tight${data.outro.current === null ? ' greyed' : ''}`}>
+                  <select
+                    className="field"
+                    value={data.outro.index ?? (data.outro.current !== null ? -1 : 0)}
+                    disabled={outroLocked || data.outro.current === null}
+                    onChange={(e) => void changeOutro(true, Number(e.target.value))}
+                  >
+                    {data.outro.index === null && data.outro.current !== null && (
+                      <option value={-1} disabled>
+                        The current outro (no longer in the channel&apos;s list)
+                      </option>
+                    )}
+                    {data.outro.options.map((o, i) => (
+                      <option key={i} value={i}>
+                        {i + 1}. {o.length > 90 ? `${o.slice(0, 90)}...` : o}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="outro-text">
+                    &ldquo;
+                    {data.outro.current ?? data.outro.options[data.outro.index ?? 0]}
+                    &rdquo;
+                  </p>
+                  {outroLockReason && <span className="faint tiny">{outroLockReason}</span>}
                 </div>
               </section>
             )}

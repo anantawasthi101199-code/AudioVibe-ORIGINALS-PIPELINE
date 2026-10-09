@@ -55,8 +55,10 @@ describe('fixed outros', () => {
     expect(twice).toBe(once);
   });
 
-  it('a kind with no outro is left alone (Global Thread makes no long episodes)', () => {
-    expect(withOutro(script, loadPersona('global-thread'), 'long', 'x')).toBe(script);
+  it('a kind with no outro is left alone', () => {
+    // Every channel now has three of each (2026-10-09), so an empty list is made here.
+    const persona = { ...loadPersona('global-thread'), signoff: [], signoffShort: [] };
+    expect(withOutro(script, persona, 'long', 'x')).toBe(script);
   });
 });
 

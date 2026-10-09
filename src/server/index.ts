@@ -80,6 +80,7 @@ import {
   getRun,
   getRuns,
   saveScript,
+  setRunOutro,
   setOverride,
   startRun,
   suggest,
@@ -683,6 +684,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/script' && req.method === 'PUT') {
         return send(res, 200, saveScript(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/run/outro' && req.method === 'PUT') {
+        return send(res, 200, setRunOutro(id ?? '', await readBody(req), user));
       }
       if (pathname === '/api/run/override' && req.method === 'POST') {
         return send(res, 200, setOverride(id ?? '', await readBody(req), true, user));

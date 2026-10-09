@@ -44,6 +44,7 @@ import { PipelineDeps } from '../pipeline/episode';
 import { budgetFor, targetFor } from '../pipeline/budget';
 import { channelVoice } from '../canon/voiceMaster';
 import { tagPass } from '../script/tagPass';
+import { currentOutro, outroOptions, setOutro } from '../script/outro';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run, runLabel, stopRequests } from '../run/store';
@@ -211,6 +212,7 @@ export const getRun = (id: string) => {
     /** Long form: belongs to a series. */
     long: loadFormat(run.manifest.formatId).kind !== 'short',
     voiceEstimate: voiceEstimateFor(read('script', scriptSchema)),
+    outro: outroStateFor(run, read('script', scriptSchema)),
     takes: takesView(run),
   };
 };
@@ -705,24 +707,29 @@ export const saveScript = (id: string, body: unknown) => {
   const edited = saveScriptSchema.parse(body);
 
   const before = run.readArtifact('script', scriptSchema);
-  const script: Script = { ...before, ...edited };
+  // THE OUTRO IS NOT THE EDITOR'S: it is kept as it was, whatever the editor
+  // sent, and only the outro control changes it (see setRunOutro).
+  const script: Script = setOutro({ ...before, ...edited }, currentOutro(before));
+  return writeChangedScript(run, before, script, 'edited in the studio', 'saved in the studio, prose unchanged');
+};
 
+/**
+ * Write a script and say what that means for its audio.
+ *
+ * The audio is now about different words if the words changed. Dropping the
+ * artifact is what makes the run honest about that. The beat files are left
+ * alone: renderScript reuses one only when its `.key` (engine, voice and exact
+ * text) still matches, so the unchanged beats cost nothing and the changed ones
+ * (for an outro, only the last part) are made again.
+ */
+const writeChangedScript = (run: Run, before: Script, script: Script, changedEvent: string, sameEvent: string) => {
   const changed =
     JSON.stringify(before.beats.map((b) => b.turns)) !==
     JSON.stringify(script.beats.map((b) => b.turns));
 
   run.writeArtifact('script', script);
-  run.journal({
-    stage: 'script',
-    event: changed ? 'edited in the studio' : 'saved in the studio, prose unchanged',
-  });
+  run.journal({ stage: 'script', event: changed ? changedEvent : sameEvent });
 
-  // The audio is now about different words. Dropping the artifact is what makes
-  // the run honest about that. The beat files are left alone: renderScript
-  // reuses one only when its `.key` (engine, voice and exact text) still
-  // matches, so the unchanged beats cost nothing and the edited ones are made
-  // again. (Until 2026-10-08 it reused by file name alone, and this comment
-  // claimed otherwise.)
   if (changed && run.hasArtifact('render')) {
     fs.rmSync(path.join(run.dir, 'render.json'), { force: true });
     run.uncomplete('render');
@@ -732,6 +739,48 @@ export const saveScript = (id: string, body: unknown) => {
   }
 
   return { run: runSummary(run, jobs.liveRunIds()), gate: regate(run, script), audioStale: changed };
+};
+
+/** Which outro list a run uses, and which of it the script ends on now. */
+export const outroStateFor = (run: Run, script: Script | null) => {
+  let options: string[] = [];
+  let kind: 'short' | 'episode' = 'episode';
+  try {
+    const format = loadFormat(run.manifest.formatId);
+    kind = format.kind === 'short' ? 'short' : 'episode';
+    options = format.sourceOnly ? [] : outroOptions(loadPersona(run.manifest.personaId), format.kind === 'short' ? 'short' : 'long');
+  } catch {
+    options = [];
+  }
+  const current = script ? currentOutro(script) : null;
+  const index = current === null ? null : options.indexOf(current);
+  return { kind, options, current, index: index === -1 ? null : index };
+};
+
+/**
+ * Attach one of the channel's outros to the script, or none (owner,
+ * 2026-10-09). Changes the saved script like an edit does: re-checked at once,
+ * and a voiced run has to be voiced again (only its last part changes).
+ */
+export const setRunOutro = (id: string, body: unknown, who: string | null = null) => {
+  const run = openRun(id);
+  if (run.isComplete('publish')) throw new HttpError(400, 'that is already published, so its outro is fixed');
+  if (jobs.isRunning(jobs.forRun(run.id)?.id ?? '')) throw new HttpError(409, 'this run is working; change the outro when it stops');
+  const { enabled, index } = z
+    .object({ enabled: z.boolean(), index: z.number().int().nonnegative().optional() })
+    .parse(body ?? {});
+  const before = run.readArtifact('script', scriptSchema);
+  const { options } = outroStateFor(run, before);
+  let outro: string | null = null;
+  if (enabled) {
+    if (index === undefined || !options[index]) {
+      throw new HttpError(400, `choose one of this channel's ${options.length} outros`);
+    }
+    outro = options[index]!;
+  }
+  const label = outro ? `outro ${options.indexOf(outro) + 1} attached` : 'outro removed';
+  const out = writeChangedScript(run, before, setOutro(before, outro), `${label}${who ? ` by ${who}` : ''}`, 'outro unchanged');
+  return { ...out, outro: outroStateFor(run, run.readArtifact('script', scriptSchema)) };
 };
 
 /**
