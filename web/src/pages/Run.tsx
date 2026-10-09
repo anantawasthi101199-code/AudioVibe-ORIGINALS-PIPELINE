@@ -1232,7 +1232,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                     )}
                     {data.outro.options.map((o, i) => (
                       <option key={i} value={i}>
-                        {i + 1}. {o.length > 90 ? `${o.slice(0, 90)}...` : o}
+                        {o.length > 90 ? `${o.slice(0, 90)}...` : o}
                       </option>
                     ))}
                   </select>
