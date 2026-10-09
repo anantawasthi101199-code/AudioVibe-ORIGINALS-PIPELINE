@@ -49,6 +49,14 @@ export interface Channel {
   };
 }
 
+/** A topic suggestion kept for next time. */
+export interface SavedSuggestion {
+  topic: string;
+  why: string;
+  at: string;
+  by: string | null;
+}
+
 export interface ChannelOverview {
   bio: string | null;
   thesis: string;
@@ -816,6 +824,8 @@ export const api = {
       studioSpend: StudioSpend;
       /** Target (a warning) and hard ceiling, per kind. */
       budgets: Record<'short' | 'episode', { targetPence: number; ceilingPence: number }>;
+      /** Suggestions kept for next time, by format id. */
+      savedSuggestions: Record<string, SavedSuggestion[]>;
       /** A news channel: an empty topic makes today's rapid-fire roundup. */
       newsRoundup: boolean;
       /** What the rapid fire's country boxes offer. */
@@ -897,12 +907,21 @@ export const api = {
   suggest: (channelId: string, formatId: string, count = 6) =>
     call<{
       suggestions: Array<{ topic: string; why: string }>;
+      /** Every suggestion kept for this format, newest first. */
+      saved: SavedSuggestion[];
       /** What this press cost. */
       pence: number;
       spent: StudioSpend;
     }>(
       `/api/channel/suggest?id=${encodeURIComponent(channelId)}`,
       { method: 'POST', body: JSON.stringify({ formatId, count }) }
+    ),
+
+  /** Remove a topic for good: a kept suggestion or a topic-queue pill. */
+  removeTopic: (channelId: string, topic: string) =>
+    call<{ ok: true; savedSuggestions: Record<string, SavedSuggestion[]> }>(
+      `/api/channel/topic?id=${encodeURIComponent(channelId)}`,
+      { method: 'DELETE', body: JSON.stringify({ topic }) }
     ),
 
   /** The FINAL audio: what publishing sends. `key` makes a player reload it. */

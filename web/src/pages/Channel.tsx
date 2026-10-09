@@ -418,7 +418,11 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   // SUGGESTIONS BELONG TO THE FORMAT THEY WERE ASKED FOR: shorts get compact
   // stories, episodes deep ones. Switching format clears them, so an episode
   // is never started from a short's idea.
-  useEffect(() => setIdeas([]), [route?.formatId]);
+  // KEPT FOR NEXT TIME (2026-10-09): the list shown is the one saved for this
+  // format, and it stays until each suggestion is used or removed.
+  useEffect(() => {
+    setIdeas(route ? (data?.savedSuggestions[route.formatId] ?? []) : []);
+  }, [route?.formatId, data?.savedSuggestions]);
   // NOTHING STARTS ON ONE CLICK (owner, 2026-10-05): the dialog says exactly
   // what is about to be made, and only Confirm starts it.
   const [confirming, setConfirming] = useState<{ again: boolean; blank: boolean } | null>(null);
@@ -571,13 +575,24 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
     setSuggesting(true);
     setError(null);
     try {
-      const { suggestions, pence, spent } = await api.suggest(channel.id, route.formatId);
-      setIdeas(suggestions);
+      const { saved, pence, spent } = await api.suggest(channel.id, route.formatId);
+      setIdeas(saved);
       setSuggestCost({ pence, totalPence: spent.totalPence });
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setSuggesting(false);
+    }
+  };
+
+  /** Remove a topic for good: it is not shown, or suggested, again. */
+  const dropTopic = async (t: string) => {
+    setError(null);
+    try {
+      await api.removeTopic(channel.id, t);
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
     }
   };
 
@@ -1148,33 +1163,47 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
 
                 {ideas.length > 0 && (
                   <div className="stack" style={{ gap: '0.35rem' }}>
+                    <span className="faint tiny">
+                      Suggested, kept for next time ({ideas.length}). Pick one, or × the ones you do not
+                      want; they will not be suggested again.
+                    </span>
                     {ideas.map((idea) => (
-                      <button
-                        key={idea.topic}
-                        className="idea"
-                        onClick={() => {
-                          setTopic(idea.topic);
-                          setIdeas([]);
-                        }}
-                      >
-                        <span>{idea.topic}</span>
+                      <div key={idea.topic} className={`idea${topic.trim() === idea.topic ? ' on' : ''}`}>
+                        <button type="button" className="idea-pick" onClick={() => setTopic(idea.topic)}>
+                          {idea.topic}
+                        </button>
                         <Info>{idea.why}</Info>
-                      </button>
+                        <button
+                          type="button"
+                          className="idea-x"
+                          title="Remove: not shown or suggested again"
+                          aria-label={`Remove ${idea.topic}`}
+                          onClick={() => void dropTopic(idea.topic)}
+                        >
+                          ×
+                        </button>
+                      </div>
                     ))}
                   </div>
                 )}
 
                 {queue.length > 0 && (
-                  <div className="row" style={{ gap: '0.35rem' }}>
-                    {queue.slice(0, 6).map((t) => (
-                      <button
-                        key={t}
-                        className="btn ghost small"
-                        onClick={() => setTopic(t)}
-                        title={t}
-                      >
-                        {t.split(/[-–—]/)[0]!.trim().slice(0, 40)}
-                      </button>
+                  <div className="row" style={{ gap: '0.35rem', flexWrap: 'wrap' }}>
+                    {queue.map((t) => (
+                      <span key={t} className={`pick-pill${topic.trim() === t ? ' on' : ''}`}>
+                        <button type="button" onClick={() => setTopic(t)} title={t}>
+                          {t.split(/[-–—]/)[0]!.trim().slice(0, 60)}
+                        </button>
+                        <button
+                          type="button"
+                          className="idea-x"
+                          title="Remove from this list for good"
+                          aria-label={`Remove ${t}`}
+                          onClick={() => void dropTopic(t)}
+                        >
+                          ×
+                        </button>
+                      </span>
                     ))}
                   </div>
                 )}

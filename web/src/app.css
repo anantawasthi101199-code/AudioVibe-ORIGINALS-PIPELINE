@@ -2910,3 +2910,52 @@ textarea.beat-edit.whole-edit {
   color: var(--text);
   box-shadow: inset 3px 0 0 var(--pass);
 }
+
+/* Kept suggestions and topic pills, each removable. */
+.idea.on,
+.pick-pill.on {
+  border-color: var(--hold-dim);
+  color: var(--text);
+}
+.idea-pick {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+}
+.idea-x {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0.2rem;
+  cursor: pointer;
+}
+.idea-x:hover {
+  color: var(--fail);
+}
+.pick-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.25rem 0.4rem 0.25rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+.pick-pill > button:first-child {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
