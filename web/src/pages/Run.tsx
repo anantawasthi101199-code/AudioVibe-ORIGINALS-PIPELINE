@@ -766,6 +766,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         <div style={{ minWidth: 0 }}>
           <div className="eyebrow">
             {run.channelName} · {run.label} · {isSource ? 'source script' : isShort ? 'short' : 'episode'}
+            {run.tag ? <> · <span className="pill hold">{run.tag}</span></> : null}
           </div>
           <h1 className="run-title">{script?.title ?? run.topic}</h1>
           <div className="run-chips">

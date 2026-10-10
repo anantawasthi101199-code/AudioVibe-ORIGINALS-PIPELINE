@@ -36,6 +36,7 @@ import { ProvenancePayload, buildFictionProvenance, buildProvenance } from './pr
 import { findSeries, recordSeries, seriesKey } from './seriesRegistry';
 import { SERIES_COVER_SIZE } from '../art/cover';
 import { repoRoot } from '../config';
+import { replacedAudio, retireReplaced } from './revoice';
 
 /**
  * Where this episode sits in a serial.
@@ -279,6 +280,20 @@ export const publishRun = async (
   run.journal({ stage: 'publish', event: `published: audio ${result.audioId} on ${platform.url}` });
 
   say(`published: audio ${result.audioId} (${result.status})`);
+
+  // A RE-VOICED RUN REPLACES WHAT WAS LIVE. Deleted only now that the new one
+  // is up, so the channel is never missing it. A failed delete does not undo
+  // the publish: it leaves replaces.json for `revoice --retire-old`.
+  if (replacedAudio(run)) {
+    try {
+      const retired = await retireReplaced(run, { log: say });
+      if (retired) say(`replaced the old audio ${retired.audioId}${retired.removed ? '' : ' (it was already gone)'}`);
+    } catch (err) {
+      run.journal({ stage: 'publish', event: 'could not delete the old audio', detail: (err as Error).message });
+      say(`PUBLISHED, BUT THE OLD AUDIO IS STILL LIVE: ${(err as Error).message}. Run: foundry revoice --run ${run.id} --retire-old`);
+    }
+  }
+
   return { audioId: result.audioId, status: result.status, url: platform.url, seriesId };
 };
 

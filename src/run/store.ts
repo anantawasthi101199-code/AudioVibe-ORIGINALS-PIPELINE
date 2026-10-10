@@ -192,6 +192,12 @@ export const runManifestSchema = z.object({
   tagPass: z.boolean().default(false),
   /** When the tag pass ran, so a resume never pays for it twice. */
   tagPassAt: z.string().datetime().optional(),
+  /**
+   * A label a person can find a run by, shown beside it everywhere in the
+   * studio. First used for the GPT-voiced originals re-voiced on ElevenLabs
+   * (owner, 2026-10-10).
+   */
+  tag: z.string().trim().min(1).max(40).optional(),
 
   /**
    * This run's script was written in one call rather than beat by beat.
@@ -742,6 +748,11 @@ export class Run {
 
   setVoiceEngine(engine: 'openai' | 'elevenlabs'): void {
     this.manifestData.voiceEngine = engine;
+    this.save();
+  }
+
+  setTag(tag: string | undefined): void {
+    this.manifestData.tag = tag;
     this.save();
   }
 

@@ -362,6 +362,8 @@ export interface RunSummary {
   artKey: string | null;
   /** The series an episode publishes into, or null (shorts have none). */
   seriesTitle: string | null;
+  /** A label to find it by (manifest.tag), or null. */
+  tag: string | null;
 }
 
 /**
@@ -489,6 +491,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     atCeiling: m.spentPence >= budgetsFor(run).ceilingPence,
     voiceEngine: m.voiceEngine,
     seriesTitle: m.seriesTitle ?? null,
+    tag: m.tag ?? null,
     artKey: (() => {
       const art = suppliedArt(path.join(run.dir, 'media'), 'cover');
       return art ? String(Math.round(fs.statSync(art).mtimeMs)) : null;

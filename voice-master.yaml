@@ -404,6 +404,29 @@ channels:
         sayAs: KAH-leh-vah-lah
       - word: Vainamoinen
         sayAs: VY-nuh-moy-nen
+      # Maya (K'iche'): X is said "sh" (2026-10-10, Hero Twins re-voice).
+      - word: Xibalba
+        sayAs: shee-BAHL-bah
+      - word: Hunahpu
+        sayAs: hoo-nah-POO
+      - word: Xbalanque
+        sayAs: shbah-LAHN-keh
+      - word: Vucub
+        sayAs: voo-KOOB
+      - word: Caquix
+        sayAs: kah-KEESH
+      - word: Xquic
+        sayAs: shkeek
+      - word: Xmucane
+        sayAs: shmoo-KAH-neh
+      - word: Hunbatz
+        sayAs: hoon-BAHTS
+      - word: Hunchouen
+        sayAs: hoon-CHOH-wen
+      - word: Zipacna
+        sayAs: see-pahk-NAH
+      - word: Cabrakan
+        sayAs: kah-brah-KAHN
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

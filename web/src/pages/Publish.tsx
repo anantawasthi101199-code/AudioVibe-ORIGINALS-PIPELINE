@@ -150,6 +150,7 @@ const Row = ({
       </span>
       <span className="muted">
         {run.label} · {/^s|-s\d/.test(run.label) ? 'short' : 'episode'} ·{' '}
+        {run.tag ? <span className="pill hold">{run.tag}</span> : null}{' '}
         {run.seriesTitle ? `${run.seriesTitle} · ` : ''}
         {clock(run.durationS)} · {money(run.spentPence)} · {ago(run.createdAt)}
         {run.music ? ' · with music' : ''}

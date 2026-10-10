@@ -1238,7 +1238,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   <span className="queue-main">
                     <span className="queue-title">{r.title ?? r.topic}</span>
                     <span className="muted">
-                      {r.label} · {r.seriesTitle ? `${r.seriesTitle} · ` : ''}{ago(r.createdAt)}
+                      {r.label} · {r.tag ? <span className="pill hold">{r.tag}</span> : null} {r.seriesTitle ? `${r.seriesTitle} · ` : ''}{ago(r.createdAt)}
                       {r.workingBy ? ` · ${r.workingBy} started it` : r.heldBy ? ` · ${r.heldBy} has it open` : ''}
                     </span>
                   </span>

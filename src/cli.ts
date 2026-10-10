@@ -85,12 +85,13 @@ import { EpisodeFormat } from './formats/schema';
 import { COMPOSED_INTO_WRITER, promptRegistry } from './prompts/registry';
 import { loadSchedule, returnTopic, takeTopic } from './schedule/load';
 import { Run, STAGES } from './run/store';
-import { buildDeps, priorEpisodeTexts } from './deps';
+import { buildDeps, buildTts, priorEpisodeTexts } from './deps';
 import { Reporter } from './cli/ui';
 import { setUpChannel } from './pipeline/channel';
 import { PublishRefused, publishRun } from './publish/publishRun';
 import { dueForRelease, releaseDue } from './publish/release';
 import { unpublish } from './publish/unpublish';
+import { prepareRevoice, replacedAudio, retireReplaced } from './publish/revoice';
 import {
   accountsPath,
   loadAccounts,
@@ -221,6 +222,12 @@ Commands
                                  few of a channel, where publishing is really
                                  looking at the result.
   publish --run <id> [--yes]     Publish a run that passed the gate
+  revoice --run <id> --tag <t>   Re-voice a PUBLISHED run on ElevenLabs keeping its
+          [--prepare-only]       title, description, script and picture; the live
+                                 audio stays up until publish, which puts the new
+                                 one out and then deletes the old one.
+  revoice --run <id> --retire-old [--yes]
+                                 Delete the old audio if a publish could not.
   compare --a <run> --b <run>    Which of two scripts is better to listen to
   beat --name <name>             Synthesise a background loop and keep it, so a
        [--style piano|strings|epic]  show has a sound instead of a setting.
@@ -825,7 +832,7 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
       ? `${screenerConfig()!.model}, escalating to ${verifierConfig().model}`
       : verifierConfig().model],
     ['research', describeRetrieval(retrievalKeys())],
-    ['voice', ttsProvider() === 'openai' ? 'openai, drafting only' : ttsProvider()],
+    ['voice', run.manifest.voiceEngine === 'openai' ? 'GPT (openai)' : 'ElevenLabs'],
   ]);
 
   // FROM THE MANIFEST, NOT FROM THE COMMAND LINE, so a resume continues the way
@@ -849,6 +856,10 @@ const finishRun = async (run: Run, argv: string[]): Promise<number> => {
   }
 
   const deps = buildDeps({
+    // THE RUN'S OWN ENGINE, as in the studio: a run records which engine voices
+    // it (GPT unless somebody chose ElevenLabs), so a resume from here cannot
+    // finish an ElevenLabs episode in a GPT voice.
+    tts: buildTts(run.manifest.voiceEngine),
     onePass: run.manifest.onePass,
     // Also from the manifest, and for the same reason.
     stages: run.manifest.stages as Partial<StageFlags> | undefined,
@@ -1148,6 +1159,35 @@ const cmdUnpublish = async (argv: string[]): Promise<number> => {
       : `${result.audioId}: ${result.note}`
   );
   return 0;
+};
+
+/**
+ * Re-voice a published run on ElevenLabs and queue it to replace what is live.
+ * See publish/revoice.ts for why the swap happens at publish time.
+ */
+const cmdRevoice = async (argv: string[]): Promise<number> => {
+  const run = openRun(argv);
+  if (flag(argv, 'retire-old')) {
+    if (platformUrl().isProduction && !flag(argv, 'yes')) {
+      console.error(`AUDIOVIBE_API_URL points at PRODUCTION (${platformUrl().url}). Re-run with --yes.`);
+      return 1;
+    }
+    const retired = await retireReplaced(run, { log: (m) => console.log(`  ${m}`) });
+    console.log(retired ? `deleted ${retired.audioId}` : `${run.id} replaces nothing`);
+    return 0;
+  }
+
+  const tag = arg(argv, 'tag');
+  if (!tag) {
+    console.error('revoice needs --tag <label>, so the re-voiced runs can be found together');
+    return 1;
+  }
+  if (!replacedAudio(run)) {
+    const old = prepareRevoice(run, { tag, engine: 'elevenlabs', who: 'cli' });
+    console.log(`  ${run.id} will replace ${old.audioId} when it is published; that audio stays live until then`);
+  }
+  if (flag(argv, 'prepare-only')) return 0;
+  return finishRun(Run.open(run.id), argv);
 };
 
 /**
@@ -2365,6 +2405,8 @@ export const run = async (argv: string[]): Promise<number> => {
         return await cmdCategories();
       case 'unpublish':
         return await cmdUnpublish(rest);
+      case 'revoice':
+        return await cmdRevoice(rest);
       case 'approve':
         return await cmdApprove(rest);
       case 'resume':
