@@ -35,8 +35,16 @@ describe('re-voicing a published run', () => {
     run.markComplete('publish');
     fs.writeFileSync(run.mediaPath('01-story.mp3'), 'gpt beat');
     fs.writeFileSync(run.mediaPath('cover.supplied.png'), 'picture');
+    fs.writeFileSync(path.join(run.dir, 'archive.json'), JSON.stringify({ files: { 'media/episode.wav': 1 } }));
     return Run.open(run.id, { root });
   };
+
+  it('retires the old archive record, so the studio plays the new voice and not the archived one', () => {
+    const run = published();
+    prepareRevoice(run, { tag: 'revoiced-eleven' });
+    expect(fs.existsSync(path.join(run.dir, 'archive.json'))).toBe(false);
+    expect(fs.existsSync(path.join(run.dir, 'archive.previous.json'))).toBe(true);
+  });
 
   it('prepares without touching the live audio, keeping script and picture, tagged, on ElevenLabs', () => {
     const run = published();

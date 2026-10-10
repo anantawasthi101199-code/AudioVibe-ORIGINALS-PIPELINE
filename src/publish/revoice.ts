@@ -88,6 +88,12 @@ export const prepareRevoice = (
     }
   }
   fs.rmSync(path.join(run.dir, 'render.json'), { force: true });
+  // THE OLD ARCHIVE RECORD DESCRIBES THE OLD AUDIO. While it stands, the
+  // player, the download and the length all read the archived (GPT) copy
+  // instead of the new local voice. Kept beside the run, so "what was the old
+  // one" stays answerable; the new version archives normally once published.
+  const archive = path.join(run.dir, 'archive.json');
+  if (fs.existsSync(archive)) fs.renameSync(archive, path.join(run.dir, 'archive.previous.json'));
   run.uncomplete('render');
   run.uncomplete('qa');
   // A whole voicing's room on the budget, as the studio's Regenerate gives.
