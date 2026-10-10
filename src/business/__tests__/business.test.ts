@@ -270,6 +270,15 @@ describe('runBusiness', () => {
     expect(regate(run, run.readArtifact('script', scriptSchema))?.passed).toBe(true);
   });
 
+  it('resumes a run made before this lane existed (reference without the business record)', async () => {
+    const run = makeRun();
+    await runBusiness(run, deps(), bizDeps);
+    run.writeArtifact('reference', { selection: { chosen: ['x'] } });
+    const second = fakeWriter();
+    await runBusiness(Run.open(run.id, { root }), deps(second), bizDeps);
+    expect(second.calls).toBe(0);
+  });
+
   it('abandons when no source tells the whole story', async () => {
     const thin = { name: 'thin', search: async () => [{ url: 'https://someblog.in/x', title: 'x' }] };
     const d = { ...deps(), search: thin, fetchDeps: { httpGet: async (url: string): Promise<HttpResponse> => ({ status: 200, body: PAGE('Haldiram. '.repeat(20)), finalUrl: url, contentType: 'text/html' }) } };

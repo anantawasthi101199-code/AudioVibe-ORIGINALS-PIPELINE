@@ -114,9 +114,13 @@ export const runBusiness = async (
   let subject: string;
   if (run.hasArtifact('corpus') && run.hasArtifact('reference')) {
     source = run.readArtifact('corpus', corpusArtifactSchema).sources[0]!;
-    const rec = run.readArtifact('reference', businessRecordSchema).business;
-    subject = rec.subject;
-    say('source')(`reusing ${rec.title}`);
+    // A RUN MADE BEFORE THIS LANE EXISTED (the first Business Decoded shorts
+    // came off the single-story lane) has a reference without the business
+    // record. Its source is still in the corpus, so reuse that rather than
+    // refusing a run whose script and source are both on disk.
+    const rec = run.readArtifact('reference', businessRecordSchema.partial()).business;
+    subject = rec?.subject ?? subjectOf(run.manifest.topic);
+    say('source')(`reusing ${rec?.title ?? source.title ?? source.url}`);
   } else {
     stage = 'source';
     subject = subjectOf(run.manifest.topic);
