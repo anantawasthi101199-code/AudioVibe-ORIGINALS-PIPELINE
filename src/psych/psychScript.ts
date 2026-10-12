@@ -219,12 +219,12 @@ export const buildPsychSystem = (persona: Persona): string => {
 const partsOf = (format: EpisodeFormat): string =>
   format.beats
     .map((beat) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       return [
         `--- ${beat.id} ---`,
         `MUST: ${beat.function.trim().replace(/\s+/g, ' ')}`,
         beat.constraints.map((c) => `- ${c.trim().replace(/\s+/g, ' ')}`).join('\n'),
-        `LENGTH: ${min} to ${max} words.`,
+        `LENGTH: at most ${max} words. A ceiling, not a target: shorter is right when the beat is fully told.`,
       ]
         .filter(Boolean)
         .join('\n');
@@ -242,7 +242,6 @@ const shell = (input: {
   const kind = input.format.kind;
   const signoff = signoffFor(input.persona, kind, input.seed);
   const ceiling = input.format.beats.reduce((n, b) => n + wordsForBeat(b).max, 0);
-  const floor = input.format.beats.reduce((n, b) => n + wordsForBeat(b).min, 0);
 
   return [
     input.instruction
@@ -255,10 +254,10 @@ const shell = (input: {
     tagGuidance(input.persona),
     TITLE_RULE,
     '',
-    `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +
+    `THE WHOLE SCRIPT IS AT MOST ${ceiling} WORDS, goodbye included. ` +
       (kind === 'short'
         ? 'Over that it runs past three minutes and cannot be used.'
-        : 'Use the room. A thin episode on a subject somebody is living is a failed one.'),
+        : 'That is a ceiling, not a target: when the subject is fully told, stop. Never pad.'),
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${host.id}", "text": "..."}]}]}`,

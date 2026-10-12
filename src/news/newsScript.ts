@@ -199,14 +199,14 @@ export const buildNewsPrompt = (input: NewsScriptInput): string => {
 
   const parts = input.format.beats
     .map((beat) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       return [
         `--- ${beat.id} ---`,
         `MUST: ${beat.function.trim().replace(/\s+/g, ' ')}`,
         beat.constraints.length
           ? beat.constraints.map((c) => `- ${c.trim().replace(/\s+/g, ' ')}`).join('\n')
           : '',
-        `LENGTH: ${min} to ${max} words. A hard budget: the whole report must stay under three minutes.`,
+        `LENGTH: at most ${max} words. A hard budget: the whole report must stay under three minutes.`,
       ]
         .filter(Boolean)
         .join('\n');

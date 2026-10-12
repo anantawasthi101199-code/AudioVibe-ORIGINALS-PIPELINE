@@ -153,7 +153,7 @@ const renderBeats = (
 ): string =>
   format.beats
     .map((beat, i) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       const mine = claims.filter((c) => c.beatId === beat.id);
       return [
         `--- ${beat.id} (${beat.type}) ---`,
@@ -169,7 +169,7 @@ const renderBeats = (
         // A GUIDE, SAID TO BE A GUIDE, for the same reason it is one per beat:
         // given as a target, a beat with four facts' worth of material writes to
         // the number rather than to the material.
-        `LENGTH: roughly ${min} to ${max} words. A guide, not a target - say what ` +
+        `LENGTH: at most ${max} words. A ceiling, not a target - say what ` +
           `the facts support and then stop.`,
         `FACTS RESEARCHED FOR THIS BEAT:\n${renderClaims(mine)}`,
       ]

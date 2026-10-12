@@ -27,11 +27,13 @@ import {
   type Platform,
   type Route,
   type CoveredView,
+  type MapView,
   type SeasonView,
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
 import { ImagePicker } from '../components/ImagePicker';
+import { MapPanel } from '../components/MapPanel';
 
 /** A long description: its first sentence, and the rest behind "more". */
 const Brief = ({ text }: { text: string }) => {
@@ -438,6 +440,9 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
   // growing two more buttons that spend.
   const [season, setSeason] = useState<SeasonView | null>(null);
   const [covered, setCovered] = useState<CoveredView | null>(null);
+  const [maps, setMaps] = useState<MapView[]>([]);
+  // The map item the Make form holds, set by Load and sent with the start.
+  const [mapItem, setMapItem] = useState<string | null>(null);
   // What the topic being typed clashes with, checked as it is typed.
   //
   // THE SERVER DECIDES, NOT THE PAGE. The same call `make` makes before it
@@ -470,6 +475,10 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
     void api
       .covered(id)
       .then(setCovered)
+      .catch(() => undefined);
+    void api
+      .maps(id)
+      .then(setMaps)
       .catch(() => undefined);
   }, [load, id]);
 
@@ -537,8 +546,8 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         : route.kind === 'shorts'
           ? `A set of ${route.produces} shorts, written to be cut apart later`
           : 'A short';
-    const [lo, hi] = route.seconds;
-    const length = `${Math.round(lo / 60 * 10) / 10}-${Math.round(hi / 60 * 10) / 10} minutes`;
+    // Only a ceiling (owner, 2026-10-12): it runs as long as the material does.
+    const length = `up to ${Math.round(route.seconds[1] / 60 * 10) / 10} minutes`;
     const cost = blank
       ? 'Nothing now: a blank template you write yourself. Only voicing costs, after you approve it.'
       : rapidFire
@@ -562,6 +571,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         blank,
         countries: topic.trim() ? [] : countries.filter(Boolean),
         seriesTitle: route.long && seriesTitle.trim() ? seriesTitle.trim() : undefined,
+        mapItem: mapItem ?? undefined,
       });
       go(`/r/${runId}`);
     } catch (e) {
@@ -671,7 +681,7 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
               <div key={r.formatId} className="overview-route">
                 <strong>{r.kind === 'shorts' ? `Set of ${r.produces} shorts` : r.long ? 'Episode' : 'Short'}</strong>
                 <span className="faint tiny">
-                  {r.formatName} · {Math.round((r.seconds[0] / 60) * 10) / 10}-{Math.round((r.seconds[1] / 60) * 10) / 10} min
+                  {r.formatName} · up to {Math.round((r.seconds[1] / 60) * 10) / 10} min
                 </span>
                 <span className="muted tiny">{r.intent}</span>
               </div>
@@ -900,6 +910,24 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </section>
         )}
 
+        {/* --- Content maps: the planned series, one item at a time ------ */}
+        {maps.map((m) => (
+          <MapPanel
+            key={m.id}
+            map={m}
+            loaded={mapItem}
+            go={go}
+            onLoad={(item) => {
+              const r = channel.routes.find((x) => x.formatId === m.formatId);
+              if (r) setRoute(r);
+              setTopic(item.topic);
+              setSeriesTitle(item.seriesTitle);
+              setNewSeries(!channel.seriesTitles.includes(item.seriesTitle));
+              setMapItem(item.key);
+            }}
+          />
+        ))}
+
         {/* --- What this channel has already covered -------------------- */}
         {!channel.fiction && covered && covered.entries.length > 0 && (
           <section className="panel">
@@ -968,12 +996,11 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                       one channel can be told apart. */}
                   <span className="muted tiny">{r.formatName}</span>
                   <span className="faint tiny">
-                    {r.seconds[0] < 60
-                      ? `${r.seconds[0]}-${r.seconds[1]}s`
+                    {r.seconds[1] < 60
+                      ? `up to ${r.seconds[1]}s`
                       : r.seconds[1] < 300
-                        ? // Half-minutes for shorts, or 150-185s reads as "3-3m".
-                          `${Math.round(r.seconds[0] / 30) / 2}-${Math.round(r.seconds[1] / 30) / 2}m`
-                        : `${Math.round(r.seconds[0] / 60)}-${Math.round(r.seconds[1] / 60)}m`}
+                        ? `up to ${Math.round(r.seconds[1] / 30) / 2}m`
+                        : `up to ${Math.round(r.seconds[1] / 60)}m`}
                   </span>
                 </button>
               ))}
@@ -994,6 +1021,14 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                 />
+                {mapItem && (
+                  <span className="faint tiny">
+                    From the map, #{mapItem.split('/').pop()}.{' '}
+                    <button type="button" className="btn small ghost" onClick={() => setMapItem(null)}>
+                      Not from the map
+                    </button>
+                  </span>
+                )}
 
                 {/* RAPID FIRE COUNTRIES: one story from each chosen country.
                     All empty keeps the desk's default regions. */}

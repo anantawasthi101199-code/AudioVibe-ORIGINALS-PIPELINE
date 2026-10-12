@@ -482,14 +482,12 @@ describe('the approval break', () => {
     // Every check that does not need audio has actually run. The measurement is
     // not evidence of that - the old fabricated report carried one too - so this
     // asserts on the checks themselves.
-    const checks = gate.findings.map((f) => f.check);
+
     expect(gate.measurement.words).toBeGreaterThan(0);
 
     // A length is reported rather than the zero a missing render would give,
     // which used to make every held run claim it ran 0 seconds.
-    expect(
-      checks.some((c) => c === 'duration') && gate.findings.find((f) => f.check === 'duration')!.detail
-    ).not.toMatch(/runs 0s/);
+    expect(gate.findings.find((f) => f.check === 'duration')?.detail ?? '').not.toMatch(/runs 0s/);
   });
 
   it('renders once approved, without re-paying for the script', async () => {

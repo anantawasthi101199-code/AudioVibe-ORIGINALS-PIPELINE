@@ -129,7 +129,7 @@ export const returnShape = (parts: Array<{ id: string; words: number }>): string
 
 {
   "beats": [
-${parts.map((p) => `    {"id": "${p.id}", "text": "about ${p.words} words"}`).join(',\n')}
+${parts.map((p) => `    {"id": "${p.id}", "text": "at most ${p.words} words"}`).join(',\n')}
   ]
 }
 
@@ -161,8 +161,7 @@ export const writeCaseScript = async (
 ): Promise<Script> => {
   const { persona, format, file } = input;
   const parts = format.beats.map((b) => {
-    const { min, max } = wordsForBeat(b);
-    return { id: b.id, words: Math.round((min + max) / 2) };
+    return { id: b.id, words: wordsForBeat(b).max };
   });
 
   const system = `${buildSystem(persona, input.isoDate, 'long')}
@@ -180,7 +179,7 @@ WRITE THE EPISODE. ${parts.length} parts, in one piece, each continuing the last
 ${format.beats
   .map((b, i) => {
     const words = parts[i]!.words;
-    return `PART ${i + 1} (${b.id}), about ${words} words\n  ${b.function.trim().replace(/\s+/g, ' ')}${
+    return `PART ${i + 1} (${b.id}), at most ${words} words, shorter when it is told\n  ${b.function.trim().replace(/\s+/g, ' ')}${
       b.constraints?.length
         ? `\n${b.constraints.map((c: string) => `  - ${c}`).join('\n')}`
         : ''
@@ -293,8 +292,7 @@ export const writeCaseShort = async (
 ): Promise<Script> => {
   const { persona, format, article } = input;
   const parts = format.beats.map((b) => {
-    const { min, max } = wordsForBeat(b);
-    return { id: b.id, words: Math.round((min + max) / 2) };
+    return { id: b.id, words: wordsForBeat(b).max };
   });
 
 
@@ -315,7 +313,7 @@ ${article.text.slice(0, SHORT_CASE_CHARS)}
 WRITE IT. ${parts.length} parts, in one piece.
 
 ${format.beats
-  .map((b, i) => `PART ${i + 1} (${b.id}), about ${parts[i]!.words} words\n  ${b.function.trim().replace(/\s+/g, ' ')}`)
+  .map((b, i) => `PART ${i + 1} (${b.id}), at most ${parts[i]!.words} words, shorter when it is told\n  ${b.function.trim().replace(/\s+/g, ' ')}`)
   .join('\n\n')}
 
 ${returnShape(parts)}`;

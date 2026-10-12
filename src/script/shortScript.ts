@@ -147,7 +147,7 @@ export const writeShortScript = async (
 
   const parts = input.format.beats
     .map((beat) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       return [
         `--- ${beat.id} (${beat.type}) ---`,
         `MUST: ${beat.function.trim().replace(/\s+/g, ' ')}`,
@@ -156,7 +156,7 @@ export const writeShortScript = async (
               .map((c) => `- ${c.trim().replace(/\s+/g, ' ')}`)
               .join('\n')}`
           : '',
-        `LENGTH: roughly ${min} to ${max} words. Here that is a budget, not a guide.`,
+        `LENGTH: at most ${max} words. A ceiling, not a target: shorter is right when the beat is fully told.`,
       ]
         .filter(Boolean)
         .join('\n');

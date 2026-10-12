@@ -345,14 +345,14 @@ export const renderReference = (reference: Reference): string => {
 const renderBeats = (format: EpisodeFormat): string =>
   format.beats
     .map((beat) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       return [
         `--- ${beat.id} (${beat.type}) ---`,
         `MUST: ${beat.function.trim().replace(/\s+/g, ' ')}`,
         beat.constraints.length
           ? `CONSTRAINTS:\n${beat.constraints.map((c) => `- ${c.trim().replace(/\s+/g, ' ')}`).join('\n')}`
           : '',
-        `LENGTH: roughly ${min} to ${max} words. A guide, not a target.`,
+        `LENGTH: at most ${max} words. A ceiling, not a target: shorter is right when the beat is fully told.`,
       ]
         .filter(Boolean)
         .join('\n');

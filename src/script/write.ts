@@ -423,7 +423,7 @@ export const renderClaims = (claims: Claim[]): string => {
 };
 
 export const buildPrompt = (ctx: BeatContext): string => {
-  const { min, max } = wordsForBeat(ctx.beat);
+  const { max } = wordsForBeat(ctx.beat);
   const claims = renderClaims(ctx.claims);
 
   return [
@@ -438,10 +438,9 @@ export const buildPrompt = (ctx: BeatContext): string => {
     // claims' worth of material to cover writes to the number instead of to the
     // material, and what fills the gap is a second description of something
     // already described.
-    `LENGTH: roughly ${min} to ${max} words, but this is a guide and not a ` +
-      `target. Say what the claims support, as fully as they support it, and ` +
-      `then stop. A short beat that says everything once is right. Never reach ` +
-      `for length.`,
+    `LENGTH: at most ${max} words. A ceiling, not a target: say what the claims ` +
+      `support, as fully as they support it, and then stop. A short beat that ` +
+      `says everything once is right. Never reach for length.`,
     ctx.plan ?? '',
     // THE WHOLE SCRIPT SO FAR, not a sentence of it. Sent in the prompt rather
     // than the system block because it changes every beat and would invalidate
@@ -721,11 +720,12 @@ export const critiqueBeat = (
   // running half again over its slot is a beat that has started rambling, and
   // that is a real fault rather than an arithmetic one.
   const words = text.split(/\s+/).filter(Boolean).length;
-  const { min, max } = wordsForBeat(beat);
+  // NO FLOOR (owner, 2026-10-12): a beat that is done is done.
+  const { max } = wordsForBeat(beat);
   if (words > max * 1.5) {
     blocking.push(`runs ${words} words, well past the ${max} this beat has room for`);
-  } else if (words < min || words > max) {
-    advisory.push(`runs ${words} words against a guide of ${min} to ${max}`);
+  } else if (words > max) {
+    advisory.push(`runs ${words} words, over its ceiling of ${max}`);
   }
 
   return { blocking, advisory };

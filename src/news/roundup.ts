@@ -113,12 +113,12 @@ export const buildRoundupPrompt = (input: {
 
   const parts = input.format.beats
     .map((beat) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       return [
         `--- ${beat.id} ---`,
         `MUST: ${beat.function.trim().replace(/\s+/g, ' ')}`,
         ...beat.constraints.map((c) => `- ${c.trim().replace(/\s+/g, ' ')}`),
-        `LENGTH: ${min} to ${max} words.`,
+        `LENGTH: at most ${max} words. A ceiling, not a target: shorter is right when the beat is fully told.`,
       ].join('\n');
     })
     .join('\n\n');

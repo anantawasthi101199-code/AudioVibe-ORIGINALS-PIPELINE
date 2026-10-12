@@ -55,20 +55,6 @@ export interface GateReport {
 export const MAX_VOCABULARY_OVERLAP = 0.45;
 
 /**
- * The shortest thing that is still a long-form episode, in seconds.
- *
- * FIVE MINUTES, AND IT IS A PRODUCT BOUNDARY RATHER THAN A QUALITY ONE. Below
- * it the thing in the long-form feed is a short, and a listener who opened an
- * episode gets ninety seconds of one. That is worth saying out loud even though
- * nothing about the writing is wrong.
- *
- * It is NOT a floor to write towards, which is the distinction that matters and
- * the one the old target-plus-tolerance rule lost. Nothing asks a beat to reach
- * it. It only reports, afterwards, that the material did not carry an episode.
- */
-export const EPISODE_FLOOR_S = 300;
-
-/**
  * The longest an episode should run before it is probably rambling.
  *
  * Twenty minutes. Set from the owner's preference rather than derived, and it
@@ -550,53 +536,17 @@ export const runGate = (input: GateInput): GateReport => {
 
   // --- 7. Duration. ---
   //
-  // THERE IS NOTHING TO PAD TOWARDS AND TWO REAL EDGES.
-  //
-  // The format's target used to be enforced at both ends with a tolerance, so an
-  // episode whose material ran out at eleven minutes was told it was short and
-  // an episode that had more to say was told it was long. The owner settled it:
-  // "the target time can be anything, don't make it match to some threshold ...
-  // if there is limited information I wouldn't want it to keep pushing out stuff
-  // to just reach the mark".
-  //
-  // So the target is a planning number for the beat sheet and nothing reports
-  // against it. What is left is the two places where length stops being a matter
-  // of taste and becomes the wrong product:
-  //
-  //   UNDER FIVE MINUTES it is not a long episode, it is a short, and it is
-  //   sitting in the wrong feed with the wrong expectations. The owner's words:
-  //   "keep the floor to 5 mins the lowest time frame, because below this then
-  //   it becomes a short form content."
-  //
-  //   OVER THE CAP the beats have started rambling. An audio episode that will
-  //   not end is the one fault a listener cannot skim past.
-  //
-  // Both are reported. Neither refuses the run, because the gate's job here is
-  // to tell somebody, and a held run has a human reading it anyway.
-  //
-  // A SHORT KEEPS THE OLD RULE, because a short genuinely does owe its target: a
-  // ninety-second format that runs four minutes is not a short any more, and
-  // the five-minute floor would fire on every correct one.
+  // ONLY A CEILING (owner, 2026-10-12): "no hard floor ... they can be any
+  // length long, no need to stretch episode if unnecessary, let there be only a
+  // cap on max length". The old five-minute episode floor and the short's lower
+  // bound are gone. Past the cap the beats have started rambling, and that is
+  // reported, not refused: a held run has a human reading it anyway.
   if (input.format.kind === 'short') {
-    const [lo, hi] = input.format.targetSeconds;
-    const min = lo * (1 - DURATION_TOLERANCE);
+    const hi = input.format.targetSeconds[1];
     const max = hi * (1 + DURATION_TOLERANCE);
-    if (input.durationS < min || input.durationS > max) {
-      add(
-        'duration',
-        `runs ${Math.round(input.durationS)}s against a ${Math.round(min)}-${Math.round(max)}s ` +
-          `guide for a short.`,
-        false
-      );
+    if (input.durationS > max) {
+      add('duration', `runs ${Math.round(input.durationS)}s, past the ${Math.round(max)}s cap for a short.`, false);
     }
-  } else if (input.durationS < EPISODE_FLOOR_S) {
-    add(
-      'duration',
-      `runs ${Math.round(input.durationS)}s, under the ${EPISODE_FLOOR_S}s floor for a long episode. ` +
-        `Below five minutes this is short-form content in a long-form feed. Usually it means the ` +
-        `research came back thin, so look at the corpus before looking at the script.`,
-      false
-    );
   } else if (input.durationS > EPISODE_CAP_S) {
     add(
       'duration',

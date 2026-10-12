@@ -140,16 +140,15 @@ export const buildBusinessPrompt = (input: BusinessScriptInput): string => {
   const host = input.persona.hosts[0]!;
   const signoff = signoffFor(input.persona, kind, input.subject);
   const ceiling = input.format.beats.reduce((n, b) => n + wordsForBeat(b).max, 0);
-  const floor = input.format.beats.reduce((n, b) => n + wordsForBeat(b).min, 0);
 
   const parts = input.format.beats
     .map((beat) => {
-      const { min, max } = wordsForBeat(beat);
+      const { max } = wordsForBeat(beat);
       return [
         `--- ${beat.id} ---`,
         `MUST: ${beat.function.trim().replace(/\s+/g, ' ')}`,
         beat.constraints.map((c) => `- ${c.trim().replace(/\s+/g, ' ')}`).join('\n'),
-        `LENGTH: ${min} to ${max} words.`,
+        `LENGTH: at most ${max} words. A ceiling, not a target: shorter is right when the beat is fully told.`,
       ]
         .filter(Boolean)
         .join('\n');
@@ -169,10 +168,10 @@ export const buildBusinessPrompt = (input: BusinessScriptInput): string => {
     tagGuidance(input.persona),
     TITLE_RULE,
     '',
-    `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +
+    `THE WHOLE SCRIPT IS AT MOST ${ceiling} WORDS, goodbye included. ` +
       (kind === 'short'
         ? 'Over that it runs past three minutes and cannot be used. Cut detail, never the ending.'
-        : 'Use the room: this is a deep dive, and a short episode is a failed one.'),
+        : 'That is a ceiling, not a target: when the story is fully told, stop. Never pad.'),
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${host.id}", "text": "..."}]}]}`,

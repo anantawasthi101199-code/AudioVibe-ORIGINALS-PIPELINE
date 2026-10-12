@@ -228,7 +228,7 @@ describe('critiqueBeat', () => {
     // is the right beat.
     const short = critiqueBeat([{ speaker: 'host', text: 'Short.' }], SOLO, FORMAT.beats[0]!);
     expect(short.blocking.filter((b) => /runs \d+ words/.test(b))).toEqual([]);
-    expect(short.advisory.join(' ')).toMatch(/runs \d+ words/);
+    expect(short.advisory.join(' ')).not.toMatch(/runs \d+ words/);
   });
 
   it('still blocks a beat that runs away with itself', () => {
@@ -252,7 +252,7 @@ describe('critiqueBeat', () => {
       FORMAT.beats[0]!
     );
     expect(nearMiss.blocking.filter((b) => /runs \d+ words/.test(b))).toEqual([]);
-    expect(nearMiss.advisory.join(' ')).toMatch(/runs \d+ words against a guide/);
+    expect(nearMiss.advisory.join(' ')).toMatch(/runs \d+ words, over its ceiling/);
   });
 
   it('blocks a banned phrase', () => {

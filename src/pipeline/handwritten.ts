@@ -93,7 +93,7 @@ export const handwrittenGate = (run: Run, script: Script): GateReport => {
   const text = fullText(script);
   const render = run.hasArtifact('render') ? run.readArtifact('render', renderResultSchema) : null;
   const seconds = render?.durationS ?? text.split(/\s+/).filter(Boolean).length / WORDS_PER_SECOND;
-  const [lo, hi] = format.targetSeconds;
+  const hi = format.targetSeconds[1];
 
   const findings: GateFinding[] = [];
   for (const beat of script.beats) {
@@ -105,10 +105,10 @@ export const handwrittenGate = (run: Run, script: Script): GateReport => {
       });
     }
   }
-  if (seconds > hi * 1.1 || seconds < lo * 0.9) {
+  if (seconds > hi * 1.1) {
     findings.push({
       check: 'length',
-      detail: `about ${Math.round(seconds)}s ${render ? 'measured' : 'read aloud'}; the format wants ${lo}-${hi}s`,
+      detail: `about ${Math.round(seconds)}s ${render ? 'measured' : 'read aloud'}; the format's ceiling is ${hi}s`,
       blocking: false,
     });
   }

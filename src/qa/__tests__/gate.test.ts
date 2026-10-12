@@ -283,13 +283,9 @@ describe('runGate', () => {
     );
   });
 
-  it('REPORTS an episode under the five-minute floor without blocking it', () => {
-    const report = runGate(input({ durationS: 240 }));
-    expect(report.passed).toBe(true);
-    const duration = report.findings.find((f) => f.check === 'duration');
-    expect(duration).toBeDefined();
-    expect(duration!.blocking).toBe(false);
-    expect(duration!.detail).toMatch(/floor/);
+  it('says nothing about a short episode: there is no floor (owner, 2026-10-12)', () => {
+    const report = runGate(input({ durationS: 120 }));
+    expect(report.findings.some((f) => f.check === 'duration')).toBe(false);
   });
 
   it('REPORTS an episode past the cap without blocking it', () => {
