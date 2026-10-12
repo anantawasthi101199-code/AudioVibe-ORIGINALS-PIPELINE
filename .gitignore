@@ -43,6 +43,8 @@ library.json
 # Scratch audio
 *.wav
 *.mp3
+# Each channel's background loops ship in the image (scripts/generate-music.ts).
+!channel-music/*.mp3
 # The 4-byte stand-ins the publish readiness test needs. See src/publish/__tests__.
 !src/publish/__tests__/fixtures/**/media/*.wav
 !src/publish/__tests__/fixtures/**/media/*.mp3
