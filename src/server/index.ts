@@ -16,6 +16,7 @@
  * messages are lines of text, and EventSource reconnects on its own. A
  * websocket would add a protocol to get a feature this does not need.
  */
+import { mapsFor } from './maps';
 import fs from 'fs';
 import http from 'http';
 import path from 'path';
@@ -528,6 +529,7 @@ export const createServer = (): http.Server =>
       if (pathname === '/api/run/verify') return send(res, 200, await verifyPublished(id ?? ''));
       if (pathname === '/api/next') return send(res, 200, nextDue());
       if (pathname === '/api/channel') return send(res, 200, getChannel(id ?? ''));
+      if (pathname === '/api/maps') return send(res, 200, mapsFor(id ?? ''));
       if (pathname === '/api/runs' && req.method === 'GET') {
         return send(res, 200, getRuns(url.searchParams.get('channel')));
       }

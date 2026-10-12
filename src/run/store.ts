@@ -131,6 +131,9 @@ export const runManifestSchema = z.object({
    */
   seriesTitle: z.string().min(1).optional(),
 
+  /** The content-map item this was made from, `<map>/<number>`. See server/maps.ts. */
+  mapItem: z.string().min(1).optional(),
+
   /** A rapid fire's chosen countries, by name. Unset: the desk's own regions. */
   countries: z.array(z.string()).optional(),
 
@@ -487,6 +490,8 @@ export class Run {
       holdForApproval?: boolean;
       /** The series a long episode belongs to. */
       seriesTitle?: string;
+      /** The content-map item this is made from. */
+      mapItem?: string;
       /** A blank template to be written by hand. See pipeline/handwritten.ts. */
       handwritten?: boolean;
       /** A rapid fire's chosen countries. See news/countries.ts. */
@@ -521,6 +526,7 @@ export class Run {
       personaId: input.personaId,
       formatId: input.formatId,
       seriesTitle: input.seriesTitle,
+      mapItem: input.mapItem,
       topic: input.topic,
       createdAt: now.toISOString(),
       completed: [],

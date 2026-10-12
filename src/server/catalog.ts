@@ -362,6 +362,8 @@ export interface RunSummary {
   artKey: string | null;
   /** The series an episode publishes into, or null (shorts have none). */
   seriesTitle: string | null;
+  /** The content-map item this was made from. See maps.ts. */
+  mapItem: string | null;
   /** A label to find it by (manifest.tag), or null. */
   tag: string | null;
 }
@@ -491,6 +493,7 @@ export const runSummary = (run: Run, liveIds: ReadonlySet<string> = new Set()): 
     atCeiling: m.spentPence >= budgetsFor(run).ceilingPence,
     voiceEngine: m.voiceEngine,
     seriesTitle: m.seriesTitle ?? null,
+    mapItem: m.mapItem ?? null,
     tag: m.tag ?? null,
     artKey: (() => {
       const art = suppliedArt(path.join(run.dir, 'media'), 'cover');

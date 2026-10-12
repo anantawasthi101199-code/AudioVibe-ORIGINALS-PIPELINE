@@ -1,0 +1,726 @@
+{
+  "id": "hindu-mythology",
+  "channelId": "mythic-archives",
+  "title": "Hindu Mythology",
+  "formatId": "myth-story",
+  "series": [
+    {
+      "number": 1,
+      "title": "The Foundations of Hindu Mythology",
+      "note": "This series gives listeners the background they need before encountering the more complicated stories.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Before the Beginning: How Did the Universe Begin?",
+          "covers": "Cosmic creation, the primordial waters, and the Nasadiya Sukta's mysterious questions about existence.",
+          "source": "Rig Veda (Griffith translation) 10.129, the Nasadiya Sukta; Vishnu Purana (Wilson translation) book 1"
+        },
+        {
+          "number": 2,
+          "title": "Brahma, Vishnu and Shiva: The Three Cosmic Powers",
+          "covers": "The Trimurti, their traditional roles, and why different Hindu traditions understand them differently.",
+          "source": "Vishnu Purana (Wilson translation) book 1; Shiva Purana"
+        },
+        {
+          "number": 3,
+          "title": "The Many Gods of Hindu Mythology",
+          "covers": "Devas, asuras, devas' kings, divine attendants, and the different roles of the gods.",
+          "source": "Rig Veda (Griffith translation); Vishnu Purana (Wilson translation) book 1"
+        },
+        {
+          "number": 4,
+          "title": "The Seven Worlds Above and Below",
+          "covers": "Lokas, celestial realms, the underworlds, and the beings associated with them.",
+          "source": "Vishnu Purana (Wilson translation) book 2"
+        },
+        {
+          "number": 5,
+          "title": "The Four Yugas: The Rise and Fall of the Ages",
+          "covers": "Satya, Treta, Dvapara, and Kali Yuga, and the changing condition of dharma.",
+          "source": "Vishnu Purana (Wilson translation) books 1 and 6; Mahabharata (Ganguli translation) Vana Parva, Markandeya's discourse"
+        },
+        {
+          "number": 6,
+          "title": "What Happens When the Universe Ends?",
+          "covers": "Pralaya, cosmic dissolution, and cycles of creation and renewal.",
+          "source": "Vishnu Purana (Wilson translation) book 6"
+        },
+        {
+          "number": 7,
+          "title": "Devas vs Asuras: Why Are the Gods Always at War?",
+          "covers": "The relationship between devas and asuras, their rivalries, and why the conflict is more complicated than good versus evil.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva; Shatapatha Brahmana (Eggeling translation)"
+        },
+        {
+          "number": 8,
+          "title": "Karma and Rebirth: What Determines Your Next Life?",
+          "covers": "Actions and consequences, samsara, and rebirth as explained through Hindu traditions.",
+          "source": "Brihadaranyaka and Chandogya Upanishads (Muller translation); Bhagavad Gita"
+        },
+        {
+          "number": 9,
+          "title": "The Saptarishis: The Seven Great Sages",
+          "covers": "The rishis, their roles in transmitting knowledge, and their place in cosmic cycles.",
+          "source": "Mahabharata (Ganguli translation); Vishnu Purana (Wilson translation) book 3"
+        },
+        {
+          "number": 10,
+          "title": "The Sacred Books: Where Do These Stories Come From?",
+          "covers": "An accessible introduction to the Vedas, Upanishads, epics, Puranas, and regional traditions.",
+          "source": "Rig Veda (Griffith translation); Upanishads (Muller translation); Mahabharata (Ganguli translation)"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Shiva: The Lord of Transformation",
+      "note": "",
+      "episodes": [
+        {
+          "number": 11,
+          "title": "Who Is Shiva? The God Who Stands Outside the Rules",
+          "covers": "Shiva's ascetic life, cosmic role, symbols, and seemingly contradictory nature.",
+          "source": "Shiva Purana; Svetasvatara Upanishad"
+        },
+        {
+          "number": 12,
+          "title": "How Shiva Married Sati: The Love That Ended in Tragedy",
+          "covers": "Sati, Daksha's sacrifice, Shiva's grief, and the destruction of Daksha's ritual.",
+          "source": "Shiva Purana, Rudra Samhita, Sati Khanda; Bhagavata Purana book 4"
+        },
+        {
+          "number": 13,
+          "title": "Sati's Death and the Birth of Shakti Peethas",
+          "covers": "The story of Sati's body and the sacred geography associated with Shakti Peethas, noting variations across traditions.",
+          "source": "Devi Bhagavata Purana (Vijnanananda translation) book 7; Shiva Purana"
+        },
+        {
+          "number": 14,
+          "title": "How Parvati Won Shiva's Love",
+          "covers": "Parvati's determination, austerities, and the return of Shiva to worldly life.",
+          "source": "Kalidasa's Kumarasambhava (Griffith translation); Shiva Purana, Rudra Samhita, Parvati Khanda"
+        },
+        {
+          "number": 15,
+          "title": "Ganesha's Birth: Why Did Shiva Cut Off His Son's Head?",
+          "covers": "Parvati's creation of Ganesha, their confrontation, and the elephant head.",
+          "source": "Shiva Purana, Rudra Samhita, Kumara Khanda"
+        },
+        {
+          "number": 16,
+          "title": "Kartikeya and the Birth of the God of War",
+          "covers": "The divine birth, the threat posed by Tarakasura, and Kartikeya's role as commander of the gods.",
+          "source": "Valmiki Ramayana (Griffith translation) Bala Kanda; Kalidasa's Kumarasambhava (Griffith translation); Mahabharata (Ganguli translation) Vana Parva"
+        },
+        {
+          "number": 17,
+          "title": "The Churning of the Ocean: Shiva and the Deadly Poison",
+          "covers": "The emergence of halahala poison and Shiva's act of cosmic protection.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva; Bhagavata Purana book 8"
+        },
+        {
+          "number": 18,
+          "title": "The Descent of the Ganga: How Shiva Saved the Earth",
+          "covers": "Bhagiratha's quest, Ganga's descent, and Shiva's role in controlling her force.",
+          "source": "Valmiki Ramayana (Griffith translation) Bala Kanda; Mahabharata (Ganguli translation) Vana Parva"
+        },
+        {
+          "number": 19,
+          "title": "Shiva Burns Kama: Why Did the God of Love Become Ashes?",
+          "covers": "Kama's attempt to awaken Shiva's desire and the consequences of interrupting his meditation.",
+          "source": "Kalidasa's Kumarasambhava (Griffith translation); Shiva Purana"
+        },
+        {
+          "number": 20,
+          "title": "Nataraja: The Dance That Creates and Destroys the Universe",
+          "covers": "Shiva's cosmic dance, its symbolism, and the relationship between destruction and renewal.",
+          "source": "Shiva Purana; the Chidambaram temple tradition"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Vishnu and the Avatars",
+      "note": "The Dashavatara tradition is a useful organising framework, but lists and interpretations vary between texts and communities. These episodes cover the major avatar stories without pretending that every tradition follows one identical list.",
+      "episodes": [
+        {
+          "number": 21,
+          "title": "Why Does Vishnu Descend to Earth?",
+          "covers": "The purpose of avatars, the restoration of dharma, and the idea of divine intervention.",
+          "source": "Bhagavad Gita 4.7-8; Bhagavata Purana book 1"
+        },
+        {
+          "number": 22,
+          "title": "Matsya: The Fish Who Saved the World from the Flood",
+          "covers": "The great flood, Manu, and the preservation of life and sacred knowledge.",
+          "source": "Shatapatha Brahmana 1.8.1 (Eggeling translation); Bhagavata Purana book 8"
+        },
+        {
+          "number": 23,
+          "title": "Kurma: The Tortoise Beneath the Mountain",
+          "covers": "Mount Mandara, the churning of the ocean, and Vishnu's support of the cosmic enterprise.",
+          "source": "Bhagavata Purana book 8; Mahabharata (Ganguli translation) Adi Parva"
+        },
+        {
+          "number": 24,
+          "title": "Varaha: The Boar Who Rescued the Earth",
+          "covers": "Hiranyaksha, the submerged Earth, and Vishnu's battle to restore it.",
+          "source": "Vishnu Purana (Wilson translation) book 1; Bhagavata Purana book 3"
+        },
+        {
+          "number": 25,
+          "title": "Narasimha: The Man-Lion Who Defeated an Impossible Boon",
+          "covers": "Hiranyakashipu, Prahlada, and the loophole that allowed the seemingly invincible demon to be defeated.",
+          "source": "Vishnu Purana (Wilson translation) book 1; Bhagavata Purana book 7"
+        },
+        {
+          "number": 26,
+          "title": "Vamana: The Dwarf Who Claimed the Three Worlds",
+          "covers": "King Bali, Vishnu's dwarf incarnation, and the three cosmic strides.",
+          "source": "Bhagavata Purana book 8; Vishnu Purana (Wilson translation) book 3; Rig Veda (Griffith translation) 1.22"
+        },
+        {
+          "number": 27,
+          "title": "Parashurama: The Warrior Sage Who Challenged the Kings",
+          "covers": "The conflict between Brahmins and Kshatriyas in the traditional narrative and Parashurama's place among Vishnu's avatars.",
+          "source": "Mahabharata (Ganguli translation) Vana and Shanti Parvas; Bhagavata Purana book 9"
+        },
+        {
+          "number": 28,
+          "title": "Rama: The Prince Who Became a God",
+          "covers": "Rama's role as an avatar, his ideals, and the different ways traditions understand him.",
+          "source": "Valmiki Ramayana (Griffith translation)"
+        },
+        {
+          "number": 29,
+          "title": "Krishna: The Avatar Who Changed the Course of History",
+          "covers": "Krishna's divine identity, his role in the Mahabharata, and his relationship with Arjuna.",
+          "source": "Mahabharata (Ganguli translation); Bhagavata Purana book 10"
+        },
+        {
+          "number": 30,
+          "title": "Kalki: The Warrior Yet to Come",
+          "covers": "The future avatar, the end of Kali Yuga in traditional cosmology, and the renewal of cosmic order.",
+          "source": "Vishnu Purana (Wilson translation) book 4; Mahabharata (Ganguli translation) Vana Parva"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "The Ramayana: The Journey of Rama",
+      "note": "This is the first major continuous epic. Use the Valmiki Ramayana as the primary narrative backbone, while flagging significant differences in other tellings.",
+      "episodes": [
+        {
+          "number": 31,
+          "title": "The Birth of Rama: The Princes of Ayodhya",
+          "covers": "Dasharatha, his sons, and the origins of Rama's story.",
+          "source": "Valmiki Ramayana (Griffith translation) Bala Kanda"
+        },
+        {
+          "number": 32,
+          "title": "Vishvamitra's Request: Rama's First Great Adventure",
+          "covers": "The young princes, the forest journey, and their encounter with threats to the sages' rituals.",
+          "source": "Valmiki Ramayana (Griffith translation) Bala Kanda"
+        },
+        {
+          "number": 33,
+          "title": "Sita's Swayamvara: The Bow That Only Rama Could Lift",
+          "covers": "Sita's marriage, Shiva's bow, and the joining of two royal families.",
+          "source": "Valmiki Ramayana (Griffith translation) Bala Kanda"
+        },
+        {
+          "number": 34,
+          "title": "The Exile of Rama: How a Promise Changed a Kingdom",
+          "covers": "Kaikeyi's demands, Dasharatha's promise, and Rama's departure.",
+          "source": "Valmiki Ramayana (Griffith translation) Ayodhya Kanda"
+        },
+        {
+          "number": 35,
+          "title": "Life in the Forest: Surpanakha and the Events That Changed Everything",
+          "covers": "The forest years, encounters with its inhabitants, and the conflict that escalates toward Sita's abduction.",
+          "source": "Valmiki Ramayana (Griffith translation) Aranya Kanda"
+        },
+        {
+          "number": 36,
+          "title": "The Golden Deer: How Ravana Abducted Sita",
+          "covers": "Maricha's deception, Sita's abduction, and Jatayu's attempt to intervene.",
+          "source": "Valmiki Ramayana (Griffith translation) Aranya Kanda"
+        },
+        {
+          "number": 37,
+          "title": "Rama Meets Hanuman: The Search for Sita Begins",
+          "covers": "Rama and Lakshmana's search, Hanuman's first meeting with Rama, and the alliance with Sugriva.",
+          "source": "Valmiki Ramayana (Griffith translation) Kishkindha Kanda"
+        },
+        {
+          "number": 38,
+          "title": "Vali and Sugriva: The Battle for the Vanara Kingdom",
+          "covers": "The brothers' rivalry, Rama's intervention, and the moral questions surrounding Vali's death.",
+          "source": "Valmiki Ramayana (Griffith translation) Kishkindha Kanda"
+        },
+        {
+          "number": 39,
+          "title": "Hanuman's Leap to Lanka",
+          "covers": "The crossing of the ocean, the obstacles along the way, and Hanuman's arrival in Lanka.",
+          "source": "Valmiki Ramayana (Griffith translation) Sundara Kanda"
+        },
+        {
+          "number": 40,
+          "title": "Hanuman in Lanka: Finding Sita in Ashoka Vatika",
+          "covers": "Hanuman's meeting with Sita, the exchange of Rama's token, and his confrontation with Ravana's forces.",
+          "source": "Valmiki Ramayana (Griffith translation) Sundara Kanda"
+        },
+        {
+          "number": 41,
+          "title": "The Bridge to Lanka and the Great War",
+          "covers": "The ocean crossing, the siege, major battles, and the fall of Ravana.",
+          "source": "Valmiki Ramayana (Griffith translation) Yuddha Kanda"
+        },
+        {
+          "number": 42,
+          "title": "Rama's Return to Ayodhya: Victory, Kingship, and What Came Next",
+          "covers": "The return, the coronation, and an introduction to the later Uttara Kanda traditions and their difficult questions.",
+          "source": "Valmiki Ramayana (Griffith translation) Yuddha Kanda and Uttara Kanda"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "The Mahabharata: The Fall of a Dynasty",
+      "note": "The Mahabharata is much larger than a straightforward war story. Its family history, moral dilemmas, embedded tales, and philosophical teachings deserve a substantial series.",
+      "episodes": [
+        {
+          "number": 43,
+          "title": "The Origins of the Kuru Dynasty",
+          "covers": "Shantanu, Ganga, Bhishma, and the events that shape the royal succession.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva"
+        },
+        {
+          "number": 44,
+          "title": "The Birth of the Pandavas and the Kauravas",
+          "covers": "Pandu, Dhritarashtra, Kunti, Madri, Gandhari, and the unusual births of their children.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva"
+        },
+        {
+          "number": 45,
+          "title": "Karna: The Abandoned Prince Who Became a Legend",
+          "covers": "Kunti's secret, Karna's upbringing, his ambition, and his bond with Duryodhana.",
+          "source": "Mahabharata (Ganguli translation) Adi, Vana and Udyoga Parvas"
+        },
+        {
+          "number": 46,
+          "title": "Drona's School: The Rivalry Between the Princes",
+          "covers": "The education of the royal cousins, Arjuna's skill, Ekalavya, and the growing tensions.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva"
+        },
+        {
+          "number": 47,
+          "title": "The House of Lac: The Pandavas Escape a Deadly Trap",
+          "covers": "Duryodhana's plot, the burning palace, and the brothers' escape.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva, Jatugriha"
+        },
+        {
+          "number": 48,
+          "title": "Draupadi's Swayamvara: How Five Brothers Married One Woman",
+          "covers": "Draupadi's contest, Arjuna's victory, and the circumstances leading to the marriage of the five Pandavas.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva, Swayamvara"
+        },
+        {
+          "number": 49,
+          "title": "Indraprastha and the Rise of the Pandavas",
+          "covers": "The division of the kingdom, the building of Indraprastha, and the Rajasuya sacrifice.",
+          "source": "Mahabharata (Ganguli translation) Sabha Parva"
+        },
+        {
+          "number": 50,
+          "title": "The Dice Game: How the Pandavas Lost Everything",
+          "covers": "Shakuni's dice, Yudhishthira's decisions, and the collapse of the Pandavas' fortunes.",
+          "source": "Mahabharata (Ganguli translation) Sabha Parva"
+        },
+        {
+          "number": 51,
+          "title": "Draupadi in the Kuru Court: The Question Nobody Could Answer",
+          "covers": "Draupadi's humiliation, her questions about the legality of the wager, and the court's moral failure.",
+          "source": "Mahabharata (Ganguli translation) Sabha Parva"
+        },
+        {
+          "number": 52,
+          "title": "Thirteen Years in Exile: The Trials of the Pandavas",
+          "covers": "Forest adventures, encounters with sages, and the final year in disguise.",
+          "source": "Mahabharata (Ganguli translation) Vana and Virata Parvas"
+        },
+        {
+          "number": 53,
+          "title": "Krishna's Peace Mission: Can War Still Be Prevented?",
+          "covers": "Negotiations, failed diplomacy, and the final march toward Kurukshetra.",
+          "source": "Mahabharata (Ganguli translation) Udyoga Parva"
+        },
+        {
+          "number": 54,
+          "title": "The Bhagavad Gita: Why Krishna Taught Arjuna to Fight",
+          "covers": "Arjuna's crisis, Krishna's teachings, duty, action, devotion, and liberation.",
+          "source": "Mahabharata (Ganguli translation) Bhishma Parva; Bhagavad Gita"
+        },
+        {
+          "number": 55,
+          "title": "Bhishma's Fall: The First Great Turning Point of the War",
+          "covers": "The early battles, Bhishma's leadership, and the strategy that brings him down.",
+          "source": "Mahabharata (Ganguli translation) Bhishma Parva"
+        },
+        {
+          "number": 56,
+          "title": "Abhimanyu and the Chakravyuha",
+          "covers": "The young warrior's entry into the battle formation and the events surrounding his death.",
+          "source": "Mahabharata (Ganguli translation) Drona Parva"
+        },
+        {
+          "number": 57,
+          "title": "Karna, Drona, and the Final Days of War",
+          "covers": "The deaths of major warriors, shifting loyalties, and the moral cost of victory.",
+          "source": "Mahabharata (Ganguli translation) Drona, Karna and Shalya Parvas"
+        },
+        {
+          "number": 58,
+          "title": "The End of the Mahabharata: Ashwatthama, Krishna, and the Pandavas' Final Journey",
+          "covers": "The aftermath, the collapse of the dynasty, the end of Krishna's earthly life, and the Pandavas' final ascent.",
+          "source": "Mahabharata (Ganguli translation) Sauptika, Mausala, Mahaprasthanika and Svargarohana Parvas"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Devi: The Divine Feminine",
+      "note": "",
+      "episodes": [
+        {
+          "number": 59,
+          "title": "Who Is Adi Shakti? The Power Behind the Universe",
+          "covers": "Shakti as divine power, the goddess traditions, and the idea of the feminine as ultimate reality in some schools.",
+          "source": "Devi Bhagavata Purana (Vijnanananda translation); Devi Mahatmya (Markandeya Purana, Pargiter translation)"
+        },
+        {
+          "number": 60,
+          "title": "Mahishasura: The Demon No God Could Defeat",
+          "covers": "The boon, the gods' defeat, and the manifestation of Durga.",
+          "source": "Devi Mahatmya (Markandeya Purana, Pargiter translation), the middle episode"
+        },
+        {
+          "number": 61,
+          "title": "The Battle of Durga and Mahishasura",
+          "covers": "The goddess's battle, the demon's transformations, and the triumph of divine power.",
+          "source": "Devi Mahatmya (Markandeya Purana, Pargiter translation), the middle episode"
+        },
+        {
+          "number": 62,
+          "title": "Kali: The Goddess Who Appeared on the Battlefield",
+          "covers": "Kali's emergence, her terrifying forms, and her relationship with Durga in key narratives.",
+          "source": "Devi Mahatmya (Markandeya Purana, Pargiter translation), the final episode"
+        },
+        {
+          "number": 63,
+          "title": "Kali and Shiva: The Meaning Behind the Image",
+          "covers": "The traditions behind Kali standing upon Shiva and the symbolism of power, restraint, and cosmic balance.",
+          "source": "Devi Mahatmya (Markandeya Purana, Pargiter translation); later Bengali Shakta tradition"
+        },
+        {
+          "number": 64,
+          "title": "Lakshmi: The Goddess Who Emerged from the Ocean",
+          "covers": "Lakshmi's appearance during the churning of the ocean and her association with prosperity and fortune.",
+          "source": "Vishnu Purana (Wilson translation) book 1; Bhagavata Purana book 8"
+        },
+        {
+          "number": 65,
+          "title": "Saraswati: The Goddess of Knowledge and the Arts",
+          "covers": "Saraswati's symbolism, associations with learning, and place in devotional traditions.",
+          "source": "Rig Veda (Griffith translation) hymns to Sarasvati; Devi Bhagavata Purana (Vijnanananda translation)"
+        },
+        {
+          "number": 66,
+          "title": "Parvati, Durga, and Kali: Are They Different Goddesses?",
+          "covers": "How traditions understand distinct forms, manifestations, and identities of the goddess.",
+          "source": "Devi Mahatmya (Markandeya Purana, Pargiter translation); Devi Bhagavata Purana (Vijnanananda translation)"
+        },
+        {
+          "number": 67,
+          "title": "The Story of Sati and the Sacred Shakti Peethas",
+          "covers": "A deeper look at the legend, sacred sites, and the differences between lists and tellings.",
+          "source": "Devi Bhagavata Purana (Vijnanananda translation) book 7; Shiva Purana"
+        },
+        {
+          "number": 68,
+          "title": "Navaratri: Nine Nights of the Goddess",
+          "covers": "The major narratives behind the festival, its different regional forms, and its devotional significance.",
+          "source": "Devi Mahatmya (Markandeya Purana, Pargiter translation); Devi Bhagavata Purana (Vijnanananda translation) book 3"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Sages, Demons, Kings, and Cosmic Legends",
+      "note": "These are essential stories from the wider mythological universe, especially the Puranas. They add context that the two great epics alone cannot provide.",
+      "episodes": [
+        {
+          "number": 69,
+          "title": "Samudra Manthana: The Churning of the Cosmic Ocean",
+          "covers": "The devas and asuras cooperate, the treasures emerge, and amrita becomes the prize.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva; Vishnu Purana (Wilson translation) book 1"
+        },
+        {
+          "number": 70,
+          "title": "Mohini: The Enchantress Who Outwitted the Asuras",
+          "covers": "Vishnu's Mohini form and the distribution of the nectar of immortality.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva; Bhagavata Purana book 8"
+        },
+        {
+          "number": 71,
+          "title": "Prahlada: The Child Who Refused to Abandon Vishnu",
+          "covers": "A devotee's faith in the face of persecution by his own father.",
+          "source": "Vishnu Purana (Wilson translation) book 1; Bhagavata Purana book 7"
+        },
+        {
+          "number": 72,
+          "title": "Dhruva: The Boy Who Became the Pole Star",
+          "covers": "Rejection, determination, penance, divine grace, and the origin of Dhruva's celestial place.",
+          "source": "Vishnu Purana (Wilson translation) book 1"
+        },
+        {
+          "number": 73,
+          "title": "Markandeya: The Boy Who Defeated Death",
+          "covers": "The young sage, his destined death, and his encounter with Yama and Shiva.",
+          "source": "Mahabharata (Ganguli translation) Vana Parva; Shiva Purana"
+        },
+        {
+          "number": 74,
+          "title": "Gajendra Moksha: The Elephant Who Called for Help",
+          "covers": "The elephant's struggle, his prayer to Vishnu, and liberation through divine grace.",
+          "source": "Bhagavata Purana book 8"
+        },
+        {
+          "number": 75,
+          "title": "King Harishchandra: The King Who Would Not Tell a Lie",
+          "covers": "A king tested through loss, suffering, and his commitment to truth.",
+          "source": "Markandeya Purana (Pargiter translation)"
+        },
+        {
+          "number": 76,
+          "title": "Rishi Durvasa: The Sage Whose Anger Changed Destinies",
+          "covers": "Stories of Durvasa's curses, their consequences, and the importance of context across different tellings.",
+          "source": "Mahabharata (Ganguli translation) Adi and Vana Parvas; Vishnu Purana (Wilson translation) book 1"
+        },
+        {
+          "number": 77,
+          "title": "Narada: The Divine Sage Who Set Events in Motion",
+          "covers": "Narada's journeys, music, devotion, and role as messenger and catalyst.",
+          "source": "Mahabharata (Ganguli translation) Sabha Parva; Bhagavata Purana"
+        },
+        {
+          "number": 78,
+          "title": "The Story of Garuda: The Eagle Who Challenged the Gods",
+          "covers": "Garuda's birth, his mother's bondage, the quest for amrita, and his relationship with Vishnu.",
+          "source": "Mahabharata (Ganguli translation) Adi Parva, Astika Parva"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Krishna: The Divine Life Story",
+      "note": "This is a character-focused series. It revisits Krishna's place in the Mahabharata but explores his childhood, relationships, and devotional traditions in much greater depth.",
+      "episodes": [
+        {
+          "number": 79,
+          "title": "Krishna's Birth: The Child Kamsa Feared",
+          "covers": "Devaki, Vasudeva, the prophecy, and Krishna's escape from Kamsa.",
+          "source": "Vishnu Purana (Wilson translation) book 5; Bhagavata Purana book 10"
+        },
+        {
+          "number": 80,
+          "title": "The Child of Gokul: Butter, Mischief, and Miracles",
+          "covers": "Krishna's childhood pranks and the divine episodes associated with them.",
+          "source": "Bhagavata Purana book 10; Vishnu Purana (Wilson translation) book 5"
+        },
+        {
+          "number": 81,
+          "title": "Putana, Trinavarta, and the Threats to Krishna",
+          "covers": "The demons sent against the child and the stories of Krishna's early powers.",
+          "source": "Bhagavata Purana book 10; Vishnu Purana (Wilson translation) book 5"
+        },
+        {
+          "number": 82,
+          "title": "Kaliya: The Serpent Who Poisoned the Yamuna",
+          "covers": "Krishna's confrontation with Kaliya and the restoration of the river's waters.",
+          "source": "Bhagavata Purana book 10; Vishnu Purana (Wilson translation) book 5"
+        },
+        {
+          "number": 83,
+          "title": "Govardhan: Why Krishna Challenged Indra",
+          "covers": "The lifting of the mountain, the storm, and the debate over ritual and devotion.",
+          "source": "Bhagavata Purana book 10; Vishnu Purana (Wilson translation) book 5"
+        },
+        {
+          "number": 84,
+          "title": "Radha and Krishna: The Love That Became Divine",
+          "covers": "Radha's role, devotional interpretations of their relationship, and the many forms of the tradition.",
+          "source": "Jayadeva's Gita Govinda (Arnold translation); Bhagavata Purana book 10"
+        },
+        {
+          "number": 85,
+          "title": "The Rasa Lila: What Happened on the Night of the Divine Dance?",
+          "covers": "Krishna's dance with the gopis and the spiritual interpretations of this sacred narrative.",
+          "source": "Bhagavata Purana book 10; Vishnu Purana (Wilson translation) book 5"
+        },
+        {
+          "number": 86,
+          "title": "Kamsa's Death: Krishna Returns to Mathura",
+          "covers": "Krishna and Balarama's return, the wrestling arena, and Kamsa's downfall.",
+          "source": "Bhagavata Purana book 10; Vishnu Purana (Wilson translation) book 5"
+        },
+        {
+          "number": 87,
+          "title": "Dwarka: The City Krishna Built by the Sea",
+          "covers": "Krishna's later life, the relocation associated with Dwarka, and the political world of the Yadavas.",
+          "source": "Vishnu Purana (Wilson translation) book 5; Mahabharata (Ganguli translation) Sabha Parva"
+        },
+        {
+          "number": 88,
+          "title": "The End of Krishna's Earthly Life",
+          "covers": "The conflict within the Yadava clan, the circumstances of Krishna's departure, and the end of an age.",
+          "source": "Mahabharata (Ganguli translation) Mausala Parva; Vishnu Purana (Wilson translation) book 5"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "The Wisdom Behind the Myths",
+      "note": "This series turns listeners from followers of stories into people who understand the ideas beneath them. Use narrative examples rather than making these episodes sound like lectures.",
+      "episodes": [
+        {
+          "number": 89,
+          "title": "What Is Dharma? When Doing the Right Thing Is Not Simple",
+          "covers": "Dharma through Rama, Yudhishthira, Arjuna, and other difficult moral choices.",
+          "source": "Mahabharata (Ganguli translation); Valmiki Ramayana (Griffith translation)"
+        },
+        {
+          "number": 90,
+          "title": "Karma: Can Your Actions Change Your Destiny?",
+          "covers": "Karma, responsibility, consequences, and why it should not be reduced to a simple reward-and-punishment system.",
+          "source": "Bhagavad Gita; Brihadaranyaka Upanishad (Muller translation)"
+        },
+        {
+          "number": 91,
+          "title": "Atman and Brahman: What Is the Self?",
+          "covers": "The Upanishadic exploration of the self and ultimate reality, including differing interpretations.",
+          "source": "Chandogya, Brihadaranyaka and Katha Upanishads (Muller translation)"
+        },
+        {
+          "number": 92,
+          "title": "Moksha: What Does It Mean to Escape the Cycle of Rebirth?",
+          "covers": "Liberation, samsara, and the different paths described by Hindu traditions.",
+          "source": "Katha Upanishad (Muller translation); Bhagavad Gita"
+        },
+        {
+          "number": 93,
+          "title": "The Bhagavad Gita's Three Paths",
+          "covers": "Karma yoga, bhakti yoga, and jnana yoga, with examples of how they are understood.",
+          "source": "Bhagavad Gita"
+        },
+        {
+          "number": 94,
+          "title": "Maya: Is the World an Illusion?",
+          "covers": "The different meanings of maya and why it is more nuanced than saying the world does not exist.",
+          "source": "Svetasvatara Upanishad; Bhagavata Purana; Vishnu Purana (Wilson translation)"
+        },
+        {
+          "number": 95,
+          "title": "Why Do Hindu Gods Have So Many Forms?",
+          "covers": "Images, symbols, manifestations, and the diversity of understandings of the divine.",
+          "source": "Bhagavad Gita chapter 11; Rig Veda (Griffith translation) 1.164"
+        },
+        {
+          "number": 96,
+          "title": "Bhakti: How Love Became a Path to God",
+          "covers": "Devotion, surrender, poetry, music, and the growth of devotional traditions.",
+          "source": "Bhagavad Gita chapter 12; Bhagavata Purana; Songs of Kabir (Tagore translation)"
+        },
+        {
+          "number": 97,
+          "title": "Fate vs Free Will: Are Our Lives Already Written?",
+          "covers": "Destiny, divine will, human action, and moral responsibility in the epics and philosophical texts.",
+          "source": "Mahabharata (Ganguli translation); Bhagavad Gita"
+        },
+        {
+          "number": 98,
+          "title": "What Happens After Death?",
+          "covers": "Death, rebirth, heaven and hell in traditional cosmologies, and the possibility of liberation.",
+          "source": "Katha Upanishad, Nachiketa and Yama (Muller translation); Garuda Purana (Wood and Subrahmanyam translation)"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Living Hindu Traditions and the Many Ramayanas",
+      "note": "This final series expands the listener's understanding beyond the most familiar Sanskrit narratives. It shows how mythology becomes part of lived religion, culture, art, and community.",
+      "episodes": [
+        {
+          "number": 99,
+          "title": "The Many Ramayanas: Why Does Rama's Story Change?",
+          "covers": "Valmiki's Ramayana, Tulsidas's Ramcharitmanas, Kamban's version, and other retellings.",
+          "source": "Valmiki Ramayana (Griffith translation); Tulsidas's Ramcharitmanas (Growse translation); Kamban's Ramavataram"
+        },
+        {
+          "number": 100,
+          "title": "The Mahabharata Beyond the Battlefield",
+          "covers": "Regional narratives, oral traditions, local performances, and stories that expand the epic.",
+          "source": "Mahabharata (Ganguli translation); regional and oral traditions"
+        },
+        {
+          "number": 101,
+          "title": "Ganesh Chaturthi: The Festival of the Elephant-Headed God",
+          "covers": "Ganesha's stories, the festival's devotional meanings, and its regional and historical development.",
+          "source": "Shiva Purana; the history of the public festival from 1893"
+        },
+        {
+          "number": 102,
+          "title": "Diwali: One Festival, Several Mythological Stories",
+          "covers": "Rama's return, Lakshmi traditions, and other regional stories associated with the festival.",
+          "source": "Valmiki Ramayana (Griffith translation); Bhagavata Purana"
+        },
+        {
+          "number": 103,
+          "title": "Holi: Prahlada, Holika, and the Burning of Evil",
+          "covers": "The narrative of Prahlada and Holika, and the different meanings of Holi across regions.",
+          "source": "Vishnu Purana (Wilson translation) book 1; Bhagavata Purana book 7"
+        },
+        {
+          "number": 104,
+          "title": "Jagannath: The Mysterious Lord of Puri",
+          "covers": "Jagannath's distinctive iconography, major traditions, and the story of the Rath Yatra.",
+          "source": "Skanda Purana, the Indradyumna legend; W. W. Hunter's Orissa (1872)"
+        },
+        {
+          "number": 105,
+          "title": "Murugan and Ayyappa: The South Indian Divine Traditions",
+          "covers": "The distinct stories and devotional worlds surrounding Murugan and Ayyappa.",
+          "source": "Tirumurugarruppatai; Skanda Purana; Kerala Ayyappa tradition"
+        },
+        {
+          "number": 106,
+          "title": "Sacred Rivers and Mountains: The Geography of Mythology",
+          "covers": "Ganga, Yamuna, Kailash, and other sacred landscapes and their narrative associations.",
+          "source": "Valmiki Ramayana (Griffith translation); Mahabharata (Ganguli translation) Vana Parva, the pilgrimage chapters"
+        },
+        {
+          "number": 107,
+          "title": "The Ramayana Across Asia",
+          "covers": "How Rama's story was adapted in Thailand, Indonesia, Cambodia, and elsewhere.",
+          "source": "the Thai Ramakien, the Khmer Reamker and the Old Javanese Kakawin Ramayana"
+        },
+        {
+          "number": 108,
+          "title": "How Hindu Mythology Continues to Evolve",
+          "covers": "Oral storytelling, dance, temple traditions, regional retellings, modern media, and the continuing life of these narratives.",
+          "source": "Mahabharata (Ganguli translation); Valmiki Ramayana (Griffith translation); living performance traditions"
+        }
+      ]
+    }
+  ]
+}

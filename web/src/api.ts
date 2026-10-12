@@ -596,6 +596,32 @@ export interface SeasonPlan {
   episodes: EpisodeCard[];
 }
 
+export interface MapItem {
+  key: string;
+  number: number;
+  title: string;
+  covers: string;
+  source: string;
+  seriesNumber: number;
+  seriesTitle: string;
+  position: number;
+  seriesSize: number;
+  topic: string;
+  state: 'published' | 'making' | 'retry' | 'todo';
+  runId: string | null;
+  runState: RunState | null;
+}
+
+export interface MapView {
+  id: string;
+  title: string;
+  formatId: string;
+  total: number;
+  published: number;
+  next: MapItem | null;
+  items: MapItem[];
+}
+
 export interface SeasonView {
   show: string;
   season: number;
@@ -652,6 +678,8 @@ export const api = {
    * beat library is that somebody hears one before choosing it.
    */
   beatAudio: (name: string) => `/api/beats/audio?name=${encodeURIComponent(name)}`,
+
+  maps: (channel: string) => call<MapView[]>(`/api/maps?id=${encodeURIComponent(channel)}`),
 
   season: (channel: string, season = 1) =>
     call<SeasonView>(`/api/season?id=${encodeURIComponent(channel)}&season=${season}`),
@@ -896,6 +924,8 @@ export const api = {
     blank?: boolean;
     /** A rapid fire's countries, up to three. None: the desk's own regions. */
     countries?: string[];
+    /** The content-map item this is made from. Only the map's next one is allowed. */
+    mapItem?: string;
   }) =>
     call<{ runId: string; jobId: string | null }>('/api/runs', {
       method: 'POST',

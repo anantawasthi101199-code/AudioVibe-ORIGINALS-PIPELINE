@@ -62,6 +62,7 @@ import { jobs, jobId } from './jobs';
 import { suggestTopics } from './suggest';
 import { costBreakdown } from './costs';
 import { recordStudioSpend, studioSpendFor } from './studioSpend';
+import { mapStartRefusal } from './maps';
 import { isHidden, keepSuggestions, picksFor, removeTopic, topicUsed } from './topicPicks';
 import { channelVoice as voiceFor } from '../canon/voiceMaster';
 import { loadSchedule } from '../schedule/load';
@@ -344,6 +345,8 @@ export const startRunSchema = z.object({
   again: z.boolean().default(false),
   /** The interface's `--series`: the series a long episode is filed into. */
   seriesTitle: z.string().trim().min(1).optional(),
+  /** Made from a content map: only that map's next item is allowed. See maps.ts. */
+  mapItem: z.string().min(1).optional(),
   /** A blank template to fill in by hand, instead of paying for research and writing. */
   blank: z.boolean().default(false),
   /** A rapid fire's countries, up to three. None: the desk's own regions. */
@@ -388,6 +391,11 @@ export const startRun = (body: unknown, who: string | null = null) => {
     throw new HttpError(400, 'an episode needs a series: choose one, or name a new one');
   }
 
+  if (input.mapItem) {
+    const no = mapStartRefusal(persona.id, input.mapItem);
+    if (no) throw new HttpError(no.status, no.message);
+  }
+
   if (input.blank && format.sourceOnly) {
     throw new HttpError(400, 'a set is cut into shorts; write the shorts instead');
   }
@@ -397,8 +405,11 @@ export const startRun = (body: unknown, who: string | null = null) => {
   // does not have, and the interface would then warn about a duplicate while
   // happily making it. Skipped for fiction and news for the reason covered.ts
   // gives: both reuse one topic string for every episode they ever make.
+  // A MAP ITEM SKIPS THE CHECK, not the record: the map is its own duplicate
+  // guard (each item made once, in order), and neighbouring items share their
+  // source text's name, which the word match would read as the same subject.
   const deduped = !persona.fiction && !hasNewsDesk(persona.id);
-  if (deduped && !input.again) {
+  if (deduped && !input.again && !input.mapItem) {
     const blocked = blocking(findCovered(loadCatalogue(), persona.id, input.topic));
     if (blocked.length) throw new HttpError(409, refusal(persona.id, input.topic, blocked));
   }
@@ -410,6 +421,7 @@ export const startRun = (body: unknown, who: string | null = null) => {
     onePass: true,
     holdForApproval: input.blank || (!input.renderNow && !format.sourceOnly),
     seriesTitle: format.kind === 'short' ? undefined : input.seriesTitle,
+    mapItem: input.mapItem,
     handwritten: input.blank,
     countries,
   });
