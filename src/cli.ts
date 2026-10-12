@@ -765,7 +765,7 @@ const describeRun = (
   console.log(`  topic:  ${topic}`);
   console.log(`  beats:  ${format.beats.map((b) => b.id).join(' -> ')}`);
   console.log(
-    `  length: ${Math.round(format.targetSeconds[0] / 60)}-${Math.round(format.targetSeconds[1] / 60)} minutes`
+    `  length: up to ${Math.round(format.targetSeconds[1] / 60)} minutes`
   );
   console.log(`  models: ${writer.model} writing, ${verifier.model} verifying`);
   console.log('');
@@ -1709,13 +1709,12 @@ const cmdSeason = async (argv: string[]): Promise<number> => {
   // Episode length comes from the show rather than a flag, because the cards
   // have to be sized to what an episode can actually hold and the show already
   // knows that number.
-  const [lo, hi] = persona.episodeSeconds;
-  const minutes = Math.round((lo + hi) / 2 / 60);
+  const minutes = Math.round(persona.episodeSeconds[1] / 60);
 
   const deps = buildDeps();
   let pence = 0;
 
-  console.log(`Breaking ${persona.name} season ${seasonNumber}: ${episodes} episodes, about ${minutes} minutes each.`);
+  console.log(`Breaking ${persona.name} season ${seasonNumber}: ${episodes} episodes, up to ${minutes} minutes each.`);
 
   const plan = await planSeason(
     {

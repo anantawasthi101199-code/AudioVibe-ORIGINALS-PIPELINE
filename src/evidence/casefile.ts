@@ -260,7 +260,7 @@ export const buildCaseFile = async (
 
   const prompt = `THE CASE: ${input.topic}
 
-This has to carry about ${minutes} minutes of audio, so the chronology needs enough events to tell that long without padding, and each one needs enough detail to be said out loud.
+This can run up to ${minutes} minutes of audio, and shorter is fine. Set down every event the document supports and no more, never padding, and give each one enough detail to be said out loud.
 
 THE DOCUMENT
 Title: ${input.source.title}

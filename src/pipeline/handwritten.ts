@@ -46,8 +46,8 @@ export const blankScript = (persona: Persona, format: EpisodeFormat, topic: stri
       turns: [
         {
           speaker: persona.hosts[0]!.id,
-          text: `${BLANK_MARK} ${b.seconds[0]}-${b.seconds[1]}s, about ${Math.round(
-            b.seconds[0] * WORDS_PER_SECOND,
+          text: `${BLANK_MARK} up to ${b.seconds[1]}s, at most ${Math.round(
+            b.seconds[1] * WORDS_PER_SECOND,
           )} words] ${b.function.trim().replace(/\s+/g, ' ')}`,
         },
       ],

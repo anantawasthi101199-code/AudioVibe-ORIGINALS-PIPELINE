@@ -152,7 +152,7 @@ export const planStory = async (
   const beats = input.format.beats
     .map(
       (b) =>
-        `- ${b.id} (${b.type}, ${b.seconds[0]}-${b.seconds[1]}s): ${b.function.trim().replace(/\s+/g, ' ')}`
+        `- ${b.id} (${b.type}, up to ${b.seconds[1]}s): ${b.function.trim().replace(/\s+/g, ' ')}`
     )
     .join('\n');
 

@@ -535,7 +535,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
             {
               topic: run.manifest.topic,
               source: selection.chosen[0]!,
-              targetSeconds: (format.targetSeconds[0] + format.targetSeconds[1]) / 2,
+              targetSeconds: format.targetSeconds[1],
             },
             deps.writer,
             spend

@@ -566,8 +566,8 @@ export const buildReference = async (
     })
     .join('\n\n');
 
-  const [lo, hi] = input.format.targetSeconds;
-  const minutes = `${Math.round(lo / 60)} to ${Math.round(hi / 60)} minutes`;
+  // A ceiling only (owner, 2026-10-12): the material decides the length.
+  const minutes = `at most ${Math.round(input.format.targetSeconds[1] / 60)} minutes`;
 
   const reference = await completeJson<unknown>(
     model,

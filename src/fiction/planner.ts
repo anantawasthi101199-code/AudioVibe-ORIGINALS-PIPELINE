@@ -188,7 +188,7 @@ You may add people the season needs, but every one you add spends part of a budg
 
   const prompt = `Break season ${input.seasonNumber} of ${persona.name}.
 
-${episodes} episodes, about ${episodeMinutes} minutes each, so roughly ${episodes * episodeMinutes} minutes of story in total. Size each card to what ${episodeMinutes} minutes of audio can actually hold, which is less than it looks: one substantial scene, one shorter one, and the turn.
+${episodes} episodes, each at most ${episodeMinutes} minutes and shorter where the story is done sooner. Size each card to what ${episodeMinutes} minutes of audio can actually hold at most, which is less than it looks: one substantial scene, one shorter one, and the turn.
 
 ${
   input.premise
