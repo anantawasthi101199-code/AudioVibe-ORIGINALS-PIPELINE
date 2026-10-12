@@ -2,6 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { Run } from '../../run/store';
+import { channelTracks, deleteTrack, trackFile } from '../../render/backing';
 import { defaultFor, musicDefaults, setMusicDefault } from '../music';
 
 describe("a channel's default music for shorts", () => {
@@ -31,6 +32,14 @@ describe("a channel's default music for shorts", () => {
 
     const other = Run.create({ personaId: 'root-health', formatId: 'health-short', topic: 'Sleep' }, { root });
     expect(defaultFor(other)).toBeNull();
+  });
+
+  it("offers a channel's own two loops for its kind of run, and they mix like any track", () => {
+    expect(channelTracks('psyche-session', 'long')).toEqual(['psyche-session-long-a', 'psyche-session-long-b']);
+    expect(channelTracks('psyche-session', 'short')).toEqual(['psyche-session-short-a', 'psyche-session-short-b']);
+    expect(trackFile('psyche-session-long-a')).toMatch(/channel-music/);
+    expect(channelTracks('no-such-channel', 'short')).toEqual([]);
+    expect(deleteTrack('psyche-session-long-a')).toBe(false);
   });
 
   it('refuses a track that is not in the library', async () => {

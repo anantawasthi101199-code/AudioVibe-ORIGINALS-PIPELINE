@@ -25,6 +25,7 @@ import {
   saveTrack,
   saveTrackLoop,
   checkLoop,
+  channelTracks,
   loopUnit,
   LOOP_CROSSFADE_S,
   trackFile,
@@ -88,6 +89,8 @@ const panelState = (run: Run) => {
     channelId: run.manifest.personaId,
     short: kindOf(run) === 'short',
     channelDefault: defaultFor(run),
+    // The channel's own two loops for this kind of run, for the Channel music toggle.
+    channelMusic: channelTracks(run.manifest.personaId, kindOf(run)),
   };
 };
 

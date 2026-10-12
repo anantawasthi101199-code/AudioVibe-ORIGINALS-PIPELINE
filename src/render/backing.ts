@@ -160,14 +160,31 @@ export const saveTrack = (name: string, bytes: Buffer): Track => {
   return { name: path.basename(file, '.mp3'), bytes: bytes.length, loop: null };
 };
 
+/**
+ * A channel's own loops, generated once (scripts/generate-music.ts) and
+ * committed, so they ship in the image rather than living on the volume:
+ * channel-music/<channel>-<short|long>-<a|b>.mp3. Read-only from the studio.
+ */
+export const channelMusicDir = (): string => path.join(repoRoot(), 'channel-music');
+
+/** A channel's two options for a short or an episode, as track names. */
+export const channelTracks = (channelId: string, kind: 'short' | 'long'): string[] =>
+  ['a', 'b']
+    .map((x) => `${channelId}-${kind}-${x}`)
+    .filter((name) => fs.existsSync(path.join(channelMusicDir(), `${name}.mp3`)));
+
+/** An uploaded track first, else a channel loop of that name. */
 export const trackFile = (name: string): string | null => {
   const file = trackPath(name);
-  return fs.existsSync(file) ? file : null;
+  if (fs.existsSync(file)) return file;
+  const shipped = path.join(channelMusicDir(), path.basename(file));
+  return fs.existsSync(shipped) ? shipped : null;
 };
 
 export const deleteTrack = (name: string): boolean => {
-  const file = trackFile(name);
-  if (!file) return false;
+  // Uploads only: a channel loop is part of the image, not the library.
+  const file = trackPath(name);
+  if (!fs.existsSync(file)) return false;
   fs.rmSync(file);
   fs.rmSync(loopPath(file), { force: true });
   return true;

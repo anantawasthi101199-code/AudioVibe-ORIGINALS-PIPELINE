@@ -56,6 +56,8 @@ export const MusicPanel = ({
   const [speed, setSpeed] = useState(1);
   // This episode's section of the track. Starts as the track's saved loop.
   const [loop, setLoop] = useState<Loop | null>(null);
+  // Channel music: OFF by default on every run (owner, 2026-10-12).
+  const [channelOn, setChannelOn] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const file = useRef<HTMLInputElement>(null);
@@ -71,6 +73,7 @@ export const MusicPanel = ({
       setDuck(last.duck);
       setLoop(last.loop ?? null);
       setSpeed(last.speed ?? 1);
+      setChannelOn(Boolean(last.track && mix.channelMusic?.includes(last.track)));
     } else {
       const first = lib.tracks[0];
       setTrack((t) => {
@@ -121,6 +124,11 @@ export const MusicPanel = ({
     preview.duck !== duck ||
     !sameLoop(preview.loop, loop);
   const saved = tracks.find((t) => t.name === track)?.loop ?? null;
+  const channelMusic = state?.channelMusic ?? [];
+  const pickChannel = (name: string) => {
+    setTrack(name);
+    setLoop(null); // A channel loop is made to repeat whole.
+  };
 
   return (
     <div className="stack mt" style={{ gap: '1rem' }}>
@@ -214,6 +222,44 @@ export const MusicPanel = ({
       {/* --- Trying music. Nothing below changes what publishes. --- */}
       <div className="stack" style={{ gap: '0.75rem' }}>
         <h3 style={{ margin: 0 }}>Try music</h3>
+
+        {/* CHANNEL MUSIC: the channel's own two loops for this kind of run. Off by
+            default; on picks option A. Mixing, speed and approval are the same as below. */}
+        {channelMusic.length > 0 && (
+          <div className="trim-box stack tight">
+            <label className="row" style={{ gap: '0.5rem', alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                checked={channelOn}
+                disabled={off}
+                onChange={(e) => {
+                  setChannelOn(e.target.checked);
+                  if (e.target.checked) pickChannel(channelMusic.includes(track) ? track : channelMusic[0]!);
+                  else if (channelMusic.includes(track)) setTrack('');
+                }}
+              />
+              <strong>Channel music</strong>
+              <span className="faint tiny">
+                This channel's loops for {state?.short ? 'shorts' : 'episodes'}. Fades in and out on its own.
+              </span>
+            </label>
+            {channelOn &&
+              channelMusic.map((name) => (
+                <label key={name} className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <input
+                    type="radio"
+                    name="channel-music"
+                    checked={track === name}
+                    disabled={off}
+                    onChange={() => pickChannel(name)}
+                  />
+                  <span style={{ minWidth: '5rem' }}>Option {name.slice(-1).toUpperCase()}</span>
+                  <audio controls loop preload="none" src={api.trackUrl(name)} />
+                </label>
+              ))}
+          </div>
+        )}
+
         <div className="row" style={{ gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <select
             value={track}
@@ -230,11 +276,20 @@ export const MusicPanel = ({
                 {t.name}
               </option>
             ))}
+            {channelMusic.length > 0 && (
+              <optgroup label="Channel music">
+                {channelMusic.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </optgroup>
+            )}
           </select>
           <button className="btn small" disabled={off} onClick={() => file.current?.click()}>
             {busy === 'upload' ? 'Uploading...' : 'Upload mp3'}
           </button>
-          {track && (
+          {track && !channelMusic.includes(track) && (
             <button
               className="btn ghost small"
               disabled={off}

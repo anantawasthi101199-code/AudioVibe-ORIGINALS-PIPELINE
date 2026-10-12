@@ -312,6 +312,8 @@ export interface MixState {
   short?: boolean;
   /** This channel's default music for shorts, or null. */
   channelDefault?: MusicSettings | null;
+  /** The channel's own loops for this kind of run (two: A and B), as track names. */
+  channelMusic?: string[];
 }
 
 /** What a mix is made from; a channel's default is one of these. */

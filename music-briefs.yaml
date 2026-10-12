@@ -1,0 +1,151 @@
+# Background music briefs: one short, steady, instrumental loop per entry.
+#
+# The studio repeats a loop under the whole narration and fades it in and out
+# itself (render/backing.ts), so a brief asks for NO intro, NO ending and NO
+# fades: one groove that can repeat for fifteen minutes without tiring.
+# Shorts may carry a little more character; episode (long) beds are flatter.
+#
+# Every prompt gets RULES appended. Generate with scripts/generate-music.ts;
+# output lands in music/generated/<channel>/ and is logged in order in
+# music/generated/log.jsonl.
+
+rules: >
+  Instrumental only, synthesized, no vocals, no choir, no lyrics, no spoken
+  words. A steady seamless loop: no intro, no build, no drop, no ending, no
+  fade, same energy from first second to last. Background bed for spoken
+  narration: no lead melody, sparse, keep the midrange clear, soft low end
+  and airy highs.
+
+# Added to every episode (long) brief: an episode bed repeats for 15 minutes or
+# more, so it must be even more uneventful than a short's.
+longRules: >
+  Very low density and gentle, no drum hits, no accents, no rising or falling
+  phrases, nothing that calls attention to itself, so it can repeat for twenty
+  minutes without becoming tiring.
+
+briefs:
+  # --- Psyche Session: soothing, warm, never sad ---
+  - id: psyche-session-short-a
+    channel: psyche-session
+    kind: short
+    prompt: Sparse soft felt-piano-like synth chords over a warm pad, major key, 65 BPM, gentle and reassuring.
+  - id: psyche-session-short-b
+    channel: psyche-session
+    kind: short
+    prompt: Soft ambient plucked synth with a warm pad and light airy shimmer, major key, 70 BPM, calm and kind.
+  - id: psyche-session-long-a
+    channel: psyche-session
+    kind: long
+    prompt: Slow warm evolving synth pads with a soft sub drone, major key, about 55 BPM, no percussion, soothing.
+  - id: psyche-session-long-b
+    channel: psyche-session
+    kind: long
+    prompt: Muted electric-piano-like synth chords with a very soft lo-fi texture, 68 BPM, relaxed and warm.
+
+  # --- The Crime Files: dark, tense, restrained, never horror ---
+  - id: crime-files-short-a
+    channel: crime-files
+    kind: short
+    prompt: Dark minimal true crime underscore, low cello-like synth drone, muted pulsing synth bass, minor key, 80 BPM, tense but restrained.
+  - id: crime-files-short-b
+    channel: crime-files
+    kind: short
+    prompt: Sparse dark synth piano notes over a low ominous pad with a soft ticking pulse, minor key, 85 BPM, investigative.
+  - id: crime-files-long-a
+    channel: crime-files
+    kind: long
+    prompt: Low dark synth drone with a slow muffled heartbeat pulse, minor key, 60 BPM, brooding and steady, no stingers.
+  - id: crime-files-long-b
+    channel: crime-files
+    kind: long
+    prompt: Noir synth bed, deep round synth bass and a dark soft pad, very faint brushed texture, minor key, 70 BPM, moody and patient.
+
+  # --- Mythic Archives: ancient, vast, storybook ---
+  - id: mythic-archives-short-a
+    channel: mythic-archives
+    kind: short
+    prompt: Ancient legend underscore, low string-like synth pad, gentle harp-like synth arpeggio, soft frame-drum pulse, D minor, 75 BPM.
+  - id: mythic-archives-short-b
+    channel: mythic-archives
+    kind: short
+    prompt: Deep mystical drone with distant bowed-string-like synth swells and faint chimes, modal, 70 BPM, timeless.
+  - id: mythic-archives-long-a
+    channel: mythic-archives
+    kind: long
+    prompt: Ancient-feeling ambient drone with a slow harp-like synth pattern, modal, 60 BPM, no drums, vast and calm.
+  - id: mythic-archives-long-b
+    channel: mythic-archives
+    kind: long
+    prompt: Low warm string-like synth pad with a very sparse soft hand-drum pulse, modal, 65 BPM, storytelling mood.
+
+  # --- Eureka Tales: curious, bright, wonder ---
+  - id: eureka-tales-short-a
+    channel: eureka-tales
+    kind: short
+    prompt: Curious playful pizzicato-like synth plucks and soft marimba-like synth, major key, 95 BPM, light and inquisitive.
+  - id: eureka-tales-short-b
+    channel: eureka-tales
+    kind: short
+    prompt: Bright synth arpeggio plucks over a soft pulse and airy pad, major key, 100 BPM, discovery and wonder.
+  - id: eureka-tales-long-a
+    channel: eureka-tales
+    kind: long
+    prompt: Slow gentle arpeggiated synth with a soft pad, sense of wonder, major key, 80 BPM, steady and unhurried.
+  - id: eureka-tales-long-b
+    channel: eureka-tales
+    kind: long
+    prompt: Soft glassy synth pad with sparse piano-like synth notes, major key, 75 BPM, thoughtful and curious.
+
+  # --- Business Decoded: warm, confident, modern, not cheesy ---
+  - id: business-decoded-short-a
+    channel: business-decoded
+    kind: short
+    prompt: Muted clean guitar-like synth chords over a light hip-hop beat, 92 BPM, warm and confident, not corporate-cheesy.
+  - id: business-decoded-short-b
+    channel: business-decoded
+    kind: short
+    prompt: Upbeat soft electric-piano-like synth chords with light claps and a round bass, 96 BPM, optimistic and modern.
+  - id: business-decoded-long-a
+    channel: business-decoded
+    kind: long
+    prompt: Minimal chill bed, soft synth keys and warm bass with a very faint soft pulse, 80 BPM, focused and easygoing.
+  - id: business-decoded-long-b
+    channel: business-decoded
+    kind: long
+    prompt: Warm steady electronic pulse with a soft pad and subtle bass, 88 BPM, modern and focused.
+
+  # --- The Global Thread: neutral, steady, newsy, no emotional colour ---
+  - id: global-thread-short-a
+    channel: global-thread
+    kind: short
+    prompt: Steady news-style synth arpeggio with a light electronic pulse, neutral key, 105 BPM, informative and even.
+  - id: global-thread-short-b
+    channel: global-thread
+    kind: short
+    prompt: Soft repeating piano-like synth ostinato with subtle percussion, neutral key, 100 BPM, clear and calm.
+  - id: global-thread-long-a
+    channel: global-thread
+    kind: long
+    prompt: Neutral minimal pulse bed, soft synth bass and a muted steady synth pulse, 85 BPM, steady and unobtrusive.
+  - id: global-thread-long-b
+    channel: global-thread
+    kind: long
+    prompt: Minimal ambient synth pulse with a soft pad, neutral key, 85 BPM, even and unemotional.
+
+  # --- The Root Health: clean, fresh, gentle, trustworthy ---
+  - id: root-health-short-a
+    channel: root-health
+    kind: short
+    prompt: Light fresh plucked acoustic-guitar-like synth with soft marimba-like synth, major key, 88 BPM, clean and friendly.
+  - id: root-health-short-b
+    channel: root-health
+    kind: short
+    prompt: Gentle piano-like synth chords over an airy pad, major key, 80 BPM, calm and trustworthy.
+  - id: root-health-long-a
+    channel: root-health
+    kind: long
+    prompt: Soft organic ambient bed, warm pad with light plucked synth texture, major key, 75 BPM, gentle and clear.
+  - id: root-health-long-b
+    channel: root-health
+    kind: long
+    prompt: Warm synth pads with sparse light plucks and a soft pulse, major key, 80 BPM, fresh and reassuring.
