@@ -18,7 +18,7 @@
  * measure, real leading, and the delivery tags kept visible but quiet. Editing
  * is a mode you enter, not the default.
  */
-import { MusicPanel } from '../components/MusicPanel';
+import { ChannelMusicPreview, MusicPanel } from '../components/MusicPanel';
 import { SeriesPicker } from '../components/SeriesPicker';
 import { TitleEditor } from '../components/TitleEditor';
 import { useHold } from '../useHold';
@@ -960,11 +960,14 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       </details>
                     </>
                   ) : (
-                    <p className="faint tiny" style={{ margin: 0 }}>
-                      {live
-                        ? 'The voice is being made; the player appears here when it is done.'
-                        : 'Nothing voiced yet. The card above says how to voice it.'}
-                    </p>
+                    <>
+                      <p className="faint tiny" style={{ margin: 0 }}>
+                        {live
+                          ? 'The voice is being made; the player appears here when it is done.'
+                          : 'Nothing voiced yet. The card above says how to voice it.'}
+                      </p>
+                      <ChannelMusicPreview runId={id} />
+                    </>
                   )}
                 </div>
               </section>

@@ -30,6 +30,33 @@ const sameLoop = (a: Loop | null | undefined, b: Loop | null | undefined) =>
     (a.speed ?? 1) === (b.speed ?? 1));
 
 /**
+ * The channel's loops before there is any voice: listen only. Mixing needs the
+ * voice, so choosing happens in MusicPanel once the episode is voiced.
+ */
+export const ChannelMusicPreview = ({ runId }: { runId: string }) => {
+  const [state, setState] = useState<MixState | null>(null);
+  useEffect(() => {
+    void api.mixState(runId).then(setState).catch(() => setState(null));
+  }, [runId]);
+  const names = state?.channelMusic ?? [];
+  if (!names.length) return null;
+  return (
+    <details className="fold">
+      <summary>Channel music ({state?.short ? 'shorts' : 'episodes'})</summary>
+      <div className="stack tight mt">
+        {names.map((name) => (
+          <div key={name} className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ minWidth: '5rem' }}>Option {name.slice(-1).toUpperCase()}</span>
+            <audio controls loop preload="none" src={api.trackUrl(name)} />
+          </div>
+        ))}
+        <span className="faint tiny">Listen now; mix one under the voice once the episode is voiced.</span>
+      </div>
+    </details>
+  );
+};
+
+/**
  * Your own music under a finished episode.
  *
  * TRYING IS NOT DECIDING. Mixing makes a preview to listen to and changes
