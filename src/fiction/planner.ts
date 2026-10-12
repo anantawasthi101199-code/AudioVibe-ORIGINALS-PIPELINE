@@ -19,6 +19,7 @@
  * getting there is the episode's business.
  */
 import { Persona, canonAsOf } from '../canon/schema';
+import { TITLE_MAX } from '../script/titleRule';
 import { voiceBrief } from '../script/voices';
 import { completeJson, LlmClient } from '../models/client';
 import {
@@ -120,7 +121,7 @@ const RETURN_SHAPE = `Return ONLY this JSON object.
   "episodes": [
     {
       "number": 1,
-      "title": "the episode's name",
+      "title": "the episode's name, at most ${TITLE_MAX} characters",
       "opens": "the first moment, already in progress",
       "story": "what happens, one paragraph",
       "changes": "what is irreversibly different by the end",

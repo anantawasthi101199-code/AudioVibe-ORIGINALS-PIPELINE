@@ -23,6 +23,7 @@ import { signoffFor } from '../script/storyScript';
 import { OUTRO_RULE } from '../script/outro';
 import { tagGuidance } from '../script/narration';
 import { turnSchema } from '../script/dialogue';
+import { TITLE_RULE } from '../script/titleRule';
 
 /**
  * How much of the article the writer is shown.
@@ -227,6 +228,7 @@ export const buildNewsPrompt = (input: NewsScriptInput): string => {
       ? OUTRO_RULE
       : `The last part ends by asking the listener to follow for more on ${input.beat}, then goodbye.`,
     tagGuidance(input.persona),
+    TITLE_RULE,
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${speaker}", "text": "..."}]}]}`,

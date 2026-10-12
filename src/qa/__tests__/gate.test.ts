@@ -121,6 +121,13 @@ describe('runGate', () => {
     expect(report.findings.filter((f) => f.blocking)).toEqual([]);
   });
 
+  it('BLOCKS a title the app would cut off', () => {
+    const long = { ...script(), title: "How Albert Hofmann discovered LSD's effects on his bicycle ride home in 1943" };
+    const report = runGate(input({ script: long }));
+    expect(report.findings.find((f) => f.check === 'title-length')?.blocking).toBe(true);
+    expect(runGate(input({ script: { ...script(), title: 'x'.repeat(45) } })).passed).toBe(true);
+  });
+
   it('BLOCKS on a ledger problem', () => {
     const report = runGate(
       input({

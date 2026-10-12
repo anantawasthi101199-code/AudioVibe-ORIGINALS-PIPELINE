@@ -13,6 +13,7 @@
  * over the script and the ledger. A model is never asked "is this good".
  */
 import { EpisodeFormat } from '../formats/schema';
+import { TITLE_MAX } from '../script/titleRule';
 import { Source, TIER_RANK } from '../evidence/source';
 import { checkPronouns } from './pronouns';
 import { Persona } from '../canon/schema';
@@ -198,6 +199,15 @@ export const runGate = (input: GateInput): GateReport => {
   const humanReviewReasons: string[] = [];
   const add = (check: string, detail: string, blocking = true) =>
     findings.push({ check, detail, blocking });
+
+  // The app shows two lines of title and cuts off the rest, and the AudioVibe
+  // API refuses a longer one. Fixing it is a title edit, so it costs nothing.
+  if (input.script.title.length > TITLE_MAX) {
+    add(
+      'title-length',
+      `"${input.script.title}" is ${input.script.title.length} characters; the app shows ${TITLE_MAX}. Shorten it.`
+    );
+  }
 
   // WHICH GROUND TRUTH THIS EPISODE ANSWERS TO.
   //

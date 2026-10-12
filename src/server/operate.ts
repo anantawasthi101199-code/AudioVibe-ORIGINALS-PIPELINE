@@ -19,6 +19,7 @@
  * are the same rule: publishing somewhere you did not mean to cannot be undone.
  */
 import fs from 'fs';
+import { TITLE_MAX } from '../script/titleRule';
 import os from 'os';
 import path from 'path';
 import { z } from 'zod';
@@ -579,7 +580,7 @@ export const DESCRIPTION_MAX_WORDS = 50;
 export const setListing = async (runId: string, body: unknown) => {
   const { title, description } = z
     .object({
-      title: z.string().trim().min(1, 'give it a title').max(100, 'a title is at most 100 characters'),
+      title: z.string().trim().min(1, 'give it a title').max(TITLE_MAX, `a title is at most ${TITLE_MAX} characters, so the app shows all of it`),
       description: z.string().trim().min(1, 'give it a description'),
     })
     .parse(body ?? {});

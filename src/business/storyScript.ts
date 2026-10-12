@@ -32,6 +32,7 @@ import { signoffFor } from '../script/storyScript';
 import { OUTRO_RULE } from '../script/outro';
 import { tagGuidance } from '../script/narration';
 import { turnSchema } from '../script/dialogue';
+import { TITLE_RULE } from '../script/titleRule';
 
 export const BUSINESS_INSTRUCTION = `You are {HOST}, host of {SHOW}. You're a friendly,
 curious storyteller who does deep dives into how businesses from around the
@@ -166,6 +167,7 @@ export const buildBusinessPrompt = (input: BusinessScriptInput): string => {
       ? OUTRO_RULE
       : 'The last part ends by asking the listener to follow for more business stories.',
     tagGuidance(input.persona),
+    TITLE_RULE,
     '',
     `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +
       (kind === 'short'

@@ -28,6 +28,7 @@
  * need it rather than on every beat.
  */
 import { z } from 'zod';
+import { TITLE_MAX } from './titleRule';
 import { Persona, canonAsOf, isDialogueShow } from '../canon/schema';
 import { Beat, EpisodeFormat } from '../formats/schema';
 import { Claim } from '../evidence/claim';
@@ -858,7 +859,8 @@ export const TITLE_SYSTEM = `You write the title and description for one episode
 
 The title is what someone sees in a feed. Make it specific and concrete: name
 the thing. No colons introducing a subtitle, no "How X changed Y forever", no
-question titles, no numbers-in-a-list framing.
+question titles, no numbers-in-a-list framing. At most ${TITLE_MAX} characters,
+spaces included: the app shows a title on two lines and cuts off the rest.
 
 The description is two sentences, plain, saying what the episode establishes.
 

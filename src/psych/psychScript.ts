@@ -55,6 +55,7 @@ import { OUTRO_RULE } from '../script/outro';
 import { tagGuidance } from '../script/narration';
 import { turnSchema } from '../script/dialogue';
 import { Understanding, renderUnderstanding } from './understand';
+import { TITLE_RULE } from '../script/titleRule';
 
 /** How the show talks. Shared by both formats, because it is the same person. */
 export const PSYCH_VOICE = `HOW YOU TALK.
@@ -252,6 +253,7 @@ const shell = (input: {
       ? OUTRO_RULE
       : 'The last part ends by asking the listener to follow the show.',
     tagGuidance(input.persona),
+    TITLE_RULE,
     '',
     `THE WHOLE SCRIPT IS ${floor} TO ${ceiling} WORDS, goodbye included. ` +
       (kind === 'short'

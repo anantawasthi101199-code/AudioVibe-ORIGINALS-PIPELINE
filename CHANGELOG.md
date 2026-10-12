@@ -13,6 +13,16 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Titles are at most 45 characters** (owner, 2026-10-12). The app shows two
+  lines of title on the audio card and on Now Playing, and "How Albert Hofmann
+  discovered LSD's effects on his bicycle ride home in 1943" (76) ended in "...".
+  45 is what fits both on a 360dp phone, measured with the app's fonts; 50 does
+  not. Every writer is told it (`src/script/titleRule.ts`), the gate blocks a
+  run over it (`title-length`, fixed with a free title edit), the studio's title
+  editor and script editor refuse more, and the AudioVibe API refuses it too.
+  Rejected: cutting a long model title automatically, which publishes half a
+  sentence nobody chose.
+
 - **The outro is optional and chosen from a dropdown** (2026-10-09). Every
   channel has exactly three outros for shorts and three for episodes in
   voice-master.yaml (new ones written for Eureka Tales, The Root Health, The

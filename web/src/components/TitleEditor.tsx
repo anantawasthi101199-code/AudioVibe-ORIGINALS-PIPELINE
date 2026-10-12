@@ -9,6 +9,8 @@ import { api, type Script } from '../api';
 
 /** The studio enforces the same limit. */
 const MAX_WORDS = 50;
+/** Same as src/script/titleRule.ts: the app shows two lines of title and no more. */
+const TITLE_MAX = 45;
 const wordsIn = (text: string) => text.split(/\s+/).filter(Boolean).length;
 
 export const TitleEditor = ({
@@ -77,10 +79,12 @@ export const TitleEditor = ({
   return (
     <div className="listing editing">
       <div className="stack tight">
-        <label className="listing-label">Title, as listeners see it</label>
+        <label className="listing-label">
+          Title, as listeners see it: {title.length} of {TITLE_MAX} characters
+        </label>
         <input
           className="field"
-          maxLength={100}
+          maxLength={TITLE_MAX}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />

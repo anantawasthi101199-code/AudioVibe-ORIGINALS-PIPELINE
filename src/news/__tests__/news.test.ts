@@ -328,7 +328,7 @@ const ARTICLE_HTML =
   `<body><article><p>${ARTICLE_BODY}</p></article></body></html>`;
 
 const REPORT = {
-  title: 'Ministers from 12 countries agree Geneva ceasefire framework',
+  title: '12 countries agree Geneva ceasefire framework',
   description: 'Foreign ministers agreed a framework covering 3 border regions. Russia says it was not consulted.',
   beats: [
     {

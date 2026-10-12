@@ -19,6 +19,7 @@
  * refused if one is already in flight for that run.
  */
 import { ignoreFinding, unignoreFinding, withOverrides } from '../qa/overrides';
+import { TITLE_MAX } from '../script/titleRule';
 import { finalAudioFor } from '../render/backing';
 import { runProcess } from '../render/assemble';
 import { musicLock } from '../render/backing';
@@ -711,7 +712,7 @@ export const cutShorts = (id: string, body: unknown, who: string | null = null) 
 };
 
 export const saveScriptSchema = z.object({
-  title: z.string().min(1),
+  title: z.string().min(1).max(TITLE_MAX, `a title is at most ${TITLE_MAX} characters, so the app shows all of it`),
   description: z.string().min(1),
   beats: z.array(scriptBeatSchema).min(1),
 });

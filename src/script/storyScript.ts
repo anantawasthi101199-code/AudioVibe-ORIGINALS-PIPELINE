@@ -72,6 +72,7 @@ import {
   wordsForBeat,
   writeTitle,
 } from './write';
+import { TITLE_RULE } from './titleRule';
 
 /**
  * The instructions that are specific to telling a story rather than assembling
@@ -377,6 +378,7 @@ export const buildStoryPrompt = (input: {
         : '';
     })(),
     tagGuidance(input.persona),
+    TITLE_RULE,
     '',
     'THE BEATS, in order:',
     '',

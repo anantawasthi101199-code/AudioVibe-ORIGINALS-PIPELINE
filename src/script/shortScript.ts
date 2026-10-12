@@ -56,6 +56,7 @@ import {
   wordsForBeat,
   writeTitle,
 } from './write';
+import { TITLE_RULE } from './titleRule';
 
 /**
  * How much of the chosen article a short is shown.
@@ -171,6 +172,7 @@ export const writeShortScript = async (
       ? OUTRO_RULE
       : '',
     tagGuidance(input.persona),
+    TITLE_RULE,
     '',
     returnShape(input.persona),
     '',

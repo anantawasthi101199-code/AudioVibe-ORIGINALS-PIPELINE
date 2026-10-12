@@ -24,6 +24,7 @@ import { Desk } from './desk';
 import { NEWS_INSTRUCTION, spokenDate, ukClock } from './newsScript';
 import { AlreadyCovered, clusterStories, headlineTokens, normaliseUrl, pickArticle } from './pick';
 import { NewsSearch, screenWire, sweepWire } from './wire';
+import { TITLE_RULE } from '../script/titleRule';
 
 /**
  * How much of each article the writer reads. A roundup item is three or four
@@ -144,6 +145,7 @@ export const buildRoundupPrompt = (input: {
       ? OUTRO_RULE
       : `The last part asks the listener to follow for more, then goodbye.`,
     tagGuidance(input.persona),
+    TITLE_RULE,
     '',
     `Return JSON only: {"title": "...", "description": "...", "beats": [{"beatId": "...", ` +
       `"turns": [{"speaker": "${speaker}", "text": "..."}]}]}`,
@@ -151,7 +153,7 @@ export const buildRoundupPrompt = (input: {
     `${input.stories.length} STORIES: give each about ${Math.round(125 / input.stories.length)} seconds ` +
       `(about ${Math.round((125 / input.stories.length) * 2.85)} words). Fewer stories means more on each, ` +
       'not a shorter roundup.',
-    `THE TITLE names the places and says it is today's top news, about eight words, no date.`,
+    `THE TITLE names the places and says it is today's top news, in a few words, no date.`,
     '',
     `THE WHOLE ROUNDUP IS AT MOST ${ceiling} WORDS, goodbye included. Over that it runs past three ` +
       'minutes and cannot be used. Shorten every story evenly rather than dropping one.',
