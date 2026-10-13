@@ -68,8 +68,8 @@ describe('seeding runs from a map', () => {
       run.writeArtifact('script', script);
       return run;
     };
-    stale(a!.runId);
-    stale(b!.runId).journal({ stage: 'script', event: 'script edited in the studio' });
+    stale(a!.runId).journal({ stage: 'script', event: 'saved in the studio, prose unchanged' });
+    stale(b!.runId).journal({ stage: 'script', event: 'edited in the studio' });
 
     seedPreparedRuns();
     expect(Run.open(a!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).not.toBe('Old text.');

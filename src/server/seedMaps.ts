@@ -17,13 +17,16 @@
  * KEPT IN STEP WITH ITS FILE while nobody has touched it: a seeded run that is
  * still held, unvoiced and unedited takes the file's current text on each
  * start, so improving a script in the repo reaches the studio (owner,
- * 2026-10-13). Any edit, tag pass, approval or render freezes it.
+ * 2026-10-13). Saving with the prose unchanged and choosing an outro do not
+ * count as touching it (the outro is carried over); a prose edit, tag pass,
+ * approval or render freezes it.
  */
 import { loadPersona } from '../canon/load';
 import { recordMade } from '../catalogue/covered';
 import { formatForRun } from '../formats/forRun';
 import { blankScript, fillBlank, handwrittenGate, startHandwritten } from '../pipeline/handwritten';
 import { Run } from '../run/store';
+import { currentOutro, setOutro } from '../script/outro';
 import { scriptSchema } from '../script/write';
 import { runs } from './catalog';
 import { loadAllMaps, preparedScriptFor, topicFor } from './maps';
@@ -78,6 +81,12 @@ export const seedPreparedRuns = (log: (message: string) => void = () => undefine
 
 const SEED_EVENT = 'blank filled with the script written for this map item; nothing was paid for';
 const REFRESH_EVENT = 'script updated from its file; nothing was paid for';
+/** Script events that leave the prose as the file wrote it. */
+const keepsProse = (event: string) =>
+  event === SEED_EVENT ||
+  event === REFRESH_EVENT ||
+  event === 'saved in the studio, prose unchanged' ||
+  /^outro (\d+ attached|removed|unchanged)/.test(event);
 
 /** The one seeded run for this item, refilled from the file if it is untouched and the file changed. */
 const refreshFromFile = (channelId: string, key: string, log: (message: string) => void): void => {
@@ -91,12 +100,13 @@ const refreshFromFile = (channelId: string, key: string, log: (message: string) 
       run.awaitingApproval &&
       !run.hasArtifact('render') &&
       run.manifest.spentPence === 0 &&
-      run.readJournal().every((e) => e.stage !== 'script' || e.event === SEED_EVENT || e.event === REFRESH_EVENT) &&
+      run.readJournal().every((e) => e.stage !== 'script' || keepsProse(e.event)) &&
       run.readJournal().every((e) => e.stage !== 'publish');
     if (!untouched) return;
     const before = run.readArtifact('script', scriptSchema);
     const prepared = preparedScriptFor(channelId, key)!;
-    const after = fillBlank(blankScript(loadPersona(channelId), formatForRun(run), run.manifest.topic), prepared.text, prepared);
+    const filled = fillBlank(blankScript(loadPersona(channelId), formatForRun(run), run.manifest.topic), prepared.text, prepared);
+    const after = setOutro(filled, currentOutro(before));
     if (JSON.stringify(after) === JSON.stringify(before)) return;
     run.writeArtifact('script', after);
     run.writeArtifact('qa', handwrittenGate(run, after));
