@@ -26,20 +26,31 @@ ElevenLabs, and leave the tag pass off: the tags are already written in.
 These were written from general knowledge, not bound to a fetched source, so nothing
 has checked them automatically. Most worth a look:
 
-- Tata: TISCO's 1907 share issue (about 2.3 crore rupees from about 8,000 investors);
+- Tata: the family map (R. D. Tata as Jamsetji's cousin; Navajbai adopting Naval;
+  Ratan as Naval's son); Nowroji Saklatwala as chairman 1932 to 1938; Noel Tata
+  chairing the trusts since October 2024; TISCO's 1907 share issue (about 2.3 crore rupees from about 8,000 investors);
   the "eat every pound of steel" line is told as a story, not a quote; group figures
   (around 30 listed companies, over a million employees, revenue over $160bn).
-- Reliance: Dhirubhai's Aden years and the size of the first office are told as the
+- Reliance: who runs what now (Akash: Jio, Isha: retail, Anant: new energy);
+  Dhirubhai's Aden years and the size of the first office are told as the
   company tells them; the 1982 bear raid; the first company past 10 lakh crore revenue.
 - Amul: the Samarkha meeting (January 1946); Nehru opening the 1955 plant; farmer and
   society counts (about 3.6 million, about 18,000).
 - Infosys: the 1990 buy-out offer and the Bulgaria story are given as the founders' own
   accounts; FY2025 revenue around $19bn.
-- Asian Paints: the 1970 computer; rivals named for the 1940s; revenue "over thirty
+- Asian Paints: the Choksey family leaving in 1997, and Dani, Choksi and Vakil
+  as the families still in control; the 1970 computer; rivals named for the 1940s; revenue "over thirty
   thousand crore".
 
 Allegations (Reliance and the licence raj, the Indian Express campaign) are attributed
 and said to have been denied; keep them that way.
+
+## Who's who and tags
+
+Every script opens its beginnings with a short spoken map of the people (family
+generations for Tata, Reliance and Asian Paints; the key people for Amul and
+Infosys). Tags go beyond the old short list; anything on the channel's `never`
+list in `voice-master.yaml` is avoided, since it is removed at render.
 
 ## Pronunciation
 

@@ -58,4 +58,21 @@ describe('seeding runs from a map', () => {
     run.abandon('discarded in the studio');
     expect(seedPreparedRuns()).toEqual([]);
   });
+
+  it('AN UNTOUCHED SEEDED RUN FOLLOWS ITS FILE, an edited one is left alone', () => {
+    const [a, b] = seedPreparedRuns();
+    const stale = (id: string) => {
+      const run = Run.open(id);
+      const script = run.readArtifact('script', scriptSchema);
+      script.beats[0]!.turns[0]!.text = 'Old text.';
+      run.writeArtifact('script', script);
+      return run;
+    };
+    stale(a!.runId);
+    stale(b!.runId).journal({ stage: 'script', event: 'script edited in the studio' });
+
+    seedPreparedRuns();
+    expect(Run.open(a!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).not.toBe('Old text.');
+    expect(Run.open(b!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).toBe('Old text.');
+  });
 });

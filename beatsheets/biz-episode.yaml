@@ -67,6 +67,13 @@ beats:
       the very first venture.
     constraints:
       - >
+        WHO'S WHO FIRST, when the story spans a family or several key people
+        (owner, 2026-10-13). Before the signpost, a short spoken map: who the
+        people are, how they are related, which generation each belongs to, and
+        how far down the line this story goes. Assume the listener has never
+        heard of any of them. Then remind them where a person sits on that map
+        the first time they act.
+      - >
         SIGNPOST IN: "So let's go back to the very beginning." Then the story
         from the earliest point the source gives.
       - The year at every step. The world they lived in, briefly, so the start makes sense.

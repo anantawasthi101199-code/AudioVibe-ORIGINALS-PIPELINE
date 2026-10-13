@@ -2,9 +2,9 @@
 
 [warmly] Today's story is about time. A very particular idea of time, and one of the biggest in all of Hindu mythology.
 
-In this way of seeing things, history moves through four great ages, called yugas. The first is a golden age of truth, when everyone lives right. Then, age by age, things slowly slide. People live shorter lives. Goodness shrinks. And the last age is the hardest of all. And according to the traditional count, that last age is the one we're living in right now.
+[thoughtful] In this way of seeing things, history moves through four great ages, called yugas. The first is a golden age of truth, when everyone lives right. Then, age by age, things slowly slide. People live shorter lives. Goodness shrinks. And the last age is the hardest of all. And according to the traditional count, that last age is the one we're living in right now.
 
-We'll hear about the four ages the way one of the great epics tells it, from a giant monkey sitting in the road, explaining them to his younger brother. Their names are Hanuman and Bhima. And at the very end, we'll hear about Kalki, the rider who is said to be coming to close the last age and open a new golden one.
+[warmly] We'll hear about the four ages the way one of the great epics tells it, from a giant monkey sitting in the road, explaining them to his younger brother. Their names are Hanuman and Bhima. And at the very end, we'll hear about Kalki, the rider who is said to be coming to close the last age and open a new golden one.
 
 [softly] So let's go into a forest in the Himalayas, and hear it properly.
 
@@ -12,11 +12,13 @@ We'll hear about the four ages the way one of the great epics tells it, from a g
 
 [warmly] Our story comes from the Mahabharata, the enormous Indian epic about a war between cousins. Five brothers, the heroes of the epic, have been cheated out of their kingdom and sent to live in the wilderness for twelve years. One of those brothers is Bhima. Bhima is the strongest man alive. He is huge, short-tempered, always hungry, and he can uproot a tree with his bare hands. And he is a son of Vayu, the wind god.
 
-One day, the brothers and their wife, Draupadi, are camping high in the Himalayan forests. The wind carries a flower to Draupadi's feet. It has a thousand petals, it glows like the sun, and its scent is wonderful. Draupadi is delighted, and she asks Bhima to find her more of them. So off he goes, crashing through the forest, roaring and smashing trees out of his way, and scaring every animal for miles.
+[slowly] A quick word on who's who, because the Mahabharata has a huge cast. The five brothers are called the Pandavas. Yudhishthira is the eldest, famous for never telling a lie. Bhima is the strong one. Arjuna is the great archer. And the youngest two are twins, Nakula and Sahadeva. [low, steady] Their enemies are their own cousins, the hundred Kaurava brothers, led by the eldest, Duryodhana, and it was the Kauravas who cheated them out of their kingdom. [gently] Draupadi is the wife of all five brothers. And Krishna, whom you'll hear about near the end, is their friend, their cousin and their guide. [warmly] We'll tell the whole epic later in this series. For today, that's all you need.
+
+[tender] One day, the brothers and their wife, Draupadi, are camping high in the Himalayan forests. The wind carries a flower to Draupadi's feet. It has a thousand petals, it glows like the sun, and its scent is wonderful. Draupadi is delighted, and she asks Bhima to find her more of them. So off he goes, crashing through the forest, roaring and smashing trees out of his way, and scaring every animal for miles.
 
 [mischievously] After a while, he comes to a narrow path. And lying across the path, blocking it completely, is an old monkey. He's sitting there half asleep, scratching himself, and his long tail is stretched right across the way.
 
-Bhima shouts at him to move. The monkey opens one eye. "I'm old and ill," he says. "I can't get up. If you need to pass, just move my tail out of the way yourself."
+[playfully] Bhima shouts at him to move. The monkey opens one eye. "I'm old and ill," he says. "I can't get up. If you need to pass, just move my tail out of the way yourself."
 
 [building tension] Bhima, rather insulted, bends down to flick the tail aside with one hand. It doesn't move. He frowns, and tries with both hands. It still doesn't move. He sets his feet, grits his teeth, and heaves with all the strength in his enormous body, until the sweat pours off him and his eyes bulge. [pause] The tail stays exactly where it is.
 
@@ -24,13 +26,15 @@ Bhima shouts at him to move. The monkey opens one eye. "I'm old and ill," he say
 
 [warmly] The monkey smiles. He is Hanuman. The great Hanuman, the hero who served Rama in another age, the one who leapt across the ocean to Lanka. And Hanuman is also a son of Vayu, the wind god. So these two are brothers. They have just met for the first time.
 
-Bhima is thrilled. And he asks for something. He has heard that when Hanuman leapt across the ocean, he took on a form of tremendous size. He asks to see it.
+[softly] If you haven't met Hanuman yet, his great story is told in the other Indian epic, the Ramayana. Rama is a prince, and an avatar of Vishnu. His wife, Sita, is carried off by Ravana, the demon king of the island of Lanka. And Hanuman, the most loyal of Rama's helpers, leaps the whole ocean to find her. [warmly] That is the giant leap Bhima has heard about.
+
+[delighted] Bhima is thrilled. And he asks for something. He has heard that when Hanuman leapt across the ocean, he took on a form of tremendous size. He asks to see it.
 
 [thoughtful] Hanuman says that form belonged to another time. Things are different now. The ages have changed. And Bhima, curious, asks him what he means. What are these ages? How do they work? So Hanuman, sitting there in the road, tells him.
 
 [slowly] The first age, he says, is the Krita Yuga. It is also called the Satya Yuga, which means the age of truth. In this age, everybody does what is right, all the time, without being told. There is just one Veda, one sacred teaching, and everyone follows it. There is no need for buying or selling, because nobody wants for anything. There is no disease. Nobody grows weak with age. There is no envy, no hatred, no fear. People do not have to work the land, because the earth gives them everything they need, just by wishing for it. And in this age, Hanuman says, Vishnu himself is white.
 
-Then comes the second age, the Treta Yuga. In this age, goodness has shrunk by a quarter. People still mostly do right, but now they have to work at it. They perform great sacrifices and rituals to stay in balance with the gods. And Vishnu's colour turns red.
+[measured] Then comes the second age, the Treta Yuga. In this age, goodness has shrunk by a quarter. People still mostly do right, but now they have to work at it. They perform great sacrifices and rituals to stay in balance with the gods. And Vishnu's colour turns red.
 
 [softly] The third age is the Dvapara Yuga. Now goodness is down to half. The single Veda has been split into four. People begin to argue about what's true. Disease appears. Desire and greed grow. And Vishnu's colour turns yellow.
 
@@ -38,19 +42,19 @@ Then comes the second age, the Treta Yuga. In this age, goodness has shrunk by a
 
 [thoughtful] There's a beautiful image that captures all of this, from another of the great story books, the Bhagavata Purana. Dharma, the right order of things, is pictured as a white bull. In the age of truth, the bull stands firmly on four legs. Those legs are truthfulness, purity, compassion and self-discipline. In each age that follows, the bull loses a leg. In the Treta Yuga, he stands on three. In the Dvapara Yuga, on two. And in the Kali Yuga, he's balancing on just one. He's wobbling, and he could fall at any moment. The one leg he has left is truthfulness.
 
-[darkly] The same book tells what happened when the Kali Yuga first arrived. A good king named Parikshit, the grandson of one of Bhima's brothers, was riding through his kingdom. On a riverbank, he came across a terrible sight. A white bull, standing on one leg, trembling. A cow beside him, weeping. And standing over them, a man dressed like a king, beating them both with a club. [serious] That man was Kali himself, the spirit of the dark age, in human shape. Parikshit drew his sword to kill him. Kali threw himself at the king's feet and begged for his life. So Parikshit made a bargain. Kali could stay, but only in certain places. Wherever there is gambling. Wherever there is drunkenness. Wherever there is cruelty, greed, and lying. [pause] And that, the story says, is where Kali has lived ever since.
+[darkly] The same book tells what happened when the Kali Yuga first arrived. A good king named Parikshit, the grandson of one of Bhima's brothers, Arjuna the archer, was riding through his kingdom. On a riverbank, he came across a terrible sight. A white bull, standing on one leg, trembling. A cow beside him, weeping. And standing over them, a man dressed like a king, beating them both with a club. [serious] That man was Kali himself, the spirit of the dark age, in human shape. Parikshit drew his sword to kill him. Kali threw himself at the king's feet and begged for his life. So Parikshit made a bargain. Kali could stay, but only in certain places. Wherever there is gambling. Wherever there is drunkenness. Wherever there is cruelty, greed, and lying. [pause] And that, the story says, is where Kali has lived ever since.
 
 [warmly] So Hanuman explains why he can't show his giant form. It was a form for a greater age. But Bhima keeps asking, and in the end, his brother gives in. Hanuman begins to grow. He grows taller than the trees, as tall as a mountain, until he fills the whole sky like a second sun. Bhima is so dazzled he has to shut his eyes. Then Hanuman shrinks back down, hugs his little brother, and sends him on his way to find the flowers. Bhima is changed. He has seen what the world was once capable of.
 
 [thoughtful] Now, how long does all this take? The Vishnu Purana gives the numbers, and they are vast. They are counted in years of the gods, and one year of the gods is three hundred and sixty human years. The Krita Yuga lasts four thousand eight hundred of those divine years. The Treta Yuga, three thousand six hundred. The Dvapara Yuga, two thousand four hundred. And the Kali Yuga, the shortest, twelve hundred. Each age is shorter than the one before, by exactly a quarter, just like the bull and his legs.
 
-Turn that into human years, and the Kali Yuga lasts four hundred and thirty-two thousand years. All four ages together, one full cycle, come to four million, three hundred and twenty thousand years. And remember Brahma's day, from the first episode? One day of Brahma holds a thousand of these full cycles. That's more than four billion years in a single day.
+[awed] Turn that into human years, and the Kali Yuga lasts four hundred and thirty-two thousand years. All four ages together, one full cycle, come to four million, three hundred and twenty thousand years. And remember Brahma's day, from the first episode? One day of Brahma holds a thousand of these full cycles. That's more than four billion years in a single day.
 
 [curious] And life changes from age to age, too. The Puranas say that in the age of truth, people lived for a hundred thousand years. In the Treta Yuga, ten thousand. In the Dvapara Yuga, a thousand. And in the Kali Yuga, about a hundred. Even Vishnu's descents into the world follow the ages. His great early avatars, the fish, the tortoise, the boar and the man-lion, belong to the age of truth. Rama, the perfect prince, walks the earth in the Treta Yuga. And Krishna lives in the Dvapara Yuga, right at its very end.
 
 [thoughtful] The way people reach the divine changes as well. The Vishnu Purana puts it in one neat line. What people won in the age of truth by deep meditation, they won in the Treta Yuga by great sacrifices, and in the Dvapara Yuga by worship. And in the Kali Yuga? [softly] They win the very same thing simply by saying God's name.
 
-[mischievously] There's a lovely scene about this in the same book. A group of sages go looking for the great sage Vyasa, the one who is said to have split the Veda into four. They want to ask him which age is the best. They find him standing waist-deep in the holy river Ganga, bathing. Before they can say a word, Vyasa rises up out of the water and calls out, "Kali is excellent!" He ducks under again. He comes up again. "Kali is excellent!" The sages are baffled. When he finally steps out of the river, they ask him what on earth he meant. [warmly] And Vyasa explains. In the hardest age, the smallest effort counts for the most. A little goodness, a little devotion, done when everything around you pulls the other way, is worth more than years of discipline in the golden age. In the darkest age, the door is wider open than it has ever been.
+[mischievously] There's a lovely scene about this in the same book. A group of sages go looking for the great sage Vyasa, the one who is said to have split the Veda into four, and who is also said to have composed the Mahabharata itself. They want to ask him which age is the best. They find him standing waist-deep in the holy river Ganga, bathing. Before they can say a word, Vyasa rises up out of the water and calls out, "Kali is excellent!" He ducks under again. He comes up again. "Kali is excellent!" The sages are baffled. When he finally steps out of the river, they ask him what on earth he meant. [warmly] And Vyasa explains. In the hardest age, the smallest effort counts for the most. A little goodness, a little devotion, done when everything around you pulls the other way, is worth more than years of discipline in the golden age. In the darkest age, the door is wider open than it has ever been.
 
 [softly] So when did our Kali Yuga begin? The tradition gives a precise moment. It began on the day the god Krishna left the earth, at the end of the great war of the Mahabharata. By the traditional count, that is about five thousand years ago, in the year 3102 before the common era. Which means, with four hundred and thirty-two thousand years in total, the Kali Yuga has a very long way still to go.
 
@@ -64,10 +68,10 @@ Turn that into human years, and the Kali Yuga lasts four hundred and thirty-two 
 
 ## close
 
-So Bhima went off with his flowers, having met his brother and seen what a golden age looked like. Hanuman stayed in his forest, waiting out the age of Kali. And the five brothers listened to Markandeya, and understood the world they were living in a little better. Kalki has not come yet. In this telling, he is still on his way.
+[warmly] So Bhima went off with his flowers, having met his brother and seen what a golden age looked like. Hanuman stayed in his forest, waiting out the age of Kali. And the five brothers listened to Markandeya, and understood the world they were living in a little better. Kalki has not come yet. In this telling, he is still on his way.
 
-For the people who told these stories, the four ages explained something they could see around them. Things seemed to be getting worse. Life seemed shorter and harder than the old stories said. Here was the reason. The world was in its last and darkest age, and that was simply how time worked.
+[thoughtful] For the people who told these stories, the four ages explained something they could see around them. Things seemed to be getting worse. Life seemed shorter and harder than the old stories said. Here was the reason. The world was in its last and darkest age, and that was simply how time worked.
 
-But there was hope in it too. The darkest age is also the shortest. It ends. And what comes after it is the brightest one of all. Until then, as Vyasa shouted from the river, every small good thing counts for more than it ever has.
+[tender] But there was hope in it too. The darkest age is also the shortest. It ends. And what comes after it is the brightest one of all. Until then, as Vyasa shouted from the river, every small good thing counts for more than it ever has.
 
 [softly] Picture the white bull, standing on his one leg, wobbling but still standing. [pause] In the age we're in, the tradition says, truth is the leg he's standing on.

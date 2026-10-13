@@ -106,7 +106,9 @@ channels:
       figures crisp, and speeds up only when the story does. Sounds like a
       friend explaining over coffee, not a presenter selling anything.
     tags:
-      use: [warmly, curious, thoughtful, wry, "dry, amused", delighted, "matter-of-fact", quietly impressed, emphatic, pause, short pause, snappy, slowly]
+      use: [warmly, curious, thoughtful, wry, "dry, amused", delighted, "matter-of-fact", quietly impressed, emphatic, pause, short pause, snappy, slowly,
+            leaning in, with a smile, with a knowing smile, with a grin, serious, grave, sombre, softly, incredulous, determined, confident, relieved, proudly,
+            satisfied, rueful, exasperated, measured, reflective, knowingly, explaining, conversational, building, quickening, slowing down, firmly, boldly]
       never: [shouts, laughs, crying, whispers, sings, gasps, sarcastic, excited]
     # Names from the Business by Country scripts, series 1 (India), 2026-10-13.
     pronounce:
@@ -422,7 +424,9 @@ channels:
       after a beat of silence. Tells it from inside the world of the story,
       never amused by the people who told it and never a movie-trailer voice.
     tags:
-      use: [hushed, quietly, whispers, slowly, drawn out, awed, mischievously, tender, ominous, building tension, warmly, serious, "low, steady", pause, long pause]
+      use: [hushed, quietly, whispers, slowly, drawn out, awed, mischievously, tender, ominous, building tension, warmly, serious, "low, steady", pause, long pause,
+            softly, gently, thoughtful, curious, reverently, with wonder, in awe, darkly, intense, calmly, lightly, leaning in, with a gentle smile, knowingly,
+            slyly, playfully, delighted, proudly, brightly, measured, breathes in]
       never: [laughs, shouts, sarcastic, crying, snappy, excited]
     pronounce:
       - word: Vetala
