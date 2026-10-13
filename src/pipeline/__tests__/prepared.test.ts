@@ -29,14 +29,15 @@ describe('a prepared script', () => {
     expect(() => fillBlank(blank(), 'Hello.\n\n## opening\n\nA.', meta)).toThrow(/before the first/);
   });
 
-  it('EVERY SCRIPT ON A SHIPPED MAP fits its format and passes the hand-written gate', () => {
-    const maps = loadMaps('mythic-archives', path.join(root, 'maps'));
+  it.each(['mythic-archives', 'business-decoded'])('EVERY SCRIPT ON A SHIPPED MAP fits its format and passes the hand-written gate (%s)', (channel) => {
+    const maps = loadMaps(channel, path.join(root, 'maps'));
     const keys = maps.flatMap((m) => m.series.flatMap((s) => s.episodes.filter((e) => e.script).map((e) => `${m.id}/${e.number}`)));
     expect(keys.length).toBeGreaterThan(0);
     for (const key of keys) {
-      const prepared = preparedScriptFor('mythic-archives', key, root)!;
+      const prepared = preparedScriptFor(channel, key, root)!;
+      const formatId = maps.find((m) => key.startsWith(`${m.id}/`))!.formatId;
       const run = Run.create(
-        { personaId: 'mythic-archives', formatId: 'myth-story', topic: key, holdForApproval: false, handwritten: true },
+        { personaId: channel, formatId, topic: key, holdForApproval: false, handwritten: true },
         { root: fs.mkdtempSync(path.join(os.tmpdir(), 'prep-')) },
       );
       const script = startHandwritten(run, prepared);

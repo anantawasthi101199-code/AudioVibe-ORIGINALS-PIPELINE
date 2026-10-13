@@ -8,7 +8,7 @@ import path from 'path';
 import { Run } from '../../run/store';
 import { scriptSchema } from '../../script/write';
 import { runs } from '../catalog';
-import { loadMaps, viewOf } from '../maps';
+import { loadAllMaps, loadMaps, viewOf } from '../maps';
 import { seedPreparedRuns } from '../seedMaps';
 
 describe('seeding runs from a map', () => {
@@ -24,7 +24,7 @@ describe('seeding runs from a map', () => {
   });
 
   const scriptedKeys = () =>
-    loadMaps('mythic-archives').flatMap((m) =>
+    loadAllMaps().flatMap((m) =>
       m.series.flatMap((s) => s.episodes.filter((e) => e.script).map((e) => `${m.id}/${e.number}`)),
     );
 
@@ -32,8 +32,9 @@ describe('seeding runs from a map', () => {
     const seeded = seedPreparedRuns();
     expect(seeded.map((s) => s.mapItem)).toEqual(scriptedKeys());
 
-    const first = Run.open(seeded[0]!.runId);
-    expect(first.manifest.mapItem).toBe(seeded[0]!.mapItem);
+    const hindu = seeded.find((s) => s.mapItem.startsWith('hindu-mythology/'))!;
+    const first = Run.open(hindu.runId);
+    expect(first.manifest.mapItem).toBe(hindu.mapItem);
     expect(first.manifest.seriesTitle).toBe('The Foundations of Hindu Mythology');
     expect(first.awaitingApproval).toBe(true);
     expect(first.manifest.spentPence).toBe(0);
@@ -46,7 +47,7 @@ describe('seeding runs from a map', () => {
 
     const made = runs({ channelId: 'mythic-archives' });
     const view = viewOf(loadMaps('mythic-archives')[0]!, made);
-    for (const key of scriptedKeys()) {
+    for (const key of scriptedKeys().filter((k) => k.startsWith('hindu-mythology/'))) {
       expect(view.items.find((i) => i.key === key)!.state).toBe('scripted');
     }
   });

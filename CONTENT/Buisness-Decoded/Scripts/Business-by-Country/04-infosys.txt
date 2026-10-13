@@ -1,0 +1,81 @@
+## hook
+
+[warmly] In 1981, seven young engineers started a software company in Pune with ten thousand rupees, about two hundred and fifty dollars at the time. The money was a loan from the savings of one founder's wife.
+
+Today, that company is Infosys. It employs over three hundred thousand people, works for some of the biggest companies in the world, and brings in close to twenty billion dollars a year.
+
+[curious] But for its first ten years, it was a company that could barely get a phone line. Today we'll see how seven engineers built a software exporter in a country that made it hard to import a single computer, the night they nearly sold the whole thing, and the idea that helped turn India into one of the world's great technology services centres.
+
+Hey, I'm Adrian, and this is Business Decoded.
+
+## beginnings
+
+So let's go back to the very beginning. N. R. Narayana Murthy was born in 1946 in Karnataka, the son of a schoolteacher. He studied electrical engineering in Mysore, then did a master's degree at the Indian Institute of Technology in Kanpur, where he fell in love with computers.
+
+As a young man, Murthy was a committed socialist. He has often told the story of what changed his mind. In 1974, travelling home overland from Europe, he was detained for days at a border in communist Bulgaria, after a misunderstanding on a train. [thoughtful] By his own account, he came out of it convinced that the answer to poverty was not sharing out what existed, but creating new wealth, and doing it fairly.
+
+He worked in Paris on a system for running Charles de Gaulle airport, and then at Patni Computer Systems in Bombay. By the start of the 1980s, he wanted to build his own company, one that would write software for clients abroad and be run honestly, with the people who did the work sharing in its success.
+
+He persuaded six colleagues to join him: Nandan Nilekani, S. Gopalakrishnan, S. D. Shibulal, K. Dinesh, N. S. Raghavan and Ashok Arora. [matter-of-fact] They were bright, they were young, and they had very little money.
+
+The starting capital came from Murthy's wife, Sudha Murty, who lent him ten thousand rupees she had saved. [delighted] Sudha Murty was a remarkable engineer in her own right. Years earlier, she had seen a job advert from the truck maker TELCO, part of the Tata group, saying women need not apply. She wrote a postcard to J. R. D. Tata himself complaining about it, was called for an interview, and became the company's first woman engineer on the shop floor.
+
+While Infosys got going, it was her salary that kept the household running. She was also, by both their accounts, the one who agreed to stay out of the company, so that it would never be seen as a family business.
+
+On the second of July 1981, Infosys was registered, with its office in the Murthys' flat in Pune.
+
+The plan was simple to say and hard to do. American companies needed software written and maintained, and good programmers in the United States were expensive. Indian engineers were highly skilled and cost far less. So Infosys would do the work for American clients. Its first big client was Data Basics Corporation, in New York, and some of the founders went to the United States to work at clients' offices directly.
+
+In 1983, the company moved its base to Bangalore, closer to an early client there, and to a city that was starting to attract engineers.
+
+## struggle
+
+But it didn't stay easy for long. In the India of the 1980s, almost everything a software company needed was controlled by the government.
+
+To import a computer, you needed a licence, and getting one could take a very long time. Phone lines took months, sometimes years, to arrive. Sending a founder abroad to meet a client meant getting permission to buy foreign currency. [wry] A company whose whole business was working with clients overseas had to ask permission every time it wanted to talk to one.
+
+Money was always tight. Salaries were small, the founders lived carefully, and growth was slow. The founders who worked at client sites in America lived as cheaply as they could, sharing rooms and cooking for themselves, so that more of the fees came home to the company.
+
+And there was a deeper risk. For years, a large share of the company's income came from just a handful of clients. [matter-of-fact] When one customer is a big part of your business, losing that customer can sink you, and the founders knew it. For most of the 1980s, Infosys stayed small, careful and vulnerable.
+
+[dry, amused] Murthy has said in many interviews that it took them years just to get permission to bring in a computer. Imagine starting a bakery and waiting years for the government to let you buy an oven.
+
+Keeping people was hard as well. The kind of engineer Infosys needed could often get a job in America, at many times the salary. Every good programmer the company trained was a programmer some other firm might hire away. The founders had to persuade people to stay with promises of what the company might one day become, because they couldn't pay what it was worth yet.
+
+There were setbacks at the top, too. In 1989, a joint venture with an American consulting firm, Kurt Salmon Associates, came to an end. That venture had been one of the company's main routes to American clients, and losing it left a hole. Around the same time, Ashok Arora, one of the founders, left.
+
+Then came the moment it nearly ended. By the founders' own account, in 1990 they sat down to discuss an offer to buy the company for about a million dollars. After nine years of hard work, some of them were tempted. [emphatic] Murthy argued against it, and offered to buy out anyone who wanted to go. Nobody left. They kept going.
+
+## rise
+
+And then came the move that changed everything. In 1991, India's economy opened up.
+
+Facing a financial crisis, the government swept away much of the licence raj. Importing computers became far simpler, getting foreign currency was easier, and new technology parks gave software exporters fast satellite links to the outside world. Overnight, the walls Infosys had spent ten years pushing against started to come down.
+
+In 1993, Infosys offered its shares to the public on the Indian stock market. The sale went badly at first, and not enough investors wanted the shares, until the American bank Morgan Stanley bought a large block. [dry, amused] Anyone who bought in then and held on did very well indeed.
+
+The real engine was what Infosys called its global delivery model. Here's how it works. A small team sits at the client's office in, say, New York, close to the client, understanding exactly what's needed. The bulk of the work, the actual writing and testing of software, happens in India. [delighted] And because India is many hours ahead of the United States, the Indian team works while America sleeps. The client goes home in the evening with a problem, and comes back in the morning to find the work done.
+
+Think of it like a relay race, where the baton is handed to a fresh runner at the end of every working day. More work gets done, and it costs the client less.
+
+The timing was lucky as well as clever. In the late 1990s, companies everywhere were worried about the Y2K bug, the fear that old computer systems would break when dates rolled over to the year 2000. Huge amounts of old code had to be checked and fixed, and Indian firms were very good at it. Clients who came for Y2K stayed for everything else.
+
+In March 1999, Infosys became the first Indian company to list its shares on the NASDAQ stock exchange in New York. And it shared the rewards. Infosys was one of the first Indian companies to give large numbers of staff stock options, the right to buy the company's shares cheaply, and as the share price rose, thousands of employees became wealthy, famously including some of the company's drivers.
+
+The company kept hiring at an enormous rate, so it built its own way to train people. On the edge of Mysore, it built a huge training campus where new graduates, tens of thousands a year at its peak, spend months learning to work the Infosys way before they're put on a client's project. [wry] It looks less like an office and more like a small university town, which is more or less what it is.
+
+In 2002, Murthy handed the chief executive's job to Nandan Nilekani, who had been with him since the flat in Pune. In the year to March 2004, Infosys passed a billion dollars in revenue for the first time. A company that had once waited years for a computer was now one of the best known names in Indian business.
+
+## ending
+
+Where does it stand now? In the year to March 2025, Infosys brought in around nineteen billion dollars, with more than three hundred thousand employees and offices in dozens of countries.
+
+It hasn't always been smooth. In 2017, its first chief executive from outside the founding group, Vishal Sikka, resigned after a very public clash with Narayana Murthy over how the company was being run. Nandan Nilekani came back as chairman to steady it, and Salil Parekh became chief executive in 2018. And the whole industry now faces a new test, as artificial intelligence changes how software gets written. A business built on large numbers of skilled people doing work by hand has to work out what happens when more and more of that work can be done by machines.
+
+The founders went on to very different lives. Nandan Nilekani left in 2009 to lead Aadhaar, India's national digital identity programme, before returning to Infosys as chairman. Sudha Murty became one of India's best-loved writers and a member of the upper house of Parliament. [dry, amused] And the Murthys' daughter, Akshata, married Rishi Sunak, who went on to become Prime Minister of the United Kingdom. Not a sentence anyone in that flat in Pune would have predicted.
+
+And it changed far more than one company. Infosys, along with Tata Consultancy Services, Wipro and others, helped build an industry that today employs millions of people in India.
+
+[thoughtful] What did it take? Patience, mostly. Ten years of fighting for phone lines and import licences before the doors opened. A refusal to sell when selling would have been the easy way out. And an idea about using the time difference between India and America that turned distance from a problem into an advantage.
+
+[warmly] Ten thousand rupees from Sudha Murty's savings, and a flat in Pune. [pause] Today, a company with more people than many cities, working while the rest of the world sleeps.

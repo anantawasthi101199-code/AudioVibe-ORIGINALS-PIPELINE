@@ -14,35 +14,60 @@
           "title": "Tata: The Man Who Dreamed of Industrialising India",
           "covers": "Start with Jamsetji Tata's trading business in 1868, his ambitions for textiles, steel, power and education, and the later generations that turned those ambitions into a diversified group. Explore how industrial development and philanthropy became intertwined.",
           "subject": "Tata Group",
-          "source": "Tata Group official company history, annual reports and reputable business journalism"
+          "source": "Tata Group official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/01-tata.txt",
+            "title": "Tata: The Man Who Dreamed for India",
+            "description": "Twenty-one thousand rupees in 1868 became steel, software, hotels and Jaguar Land Rover. Jamsetji Tata's four ambitions, the sons who finished them, and why charities own most of the group."
+          }
         },
         {
           "number": 2,
           "title": "Reliance: How Dhirubhai Ambani Built an Industrial Empire",
           "covers": "Trace Ambani's early trading career, the move into textiles, the famous 1977 public offering, petrochemicals and the development of an integrated industrial business. Examine the advantages, risks and controversies associated with the group's expansion.",
           "subject": "Reliance Industries",
-          "source": "Reliance Industries official company history, annual reports and reputable business journalism"
+          "source": "Reliance Industries official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/02-reliance.txt",
+            "title": "Reliance: How Dhirubhai Built an Empire",
+            "description": "From a clerk's job in Aden and a tiny office in Masjid Bunder to the world's biggest refinery and Jio. Dhirubhai Ambani's bold bets, the 1977 share sale, and the arguments that followed him."
+          }
         },
         {
           "number": 3,
           "title": "Amul: How India's Farmers Challenged the Dairy Trade",
           "covers": "Explore the difficulties faced by milk producers, the cooperative movement, Verghese Kurien's role, milk collection and processing, and the national expansion of dairy production. Explain why this was a different kind of business success: one built around producer ownership.",
           "subject": "Amul dairy cooperative",
-          "source": "Amul dairy cooperative official company history, annual reports and reputable business journalism"
+          "source": "Amul dairy cooperative official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/03-amul.txt",
+            "title": "Amul: The Farmers Who Owned the Dairy",
+            "description": "A 1946 milk strike in Kaira, an engineer who never meant to stay, and a cooperative owned by millions of farmers. How Amul made fairness the business model."
+          }
         },
         {
           "number": 4,
           "title": "Infosys: The Small Startup That Helped Build India's IT Industry",
           "covers": "Follow seven engineers who established Infosys in 1981 with US$250 in initial capital. Explore the challenges of building an export-oriented software business, the global delivery model, international clients and the emergence of India as a technology-services destination.",
           "subject": "Infosys",
-          "source": "Infosys official company history, annual reports and reputable business journalism"
+          "source": "Infosys official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/04-infosys.txt",
+            "title": "Infosys: Seven Engineers and $250",
+            "description": "Seven engineers, ten thousand rupees from Sudha Murty's savings, and a decade of waiting for phone lines. How Infosys nearly sold out, then helped build India's IT industry."
+          }
         },
         {
           "number": 5,
           "title": "Asian Paints: How a Local Manufacturer Beat Bigger Rivals",
           "covers": "Explore the company's beginnings, the importance of distribution and dealer relationships, its understanding of local customers, and how operational efficiency and branding helped it become a major Indian paint business.",
           "subject": "Asian Paints",
-          "source": "Asian Paints official company history, annual reports and reputable business journalism"
+          "source": "Asian Paints official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/05-asian-paints.txt",
+            "title": "Asian Paints: The Garage That Beat Giants",
+            "description": "Four friends in a Bombay garage in 1942 took on the big paint companies by selling small packs in small towns, and by buying a computer before almost anyone else in India."
+          }
         },
         {
           "number": 6,

@@ -108,7 +108,40 @@ channels:
     tags:
       use: [warmly, curious, thoughtful, wry, "dry, amused", delighted, "matter-of-fact", quietly impressed, emphatic, pause, short pause, snappy, slowly]
       never: [shouts, laughs, crying, whispers, sings, gasps, sarcastic, excited]
-    pronounce: []
+    # Names from the Business by Country scripts, series 1 (India), 2026-10-13.
+    pronounce:
+      - word: Jamsetji
+        sayAs: JUM-shed-jee
+      - word: Nusserwanji
+        sayAs: NUSS-er-WAHN-jee
+      - word: Dorabji
+        sayAs: DOR-ahb-jee
+      - word: Jamshedpur
+        sayAs: JUM-shed-poor
+      - word: Chinchpokli
+        sayAs: chinch-POKE-lee
+      - word: Mayurbhanj
+        sayAs: MAH-yoor-bunj
+      - word: Dhirubhai
+        sayAs: DHEE-roo-bye
+      - word: Kokilaben
+        sayAs: KO-kee-lah-ben
+      - word: Jamnagar
+        sayAs: JAAM-nuh-gur
+      - word: Patalganga
+        sayAs: PAH-tul-GUN-gah
+      - word: Kurien
+        sayAs: KOO-ree-en
+      - word: Tribhuvandas
+        sayAs: trih-BHOO-vun-dahs
+      - word: Amul
+        sayAs: UH-mool
+      - word: amulya
+        sayAs: uh-MOOL-yuh
+      - word: Nilekani
+        sayAs: nee-LAY-kuh-nee
+      - word: Girgaum
+        sayAs: gir-GAOM
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
