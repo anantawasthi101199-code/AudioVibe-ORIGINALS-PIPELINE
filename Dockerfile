@@ -6,7 +6,12 @@
 # EVERYTHING THE STUDIO WRITES lives on the volume at /data, not in this image:
 # scripts/start.sh links runs/, art/, music/ and the record files into place
 # before the studio starts, so a redeploy never loses a run.
-FROM node:22-bookworm-slim
+# THE SAME OFFICIAL IMAGE, FROM AMAZON'S PUBLIC MIRROR (2026-10-09). Docker Hub
+# rate-limits anonymous pulls, and Railway's builders share that limit: a
+# deploy failed with "429 Too Many Requests" fetching node:22-bookworm-slim.
+# public.ecr.aws/docker/library is Docker's official images, mirrored, with no
+# such limit.
+FROM public.ecr.aws/docker/library/node:22-bookworm-slim
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ffmpeg fonts-liberation fonts-dejavu-core ca-certificates \
