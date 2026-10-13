@@ -445,7 +445,10 @@ export const MusicPanel = ({
           </button>
         </div>
 
-        {preview && (
+        {busy === 'mix' && (
+          <span className="faint tiny">Mixing the preview. The player appears when it is ready to play.</span>
+        )}
+        {preview && busy !== 'mix' && (
           <div className="player">
             <span className="faint tiny">
               Preview: {describe(preview)}

@@ -49,6 +49,14 @@ export const renderResultSchema = z.object({
   model: z.string(),
   voiceId: z.string(),
   costPence: z.number(),
+  /**
+   * Parts whose kept take ends on more than MAX_TRAILING_SILENCE_S of silence,
+   * which is what a cut-off last sentence looks like (owner, 2026-10-13: flag
+   * it, say where). `atS` is where in the episode the silence starts.
+   */
+  silentEndings: z
+    .array(z.object({ beatId: z.string(), trailingS: z.number(), atS: z.number() }))
+    .default([]),
 });
 
 export type RenderResult = z.infer<typeof renderResultSchema>;
@@ -622,6 +630,11 @@ export const renderScript = async (
 
   const files: string[] = [];
   const timings: Array<{ id: string; type: string; durationS: number; endsFile: boolean }> = [];
+  /** The last beat of each group whose kept file ends on long silence. */
+  const silent: Array<{ beatId: string; trailingS: number }> = [];
+  const noteSilence = (beatId: string, trailing: number | null) => {
+    if (trailing !== null && trailing > MAX_TRAILING_SILENCE_S) silent.push({ beatId, trailingS: trailing });
+  };
   let costPence = 0;
   let provider = '';
   let model = '';
@@ -709,6 +722,7 @@ export const renderScript = async (
         (b) => speakable(b.turns.map((t) => t.text).join('\n\n')).length
       );
       const reusedPerBeat = apportion(existing, reusedShares);
+      if (!multiVoice) noteSilence(group.at(-1)!.beatId, await measureTrailing(file, existing));
       group.forEach((b, n) => {
         timings.push({
           id: b.beatId,
@@ -875,6 +889,7 @@ export const renderScript = async (
       measured = await probe(file);
       const firstTrailing =
         measured === null ? null : await measureTrailing(file, measured);
+      let keptTrailing = firstTrailing;
 
       // NOT FOR A BEAT THAT HAD TO BE SPLIT. The retry re-sends `request`
       // whole, and `request` being too big for the engine is the entire reason
@@ -938,9 +953,11 @@ export const renderScript = async (
           write(file, retry.audio);
           result = retry;
           measured = retryDuration;
+          keptTrailing = retryTrailing;
         }
         fs.rmSync(retryFile, { force: true });
       }
+      noteSilence(group.at(-1)!.beatId, keptTrailing);
     }
 
     provider = result.provider;
@@ -1017,5 +1034,9 @@ export const renderScript = async (
     model,
     voiceId: [...voiceIds].join('+'),
     costPence,
+    silentEndings: silent.map((x) => {
+      const endS = beatMap.find((b) => b.id === x.beatId)?.endS ?? durationS;
+      return { ...x, atS: Math.max(0, Math.round((endS - x.trailingS) * 10) / 10) };
+    }),
   };
 };

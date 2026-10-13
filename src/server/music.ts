@@ -32,6 +32,7 @@ import {
 } from '../render/backing';
 import { Run } from '../run/store';
 import { loadFormat } from '../formats/load';
+import { playbackFile } from './playback';
 import { HttpError } from './routes';
 
 const asHttp = async <T>(fn: () => T | Promise<T>): Promise<T> => {
@@ -169,6 +170,7 @@ export const useMusicDefault = (runId: string) =>
     }
     await mixRun(run, settings);
     chooseMix(run);
+    await playable(run, 'chosen');
     return panelState(run);
   });
 
@@ -177,8 +179,20 @@ export const makeMix = (runId: string, body: unknown) =>
     const input = mixBody.parse(body);
     const run = Run.open(runId);
     await mixRun(run, input);
+    await playable(run, 'preview');
     return panelState(run);
   });
+
+/**
+ * THE PLAYER WAITS FOR PLAYABLE AUDIO (owner, 2026-10-13). The mix is a WAV and
+ * the player gets a compressed copy made on first play, so a player shown the
+ * moment the mix returned still sat waiting. Making the copy here keeps the
+ * panel on "Mixing..." until pressing play plays.
+ */
+const playable = async (run: Run, which: 'preview' | 'chosen') => {
+  const file = mixedFileFor(run, which);
+  if (file) await playbackFile(file);
+};
 
 export const removeMix = (runId: string) =>
   asHttp(() => {
@@ -189,9 +203,10 @@ export const removeMix = (runId: string) =>
 
 /** "Use this version": the preview becomes what publishing sends. */
 export const useMix = (runId: string) =>
-  asHttp(() => {
+  asHttp(async () => {
     const run = Run.open(runId);
     chooseMix(run);
+    await playable(run, 'chosen');
     return panelState(run);
   });
 

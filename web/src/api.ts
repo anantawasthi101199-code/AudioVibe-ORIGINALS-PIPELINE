@@ -394,7 +394,11 @@ export interface RunDetail {
   brief: { angle?: string; mustEstablish?: string[]; queries?: string[] } | null;
   claims: { claims: Claim[] } | null;
   corpus: { sources: Source[]; rejected: unknown[] } | null;
-  render: { durationS?: number } | null;
+  render: {
+    durationS?: number;
+    /** Parts whose kept take ends on long silence: maybe cut off. `atS` is where it starts. */
+    silentEndings?: Array<{ beatId: string; trailingS: number; atS: number }>;
+  } | null;
   cuts: RunSummary[];
   /** A source script, which is cut into shorts and never voiced whole. */
   isSource: boolean;

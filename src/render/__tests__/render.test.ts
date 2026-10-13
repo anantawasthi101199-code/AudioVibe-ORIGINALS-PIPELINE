@@ -327,6 +327,16 @@ describe('the truncation guard', () => {
     expect(said.join(' ')).toMatch(/1\.5s of silence\. Re-takes are off/);
   });
 
+  it('FLAGS a kept take that ends on long silence, and where it starts', async () => {
+    const { done } = render([1.48], undefined, [60], false);
+    const r = await done;
+    expect(r.silentEndings).toHaveLength(1);
+    expect(r.silentEndings[0]!.trailingS).toBe(1.48);
+    expect(r.silentEndings[0]!.atS).toBeCloseTo(r.durationS - 1.48, 0);
+    const clean = await render([0.3], undefined, [60], false).done;
+    expect(clean.silentEndings).toEqual([]);
+  });
+
   it('does not re-render a beat that ended cleanly', async () => {
     const { calls, done } = render([0.31]);
     await done;

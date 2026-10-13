@@ -940,6 +940,22 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       <div className="player">
                         <FinalAudio run={run} onChanged={() => void load()} player />
                       </div>
+                      {/* MAYBE CUT OFF (owner, 2026-10-13): a part ending on long
+                          silence is how a dropped last sentence shows up. */}
+                      {!!data.render?.silentEndings?.length && (
+                        <div className="note warn tiny">
+                          <strong>Check {data.render.silentEndings.length === 1 ? 'this ending' : 'these endings'}:</strong>{' '}
+                          {data.render.silentEndings
+                            .map(
+                              (x) =>
+                                `${x.beatId} goes silent at ${clock(x.atS)} for ${x.trailingS.toFixed(1)}s (listen from ${clock(
+                                  Math.max(0, x.atS - 10)
+                                )})`
+                            )
+                            .join('; ')}
+                          . Make sure the last words are all there. If one was cut off, voice that part again.
+                        </div>
+                      )}
                       <div className="row" style={{ gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                         <strong className="tiny">Who it is for</strong>
                         {(['general', 'mature'] as const).map((r) => (
