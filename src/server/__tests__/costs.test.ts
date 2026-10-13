@@ -91,11 +91,22 @@ describe('the voice log and the cost breakdown', () => {
 
   it('names what made the voice cost twice, from the journal, even for runs voiced before the log', () => {
     run.journal({ stage: 'render', event: '2/3: story ended on 2.1s of silence. Taking it again.' });
+    run.journal({ stage: 'render', event: 'spend', pence: 5 });
     run.journal({ stage: 'render', event: 'voice engine set to elevenlabs by anant' });
     run.journal({ stage: 'render', event: 'discarded: the script changed under it' });
     const f = costBreakdown(Run.open(RUN_ID, { root })).findings.join(' ');
     expect(f).toMatch(/1 part was re-taken/);
     expect(f).toMatch(/switched 1 time/);
     expect(f).toMatch(/changed after it was voiced 1 time/);
+  });
+
+  it('does not count choosing the engine before anything was voiced as a switch', () => {
+    const fresh = Run.create(
+      { personaId: 'mythic-archives', formatId: 'myth-story', topic: 't', holdForApproval: false },
+      { root: fs.mkdtempSync(path.join(os.tmpdir(), 'cost-')) },
+    );
+    fresh.journal({ stage: 'render', event: 'voice engine set to elevenlabs by anant' });
+    fresh.journal({ stage: 'render', event: 'spend', pence: 5 });
+    expect(costBreakdown(fresh).findings.join(' ')).not.toMatch(/switched/);
   });
 });

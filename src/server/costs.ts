@@ -143,7 +143,11 @@ export const costBreakdown = (run: Run) => {
   // voice log existed: each of these means part of the voice was paid twice.
   const count = (re: RegExp) => journal.filter((e) => re.test(`${e.event} ${e.detail ?? ''}`)).length;
   const retakes = count(/Taking it again/);
-  const engineSwitches = count(/voice engine set to/);
+  // Only a switch AFTER something was voiced throws anything away; choosing the
+  // engine before the first voicing costs nothing.
+  const firstVoice = journal.findIndex((e) => e.stage === 'render' && e.event === 'spend');
+  const engineSwitches =
+    firstVoice === -1 ? 0 : journal.slice(firstVoice).filter((e) => /voice engine set to/.test(e.event)).length;
   const editsAfterVoice = count(/discarded: the script changed/);
   const regenerations = count(/regenerating as a new take/);
   const tagPasses = count(/^tag pass/);
