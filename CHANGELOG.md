@@ -13,6 +13,16 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **A map item can carry a script already written** (owner, 2026-10-13). An
+  episode in `maps/<id>.json` may name a `script` (file, title, description);
+  Blank script on that item opens with every part filled in, and the map panel
+  says "script written". The first five Hindu Mythology episodes ship this way,
+  from `CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/`. The script is checked
+  against the format before the run exists, so one that does not fit leaves no
+  half-made run, and a test fails if any shipped script stops fitting.
+  Rejected: copying the scripts into runs on the volume, which skips the map's
+  one-at-a-time rule and is invisible in the repo.
+
 - **Titles are at most 45 characters** (owner, 2026-10-12). The app shows two
   lines of title on the audio card and on Now Playing, and "How Albert Hofmann
   discovered LSD's effects on his bicycle ride home in 1943" (76) ended in "...".

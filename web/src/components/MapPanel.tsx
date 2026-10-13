@@ -91,9 +91,13 @@ export const MapPanel = ({
               ) : (
                 <>
                   {next.state === 'retry' && <span className="pill fail">last run failed</span>}
+                  {next.scripted && <span className="pill pass">script written</span>}
                   <button type="button" className="btn spend" onClick={() => onLoad(next)} disabled={loaded === next.key}>
                     {loaded === next.key ? 'Loaded into Make' : 'Load into Make'}
                   </button>
+                  {next.scripted && (
+                    <span className="faint tiny">Load it, then press Blank script: it opens with the script filled in.</span>
+                  )}
                 </>
               )}
             </div>
@@ -122,7 +126,9 @@ export const MapPanel = ({
                           i.title
                         )}
                       </span>
-                      <span style={{ color: TONE[i.state], whiteSpace: 'nowrap' }}>{WORD[i.state]}</span>
+                      <span style={{ color: TONE[i.state], whiteSpace: 'nowrap' }}>
+                        {i.scripted && i.state === 'todo' ? 'script written' : WORD[i.state]}
+                      </span>
                     </div>
                   ))}
                 </div>

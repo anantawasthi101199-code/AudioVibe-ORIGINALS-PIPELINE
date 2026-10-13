@@ -13,31 +13,56 @@
           "number": 1,
           "title": "Before the Beginning: How Did the Universe Begin?",
           "covers": "Cosmic creation, the primordial waters, and the Nasadiya Sukta's mysterious questions about existence.",
-          "source": "Rig Veda (Griffith translation) 10.129, the Nasadiya Sukta; Vishnu Purana (Wilson translation) book 1"
+          "source": "Rig Veda (Griffith translation) 10.129, the Nasadiya Sukta; Vishnu Purana (Wilson translation) book 1",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/01-before-the-beginning.txt",
+            "title": "How the Universe Began",
+            "description": "Before the gods, before the sky, there was dark water and a question. The Nasadiya Sukta's famous doubt, Vishnu asleep on the serpent Shesha, and Brahma waking inside a lotus to build the world."
+          }
         },
         {
           "number": 2,
           "title": "Brahma, Vishnu and Shiva: The Three Cosmic Powers",
           "covers": "The Trimurti, their traditional roles, and why different Hindu traditions understand them differently.",
-          "source": "Vishnu Purana (Wilson translation) book 1; Shiva Purana"
+          "source": "Vishnu Purana (Wilson translation) book 1; Shiva Purana",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/02-brahma-vishnu-and-shiva.txt",
+            "title": "Brahma, Vishnu and Shiva",
+            "description": "The creator, the preserver and the destroyer, and the day Brahma and Vishnu fought over who was greatest until a pillar of fire with no top and no bottom appeared between them."
+          }
         },
         {
           "number": 3,
           "title": "The Many Gods of Hindu Mythology",
           "covers": "Devas, asuras, devas' kings, divine attendants, and the different roles of the gods.",
-          "source": "Rig Veda (Griffith translation); Vishnu Purana (Wilson translation) book 1"
+          "source": "Rig Veda (Griffith translation); Vishnu Purana (Wilson translation) book 1",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/03-the-many-gods.txt",
+            "title": "The Many Gods of Hindu Mythology",
+            "description": "Devas and asuras are half-brothers. Meet the whole family, from Indra and his thunderbolt to Agni, Yama and Kubera, and hear how Indra freed the world's waters from the serpent Vritra."
+          }
         },
         {
           "number": 4,
           "title": "The Seven Worlds Above and Below",
           "covers": "Lokas, celestial realms, the underworlds, and the beings associated with them.",
-          "source": "Vishnu Purana (Wilson translation) book 2"
+          "source": "Vishnu Purana (Wilson translation) book 2",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/04-the-seven-worlds.txt",
+            "title": "The Seven Worlds Above and Below",
+            "description": "A journey through all fourteen worlds: oceans of milk and honey, golden Mount Meru, the Pole Star that was once a little prince, jewel-lit underworlds, and the serpent who holds it all up."
+          }
         },
         {
           "number": 5,
           "title": "The Four Yugas: The Rise and Fall of the Ages",
           "covers": "Satya, Treta, Dvapara, and Kali Yuga, and the changing condition of dharma.",
-          "source": "Vishnu Purana (Wilson translation) books 1 and 6; Mahabharata (Ganguli translation) Vana Parva, Markandeya's discourse"
+          "source": "Vishnu Purana (Wilson translation) books 1 and 6; Mahabharata (Ganguli translation) Vana Parva, Markandeya's discourse",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/05-the-four-yugas.txt",
+            "title": "The Four Yugas",
+            "description": "Bhima cannot lift an old monkey's tail. The monkey is Hanuman, and he explains the four great ages of the world, from the age of truth to the Kali Yuga we live in now, and the rider still to come."
+          }
         },
         {
           "number": 6,

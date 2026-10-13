@@ -52,7 +52,7 @@ import { regate } from '../qa/regate';
 import { Run, runLabel, stopRequests } from '../run/store';
 import { readArchive } from '../archive/record';
 import { COUNTRIES, MAX_COUNTRIES, countriesByName } from '../news/countries';
-import { startHandwritten } from '../pipeline/handwritten';
+import { blankScript, fillBlank, startHandwritten } from '../pipeline/handwritten';
 import { loadTopics } from '../schedule/load';
 import { blocking, findCovered, loadCatalogue, recordMade, refusal } from '../catalogue/covered';
 import { hasNewsDesk, ROUNDUP_FORMAT, loadDesk, newsFormatFor } from '../news/desk';
@@ -62,7 +62,7 @@ import { jobs, jobId } from './jobs';
 import { suggestTopics } from './suggest';
 import { costBreakdown } from './costs';
 import { recordStudioSpend, studioSpendFor } from './studioSpend';
-import { mapStartRefusal } from './maps';
+import { mapStartRefusal, preparedScriptFor } from './maps';
 import { isHidden, keepSuggestions, picksFor, removeTopic, topicUsed } from './topicPicks';
 import { channelVoice as voiceFor } from '../canon/voiceMaster';
 import { loadSchedule } from '../schedule/load';
@@ -400,6 +400,17 @@ export const startRun = (body: unknown, who: string | null = null) => {
     throw new HttpError(400, 'a set is cut into shorts; write the shorts instead');
   }
 
+  // A MAP ITEM WITH A SCRIPT ALREADY WRITTEN opens filled in. Checked before the
+  // run exists, so a script that does not fit the format leaves nothing behind.
+  const prepared = input.blank && input.mapItem ? preparedScriptFor(persona.id, input.mapItem) : null;
+  if (prepared) {
+    try {
+      fillBlank(blankScript(persona, format, input.topic), prepared.text, prepared);
+    } catch (e) {
+      throw new HttpError(422, `the script written for this item does not fit: ${(e as Error).message}`);
+    }
+  }
+
   // THE SAME REFUSAL THE COMMAND LINE MAKES, and it has to be here rather than
   // only in the page. A check that lives in one front end is a rule the other
   // does not have, and the interface would then warn about a duplicate while
@@ -438,7 +449,7 @@ export const startRun = (body: unknown, who: string | null = null) => {
 
   // A BLANK IS MADE HERE AND NOW: there is nothing to run, so no job.
   if (input.blank) {
-    startHandwritten(run);
+    startHandwritten(run, prepared);
     return { runId: run.id, jobId: null };
   }
 

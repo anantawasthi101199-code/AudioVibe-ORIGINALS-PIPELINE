@@ -13,14 +13,21 @@ Format `myth-story` (parts: `opening`, `story`, `close`). Narrator: Akira.
 
 ## Putting one into the studio
 
-1. Studio → Mythic Archives → the Hindu Mythology map → the next item → **Blank script**.
-2. On the run page, switch to the whole-script box and paste the entire file.
-   Each file starts with `## opening` and has exactly the three parts the
-   format expects, so it lands in the right boxes.
+Each of these is attached to its map item in `maps/hindu-mythology.json`
+(`script`: the file, a title under 45 characters, a description), and the map
+panel shows "script written" for them.
+
+1. Studio → Mythic Archives → the map's next item → **Load into Make**.
+2. Press **Blank script**. The run opens with the whole script already filled
+   in, with its title and description set. Nothing has been paid for at this point.
 3. Pick an outro from the dropdown. None is written into the scripts, so the
    channel's fixed outro is said word for word.
 4. Voice on **ElevenLabs** and **leave the tag pass off**. The tags are already
    written in.
+
+To change a script, edit its file here. A blank made after that picks up the
+new text. The whole-script box on the run page takes the same format, if you
+would rather paste one in by hand.
 
 ## Tags
 

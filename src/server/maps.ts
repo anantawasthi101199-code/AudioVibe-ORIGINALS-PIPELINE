@@ -19,6 +19,7 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 import { repoRoot } from '../config';
+import { TITLE_MAX } from '../script/titleRule';
 import { runs, RunSummary } from './catalog';
 
 const episodeSchema = z.object({
@@ -28,6 +29,19 @@ const episodeSchema = z.object({
   covers: z.string().min(1),
   /** The text the research binds to. The factual lane abandons without one. */
   source: z.string().min(1),
+  /**
+   * A script already written for this item (owner, 2026-10-13). A blank made
+   * from the item opens with it filled in, instead of one empty box per part.
+   * `file` is relative to the repo, in the whole-script format: a `## <part>`
+   * line before each of the format's parts.
+   */
+  script: z
+    .object({
+      file: z.string().min(1),
+      title: z.string().min(1).max(TITLE_MAX),
+      description: z.string().min(1),
+    })
+    .optional(),
 });
 
 const mapSchema = z.object({
@@ -61,6 +75,8 @@ export interface MapItem {
   /** Where it sits in its own series, from 1. */
   position: number;
   seriesSize: number;
+  /** A script is already written: a blank made from this item opens filled in. */
+  scripted: boolean;
   /** What goes in the topic box: the subject, what it covers, and its text. */
   topic: string;
   state: ItemState;
@@ -120,6 +136,7 @@ export const viewOf = (map: ContentMap, made: Array<Pick<RunSummary, 'id' | 'sta
         seriesTitle: s.title,
         position: i + 1,
         seriesSize: s.episodes.length,
+        scripted: Boolean(ep.script),
         topic: topicFor(ep),
         state,
         runId: shown?.id ?? null,
@@ -163,6 +180,28 @@ export const mapStartRefusal = (channelId: string, key: string): { status: numbe
   }
   if (item.state === 'making') {
     return { status: 409, message: `"${item.title}" is already being made (${item.runId}). Discard that run to start again.` };
+  }
+  return null;
+};
+
+export interface PreparedScript {
+  text: string;
+  title: string;
+  description: string;
+}
+
+/** The script written for a map item, or null when it has none. */
+export const preparedScriptFor = (channelId: string, key: string, root = repoRoot()): PreparedScript | null => {
+  for (const m of loadMaps(channelId, path.join(root, 'maps'))) {
+    for (const s of m.series) {
+      const ep = s.episodes.find((e) => `${m.id}/${e.number}` === key);
+      if (!ep?.script) continue;
+      return {
+        text: fs.readFileSync(path.join(root, ep.script.file), 'utf8'),
+        title: ep.script.title,
+        description: ep.script.description,
+      };
+    }
   }
   return null;
 };

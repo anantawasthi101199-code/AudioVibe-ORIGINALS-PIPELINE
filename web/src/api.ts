@@ -606,6 +606,8 @@ export interface MapItem {
   seriesTitle: string;
   position: number;
   seriesSize: number;
+  /** A script is already written: Blank script opens with it filled in. */
+  scripted: boolean;
   topic: string;
   state: 'published' | 'making' | 'retry' | 'todo';
   runId: string | null;
