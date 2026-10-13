@@ -112,6 +112,18 @@ const EnginePicker = ({
           </span>
         </label>
       )}
+      <label className="row tiny" style={{ gap: '0.5rem' }}>
+        <input
+          type="checkbox"
+          checked={value.retake}
+          disabled={disabled}
+          onChange={(e) => onChange({ ...value, retake: e.target.checked })}
+        />
+        <span>
+          Re-take a part that ends on long silence, in case its last words were cut off. Each re-take
+          pays for that whole part again. Unticked, it is kept and the log says which part to listen to.
+        </span>
+      </label>
       {cost !== null && cost > left && (
         <div className="note warn tiny">
           This voicing is estimated at {money(cost)} and the run has {money(Math.max(0, left))} left
@@ -284,6 +296,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
     // UNTICKED BY DEFAULT: ElevenLabs voices the script as written, and the
     // tag pass runs only when somebody ticks it for this voicing.
     tagPass: false,
+    // UNTICKED BY DEFAULT (owner, 2026-10-13): a re-take pays for a whole part again.
+    retake: false,
   };
   const currentStage = live ? (events[events.length - 1]?.stage ?? null) : null;
   const left = run.ceilingPence - run.spentPence;

@@ -1547,7 +1547,7 @@ export const runEpisode = async (run: Run, deps: PipelineDeps): Promise<EpisodeR
         musicPhraseFile: deps.musicPhraseFile,
       },
       deps.tts,
-      {},
+      { retake: run.manifest.retakeSilence },
       spend,
       say('render')
     );

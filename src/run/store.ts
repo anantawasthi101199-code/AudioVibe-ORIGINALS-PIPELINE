@@ -193,6 +193,12 @@ export const runManifestSchema = z.object({
    * Off means the script is voiced exactly as written, hand-typed tags included.
    */
   tagPass: z.boolean().default(false),
+  /**
+   * Voice a part again in full when it ends on long silence, in case the
+   * engine cut its last words off. OFF BY DEFAULT (owner, 2026-10-13): about
+   * half of the re-takes recovered speech and half were paid for nothing.
+   */
+  retakeSilence: z.boolean().default(false),
   /** When the tag pass ran, so a resume never pays for it twice. */
   tagPassAt: z.string().datetime().optional(),
   /**
@@ -765,6 +771,11 @@ export class Run {
   setTagPass(on: boolean, doneAt?: Date): void {
     this.manifestData.tagPass = on;
     if (doneAt) this.manifestData.tagPassAt = doneAt.toISOString();
+    this.save();
+  }
+
+  setRetakeSilence(on: boolean): void {
+    this.manifestData.retakeSilence = on;
     this.save();
   }
 

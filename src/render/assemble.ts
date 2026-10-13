@@ -283,6 +283,8 @@ export interface RenderDeps {
    * found", never "fail".
    */
   trailing?: (file: string, durationS: number) => Promise<number | null>;
+  /** Re-take a part that ends on long silence (paid). Off unless the run asks. */
+  retake?: boolean;
   concat?: (files: string[], out: string, gap: number) => Promise<void>;
   /** Process runner, injected so the bed can be driven without ffmpeg. */
   run?: typeof runProcess;
@@ -886,6 +888,11 @@ export const renderScript = async (
           `${i + 1}/${groups.length}: ${beat.beatId} ended on ` +
             `${firstTrailing.toFixed(1)}s of silence, and it was rendered in ` +
             `${pieces.length} pieces, so it cannot be re-taken as one. Keeping it.`
+        );
+      } else if (!deps.retake && firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
+        onProgress?.(
+          `${i + 1}/${groups.length}: ${beat.beatId} ended on ` +
+            `${firstTrailing.toFixed(1)}s of silence. Re-takes are off, so it was kept: listen to its last words.`
         );
       } else if (firstTrailing !== null && firstTrailing > MAX_TRAILING_SILENCE_S) {
         onProgress?.(

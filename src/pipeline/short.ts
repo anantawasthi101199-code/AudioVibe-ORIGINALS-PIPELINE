@@ -258,7 +258,7 @@ export const runShort = async (
         outputPath: run.mediaPath('episode.wav'),
       },
       deps.tts,
-      {},
+      { retake: run.manifest.retakeSilence },
       spend,
       (m) => {
         log(m);

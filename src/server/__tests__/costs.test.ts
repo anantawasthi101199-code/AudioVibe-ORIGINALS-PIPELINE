@@ -38,7 +38,7 @@ describe('the voice log and the cost breakdown', () => {
     renderScript(
       { beats: beats(close), voices: { host: voice }, beatPathFor: (n) => run.mediaPath(n), outputPath: run.mediaPath('episode.wav') },
       tts,
-      { probe: async () => 30, trailing: async () => trailing, concat: async () => undefined },
+      { probe: async () => 30, trailing: async () => trailing, concat: async () => undefined, retake: true },
       (p) => run.spend(p, 10_000)
     );
 

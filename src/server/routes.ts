@@ -577,6 +577,8 @@ export const voiceEngineSchema = z
     engine: z.enum(['openai', 'elevenlabs']).optional(),
     /** ElevenLabs only: add tags with one cheap call before voicing. */
     tagPass: z.boolean().optional(),
+    /** Re-take a part that ends on long silence (paid twice when it fires). */
+    retake: z.boolean().optional(),
   })
   .default({});
 
@@ -589,7 +591,8 @@ export const voiceEngineSchema = z
  * other engine's beats and discards any finished render.
  */
 export const applyVoiceEngine = (run: Run, body: unknown, who: string | null) => {
-  const { engine, tagPass } = voiceEngineSchema.parse(body ?? {});
+  const { engine, tagPass, retake } = voiceEngineSchema.parse(body ?? {});
+  if (retake !== undefined) run.setRetakeSilence(retake);
   assertEngineReady(engine ?? run.manifest.voiceEngine);
   // THE TICK IS THE WHOLE ANSWER (owner, 2026-10-08). Unticked: voice the
   // script exactly as it is. Ticked: run the tag pass first, even if one ran

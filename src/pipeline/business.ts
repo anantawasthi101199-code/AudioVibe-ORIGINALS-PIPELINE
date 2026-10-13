@@ -262,7 +262,7 @@ export const runBusiness = async (
         musicSeed: run.manifest.topic,
       },
       deps.tts,
-      {},
+      { retake: run.manifest.retakeSilence },
       spend,
       say('render')
     );

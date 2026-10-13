@@ -436,7 +436,7 @@ export const runPsych = async (
         musicPhraseFile: deps.musicPhraseFile,
       },
       deps.tts,
-      {},
+      { retake: run.manifest.retakeSilence },
       spend,
       say('render')
     );

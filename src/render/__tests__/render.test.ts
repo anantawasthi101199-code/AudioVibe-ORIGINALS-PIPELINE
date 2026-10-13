@@ -253,7 +253,8 @@ describe('the truncation guard', () => {
   const render = (
     trailings: Array<number | null>,
     onProgress?: (m: string) => void,
-    durations: number[] = []
+    durations: number[] = [],
+    retake = true
   ) => {
     const calls: string[] = [];
     const tts: TtsProvider = {
@@ -280,6 +281,7 @@ describe('the truncation guard', () => {
           probe: async () => durations[d++] ?? 60,
           trailing: async () => trailings[i++] ?? null,
           concat: async () => undefined,
+          retake,
         },
         undefined,
         onProgress
@@ -315,6 +317,14 @@ describe('the truncation guard', () => {
   it('takes the retry when it genuinely says more', async () => {
     const { done } = render([1.4, 0.3], undefined, [90, 100]);
     expect((await done).durationS).toBe(100);
+  });
+
+  it('RE-TAKES NOTHING BY DEFAULT, and says which part to listen to', async () => {
+    const said: string[] = [];
+    const { calls, done } = render([1.48, 0.35], (m) => said.push(m), [], false);
+    await done;
+    expect(calls).toHaveLength(1);
+    expect(said.join(' ')).toMatch(/1\.5s of silence\. Re-takes are off/);
   });
 
   it('does not re-render a beat that ended cleanly', async () => {

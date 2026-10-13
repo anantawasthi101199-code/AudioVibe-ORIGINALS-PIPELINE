@@ -238,7 +238,7 @@ export const cutStories = async (
           // the renderer finds the beat's wav already on disk and keeps it, so
           // forcing a re-render at this level still produced the old audio -
           // the same stale-reuse fault one layer down.
-          stale ? { reuseExisting: false } : {},
+          { retake: run.manifest.retakeSilence, ...(stale ? { reuseExisting: false } : {}) },
           spend,
           say
         );

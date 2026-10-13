@@ -371,6 +371,8 @@ export type VoiceEngine = 'openai' | 'elevenlabs';
 export interface VoiceChoice {
   engine: VoiceEngine;
   tagPass: boolean;
+  /** Re-take a part that ends on long silence: paid twice when it fires. */
+  retake: boolean;
 }
 
 export interface RunDetail {

@@ -490,7 +490,7 @@ export const runNews = async (
         musicPhraseFile: deps.musicPhraseFile,
       },
       deps.tts,
-      {},
+      { retake: run.manifest.retakeSilence },
       spend,
       say('render')
     );
