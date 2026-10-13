@@ -43,6 +43,7 @@ import { Casebook, loadCasebook } from '../business/casebook';
 import { businessDraftProblems, businessGate, estimatedSeconds } from '../business/check';
 import { cleanStoryText, pickStorySource, searchStory, subjectOf } from '../business/pickSource';
 import { writeBusinessScript } from '../business/storyScript';
+import { mapSubject } from '../server/maps';
 import type { PipelineDeps } from './episode';
 import { withOutro } from '../script/outro';
 
@@ -123,7 +124,8 @@ export const runBusiness = async (
     say('source')(`reusing ${rec?.title ?? source.title ?? source.url}`);
   } else {
     stage = 'source';
-    subject = subjectOf(run.manifest.topic);
+    // A content-map item names its subject; a typed topic is parsed for one.
+    subject = mapSubject(run.manifest.mapItem) ?? subjectOf(run.manifest.topic);
     say('source')(`searching for the whole story of "${subject}"`);
     const candidates = await searchStory(subject, book, deps.search, bizDeps.sleep, say('source'));
     const { best, considered } = await pickStorySource(

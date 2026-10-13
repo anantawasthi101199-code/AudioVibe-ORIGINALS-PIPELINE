@@ -1,0 +1,568 @@
+{
+  "id": "business-by-country",
+  "channelId": "business-decoded",
+  "title": "The World's Businesses, Country by Country",
+  "formatId": "biz-episode",
+  "series": [
+    {
+      "number": 1,
+      "title": "India: From Small Shops to Global Empires",
+      "note": "India's business story stretches from trading houses and industrial pioneers to the IT revolution, consumer brands and digital startups. The episodes explore how founders navigated regulation, limited infrastructure, price-sensitive customers, family ownership and intense competition. The connecting story: India moves from industrial nation-building to modern consumer and digital businesses. The recurring question is how companies build trust and scale in a market with enormous diversity in income, infrastructure and customer needs.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Tata: The Man Who Dreamed of Industrialising India",
+          "covers": "Start with Jamsetji Tata's trading business in 1868, his ambitions for textiles, steel, power and education, and the later generations that turned those ambitions into a diversified group. Explore how industrial development and philanthropy became intertwined.",
+          "subject": "Tata Group",
+          "source": "Tata Group official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 2,
+          "title": "Reliance: How Dhirubhai Ambani Built an Industrial Empire",
+          "covers": "Trace Ambani's early trading career, the move into textiles, the famous 1977 public offering, petrochemicals and the development of an integrated industrial business. Examine the advantages, risks and controversies associated with the group's expansion.",
+          "subject": "Reliance Industries",
+          "source": "Reliance Industries official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 3,
+          "title": "Amul: How India's Farmers Challenged the Dairy Trade",
+          "covers": "Explore the difficulties faced by milk producers, the cooperative movement, Verghese Kurien's role, milk collection and processing, and the national expansion of dairy production. Explain why this was a different kind of business success: one built around producer ownership.",
+          "subject": "Amul dairy cooperative",
+          "source": "Amul dairy cooperative official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 4,
+          "title": "Infosys: The Small Startup That Helped Build India's IT Industry",
+          "covers": "Follow seven engineers who established Infosys in 1981 with US$250 in initial capital. Explore the challenges of building an export-oriented software business, the global delivery model, international clients and the emergence of India as a technology-services destination.",
+          "subject": "Infosys",
+          "source": "Infosys official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 5,
+          "title": "Asian Paints: How a Local Manufacturer Beat Bigger Rivals",
+          "covers": "Explore the company's beginnings, the importance of distribution and dealer relationships, its understanding of local customers, and how operational efficiency and branding helped it become a major Indian paint business.",
+          "subject": "Asian Paints",
+          "source": "Asian Paints official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 6,
+          "title": "Haldiram's: From a Small Sweets Business to a National Food Brand",
+          "covers": "Trace its Bikaner origins, the development of packaged snacks, standardisation, retail distribution and expansion beyond its home market. Explore the challenges of growing a food business while maintaining taste, quality and a recognisable identity.",
+          "subject": "Haldiram's",
+          "source": "Haldiram's official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 7,
+          "title": "Maruti Suzuki: How a Car Partnership Changed Indian Motoring",
+          "covers": "Begin with the ambition to produce a people's car, the creation of Maruti Udyog, the partnership with Suzuki and the expansion of affordable passenger vehicles. Examine how manufacturing capability, service networks and pricing changed the market.",
+          "subject": "Maruti Suzuki",
+          "source": "Maruti Suzuki official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 8,
+          "title": "Airtel: How Mobile Phones Became Affordable for Millions",
+          "covers": "Follow Sunil Mittal's early ventures, the development of mobile telecommunications, network partnerships, competition and the economics of providing connectivity to a vast population.",
+          "subject": "Airtel",
+          "source": "Airtel official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 9,
+          "title": "Flipkart: How Two Former Amazon Employees Challenged Indian Retail",
+          "covers": "Explore the early online bookstore, cash on delivery, logistics, the expansion into general e-commerce, the battle with Amazon and Walmart's acquisition of a controlling stake.",
+          "subject": "Flipkart",
+          "source": "Flipkart official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 10,
+          "title": "Zerodha: How a Bootstrapped Startup Challenged Traditional Stockbroking",
+          "covers": "Follow Nithin and Nikhil Kamath's venture, the problems traders faced, low-cost brokerage, technology-led operations and the challenge of growing a financial business while managing trust, compliance and market risk.",
+          "subject": "Zerodha",
+          "source": "Zerodha official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "United Kingdom: From Industrial Revolution to Global Brands",
+      "note": "The UK is a country of industrial pioneers, retailers, inventors, financial institutions and globally recognised brands. This series follows businesses from their early beginnings through expansion, crises and reinvention. The connecting story: British businesses repeatedly turn specialised expertise — engineering, retailing, finance or design — into products and services that travel internationally. The series also explores what happens when a famous brand expands too far or loses sight of its customers.",
+      "episodes": [
+        {
+          "number": 11,
+          "title": "Tesco: How a Market Stall Became Britain's Supermarket Giant",
+          "covers": "Jack Cohen's early market-stall business, the development of the Tesco name, expansion through stores and acquisitions, self-service retail, supermarket competition and the rise of loyalty programmes.",
+          "subject": "Tesco",
+          "source": "Tesco official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 12,
+          "title": "Rolls-Royce: How Engineering Excellence Became a Global Business",
+          "covers": "Henry Royce's engineering background, Charles Rolls's sales business, the creation of their partnership and the development of the brand. Distinguish the modern luxury-car manufacturer from the separate aerospace-engineering company, and explore the latter's financial crises and restructuring.",
+          "subject": "Rolls-Royce",
+          "source": "Rolls-Royce official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 13,
+          "title": "Virgin: How Richard Branson Built a Brand That Kept Entering New Industries",
+          "covers": "Start with Virgin Records, then explore the expansion into airlines and other ventures. Examine how the brand transferred across industries, which ventures succeeded, which struggled and why branding alone cannot guarantee a viable business.",
+          "subject": "Virgin Group",
+          "source": "Virgin Group official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 14,
+          "title": "Dyson: How an Engineer Turned Frustration into a Global Product Business",
+          "covers": "James Dyson's experiments with cyclone technology, the challenge of finding manufacturers willing to adopt his design, intellectual property, product marketing and expansion into additional household technologies.",
+          "subject": "Dyson",
+          "source": "Dyson official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 15,
+          "title": "Greggs: How a Local Bakery Became a British High-Street Institution",
+          "covers": "The early bakery, the economics of convenient food, store locations, menu evolution, supply chains and the challenge of maintaining value and consistency while competing with supermarkets and coffee shops.",
+          "subject": "Greggs",
+          "source": "Greggs official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 16,
+          "title": "ARM: The British Chip Designer Inside Billions of Devices",
+          "covers": "The company's origins in Acorn Computers, the development of energy-efficient processor designs, the licensing model, the growth of mobile computing and the role of intellectual property in a business that designs technology without manufacturing most of its chips.",
+          "subject": "Arm Holdings",
+          "source": "Arm Holdings official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 17,
+          "title": "Revolut: How a Fintech Startup Challenged Traditional Banking",
+          "covers": "Nikolay Storonsky and Vlad Yatsenko's early idea, the launch of a travel-focused financial product, the expansion into multiple services and countries, and the challenges of regulation, profitability and trust.",
+          "subject": "Revolut",
+          "source": "Revolut official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 18,
+          "title": "Burberry: How a British Outdoor Clothing Business Became a Luxury Brand",
+          "covers": "Thomas Burberry's early business, the development of weather-resistant fabrics, the trench coat, global brand recognition, periods of brand dilution and the attempts to restore its luxury positioning.",
+          "subject": "Burberry",
+          "source": "Burberry official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "United States: The Art of Building at Scale",
+      "note": "The US provides some of the clearest examples of mass production, modern consumer branding, franchising, software platforms and digital commerce. The stories examine how businesses found repeatable models and scaled them across a large domestic market and then internationally. The connecting story: From factories to digital platforms, the US series explores how businesses turn a successful product or process into a repeatable system — and how that system can create both enormous advantages and new vulnerabilities.",
+      "episodes": [
+        {
+          "number": 19,
+          "title": "Ford: How the Moving Assembly Line Changed Manufacturing",
+          "covers": "Henry Ford's early experiments, the Model T, production-line methods, falling costs, labour and wages, competition and the long-term effects of mass production.",
+          "subject": "Ford",
+          "source": "Ford official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 20,
+          "title": "McDonald's: How Two Brothers' Restaurant Became a Global Empire",
+          "covers": "The brothers' streamlined restaurant, Ray Kroc's involvement, franchising, consistency, real estate and the difficult relationship between the original concept and its expansion.",
+          "subject": "McDonald's",
+          "source": "McDonald's official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 21,
+          "title": "Walmart: How a Small-Town Shop Became a Retail Giant",
+          "covers": "Sam Walton's retail experience, low prices, rural expansion, distribution systems, data and the competitive pressures created by a business built around cost efficiency.",
+          "subject": "Walmart",
+          "source": "Walmart official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 22,
+          "title": "Coca-Cola: How a Drink Became a Global Brand",
+          "covers": "The origins of the formula, bottling partnerships, marketing, distribution, international expansion and the challenge of protecting a familiar brand while consumer preferences change.",
+          "subject": "Coca-Cola",
+          "source": "Coca-Cola official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 23,
+          "title": "Nike: How a Running Shoe Business Became a Global Sports Brand",
+          "covers": "Phil Knight and Bill Bowerman's early venture, the shift from distribution to designing its own products, athlete partnerships, global manufacturing and the controversies surrounding labour practices and supply chains.",
+          "subject": "Nike",
+          "source": "Nike official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 24,
+          "title": "Apple: How a Garage Startup Changed Personal Technology",
+          "covers": "Steve Jobs and Steve Wozniak, the early computer market, Apple's rise and near-collapse, Jobs's return, the iPod and iPhone, and the strategy of connecting hardware, software and services.",
+          "subject": "Apple",
+          "source": "Apple official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 25,
+          "title": "Amazon: How an Online Bookshop Tried to Sell Everything",
+          "covers": "Jeff Bezos's early idea, the dot-com crash, warehouses, Prime, third-party sellers and AWS. Explain how the company built infrastructure that became a business in its own right.",
+          "subject": "Amazon",
+          "source": "Amazon official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 26,
+          "title": "Netflix: How a DVD Rental Business Changed Television",
+          "covers": "Reed Hastings and Marc Randolph's early venture, the subscription model, the move away from late fees, the transition to streaming, original programming and the financial risks of competing in global entertainment.",
+          "subject": "Netflix",
+          "source": "Netflix official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 27,
+          "title": "Microsoft: How Software Became Essential to Modern Business",
+          "covers": "Bill Gates and Paul Allen, the software licensing model, the IBM PC opportunity, Windows, Office, competition, antitrust challenges and the shift towards cloud services and AI.",
+          "subject": "Microsoft",
+          "source": "Microsoft official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 28,
+          "title": "Airbnb: How Renting a Spare Room Became a Global Marketplace",
+          "covers": "The founders' early financial struggles, trust and reviews, the challenge of attracting hosts and guests, global expansion, the economics of a marketplace and the consequences of growth for local housing markets.",
+          "subject": "Airbnb",
+          "source": "Airbnb official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Canada: Building Businesses Beyond the Border",
+      "note": "Canada has developed businesses in retail, technology, finance, natural resources and consumer goods. Its proximity to the US creates opportunities for expansion but also intense competition from American companies. The connecting story: Canadian businesses frequently develop specialised products or services at home, then expand into international markets. The key question is how a company differentiates itself when its largest neighbouring market contains much bigger competitors.",
+      "episodes": [
+        {
+          "number": 29,
+          "title": "Shopify: How an Online Snowboard Shop Became a Global Commerce Platform",
+          "covers": "Tobias Lütke and his co-founders' original retail venture, their frustration with existing e-commerce software, the decision to build their own platform and the transformation into a business that helps other merchants sell online.",
+          "subject": "Shopify",
+          "source": "Shopify official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 30,
+          "title": "Lululemon: How a Yoga Studio Idea Became a Global Activewear Brand",
+          "covers": "Chip Wilson's entrepreneurial background, the first Vancouver store, the development of technical athletic clothing, community-led marketing, international expansion and the challenges of sustaining a premium brand.",
+          "subject": "Lululemon",
+          "source": "Lululemon official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 31,
+          "title": "BlackBerry: How a Canadian Technology Company Conquered Business Communication — and Lost Its Lead",
+          "covers": "Research In Motion's origins, the development of mobile email, the rise of BlackBerry devices, security and enterprise customers, the iPhone and Android challenge, and the company's transformation beyond smartphones.",
+          "subject": "BlackBerry",
+          "source": "BlackBerry official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 32,
+          "title": "Tim Hortons: How a Hockey Player Built a Canadian Coffee Institution",
+          "covers": "The founding of the chain by Tim Horton and Ron Joyce, franchising, the growth of a national coffee-and-food business, brand identity and the challenges of ownership changes and international expansion.",
+          "subject": "Tim Hortons",
+          "source": "Tim Hortons official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 33,
+          "title": "Canada Goose: How Practical Winter Clothing Became a Luxury Brand",
+          "covers": "The company's beginnings as Metro Sportswear, the development of specialist outerwear, the role of extreme-weather customers, premium positioning, celebrity visibility and the challenges of growing while protecting a functional brand identity.",
+          "subject": "Canada Goose",
+          "source": "Canada Goose official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 34,
+          "title": "Royal Bank of Canada: How a Regional Bank Became an International Financial Institution",
+          "covers": "Its nineteenth-century origins, the development of a national banking presence, expansion across borders, financial services diversification and the risks that come with managing a large financial institution.",
+          "subject": "Royal Bank of Canada",
+          "source": "Royal Bank of Canada official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Japan: Reinventing Industry and Everyday Life",
+      "note": "Japan's business history offers stories of industrial rebuilding, manufacturing excellence, consumer electronics, entertainment and reinvention during economic change. The connecting story: Japanese businesses repeatedly combined technical capability with a close understanding of how customers use products. The series also explores the danger of failing to adapt when an industry's technology changes.",
+      "episodes": [
+        {
+          "number": 35,
+          "title": "Toyota: How a Loom-Making Business Reinvented the Automobile Industry",
+          "covers": "Sakichi Toyoda's inventions, Kiichiro Toyoda's automotive ambitions, the post-war recovery, the Toyota Production System, international growth and the company's response to changing vehicle technology.",
+          "subject": "Toyota",
+          "source": "Toyota official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 36,
+          "title": "Sony: How a Small Post-War Workshop Changed Consumer Electronics",
+          "covers": "Masaru Ibuka and Akio Morita, early electronics products, the transistor radio, the Walkman, international branding and the challenges of moving beyond hardware.",
+          "subject": "Sony",
+          "source": "Sony official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 37,
+          "title": "Nintendo: How a Playing-Card Company Found the Future of Gaming",
+          "covers": "Its nineteenth-century beginnings, the move into toys and arcade machines, the Famicom and NES, the Game Boy, Mario, Pokémon and the business value of combining distinctive hardware with memorable characters.",
+          "subject": "Nintendo",
+          "source": "Nintendo official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 38,
+          "title": "Honda: How a Mechanic's Ambition Built a Global Automotive Business",
+          "covers": "Soichiro Honda's early mechanical work, the development of motorcycles, the move into cars, racing as a testing ground, international expansion and the challenge of competing across different vehicle categories.",
+          "subject": "Honda",
+          "source": "Honda official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 39,
+          "title": "Uniqlo: How Basic Clothing Became a Global Retail Strategy",
+          "covers": "Tadashi Yanai's retail background, the development of affordable everyday clothing, fabric innovation, supply-chain management, global expansion and the challenge of making simple products feel distinctive.",
+          "subject": "Uniqlo",
+          "source": "Uniqlo official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 40,
+          "title": "Nintendo's Rival, Sega: How an Arcade Pioneer Lost the Console War",
+          "covers": "Sega's development from arcade entertainment into home consoles, its competition with Nintendo, the rise of Sonic, the strategic problems surrounding successive hardware launches and its eventual shift towards game development and publishing.",
+          "subject": "Sega",
+          "source": "Sega official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "China: Building Giants at Unprecedented Speed",
+      "note": "China's business transformation combines private entrepreneurship, manufacturing capacity, technological development, state policy and access to a huge domestic market. These episodes examine how companies grew within that environment and competed internationally. The connecting story: The series explores the relationship between manufacturing, domestic scale, digital platforms and global competition — while recognising that government policy and geopolitical tensions are integral to many Chinese business stories.",
+      "episodes": [
+        {
+          "number": 41,
+          "title": "Alibaba: How Jack Ma Built an Online Marketplace for Chinese Businesses",
+          "covers": "Jack Ma's early career, the creation of Alibaba, the problem of connecting businesses online, the growth of Taobao, Alipay's development and the company's expansion into a wider digital ecosystem.",
+          "subject": "Alibaba",
+          "source": "Alibaba official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 42,
+          "title": "Huawei: How a Small Telecommunications Supplier Became a Global Technology Giant",
+          "covers": "Ren Zhengfei's founding vision, the early telecommunications equipment market, investment in research and development, international expansion and the security and geopolitical controversies that reshaped the company's global prospects.",
+          "subject": "Huawei",
+          "source": "Huawei official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 43,
+          "title": "BYD: How a Battery Maker Became an Electric-Car Powerhouse",
+          "covers": "Wang Chuanfu's early battery business, the move into automobiles, battery manufacturing, vertical integration, electric vehicles and the challenge of competing across global automotive markets.",
+          "subject": "BYD",
+          "source": "BYD official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 44,
+          "title": "Tencent: How a Messaging Service Became a Digital Empire",
+          "covers": "The early development of QQ, the rise of WeChat, online gaming, payments and digital services. Explore network effects, platform economics and the regulatory environment in which Chinese technology companies operate.",
+          "subject": "Tencent",
+          "source": "Tencent official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 45,
+          "title": "Xiaomi: How a Smartphone Startup Challenged Established Brands",
+          "covers": "Lei Jun's background, the launch of MIUI and Xiaomi smartphones, online sales, competitive pricing, community-led product development and the expansion into a wider ecosystem of connected devices.",
+          "subject": "Xiaomi",
+          "source": "Xiaomi official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 46,
+          "title": "Temu and PDD Holdings: How Ultra-Low Prices Became a Global E-Commerce Strategy",
+          "covers": "The growth of Pinduoduo in China, its group-buying model, the emergence of Temu, low-cost supply chains, aggressive customer acquisition and the controversies surrounding product quality, tariffs, competition and supply-chain practices.",
+          "subject": "PDD Holdings",
+          "source": "PDD Holdings official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "South Korea: From Industrial Catch-Up to Global Culture",
+      "note": "South Korea's economic transformation created globally recognised conglomerates, technology companies, automotive brands and entertainment businesses. This series examines the industrial foundations of that transformation and the rise of cultural exports. The connecting story: These episodes show how South Korean businesses combined industrial investment with export ambitions, then expanded into software, consumer technology and cultural products.",
+      "episodes": [
+        {
+          "number": 47,
+          "title": "Samsung: How a Trading Company Became an Electronics Giant",
+          "covers": "Lee Byung-chull's early trading venture, diversification, the development of Samsung Electronics, the investment in semiconductors and smartphones, and the risks of competing in capital-intensive technology markets.",
+          "subject": "Samsung",
+          "source": "Samsung official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 48,
+          "title": "Hyundai: How a Construction Entrepreneur Built a Global Car Company",
+          "covers": "Chung Ju-yung's early ventures, construction and industrial development, Hyundai's move into automobiles, international expansion, improvements in product quality and the challenge of competing against established automotive brands.",
+          "subject": "Hyundai",
+          "source": "Hyundai official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 49,
+          "title": "LG: How a Household Goods Business Became a Global Technology Brand",
+          "covers": "The company's origins in consumer products and chemicals, its development of electronics, home appliances and displays, international growth and the pressures of competition in rapidly changing technology markets.",
+          "subject": "LG Electronics",
+          "source": "LG Electronics official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 50,
+          "title": "K-pop and HYBE: How Korean Music Became a Global Business",
+          "covers": "The evolution of South Korea's entertainment industry, the development of the idol-training system, BTS and HYBE's expansion, fan communities, merchandising and the commercial and human challenges of the entertainment model.",
+          "subject": "HYBE",
+          "source": "HYBE official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 51,
+          "title": "Kia: How a Struggling Car Brand Reinvented Itself",
+          "covers": "Kia's origins, its early manufacturing history, the Asian financial crisis and its relationship with Hyundai, the transformation of its design and quality, and the repositioning that helped it compete internationally.",
+          "subject": "Kia Corporation",
+          "source": "Kia Corporation official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 52,
+          "title": "Coupang: How a Korean E-Commerce Startup Built a Delivery Machine",
+          "covers": "The company's beginnings, the challenges of online retail, investment in warehouses and logistics, rapid delivery, customer loyalty, competitive pressure and the difficult economics of maintaining a high-service model.",
+          "subject": "Coupang",
+          "source": "Coupang official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Germany: Engineering the World's Industries",
+      "note": "Germany is known for automotive engineering, industrial machinery, chemicals, enterprise software and specialised manufacturing. Its business stories often revolve around technical expertise, long-term investment, export markets and family ownership. The connecting story: Germany's businesses demonstrate how specialised engineering and disciplined operations can create global advantages — but also how established manufacturers must adapt when technology and customer expectations change.",
+      "episodes": [
+        {
+          "number": 53,
+          "title": "Volkswagen: How the People's Car Became a Global Automotive Giant",
+          "covers": "The company's political and industrial origins, post-war reconstruction, the Beetle's success, international expansion, the development of a multi-brand group and the emissions scandal.",
+          "subject": "Volkswagen",
+          "source": "Volkswagen official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 54,
+          "title": "BMW: How an Aircraft Engine Manufacturer Became a Luxury Car Brand",
+          "covers": "The company's early engineering history, the transition through different vehicle categories, post-war challenges, the development of its premium identity and competition in the international luxury-car market.",
+          "subject": "BMW",
+          "source": "BMW official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 55,
+          "title": "Bosch: How a Small Workshop Became an Industrial Technology Powerhouse",
+          "covers": "Robert Bosch's precision-engineering workshop, the development of automotive components, investment in research, expansion into household appliances and industrial technology, and the challenges of adapting to electrification and software.",
+          "subject": "Bosch",
+          "source": "Bosch official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 56,
+          "title": "SAP: How Five Engineers Built Software Used by the World's Largest Companies",
+          "covers": "The founders' departure from IBM, the development of integrated business software, the rise of enterprise resource planning, international expansion, cloud computing and the challenge of modernising systems that customers rely on every day.",
+          "subject": "SAP",
+          "source": "SAP official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 57,
+          "title": "Adidas: How a Family Shoe Business Became a Global Sports Brand",
+          "covers": "Adi Dassler's early footwear business, the split that created Adidas and Puma, sporting partnerships, product innovation, international branding and the changing relationship between sport, fashion and lifestyle.",
+          "subject": "Adidas",
+          "source": "Adidas official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 58,
+          "title": "Lidl: How a Discount Retailer Challenged Europe's Supermarkets",
+          "covers": "The development of the discount model, limited product ranges, private-label goods, supply-chain efficiency, international expansion and the competition between low prices and customer expectations.",
+          "subject": "Lidl",
+          "source": "Lidl official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "France: The Business of Luxury, Fashion and Innovation",
+      "note": "France has built globally influential companies in luxury goods, beauty, food, aerospace and technology. This series explores how businesses turn design, craftsmanship, research and cultural identity into commercial advantages. The connecting story: These businesses show how a company can turn design, technical knowledge or a distinctive product into a global reputation. They also explore the risks of acquisitions, brand dilution and changing consumer behaviour.",
+      "episodes": [
+        {
+          "number": 59,
+          "title": "LVMH: How Bernard Arnault Built a Luxury Empire",
+          "covers": "Arnault's early business career, the development of his position in the luxury industry, the formation of LVMH, acquisitions of prestigious brands, the economics of exclusivity and the challenge of expanding without weakening a luxury brand's appeal.",
+          "subject": "LVMH",
+          "source": "LVMH official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 60,
+          "title": "L'Oréal: How a Hair Dye Formula Became a Global Beauty Giant",
+          "covers": "Eugène Schueller's early experiments, the development of professional hair products, brand expansion, international acquisitions and the relationship between scientific research, marketing and changing beauty standards.",
+          "subject": "L'Oréal",
+          "source": "L'Oréal official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 61,
+          "title": "Chanel: How a Fashion Designer Built a Lasting Luxury Business",
+          "covers": "Gabrielle Chanel's early career, the development of her fashion identity, the company's growth through clothing, fragrance and accessories, its ownership and leadership changes, and the challenge of keeping a historic brand relevant.",
+          "subject": "Chanel",
+          "source": "Chanel official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 62,
+          "title": "Airbus: How Europe Challenged America's Dominance in Aviation",
+          "covers": "The development of European aerospace cooperation, the creation of Airbus, the engineering and financing challenges of commercial aircraft, competition with Boeing and the complexity of building aircraft through international supply chains.",
+          "subject": "Airbus",
+          "source": "Airbus official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 63,
+          "title": "Danone: How a Small Yogurt Business Became a Global Food Company",
+          "covers": "The company's origins, the development of branded dairy products, expansion through acquisitions, changes in consumer preferences and the strategic choices involved in building an international food business.",
+          "subject": "Danone",
+          "source": "Danone official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 64,
+          "title": "Michelin: How a Tyre Company Built a Global Brand Around Mobility",
+          "covers": "The founding brothers, early automotive tyres, product innovation, the development of the Michelin Guide, international expansion and the challenge of adapting to changing transport technologies.",
+          "subject": "Michelin",
+          "source": "Michelin official company history, annual reports and reputable business journalism"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Brazil: Building Businesses in a Giant Emerging Market",
+      "note": "Brazil has produced internationally significant companies in aviation, banking, food, beauty and financial technology. This series examines how businesses grew in a vast domestic market shaped by economic volatility, regulation, unequal access to services and opportunities for local innovation. The connecting story: Brazilian businesses have often succeeded by adapting products and services to local conditions before expanding beyond them. The series explores how companies manage volatility while building durable brands and international operations.",
+      "episodes": [
+        {
+          "number": 65,
+          "title": "Embraer: How Brazil Built a Global Aircraft Manufacturer",
+          "covers": "The role of technical education and state support, the founding of Embraer, the development of regional aircraft, privatisation, international partnerships and competition in the global aerospace industry.",
+          "subject": "Embraer",
+          "source": "Embraer official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 66,
+          "title": "Nubank: How a Digital Bank Challenged Traditional Banking",
+          "covers": "David Vélez and his co-founders' experience with the banking sector, the launch of a simpler digital financial service, customer acquisition, credit risk, expansion beyond Brazil and the challenge of achieving sustainable profitability.",
+          "subject": "Nubank",
+          "source": "Nubank official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 67,
+          "title": "Natura: How a Brazilian Beauty Company Built a Global Identity",
+          "covers": "The company's origins, direct selling, consultant networks, product development, sustainability positioning, international expansion and the challenge of combining a social mission with commercial performance.",
+          "subject": "Natura",
+          "source": "Natura official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 68,
+          "title": "JBS: How a Local Meat Business Became a Global Food Giant",
+          "covers": "The company's beginnings, expansion through acquisitions, international supply chains, global demand for meat and the controversies involving food safety, environmental impacts and corporate governance. The episode must distinguish established findings from allegations and disputed claims.",
+          "subject": "JBS",
+          "source": "JBS official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 69,
+          "title": "Mercado Libre: How Latin America's Online Marketplace Built a Financial Ecosystem",
+          "covers": "Marcos Galperin's original idea, the development of online commerce, the challenges of trust and payments, Mercado Pago, logistics and the expansion into financial services.",
+          "subject": "Mercado Libre",
+          "source": "Mercado Libre official company history, annual reports and reputable business journalism"
+        },
+        {
+          "number": 70,
+          "title": "Havaianas: How a Simple Flip-Flop Became a Global Fashion Product",
+          "covers": "The development of the rubber sandal, its everyday consumer market, the shift towards international lifestyle branding, distribution and the challenge of preserving mass-market appeal while charging premium prices.",
+          "subject": "Havaianas",
+          "source": "Havaianas official company history, annual reports and reputable business journalism"
+        }
+      ]
+    }
+  ]
+}

@@ -42,6 +42,11 @@ const episodeSchema = z.object({
       description: z.string().min(1),
     })
     .optional(),
+  /**
+   * What the business lane searches for ("Tata Group"). It reads the subject
+   * off the topic otherwise, and a map's long topic reads as nonsense.
+   */
+  subject: z.string().min(1).optional(),
 });
 
 const mapSchema = z.object({
@@ -119,6 +124,14 @@ export const loadAllMaps = (dir = mapsDir()): ContentMap[] => {
 
 export const loadMaps = (channelId: string, dir = mapsDir()): ContentMap[] =>
   loadAllMaps(dir).filter((m) => m.channelId === channelId);
+
+/** The search subject a map item names, for a run started from it; null if none. */
+export const mapSubject = (key: string | undefined, dir = mapsDir()): string | null => {
+  if (!key) return null;
+  const [mapId, num] = key.split('/');
+  const map = loadAllMaps(dir).find((m) => m.id === mapId);
+  return map?.series.flatMap((s) => s.episodes).find((e) => e.number === Number(num))?.subject ?? null;
+};
 
 export const topicFor = (ep: z.infer<typeof episodeSchema>): string =>
   `${ep.title.replace(/[.?!]?$/, (p) => p || '.')} ${ep.covers} Sources: ${ep.source}.`;

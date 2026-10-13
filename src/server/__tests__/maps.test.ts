@@ -3,7 +3,7 @@
  * published. The state is read off the runs, so these feed runs in directly.
  */
 import path from 'path';
-import { loadMaps, viewOf, ContentMap } from '../maps';
+import { loadMaps, mapSubject, viewOf, ContentMap } from '../maps';
 
 const map: ContentMap = {
   id: 'm',
@@ -59,5 +59,16 @@ describe('a content map', () => {
       const numbers = m.series.flatMap((s) => s.episodes.map((e) => e.number));
       expect(new Set(numbers).size).toBe(numbers.length);
     }
+  });
+
+  it('gives the business lane a plain subject for each company, not the long topic', () => {
+    const [biz] = loadMaps('business-decoded');
+    const eps = biz!.series.flatMap((s) => s.episodes);
+    expect(eps).toHaveLength(70);
+    expect(eps.every((e) => e.subject && e.subject.length < 30)).toBe(true);
+    expect(mapSubject('business-by-country/1')).toBe('Tata Group');
+    expect(mapSubject('business-by-country/40')).toBe('Sega');
+    expect(mapSubject('hindu-mythology/1')).toBeNull();
+    expect(mapSubject(undefined)).toBeNull();
   });
 });
