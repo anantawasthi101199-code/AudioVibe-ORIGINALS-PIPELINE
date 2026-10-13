@@ -427,6 +427,260 @@ channels:
         sayAs: see-pahk-NAH
       - word: Cabrakan
         sayAs: kah-brah-KAHN
+      # Hindu mythology, Series 1 (2026-10-13). Applied in order, so a phrase
+      # comes before any single word inside it. "Kali" here is the age and the
+      # spirit of the age (KUH-lee); the goddess Kali (KAH-lee) needs this
+      # entry revisited before her episodes are voiced. Names the voice
+      # already says well (Vishnu, Shiva, Brahma, Indra, Hanuman) are left
+      # alone, because a respelling can only make those worse.
+      - word: Kali Yuga
+        sayAs: KUH-lee YOO-guh
+      - word: Kali
+        sayAs: KUH-lee
+      - word: Yuga
+        sayAs: YOO-guh
+      - word: yugas
+        sayAs: YOO-guz
+      - word: Krita
+        sayAs: KRIT-uh
+      - word: Treta
+        sayAs: TRAY-tuh
+      - word: Dvapara
+        sayAs: DVAH-puh-ruh
+      - word: Nasadiya Sukta
+        sayAs: nah-SAH-dee-yuh SOOK-tuh
+      - word: Rig Veda
+        sayAs: rig VAY-duh
+      - word: Veda
+        sayAs: VAY-duh
+      - word: Vedas
+        sayAs: VAY-duz
+      - word: Puranas
+        sayAs: poo-RAH-nuz
+      - word: Purana
+        sayAs: poo-RAH-nuh
+      - word: Bhagavata
+        sayAs: BHAH-guh-vuh-tuh
+      - word: Mahabharata
+        sayAs: muh-hah-BHAH-ruh-tuh
+      - word: Trimurti
+        sayAs: trih-MOOR-tee
+      - word: Narayana
+        sayAs: nah-RAH-yuh-nuh
+      - word: Shesha
+        sayAs: SHAY-shuh
+      - word: Ananta
+        sayAs: uh-NUN-tuh
+      - word: yoga nidra
+        sayAs: YOH-guh NID-ruh
+      - word: Tapa
+        sayAs: TUH-puh
+      - word: Sanaka
+        sayAs: SUH-nuh-kuh
+      - word: Sanandana
+        sayAs: suh-NUN-duh-nuh
+      - word: Sanatana
+        sayAs: suh-NAH-tuh-nuh
+      - word: Sanatkumara
+        sayAs: suh-nut-koo-MAH-ruh
+      - word: Rudra
+        sayAs: ROOD-ruh
+      - word: Rudras
+        sayAs: ROOD-ruz
+      - word: Manu
+        sayAs: MUH-noo
+      - word: Shatarupa
+        sayAs: shuh-tuh-ROO-puh
+      - word: manava
+        sayAs: MAH-nuh-vuh
+      - word: Saraswati
+        sayAs: suh-RUSS-wuh-tee
+      - word: veena
+        sayAs: VEE-nuh
+      - word: Satyaloka
+        sayAs: SUT-yuh-loh-kuh
+      - word: Vaikuntha
+        sayAs: vai-KOON-tuh
+      - word: Sudarshana
+        sayAs: soo-DUR-shuh-nuh
+      - word: Garuda
+        sayAs: GUH-roo-duh
+      - word: Lakshmi
+        sayAs: LUCK-shmee
+      - word: dharma
+        sayAs: DHUR-muh
+      - word: Dharma
+        sayAs: DHUR-muh
+      - word: Kailasa
+        sayAs: kai-LAH-suh
+      - word: Ganga
+        sayAs: GUNG-gah
+      - word: Nandi
+        sayAs: NUN-dee
+      - word: Parvati
+        sayAs: PAR-vuh-tee
+      - word: ketaki
+        sayAs: KAY-tuh-kee
+      - word: Bhairava
+        sayAs: BHAI-ruh-vuh
+      - word: linga
+        sayAs: LING-guh
+      - word: Tiruvannamalai
+        sayAs: tih-roo-vun-nah-MAH-lai
+      - word: Pushkar
+        sayAs: POOSH-kur
+      - word: Vaishnavas
+        sayAs: VAISH-nuh-vuz
+      - word: Shaivas
+        sayAs: SHAI-vuz
+      - word: Shaktas
+        sayAs: SHAAK-tuz
+      - word: Devi
+        sayAs: DAY-vee
+      - word: Harihara
+        sayAs: huh-ree-HUH-ruh
+      - word: Kashyapa
+        sayAs: KUSH-yuh-puh
+      - word: Daksha
+        sayAs: DUCK-shuh
+      - word: Aditi
+        sayAs: UH-dih-tee
+      - word: Adityas
+        sayAs: AH-dit-yuz
+      - word: Diti
+        sayAs: DIH-tee
+      - word: Danu
+        sayAs: DUH-noo
+      - word: Daityas
+        sayAs: DAIT-yuz
+      - word: Danavas
+        sayAs: DAH-nuh-vuz
+      - word: deva
+        sayAs: DAY-vuh
+      - word: devas
+        sayAs: DAY-vuz
+      - word: asura
+        sayAs: uh-SOO-ruh
+      - word: asuras
+        sayAs: uh-SOO-ruz
+      - word: rishi
+        sayAs: RISH-ee
+      - word: Svarga
+        sayAs: SVUR-guh
+      - word: Amaravati
+        sayAs: uh-muh-RAH-vuh-tee
+      - word: Airavata
+        sayAs: ai-RAH-vuh-tuh
+      - word: vajra
+        sayAs: VUJ-ruh
+      - word: soma
+        sayAs: SO-muh
+      - word: Soma
+        sayAs: SO-muh
+      - word: Vritra
+        sayAs: VRIT-ruh
+      - word: Agni
+        sayAs: UG-nee
+      - word: Surya
+        sayAs: SOOR-yuh
+      - word: Vayu
+        sayAs: VAH-yoo
+      - word: Chandra
+        sayAs: CHUN-druh
+      - word: Varuna
+        sayAs: vuh-ROO-nuh
+      - word: makara
+        sayAs: MUH-kuh-ruh
+      - word: Yama
+        sayAs: YUH-muh
+      - word: Kubera
+        sayAs: koo-BAY-ruh
+      - word: Alaka
+        sayAs: UH-luh-kah
+      - word: Gandharvas
+        sayAs: gun-DHAR-vuz
+      - word: Apsaras
+        sayAs: UP-suh-ruz
+      - word: Yakshas
+        sayAs: YUCK-shuz
+      - word: Ashvins
+        sayAs: USH-vinz
+      - word: Vasus
+        sayAs: VUH-sooz
+      - word: koti
+        sayAs: KOH-tee
+      - word: Brihaspati
+        sayAs: brih-HUS-puh-tee
+      - word: Shukra
+        sayAs: SHOOK-ruh
+      - word: Narada
+        sayAs: NAH-ruh-duh
+      - word: Meru
+        sayAs: MAY-roo
+      - word: Jambudvipa
+        sayAs: jum-boo-DVEE-puh
+      - word: yojanas
+        sayAs: YOH-juh-nuz
+      - word: yojana
+        sayAs: YOH-juh-nuh
+      - word: Lokaloka
+        sayAs: LOH-kah-LOH-kuh
+      - word: Bharata
+        sayAs: BHAH-ruh-tuh
+      - word: Bhuloka
+        sayAs: BHOO-loh-kuh
+      - word: Bhuvarloka
+        sayAs: bhoo-VAR-loh-kuh
+      - word: Svarloka
+        sayAs: SVAR-loh-kuh
+      - word: Dhruva
+        sayAs: DHROO-vuh
+      - word: Maharloka
+        sayAs: muh-HAR-loh-kuh
+      - word: Janaloka
+        sayAs: JUH-nuh-loh-kuh
+      - word: Tapoloka
+        sayAs: TUH-poh-loh-kuh
+      - word: Patalas
+        sayAs: PAH-tuh-luz
+      - word: Patala
+        sayAs: PAH-tuh-luh
+      - word: Atala
+        sayAs: UH-tuh-luh
+      - word: Vitala
+        sayAs: VIH-tuh-luh
+      - word: Nitala
+        sayAs: NIH-tuh-luh
+      - word: Gabhastimat
+        sayAs: guh-BHUS-tih-mut
+      - word: Mahatala
+        sayAs: muh-HAH-tuh-luh
+      - word: Sutala
+        sayAs: SOO-tuh-luh
+      - word: Nagas
+        sayAs: NAH-guz
+      - word: Bali
+        sayAs: BUH-lee
+      - word: Narakas
+        sayAs: NUH-ruh-kuz
+      - word: Bhima
+        sayAs: BHEEM
+      - word: Draupadi
+        sayAs: DROW-puh-dee
+      - word: Satya
+        sayAs: SUT-yuh
+      - word: Parikshit
+        sayAs: puh-RIKSH-it
+      - word: Vyasa
+        sayAs: VYAH-suh
+      - word: Keshava
+        sayAs: KAY-shuh-vuh
+      - word: Markandeya
+        sayAs: mar-KUN-day-yuh
+      - word: Shambhala
+        sayAs: SHUM-bhuh-luh
+      - word: Kalki
+        sayAs: KUL-kee
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
