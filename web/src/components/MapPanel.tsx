@@ -8,18 +8,44 @@
  */
 import type { MapItem, MapView } from '../api';
 
+/**
+ * THE TRACK BAR READS LEFT TO RIGHT AS PROGRESS (owner, 2026-10-13): a written
+ * script is a yellow outline, audio fills it yellow, publishing turns it green.
+ */
 const TONE: Record<MapItem['state'], string> = {
   published: 'var(--pass)',
-  making: 'var(--amber)',
+  voiced: 'var(--amber)',
+  scripted: 'var(--amber)',
+  making: 'var(--hold)',
   retry: 'var(--fail)',
   todo: 'var(--ink-600)',
 };
 
 const WORD: Record<MapItem['state'], string> = {
   published: 'published',
+  voiced: 'voiced, not published',
+  scripted: 'script written',
   making: 'being made',
   retry: 'failed, make again',
   todo: 'not started',
+};
+
+/** A run exists and is still going somewhere: open it rather than start another. */
+const IN_HAND = new Set<MapItem['state']>(['making', 'scripted', 'voiced']);
+
+/** Filled for anything with audio or further; an outline for a script alone. */
+const notch = (i: MapItem, isNext: boolean): React.CSSProperties => {
+  const outlined = i.state === 'scripted' || (i.state === 'todo' && i.scripted);
+  return {
+    flex: 1,
+    height: 10,
+    borderRadius: 2,
+    boxSizing: 'border-box',
+    background: outlined ? 'transparent' : TONE[i.state],
+    border: outlined ? '2px solid var(--amber)' : undefined,
+    outline: isNext ? '2px solid var(--text)' : undefined,
+    outlineOffset: 2,
+  };
 };
 
 export const MapPanel = ({
@@ -51,18 +77,15 @@ export const MapPanel = ({
           {map.items.map((i) => (
             <span
               key={i.key}
-              title={`#${i.number} ${i.title}: ${WORD[i.state]}`}
-              style={{
-                flex: 1,
-                height: 10,
-                borderRadius: 2,
-                background: TONE[i.state],
-                outline: i.key === next?.key ? '2px solid var(--amber)' : undefined,
-                outlineOffset: 1,
-              }}
+              title={`#${i.number} ${i.title}: ${i.state === 'todo' && i.scripted ? 'script written' : WORD[i.state]}`}
+              style={notch(i, i.key === next?.key)}
             />
           ))}
         </div>
+
+        <p className="faint tiny" style={{ margin: 0 }}>
+          Yellow outline: script written · yellow: voiced · green: published · white ring: next up
+        </p>
 
         {!next && <p className="muted">Every episode on this map is published.</p>}
 
@@ -80,13 +103,13 @@ export const MapPanel = ({
               From {next.source}
             </p>
             <div className="row" style={{ gap: '0.6rem', marginTop: '0.6rem' }}>
-              {next.state === 'making' ? (
+              {IN_HAND.has(next.state) ? (
                 <>
-                  <span className="pill hold">being made</span>
+                  <span className="pill hold">{WORD[next.state]}</span>
                   <button type="button" className="btn small" onClick={() => go(`/r/${next.runId}`)}>
                     Open the run
                   </button>
-                  <span className="faint tiny">The next one opens once this is published.</span>
+                  <span className="faint tiny">The next one comes up once this is published.</span>
                 </>
               ) : (
                 <>
@@ -119,7 +142,7 @@ export const MapPanel = ({
                       <span style={{ minWidth: 0 }}>
                         <span className="faint">#{i.number} </span>
                         {i.runId ? (
-                          <a href={`#/r/${i.runId}`}>
+                          <a href={`#/r/${i.runId}`} title="Open the run">
                             {i.title}
                           </a>
                         ) : (

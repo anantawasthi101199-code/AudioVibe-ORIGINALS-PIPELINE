@@ -62,7 +62,17 @@ const mapSchema = z.object({
 
 export type ContentMap = z.infer<typeof mapSchema>;
 
-export type ItemState = 'published' | 'making' | 'retry' | 'todo';
+/**
+ * Where an item is, as the track bar draws it (owner, 2026-10-13): a written
+ * script is an outline, audio fills it, publishing turns it green.
+ *   making    a run is researching or writing, with no script to read yet
+ *   scripted  a run holds a script, not voiced yet
+ *   voiced    a run has audio, not published yet
+ */
+export type ItemState = 'published' | 'voiced' | 'scripted' | 'making' | 'retry' | 'todo';
+
+/** A run exists for the item and is still going somewhere. */
+export const IN_HAND: ReadonlySet<ItemState> = new Set(['making', 'scripted', 'voiced']);
 
 export interface MapItem {
   key: string;
@@ -98,21 +108,25 @@ export interface MapView {
 
 const mapsDir = (): string => path.join(repoRoot(), 'maps');
 
-export const loadMaps = (channelId: string, dir = mapsDir()): ContentMap[] => {
+export const loadAllMaps = (dir = mapsDir()): ContentMap[] => {
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
     .filter((f) => f.endsWith('.json'))
     .sort()
-    .map((f) => mapSchema.parse(JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))))
-    .filter((m) => m.channelId === channelId);
+    .map((f) => mapSchema.parse(JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))));
 };
+
+export const loadMaps = (channelId: string, dir = mapsDir()): ContentMap[] =>
+  loadAllMaps(dir).filter((m) => m.channelId === channelId);
 
 export const topicFor = (ep: z.infer<typeof episodeSchema>): string =>
   `${ep.title.replace(/[.?!]?$/, (p) => p || '.')} ${ep.covers} Sources: ${ep.source}.`;
 
 /** Pure, so the ordering rule can be checked without a run store. */
-export const viewOf = (map: ContentMap, made: Array<Pick<RunSummary, 'id' | 'state' | 'createdAt'> & { mapItem: string | null }>): MapView => {
+type Made = Pick<RunSummary, 'id' | 'state' | 'createdAt'> & { mapItem: string | null; hasAudio?: boolean };
+
+export const viewOf = (map: ContentMap, made: Made[]): MapView => {
   const items: MapItem[] = map.series.flatMap((s) =>
     s.episodes.map((ep, i) => {
       const key = `${map.id}/${ep.number}`;
@@ -121,7 +135,11 @@ export const viewOf = (map: ContentMap, made: Array<Pick<RunSummary, 'id' | 'sta
       const state: ItemState = mine.some((r) => r.state === 'published')
         ? 'published'
         : live
-          ? 'making'
+          ? live.hasAudio
+            ? 'voiced'
+            : live.state === 'running'
+              ? 'making'
+              : 'scripted'
           : mine.length
             ? 'retry'
             : 'todo';
@@ -178,7 +196,7 @@ export const mapStartRefusal = (channelId: string, key: string): { status: numbe
       message: view.next ? `not its turn yet: "${view.next.title}" has to be published first` : 'this map is finished',
     };
   }
-  if (item.state === 'making') {
+  if (IN_HAND.has(item.state)) {
     return { status: 409, message: `"${item.title}" is already being made (${item.runId}). Discard that run to start again.` };
   }
   return null;

@@ -105,6 +105,7 @@ import { repoRoot, runsDir } from '../config';
 import { backUpRecords, r2Store, runKey, sweepArchive } from '../archive/r2';
 import { archiveDownload } from './archiveNow';
 import { releaseDue } from '../publish/release';
+import { seedPreparedRuns } from './seedMaps';
 import {
   createSeriesJob,
   discardRun,
@@ -806,6 +807,15 @@ export const serve = async (opts: ServeOptions = {}): Promise<http.Server> => {
   // refuses a short password on an exposed host, which is the moment it stops
   // being theatre and starts mattering.
   const people = operators();
+
+  // SCRIPTS WRITTEN INTO A CONTENT MAP BECOME RUNS. See seedMaps.ts. Never
+  // fatal: a studio that will not start over one script is worse than a
+  // missing run, which the log names.
+  try {
+    seedPreparedRuns((m) => console.log(m));
+  } catch (e) {
+    console.error(`map scripts not seeded: ${(e as Error).message}`);
+  }
 
   const server = createServer();
   await new Promise<void>((resolve) => server.listen(port, host, resolve));

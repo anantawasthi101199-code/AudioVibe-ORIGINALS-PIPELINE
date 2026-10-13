@@ -609,7 +609,7 @@ export interface MapItem {
   /** A script is already written: Blank script opens with it filled in. */
   scripted: boolean;
   topic: string;
-  state: 'published' | 'making' | 'retry' | 'todo';
+  state: 'published' | 'voiced' | 'scripted' | 'making' | 'retry' | 'todo';
   runId: string | null;
   runState: RunState | null;
 }

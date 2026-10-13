@@ -13,6 +13,15 @@ Building toward the first publishable episode.
 
 ### Added
 
+- **Map scripts become runs on deploy, and the track bar shows progress**
+  (owner, 2026-10-13). A script in the map was only filled in when somebody
+  pressed Blank script, so it never appeared under the channel's runs. Now the
+  studio makes a held, filled-in run for every scripted item when it starts
+  (`src/server/seedMaps.ts`): free, once per item ever, and a discarded one
+  stays discarded. The track bar reads as progress: a yellow outline for a
+  written script, yellow for audio, green for published, a white ring on the
+  next item.
+
 - **A map item can carry a script already written** (owner, 2026-10-13). An
   episode in `maps/<id>.json` may name a `script` (file, title, description);
   Blank script on that item opens with every part filled in, and the map panel

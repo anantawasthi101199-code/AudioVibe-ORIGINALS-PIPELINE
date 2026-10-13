@@ -15,8 +15,8 @@ const map: ContentMap = {
     { number: 2, title: 'Two', note: '', episodes: [{ number: 3, title: 'T3?', covers: 'y.', source: 's' }] },
   ],
 };
-const run = (mapItem: string, state: string, createdAt = '2026-10-12') =>
-  ({ id: `c/${mapItem}`, mapItem, state, createdAt }) as never;
+const run = (mapItem: string, state: string, createdAt = '2026-10-12', hasAudio = false) =>
+  ({ id: `c/${mapItem}`, mapItem, state, createdAt, hasAudio }) as never;
 
 describe('a content map', () => {
   it('offers the first item when nothing is made', () => {
@@ -30,9 +30,16 @@ describe('a content map', () => {
     for (const state of ['running', 'awaiting-approval', 'ready']) {
       const v = viewOf(map, [run('m/1', state)]);
       expect(v.next?.key).toBe('m/1');
-      expect(v.next?.state).toBe('making');
     }
     expect(viewOf(map, [run('m/1', 'published')]).next?.key).toBe('m/2');
+  });
+
+  it('READS AS PROGRESS: being made, then a script, then audio, then published', () => {
+    expect(viewOf(map, [run('m/1', 'running')]).items[0]!.state).toBe('making');
+    expect(viewOf(map, [run('m/1', 'awaiting-approval')]).items[0]!.state).toBe('scripted');
+    expect(viewOf(map, [run('m/1', 'needs-voice')]).items[0]!.state).toBe('scripted');
+    expect(viewOf(map, [run('m/1', 'ready', '2026-10-12', true)]).items[0]!.state).toBe('voiced');
+    expect(viewOf(map, [run('m/1', 'published', '2026-10-12', true)]).items[0]!.state).toBe('published');
   });
 
   it('a failed run leaves the item to be made again', () => {
