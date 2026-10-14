@@ -546,7 +546,18 @@ const call = async <T>(path: string, init?: RequestInit): Promise<T> => {
   }
 
   const text = await res.text();
-  const body = text ? (JSON.parse(text) as unknown) : null;
+  let body: unknown = null;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    // NOT THE STUDIO ANSWERING (2026-10-15): while a deploy restarts it,
+    // Railway's edge sends its own HTML error page, which read as
+    // "Unexpected token '<'".
+    throw new ApiError(
+      res.status,
+      `the studio is restarting after an update (HTTP ${res.status}). Wait a minute, then try again.`
+    );
+  }
 
   if (!res.ok) {
     throw new ApiError(res.status, (body as { error?: string })?.error ?? `HTTP ${res.status}`);
