@@ -39,15 +39,23 @@ export interface Seeded {
 
 export const seedPreparedRuns = (log: (message: string) => void = () => undefined): Seeded[] => {
   const seeded: Seeded[] = [];
+  // ONE RUNS LIST PER CHANNEL, NOT PER ITEM (2026-10-15). Listing a channel's
+  // runs takes seconds on the hosted volume, and this runs before the studio
+  // listens: once per item, 130 scripts kept every deploy down for minutes.
+  const listed = new Map<string, ReturnType<typeof runs>>();
+  const runsOf = (channelId: string) => {
+    if (!listed.has(channelId)) listed.set(channelId, runs({ channelId }));
+    return listed.get(channelId)!;
+  };
   for (const map of loadAllMaps()) {
     const persona = loadPersona(map.channelId);
-    const made = new Set(runs({ channelId: map.channelId }).map((r) => r.mapItem));
+    const made = new Set(runsOf(map.channelId).map((r) => r.mapItem));
     for (const series of map.series) {
       for (const ep of series.episodes) {
         const key = `${map.id}/${ep.number}`;
         if (!ep.script) continue;
         if (made.has(key)) {
-          refreshFromFile(map.channelId, key, log);
+          refreshFromFile(map.channelId, key, log, runsOf(map.channelId));
           continue;
         }
         try {
@@ -90,8 +98,13 @@ const keepsProse = (event: string) =>
   /^outro (\d+ attached|removed|unchanged)/.test(event);
 
 /** The one seeded run for this item, refilled from the file if it is untouched and the file changed. */
-const refreshFromFile = (channelId: string, key: string, log: (message: string) => void): void => {
-  const mine = runs({ channelId }).filter((r) => r.mapItem === key);
+const refreshFromFile = (
+  channelId: string,
+  key: string,
+  log: (message: string) => void,
+  listed: ReturnType<typeof runs>,
+): void => {
+  const mine = listed.filter((r) => r.mapItem === key);
   if (mine.length !== 1) return;
   try {
     const run = Run.open(mine[0]!.id);
