@@ -118,121 +118,221 @@
       "number": 11,
       "title": "Isis and the Secret Name of Ra",
       "covers": "Isis makes a serpent from the old sun god's spit, and Ra, poisoned and in agony, must give up the hidden name that holds his power.",
-      "source": "E. A. Wallis Budge, Legends of the Gods (1912), the legend of Ra and Isis"
+      "source": "E. A. Wallis Budge, Legends of the Gods (1912), the legend of Ra and Isis",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/011-isis-and-the-secret-name-of-ra.txt",
+        "title": "Isis and the Secret Name of Ra",
+        "description": "The sun god Ra has a secret name that holds all his power. The goddess Isis wants it, so she makes a serpent out of his own spit and lays it on his path."
+      }
     },
     {
       "number": 12,
       "title": "Gilgamesh and the Plant of Immortality",
       "covers": "Grieving for Enkidu, Gilgamesh crosses the waters of death to find the one man who never died, and loses the plant of youth to a snake.",
-      "source": "The Epic of Gilgamesh (R. Campbell Thompson translation, 1928), tablets 9 to 11"
+      "source": "The Epic of Gilgamesh (R. Campbell Thompson translation, 1928), tablets 9 to 11",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/012-gilgamesh-plant-of-immortality.txt",
+        "title": "Gilgamesh and the Plant of Youth",
+        "description": "After his best friend dies, King Gilgamesh is terrified of death. He crosses the world and the waters of death to find the one man the gods let live forever."
+      }
     },
     {
       "number": 13,
       "title": "The Children of Lir: 900 Years as Swans",
       "covers": "A jealous stepmother turns four children into swans, and they spend nine centuries on cold waters until a bell rings out across Ireland.",
-      "source": "Lady Gregory, Gods and Fighting Men (1904), the fate of the children of Lir"
+      "source": "Lady Gregory, Gods and Fighting Men (1904), the fate of the children of Lir",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/013-children-of-lir.txt",
+        "title": "The Children of Lir: 900 Years as Swans",
+        "description": "A jealous stepmother turns four children into swans with a druid's wand. They keep their human voices, and must spend nine hundred years on Ireland's coldest waters."
+      }
     },
     {
       "number": 14,
       "title": "Amaterasu: The Sun Goddess Who Hid in a Cave",
       "covers": "Insulted by her storm god brother, the sun goddess shuts herself in a cave and the world goes dark until the gods trick her out.",
-      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the door of the heavenly rock-dwelling"
+      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the door of the heavenly rock-dwelling",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/014-amaterasu-hides-in-the-cave.txt",
+        "title": "Amaterasu: The Sun Goddess in the Cave",
+        "description": "Insulted by her wild storm god brother, the sun goddess of Japan shuts herself in a cave, and the whole world goes dark. Eight hundred gods gather to lure her out."
+      }
     },
     {
       "number": 15,
       "title": "Nüwa: The Goddess Who Mended the Sky",
       "covers": "Nüwa shapes the first people from yellow clay, and when a pillar of heaven breaks she melts five coloured stones to patch the sky.",
-      "source": "The Huainanzi, book 6, and E. T. C. Werner, Myths and Legends of China (1922)"
+      "source": "The Huainanzi, book 6, and E. T. C. Werner, Myths and Legends of China (1922)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/015-nuwa-mends-the-sky.txt",
+        "title": "Nüwa: The Goddess Who Mended the Sky",
+        "description": "A goddess shapes the first people out of yellow mud. Then an angry water god smashes into one of the pillars holding up heaven, and the sky cracks open above them."
+      }
     },
     {
       "number": 16,
       "title": "Koschei the Deathless: The Sorcerer Who Hid His Death",
       "covers": "A prince's wife is stolen by a sorcerer whose death is hidden in a needle, in an egg, in a duck, in a hare, in an iron chest.",
-      "source": "Koschei the Deathless, in W. R. S. Ralston, Russian Folk-Tales (1873)"
+      "source": "Koschei the Deathless, in W. R. S. Ralston, Russian Folk-Tales (1873)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/016-koschei-the-deathless.txt",
+        "title": "Koschei the Deathless: The Hidden Death",
+        "description": "A sorcerer who cannot be killed has stolen a prince's wife. The prince learns why: Koschei has hidden his death far away, in a needle, inside an egg, inside a duck, inside a hare."
+      }
     },
     {
       "number": 17,
       "title": "Quetzalcoatl: The Feathered Serpent Who Sailed Away",
       "covers": "A wise god-king is tricked by his rival with a mirror and strong drink, shamed, and leaves his people, promising to return.",
-      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the Quetzalcoatl myth"
+      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the Quetzalcoatl myth",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/017-quetzalcoatl-sails-away.txt",
+        "title": "Quetzalcoatl: The Feathered Serpent's Exile",
+        "description": "A wise and gentle god-king rules a golden city. Then his rival arrives with a mirror and a strong drink, and tricks him into the night that ends his reign."
+      }
     },
     {
       "number": 18,
       "title": "Anansi and the Pot of Wisdom",
       "covers": "Anansi tries to hide all the wisdom in the world at the top of a tree, and his small son shows him how much he still has to learn.",
-      "source": "West African Anansi tales, as collected in R. S. Rattray, Akan-Ashanti Folk-Tales (1930)"
+      "source": "West African Anansi tales, as collected in R. S. Rattray, Akan-Ashanti Folk-Tales (1930)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/018-anansi-pot-of-wisdom.txt",
+        "title": "Anansi and the Pot of Wisdom",
+        "description": "Anansi the spider gathers all the wisdom in the world into one pot and tries to hide it at the top of a tree. His small son is watching, and knows something he does not."
+      }
     },
     {
       "number": 19,
       "title": "Excalibur and the Lady of the Lake",
       "covers": "Arthur breaks his sword in a fight, and Merlin takes him to a lake where a hand rises from the water holding a new one.",
-      "source": "Thomas Malory, Le Morte d'Arthur (1485), book 1, chapter 25"
+      "source": "Thomas Malory, Le Morte d'Arthur (1485), book 1, chapter 25",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/019-excalibur-and-the-lady-of-the-lake.txt",
+        "title": "Excalibur and the Lady of the Lake",
+        "description": "King Arthur breaks his sword in a fight he nearly loses. Merlin takes him to a wide lake, and a hand in white silk rises out of the water, holding a new one."
+      }
     },
     {
       "number": 20,
       "title": "Ceyx and Alcyone: The Couple Who Became Kingfishers",
       "covers": "A king drowns at sea, the god of sleep sends his wife a dream of his death, and the gods turn the grieving pair into birds who calm the winter waves.",
-      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 11"
+      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 11",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/020-ceyx-and-alcyone.txt",
+        "title": "Ceyx and Alcyone: The Kingfisher Lovers",
+        "description": "A king sails away against his wife's pleading and is lost in a storm. Every day she prays for his return, until the god of sleep sends her a dream."
+      }
     },
     {
       "number": 21,
       "title": "Sekhmet: The Goddess Who Was Tricked With Red Beer",
       "covers": "Ra sends his fierce eye to punish rebellious humans, she will not stop killing, and the gods flood the fields with beer dyed red to save humanity.",
-      "source": "The Book of the Heavenly Cow, in E. A. Wallis Budge, Legends of the Gods (1912)"
+      "source": "The Book of the Heavenly Cow, in E. A. Wallis Budge, Legends of the Gods (1912)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/021-sekhmet-and-the-red-beer.txt",
+        "title": "Sekhmet: The Goddess Tricked With Red Beer",
+        "description": "The sun god sends his fiercest daughter to punish humans who plotted against him. She enjoys the killing too much to stop, so the gods flood the fields with beer dyed the colour of blood."
+      }
     },
     {
       "number": 22,
       "title": "Inanna's Descent to the Underworld",
       "covers": "The queen of heaven goes down to her sister's kingdom of the dead, is stripped at seven gates, killed, and must find someone to take her place.",
-      "source": "The Descent of Inanna, in the Electronic Text Corpus of Sumerian Literature (Oxford)"
+      "source": "The Descent of Inanna, in the Electronic Text Corpus of Sumerian Literature (Oxford)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/022-inannas-descent.txt",
+        "title": "Inanna's Descent to the Underworld",
+        "description": "The queen of heaven decides to visit her sister, the queen of the dead. At each of seven gates she must give up one of her treasures, and she arrives with nothing."
+      }
     },
     {
       "number": 23,
       "title": "Fionn and the Salmon of Knowledge",
       "covers": "A poet spends seven years trying to catch a magic salmon, his young servant burns his thumb cooking it, and gains all the wisdom in the world.",
-      "source": "Lady Gregory, Gods and Fighting Men (1904), the coming of Finn"
+      "source": "Lady Gregory, Gods and Fighting Men (1904), the coming of Finn",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/023-fionn-and-the-salmon.txt",
+        "title": "Fionn and the Salmon of Knowledge",
+        "description": "An old poet spends seven years trying to catch a magic salmon that holds all the knowledge in the world. When he finally does, he asks his young servant to cook it, and not taste a single bite."
+      }
     },
     {
       "number": 24,
       "title": "Susanoo and the Eight-Headed Serpent",
       "covers": "The banished storm god meets a family who have lost seven daughters to a monster, and sets a trap with eight bowls of strong sake.",
-      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the eight-forked serpent"
+      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the eight-forked serpent",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/024-susanoo-and-the-serpent.txt",
+        "title": "Susanoo and the Eight-Headed Serpent",
+        "description": "Banished from heaven, the storm god meets an old couple who have lost seven daughters to a monster with eight heads. Their last daughter is next, so he sets a trap with eight bowls of strong rice wine."
+      }
     },
     {
       "number": 25,
       "title": "Hou Yi: The Archer Who Shot Down Nine Suns",
       "covers": "Ten suns rise at once and scorch the earth, and a great archer shoots nine of them from the sky.",
-      "source": "E. T. C. Werner, Myths and Legends of China (1922), the archer and the suns"
+      "source": "E. T. C. Werner, Myths and Legends of China (1922), the archer and the suns",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/025-hou-yi-shoots-the-suns.txt",
+        "title": "Hou Yi: The Archer Who Shot Down Nine Suns",
+        "description": "Ten suns live in a giant tree, and take turns to cross the sky. One morning, all ten rise together, and the earth begins to burn. Only one archer can stop them."
+      }
     },
     {
       "number": 26,
       "title": "The Firebird",
       "covers": "A prince follows a glowing bird that steals the king's golden apples, helped by a grey wolf on a quest of ever larger thefts.",
-      "source": "Prince Ivan, the Firebird and the Grey Wolf, in Post Wheeler, Russian Wonder Tales (1912)"
+      "source": "Prince Ivan, the Firebird and the Grey Wolf, in Post Wheeler, Russian Wonder Tales (1912)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/026-the-firebird.txt",
+        "title": "The Firebird",
+        "description": "A blazing bird is stealing the golden apples from the tsar's garden. His youngest son grabs one feather, and sets off on a quest with the help of a grey wolf that eats his horse."
+      }
     },
     {
       "number": 27,
       "title": "Huitzilopochtli: Born Armed on the Serpent Mountain",
       "covers": "A mother is attacked by her four hundred children, and the war god springs from her womb fully armed to defend her.",
-      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the birth of Huitzilopochtli"
+      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the birth of Huitzilopochtli",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/027-huitzilopochtli.txt",
+        "title": "Huitzilopochtli: Born Armed on the Mountain",
+        "description": "A mother goddess becomes pregnant from a ball of feathers. Her four hundred children are so ashamed that they climb the mountain to kill her, just as her last son is born."
+      }
     },
     {
       "number": 28,
       "title": "Kaggen: The Mantis Who Made the Eland",
       "covers": "The trickster god of the San people secretly raises the first eland from a shoe, and grieves when his family hunt it.",
-      "source": "W. H. I. Bleek and L. C. Lloyd, Specimens of Bushman Folklore (1911)"
+      "source": "W. H. I. Bleek and L. C. Lloyd, Specimens of Bushman Folklore (1911)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/028-kaggen-and-the-eland.txt",
+        "title": "Kaggen: The Mantis Who Made the Eland",
+        "description": "Kaggen, the trickster god of the San people, secretly raises the first eland from a piece of leather. He loves it like a child, until his family follow him and see what he has been hiding."
+      }
     },
     {
       "number": 29,
       "title": "Gawain and the Green Knight",
       "covers": "A giant green knight offers a deadly game at Christmas, and Gawain must travel a year later to receive the return blow.",
-      "source": "Sir Gawain and the Green Knight (Jessie L. Weston translation, 1898)"
+      "source": "Sir Gawain and the Green Knight (Jessie L. Weston translation, 1898)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/029-gawain-and-the-green-knight.txt",
+        "title": "Gawain and the Green Knight",
+        "description": "A giant green knight rides into King Arthur's Christmas feast and offers a deadly game. Gawain cuts off his head, and the knight picks it up and tells him to come and receive the return blow in a year."
+      }
     },
     {
       "number": 30,
       "title": "King Midas and the Golden Touch",
-      "covers": "A king is granted a wish that everything he touches turns to gold, and soon cannot eat, drink or hold his own daughter.",
-      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 11"
+      "covers": "A king does a kindness for the god of wine and is granted one wish: everything he touches turns to gold. Then he sits down to eat, and cannot eat or drink anything at all.",
+      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 11",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/030-king-midas.txt",
+        "title": "King Midas and the Golden Touch",
+        "description": "A king does a kindness for a god, and is granted one wish. He asks that everything he touches should turn to gold. Then he sits down to eat."
+      }
     },
     {
       "number": 31,

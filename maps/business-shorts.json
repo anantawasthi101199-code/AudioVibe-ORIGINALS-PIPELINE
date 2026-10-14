@@ -129,140 +129,240 @@
       "title": "KFC: The Colonel Who Started Again at Sixty-Five",
       "covers": "Harland Sanders frying chicken at a roadside petrol station, his secret blend, selling franchises from the back of his car in old age, and how the brand spread across the globe.",
       "subject": "KFC",
-      "source": "KFC official company history, annual reports and reputable business journalism"
+      "source": "KFC official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/011-kfc.txt",
+        "title": "KFC: The Colonel Who Started Again at 65",
+        "description": "At sixty-five, Harland Sanders lost his restaurant and had little more than a pension cheque. So he loaded a pressure cooker into his car and drove across America, selling his chicken recipe one kitchen at a time."
+      }
     },
     {
       "number": 12,
       "title": "H&M: The Swedish Store That Made Fashion Cheap",
       "covers": "Erling Persson opening a women's clothing shop in Västerås in 1947 after seeing American retail, low prices on high volumes, and the designer collaborations that drew queues.",
       "subject": "H&M",
-      "source": "H&M official company history, annual reports and reputable business journalism"
+      "source": "H&M official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/012-h-and-m.txt",
+        "title": "H&M: The Swedish Shop for Cheap Fashion",
+        "description": "A Swedish shopkeeper saw how American stores sold clothes in huge numbers at low prices. He opened one small shop called Hennes, meaning hers, and it grew into one of the world's biggest fashion chains."
+      }
     },
     {
       "number": 13,
       "title": "Facebook: From a Dorm Room to Three Billion Users",
       "covers": "Mark Zuckerberg's Harvard network in 2004, the spread to other campuses, the News Feed, buying Instagram and WhatsApp, and the rename to Meta.",
       "subject": "Facebook Meta",
-      "source": "Facebook Meta official company history, annual reports and reputable business journalism"
+      "source": "Facebook Meta official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/013-facebook.txt",
+        "title": "Facebook: From a Dorm Room to Billions",
+        "description": "In 2004 a nineteen-year-old student built a website for his university friends. It spread to every campus in America, then the world, and three billion people now use it every month."
+      }
     },
     {
       "number": 14,
       "title": "Stripe: Two Irish Brothers Who Fixed Online Payments",
       "covers": "Patrick and John Collison from rural Tipperary, seven lines of code to accept payments, winning over developers, and building the plumbing behind much of internet commerce.",
       "subject": "Stripe",
-      "source": "Stripe official company history, annual reports and reputable business journalism"
+      "source": "Stripe official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/014-stripe.txt",
+        "title": "Stripe: Two Brothers Fix Online Payments",
+        "description": "Taking payments online once meant weeks of paperwork. Two brothers from a small village in Ireland made it take seven lines of code, and now trillions of dollars a year flow through their company."
+      }
     },
     {
       "number": 15,
       "title": "Tesla: The Electric Car Startup Everyone Said Would Fail",
       "covers": "Martin Eberhard and Marc Tarpenning founding Tesla in 2003, Elon Musk's investment, the Roadster, near-bankruptcy, the Model 3 production struggle, and becoming the most valuable carmaker.",
       "subject": "Tesla",
-      "source": "Tesla official company history, annual reports and reputable business journalism"
+      "source": "Tesla official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/015-tesla.txt",
+        "title": "Tesla: The Car Startup Expected to Fail",
+        "description": "Two engineers believed electric cars could be fast and fun. Tesla nearly went bankrupt in 2008 and again during the Model 3, then became the most valuable car company in the world."
+      }
     },
     {
       "number": 16,
       "title": "Barbie: The Doll That Made Mattel",
       "covers": "Ruth and Elliot Handler starting Mattel in a garage, Ruth seeing her daughter play with paper dolls, the launch of Barbie in 1959, and the doll's many reinventions.",
       "subject": "Mattel Barbie",
-      "source": "Mattel Barbie official company history, annual reports and reputable business journalism"
+      "source": "Mattel Barbie official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/016-barbie.txt",
+        "title": "Barbie: The Doll That Made Mattel",
+        "description": "A mother watched her daughter play with paper dolls and pretend they were grown women. The company's men said no mother would buy such a doll. Barbie has since sold over a billion."
+      }
     },
     {
       "number": 17,
       "title": "Levi's: The Gold Rush Trousers That Became Jeans",
       "covers": "Levi Strauss selling dry goods in San Francisco, tailor Jacob Davis's riveted work trousers, the patent of 1873, and denim's journey from miners to fashion.",
       "subject": "Levi Strauss",
-      "source": "Levi Strauss official company history, annual reports and reputable business journalism"
+      "source": "Levi Strauss official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/017-levis.txt",
+        "title": "Levi's: Gold Rush Trousers That Became Jeans",
+        "description": "A tailor in Nevada put metal rivets in a working man's trousers so they would stop tearing. He needed a partner to pay for the patent, and wrote to the cloth seller Levi Strauss."
+      }
     },
     {
       "number": 18,
       "title": "Heineken: The Brewery Bought by a 22-Year-Old",
       "covers": "Gerard Adriaan Heineken buying an Amsterdam brewery in 1864, the special yeast, export to America after Prohibition, and Freddy Heineken's marketing genius.",
       "subject": "Heineken",
-      "source": "Heineken official company history, annual reports and reputable business journalism"
+      "source": "Heineken official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/018-heineken.txt",
+        "title": "Heineken: The Brewery Bought by a 22-Year-Old",
+        "description": "In 1864, a young man in Amsterdam persuaded his mother to buy the city's biggest brewery. His family turned it into one of the most famous beers in the world."
+      }
     },
     {
       "number": 19,
       "title": "Paytm: The Mobile Wallet That Rode Demonetisation",
       "covers": "Vijay Shekhar Sharma from a small town in Uttar Pradesh, phone recharges, the digital wallet, the cash ban of 2016 that sent users soaring, and the regulatory troubles that followed.",
       "subject": "Paytm",
-      "source": "Paytm official company history, annual reports and reputable business journalism"
+      "source": "Paytm official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/019-paytm.txt",
+        "title": "Paytm: The Wallet That Rode Demonetisation",
+        "description": "One night in 2016, India cancelled most of its banknotes. A phone payment app run by a teacher's son from a small town was ready, and millions signed up within weeks."
+      }
     },
     {
       "number": 20,
       "title": "Shopee: The Gaming Company That Became an Online Shop",
       "covers": "Forrest Li founding Garena in Singapore to publish games, the hit Free Fire, and using game profits to build the shopping app Shopee across the region.",
       "subject": "Sea Limited Shopee",
-      "source": "Sea Limited Shopee official company history, annual reports and reputable business journalism"
+      "source": "Sea Limited Shopee official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/020-shopee.txt",
+        "title": "Shopee: The Game Company That Built a Shop",
+        "description": "A businessman in Singapore built a games company, then used the money from its hit games to launch a shopping app. Shopee became the biggest online marketplace in South-East Asia."
+      }
     },
     {
       "number": 21,
       "title": "Domino's: The Pizza Chain That Sold Speed",
       "covers": "Two brothers buying one pizzeria in Michigan in 1960, the bet on delivery, the famous thirty-minute promise, and the later reinvention as a technology company that happens to make pizza.",
       "subject": "Domino's Pizza",
-      "source": "Domino's Pizza official company history, annual reports and reputable business journalism"
+      "source": "Domino's Pizza official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/021-dominos.txt",
+        "title": "Domino's: The Pizza Chain That Sold Speed",
+        "description": "Two brothers bought one struggling pizza shop in Michigan with borrowed money. One of them swapped his half for a Volkswagen Beetle. The other built the biggest pizza company in the world."
+      }
     },
     {
       "number": 22,
       "title": "Costco: The Warehouse That Charges You to Shop",
       "covers": "Jim Sinegal and Jeffrey Brotman opening a Seattle warehouse in 1983, the membership-fee model, tiny margins, the hot dog price that never changes, and fierce customer loyalty.",
       "subject": "Costco",
-      "source": "Costco official company history, annual reports and reputable business journalism"
+      "source": "Costco official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/022-costco.txt",
+        "title": "Costco: The Shop That Charges You to Enter",
+        "description": "Costco makes customers pay a yearly fee just to walk in, sells fewer products than a supermarket, and has kept its hot dog at the same price since 1985. Millions of people love it."
+      }
     },
     {
       "number": 23,
       "title": "Nvidia: The Graphics Card Maker That Powered a Revolution",
       "covers": "Three engineers meeting at a Denny's diner in 1993, chips for video games, the CUDA bet that let graphics chips do general computing, and becoming one of the world's most valuable companies.",
       "subject": "Nvidia",
-      "source": "Nvidia official company history, annual reports and reputable business journalism"
+      "source": "Nvidia official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/023-nvidia.txt",
+        "title": "Nvidia: The Graphics Chip Maker Behind AI",
+        "description": "Three engineers met in a roadside diner in 1993 to plan a company making graphics chips for video games. Those chips turned out to be exactly what modern artificial intelligence needed."
+      }
     },
     {
       "number": 24,
       "title": "Duolingo: The Green Owl That Made Language Learning a Game",
       "covers": "Luis von Ahn, the inventor of CAPTCHA, wanting free education for all, the game-like lessons and streaks, and the mascot that became an internet celebrity.",
       "subject": "Duolingo",
-      "source": "Duolingo official company history, annual reports and reputable business journalism"
+      "source": "Duolingo official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/024-duolingo.txt",
+        "title": "Duolingo: The Owl That Made Learning a Game",
+        "description": "A professor from Guatemala knew how much it cost poor people to learn English. He built a free app that turned language lessons into a game, starring a green owl that will not leave you alone."
+      }
     },
     {
       "number": 25,
       "title": "Harley-Davidson: The Motorbike Built in a Backyard Shed",
       "covers": "William Harley and the Davidson brothers in a Milwaukee shed in 1903, military orders in two world wars, nearly collapsing in the 1980s, and the loyal owners who saved it.",
       "subject": "Harley-Davidson",
-      "source": "Harley-Davidson official company history, annual reports and reputable business journalism"
+      "source": "Harley-Davidson official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/025-harley-davidson.txt",
+        "title": "Harley-Davidson: The Bike Built in a Shed",
+        "description": "Two young men in Milwaukee built a motorised bicycle in a small wooden shed in 1903. Harley-Davidson survived wars, Japanese rivals and near ruin, saved in the end by the people who rode them."
+      }
     },
     {
       "number": 26,
       "title": "Hasbro: From Pencil Cases to Monopoly and Transformers",
       "covers": "The Hassenfeld brothers selling textile remnants in Rhode Island, pencil boxes, Mr Potato Head, G.I. Joe, and buying Milton Bradley and Parker Brothers.",
       "subject": "Hasbro",
-      "source": "Hasbro official company history, annual reports and reputable business journalism"
+      "source": "Hasbro official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/026-hasbro.txt",
+        "title": "Hasbro: From Pencil Cases to Monopoly",
+        "description": "Three immigrant brothers in America sold leftover cloth, then pencil cases, then toys. Their company sold the first toy ever advertised on television, and now makes Monopoly, Nerf and Transformers."
+      }
     },
     {
       "number": 27,
       "title": "Ray-Ban: The Glasses Made for Pilots",
       "covers": "Bausch & Lomb's anti-glare lenses for US airmen in the 1930s, the Aviator and Wayfarer, film stardom, and the Italian company Luxottica that bought the brand.",
       "subject": "Luxottica Ray-Ban",
-      "source": "Luxottica Ray-Ban official company history, annual reports and reputable business journalism"
+      "source": "Luxottica Ray-Ban official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/027-ray-ban.txt",
+        "title": "Ray-Ban: The Glasses Made for Pilots",
+        "description": "American pilots in the 1920s and 30s were suffering from headaches and sore eyes caused by the glare of the sky. An eyewear company made them special green lenses, and Ray-Ban was born."
+      }
     },
     {
       "number": 28,
       "title": "Philips: The Light Bulb Factory That Lit Up Europe",
       "covers": "Gerard and Anton Philips making bulbs in Eindhoven in 1891, radios, the compact cassette and the CD, and the shift into health technology.",
       "subject": "Philips",
-      "source": "Philips official company history, annual reports and reputable business journalism"
+      "source": "Philips official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/028-philips.txt",
+        "title": "Philips: The Bulb Factory That Lit Up Europe",
+        "description": "A father and son bought an empty factory in a small Dutch town to make light bulbs. A younger brother who loved selling joined them, and the company grew into Philips, maker of the cassette tape and the CD."
+      }
     },
     {
       "number": 29,
       "title": "Nykaa: The Banker Who Started Again at Fifty",
       "covers": "Falguni Nayar leaving investment banking to sell beauty products online in 2012, building trust in a new market, and becoming one of India's richest self-made women.",
       "subject": "Nykaa",
-      "source": "Nykaa official company history, annual reports and reputable business journalism"
+      "source": "Nykaa official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/029-nykaa.txt",
+        "title": "Nykaa: The Banker Who Started Again at Fifty",
+        "description": "After nearly twenty years as a top investment banker, Falguni Nayar left at the age of forty-nine to sell beauty products online. Her company Nykaa made her one of the richest women in India."
+      }
     },
     {
       "number": 30,
       "title": "Jollibee: The Ice Cream Parlour That Beat McDonald's",
       "covers": "Tony Tan Caktiong's ice cream shop in Manila in 1975, adding hot food, sweet spaghetti and Chickenjoy for Filipino tastes, and winning its home market against global chains.",
       "subject": "Jollibee",
-      "source": "Jollibee official company history, annual reports and reputable business journalism"
+      "source": "Jollibee official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/030-jollibee.txt",
+        "title": "Jollibee: The Bee That Beat McDonald's",
+        "description": "A young man in Manila opened an ice cream shop with his family. Customers wanted hot food, so he added burgers, then sweet spaghetti and crispy chicken, and built the restaurant that beats McDonald's in the Philippines."
+      }
     },
     {
       "number": 31,

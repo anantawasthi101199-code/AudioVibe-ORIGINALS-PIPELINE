@@ -1,0 +1,21 @@
+## story
+
+[leaning in] Every year, more than a trillion dollars in online payments flows through a company started by two brothers from a tiny village in rural Ireland.
+
+[warmly] Patrick and John Collison grew up in Dromineer, a village of a few houses beside a lake in County Tipperary. Their parents were scientists. [curious] Both brothers taught themselves to write computer programs as boys, and both were brilliant. As teenagers they went to university in America, and built their first company together, a tool for people selling on eBay. They sold it in 2008, while Patrick was still a teenager.
+
+[thoughtful] Building that company had shown them a problem. If you made a website and wanted to accept card payments, it was a nightmare. You had to apply to a bank, fill in piles of forms, wait for weeks, and then connect your website to old payment systems that were confusing and fragile. [wry] Many small websites simply gave up.
+
+[determined] So in 2010 the brothers began building something better. Their idea was that a programmer should be able to accept payments by adding just a few lines of code to a website, in minutes rather than weeks. [with a smile] They called it Stripe, and launched it publicly in 2011.
+
+[curious] At first, they found customers the hard way. When a programmer said they might try Stripe, the brothers would say, great, give us your laptop, and set it up for them right there and then. [pause] People in Silicon Valley gave it a name: the Collison installation.
+
+## rise
+
+[building] Programmers loved it. Stripe was simple, clear and quick, and that is why it worked. Programmers told their friends, small companies chose it, and as those companies grew into big ones, they kept using Stripe. Famous investors piled in.
+
+[quietly impressed] Today millions of businesses use Stripe, from tiny online shops to some of the biggest companies in the world. In 2024, payments worth around one point four trillion dollars passed through it, and it is one of the most valuable private companies on Earth.
+
+## close
+
+[warmly] It took two brothers who were fed up with how hard it was, and made it easy for everyone else.

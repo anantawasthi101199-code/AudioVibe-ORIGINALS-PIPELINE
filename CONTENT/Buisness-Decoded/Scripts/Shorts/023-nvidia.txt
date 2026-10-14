@@ -1,0 +1,21 @@
+## story
+
+[leaning in] Nvidia, one of the most valuable companies in the world, was planned in a booth at a roadside diner, by three engineers who wanted to make video games look better.
+
+[warmly] The diner was a Denny's in San Jose, California, in 1993. One of the three was Jensen Huang, who had been born in Taiwan, moved to America as a boy, and worked at a Denny's himself as a teenager, washing dishes. The other two, Chris Malachowsky and Curtis Priem, were engineers like him.
+
+[curious] They saw that computer games were getting more ambitious, with three-dimensional worlds full of detail. But the main chip inside a computer, the processor, was not good at drawing those pictures. It does tasks one after another, very quickly. [thoughtful] Drawing a 3D scene means doing millions of small calculations all at once, for every point of light on the screen. So they decided to build a special chip that did only that: a graphics chip.
+
+[grave] Their first chip, in 1995, flopped. Nvidia came within weeks of running out of money. [determined] They bet everything on the next one, and in 1997 it was a hit. Then, in 1999, they launched the GeForce, and called it the world's first GPU, a graphics processing unit. Gamers loved it.
+
+[thoughtful] And then Jensen Huang made a long, expensive bet that many investors did not understand. [pause] He decided that his gaming chips should be able to do far more than games.
+
+## rise
+
+[building] In 2006 Nvidia released software called CUDA, which let scientists use graphics chips for any calculation that needed millions of small sums at once. [with wonder] In 2012, a team of researchers trained a new kind of artificial intelligence on two Nvidia gaming cards, and it beat every other computer at recognising pictures. [knowingly] It worked because AI turned out to need exactly what games needed: enormous numbers of small calculations, done side by side.
+
+[quietly impressed] When AI chatbots took off at the end of 2022, every big technology company needed Nvidia's chips, and it became one of the most valuable companies on Earth.
+
+## close
+
+[warmly] It took three engineers in a diner, and a bet that chips built for games could do much more.
