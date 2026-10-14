@@ -1,0 +1,21 @@
+## story
+
+[leaning in] Almost every advanced computer chip on Earth, in your phone and in the world's most powerful computers, is printed with a machine made by one company in a small town in the Netherlands. It began in a leaky wooden shed.
+
+[warmly] In 1984 the Dutch electronics giant Philips and a smaller chip equipment company set up a joint business together. They called it ASML. Its first home was a wooden building beside a Philips office in Eindhoven, and when it rained, the roof leaked. [curious] Its job was to build lithography machines.
+
+[thoughtful] Lithography is how chips are made. Imagine a slide projector, shining light through a pattern, but in reverse, shrinking the picture down instead of making it bigger. The machine shines light through a pattern of a circuit, shrinks it, and prints it onto a disc of silicon. Do it again and again, layer by layer, and you build a chip with billions of tiny switches.
+
+[serious] To make the switches smaller, you need light with a shorter and shorter wavelength. For decades, the industry kept shrinking. [grave] But eventually ordinary light could go no further. [determined] The answer was extreme ultraviolet light, invisible and incredibly hard to make and control. Most experts thought it was impossible to use in a factory. [pause] ASML decided to try anyway.
+
+## rise
+
+[with wonder] It took more than twenty years and billions of euros. To make the light, the machine fires a laser at tiny drops of molten tin, tens of thousands of times a second, turning each drop into a flash of glowing plasma. The light bounces off mirrors so smooth that if they were the size of a country, their biggest bump would be smaller than a millimetre.
+
+[building] The first machines for real factories arrived in the late 2010s. Each is the size of a bus and costs hundreds of millions of euros. [knowingly] It worked because ASML kept going long after others gave up, and worked with suppliers it trusted completely.
+
+[quietly impressed] Today it is the only company in the world that makes these machines. Every maker of the most advanced chips depends on it, and it is one of Europe's most valuable companies.
+
+## close
+
+[warmly] It took a company in a leaky shed that refused to believe something was impossible.

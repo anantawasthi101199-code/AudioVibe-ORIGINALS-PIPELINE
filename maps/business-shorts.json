@@ -369,140 +369,240 @@
       "title": "Nutella: The Chocolate Spread Born from a Shortage",
       "covers": "Pietro Ferrero stretching scarce cocoa with hazelnuts in post-war Italy, the jar that became Nutella, and how one family built Kinder, Ferrero Rocher and Tic Tac while staying private.",
       "subject": "Ferrero",
-      "source": "Ferrero official company history, annual reports and reputable business journalism"
+      "source": "Ferrero official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/031-nutella.txt",
+        "title": "Nutella: The Spread Born from a Shortage",
+        "description": "After the Second World War, chocolate was scarce in Italy. A pastry maker stretched it with local hazelnuts, and his family turned that recipe into Nutella, Kinder and Ferrero Rocher."
+      }
     },
     {
       "number": 32,
       "title": "Aldi: Two Brothers, One Shop, Two Empires",
       "covers": "Karl and Theo Albrecht taking over their mother's shop in Essen, the no-frills discount formula, the split into Aldi Nord and Aldi Süd, and their spread across Europe, the US and Australia.",
       "subject": "Aldi",
-      "source": "Aldi official company history, annual reports and reputable business journalism"
+      "source": "Aldi official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/032-aldi.txt",
+        "title": "Aldi: Two Brothers, One Shop, Two Empires",
+        "description": "Two brothers took over their mother's small grocery shop in a German mining town after the war. They built a cheap, no-frills supermarket, then fell out and split the business in two."
+      }
     },
     {
       "number": 33,
       "title": "Intel: The Company That Put a Brain in Every Computer",
       "covers": "Robert Noyce and Gordon Moore leaving Fairchild in 1968, memory chips, the first microprocessor, the 'Intel Inside' campaign and its long run at the heart of the PC.",
       "subject": "Intel",
-      "source": "Intel official company history, annual reports and reputable business journalism"
+      "source": "Intel official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/033-intel.txt",
+        "title": "Intel: The Brain Inside Every Computer",
+        "description": "Two engineers left their company in 1968 to start Intel. Three years later, their team fitted a whole computer processor onto a single chip, and the age of personal computers began."
+      }
     },
     {
       "number": 34,
       "title": "WhatsApp: The Messaging App With No Adverts",
       "covers": "Jan Koum and Brian Acton, two former Yahoo engineers, a status app that became a messenger, a tiny team serving hundreds of millions, and the 19 billion dollar sale to Facebook.",
       "subject": "WhatsApp",
-      "source": "WhatsApp official company history, annual reports and reputable business journalism"
+      "source": "WhatsApp official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/034-whatsapp.txt",
+        "title": "WhatsApp: The Messaging App With No Adverts",
+        "description": "A teenager who arrived in America from Ukraine with his mother and lived on food stamps built a messaging app with a friend. He signed its 19 billion dollar sale outside the welfare office where he once queued."
+      }
     },
     {
       "number": 35,
       "title": "Ryanair: The Airline That Made Flying Cheap",
       "covers": "A small Irish airline flying from Waterford in 1985, nearly failing, copying Southwest's low-cost model, Michael O'Leary's no-frills approach, and becoming Europe's biggest carrier.",
       "subject": "Ryanair",
-      "source": "Ryanair official company history, annual reports and reputable business journalism"
+      "source": "Ryanair official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/035-ryanair.txt",
+        "title": "Ryanair: The Airline That Made Flying Cheap",
+        "description": "A tiny Irish airline that began with one fifteen-seat plane was losing money fast. Then it copied a cheap American airline, cut everything it could, and became the biggest airline in Europe."
+      }
     },
     {
       "number": 36,
       "title": "Disney: The Mouse That Built an Empire",
       "covers": "Walt and Roy Disney's cartoon studio, losing Oswald the rabbit, creating Mickey Mouse, the gamble on Snow White, Disneyland, and the modern company of parks and franchises.",
       "subject": "Walt Disney Company",
-      "source": "Walt Disney Company official company history, annual reports and reputable business journalism"
+      "source": "Walt Disney Company official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/036-disney.txt",
+        "title": "Disney: The Mouse That Built an Empire",
+        "description": "Walt Disney lost his first cartoon star to the man who paid for it. On the train home he dreamed up a mouse, and built one of the biggest entertainment companies in the world."
+      }
     },
     {
       "number": 37,
       "title": "Dr. Martens: The Army Doctor's Boot That Joined the Punks",
       "covers": "A German doctor with an injured ankle designing an air-cushioned sole, the British Griggs family making the 1460 boot in 1960, and its adoption by workers, skinheads and punks.",
       "subject": "Dr. Martens",
-      "source": "Dr. Martens official company history, annual reports and reputable business journalism"
+      "source": "Dr. Martens official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/037-dr-martens.txt",
+        "title": "Dr. Martens: The Doctor's Boot Punks Loved",
+        "description": "A German army doctor hurt his ankle skiing and designed a boot with a soft air-cushioned sole. A family of English bootmakers added yellow stitching, and it became the boot of workers, then rebels."
+      }
     },
     {
       "number": 38,
       "title": "ASML: The Dutch Company Every Chip Maker Needs",
       "covers": "A joint venture between Philips and ASM in a shed beside a factory in 1984, decades betting on lithography, and the extreme ultraviolet machines only it can make.",
       "subject": "ASML",
-      "source": "ASML official company history, annual reports and reputable business journalism"
+      "source": "ASML official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/038-asml.txt",
+        "title": "ASML: The Machine Every Chip Maker Needs",
+        "description": "Every advanced computer chip in the world is made on machines from one company in a small Dutch town. ASML began in a leaky shed in 1984, and spent decades building a machine others gave up on."
+      }
     },
     {
       "number": 39,
       "title": "Wipro: The Vegetable Oil Company That Became an IT Giant",
       "covers": "Western India Vegetable Products in 1945, Azim Premji taking over at twenty-one after his father's death, the move into computers, and his record-setting philanthropy.",
       "subject": "Wipro",
-      "source": "Wipro official company history, annual reports and reputable business journalism"
+      "source": "Wipro official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/039-wipro.txt",
+        "title": "Wipro: From Cooking Oil to IT Giant",
+        "description": "When his father died suddenly, a twenty-one-year-old student came home from America to run the family's cooking oil company. Azim Premji turned it into one of India's biggest technology firms."
+      }
     },
     {
       "number": 40,
       "title": "Singapore Airlines: The Airline of a Country Without Domestic Flights",
       "covers": "The split from Malaysia-Singapore Airlines in 1972, the Singapore Girl, betting on service and new planes, and staying among the world's best-rated airlines.",
       "subject": "Singapore Airlines",
-      "source": "Singapore Airlines official company history, annual reports and reputable business journalism"
+      "source": "Singapore Airlines official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/040-singapore-airlines.txt",
+        "title": "Singapore Airlines: Nowhere to Fly at Home",
+        "description": "Singapore is so small that it has no domestic flights, so every journey its airline makes is against the world's best. It decided to win on service, and became one of the best-rated airlines on Earth."
+      }
     },
     {
       "number": 41,
       "title": "Heinz: The Ketchup That Promised Purity",
       "covers": "Henry John Heinz bottling horseradish in clear glass, the '57 varieties' slogan, his campaign for food safety laws, and how ketchup became the brand's global calling card.",
       "subject": "Heinz",
-      "source": "Heinz official company history, annual reports and reputable business journalism"
+      "source": "Heinz official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/041-heinz.txt",
+        "title": "Heinz: The Ketchup That Promised Purity",
+        "description": "Other food sellers hid cheap fillers in dark bottles. A young man in Pittsburgh put his horseradish in clear glass so customers could see what they were buying, and built the most famous ketchup in the world."
+      }
     },
     {
       "number": 42,
       "title": "Primark: Low Prices Without a Website",
       "covers": "Arthur Ryan opening the first Penneys in Dublin in 1969, the move into Britain under the Primark name, the bargain-fashion formula and the choice to stay mostly offline.",
       "subject": "Primark",
-      "source": "Primark official company history, annual reports and reputable business journalism"
+      "source": "Primark official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/042-primark.txt",
+        "title": "Primark: Low Prices Without a Website",
+        "description": "An Irish businessman opened one cheap clothing shop in Dublin in 1969. Primark grew across Europe and America selling fashion at rock-bottom prices, almost without selling online at all."
+      }
     },
     {
       "number": 43,
       "title": "Oracle: The Database Built From a CIA Project Name",
       "covers": "Larry Ellison and two partners reading a research paper on relational databases, the first commercial SQL product named after a CIA project, aggressive selling, and growth into a business software giant.",
       "subject": "Oracle",
-      "source": "Oracle official company history, annual reports and reputable business journalism"
+      "source": "Oracle official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/043-oracle.txt",
+        "title": "Oracle: A Database Named After a CIA Project",
+        "description": "A college dropout read a research paper that a giant computer company was ignoring, and built a database from it. He named it after a CIA project he had worked on, and Oracle became a software giant."
+      }
     },
     {
       "number": 44,
       "title": "Instagram: The Photo App Sold for a Billion With Thirteen Staff",
       "covers": "Kevin Systrom and Mike Krieger dropping a check-in app called Burbn, filters for phone photos, a million users in two months, and the sale to Facebook in 2012.",
       "subject": "Instagram",
-      "source": "Instagram official company history, annual reports and reputable business journalism"
+      "source": "Instagram official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/044-instagram.txt",
+        "title": "Instagram: A Billion Dollars, Thirteen Staff",
+        "description": "Two founders gave up on a complicated check-in app and kept only the part people used: sharing photos. Eighteen months later, Facebook paid a billion dollars for their company of thirteen people."
+      }
     },
     {
       "number": 45,
       "title": "Southwest: The Airline Sketched on a Napkin",
       "covers": "Herb Kelleher and Rollin King drawing a triangle of Texas cities, years of legal fights to take off, quick turnarounds, one plane type, and decades of profits in a hard industry.",
       "subject": "Southwest Airlines",
-      "source": "Southwest Airlines official company history, annual reports and reputable business journalism"
+      "source": "Southwest Airlines official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/045-southwest.txt",
+        "title": "Southwest: The Airline Sketched on a Napkin",
+        "description": "Two men drew a triangle between three Texas cities on a napkin. Big airlines fought them in court for years before their first flight, and Southwest became the most copied airline in the world."
+      }
     },
     {
       "number": 46,
       "title": "Marvel: The Comic Book Company That Went Bankrupt, Then Ruled Cinema",
       "covers": "Timely Comics in 1939, Stan Lee and Jack Kirby's heroes of the 1960s, bankruptcy in 1996, the risky film studio, Iron Man, and the sale to Disney.",
       "subject": "Marvel Entertainment",
-      "source": "Marvel Entertainment official company history, annual reports and reputable business journalism"
+      "source": "Marvel Entertainment official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/046-marvel.txt",
+        "title": "Marvel: From Bankruptcy to Ruling Cinema",
+        "description": "Marvel's comic book heroes had flaws and money worries, and readers loved them. Then the company went bankrupt, and bet its own characters on a loan to make films itself."
+      }
     },
     {
       "number": 47,
       "title": "Patagonia: The Company That Told You Not to Buy Its Jacket",
       "covers": "Yvon Chouinard forging climbing pitons, moving into clothing, the 'Don't Buy This Jacket' advert, and giving the company away to fight climate change.",
       "subject": "Patagonia",
-      "source": "Patagonia official company history, annual reports and reputable business journalism"
+      "source": "Patagonia official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/047-patagonia.txt",
+        "title": "Patagonia: Don't Buy This Jacket",
+        "description": "A climber who made his own climbing gear in a backyard forge built an outdoor clothing company that told customers to buy less. Then he gave the whole company away to fight climate change."
+      }
     },
     {
       "number": 48,
       "title": "Maersk: The Shipping Company That Moves the World's Goods",
       "covers": "A Danish captain and his son starting a steamship company in 1904, the shift to container ships, and growing into one of the largest shipping lines on earth.",
       "subject": "Maersk",
-      "source": "Maersk official company history, annual reports and reputable business journalism"
+      "source": "Maersk official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/048-maersk.txt",
+        "title": "Maersk: The Ships That Move the World",
+        "description": "A Danish sea captain and his son bought one second-hand steamship in 1904. Their family company grew into one of the biggest container shipping lines on Earth, carrying the goods in your home."
+      }
     },
     {
       "number": 49,
       "title": "HDFC Bank: The Bank That Was Built to Be Boring",
       "covers": "HDFC starting in housing finance in 1977, Aditya Puri building a new private bank from 1994, careful lending, and growing into India's largest private bank.",
       "subject": "HDFC Bank",
-      "source": "HDFC Bank official company history, annual reports and reputable business journalism"
+      "source": "HDFC Bank official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/049-hdfc-bank.txt",
+        "title": "HDFC Bank: Built on Purpose to Be Boring",
+        "description": "A banker who was sixty-six years old started India's first home loan company. His company then built a bank that grew by being careful, and became India's biggest private bank."
+      }
     },
     {
       "number": 50,
       "title": "M-Pesa: Money Sent by Text Message",
       "covers": "A Kenyan mobile network and a British aid-funded trial in 2007, people sending money from basic phones, and how it reshaped banking for millions.",
       "subject": "Safaricom M-Pesa",
-      "source": "Safaricom M-Pesa official company history, annual reports and reputable business journalism"
+      "source": "Safaricom M-Pesa official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/050-m-pesa.txt",
+        "title": "M-Pesa: Money Sent by Text Message",
+        "description": "In Kenya, most people had no bank account, and sending money home meant trusting a bus driver with cash. A phone company tested a simple text message service, and changed how a whole country handles money."
+      }
     },
     {
       "number": 51,

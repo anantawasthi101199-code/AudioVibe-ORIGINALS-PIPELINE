@@ -1,0 +1,21 @@
+## story
+
+[leaning in] In 1971, a small company in California fitted the brain of a computer onto a chip the size of a fingernail. That company was Intel, and it changed the world.
+
+[warmly] Intel was started in 1968 by two engineers, Robert Noyce and Gordon Moore. Both worked in what was becoming Silicon Valley, south of San Francisco. Noyce had helped invent the microchip itself, a tiny slice of silicon packed with electronic parts. [curious] They wanted to build their own company, and a young engineer called Andy Grove joined them almost immediately.
+
+[thoughtful] At first, Intel made memory chips, which store information. [curious] Then, in 1969, a Japanese company that made calculators asked Intel to design a set of chips for its new machine. Intel's engineers had a better idea. Instead of a dozen chips, each doing one job, why not put a whole tiny computer processor on just one chip? A chip that could be told what to do by a program.
+
+[with wonder] In 1971 they launched it, the Intel 4004. It was the first microprocessor sold to the world, a computer's brain on a single piece of silicon.
+
+[thoughtful] Gordon Moore had already made a famous prediction. The number of parts that could fit on a chip, he said, would keep doubling every couple of years. It became known as Moore's law, and for decades it came true. [pause] And then, in 1981, came the deal that made Intel enormous.
+
+## rise
+
+[building] IBM, then the biggest computer company in the world, chose an Intel processor for its new personal computer, the IBM PC. Other companies copied the PC, and they all used Intel chips too. In 1985, Andy Grove made a brave decision. He pulled out of the memory business, where Japanese rivals were winning, and bet everything on processors. [knowingly] It worked because almost every personal computer on Earth now needed an Intel brain.
+
+[with a smile] In 1991 it started the Intel Inside adverts, with a famous little five-note jingle. [serious] In recent years, Intel has fallen behind rivals in making the most advanced chips, and is fighting hard to catch up. [quietly impressed] But the processor it invented is inside almost everything with a screen.
+
+## close
+
+[warmly] It took engineers who saw that one chip could do the work of many.

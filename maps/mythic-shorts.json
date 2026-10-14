@@ -338,61 +338,111 @@
       "number": 31,
       "title": "Horus and Set: The Eighty-Year Trial for the Throne",
       "covers": "The young Horus and his uncle Set fight for Egypt's crown in a long divine court case full of tricks, contests and boats made of stone.",
-      "source": "The Contendings of Horus and Set, Chester Beatty Papyrus I, in Alan H. Gardiner's translation"
+      "source": "The Contendings of Horus and Set, Chester Beatty Papyrus I, in Alan H. Gardiner's translation",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/031-horus-and-set.txt",
+        "title": "Horus and Set: The Trial for the Throne",
+        "description": "After the murdered king Osiris goes down to rule the dead, his young son and his brother both claim his crown. The court of the gods argues for eighty years, and the contest gets very strange."
+      }
     },
     {
       "number": 32,
       "title": "Marduk and Tiamat: The War That Made the World",
       "covers": "The young god Marduk fights the ocean dragon Tiamat, splits her body in two, and builds the sky and earth from the halves.",
-      "source": "Enuma Elish, in L. W. King, The Seven Tablets of Creation (1902)"
+      "source": "Enuma Elish, in L. W. King, The Seven Tablets of Creation (1902)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/032-marduk-and-tiamat.txt",
+        "title": "Marduk and Tiamat: The War That Made Earth",
+        "description": "The goddess of the salt sea raises an army of monsters to destroy the young gods. Only one god dares to face her, and he asks for a price: if he wins, he will be king of them all."
+      }
     },
     {
       "number": 33,
       "title": "Oisín in Tír na nÓg: The Land of Youth",
       "covers": "A hero rides away with a fairy woman to a land where no one ages, and when he returns home three centuries have passed.",
-      "source": "Lady Gregory, Gods and Fighting Men (1904), Oisin's children and the Land of the Young"
+      "source": "Lady Gregory, Gods and Fighting Men (1904), Oisin's children and the Land of the Young",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/033-oisin-in-tir-na-nog.txt",
+        "title": "Oisín in Tír na nÓg: The Land of Youth",
+        "description": "A fairy woman on a white horse carries the hero Oisín away over the sea to the Land of Youth. After three happy years he longs to see Ireland again, and she gives him one warning."
+      }
     },
     {
       "number": 34,
       "title": "The White Hare of Inaba",
       "covers": "A hare who tricked crocodiles is skinned and given cruel advice, until a kind young god shows him how to heal.",
-      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the white hare of Inaba"
+      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the white hare of Inaba",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/034-white-hare-of-inaba.txt",
+        "title": "The White Hare of Inaba",
+        "description": "A hare tricks a line of sea monsters into making him a bridge, and pays for it with his fur. Eighty cruel brothers give him terrible advice. Then their youngest brother comes along the beach."
+      }
     },
     {
       "number": 35,
       "title": "Chang'e: The Woman Who Flew to the Moon",
       "covers": "Hou Yi's wife swallows the elixir of immortality and floats up to the moon, where she lives alone with a jade rabbit.",
-      "source": "E. T. C. Werner, Myths and Legends of China (1922), the moon lady"
+      "source": "E. T. C. Werner, Myths and Legends of China (1922), the moon lady",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/035-change-flies-to-the-moon.txt",
+        "title": "Chang'e: The Woman Who Flew to the Moon",
+        "description": "The archer Yi is given a potion that can make one person a god. He hides it at home, and his wife Chang'e finds it and drinks it, and begins to float up into the sky."
+      }
     },
     {
       "number": 36,
       "title": "Sadko in the Palace of the Sea King",
       "covers": "A poor musician of Novgorod wins a fortune by his playing, and is later dragged beneath the waves to play for the king of the sea.",
-      "source": "The bylina of Sadko, in Isabel Florence Hapgood, The Epic Songs of Russia (1886)"
+      "source": "The bylina of Sadko, in Isabel Florence Hapgood, The Epic Songs of Russia (1886)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/036-sadko.txt",
+        "title": "Sadko in the Palace of the Sea King",
+        "description": "A poor musician of old Novgorod plays his harp beside a lake, and the King of the Sea rises out of the water to listen. Years later, the king wants him back, under the waves."
+      }
     },
     {
       "number": 37,
       "title": "Manco Cápac and the Golden Staff",
       "covers": "The sun sends his children to find where a golden staff will sink into the earth, and there they found the city of Cusco.",
-      "source": "Garcilaso de la Vega, Royal Commentaries of the Incas (Markham translation, 1869)"
+      "source": "Garcilaso de la Vega, Royal Commentaries of the Incas (Markham translation, 1869)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/037-manco-capac.txt",
+        "title": "Manco Cápac and the Golden Staff",
+        "description": "The Sun looks down on people living like animals and sends his son and daughter out of a great lake with a golden staff. Wherever it sinks into the ground, they must build a city."
+      }
     },
     {
       "number": 38,
       "title": "The Chameleon's Message: Why People Die",
       "covers": "The creator sends a slow chameleon with the gift of life and a fast lizard with the message of death, and the lizard arrives first.",
-      "source": "Henry Callaway, The Religious System of the Amazulu (1870), the coming of death"
+      "source": "Henry Callaway, The Religious System of the Amazulu (1870), the coming of death",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/038-the-chameleons-message.txt",
+        "title": "The Chameleon's Message: Why People Die",
+        "description": "The first ancestor of the Zulu people sends a chameleon with a message that people will live forever. But the chameleon is slow, and stops to eat, and a lizard is sent after it with a different message."
+      }
     },
     {
       "number": 39,
       "title": "Merlin and Nimue: The Wizard Who Was Trapped",
       "covers": "Merlin falls for a young enchantress, teaches her his magic, and she uses it to seal him away forever.",
-      "source": "Thomas Malory, Le Morte d'Arthur (1485), book 4"
+      "source": "Thomas Malory, Le Morte d'Arthur (1485), book 4",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/039-merlin-and-nimue.txt",
+        "title": "Merlin and Nimue: The Wizard Who Was Trapped",
+        "description": "Merlin, the greatest wizard in Britain, falls in love with a young enchantress and teaches her all his magic. He has already seen how it ends, and goes with her anyway."
+      }
     },
     {
       "number": 40,
       "title": "Baucis and Philemon: The Couple Who Fed the Gods",
       "covers": "Two disguised gods are turned away by a whole village except one poor old couple, who are rewarded and the village drowned.",
-      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 8"
+      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 8",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/040-baucis-and-philemon.txt",
+        "title": "Baucis and Philemon: Supper for the Gods",
+        "description": "Two gods in disguise knock on a thousand doors, and every one is slammed in their faces. Then they come to the smallest hut in the village, where a poor old couple invite them in."
+      }
     },
     {
       "number": 41,

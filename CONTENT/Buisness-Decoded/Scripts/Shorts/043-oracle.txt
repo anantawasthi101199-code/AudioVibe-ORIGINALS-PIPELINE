@@ -1,0 +1,23 @@
+## story
+
+[leaning in] One of the biggest software companies in the world is named after a secret project for the CIA, America's spy agency. And it started because the computer giant IBM did not move fast enough.
+
+[warmly] Larry Ellison was born in New York in 1944 and adopted as a baby by relatives in Chicago. He went to university twice, and dropped out twice. [curious] But he was very good with computers, and moved to California, where he worked as a programmer. At one company, he worked on a database for the CIA. Its code name was Oracle.
+
+[thoughtful] A database is where a business keeps all its information: customers, orders, money. Back then they were clumsy and hard to search. [with wonder] Then a scientist at IBM wrote a famous paper describing a better way, called a relational database. Everything was kept in neat tables, like a spreadsheet, and you could ask it questions in a simple language.
+
+[determined] In 1977, Ellison and two friends started their own company, with about two thousand dollars between them. They had read the IBM paper, and they believed IBM was too slow and cautious to sell the idea quickly. [slyly] So they would build it first.
+
+[knowingly] In 1979 they released their database. They called it Oracle, after that old project. [with a smile] And they called it Version 2, though there had never been a Version 1. [pause] Ellison guessed that customers would not trust a brand-new product.
+
+## rise
+
+[building] One of their first customers was the American air force. Oracle sold hard, and promised a lot, and businesses everywhere bought it. [knowingly] It worked because they got a good idea to customers years before the company that invented it did.
+
+[serious] In 1990 it nearly collapsed, after it had reported sales that had not really happened yet. It cut back, fixed its accounts and recovered.
+
+[quietly impressed] Today Oracle runs the databases and business software of huge companies and governments around the world, and Larry Ellison is one of the richest people on Earth.
+
+## close
+
+[warmly] It took a dropout who read the right paper, and moved faster than the people who wrote it.
