@@ -1,0 +1,608 @@
+{
+  "id": "roothealth-shorts",
+  "channelId": "root-health",
+  "title": "100 Everyday Body Questions",
+  "formatId": "health-short",
+  "shorts": [
+    {
+      "number": 1,
+      "title": "Why Do We Need Sleep at All?",
+      "covers": "What the brain and body do during sleep that they cannot do awake, from clearing waste in the brain to fixing memories, and what one bad night really costs.",
+      "source": "NHS sleep guidance and reviews of sleep and brain clearance research"
+    },
+    {
+      "number": 2,
+      "title": "What Are Hiccups For?",
+      "covers": "The muscle spasm behind a hiccup, the leading ideas about why we have them, and why most home cures are hit and miss.",
+      "source": "NHS guidance on hiccups and physiology reviews"
+    },
+    {
+      "number": 3,
+      "title": "How Do Vaccines Train Your Body?",
+      "covers": "How a vaccine shows the immune system a harmless preview of a germ, how memory cells remember it, and why some vaccines need boosters.",
+      "source": "NHS vaccination guidance and WHO resources on how vaccines work"
+    },
+    {
+      "number": 4,
+      "title": "Is a Migraine Just a Bad Headache?",
+      "covers": "What happens in the brain during a migraine, why some people see flashing lights first, and the treatments that help.",
+      "source": "NHS migraine guidance and NICE headache guidance"
+    },
+    {
+      "number": 5,
+      "title": "Does Reading in Dim Light Ruin Your Eyes?",
+      "covers": "Whether the old warning is true, what dim light really does to your eyes, and what does cause short sight in children.",
+      "source": "NHS eye health guidance and research on myopia and outdoor time"
+    },
+    {
+      "number": 6,
+      "title": "What Does SPF Really Mean?",
+      "covers": "What the number on sun cream measures, the difference between UVA and UVB, and how much you need to put on.",
+      "source": "NHS sun safety guidance and the British Association of Dermatologists"
+    },
+    {
+      "number": 7,
+      "title": "Is Lactic Acid Why Your Muscles Ache?",
+      "covers": "Why muscles are sore a day or two after exercise, why lactic acid is not to blame, and what helps recovery.",
+      "source": "Reviews of delayed onset muscle soreness and exercise physiology research"
+    },
+    {
+      "number": 8,
+      "title": "Paracetamol or Ibuprofen?",
+      "covers": "How the two most common painkillers work differently, which suits which kind of pain, and the safety limits for each.",
+      "source": "NHS guidance on paracetamol and ibuprofen"
+    },
+    {
+      "number": 9,
+      "title": "Why Do People Get Hay Fever?",
+      "covers": "How the immune system mistakes pollen for a threat, what causes the sneezing and itching, and the treatments that help.",
+      "source": "NHS hay fever guidance"
+    },
+    {
+      "number": 10,
+      "title": "Do You Need Eight Glasses of Water a Day?",
+      "covers": "Where the eight-glasses rule came from, how much fluid you really need, and how your body tells you.",
+      "source": "NHS guidance on water and drinks and the European Food Safety Authority's reference values"
+    },
+    {
+      "number": 11,
+      "title": "Do You Really Need Eight Hours?",
+      "covers": "Where the eight-hour figure comes from, how much sleep adults actually need, why it varies from person to person, and the signs you are not getting enough.",
+      "source": "NHS sleep guidance and the American Academy of Sleep Medicine consensus on adult sleep duration"
+    },
+    {
+      "number": 12,
+      "title": "Why Do We Get Goosebumps?",
+      "covers": "The tiny muscles that lift each hair, why cold and fear both trigger them, and what they were for in our furry ancestors.",
+      "source": "Physiology reviews and research on the arrector pili muscles"
+    },
+    {
+      "number": 13,
+      "title": "Why Do We Get a Fever?",
+      "covers": "Why the body turns up its own temperature when fighting infection, when a fever is helpful, and when it needs medical attention.",
+      "source": "NHS guidance on fever in adults and children"
+    },
+    {
+      "number": 14,
+      "title": "What Is Concussion?",
+      "covers": "How a knock to the head shakes the brain inside the skull, the warning signs, and why rest and a gradual return matter.",
+      "source": "NHS concussion guidance and sport concussion consensus statements"
+    },
+    {
+      "number": 15,
+      "title": "Do Carrots Help You See in the Dark?",
+      "covers": "How a wartime cover story about British pilots started a famous myth, and what vitamin A really does for vision.",
+      "source": "Historical accounts of the Second World War carrot campaign and NHS guidance on vitamin A"
+    },
+    {
+      "number": 16,
+      "title": "What Does Sunburn Do to Your Skin?",
+      "covers": "How ultraviolet light damages the DNA in skin cells, why the skin goes red and peels, and the link to skin cancer.",
+      "source": "NHS sunburn guidance and Cancer Research UK"
+    },
+    {
+      "number": 17,
+      "title": "Does Stretching Prevent Injury?",
+      "covers": "What stretching before and after exercise really does, and what the evidence shows about injury and warming up.",
+      "source": "Systematic reviews of stretching and sports injury"
+    },
+    {
+      "number": 18,
+      "title": "How Do Painkillers Know Where It Hurts?",
+      "covers": "Why a painkiller you swallow eases pain in your foot, how pain signals travel, and how the medicine interrupts them.",
+      "source": "Pharmacology reviews and NHS medicines information"
+    },
+    {
+      "number": 19,
+      "title": "Are Allergies on the Rise?",
+      "covers": "Why allergies have become more common, the hygiene hypothesis and its newer versions, and what researchers think is happening.",
+      "source": "Reviews of the hygiene and old friends hypotheses and allergy prevalence research"
+    },
+    {
+      "number": 20,
+      "title": "How Do Your Kidneys Clean Your Blood?",
+      "covers": "How two fist-sized organs filter all of your blood many times a day, and what they keep and what they throw away.",
+      "source": "NHS kidney guidance and Kidney Care UK"
+    },
+    {
+      "number": 21,
+      "title": "Why Is Yawning Contagious?",
+      "covers": "What a yawn is, the leading ideas about why we do it, and why seeing or even reading about a yawn can set one off.",
+      "source": "Reviews of yawning research in physiology and neuroscience journals"
+    },
+    {
+      "number": 22,
+      "title": "Why Do Fingers Wrinkle in Water?",
+      "covers": "Why fingertips prune in the bath, the nerve signal behind it, and the idea that wrinkles help us grip wet things.",
+      "source": "Research on water-induced finger wrinkling in Biology Letters and later studies"
+    },
+    {
+      "number": 23,
+      "title": "Why Antibiotics Won't Cure a Cold",
+      "covers": "The difference between bacteria and viruses, why antibiotics only work on one of them, and what really helps a cold.",
+      "source": "NHS guidance on antibiotics and the common cold"
+    },
+    {
+      "number": 24,
+      "title": "Spotting a Stroke: Act FAST",
+      "covers": "What a stroke is, the FAST signs of face, arms, speech and time, and why every minute of delay costs brain cells.",
+      "source": "NHS stroke guidance and the Stroke Association"
+    },
+    {
+      "number": 25,
+      "title": "Why Do We Need Reading Glasses After 40?",
+      "covers": "How the lens of the eye stiffens with age, why small print starts to blur, and how reading glasses fix it.",
+      "source": "NHS guidance on long-sightedness and age-related vision changes"
+    },
+    {
+      "number": 26,
+      "title": "Does Chocolate Cause Spots?",
+      "covers": "What really causes acne, from oil glands to bacteria and hormones, and what the evidence says about diet.",
+      "source": "NHS acne guidance and reviews of diet and acne research"
+    },
+    {
+      "number": 27,
+      "title": "Where Did 10,000 Steps Come From?",
+      "covers": "How a Japanese pedometer advert created the famous target, and what large studies show about how many steps really help.",
+      "source": "The 2022 Lancet Public Health meta-analysis of daily steps and mortality"
+    },
+    {
+      "number": 28,
+      "title": "What Is the Placebo Effect?",
+      "covers": "How a sugar pill can make people feel better, what it can and cannot do, and why trials compare medicines against placebos.",
+      "source": "Systematic reviews of placebo effects and clinical trial guidance"
+    },
+    {
+      "number": 29,
+      "title": "Peanuts for Babies: A Surprising Discovery",
+      "covers": "How a big study turned advice on peanut allergy upside down, and what it means for introducing foods to babies.",
+      "source": "The LEAP study in the New England Journal of Medicine and NHS guidance on introducing allergens"
+    },
+    {
+      "number": 30,
+      "title": "What Are Kidney Stones?",
+      "covers": "How hard crystals form in the kidneys, why passing one is so painful, and how to lower the risk.",
+      "source": "NHS guidance on kidney stones"
+    },
+    {
+      "number": 31,
+      "title": "What Is Sleep Paralysis?",
+      "covers": "Waking up unable to move, sometimes with a presence in the room: what is happening in the brain, why it is harmless, and what makes it more likely.",
+      "source": "NHS guidance on sleep paralysis and reviews of REM sleep research"
+    },
+    {
+      "number": 32,
+      "title": "Why Does Sunlight Make Some People Sneeze?",
+      "covers": "The photic sneeze reflex: what happens between the eye and the nose, and why about one in five people have it.",
+      "source": "Reviews of the photic sneeze reflex in neurology research"
+    },
+    {
+      "number": 33,
+      "title": "What Is Antibiotic Resistance?",
+      "covers": "How bacteria evolve to survive antibiotics, why overuse speeds it up, and why it is one of the biggest health threats in the world.",
+      "source": "WHO and NHS guidance on antimicrobial resistance"
+    },
+    {
+      "number": 34,
+      "title": "Do We Only Use 10% of Our Brains?",
+      "covers": "Where the famous myth came from, and what brain scans show about how much of the brain we actually use.",
+      "source": "Neuroscience reviews and brain imaging research"
+    },
+    {
+      "number": 35,
+      "title": "What Is Colour Blindness?",
+      "covers": "How the eye sees colour, why some people mix up reds and greens, and why it is far more common in men.",
+      "source": "NHS guidance on colour vision deficiency"
+    },
+    {
+      "number": 36,
+      "title": "Why Does Hair Turn Grey?",
+      "covers": "How hair gets its colour, why the pigment cells slow down with age, and whether stress can really turn you grey.",
+      "source": "Dermatology reviews and research on stress and hair pigment cells in Nature"
+    },
+    {
+      "number": 37,
+      "title": "Is Sitting the New Smoking?",
+      "covers": "What sitting for long hours does to the body, how much it matters, and how small breaks can help.",
+      "source": "NHS physical activity guidance and reviews of sedentary behaviour research"
+    },
+    {
+      "number": 38,
+      "title": "Do Medicines Stop Working After Expiry?",
+      "covers": "What an expiry date on medicine really means, what happens to tablets over time, and why some should be thrown away.",
+      "source": "NHS guidance on medicine expiry and safe disposal"
+    },
+    {
+      "number": 39,
+      "title": "What Happens in an Asthma Attack?",
+      "covers": "How the airways tighten and swell, what an inhaler does, and the signs of an attack that needs emergency help.",
+      "source": "NHS asthma guidance and Asthma + Lung UK"
+    },
+    {
+      "number": 40,
+      "title": "Do Detox Diets Work?",
+      "covers": "What the liver and kidneys already do to clear waste, and why detox teas and juice cleanses are not needed.",
+      "source": "NHS guidance on detox diets and reviews of detox claims"
+    },
+    {
+      "number": 41,
+      "title": "Do Screens Before Bed Keep You Awake?",
+      "covers": "How light and late-night scrolling affect the body clock and sleepiness, what the evidence actually shows, and what helps.",
+      "source": "NHS sleep guidance and systematic reviews on evening screen use and sleep"
+    },
+    {
+      "number": 42,
+      "title": "What Is Brain Freeze?",
+      "covers": "Why eating something icy causes a sharp headache in the forehead, what the blood vessels are doing, and how to stop it.",
+      "source": "Research on cold-stimulus headache in medical journals"
+    },
+    {
+      "number": 43,
+      "title": "Can Wet Hair Give You a Cold?",
+      "covers": "Where the old warning comes from, what actually causes colds, and what research says about being cold and catching infections.",
+      "source": "NHS guidance on colds and research on cold exposure and respiratory infections"
+    },
+    {
+      "number": 44,
+      "title": "Does Brain Training Work?",
+      "covers": "Whether puzzle apps and brain games make you smarter, what the big studies found, and what really keeps the brain healthy.",
+      "source": "Systematic reviews of cognitive training and the 2014 and 2016 expert consensus statements"
+    },
+    {
+      "number": 45,
+      "title": "What Is Tinnitus?",
+      "covers": "The ringing or buzzing that only you can hear, why it happens, and the ways people learn to manage it.",
+      "source": "NHS tinnitus guidance and the British Tinnitus Association"
+    },
+    {
+      "number": 46,
+      "title": "What Causes Dandruff?",
+      "covers": "The yeast that lives on everyone's scalp, why it causes flakes in some people, and the shampoos that help.",
+      "source": "NHS dandruff guidance and dermatology reviews"
+    },
+    {
+      "number": 47,
+      "title": "Can You Burn Fat From One Spot?",
+      "covers": "Why sit-ups do not melt belly fat, how the body chooses where to burn fat from, and what actually works.",
+      "source": "Studies on spot reduction and exercise physiology reviews"
+    },
+    {
+      "number": 48,
+      "title": "How Does CPR Keep Someone Alive?",
+      "covers": "What happens when the heart stops, how chest compressions keep blood moving to the brain, and how to do them.",
+      "source": "Resuscitation Council UK guidance and NHS guidance on CPR"
+    },
+    {
+      "number": 49,
+      "title": "Why Do We Cough?",
+      "covers": "How a cough clears the airways, why some coughs hang on for weeks after a cold, and when a cough needs checking.",
+      "source": "NHS guidance on coughs"
+    },
+    {
+      "number": 50,
+      "title": "What Causes a Hangover?",
+      "covers": "What alcohol does to the body overnight, from dehydration to a toxic by-product, and why most cures do not work.",
+      "source": "NHS alcohol guidance and research on hangover causes"
+    },
+    {
+      "number": 51,
+      "title": "Why Do Teenagers Want to Sleep Late?",
+      "covers": "How the body clock shifts later in adolescence, why it is biology rather than laziness, and what that means for school mornings.",
+      "source": "Reviews of adolescent circadian rhythm research and school start time studies"
+    },
+    {
+      "number": 52,
+      "title": "What Causes a Stitch When You Run?",
+      "covers": "The sharp pain under the ribs during exercise, the main explanations, and what actually helps it go away.",
+      "source": "Reviews of exercise-related transient abdominal pain"
+    },
+    {
+      "number": 53,
+      "title": "Why Is Flu Worse in Winter?",
+      "covers": "Why flu and colds peak in the colder months, from indoor crowding to how viruses survive in dry air.",
+      "source": "Reviews of influenza seasonality and NHS flu guidance"
+    },
+    {
+      "number": 54,
+      "title": "How Does a General Anaesthetic Work?",
+      "covers": "What happens when you are put to sleep for an operation, how it differs from normal sleep, and how anaesthetists keep you safe.",
+      "source": "Royal College of Anaesthetists patient information and NHS guidance"
+    },
+    {
+      "number": 55,
+      "title": "How Loud Is Too Loud?",
+      "covers": "How loud music and noise damage the tiny hair cells in the ear, why the damage is permanent, and how to protect your hearing.",
+      "source": "NHS guidance on hearing loss and WHO safe listening guidance"
+    },
+    {
+      "number": 56,
+      "title": "What Is Eczema?",
+      "covers": "Why some skin gets dry, itchy and inflamed, how the skin barrier works, and the everyday treatments that help.",
+      "source": "NHS eczema guidance and NICE atopic eczema guidance"
+    },
+    {
+      "number": 57,
+      "title": "What Causes Muscle Cramp?",
+      "covers": "Why a muscle suddenly locks tight, the main explanations, and what helps a cramp ease.",
+      "source": "NHS guidance on leg cramps and exercise-associated muscle cramp reviews"
+    },
+    {
+      "number": 58,
+      "title": "What to Do When Someone Is Choking",
+      "covers": "How to tell when someone is really choking, back blows and abdominal thrusts step by step, and when to call for help.",
+      "source": "NHS guidance on choking and Resuscitation Council UK"
+    },
+    {
+      "number": 59,
+      "title": "Is Vaping Safer Than Smoking?",
+      "covers": "What is in vape vapour compared with cigarette smoke, what the evidence shows, and why it is not harmless.",
+      "source": "NHS guidance on vaping and the Cochrane review of e-cigarettes for stopping smoking"
+    },
+    {
+      "number": 60,
+      "title": "Why Are There Different Blood Types?",
+      "covers": "What A, B, AB and O mean, what the plus and minus sign show, and why the right match matters in a transfusion.",
+      "source": "NHS Blood and Transplant guidance on blood groups"
+    },
+    {
+      "number": 61,
+      "title": "Are Naps Good for You?",
+      "covers": "What a short nap does for alertness, why long naps leave you groggy, and when napping can be a sign of a sleep problem.",
+      "source": "NHS sleep guidance and reviews of napping research"
+    },
+    {
+      "number": 62,
+      "title": "Does Cracking Your Knuckles Cause Arthritis?",
+      "covers": "What the popping sound in a joint really is, and what studies, including one doctor who cracked one hand for sixty years, have found.",
+      "source": "Research on joint cavitation and knuckle cracking and arthritis studies"
+    },
+    {
+      "number": 63,
+      "title": "Does Handwashing Really Work?",
+      "covers": "How washing hands with soap breaks germs apart, how long it takes, and the evidence that it prevents illness.",
+      "source": "WHO and NHS handwashing guidance and systematic reviews of hand hygiene"
+    },
+    {
+      "number": 64,
+      "title": "Why Do People Faint?",
+      "covers": "How a sudden drop in blood flow to the brain causes fainting, the common triggers, and when fainting needs checking.",
+      "source": "NHS guidance on fainting and NICE guidance on transient loss of consciousness"
+    },
+    {
+      "number": 65,
+      "title": "Why Do Your Ears Pop on a Plane?",
+      "covers": "How air pressure changes squeeze the eardrum, what the tube behind your nose does, and the tricks that help.",
+      "source": "NHS guidance on ear problems when flying"
+    },
+    {
+      "number": 66,
+      "title": "Why Do Bruises Change Colour?",
+      "covers": "How a bruise forms when tiny blood vessels break, and why it turns from purple to green to yellow as it heals.",
+      "source": "NHS guidance on bruises and physiology of haemoglobin breakdown"
+    },
+    {
+      "number": 67,
+      "title": "How Does a Broken Bone Heal?",
+      "covers": "The stages of bone repair, from the first clot to new bone, and why a cast holds everything still.",
+      "source": "NHS guidance on broken bones and orthopaedic reviews of fracture healing"
+    },
+    {
+      "number": 68,
+      "title": "Burns: Why Cold Water Beats Butter",
+      "covers": "What a burn does to skin, why cool running water for twenty minutes helps, and the old remedies that make it worse.",
+      "source": "NHS guidance on burns and scalds and British Red Cross first aid"
+    },
+    {
+      "number": 69,
+      "title": "What Smoking Does to Your Lungs",
+      "covers": "How cigarette smoke damages the airways and air sacs, and how the body begins to recover after stopping.",
+      "source": "NHS Better Health guidance on quitting smoking"
+    },
+    {
+      "number": 70,
+      "title": "How Your Body Replaces Donated Blood",
+      "covers": "What happens after you give blood, how quickly the body makes new cells, and why donors are always needed.",
+      "source": "NHS Blood and Transplant donor guidance"
+    },
+    {
+      "number": 71,
+      "title": "Snoring or Sleep Apnoea?",
+      "covers": "Why people snore, how obstructive sleep apnoea differs, the warning signs to take seriously, and how it is treated.",
+      "source": "NHS guidance on snoring and obstructive sleep apnoea"
+    },
+    {
+      "number": 72,
+      "title": "What Are Pins and Needles?",
+      "covers": "Why a leg or arm goes numb and tingly when you sit on it, what the nerves are doing, and when tingling is a sign of something else.",
+      "source": "NHS guidance on pins and needles and nerve physiology reviews"
+    },
+    {
+      "number": 73,
+      "title": "Why Do Your Glands Swell?",
+      "covers": "What lymph nodes are, why they swell up when you are ill, and the signs that a lump needs checking.",
+      "source": "NHS guidance on swollen glands"
+    },
+    {
+      "number": 74,
+      "title": "What Is Deja Vu?",
+      "covers": "That strange feeling of having lived this moment before: what researchers think the brain is doing, and why it is usually harmless.",
+      "source": "Reviews of deja vu research in memory and neuroscience journals"
+    },
+    {
+      "number": 75,
+      "title": "How Does Sugar Cause Tooth Decay?",
+      "covers": "How mouth bacteria turn sugar into acid that eats tooth enamel, and why how often you eat sugar matters as much as how much.",
+      "source": "NHS dental health guidance and Public Health England's Delivering Better Oral Health"
+    },
+    {
+      "number": 76,
+      "title": "How Does Skin Heal a Cut?",
+      "covers": "The stages of healing from the first clot to new skin, why scars form, and how to help a wound heal well.",
+      "source": "NHS guidance on cuts and wound healing reviews"
+    },
+    {
+      "number": 77,
+      "title": "Is Bad Posture Really Bad for Your Back?",
+      "covers": "What causes most back pain, why posture matters less than people think, and why staying active helps.",
+      "source": "NHS back pain guidance and NICE low back pain guidance"
+    },
+    {
+      "number": 78,
+      "title": "Stopping a Nosebleed the Right Way",
+      "covers": "Why noses bleed, why you should lean forward and not back, and where to pinch.",
+      "source": "NHS guidance on nosebleeds"
+    },
+    {
+      "number": 79,
+      "title": "What Is Altitude Sickness?",
+      "covers": "Why thin mountain air makes some people ill, the warning signs, and why climbing slowly is the best prevention.",
+      "source": "NHS guidance on altitude sickness"
+    },
+    {
+      "number": 80,
+      "title": "What Is Anaemia?",
+      "covers": "How the blood carries oxygen, why too little iron leaves people tired and pale, and how it is diagnosed and treated.",
+      "source": "NHS guidance on iron deficiency anaemia"
+    },
+    {
+      "number": 81,
+      "title": "How Jet Lag Hits Your Body Clock",
+      "covers": "Why crossing time zones throws the body clock out, why flying east feels worse, and what helps you adjust faster.",
+      "source": "NHS guidance on jet lag and reviews of light exposure and circadian adjustment"
+    },
+    {
+      "number": 82,
+      "title": "Why Do We Blush?",
+      "covers": "What happens in the blood vessels of the face when we feel embarrassed, and why humans may be the only animals that blush.",
+      "source": "Physiology reviews of facial blushing and the sympathetic nervous system"
+    },
+    {
+      "number": 83,
+      "title": "Chickenpox and Shingles: The Same Virus",
+      "covers": "How the chickenpox virus hides in the nerves for decades and can return as shingles later in life, and how vaccines help.",
+      "source": "NHS guidance on chickenpox and shingles"
+    },
+    {
+      "number": 84,
+      "title": "Why Does Music Give You Chills?",
+      "covers": "The shivers some music sends down your spine, what brain scans show happening, and why not everyone feels them.",
+      "source": "Research on musical frisson and dopamine release in Nature Neuroscience"
+    },
+    {
+      "number": 85,
+      "title": "What Does Fluoride Do for Teeth?",
+      "covers": "How fluoride strengthens enamel and repairs early damage, how much is safe, and the evidence behind fluoride toothpaste.",
+      "source": "NHS guidance on fluoride and Cochrane reviews of fluoride toothpaste"
+    },
+    {
+      "number": 86,
+      "title": "Does Shaving Make Hair Grow Back Thicker?",
+      "covers": "Why the myth feels true, what shaving actually does to a hair, and what studies have shown.",
+      "source": "Dermatology research on shaving and hair growth"
+    },
+    {
+      "number": 87,
+      "title": "Why Does Exercise Lift Your Mood?",
+      "covers": "What happens in the body and brain during exercise, beyond the famous endorphins, and how quickly the effect starts.",
+      "source": "NHS guidance on exercise and wellbeing and systematic reviews of exercise and mood"
+    },
+    {
+      "number": 88,
+      "title": "What Happens in Anaphylaxis?",
+      "covers": "How a severe allergic reaction spreads through the body in minutes, the warning signs, and how an adrenaline pen works.",
+      "source": "NHS anaphylaxis guidance and Resuscitation Council UK"
+    },
+    {
+      "number": 89,
+      "title": "Why Do You Get Out of Breath?",
+      "covers": "What is happening in the body when you puff and pant after running, and why fitness makes it easier.",
+      "source": "Exercise physiology reviews of breathing and oxygen use"
+    },
+    {
+      "number": 90,
+      "title": "Does Sugar Make Children Hyper?",
+      "covers": "Where the idea comes from, what careful experiments found, and why parents still see a sugar rush.",
+      "source": "Meta-analysis of sugar and behaviour in children in JAMA and later reviews"
+    },
+    {
+      "number": 91,
+      "title": "Is Sleeping In at Weekends Bad?",
+      "covers": "Social jet lag: what happens when weekday and weekend sleep times are far apart, and whether catching up on sleep works.",
+      "source": "Reviews of social jet lag and catch-up sleep research"
+    },
+    {
+      "number": 92,
+      "title": "Why Do Onions Make You Cry?",
+      "covers": "The chemical an onion releases when cut, how it reaches your eyes, and the tricks that really reduce the tears.",
+      "source": "Research on onion lachrymatory factor synthase in Nature and food chemistry reviews"
+    },
+    {
+      "number": 93,
+      "title": "How Long Are You Contagious?",
+      "covers": "How long colds, flu and stomach bugs can spread from person to person, and when it is reasonable to go back to work or school.",
+      "source": "NHS guidance on infectious illness and time off school and work"
+    },
+    {
+      "number": 94,
+      "title": "How Do Nerves Carry Messages?",
+      "covers": "How a signal races from your toe to your brain as electricity and chemistry, and why some messages travel faster than others.",
+      "source": "Physiology reviews of nerve conduction"
+    },
+    {
+      "number": 95,
+      "title": "Why Does Food Taste Bland With a Cold?",
+      "covers": "How much of taste is really smell, what a blocked nose does to flavour, and why some people lose their sense of smell for longer.",
+      "source": "NHS guidance on loss of smell and research on smell and flavour"
+    },
+    {
+      "number": 96,
+      "title": "What Are Warts?",
+      "covers": "The virus that causes warts, how they spread, why they often go away on their own, and the treatments that work.",
+      "source": "NHS guidance on warts and verrucas"
+    },
+    {
+      "number": 97,
+      "title": "How Do Muscles Get Stronger?",
+      "covers": "What happens inside a muscle when you lift something heavy, why it gets stronger after rest, and why protein and sleep matter.",
+      "source": "Exercise physiology reviews of muscle protein synthesis and NHS strength guidance"
+    },
+    {
+      "number": 98,
+      "title": "How to Treat a Sprained Ankle",
+      "covers": "What a sprain does to the ligaments, what to do in the first few days, and when it might be broken.",
+      "source": "NHS guidance on sprains and strains"
+    },
+    {
+      "number": 99,
+      "title": "What Does Air Pollution Do to the Body?",
+      "covers": "How tiny particles from traffic and fires get deep into the lungs and blood, and what people can do to reduce exposure.",
+      "source": "WHO air quality guidance and the Chief Medical Officer's 2022 report on air pollution"
+    },
+    {
+      "number": 100,
+      "title": "Type 1 and Type 2 Diabetes: The Difference",
+      "covers": "How insulin moves sugar into cells, why type 1 and type 2 diabetes happen for different reasons, and how each is treated.",
+      "source": "NHS diabetes guidance and Diabetes UK"
+    }
+  ]
+}

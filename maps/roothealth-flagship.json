@@ -1,0 +1,223 @@
+{
+  "id": "roothealth-flagship",
+  "channelId": "root-health",
+  "title": "RootHealth: How Your Body Works",
+  "formatId": "what-we-know",
+  "series": [
+    {
+      "number": 1,
+      "title": "Gut Health",
+      "note": "Understand what happens between the moment you eat and the moment your body absorbs nutrients or eliminates waste, and learn why gut-health advice online can be confusing.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Your Gut Is More Than a Food Pipe",
+          "covers": "What actually happens to food after you swallow it? Follow a meal through the mouth, stomach, small intestine and colon. Explain digestion, nutrient absorption, digestive secretions and waste formation. Misconception to correct: Food does not simply sit in the stomach until it disappears, and bowel movements do not directly measure how much nutrition the body has absorbed.",
+          "source": "NIDDK digestive-system resources and established gastrointestinal physiology reviews."
+        },
+        {
+          "number": 2,
+          "title": "The Hidden Ecosystem Inside Your Gut",
+          "covers": "What are gut bacteria doing inside us, and do we need to change them? Introduce the gut microbiome, its relationship with digestion, fermentation, microbial metabolites and immune function. Misconception to correct: There is no single universally ideal microbiome score that guarantees good health.",
+          "source": "Recent human studies, systematic reviews of microbiome interventions and reviews distinguishing association from causation."
+        },
+        {
+          "number": 3,
+          "title": "Bloating, Gas and Your Gut's Sensitivity",
+          "covers": "Why can an ordinary meal leave one person comfortable and another feeling painfully bloated? Explain gas production, fermentation, gut movement, abdominal distension and visceral sensitivity, the way internal sensations are perceived. Misconception to correct: Bloating does not automatically mean food intolerance, a damaged gut or an unhealthy microbiome. Safety: Persistent or worsening symptoms, blood in the stool, unexplained weight loss or significant bowel changes warrant clinical assessment.",
+          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+        },
+        {
+          "number": 4,
+          "title": "IBS, Food Intolerance and Coeliac Disease",
+          "covers": "How can similar symptoms come from different conditions? Compare irritable bowel syndrome (IBS), lactose intolerance, coeliac disease and inflammatory bowel disease without suggesting that they are interchangeable. Misconception to correct: IBS is not the same as inflammatory bowel disease, and coeliac disease is not simply a preference to avoid gluten. Safety: People being assessed for coeliac disease should not start a gluten-free diet before testing without medical advice, because avoiding gluten can make diagnostic tests less reliable.",
+          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+        },
+        {
+          "number": 5,
+          "title": "Fibre, Fermentation and the Foods Your Gut Uses",
+          "covers": "Why can one type of fibre help digestion while another makes symptoms worse? Explain soluble and insoluble fibre, fermentation, stool consistency and short-chain fatty acids. Misconception to correct: More fibre is not automatically better for every person or every digestive condition.",
+          "source": "Human intervention studies and clinical dietary guidance for constipation and IBS."
+        },
+        {
+          "number": 6,
+          "title": "Probiotics, Prebiotics and Gut-Health Marketing",
+          "covers": "Which gut-health products have meaningful evidence behind them? Explain probiotics, prebiotics, fermented foods, commercial microbiome tests and the difference between a plausible mechanism and a proven clinical benefit. Misconception to correct: A product labelled \"probiotic\" is not automatically effective for every condition. Safety: Supplements can have side effects and may be unsuitable for some medically vulnerable people.",
+          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+        },
+        {
+          "number": 7,
+          "title": "Building a Gut-Health Routine Without Obsessing Over Food",
+          "covers": "What can someone realistically do to support digestive health? Bring together dietary variety, appropriate fibre intake, fluids, physical activity, regular eating patterns and individual symptom management. Misconception to correct: A perfect diet, a detox or a supplement routine is not required to maintain a healthy digestive system.",
+          "source": "NHS guidance, NICE IBS recommendations and condition-specific dietary guidance."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Cholesterol and Heart Health",
+      "note": "Replace confusing cholesterol numbers and simplistic \"good versus bad food\" messages with a clear understanding of how cardiovascular disease develops and how risk can be reduced.",
+      "episodes": [
+        {
+          "number": 8,
+          "title": "Cholesterol: Why Does Your Body Need It?",
+          "covers": "If cholesterol is necessary for life, why can high cholesterol be harmful? Explain cholesterol's roles in cell membranes and hormone production, how lipoproteins transport fats through blood, and the differences between LDL, HDL, triglycerides and non-HDL cholesterol. Misconception to correct: Cholesterol is not inherently toxic, and HDL should not be interpreted as a simple protective score.",
+          "source": "NHS, British Heart Foundation and current lipid-management guidance."
+        },
+        {
+          "number": 9,
+          "title": "How Arteries Change Over Time",
+          "covers": "How can a person feel perfectly healthy while cardiovascular disease develops? Explain atherosclerosis, retention of apoB-containing particles in artery walls, inflammatory responses and plaque formation. Misconception to correct: A heart attack is not simply caused by a sudden blockage from eating one fatty meal. Safety: Sudden chest pressure, severe breathlessness or other symptoms suggestive of a heart attack require emergency assessment.",
+          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+        },
+        {
+          "number": 10,
+          "title": "Why Is My Cholesterol High?",
+          "covers": "Why do some people have elevated LDL even when they eat reasonably well? Cover inherited variation, familial hypercholesterolaemia, saturated-fat intake, thyroid disorders, some medications and other secondary causes. Misconception to correct: High LDL is not always the result of poor lifestyle choices or excess body weight.",
+          "source": "NICE lipid guidance and familial hypercholesterolaemia recommendations."
+        },
+        {
+          "number": 11,
+          "title": "Understanding Your Heart-Risk Numbers",
+          "covers": "Does one cholesterol result tell you how likely you are to have a heart attack? Explain lipid profiles, blood pressure, diabetes, smoking, age, family history and multivariable risk assessment. Introduce the role of QRISK3 in UK primary prevention. Misconception to correct: One number cannot describe every person's cardiovascular risk. Safety: Risk calculators have limitations and may underestimate risk in some circumstances.",
+          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+        },
+        {
+          "number": 12,
+          "title": "Food, Fibre, Exercise and the Numbers That Change",
+          "covers": "Which lifestyle changes have the strongest evidence for improving cardiovascular health? Explore replacing saturated fats with unsaturated fats, soluble fibre, dietary patterns, physical activity, smoking cessation and blood-pressure management. Misconception to correct: No single food, juice or supplement can guarantee healthy arteries.",
+          "source": "NICE recommendations, NHS Eatwell guidance and systematic reviews of dietary interventions."
+        },
+        {
+          "number": 13,
+          "title": "Statins, Other Treatments and Long-Term Prevention",
+          "covers": "When do lifestyle changes suffice, and when do medicines add important protection? Explain statins, absolute versus relative risk reduction, treatment monitoring, common concerns about side effects and additional lipid-lowering options. Misconception to correct: Taking medication does not mean someone has failed at healthy living; lifestyle and medicines can complement each other. Safety: Discuss pregnancy-related considerations for lipid-lowering treatment where relevant, with advice to the individual from their clinician.",
+          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Women's Hormonal Health",
+      "note": "Help listeners understand hormonal cycles and changes throughout life without treating every symptom as a hormone imbalance or reducing women's health to reproductive hormones alone.",
+      "episodes": [
+        {
+          "number": 14,
+          "title": "Your Hormones: The Body's Communication Network",
+          "covers": "What are hormones, and how do they control so many different processes? Explain endocrine glands, hormone receptors, signalling, feedback loops and the hypothalamus-pituitary axis. Misconception to correct: Hormones are not exclusively female reproductive chemicals, and every fluctuation is not a disorder.",
+          "source": "Endocrine Society educational resources and established endocrine physiology reviews."
+        },
+        {
+          "number": 15,
+          "title": "The Menstrual Cycle: A Monthly Conversation Between the Brain and Ovaries",
+          "covers": "What actually happens during a menstrual cycle, and why can its timing vary? Explain follicle-stimulating hormone, luteinising hormone, oestrogen, progesterone, ovulation and the uterine lining. Misconception to correct: There is no universal 28-day cycle, and a late period does not automatically mean PCOS. Safety: Persistent irregularity, unusually heavy bleeding, severe pain or possible pregnancy with concerning symptoms may need assessment.",
+          "source": "NHS menstrual-health guidance and recognised gynaecological guidance."
+        },
+        {
+          "number": 16,
+          "title": "PMS, PMDD and the Hormone-Mood Connection",
+          "covers": "Why can mood, sleep, appetite and concentration change before a period? Explain cyclical hormone changes, differences in sensitivity to those changes, premenstrual syndrome (PMS) and premenstrual dysphoric disorder (PMDD). Misconception to correct: Severe premenstrual distress is not simply a lack of willpower, and hormone levels alone do not reliably explain the severity of symptoms. Safety: Severe depression, inability to function or suicidal thoughts require appropriate urgent support; immediate danger warrants emergency help.",
+          "source": "Current specialist guidance on PMS and PMDD and evidence for psychological and medical treatments."
+        },
+        {
+          "number": 17,
+          "title": "PCOS: More Than Irregular Periods",
+          "covers": "What is PCOS, and why does it affect different people in different ways? Explain ovulatory dysfunction, androgen excess, ovarian appearance, insulin resistance and the limits of interpreting any single blood test. Misconception to correct: PCOS can occur in people of different body sizes; an ultrasound alone does not establish the diagnosis in every case. Safety: Absent or persistently irregular periods and symptoms such as rapid-onset excess hair growth or voice changes need clinical assessment.",
+          "source": "The 2023 International Evidence-based Guideline for PCOS and NICE guidance where applicable."
+        },
+        {
+          "number": 18,
+          "title": "Thyroid, Prolactin and Other Hormonal Problems",
+          "covers": "How can a problem outside the ovaries affect periods, energy or fertility? Explain thyroid hormone, prolactin, pituitary regulation and the interaction between energy availability, exercise and reproductive function. Misconception to correct: Fatigue, acne, hair loss and weight changes are not specific enough to diagnose a hormone disorder by themselves. Safety: Avoid interpreting isolated laboratory values without reference ranges, medications, pregnancy status and clinical context.",
+          "source": "NICE thyroid guidance, pituitary guidance and recommendations on menstrual disturbance."
+        },
+        {
+          "number": 19,
+          "title": "Fertility, Pregnancy and Hormonal Transitions",
+          "covers": "How do hormones support fertility and change during pregnancy and after childbirth? Explain ovulation, fertilisation, implantation, pregnancy-related hormonal changes, postpartum changes and the limits of fertility predictions. Misconception to correct: Menstrual regularity alone does not prove fertility, and an isolated hormone test cannot predict every person's chances of conception. Safety: Include the importance of appropriate antenatal care and prompt assessment of concerning pregnancy or postpartum symptoms.",
+          "source": "NICE fertility guidance, antenatal guidance and current reproductive-medicine recommendations."
+        },
+        {
+          "number": 20,
+          "title": "Perimenopause, Menopause and Life After the Transition",
+          "covers": "What changes when ovarian hormone production declines, and what can help? Explain perimenopause, menopause, hot flushes, sleep and mood changes, genitourinary symptoms, bone health and treatment options. Misconception to correct: Menopause does not affect everyone in the same way, and hormone therapy is neither universally necessary nor universally unsuitable. Safety: Unexplained bleeding, particularly bleeding after menopause, needs medical assessment.",
+          "source": "Current NICE menopause recommendations and evidence on the benefits and risks of treatments."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Men's Hormonal Health",
+      "note": "Explain male hormones and reproductive health in a way that counters misinformation without implying that testosterone determines masculinity, strength, confidence or personal worth.",
+      "episodes": [
+        {
+          "number": 21,
+          "title": "Testosterone: What It Actually Does",
+          "covers": "What does testosterone do in the body, and what does it not do? Explain testosterone production, androgen receptors, muscle and bone physiology, sexual function, red blood cell production and reproductive development. Misconception to correct: Higher testosterone is not automatically better, and testosterone alone does not determine muscle growth, libido or wellbeing.",
+          "source": "Endocrine Society and NHS resources on male reproductive health."
+        },
+        {
+          "number": 22,
+          "title": "The Hormonal Control Room: Brain, Testes and Sperm Production",
+          "covers": "How does the body regulate testosterone and produce sperm? Explain the hypothalamic-pituitary-gonadal axis, gonadotrophin-releasing hormone, LH, FSH, testosterone production and spermatogenesis. Misconception to correct: Testosterone concentration and sperm production are related but not interchangeable measurements.",
+          "source": "Reproductive physiology reviews and current male fertility guidance."
+        },
+        {
+          "number": 23,
+          "title": "Low Testosterone: Symptoms, Testing and Diagnosis",
+          "covers": "How do doctors determine whether testosterone is genuinely too low? Explain symptoms, morning testosterone testing, repeat measurements, laboratory variation and the distinction between primary testicular and secondary hypothalamic-pituitary causes. Misconception to correct: Tiredness, reduced motivation or weight gain alone cannot establish testosterone deficiency. Safety: Testing and interpretation should account for illness, medication and other relevant factors.",
+          "source": "Endocrine Society clinical practice guidance and NHS pathways."
+        },
+        {
+          "number": 24,
+          "title": "Fertility, Libido, Erections and Ageing",
+          "covers": "Which changes are part of ageing, and which deserve investigation? Distinguish libido, erectile function, testosterone, sperm quality, fertility and age-related changes. Explain the roles of vascular health, sleep, medications and psychological factors. Misconception to correct: Sexual difficulties do not automatically indicate low testosterone, and fertility problems are not exclusively female. Safety: Persistent erectile difficulties or fertility concerns deserve appropriate clinical review.",
+          "source": "NICE fertility guidance and recognised sexual-medicine guidance."
+        },
+        {
+          "number": 25,
+          "title": "Testosterone Therapy, Supplements and the Truth About \"Optimisation\"",
+          "covers": "When is testosterone treatment useful, and when are claims about boosting testosterone misleading? Explain medically indicated testosterone replacement, monitoring, fertility suppression, risks and the limited evidence behind many commercial boosters. Misconception to correct: Testosterone therapy is not a universal anti-ageing treatment and can impair sperm production. Safety: People who want children should discuss fertility before testosterone therapy. Prescribed treatment should not be started, stopped or changed without clinical guidance.",
+          "source": "Endocrine Society guidance, NHS testosterone information and current evidence on long-term treatment outcomes."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Nutrition Through Life",
+      "note": "Explain why nutritional needs change across life, which nutrients deserve attention at different stages, and how people can eat well without expensive products or rigid food rules.",
+      "episodes": [
+        {
+          "number": 26,
+          "title": "Nutrition Basics: What Does Your Body Need From Food?",
+          "covers": "What does food actually provide the body, beyond calories? Explain carbohydrates, protein, fats, vitamins, minerals, fibre, water and energy balance. Introduce essential nutrients and the difference between energy needs and micronutrient needs. Misconception to correct: Calories alone do not tell you whether a diet supplies all essential nutrients.",
+          "source": "NHS Eatwell Guide, WHO healthy-diet guidance and recognised nutrition reference values."
+        },
+        {
+          "number": 27,
+          "title": "Childhood and Adolescence: Fuel for Growth",
+          "covers": "Why do growing children and teenagers have different nutritional needs from adults? Cover growth, energy, protein, iron, calcium, vitamin D and the importance of varied foods during development. Misconception to correct: Adult portion sizes and restrictive diets should not automatically be applied to growing children. Safety: Avoid unsupervised supplementation and restrictive weight-loss diets for children; concerns about growth or eating difficulties deserve professional advice.",
+          "source": "NHS childhood nutrition guidance and UK dietary recommendations."
+        },
+        {
+          "number": 28,
+          "title": "Adult Nutrition: Maintaining Energy, Muscle and Metabolic Health",
+          "covers": "How should nutrition support an adult's everyday health over decades? Explain protein, fibre, unsaturated fats, dietary variety, energy needs and the relationship between diet, cardiovascular health and metabolic health. Misconception to correct: There is no single optimal macronutrient ratio or meal schedule for every adult.",
+          "source": "NHS Eatwell Guide, NICE cardiovascular guidance and systematic reviews of dietary patterns."
+        },
+        {
+          "number": 29,
+          "title": "Pregnancy, Breastfeeding and Nutritional Needs",
+          "covers": "How do nutritional requirements change during pregnancy and breastfeeding? Explain folate, iron, iodine, vitamin D, dietary variety, energy needs and the differences between pregnancy and lactation. Misconception to correct: \"Eating for two\" does not mean doubling food intake, and natural supplements are not automatically safe during pregnancy. Safety: Cover UK guidance on folic acid, vitamin D, food safety and supplements. Explain that higher-dose folic acid may be indicated for certain risk groups under medical guidance.",
+          "source": "NHS pregnancy guidance, NICE antenatal guidance and current UK supplementation recommendations."
+        },
+        {
+          "number": 30,
+          "title": "Nutrition After 60: Protecting Strength, Bones and Independence",
+          "covers": "How can nutrition support healthy ageing when appetite, muscle and bone health may change? Explore muscle loss with ageing, protein adequacy, calcium, vitamin D, hydration, appetite changes and the effects of dental, digestive or medical problems on eating. Misconception to correct: Older adults do not all need the same diet, and weight loss is not always desirable or harmless in later life. Safety: Persistent loss of appetite, difficulty swallowing, unexplained weight loss or signs of malnutrition warrant clinical assessment.",
+          "source": "NHS older-adult nutrition resources, NICE malnutrition guidance and evidence on protein intake and physical activity in ageing."
+        }
+      ]
+    }
+  ]
+}
