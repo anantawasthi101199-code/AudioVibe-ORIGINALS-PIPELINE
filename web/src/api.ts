@@ -954,10 +954,10 @@ export const api = {
     }),
 
   /** Attach one of the channel's outros (index), or none (enabled false). Changes the script. */
-  setOutro: (id: string, enabled: boolean, index?: number) =>
+  setOutro: (id: string, enabled: boolean, index?: number, text?: string) =>
     call<{ outro: OutroState; audioStale: boolean }>(`/api/run/outro?id=${encodeURIComponent(id)}`, {
       method: 'PUT',
-      body: JSON.stringify({ enabled, index }),
+      body: JSON.stringify({ enabled, index, text }),
     }),
 
   /** Stop the job working on a run, after the paid step it is on. */

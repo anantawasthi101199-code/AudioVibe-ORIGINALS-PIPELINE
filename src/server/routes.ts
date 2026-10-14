@@ -824,19 +824,28 @@ export const setRunOutro = (id: string, body: unknown, who: string | null = null
   const run = openRun(id);
   if (run.isComplete('publish')) throw new HttpError(400, 'that is already published, so its outro is fixed');
   if (jobs.isRunning(jobs.forRun(run.id)?.id ?? '')) throw new HttpError(409, 'this run is working; change the outro when it stops');
-  const { enabled, index } = z
-    .object({ enabled: z.boolean(), index: z.number().int().nonnegative().optional() })
+  const { enabled, index, text } = z
+    .object({
+      enabled: z.boolean(),
+      index: z.number().int().nonnegative().optional(),
+      // The chosen outro reworded for this run only (owner, 2026-10-14).
+      text: z.string().max(1000).optional(),
+    })
     .parse(body ?? {});
   const before = run.readArtifact('script', scriptSchema);
   const { options } = outroStateFor(run, before);
   let outro: string | null = null;
-  if (enabled) {
+  const own = text?.replace(/\s+/g, ' ').trim();
+  if (enabled && own) {
+    outro = own;
+  } else if (enabled) {
     if (index === undefined || !options[index]) {
       throw new HttpError(400, `choose one of this channel's ${options.length} outros`);
     }
     outro = options[index]!;
   }
-  const label = outro ? `outro ${options.indexOf(outro) + 1} attached` : 'outro removed';
+  const at = outro ? options.indexOf(outro) : -1;
+  const label = !outro ? 'outro removed' : at === -1 ? 'outro (edited) attached' : `outro ${at + 1} attached`;
   const out = writeChangedScript(run, before, setOutro(before, outro), `${label}${who ? ` by ${who}` : ''}`, 'outro unchanged');
   return { ...out, outro: outroStateFor(run, run.readArtifact('script', scriptSchema)) };
 };

@@ -179,6 +179,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
   const [stopping, setStopping] = useState(false);
   /** The outro list, open or shut. */
   const [outroOpen, setOutroOpen] = useState(false);
+  /** The outro's words being edited, or null when the box shows the saved outro. */
+  const [outroText, setOutroText] = useState<string | null>(null);
   /** How the script is being edited: part by part, or as one pasted box. Never both. */
   const [editMode, setEditMode] = useState<'beats' | 'whole'>('beats');
   const [wholeText, setWholeText] = useState('');
@@ -386,7 +388,7 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         : null;
   const outroLocked = outroLockReason !== null || busy !== null;
 
-  const changeOutro = async (enabled: boolean, index: number) => {
+  const changeOutro = async (enabled: boolean, index: number, text?: string) => {
     const voiced = run.completed.includes('render');
     if (
       voiced &&
@@ -394,14 +396,16 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
         'This run is voiced. Changing the outro changes the script, so it will need voicing again (only the last part is re-voiced). Go ahead?'
       )
     )
-      return;
+      return false;
     setBusy('outro');
     setError(null);
     try {
-      await api.setOutro(id, enabled, index);
+      await api.setOutro(id, enabled, index, text);
       await load();
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     } finally {
       setBusy(null);
     }
@@ -1348,7 +1352,8 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                             className={`outro-option${data.outro.index === i ? ' on' : ''}`}
                             onClick={() => {
                               setOutroOpen(false);
-                              if (data.outro.index !== i) void changeOutro(true, i);
+                              setOutroText(null);
+                              if (data.outro.current !== o) void changeOutro(true, i);
                             }}
                           >
                             {o}
@@ -1357,6 +1362,40 @@ export const Run = ({ id, go }: { id: string; go: (path: string) => void }) => {
                       </div>
                     )}
                   </div>
+                  {/* EDIT THE CHOSEN OUTRO (owner, 2026-10-14): the words saved here
+                      are what is voiced, for this run only; voice-master.yaml keeps
+                      the channel's list. */}
+                  {data.outro.current !== null && (
+                    <>
+                      <textarea
+                        rows={3}
+                        value={outroText ?? data.outro.current}
+                        disabled={outroLocked}
+                        aria-label="Outro words"
+                        onChange={(e) => setOutroText(e.target.value)}
+                      />
+                      {outroText !== null && outroText.replace(/\s+/g, ' ').trim() !== data.outro.current && (
+                        <div className="row" style={{ gap: '0.5rem' }}>
+                          <button
+                            type="button"
+                            className="primary"
+                            disabled={outroLocked || !outroText.trim()}
+                            onClick={async () => {
+                              if (await changeOutro(true, data.outro.index ?? 0, outroText)) setOutroText(null);
+                            }}
+                          >
+                            Save outro
+                          </button>
+                          <button type="button" disabled={outroLocked} onClick={() => setOutroText(null)}>
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                      {data.outro.index === null && (
+                        <span className="faint tiny">Edited for this run. Pick one from the list to go back to the channel's words.</span>
+                      )}
+                    </>
+                  )}
                   {outroLockReason && <span className="faint tiny">{outroLockReason}</span>}
                 </div>
               </section>

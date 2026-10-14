@@ -53,6 +53,13 @@ describe('the outro', () => {
     expect(getRun(RUN_ID).outro.current).toBeNull();
   });
 
+  it('the chosen outro can be reworded for this run', () => {
+    setRunOutro(RUN_ID, { enabled: true, index: 0, text: '  Thanks   for listening.  ' });
+    expect(lastTurns().filter((t) => t.fixed).map((t) => t.text)).toEqual(['Thanks for listening.']);
+    const o = getRun(RUN_ID).outro;
+    expect([o.current, o.index]).toEqual(['Thanks for listening.', null]);
+  });
+
   it('a voiced run has to be voiced again when the outro changes', () => {
     expect(run.isComplete('render')).toBe(true);
     const r = setRunOutro(RUN_ID, { enabled: true, index: 0 });
