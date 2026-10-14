@@ -3,7 +3,8 @@
  * published. The state is read off the runs, so these feed runs in directly.
  */
 import path from 'path';
-import { loadMaps, mapSubject, viewOf, ContentMap } from '../maps';
+import { loadAllMaps, loadMaps, mapSubject, viewOf, ContentMap } from '../maps';
+import { loadPersona } from '../../canon/load';
 
 const map: ContentMap = {
   id: 'm',
@@ -53,9 +54,11 @@ describe('a content map', () => {
   });
 
   it('the shipped maps parse, with every episode numbered once', () => {
-    const maps = loadMaps('mythic-archives', path.join(__dirname, '..', '..', '..', 'maps'));
+    const maps = loadAllMaps(path.join(__dirname, '..', '..', '..', 'maps'));
     expect(maps.length).toBeGreaterThan(0);
     for (const m of maps) {
+      // A map in a format its channel does not make could never be started.
+      expect(loadPersona(m.channelId).formats).toContain(m.formatId);
       const numbers = m.series.flatMap((s) => s.episodes.map((e) => e.number));
       expect(new Set(numbers).size).toBe(numbers.length);
     }
@@ -69,6 +72,10 @@ describe('a content map', () => {
     expect(mapSubject('business-by-country/1')).toBe('Tata Group');
     expect(mapSubject('business-by-country/40')).toBe('Sega');
     expect(mapSubject('hindu-mythology/1')).toBeNull();
+    // The shorts map names its companies the same way.
+    const shorts = loadMaps('business-decoded').find((m) => m.id === 'business-shorts')!;
+    expect(shorts.series.flatMap((s) => s.episodes).every((e) => e.subject && e.subject.length < 30)).toBe(true);
+    expect(mapSubject('business-shorts/1')).toBe('Starbucks');
     expect(mapSubject(undefined)).toBeNull();
   });
 });

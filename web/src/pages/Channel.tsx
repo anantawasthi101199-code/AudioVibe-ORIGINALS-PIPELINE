@@ -915,14 +915,18 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           <MapPanel
             key={m.id}
             map={m}
+            short={!channel.routes.find((x) => x.formatId === m.formatId)?.long}
             loaded={mapItem}
             go={go}
             onLoad={(item) => {
               const r = channel.routes.find((x) => x.formatId === m.formatId);
               if (r) setRoute(r);
               setTopic(item.topic);
-              setSeriesTitle(item.seriesTitle);
-              setNewSeries(!channel.seriesTitles.includes(item.seriesTitle));
+              // A short's theme is not a series: shorts are filed loose.
+              if (r?.long) {
+                setSeriesTitle(item.seriesTitle);
+                setNewSeries(!channel.seriesTitles.includes(item.seriesTitle));
+              }
               setMapItem(item.key);
             }}
           />

@@ -1,0 +1,678 @@
+{
+  "id": "mythic-shorts",
+  "channelId": "mythic-archives",
+  "title": "Mythic Archives Shorts: Myths From Around the World",
+  "formatId": "myth-short",
+  "series": [
+    {
+      "number": 1,
+      "title": "Egypt: Gods of the Nile",
+      "note": "The gods, monsters and tales of ancient Egypt.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Osiris and Set: The Brother Who Sealed a King in a Box",
+          "covers": "Set tricks Osiris into a beautiful chest, seals it and throws it into the Nile, and Isis searches the world to bring her husband back.",
+          "source": "Plutarch, On Isis and Osiris (Babbitt translation, Loeb 1936)"
+        },
+        {
+          "number": 2,
+          "title": "Isis and the Secret Name of Ra",
+          "covers": "Isis makes a serpent from the old sun god's spit, and Ra, poisoned and in agony, must give up the hidden name that holds his power.",
+          "source": "E. A. Wallis Budge, Legends of the Gods (1912), the legend of Ra and Isis"
+        },
+        {
+          "number": 3,
+          "title": "Sekhmet: The Goddess Who Was Tricked With Red Beer",
+          "covers": "Ra sends his fierce eye to punish rebellious humans, she will not stop killing, and the gods flood the fields with beer dyed red to save humanity.",
+          "source": "The Book of the Heavenly Cow, in E. A. Wallis Budge, Legends of the Gods (1912)"
+        },
+        {
+          "number": 4,
+          "title": "Horus and Set: The Eighty-Year Trial for the Throne",
+          "covers": "The young Horus and his uncle Set fight for Egypt's crown in a long divine court case full of tricks, contests and boats made of stone.",
+          "source": "The Contendings of Horus and Set, Chester Beatty Papyrus I, in Alan H. Gardiner's translation"
+        },
+        {
+          "number": 5,
+          "title": "Apep: The Serpent Who Attacks the Sun Every Night",
+          "covers": "Each night the sun boat sails through the underworld and the great serpent Apep tries to swallow it, and the gods must fight him off before dawn.",
+          "source": "E. A. Wallis Budge, The Gods of the Egyptians (1904), and the Book of Overthrowing Apep"
+        },
+        {
+          "number": 6,
+          "title": "The Weighing of the Heart",
+          "covers": "A dead soul stands in the Hall of Two Truths while its heart is weighed against the feather of Maat, and a monster waits to eat the guilty.",
+          "source": "The Egyptian Book of the Dead, Papyrus of Ani (Budge translation, 1895), chapter 125"
+        },
+        {
+          "number": 7,
+          "title": "The Shipwrecked Sailor and the Serpent King",
+          "covers": "A sailor is washed up on a magical island ruled by a giant golden serpent, who tells him a sad story and sends him home with treasure.",
+          "source": "The Tale of the Shipwrecked Sailor, in W. M. Flinders Petrie, Egyptian Tales (1895)"
+        },
+        {
+          "number": 8,
+          "title": "Thoth and the Five Extra Days",
+          "covers": "Ra forbids the sky goddess Nut to give birth on any day of the year, so Thoth gambles with the moon and wins five new days.",
+          "source": "Plutarch, On Isis and Osiris (Babbitt translation, Loeb 1936), chapter 12"
+        },
+        {
+          "number": 9,
+          "title": "The Doomed Prince",
+          "covers": "A prince is told at birth he will die by a crocodile, a snake or a dog, and he sets out into the world to outrun his fate.",
+          "source": "The Tale of the Doomed Prince, in W. M. Flinders Petrie, Egyptian Tales (1895)"
+        },
+        {
+          "number": 10,
+          "title": "The Two Brothers: Anpu and Bata",
+          "covers": "A false accusation drives a younger brother into exile, where he hides his heart in a flower and is reborn again and again.",
+          "source": "The Tale of Two Brothers, Papyrus d'Orbiney, in W. M. Flinders Petrie, Egyptian Tales (1895)"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Mesopotamia: The First Stories",
+      "note": "The oldest written myths, from Sumer, Babylon and Assyria.",
+      "episodes": [
+        {
+          "number": 11,
+          "title": "Gilgamesh and Enkidu: The King Who Met His Match",
+          "covers": "The gods make a wild man to tame a tyrant king, the two fight in the street, and become friends who kill the guardian of the cedar forest.",
+          "source": "The Epic of Gilgamesh (R. Campbell Thompson translation, 1928), tablets 1 to 5"
+        },
+        {
+          "number": 12,
+          "title": "Gilgamesh and the Plant of Immortality",
+          "covers": "Grieving for Enkidu, Gilgamesh crosses the waters of death to find the one man who never died, and loses the plant of youth to a snake.",
+          "source": "The Epic of Gilgamesh (R. Campbell Thompson translation, 1928), tablets 9 to 11"
+        },
+        {
+          "number": 13,
+          "title": "Inanna's Descent to the Underworld",
+          "covers": "The queen of heaven goes down to her sister's kingdom of the dead, is stripped at seven gates, killed, and must find someone to take her place.",
+          "source": "The Descent of Inanna, in the Electronic Text Corpus of Sumerian Literature (Oxford)"
+        },
+        {
+          "number": 14,
+          "title": "Marduk and Tiamat: The War That Made the World",
+          "covers": "The young god Marduk fights the ocean dragon Tiamat, splits her body in two, and builds the sky and earth from the halves.",
+          "source": "Enuma Elish, in L. W. King, The Seven Tablets of Creation (1902)"
+        },
+        {
+          "number": 15,
+          "title": "Adapa: The Man Who Refused Eternal Life",
+          "covers": "A wise man breaks the wing of the south wind, is called before the sky god, and on his own god's advice turns down the food of immortality.",
+          "source": "The Legend of Adapa, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)"
+        },
+        {
+          "number": 16,
+          "title": "Etana: The King Who Flew on an Eagle",
+          "covers": "A childless king rescues an eagle from a pit, and the bird carries him up toward heaven to find the plant of birth.",
+          "source": "The Legend of Etana, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)"
+        },
+        {
+          "number": 17,
+          "title": "Nergal and Ereshkigal: The God Who Married Death",
+          "covers": "A god insults the queen of the dead, is summoned to her kingdom, and the story ends in a strange and stormy marriage.",
+          "source": "Nergal and Ereshkigal, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)"
+        },
+        {
+          "number": 18,
+          "title": "Anzu: The Bird Who Stole the Tablet of Destinies",
+          "covers": "A lion-headed bird steals the tablet that gives control of the universe, and the gods search for a champion brave enough to fight it.",
+          "source": "The Myth of Anzu, in the Electronic Text Corpus of Sumerian Literature and Stephanie Dalley's notes"
+        },
+        {
+          "number": 19,
+          "title": "Lugalbanda: Left Alone in the Mountains",
+          "covers": "A young soldier falls ill on campaign and is abandoned in a cave, where he wins the favour of a giant bird and gains impossible speed.",
+          "source": "Lugalbanda in the Mountain Cave, in the Electronic Text Corpus of Sumerian Literature (Oxford)"
+        },
+        {
+          "number": 20,
+          "title": "Enki and Ninhursag: The Curse of the Eight Plants",
+          "covers": "The water god eats eight sacred plants in the paradise of Dilmun, the mother goddess curses him, and he falls deathly ill.",
+          "source": "Enki and Ninhursag, in the Electronic Text Corpus of Sumerian Literature (Oxford)"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Celtic Legends",
+      "note": "Heroes, enchantments and otherworlds from Ireland and Wales.",
+      "episodes": [
+        {
+          "number": 21,
+          "title": "Cú Chulainn: How a Boy Became the Hound of Culann",
+          "covers": "A small boy kills a smith's ferocious guard dog with a ball and stick, offers to guard the house himself, and takes the name he will be known by forever.",
+          "source": "Lady Gregory, Cuchulain of Muirthemne (1902), the boy deeds of Cuchulain"
+        },
+        {
+          "number": 22,
+          "title": "The Children of Lir: 900 Years as Swans",
+          "covers": "A jealous stepmother turns four children into swans, and they spend nine centuries on cold waters until a bell rings out across Ireland.",
+          "source": "Lady Gregory, Gods and Fighting Men (1904), the fate of the children of Lir"
+        },
+        {
+          "number": 23,
+          "title": "Fionn and the Salmon of Knowledge",
+          "covers": "A poet spends seven years trying to catch a magic salmon, his young servant burns his thumb cooking it, and gains all the wisdom in the world.",
+          "source": "Lady Gregory, Gods and Fighting Men (1904), the coming of Finn"
+        },
+        {
+          "number": 24,
+          "title": "Oisín in Tír na nÓg: The Land of Youth",
+          "covers": "A hero rides away with a fairy woman to a land where no one ages, and when he returns home three centuries have passed.",
+          "source": "Lady Gregory, Gods and Fighting Men (1904), Oisin's children and the Land of the Young"
+        },
+        {
+          "number": 25,
+          "title": "Deirdre of the Sorrows",
+          "covers": "A girl is foretold to bring ruin, is raised in hiding for a king, and runs away with the man she loves, with tragic results.",
+          "source": "Lady Gregory, Cuchulain of Muirthemne (1902), the fate of the sons of Usnach"
+        },
+        {
+          "number": 26,
+          "title": "Pwyll: The Prince Who Swapped Places With the King of the Dead",
+          "covers": "A Welsh prince offends the lord of the otherworld and agrees to rule his kingdom for a year in his shape.",
+          "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Pwyll Prince of Dyfed"
+        },
+        {
+          "number": 27,
+          "title": "Branwen: The Insult That Started a War",
+          "covers": "A Welsh princess married to the King of Ireland is mistreated, a starling carries her message home, and her giant brother wades across the sea.",
+          "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Branwen the daughter of Llyr"
+        },
+        {
+          "number": 28,
+          "title": "Blodeuwedd: The Woman Made of Flowers",
+          "covers": "Magicians make a bride out of oak, broom and meadowsweet for a man cursed never to marry a human, and she plots his death.",
+          "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Math the son of Mathonwy"
+        },
+        {
+          "number": 29,
+          "title": "Taliesin: The Boy Who Tasted Three Drops",
+          "covers": "A servant boy tastes a potion meant for someone else, flees a furious witch through many shapes, and is reborn as the greatest bard of Wales.",
+          "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Taliesin"
+        },
+        {
+          "number": 30,
+          "title": "Lugh and the Battle of Mag Tuired",
+          "covers": "A young god of many skills is let into the court at Tara, and leads the gods of Ireland against the Fomorians and their one-eyed king.",
+          "source": "Lady Gregory, Gods and Fighting Men (1904), the coming of Lugh and the great battle"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Japan: Gods, Spirits and Ghosts",
+      "note": "Creation myths, folk tales and ghost stories from Japan.",
+      "episodes": [
+        {
+          "number": 31,
+          "title": "Izanagi and Izanami: The Gods Who Made Japan",
+          "covers": "Two gods stir the ocean with a spear to make the islands, and after Izanami dies, Izanagi follows her into the land of the dead.",
+          "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), sections 1 to 10"
+        },
+        {
+          "number": 32,
+          "title": "Amaterasu: The Sun Goddess Who Hid in a Cave",
+          "covers": "Insulted by her storm god brother, the sun goddess shuts herself in a cave and the world goes dark until the gods trick her out.",
+          "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the door of the heavenly rock-dwelling"
+        },
+        {
+          "number": 33,
+          "title": "Susanoo and the Eight-Headed Serpent",
+          "covers": "The banished storm god meets a family who have lost seven daughters to a monster, and sets a trap with eight bowls of strong sake.",
+          "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the eight-forked serpent"
+        },
+        {
+          "number": 34,
+          "title": "The White Hare of Inaba",
+          "covers": "A hare who tricked crocodiles is skinned and given cruel advice, until a kind young god shows him how to heal.",
+          "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), the white hare of Inaba"
+        },
+        {
+          "number": 35,
+          "title": "Urashima Taro: The Fisherman Who Visited the Sea Palace",
+          "covers": "A fisherman saves a turtle, is taken to the palace beneath the sea, and returns home with a box he is told never to open.",
+          "source": "Yei Theodora Ozaki, Japanese Fairy Tales (1908), the story of Urashima Taro"
+        },
+        {
+          "number": 36,
+          "title": "Momotaro: The Boy Born From a Peach",
+          "covers": "An old couple find a baby inside a giant peach, and he grows up to sail for the island of demons with a dog, a monkey and a pheasant.",
+          "source": "Yei Theodora Ozaki, Japanese Fairy Tales (1908), the story of Momotaro"
+        },
+        {
+          "number": 37,
+          "title": "Kaguya-hime: The Princess From the Moon",
+          "covers": "A bamboo cutter finds a tiny girl glowing inside a stalk, she sets impossible tasks for her suitors, and the moon people come to take her back.",
+          "source": "The Tale of the Bamboo Cutter, in F. Victor Dickins, Japanese Texts (1906)"
+        },
+        {
+          "number": 38,
+          "title": "Yuki-onna: The Woman of the Snow",
+          "covers": "A woodcutter survives a blizzard when a pale spirit spares him on one condition, and years later he breaks his promise.",
+          "source": "Lafcadio Hearn, Kwaidan (1904), Yuki-Onna"
+        },
+        {
+          "number": 39,
+          "title": "Hoichi the Earless",
+          "covers": "A blind musician is summoned each night to play for a ghostly court, and a priest paints scripture on his body to hide him from the dead.",
+          "source": "Lafcadio Hearn, Kwaidan (1904), the story of Mimi-Nashi-Hoichi"
+        },
+        {
+          "number": 40,
+          "title": "Tamamo-no-Mae: The Nine-Tailed Fox at Court",
+          "covers": "The most beautiful and learned woman at the emperor's court makes him fall ill, and a court astrologer reveals she is a fox spirit.",
+          "source": "F. Hadland Davis, Myths and Legends of Japan (1912), the fox woman"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "China: Heaven and Earth",
+      "note": "Creation, heroes and immortals from Chinese myth and legend.",
+      "episodes": [
+        {
+          "number": 41,
+          "title": "Pangu: The Giant Who Pushed the Sky Away",
+          "covers": "A giant hatches from a cosmic egg, holds heaven and earth apart for eighteen thousand years, and his body becomes the world.",
+          "source": "E. T. C. Werner, Myths and Legends of China (1922), the creation of the world"
+        },
+        {
+          "number": 42,
+          "title": "Nüwa: The Goddess Who Mended the Sky",
+          "covers": "Nüwa shapes the first people from yellow clay, and when a pillar of heaven breaks she melts five coloured stones to patch the sky.",
+          "source": "The Huainanzi, book 6, and E. T. C. Werner, Myths and Legends of China (1922)"
+        },
+        {
+          "number": 43,
+          "title": "Hou Yi: The Archer Who Shot Down Nine Suns",
+          "covers": "Ten suns rise at once and scorch the earth, and a great archer shoots nine of them from the sky.",
+          "source": "E. T. C. Werner, Myths and Legends of China (1922), the archer and the suns"
+        },
+        {
+          "number": 44,
+          "title": "Chang'e: The Woman Who Flew to the Moon",
+          "covers": "Hou Yi's wife swallows the elixir of immortality and floats up to the moon, where she lives alone with a jade rabbit.",
+          "source": "E. T. C. Werner, Myths and Legends of China (1922), the moon lady"
+        },
+        {
+          "number": 45,
+          "title": "The Cowherd and the Weaver Girl",
+          "covers": "A poor cowherd marries a weaver from heaven, the gods split them with the Milky Way, and they may meet only once a year on a bridge of magpies.",
+          "source": "E. T. C. Werner, Myths and Legends of China (1922), the herdsman and the weaving girl"
+        },
+        {
+          "number": 46,
+          "title": "Sun Wukong: The Monkey Who Wrecked Heaven",
+          "covers": "A stone monkey learns magic, eats the peaches of immortality, defeats heaven's armies, and is trapped under a mountain by the Buddha.",
+          "source": "Wu Cheng'en, Journey to the West, chapters 1 to 7, in Timothy Richard, A Mission to Heaven (1913)"
+        },
+        {
+          "number": 47,
+          "title": "Yu the Great: The Man Who Tamed the Flood",
+          "covers": "After his father fails to hold back a world flood with stolen soil, Yu spends thirteen years digging channels and never goes home.",
+          "source": "The Shujing (James Legge translation, 1865), the tribute of Yu, and E. T. C. Werner (1922)"
+        },
+        {
+          "number": 48,
+          "title": "Jingwei: The Bird Who Tried to Fill the Sea",
+          "covers": "A princess drowns in the eastern sea and is reborn as a small bird who carries pebbles and twigs to fill it, forever.",
+          "source": "The Classic of Mountains and Seas (Shan Hai Jing), and E. T. C. Werner, Myths and Legends of China (1922)"
+        },
+        {
+          "number": 49,
+          "title": "Madame White Snake",
+          "covers": "A white snake spirit becomes a woman and marries a young man, until a monk sets out to expose her and imprison her under a pagoda.",
+          "source": "The Legend of the White Snake, in E. T. C. Werner, Myths and Legends of China (1922)"
+        },
+        {
+          "number": 50,
+          "title": "The Butterfly Lovers",
+          "covers": "A girl disguises herself as a boy to study, falls in love with a classmate, and when they cannot marry they become two butterflies.",
+          "source": "The legend of Liang Shanbo and Zhu Yingtai, as retold in Chinese folklore collections"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Slavic and Finnish Tales",
+      "note": "Witches, firebirds and singing wizards from Eastern and Northern Europe.",
+      "episodes": [
+        {
+          "number": 51,
+          "title": "Vasilisa and Baba Yaga",
+          "covers": "A girl is sent to fetch fire from the witch in the hut on chicken legs, carrying only a tiny doll her mother left her.",
+          "source": "Vasilisa the Beautiful, in Post Wheeler, Russian Wonder Tales (1912)"
+        },
+        {
+          "number": 52,
+          "title": "Koschei the Deathless: The Sorcerer Who Hid His Death",
+          "covers": "A prince's wife is stolen by a sorcerer whose death is hidden in a needle, in an egg, in a duck, in a hare, in an iron chest.",
+          "source": "Koschei the Deathless, in W. R. S. Ralston, Russian Folk-Tales (1873)"
+        },
+        {
+          "number": 53,
+          "title": "The Firebird",
+          "covers": "A prince follows a glowing bird that steals the king's golden apples, helped by a grey wolf on a quest of ever larger thefts.",
+          "source": "Prince Ivan, the Firebird and the Grey Wolf, in Post Wheeler, Russian Wonder Tales (1912)"
+        },
+        {
+          "number": 54,
+          "title": "Sadko in the Palace of the Sea King",
+          "covers": "A poor musician of Novgorod wins a fortune by his playing, and is later dragged beneath the waves to play for the king of the sea.",
+          "source": "The bylina of Sadko, in Isabel Florence Hapgood, The Epic Songs of Russia (1886)"
+        },
+        {
+          "number": 55,
+          "title": "Ilya Muromets: The Hero Who Sat Still for Thirty-Three Years",
+          "covers": "A peasant who cannot walk is healed by wandering pilgrims, gains great strength, and defeats the monstrous Nightingale the Robber.",
+          "source": "Isabel Florence Hapgood, The Epic Songs of Russia (1886), Ilya of Murom"
+        },
+        {
+          "number": 56,
+          "title": "Väinämöinen and Joukahainen: The Singing Duel",
+          "covers": "A boastful young man challenges the oldest of singers, and is sung into a swamp until he offers his sister in exchange for his life.",
+          "source": "The Kalevala (John Martin Crawford translation, 1888), runo 3"
+        },
+        {
+          "number": 57,
+          "title": "The Sampo: The Magic Mill of Plenty",
+          "covers": "A smith forges a mill that grinds out grain, salt and gold, and the heroes of Kalevala sail north to steal it back.",
+          "source": "The Kalevala (John Martin Crawford translation, 1888), runos 10 and 39 to 43"
+        },
+        {
+          "number": 58,
+          "title": "Kullervo: The Tragic Son of Kalevala",
+          "covers": "A boy sold as a slave suffers cruelty after cruelty, takes a terrible revenge, and learns a truth too heavy to live with.",
+          "source": "The Kalevala (John Martin Crawford translation, 1888), runos 31 to 36"
+        },
+        {
+          "number": 59,
+          "title": "Lemminkäinen's Mother: Raking the River of Death",
+          "covers": "A reckless hero is killed and cut to pieces in the river of the underworld, and his mother rakes the water to put him back together.",
+          "source": "The Kalevala (John Martin Crawford translation, 1888), runos 14 and 15"
+        },
+        {
+          "number": 60,
+          "title": "Eglė, Queen of Serpents",
+          "covers": "A Lithuanian girl finds a grass snake in her clothes, must marry him, and discovers he is a prince of the sea.",
+          "source": "The Lithuanian tale of Eglė the Queen of Serpents, as recorded in Baltic folklore collections"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "The Americas",
+      "note": "Myths of the Aztec, Inca, Maya and the peoples of North America.",
+      "episodes": [
+        {
+          "number": 61,
+          "title": "The Fifth Sun: The God Who Leapt Into the Fire",
+          "covers": "The gods gather in darkness to make a new sun, the proud one hesitates, and a small sickly god jumps into the flames first.",
+          "source": "Lewis Spence, The Myths of Mexico and Peru (1913), and Sahagún's account of Teotihuacan"
+        },
+        {
+          "number": 62,
+          "title": "Quetzalcoatl: The Feathered Serpent Who Sailed Away",
+          "covers": "A wise god-king is tricked by his rival with a mirror and strong drink, shamed, and leaves his people, promising to return.",
+          "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the Quetzalcoatl myth"
+        },
+        {
+          "number": 63,
+          "title": "Huitzilopochtli: Born Armed on the Serpent Mountain",
+          "covers": "A mother is attacked by her four hundred children, and the war god springs from her womb fully armed to defend her.",
+          "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the birth of Huitzilopochtli"
+        },
+        {
+          "number": 64,
+          "title": "Manco Cápac and the Golden Staff",
+          "covers": "The sun sends his children to find where a golden staff will sink into the earth, and there they found the city of Cusco.",
+          "source": "Garcilaso de la Vega, Royal Commentaries of the Incas (Markham translation, 1869)"
+        },
+        {
+          "number": 65,
+          "title": "Viracocha: The Creator Who Walked Away Over the Sea",
+          "covers": "The creator rises from Lake Titicaca, turns his first people to stone, makes the sun and moon, and walks off across the ocean.",
+          "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the Viracocha myth"
+        },
+        {
+          "number": 66,
+          "title": "The People of Maize",
+          "covers": "The gods try to make people from mud and then wood, both fail, and the first true humans are made from yellow and white corn.",
+          "source": "The Popol Vuh, in Lewis Spence, The Popol Vuh (1908)"
+        },
+        {
+          "number": 67,
+          "title": "Sedna: The Mother of the Sea",
+          "covers": "A young woman is thrown from a boat by her father, her fingers become the seals and whales, and she rules the creatures from the sea floor.",
+          "source": "Franz Boas, The Central Eskimo (1888), the tale of Sedna"
+        },
+        {
+          "number": 68,
+          "title": "Raven Steals the Light",
+          "covers": "The world is dark because a rich man keeps the sun, moon and stars in boxes, so Raven is reborn as his grandson to steal them.",
+          "source": "John R. Swanton, Tlingit Myths and Texts (1909), the Raven cycle"
+        },
+        {
+          "number": 69,
+          "title": "Sky Woman: The Fall That Made the Earth",
+          "covers": "A woman falls from the sky world, birds catch her, and animals dive to bring up mud to build land on the back of a turtle.",
+          "source": "J. N. B. Hewitt, Iroquoian Cosmology (1903)"
+        },
+        {
+          "number": 70,
+          "title": "Coyote Steals Fire",
+          "covers": "The people are cold and only the Fire Beings have flame, so Coyote plans a relay of animals to carry it away.",
+          "source": "Katharine Berry Judson, Myths and Legends of the Pacific Northwest (1910)"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Africa and Persia",
+      "note": "Tricksters, kings and monsters from Africa and the Persian Book of Kings.",
+      "episodes": [
+        {
+          "number": 71,
+          "title": "Anansi: The Spider Who Bought the Sky God's Stories",
+          "covers": "Anansi asks the sky god for all the world's stories, and must capture a python, a leopard, hornets and a fairy to pay for them.",
+          "source": "R. S. Rattray, Akan-Ashanti Folk-Tales (1930), how the sky god's stories came to be Anansi's"
+        },
+        {
+          "number": 72,
+          "title": "Anansi and the Pot of Wisdom",
+          "covers": "Anansi tries to hide all the wisdom in the world at the top of a tree, and his small son shows him how much he still has to learn.",
+          "source": "West African Anansi tales, as collected in R. S. Rattray, Akan-Ashanti Folk-Tales (1930)"
+        },
+        {
+          "number": 73,
+          "title": "Kaggen: The Mantis Who Made the Eland",
+          "covers": "The trickster god of the San people secretly raises the first eland from a shoe, and grieves when his family hunt it.",
+          "source": "W. H. I. Bleek and L. C. Lloyd, Specimens of Bushman Folklore (1911)"
+        },
+        {
+          "number": 74,
+          "title": "The Chameleon's Message: Why People Die",
+          "covers": "The creator sends a slow chameleon with the gift of life and a fast lizard with the message of death, and the lizard arrives first.",
+          "source": "Henry Callaway, The Religious System of the Amazulu (1870), the coming of death"
+        },
+        {
+          "number": 75,
+          "title": "Rostam and Sohrab: The Father Who Did Not Know His Son",
+          "covers": "Persia's greatest hero fights a young champion from the enemy army, not knowing the boy is his own son.",
+          "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), the tragedy of Sohrab"
+        },
+        {
+          "number": 76,
+          "title": "Zahhak: The King With Serpents on His Shoulders",
+          "covers": "A prince lets a devil kiss his shoulders, snakes grow from them, and they must be fed human brains every day.",
+          "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), Zahhak"
+        },
+        {
+          "number": 77,
+          "title": "Zal and the Simurgh: The Baby Raised by a Giant Bird",
+          "covers": "A baby born with white hair is left on a mountain by his ashamed father, and is raised by the wise bird Simurgh.",
+          "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), Zal"
+        },
+        {
+          "number": 78,
+          "title": "Kaveh the Blacksmith: The Apron That Toppled a Tyrant",
+          "covers": "A blacksmith whose sons were fed to the serpent king raises his leather apron on a spear and leads a revolt.",
+          "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), Kaveh and Faridun"
+        },
+        {
+          "number": 79,
+          "title": "Jamshid: The King Who Thought He Was a God",
+          "covers": "A golden age king teaches people crafts and banishes illness, then claims divine credit and loses everything.",
+          "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), Jamshid"
+        },
+        {
+          "number": 80,
+          "title": "Sinbad and the Island That Was a Whale",
+          "covers": "On his first voyage Sinbad's crew lands on an island, lights a fire, and discovers they are standing on a sleeping whale.",
+          "source": "The Thousand Nights and a Night (Richard Burton translation, 1885), the first voyage of Sindbad"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Arthur and Medieval Legend",
+      "note": "Knights, enchanters and legends of medieval Europe.",
+      "episodes": [
+        {
+          "number": 81,
+          "title": "The Sword in the Stone",
+          "covers": "A sword is set in a stone with a promise that whoever pulls it out is the rightful king, and a young squire does it without trying.",
+          "source": "Thomas Malory, Le Morte d'Arthur (1485), book 1"
+        },
+        {
+          "number": 82,
+          "title": "Excalibur and the Lady of the Lake",
+          "covers": "Arthur breaks his sword in a fight, and Merlin takes him to a lake where a hand rises from the water holding a new one.",
+          "source": "Thomas Malory, Le Morte d'Arthur (1485), book 1, chapter 25"
+        },
+        {
+          "number": 83,
+          "title": "Gawain and the Green Knight",
+          "covers": "A giant green knight offers a deadly game at Christmas, and Gawain must travel a year later to receive the return blow.",
+          "source": "Sir Gawain and the Green Knight (Jessie L. Weston translation, 1898)"
+        },
+        {
+          "number": 84,
+          "title": "Merlin and Nimue: The Wizard Who Was Trapped",
+          "covers": "Merlin falls for a young enchantress, teaches her his magic, and she uses it to seal him away forever.",
+          "source": "Thomas Malory, Le Morte d'Arthur (1485), book 4"
+        },
+        {
+          "number": 85,
+          "title": "The Holy Grail and the Fisher King",
+          "covers": "Knights of the Round Table seek the Grail, a wounded king waits in a castle, and only the purest knight can finish the quest.",
+          "source": "Thomas Malory, Le Morte d'Arthur (1485), books 13 to 17"
+        },
+        {
+          "number": 86,
+          "title": "Tristan and Iseult: The Love Potion",
+          "covers": "A knight escorts an Irish princess to marry his uncle, they drink a potion by mistake, and fall into a love that destroys them.",
+          "source": "Joseph Bédier, The Romance of Tristan and Iseult (Hilaire Belloc translation, 1913)"
+        },
+        {
+          "number": 87,
+          "title": "Melusine: The Wife Who Became a Serpent on Saturdays",
+          "covers": "A knight marries a beautiful stranger who makes him swear never to see her on Saturdays, and he breaks his word.",
+          "source": "Jean d'Arras, Melusine (A. K. Donald edition of the English version, 1895)"
+        },
+        {
+          "number": 88,
+          "title": "The Pied Piper of Hamelin",
+          "covers": "A town refuses to pay the piper who rid it of rats, and he plays a new tune that leads away its children.",
+          "source": "The Brothers Grimm, Deutsche Sagen (1816), the children of Hameln, and Robert Browning's poem (1842)"
+        },
+        {
+          "number": 89,
+          "title": "Roland at Roncevaux: The Horn Blown Too Late",
+          "covers": "Charlemagne's rear guard is ambushed in the Pyrenees, and the proud Roland refuses to blow his horn for help until it is too late.",
+          "source": "The Song of Roland (C. K. Scott Moncrieff translation, 1919)"
+        },
+        {
+          "number": 90,
+          "title": "The Death of Arthur and the Boat to Avalon",
+          "covers": "Arthur fights his son Mordred at Camlann, orders Excalibur thrown back into the lake, and is carried away by three queens.",
+          "source": "Thomas Malory, Le Morte d'Arthur (1485), book 21"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Lesser-Told Classics",
+      "note": "Shorter Greek, Norse and Indian stories that the big series do not cover.",
+      "episodes": [
+        {
+          "number": 91,
+          "title": "Erysichthon: The King Who Ate Himself",
+          "covers": "A king cuts down a sacred oak of the harvest goddess, is cursed with a hunger nothing can fill, sells his own daughter for food, and finally devours his own body.",
+          "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 8"
+        },
+        {
+          "number": 92,
+          "title": "Ceyx and Alcyone: The Couple Who Became Kingfishers",
+          "covers": "A king drowns at sea, the god of sleep sends his wife a dream of his death, and the gods turn the grieving pair into birds who calm the winter waves.",
+          "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 11"
+        },
+        {
+          "number": 93,
+          "title": "King Midas and the Golden Touch",
+          "covers": "A king is granted a wish that everything he touches turns to gold, and soon cannot eat, drink or hold his own daughter.",
+          "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 11"
+        },
+        {
+          "number": 94,
+          "title": "Baucis and Philemon: The Couple Who Fed the Gods",
+          "covers": "Two disguised gods are turned away by a whole village except one poor old couple, who are rewarded and the village drowned.",
+          "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 8"
+        },
+        {
+          "number": 95,
+          "title": "Phaethon: The Boy Who Drove the Sun",
+          "covers": "The son of the sun god begs to drive his father's chariot for one day, loses control and sets the earth on fire.",
+          "source": "Ovid, Metamorphoses (Brookes More translation, 1922), books 1 and 2"
+        },
+        {
+          "number": 96,
+          "title": "Pygmalion: The Sculptor Who Fell in Love With His Statue",
+          "covers": "A sculptor carves a woman of ivory more beautiful than any living one, and prays to Venus to bring her to life.",
+          "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 10"
+        },
+        {
+          "number": 97,
+          "title": "Thor and the Dwarf Who Talked Until Sunrise",
+          "covers": "A dwarf arrives to marry Thor's daughter, and Thor quizzes him all night on the names of things until the sun turns him to stone.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923), Alvissmol"
+        },
+        {
+          "number": 98,
+          "title": "Savitri: The Wife Who Argued With Death",
+          "covers": "A princess marries a man fated to die in a year, and when Yama comes for him she follows and outwits the god of death.",
+          "source": "The Mahabharata (Kisari Mohan Ganguli translation), Vana Parva, the story of Savitri"
+        },
+        {
+          "number": 99,
+          "title": "Nala and Damayanti: The King Who Gambled Away Everything",
+          "covers": "A king possessed by a demon loses his kingdom at dice, abandons his wife in the forest, and both must find their way back.",
+          "source": "The Mahabharata (Kisari Mohan Ganguli translation), Vana Parva, the story of Nala"
+        },
+        {
+          "number": 100,
+          "title": "Shakuntala and the Forgotten Ring",
+          "covers": "A king marries a hermit's daughter in the forest and gives her his ring, a curse makes him forget her, and the lost ring is found in a fish.",
+          "source": "Kalidasa, Shakuntala (Arthur W. Ryder translation, 1912), and the Mahabharata, Adi Parva"
+        }
+      ]
+    }
+  ]
+}

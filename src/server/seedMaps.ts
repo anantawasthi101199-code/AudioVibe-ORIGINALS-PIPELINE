@@ -24,6 +24,7 @@
 import { loadPersona } from '../canon/load';
 import { recordMade } from '../catalogue/covered';
 import { formatForRun } from '../formats/forRun';
+import { loadFormat } from '../formats/load';
 import { blankScript, fillBlank, handwrittenGate, startHandwritten } from '../pipeline/handwritten';
 import { Run } from '../run/store';
 import { currentOutro, setOutro } from '../script/outro';
@@ -59,7 +60,8 @@ export const seedPreparedRuns = (log: (message: string) => void = () => undefine
             topic,
             onePass: true,
             holdForApproval: true,
-            seriesTitle: series.title,
+            // A shorts map's groups are themes; shorts are filed loose.
+            seriesTitle: loadFormat(map.formatId).kind === 'short' ? undefined : series.title,
             mapItem: key,
             handwritten: true,
           });

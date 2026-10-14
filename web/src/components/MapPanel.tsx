@@ -1,11 +1,13 @@
 /**
- * A channel's content maps: the planned series and episodes, made in order.
+ * A channel's content maps: the planned series and episodes, or a list of
+ * standalone shorts grouped by theme, made in order.
  *
  * ONE ITEM IS OFFERED AT A TIME, the first not yet published, and the next is
  * not offered until it is out. The server enforces the same rule (maps.ts), so
  * this panel only shows it. Load fills the Make form with the item's subject
  * and series; everything after that is the ordinary pipeline.
  */
+import { useState } from 'react';
 import type { MapItem, MapView } from '../api';
 
 /**
@@ -48,19 +50,47 @@ const notch = (i: MapItem, isNext: boolean): React.CSSProperties => {
   };
 };
 
+/** Copies the title and what it covers, ready to paste anywhere (owner, 2026-10-14). */
+const CopyButton = ({ item }: { item: MapItem }) => {
+  const [done, setDone] = useState(false);
+  return (
+    <button
+      type="button"
+      className="btn small"
+      style={{ padding: '0 0.45rem', flexShrink: 0 }}
+      title="Copy the title and description"
+      onClick={() =>
+        void navigator.clipboard.writeText(`${item.title}
+
+${item.covers}`).then(() => {
+          setDone(true);
+          setTimeout(() => setDone(false), 1500);
+        })
+      }
+    >
+      {done ? 'Copied' : 'Copy'}
+    </button>
+  );
+};
+
 export const MapPanel = ({
   map,
+  short,
   loaded,
   onLoad,
   go,
 }: {
   map: MapView;
+  /** A map of standalone shorts: its groups are themes, not series. */
+  short: boolean;
   /** The item key the Make form currently holds, if it came from here. */
   loaded: string | null;
   onLoad: (item: MapItem) => void;
   go: (path: string) => void;
 }) => {
   const next = map.next;
+  const unit = short ? 'short' : 'episode';
+  const group = short ? 'Theme' : 'Series';
   return (
     <section className="panel">
       <div className="panel-head">
@@ -87,15 +117,18 @@ export const MapPanel = ({
           Yellow outline: script written · yellow: voiced · green: published · white ring: next up
         </p>
 
-        {!next && <p className="muted">Every episode on this map is published.</p>}
+        {!next && <p className="muted">Every {unit} on this map is published.</p>}
 
         {next && (
           <div className="card" style={{ borderColor: 'var(--amber)' }}>
             <div className="eyebrow">
-              Next: series {next.seriesNumber}, {next.seriesTitle} · episode {next.position} of {next.seriesSize} · #
-              {next.number}
+              Next: {group.toLowerCase()} {next.seriesNumber}, {next.seriesTitle} · {unit} {next.position} of{' '}
+              {next.seriesSize} · #{next.number}
             </div>
-            <strong>{next.title}</strong>
+            <div className="row" style={{ gap: '0.6rem' }}>
+              <strong>{next.title}</strong>
+              <CopyButton item={next} />
+            </div>
             <p className="muted tiny" style={{ margin: '0.35rem 0 0' }}>
               {next.covers}
             </p>
@@ -135,10 +168,10 @@ export const MapPanel = ({
               return (
                 <div key={n} className="stack tight">
                   <div className="eyebrow">
-                    Series {n}: {eps[0]!.seriesTitle} ({eps.filter((e) => e.state === 'published').length}/{eps.length})
+                    {group} {n}: {eps[0]!.seriesTitle} ({eps.filter((e) => e.state === 'published').length}/{eps.length})
                   </div>
                   {eps.map((i) => (
-                    <div key={i.key} className="row between tiny" style={{ gap: '0.8rem' }}>
+                    <div key={i.key} className="row between tiny" style={{ gap: '0.8rem', alignItems: 'flex-start' }}>
                       <span style={{ minWidth: 0 }}>
                         <span className="faint">#{i.number} </span>
                         {i.runId ? (
@@ -147,7 +180,11 @@ export const MapPanel = ({
                           </a>
                         ) : (
                           i.title
-                        )}
+                        )}{' '}
+                        <CopyButton item={i} />
+                        <span className="muted" style={{ display: 'block', marginTop: '0.15rem' }}>
+                          {i.covers}
+                        </span>
                       </span>
                       <span style={{ color: TONE[i.state], whiteSpace: 'nowrap' }}>
                         {i.scripted && i.state === 'todo' ? 'script written' : WORD[i.state]}
