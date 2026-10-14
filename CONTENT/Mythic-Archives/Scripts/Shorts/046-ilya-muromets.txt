@@ -1,0 +1,23 @@
+## story
+
+[warmly] This is a Russian story about Ilya, a peasant who could not walk for thirty-three years, and then became the greatest hero in Russia.
+
+[softly] Ilya was born in a village near the town of Murom. From the day he was born, his legs would not hold him up. He could not walk, or stand. [tender] So, year after year, he sat on top of the big warm stove in his parents' wooden house, watching his mother and father go out to work in the fields. Thirty-three years passed like that.
+
+[curious] One day, when his parents were out, two old men knocked at the door. They were wandering pilgrims, travelling holy men, in worn clothes, with long staffs. Bring us a drink, they called. [gently] Ilya called back that he could not, because he could not walk. [knowingly] Stand up, Ilya, they said. And fetch us a drink.
+
+[with wonder] And Ilya stood up. His legs held. He walked across the room, poured out a jug of honey drink, and brought it to them. They told him to drink it himself. [intense] As he did, a huge strength poured into his body. He felt he could pick up the whole world.
+
+[serious] Go to the city of Kiev, they said, and serve the great prince there. Use your strength to protect the people. [pause] Then they were gone.
+
+## ending
+
+[determined] Ilya found a horse, and set off for Kiev. [ominous] On the road, he came to a forest where nobody dared to go. A monster called Nightingale the Robber lived there, sitting in a nest built across nine great oak trees. When he whistled, the forest bent flat, the grass withered, and every traveller fell down dead.
+
+[building tension] The Robber saw Ilya coming, and whistled with all his might. Ilya's horse stumbled to its knees. [intense] But Ilya pulled out his bow, and shot one arrow, straight into the Robber's eye. The monster tumbled out of his nest. Ilya tied him to his saddle, and rode on to Kiev.
+
+[slyly] The prince did not believe him, and asked the Robber to whistle. [grave] The Robber did, so loudly that the roofs flew off the houses and the prince's guests fell to the floor. [firmly] So Ilya took his sword, and made sure the Robber would never whistle again.
+
+## close
+
+[warmly] And the man who had sat on a stove for thirty-three years became the first and greatest defender of Kiev.

@@ -1,0 +1,21 @@
+## story
+
+[leaning in] If you have ever opened a PDF, or looked at a photo that was edited, you have used something from Adobe. It started because two scientists could not persuade their employer to sell their idea.
+
+[warmly] John Warnock and Charles Geschke worked at a famous research lab in California run by Xerox, the photocopier company. [curious] In the late 1970s, they worked on a big problem. Computers could show text and pictures on screen, but printing them was a mess. Every printer was different, and pages came out jagged, or wrong.
+
+[thoughtful] They developed a way to describe a whole page, its words, shapes and pictures, so that any printer could print it perfectly sharp. [serious] But Xerox was slow to turn it into a product it would sell. [determined] So, in 1982, the two of them left, and started their own company. They named it Adobe, after a creek that ran behind Warnock's house.
+
+[curious] Their page-describing language was called PostScript. [with a smile] Soon a famous visitor came to see them: Steve Jobs, the head of Apple. He wanted to buy the whole company. They said no. [pause] So instead, Jobs did a deal.
+
+## rise
+
+[building] Apple put PostScript inside its new laser printer in 1985. Together with Apple's Macintosh computer, it let ordinary people design and print magazines, posters and books from a desk. It was called desktop publishing, and it changed the printing world. [delighted] Adobe followed with drawing software called Illustrator, and then, in 1990, Photoshop, for editing photographs. In 1993 it invented the PDF, a file that looks exactly the same on any computer, and gave away the reader free, so everyone could open one.
+
+[knowingly] It worked because Adobe kept solving the same problem in new ways: making what you made look exactly the way you meant, everywhere.
+
+[serious] In 2013 it stopped selling its software in boxes, and switched to monthly subscriptions. Many customers were angry. [quietly impressed] But it became one of the biggest software companies in the world.
+
+## close
+
+[warmly] It took two scientists who believed in an idea enough to leave the company that would not sell it.

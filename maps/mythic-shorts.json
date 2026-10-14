@@ -448,121 +448,221 @@
       "number": 41,
       "title": "Apep: The Serpent Who Attacks the Sun Every Night",
       "covers": "Each night the sun boat sails through the underworld and the great serpent Apep tries to swallow it, and the gods must fight him off before dawn.",
-      "source": "E. A. Wallis Budge, The Gods of the Egyptians (1904), and the Book of Overthrowing Apep"
+      "source": "E. A. Wallis Budge, The Gods of the Egyptians (1904), and the Book of Overthrowing Apep",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/041-apep.txt",
+        "title": "Apep: The Serpent Who Attacks the Sun",
+        "description": "Every night, the sun god sails his boat through the underworld. And every night, a giant serpent waits in the dark to swallow him, so that morning never comes."
+      }
     },
     {
       "number": 42,
       "title": "Adapa: The Man Who Refused Eternal Life",
       "covers": "A wise man breaks the wing of the south wind, is called before the sky god, and on his own god's advice turns down the food of immortality.",
-      "source": "The Legend of Adapa, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)"
+      "source": "The Legend of Adapa, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/042-adapa.txt",
+        "title": "Adapa: The Man Who Refused Eternal Life",
+        "description": "A wise man breaks the wing of the south wind, and is summoned to heaven to answer for it. His own god warns him: when the sky god offers you food, do not eat it."
+      }
     },
     {
       "number": 43,
       "title": "Deirdre of the Sorrows",
       "covers": "A girl is foretold to bring ruin, is raised in hiding for a king, and runs away with the man she loves, with tragic results.",
-      "source": "Lady Gregory, Cuchulain of Muirthemne (1902), the fate of the sons of Usnach"
+      "source": "Lady Gregory, Cuchulain of Muirthemne (1902), the fate of the sons of Usnach",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/043-deirdre-of-the-sorrows.txt",
+        "title": "Deirdre of the Sorrows",
+        "description": "Before she is born, a druid foretells that a baby girl will bring ruin to Ulster. The king hides her away to marry her himself, but she falls in love with a young warrior instead."
+      }
     },
     {
       "number": 44,
       "title": "Urashima Taro: The Fisherman Who Visited the Sea Palace",
       "covers": "A fisherman saves a turtle, is taken to the palace beneath the sea, and returns home with a box he is told never to open.",
-      "source": "Yei Theodora Ozaki, Japanese Fairy Tales (1908), the story of Urashima Taro"
+      "source": "Yei Theodora Ozaki, Japanese Fairy Tales (1908), the story of Urashima Taro",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/044-urashima-taro.txt",
+        "title": "Urashima Taro: The Palace Under the Sea",
+        "description": "A young fisherman saves a turtle and is carried down to a palace beneath the sea. When he returns home, a princess gives him a beautiful box, and tells him never to open it."
+      }
     },
     {
       "number": 45,
       "title": "The Cowherd and the Weaver Girl",
       "covers": "A poor cowherd marries a weaver from heaven, the gods split them with the Milky Way, and they may meet only once a year on a bridge of magpies.",
-      "source": "E. T. C. Werner, Myths and Legends of China (1922), the herdsman and the weaving girl"
+      "source": "E. T. C. Werner, Myths and Legends of China (1922), the herdsman and the weaving girl",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/045-cowherd-and-weaver-girl.txt",
+        "title": "The Cowherd and the Weaver Girl",
+        "description": "A goddess who weaves the clouds falls in love with a poor cowherd on earth. Heaven drags her home, and draws a river of stars across the sky between them."
+      }
     },
     {
       "number": 46,
       "title": "Ilya Muromets: The Hero Who Sat Still for Thirty-Three Years",
       "covers": "A peasant who cannot walk is healed by wandering pilgrims, gains great strength, and defeats the monstrous Nightingale the Robber.",
-      "source": "Isabel Florence Hapgood, The Epic Songs of Russia (1886), Ilya of Murom"
+      "source": "Isabel Florence Hapgood, The Epic Songs of Russia (1886), Ilya of Murom",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/046-ilya-muromets.txt",
+        "title": "Ilya Muromets: 33 Years on the Stove",
+        "description": "A peasant boy cannot walk, and sits by the stove until he is thirty-three. Then two strange pilgrims ask him for a drink, and he stands up with the strength of a giant."
+      }
     },
     {
       "number": 47,
       "title": "Viracocha: The Creator Who Walked Away Over the Sea",
       "covers": "The creator rises from Lake Titicaca, turns his first people to stone, makes the sun and moon, and walks off across the ocean.",
-      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the Viracocha myth"
+      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), the Viracocha myth",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/047-viracocha.txt",
+        "title": "Viracocha: The Creator Who Walked on the Sea",
+        "description": "The Inca creator rises out of a great lake in the dark. He makes giants from stone, and then the sun and moon and people, and then walks away across the ocean."
+      }
     },
     {
       "number": 48,
       "title": "Rostam and Sohrab: The Father Who Did Not Know His Son",
       "covers": "Persia's greatest hero fights a young champion from the enemy army, not knowing the boy is his own son.",
-      "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), the tragedy of Sohrab"
+      "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), the tragedy of Sohrab",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/048-rostam-and-sohrab.txt",
+        "title": "Rostam and Sohrab: Father Against Son",
+        "description": "Persia's greatest hero leaves behind an armband for a son he will never meet. Years later, a young champion of the enemy army challenges him, and neither knows who the other is."
+      }
     },
     {
       "number": 49,
       "title": "The Holy Grail and the Fisher King",
       "covers": "Knights of the Round Table seek the Grail, a wounded king waits in a castle, and only the purest knight can finish the quest.",
-      "source": "Thomas Malory, Le Morte d'Arthur (1485), books 13 to 17"
+      "source": "Thomas Malory, Le Morte d'Arthur (1485), books 13 to 17",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/049-the-holy-grail.txt",
+        "title": "The Holy Grail and the Fisher King",
+        "description": "A sacred cup appears in the air at King Arthur's feast, and the knights swear to find it. Far away, a wounded king waits in a castle, and his land lies dying until someone pure enough arrives."
+      }
     },
     {
       "number": 50,
       "title": "Phaethon: The Boy Who Drove the Sun",
       "covers": "The son of the sun god begs to drive his father's chariot for one day, loses control and sets the earth on fire.",
-      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), books 1 and 2"
+      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), books 1 and 2",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/050-phaethon.txt",
+        "title": "Phaethon: The Boy Who Drove the Sun",
+        "description": "A boy is teased that the sun god is not really his father. He travels to the sun's palace to prove it, and asks for one thing: to drive the chariot of the sun for a day."
+      }
     },
     {
       "number": 51,
       "title": "The Weighing of the Heart",
       "covers": "A dead soul stands in the Hall of Two Truths while its heart is weighed against the feather of Maat, and a monster waits to eat the guilty.",
-      "source": "The Egyptian Book of the Dead, Papyrus of Ani (Budge translation, 1895), chapter 125"
+      "source": "The Egyptian Book of the Dead, Papyrus of Ani (Budge translation, 1895), chapter 125",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/051-weighing-of-the-heart.txt",
+        "title": "The Weighing of the Heart",
+        "description": "An Egyptian scribe called Ani dies and walks into the Hall of Two Truths. His heart is placed on a scale against a single feather, and beside the scale, a monster waits to eat it."
+      }
     },
     {
       "number": 52,
       "title": "Etana: The King Who Flew on an Eagle",
       "covers": "A childless king rescues an eagle from a pit, and the bird carries him up toward heaven to find the plant of birth.",
-      "source": "The Legend of Etana, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)"
+      "source": "The Legend of Etana, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/052-etana.txt",
+        "title": "Etana: The King Who Flew on an Eagle",
+        "description": "A good king has no son to rule after him. A wounded eagle lies trapped at the bottom of a pit, and the sun god tells the king that the eagle can carry him to heaven."
+      }
     },
     {
       "number": 53,
       "title": "Pwyll: The Prince Who Swapped Places With the King of the Dead",
       "covers": "A Welsh prince offends the lord of the otherworld and agrees to rule his kingdom for a year in his shape.",
-      "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Pwyll Prince of Dyfed"
+      "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Pwyll Prince of Dyfed",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/053-pwyll.txt",
+        "title": "Pwyll: The Prince Who Swapped With Death",
+        "description": "A Welsh prince insults the king of the otherworld while out hunting. To make up for it, he agrees to swap shapes with him for a whole year, and rule his kingdom of the dead."
+      }
     },
     {
       "number": 54,
       "title": "Momotaro: The Boy Born From a Peach",
       "covers": "An old couple find a baby inside a giant peach, and he grows up to sail for the island of demons with a dog, a monkey and a pheasant.",
-      "source": "Yei Theodora Ozaki, Japanese Fairy Tales (1908), the story of Momotaro"
+      "source": "Yei Theodora Ozaki, Japanese Fairy Tales (1908), the story of Momotaro",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/054-momotaro.txt",
+        "title": "Momotaro: The Boy Born From a Peach",
+        "description": "An old woman washing clothes in a river sees a giant peach floating towards her. Inside is a baby boy, and when he grows up, he sets off to fight the ogres of Ogre Island."
+      }
     },
     {
       "number": 55,
       "title": "Sun Wukong: The Monkey Who Wrecked Heaven",
       "covers": "A stone monkey learns magic, eats the peaches of immortality, defeats heaven's armies, and is trapped under a mountain by the Buddha.",
-      "source": "Wu Cheng'en, Journey to the West, chapters 1 to 7, in Timothy Richard, A Mission to Heaven (1913)"
+      "source": "Wu Cheng'en, Journey to the West, chapters 1 to 7, in Timothy Richard, A Mission to Heaven (1913)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/055-sun-wukong.txt",
+        "title": "Sun Wukong: The Monkey Who Wrecked Heaven",
+        "description": "A monkey born from a stone learns magic, steals the gods' peaches of immortality, and defeats the armies of heaven. Then the Buddha offers him a bet he cannot resist."
+      }
     },
     {
       "number": 56,
       "title": "Väinämöinen and Joukahainen: The Singing Duel",
       "covers": "A boastful young man challenges the oldest of singers, and is sung into a swamp until he offers his sister in exchange for his life.",
-      "source": "The Kalevala (John Martin Crawford translation, 1888), runo 3"
+      "source": "The Kalevala (John Martin Crawford translation, 1888), runo 3",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/056-singing-duel.txt",
+        "title": "Väinämöinen and the Singing Duel",
+        "description": "A boastful young man challenges the oldest and wisest singer in Finland to a contest of songs. The old man starts to sing, and the young man begins to sink into a swamp."
+      }
     },
     {
       "number": 57,
       "title": "The People of Maize",
       "covers": "The gods try to make people from mud and then wood, both fail, and the first true humans are made from yellow and white corn.",
-      "source": "The Popol Vuh, in Lewis Spence, The Popol Vuh (1908)"
+      "source": "The Popol Vuh, in Lewis Spence, The Popol Vuh (1908)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/057-the-people-of-maize.txt",
+        "title": "The People of Maize",
+        "description": "The Maya gods try to make people who will speak and remember them. People of mud fall apart. People of wood forget them. Then the animals bring news of yellow and white corn."
+      }
     },
     {
       "number": 58,
       "title": "Zahhak: The King With Serpents on His Shoulders",
       "covers": "A prince lets a devil kiss his shoulders, snakes grow from them, and they must be fed human brains every day.",
-      "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), Zahhak"
+      "source": "Ferdowsi, The Shahnameh (A. G. and E. Warner translation, 1905), Zahhak",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/058-zahhak.txt",
+        "title": "Zahhak: The King With Snakes on His Shoulders",
+        "description": "A prince lets a kindly cook kiss his shoulders as a reward. Two black snakes grow from the spots, and they can only be fed one thing: human brains."
+      }
     },
     {
       "number": 59,
       "title": "Tristan and Iseult: The Love Potion",
       "covers": "A knight escorts an Irish princess to marry his uncle, they drink a potion by mistake, and fall into a love that destroys them.",
-      "source": "Joseph Bédier, The Romance of Tristan and Iseult (Hilaire Belloc translation, 1913)"
+      "source": "Joseph Bédier, The Romance of Tristan and Iseult (Hilaire Belloc translation, 1913)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/059-tristan-and-iseult.txt",
+        "title": "Tristan and Iseult: The Love Potion",
+        "description": "A knight sails to Ireland to bring back a bride for his uncle, the king. On the voyage home, on a hot day, he and the princess drink a love potion by mistake."
+      }
     },
     {
       "number": 60,
       "title": "Pygmalion: The Sculptor Who Fell in Love With His Statue",
       "covers": "A sculptor carves a woman of ivory more beautiful than any living one, and prays to Venus to bring her to life.",
-      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 10"
+      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 10",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/060-pygmalion.txt",
+        "title": "Pygmalion: The Sculptor Who Loved His Statue",
+        "description": "A sculptor on the island of Cyprus carves a woman out of ivory, more beautiful than anyone alive, and falls in love with her. At the festival of the goddess of love, he makes a wish."
+      }
     },
     {
       "number": 61,

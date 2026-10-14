@@ -609,70 +609,120 @@
       "title": "Kellogg's: The Breakfast Born in a Health Sanitarium",
       "covers": "Two brothers at a Michigan health resort, the accidental flake, the bitter split over adding sugar, and the advertising that turned cereal into the default morning meal.",
       "subject": "Kellogg's",
-      "source": "Kellogg's official company history, annual reports and reputable business journalism"
+      "source": "Kellogg's official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/051-kelloggs.txt",
+        "title": "Kellogg's: Breakfast Born in a Health Spa",
+        "description": "Two brothers at a Michigan health resort made flakes of grain by accident. One wanted to keep them plain and healthy. The other wanted to add sugar and sell them to everyone, and their fight lasted for years."
+      }
     },
     {
       "number": 52,
       "title": "Sephora: The Store That Let You Touch the Make-Up",
       "covers": "Dominique Mandonnaud's open-sell perfume shops in France, the Sephora name, joining LVMH, and how letting customers test everything changed beauty retail.",
       "subject": "Sephora",
-      "source": "Sephora official company history, annual reports and reputable business journalism"
+      "source": "Sephora official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/052-sephora.txt",
+        "title": "Sephora: The Shop That Let You Try Anything",
+        "description": "In most perfume shops, the products sat locked behind a counter with a salesperson guarding them. A Frenchman opened a shop where customers could pick up and try anything they liked, and built Sephora."
+      }
     },
     {
       "number": 53,
       "title": "Adobe: The Software That Shaped Every Page",
       "covers": "John Warnock and Charles Geschke leaving Xerox PARC with PostScript, desktop publishing, Photoshop and the PDF, and the switch to subscription software.",
       "subject": "Adobe",
-      "source": "Adobe official company history, annual reports and reputable business journalism"
+      "source": "Adobe official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/053-adobe.txt",
+        "title": "Adobe: The Software That Shaped Every Page",
+        "description": "Two scientists could not get their employer to sell their invention for printing pages, so they left and started Adobe in 1982. They went on to make Photoshop and the PDF."
+      }
     },
     {
       "number": 54,
       "title": "TikTok: The App That Learned What You Like",
       "covers": "Zhang Yiming founding ByteDance in Beijing, the recommendation engine behind news app Toutiao, buying Musical.ly, and building the short-video app that swept the world.",
       "subject": "ByteDance TikTok",
-      "source": "ByteDance TikTok official company history, annual reports and reputable business journalism"
+      "source": "ByteDance TikTok official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/054-tiktok.txt",
+        "title": "TikTok: The App That Learns What You Like",
+        "description": "A Chinese engineer built apps that learned what each user wanted to see, with no human editors. His short video app TikTok swept the world faster than almost any app before it."
+      }
     },
     {
       "number": 55,
       "title": "Emirates: The Airline That Started With Two Borrowed Planes",
       "covers": "Dubai launching an airline in 1985 with leased aircraft, building a hub between East and West, giant Airbus A380s, and turning a desert city into a global connection point.",
       "subject": "Emirates airline",
-      "source": "Emirates airline official company history, annual reports and reputable business journalism"
+      "source": "Emirates airline official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/055-emirates.txt",
+        "title": "Emirates: An Airline From Two Borrowed Planes",
+        "description": "In 1985 a neighbour's airline cut its flights to Dubai. Dubai launched its own airline with two leased planes, and turned a small desert city into the place the world changes planes."
+      }
     },
     {
       "number": 56,
       "title": "Pixar: The Computer Lab That Steve Jobs Saved",
       "covers": "Lucasfilm's graphics division, Steve Jobs buying it in 1986, years of losses selling computers, short films, and Toy Story, the first fully computer-animated feature.",
       "subject": "Pixar",
-      "source": "Pixar official company history, annual reports and reputable business journalism"
+      "source": "Pixar official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/056-pixar.txt",
+        "title": "Pixar: The Computer Lab Steve Jobs Saved",
+        "description": "Steve Jobs bought a struggling computer lab that sold expensive machines nobody wanted. It kept making short cartoons to show off its computers, and ended up making Toy Story."
+      }
     },
     {
       "number": 57,
       "title": "Gillette: The Razor You Throw Away",
       "covers": "King C. Gillette, a travelling salesman, inventing the disposable blade, the razor-and-blades model, supplying soldiers in World War One, and its sale to Procter & Gamble.",
       "subject": "Gillette",
-      "source": "Gillette official company history, annual reports and reputable business journalism"
+      "source": "Gillette official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/057-gillette.txt",
+        "title": "Gillette: The Razor You Throw Away",
+        "description": "A travelling salesman was told by his boss to invent something people would use once and throw away. Shaving one morning with a blunt razor, he had the idea that built Gillette."
+      }
     },
     {
       "number": 58,
       "title": "Carlsberg: The Brewery That Gave Science Its Profits",
       "covers": "J.C. Jacobsen naming a brewery after his son in 1847, the lab that purified lager yeast and shared it freely, and the foundation that owns the company and funds research.",
       "subject": "Carlsberg",
-      "source": "Carlsberg official company history, annual reports and reputable business journalism"
+      "source": "Carlsberg official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/058-carlsberg.txt",
+        "title": "Carlsberg: The Brewery That Shared Its Secret",
+        "description": "A Danish brewer named his brewery after his son, built a laboratory, and gave away the pure yeast his scientists discovered. A foundation still owns the company and funds science with its profits."
+      }
     },
     {
       "number": 59,
       "title": "Royal Enfield: The British Motorbike That Became Indian",
       "covers": "An English firm making guns and bikes, the Bullet supplied to the Indian Army, the Indian factory outliving the British parent, and the revival under Eicher Motors.",
       "subject": "Royal Enfield",
-      "source": "Royal Enfield official company history, annual reports and reputable business journalism"
+      "source": "Royal Enfield official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/059-royal-enfield.txt",
+        "title": "Royal Enfield: A British Bike Turned Indian",
+        "description": "An English motorbike company sold Bullets to the Indian Army and set up a factory in Madras. The English company closed, the Indian factory carried on, and a young man saved it from shutting down."
+      }
     },
     {
       "number": 60,
       "title": "Dangote: The Trader Who Built Africa's Biggest Business",
       "covers": "Aliko Dangote borrowing from his uncle to trade goods in Lagos, moving into cement, sugar and flour, and his giant oil refinery.",
       "subject": "Dangote Group",
-      "source": "Dangote Group official company history, annual reports and reputable business journalism"
+      "source": "Dangote Group official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/060-dangote.txt",
+        "title": "Dangote: The Trader Who Chose to Build",
+        "description": "A young man in northern Nigeria borrowed money from his uncle to trade sugar and cement. Instead of importing forever, he built factories, and became the richest person in Africa."
+      }
     },
     {
       "number": 61,

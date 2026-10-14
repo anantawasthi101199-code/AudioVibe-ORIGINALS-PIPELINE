@@ -1,0 +1,19 @@
+## story
+
+[leaning in] TikTok reached a billion users faster than almost any app in history. Its secret was a computer program that watches what you watch, and learns.
+
+[warmly] The story begins with Zhang Yiming, a software engineer born in 1983 in Fujian, a province on China's south-east coast. [thoughtful] He noticed something about the internet. There was far too much to look at. People wasted time searching. What if an app simply learned what each person liked, and showed them more of it, without any human editors deciding?
+
+[determined] In 2012, he started a company called ByteDance, working from an apartment in Beijing. Its first big hit was a news app. It had no editors. Instead, it watched which stories you clicked, how long you read them, what you skipped, and used that to choose the next story for you. [delighted] It became one of the most popular news apps in China.
+
+[curious] Then Zhang used the same idea for short videos. In 2016, ByteDance launched Douyin in China, an app of videos only a few seconds or minutes long. [thoughtful] To reach the rest of the world, it launched an international version called TikTok. [pause] And in 2017, it bought a rival that already had millions of young users in America.
+
+## rise
+
+[building] That rival was Musical.ly, an app where teenagers filmed themselves lip-syncing to songs. ByteDance merged it into TikTok in 2018, and it exploded. [knowingly] It worked because of the For You page. You did not need to follow anyone. You just started watching, and within minutes the app had worked out what made you stay, and kept showing you more of it. Dances, jokes, recipes, songs, all endlessly scrolling.
+
+[serious] It has faced bans, and fierce arguments, especially in America, about a Chinese company holding so much data about so many people. [quietly impressed] But it has changed what music becomes a hit, what people buy, and how a whole generation spends its time, and it is used by over a billion people.
+
+## close
+
+[warmly] It took an engineer who wanted the app to do the searching for you.
