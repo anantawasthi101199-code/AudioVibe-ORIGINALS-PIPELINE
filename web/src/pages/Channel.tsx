@@ -795,8 +795,9 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
 
       </div>
 
-      <div className="channel-grid">
-        <div className="stack tight">
+      {/* THE PLANS RUN THE FULL WIDTH (owner, 2026-10-14): episodes and
+          shorts side by side, end to end, above the Make and Runs pair. */}
+      <div className="stack tight" style={{ marginTop: '0.75rem' }}>
         {/* --- The season plan, for a serial ---------------------------- */}
         {channel.fiction && (
           <section className="panel">
@@ -951,41 +952,10 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </div>
         )}
 
-        {/* --- What this channel has already covered -------------------- */}
-        {!channel.fiction && covered && covered.entries.length > 0 && (
-          <section className="panel">
-            <div className="panel-head">
-              <h2>Already covered</h2>
-              <span className="spacer" />
-              <span className="right-edge">
-                <Info label="What this stops">
-                  Starting a run on a subject this channel has already made is refused before
-                  anything is spent, and the earlier run is named. Matching is on the identifying
-                  words rather than the exact string, because a duplicate is nearly always the
-                  same subject typed at a different length. Pass --again if it really is
-                  different.
-                </Info>
-              </span>
-            </div>
+      </div>
 
-            <div className="panel-body stack tight">
-              {covered.entries.slice(0, 12).map((e) => (
-                <div key={e.runId} className="row between" style={{ gap: '1rem' }}>
-                  <span style={{ minWidth: 0 }}>{e.topic}</span>
-                  <span className="faint tiny" style={{ whiteSpace: 'nowrap' }}>
-                    {e.madeAt.slice(0, 10)}
-                  </span>
-                </div>
-              ))}
-              {covered.entries.length > 12 && (
-                <p className="faint tiny" style={{ margin: 0 }}>
-                  and {covered.entries.length - 12} more
-                </p>
-              )}
-            </div>
-          </section>
-        )}
-
+      <div className="channel-grid">
+        <div className="stack tight">
         {/* --- Make something ------------------------------------------- */}
         <section className="panel">
           <div className="panel-head">
@@ -1269,7 +1239,6 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             )}
           </div>
         </section>
-
         </div>
 
         <div className="channel-side">
@@ -1312,6 +1281,35 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
         </section>
         </div>
       </div>
+
+      {/* --- What this channel has already covered -------------------- */}
+      {/* LAST AND FOLDED SHUT (owner, 2026-10-14): a reference list, read
+          rarely; the refusal it backs works whether or not it is open. */}
+      {!channel.fiction && covered && covered.entries.length > 0 && (
+        <details className="panel" style={{ marginTop: '1.1rem' }}>
+          <summary className="panel-head" style={{ cursor: 'pointer' }}>
+            <h2>Already covered</h2>
+            <span className="pill">{covered.entries.length}</span>
+          </summary>
+
+          <div className="panel-body stack tight">
+            <p className="faint tiny" style={{ margin: 0 }}>
+              Starting a run on a subject this channel has already made is refused before anything is
+              spent, and the earlier run is named. Matching is on the identifying words rather than the
+              exact string, because a duplicate is nearly always the same subject typed at a different
+              length. Pass --again if it really is different.
+            </p>
+            {covered.entries.map((e) => (
+              <div key={e.runId} className="map-row row between" style={{ gap: '1rem' }}>
+                <span style={{ minWidth: 0 }}>{e.topic}</span>
+                <span className="faint tiny" style={{ whiteSpace: 'nowrap' }}>
+                  {e.madeAt.slice(0, 10)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 };
