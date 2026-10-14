@@ -8,61 +8,111 @@
       "number": 1,
       "title": "Osiris and Set: The Brother Who Sealed a King in a Box",
       "covers": "Set tricks Osiris into a beautiful chest, seals it and throws it into the Nile, and Isis searches the world to bring her husband back.",
-      "source": "Plutarch, On Isis and Osiris (Babbitt translation, Loeb 1936)"
+      "source": "Plutarch, On Isis and Osiris (Babbitt translation, Loeb 1936)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/001-osiris-and-set.txt",
+        "title": "Osiris and Set: The King in the Box",
+        "description": "A jealous brother builds a beautiful chest, shaped to fit one man exactly. Then he invites the king of Egypt to a feast, and offers it as a prize to whoever fits inside."
+      }
     },
     {
       "number": 2,
       "title": "Gilgamesh and Enkidu: The King Who Met His Match",
       "covers": "The gods make a wild man to tame a tyrant king, the two fight in the street, and become friends who kill the guardian of the cedar forest.",
-      "source": "The Epic of Gilgamesh (R. Campbell Thompson translation, 1928), tablets 1 to 5"
+      "source": "The Epic of Gilgamesh (R. Campbell Thompson translation, 1928), tablets 1 to 5",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/002-gilgamesh-and-enkidu.txt",
+        "title": "Gilgamesh and Enkidu: King Meets His Match",
+        "description": "The gods made a wild man from clay to stop a cruel king. The two met in a doorway, fought until the walls shook, and became the most famous friends in the world's oldest story."
+      }
     },
     {
       "number": 3,
       "title": "Cú Chulainn: How a Boy Became the Hound of Culann",
       "covers": "A small boy kills a smith's ferocious guard dog with a ball and stick, offers to guard the house himself, and takes the name he will be known by forever.",
-      "source": "Lady Gregory, Cuchulain of Muirthemne (1902), the boy deeds of Cuchulain"
+      "source": "Lady Gregory, Cuchulain of Muirthemne (1902), the boy deeds of Cuchulain",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/003-cu-chulainn.txt",
+        "title": "Cú Chulainn: The Boy and the Hound",
+        "description": "A small boy arrives late at a feast, and the guard dog is already loose in the dark. What he does next gives him the name Ireland's greatest hero is known by forever."
+      }
     },
     {
       "number": 4,
       "title": "Izanagi and Izanami: The Gods Who Made Japan",
       "covers": "Two gods stir the ocean with a spear to make the islands, and after Izanami dies, Izanagi follows her into the land of the dead.",
-      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), sections 1 to 10"
+      "source": "The Kojiki (Basil Hall Chamberlain translation, 1882), sections 1 to 10",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/004-izanagi-and-izanami.txt",
+        "title": "Izanagi and Izanami: The Gods Who Made Japan",
+        "description": "Two gods stir the ocean with a spear and build the islands of Japan together. Then one of them dies, and the other follows her into the land of the dead, against every warning."
+      }
     },
     {
       "number": 5,
       "title": "Pangu: The Giant Who Pushed the Sky Away",
       "covers": "A giant hatches from a cosmic egg, holds heaven and earth apart for eighteen thousand years, and his body becomes the world.",
-      "source": "E. T. C. Werner, Myths and Legends of China (1922), the creation of the world"
+      "source": "E. T. C. Werner, Myths and Legends of China (1922), the creation of the world",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/005-pangu.txt",
+        "title": "Pangu: The Giant Who Pushed the Sky Away",
+        "description": "Before anything existed, there was a cosmic egg, and inside it a giant was growing. When he finally broke out, he spent eighteen thousand years holding the sky away from the earth."
+      }
     },
     {
       "number": 6,
       "title": "Vasilisa and Baba Yaga",
       "covers": "A girl is sent to fetch fire from the witch in the hut on chicken legs, carrying only a tiny doll her mother left her.",
-      "source": "Vasilisa the Beautiful, in Post Wheeler, Russian Wonder Tales (1912)"
+      "source": "Vasilisa the Beautiful, in Post Wheeler, Russian Wonder Tales (1912)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/006-vasilisa-and-baba-yaga.txt",
+        "title": "Vasilisa and Baba Yaga",
+        "description": "A girl is sent into the dark forest to fetch fire from the most feared witch in Russia. All she carries is a tiny doll her dying mother gave her, with a secret."
+      }
     },
     {
       "number": 7,
       "title": "The Fifth Sun: The God Who Leapt Into the Fire",
       "covers": "The gods gather in darkness to make a new sun, the proud one hesitates, and a small sickly god jumps into the flames first.",
-      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), and Sahagún's account of Teotihuacan"
+      "source": "Lewis Spence, The Myths of Mexico and Peru (1913), and Sahagún's account of Teotihuacan",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/007-the-fifth-sun.txt",
+        "title": "The Fifth Sun: The God Who Leapt Into Fire",
+        "description": "The world was dark, and the Aztec gods needed one of them to become the new sun. A proud god said he would do it. Then a small, sick, forgotten god stepped forward too."
+      }
     },
     {
       "number": 8,
       "title": "Anansi: The Spider Who Bought the Sky God's Stories",
       "covers": "Anansi asks the sky god for all the world's stories, and must capture a python, a leopard, hornets and a fairy to pay for them.",
-      "source": "R. S. Rattray, Akan-Ashanti Folk-Tales (1930), how the sky god's stories came to be Anansi's"
+      "source": "R. S. Rattray, Akan-Ashanti Folk-Tales (1930), how the sky god's stories came to be Anansi's",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/008-anansi-buys-the-stories.txt",
+        "title": "Anansi: The Spider Who Bought the Stories",
+        "description": "Anansi the spider wants to own every story in the world, so he asks the sky god for them. The price is four impossible captures: a python, a leopard, a swarm of hornets and a fairy."
+      }
     },
     {
       "number": 9,
       "title": "The Sword in the Stone",
       "covers": "A sword is set in a stone with a promise that whoever pulls it out is the rightful king, and a young squire does it without trying.",
-      "source": "Thomas Malory, Le Morte d'Arthur (1485), book 1"
+      "source": "Thomas Malory, Le Morte d'Arthur (1485), book 1",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/009-the-sword-in-the-stone.txt",
+        "title": "The Sword in the Stone",
+        "description": "A sword appears in a stone in a London churchyard, with words promising the kingdom to whoever can pull it out. The greatest knights in England all fail. Then a teenage squire forgets his brother's sword."
+      }
     },
     {
       "number": 10,
       "title": "Erysichthon: The King Who Ate Himself",
       "covers": "A king cuts down a sacred oak of the harvest goddess, is cursed with a hunger nothing can fill, sells his own daughter for food, and finally devours his own body.",
-      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 8"
+      "source": "Ovid, Metamorphoses (Brookes More translation, 1922), book 8",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/010-erysichthon.txt",
+        "title": "Erysichthon: The King Who Ate Himself",
+        "description": "A greedy Greek king cuts down a sacred tree that bleeds when the axe hits it. The goddess of the harvest sends him a punishment: a hunger that no amount of food can fill."
+      }
     },
     {
       "number": 11,

@@ -1,0 +1,21 @@
+## story
+
+[leaning in] In 1999, two students tried to sell their search engine for under a million dollars. The buyer said no. That search engine was Google.
+
+[warmly] Let's go back a little. In 1995, at Stanford University in California, a student called Larry Page was showing new students around campus. One of them was Sergey Brin. [with a smile] They argued about almost everything. But they became friends, and soon they were working on the same problem.
+
+[curious] The early internet was a mess. Search for something and you got pages that simply repeated your words hundreds of times, with nothing useful on them. Page had an idea. In universities, a research paper is respected when lots of other papers mention it. So why not rank web pages the same way? [thoughtful] A page that many other sites link to is probably worth reading. They built a search engine around that idea and ran it from their student rooms, on computers stacked in cases built from toy bricks.
+
+[delighted] It worked beautifully. The results were simply better. In 1998 an investor watched a short demonstration, and wrote them a cheque for one hundred thousand dollars, made out to Google Incorporated. [wry] The company did not exist yet. They had to create it so they could cash the cheque. They named it after a googol, the number one followed by a hundred zeros, because they wanted to organise a huge amount of information. Then they rented a garage in a nearby town and moved in.
+
+[serious] But they had no way to make money. And that is when they tried to sell it, and got turned down.
+
+## rise
+
+[building] So they found another way. In 2000, Google began showing small text adverts next to search results, matched to what you had just searched for. Search for running shoes, and you saw an advert for running shoes. [knowingly] It was useful to the shopper and gold for the advertiser, and that is why it worked.
+
+[quietly impressed] Google went on the stock market in 2004. It went on to buy YouTube, build Android, the system inside most of the world's phones, and today it answers billions of searches every single day.
+
+## close
+
+[warmly] It took two students who cared more about getting the answer right than about getting rich quickly.

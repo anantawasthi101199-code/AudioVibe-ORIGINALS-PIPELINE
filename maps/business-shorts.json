@@ -9,70 +9,120 @@
       "title": "Starbucks: How a Seattle Coffee Bean Shop Took Over the World",
       "covers": "Three friends selling beans in 1971, Howard Schultz's trip to Milan, the idea of the 'third place' between home and work, and the expansion that put a store on almost every high street.",
       "subject": "Starbucks",
-      "source": "Starbucks official company history, annual reports and reputable business journalism"
+      "source": "Starbucks official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/001-starbucks.txt",
+        "title": "Starbucks: From One Bean Shop to the World",
+        "description": "In 1971 Starbucks sold coffee beans and never poured a single cup. Then a young salesman walked into an espresso bar in Milan, and saw a different business entirely."
+      }
     },
     {
       "number": 2,
       "title": "Zara: The Shop That Makes Clothes in Weeks, Not Months",
       "covers": "Amancio Ortega making bathrobes in A Coruña, the first Zara store in 1975, the fast design-to-shelf system, and how Inditex became the world's biggest fashion retailer.",
       "subject": "Inditex Zara",
-      "source": "Inditex Zara official company history, annual reports and reputable business journalism"
+      "source": "Inditex Zara official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/002-zara.txt",
+        "title": "Zara: New Clothes in Weeks, Not Months",
+        "description": "A shop boy who left school at fourteen built the world's biggest fashion business by doing one thing faster than anyone else: getting new clothes into shops in a few weeks."
+      }
     },
     {
       "number": 3,
       "title": "Google: The Search Engine Built in a Garage",
       "covers": "Larry Page and Sergey Brin's PageRank research at Stanford, the garage office, the ad model that paid for free search, and the growth into Android, YouTube and Alphabet.",
       "subject": "Google",
-      "source": "Google official company history, annual reports and reputable business journalism"
+      "source": "Google official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/003-google.txt",
+        "title": "Google: The Search Engine Built in a Garage",
+        "description": "Two students tried to sell their search engine for under a million dollars and were turned down. Then they rented a garage, and Google grew into one of the biggest companies in history."
+      }
     },
     {
       "number": 4,
       "title": "Uber: The Taxi Company With No Taxis",
       "covers": "Garrett Camp and Travis Kalanick failing to find a cab in Paris, black cars on demand in San Francisco, rapid global expansion, fights with regulators and the leadership change that followed.",
       "subject": "Uber",
-      "source": "Uber official company history, annual reports and reputable business journalism"
+      "source": "Uber official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/004-uber.txt",
+        "title": "Uber: The Taxi Company With No Taxis",
+        "description": "On a cold night in Paris, two young founders could not find a taxi. Their answer was an app that turned millions of ordinary cars into rides at the press of a button."
+      }
     },
     {
       "number": 5,
       "title": "Ferrari: The Racing Team That Sells Cars to Pay for It",
       "covers": "Enzo Ferrari driving for Alfa Romeo, founding his own team, selling road cars to fund racing, the prancing horse badge, and the scarcity that keeps the brand so valuable.",
       "subject": "Ferrari",
-      "source": "Ferrari official company history, annual reports and reputable business journalism"
+      "source": "Ferrari official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/005-ferrari.txt",
+        "title": "Ferrari: The Racing Team That Sells Cars",
+        "description": "Enzo Ferrari only wanted to win races. To pay for it, he started selling road cars to wealthy drivers, and turned scarcity into one of the most valuable brands in the world."
+      }
     },
     {
       "number": 6,
       "title": "LEGO: The Toy Company That Almost Broke",
       "covers": "Ole Kirk Christiansen's wooden toys in Billund, the plastic brick of 1958, too many products and losses in the early 2000s, and the comeback built on films and licensed sets.",
       "subject": "LEGO",
-      "source": "LEGO official company history, annual reports and reputable business journalism"
+      "source": "LEGO official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/006-lego.txt",
+        "title": "LEGO: The Toy Company That Almost Broke",
+        "description": "A Danish carpenter made wooden toys to survive the Great Depression. His family turned a plastic brick into the world's favourite toy, then nearly lost it all."
+      }
     },
     {
       "number": 7,
       "title": "Rolex: The Watch Company Owned by a Charity",
       "covers": "Hans Wilsdorf founding a watch business in London in 1905, the waterproof Oyster, the move to Geneva, and why the company is owned by a foundation rather than shareholders.",
       "subject": "Rolex",
-      "source": "Rolex official company history, annual reports and reputable business journalism"
+      "source": "Rolex official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/007-rolex.txt",
+        "title": "Rolex: The Watch Company Owned by a Charity",
+        "description": "A German orphan in London decided that people would one day wear their watches on their wrists. Rolex became the world's best-known watch, and today a charitable foundation owns it."
+      }
     },
     {
       "number": 8,
       "title": "Nestlé: The Baby Food That Grew Into the World's Biggest Food Company",
       "covers": "Henri Nestlé's infant cereal in 1867, the merger with the Anglo-Swiss Condensed Milk Company, Nescafé, KitKat and Nespresso, and the controversies along the way.",
       "subject": "Nestlé",
-      "source": "Nestlé official company history, annual reports and reputable business journalism"
+      "source": "Nestlé official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/008-nestle.txt",
+        "title": "Nestlé: From Baby Food to Food Giant",
+        "description": "A chemist in a small Swiss town mixed milk, flour and sugar to feed babies who could not be breastfed. That recipe grew into the biggest food company in the world."
+      }
     },
     {
       "number": 9,
       "title": "Zomato: From Scanned Menus to Food Delivery",
       "covers": "Deepinder Goyal scanning restaurant menus at his Delhi office in 2008, the restaurant listing site, the move into delivery, and the public listing in 2021.",
       "subject": "Zomato",
-      "source": "Zomato official company history, annual reports and reputable business journalism"
+      "source": "Zomato official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/009-zomato.txt",
+        "title": "Zomato: From Scanned Menus to Delivery",
+        "description": "Two office workers in Delhi watched colleagues queue to read a pile of paper menus. They scanned them, put them online, and built one of India's biggest food delivery companies."
+      }
     },
     {
       "number": 10,
       "title": "Grab: The Taxi App Two Classmates Built for South-East Asia",
       "covers": "Anthony Tan and Tan Hooi Ling's Harvard business plan, safer taxis in Kuala Lumpur, beating Uber in the region, and growing into payments and food delivery.",
       "subject": "Grab Holdings",
-      "source": "Grab Holdings official company history, annual reports and reputable business journalism"
+      "source": "Grab Holdings official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/010-grab.txt",
+        "title": "Grab: The Taxi App Built for South-East Asia",
+        "description": "Two business school classmates wanted taxis in Malaysia to be safer. Their app beat Uber in South-East Asia and became the region's everyday app for rides, food and payments."
+      }
     },
     {
       "number": 11,
