@@ -624,6 +624,8 @@ export interface MapView {
   id: string;
   title: string;
   formatId: string;
+  /** A flat list of standalone shorts rather than episodes in series. */
+  shorts: boolean;
   total: number;
   published: number;
   next: MapItem | null;

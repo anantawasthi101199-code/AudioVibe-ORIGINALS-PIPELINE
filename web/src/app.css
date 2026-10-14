@@ -257,6 +257,41 @@ h3 {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+/* Content maps: episodes left, shorts right, a rule between (2026-10-14). */
+.maps-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.maps-col + .maps-col {
+  border-left: 1px solid var(--line);
+  padding-left: 1.25rem;
+}
+
+.map-row {
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.map-row:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .maps-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .maps-col + .maps-col {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+  }
+}
+
 .grid.three {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }

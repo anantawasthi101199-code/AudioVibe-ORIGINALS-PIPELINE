@@ -49,23 +49,39 @@ const episodeSchema = z.object({
   subject: z.string().min(1).optional(),
 });
 
-const mapSchema = z.object({
-  id: z.string().min(1),
-  channelId: z.string().min(1),
-  title: z.string().min(1),
-  /** Every item is made in this format. A long format, so each lands in its series. */
-  formatId: z.string().min(1),
-  series: z.array(
-    z.object({
-      number: z.number().int().positive(),
-      title: z.string().min(1).max(80),
-      note: z.string().default(''),
-      episodes: z.array(episodeSchema).min(1),
-    })
-  ),
-});
+/**
+ * EPISODES COME IN SERIES, SHORTS COME LOOSE (owner, 2026-10-14). A map file
+ * has one or the other: `series` for long episodes, each landing in its series,
+ * or `shorts`, a flat list of standalone shorts. A shorts list is read as one
+ * unnamed group so everything below handles both the same way.
+ */
+const seriesSchema = z.array(
+  z.object({
+    number: z.number().int().positive(),
+    title: z.string().min(1).max(80),
+    note: z.string().default(''),
+    episodes: z.array(episodeSchema).min(1),
+  })
+);
 
-export type ContentMap = z.infer<typeof mapSchema>;
+const mapSchema = z
+  .object({
+    id: z.string().min(1),
+    channelId: z.string().min(1),
+    title: z.string().min(1),
+    /** Every item is made in this format: a long one for series, a short one for shorts. */
+    formatId: z.string().min(1),
+    series: seriesSchema.optional(),
+    shorts: z.array(episodeSchema).min(1).optional(),
+  })
+  .refine((m) => Boolean(m.series) !== Boolean(m.shorts), 'a map has either "series" or "shorts", not both')
+  .transform(({ shorts, series, ...m }) => ({
+    ...m,
+    shorts: Boolean(shorts),
+    series: series ?? [{ number: 1, title: m.title, note: '', episodes: shorts! }],
+  }));
+
+export type ContentMap = z.output<typeof mapSchema>;
 
 /**
  * Where an item is, as the track bar draws it (owner, 2026-10-13): a written
@@ -104,6 +120,8 @@ export interface MapView {
   id: string;
   title: string;
   formatId: string;
+  /** A flat list of standalone shorts rather than episodes in series. */
+  shorts: boolean;
   total: number;
   published: number;
   /** The one item that may be made now. Null when the whole map is out. */
@@ -180,6 +198,7 @@ export const viewOf = (map: ContentMap, made: Made[]): MapView => {
     id: map.id,
     title: map.title,
     formatId: map.formatId,
+    shorts: map.shorts,
     total: items.length,
     published,
     next: items.find((i) => i.state !== 'published') ?? null,

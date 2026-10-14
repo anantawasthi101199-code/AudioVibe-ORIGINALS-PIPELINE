@@ -1,6 +1,6 @@
 /**
- * A channel's content maps: the planned series and episodes, or a list of
- * standalone shorts grouped by theme, made in order.
+ * A channel's content maps: episodes planned in series, or a flat list of
+ * standalone shorts, each made in order.
  *
  * ONE ITEM IS OFFERED AT A TIME, the first not yet published, and the next is
  * not offered until it is out. The server enforces the same rule (maps.ts), so
@@ -60,9 +60,7 @@ const CopyButton = ({ item }: { item: MapItem }) => {
       style={{ padding: '0 0.45rem', flexShrink: 0 }}
       title="Copy the title and description"
       onClick={() =>
-        void navigator.clipboard.writeText(`${item.title}
-
-${item.covers}`).then(() => {
+        void navigator.clipboard.writeText(`${item.title}\n\n${item.covers}`).then(() => {
           setDone(true);
           setTimeout(() => setDone(false), 1500);
         })
@@ -73,28 +71,47 @@ ${item.covers}`).then(() => {
   );
 };
 
+/** One line of the whole map, ruled off from the next. */
+const Row = ({ i }: { i: MapItem }) => (
+  <div className="map-row row between tiny" style={{ gap: '0.8rem', alignItems: 'flex-start' }}>
+    <span style={{ minWidth: 0 }}>
+      <span className="faint">#{i.number} </span>
+      {i.runId ? (
+        <a href={`#/r/${i.runId}`} title="Open the run">
+          {i.title}
+        </a>
+      ) : (
+        i.title
+      )}{' '}
+      <CopyButton item={i} />
+      <span className="muted" style={{ display: 'block', marginTop: '0.15rem' }}>
+        {i.covers}
+      </span>
+    </span>
+    <span style={{ color: TONE[i.state], whiteSpace: 'nowrap' }}>
+      {i.scripted && i.state === 'todo' ? 'script written' : WORD[i.state]}
+    </span>
+  </div>
+);
+
 export const MapPanel = ({
   map,
-  short,
   loaded,
   onLoad,
   go,
 }: {
   map: MapView;
-  /** A map of standalone shorts: its groups are themes, not series. */
-  short: boolean;
   /** The item key the Make form currently holds, if it came from here. */
   loaded: string | null;
   onLoad: (item: MapItem) => void;
   go: (path: string) => void;
 }) => {
   const next = map.next;
-  const unit = short ? 'short' : 'episode';
-  const group = short ? 'Theme' : 'Series';
+  const unit = map.shorts ? 'short' : 'episode';
   return (
     <section className="panel">
       <div className="panel-head">
-        <h2>Map: {map.title}</h2>
+        <h2>{map.title}</h2>
         <span className="spacer" />
         <span className="muted tiny right-edge">
           {map.published} of {map.total} published
@@ -102,7 +119,7 @@ export const MapPanel = ({
       </div>
 
       <div className="panel-body stack">
-        {/* THE TRACK BAR: one notch per episode, in map order. */}
+        {/* THE TRACK BAR: one notch per item, in map order. */}
         <div style={{ display: 'flex', gap: 2 }} aria-label={`${map.published} of ${map.total} published`}>
           {map.items.map((i) => (
             <span
@@ -122,8 +139,9 @@ export const MapPanel = ({
         {next && (
           <div className="card" style={{ borderColor: 'var(--amber)' }}>
             <div className="eyebrow">
-              Next: {group.toLowerCase()} {next.seriesNumber}, {next.seriesTitle} · {unit} {next.position} of{' '}
-              {next.seriesSize} · #{next.number}
+              {map.shorts
+                ? `Next: short ${next.number} of ${map.total}`
+                : `Next: series ${next.seriesNumber}, ${next.seriesTitle} · episode ${next.position} of ${next.seriesSize} · #${next.number}`}
             </div>
             <div className="row" style={{ gap: '0.6rem' }}>
               <strong>{next.title}</strong>
@@ -163,37 +181,22 @@ export const MapPanel = ({
         <details>
           <summary className="muted tiny">The whole map</summary>
           <div className="stack tight" style={{ marginTop: '0.5rem' }}>
-            {[...new Set(map.items.map((i) => i.seriesNumber))].map((n) => {
-              const eps = map.items.filter((i) => i.seriesNumber === n);
-              return (
-                <div key={n} className="stack tight">
-                  <div className="eyebrow">
-                    {group} {n}: {eps[0]!.seriesTitle} ({eps.filter((e) => e.state === 'published').length}/{eps.length})
-                  </div>
-                  {eps.map((i) => (
-                    <div key={i.key} className="row between tiny" style={{ gap: '0.8rem', alignItems: 'flex-start' }}>
-                      <span style={{ minWidth: 0 }}>
-                        <span className="faint">#{i.number} </span>
-                        {i.runId ? (
-                          <a href={`#/r/${i.runId}`} title="Open the run">
-                            {i.title}
-                          </a>
-                        ) : (
-                          i.title
-                        )}{' '}
-                        <CopyButton item={i} />
-                        <span className="muted" style={{ display: 'block', marginTop: '0.15rem' }}>
-                          {i.covers}
-                        </span>
-                      </span>
-                      <span style={{ color: TONE[i.state], whiteSpace: 'nowrap' }}>
-                        {i.scripted && i.state === 'todo' ? 'script written' : WORD[i.state]}
-                      </span>
+            {map.shorts
+              ? map.items.map((i) => <Row key={i.key} i={i} />)
+              : [...new Set(map.items.map((i) => i.seriesNumber))].map((n) => {
+                  const eps = map.items.filter((i) => i.seriesNumber === n);
+                  return (
+                    <div key={n} className="stack tight">
+                      <div className="eyebrow">
+                        Series {n}: {eps[0]!.seriesTitle} ({eps.filter((e) => e.state === 'published').length}/
+                        {eps.length})
+                      </div>
+                      {eps.map((i) => (
+                        <Row key={i.key} i={i} />
+                      ))}
                     </div>
-                  ))}
-                </div>
-              );
-            })}
+                  );
+                })}
           </div>
         </details>
 

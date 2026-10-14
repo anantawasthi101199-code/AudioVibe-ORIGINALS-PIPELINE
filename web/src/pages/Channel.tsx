@@ -910,27 +910,46 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           </section>
         )}
 
-        {/* --- Content maps: the planned series, one item at a time ------ */}
-        {maps.map((m) => (
-          <MapPanel
-            key={m.id}
-            map={m}
-            short={!channel.routes.find((x) => x.formatId === m.formatId)?.long}
-            loaded={mapItem}
-            go={go}
-            onLoad={(item) => {
-              const r = channel.routes.find((x) => x.formatId === m.formatId);
-              if (r) setRoute(r);
-              setTopic(item.topic);
-              // A short's theme is not a series: shorts are filed loose.
-              if (r?.long) {
-                setSeriesTitle(item.seriesTitle);
-                setNewSeries(!channel.seriesTitles.includes(item.seriesTitle));
-              }
-              setMapItem(item.key);
-            }}
-          />
-        ))}
+        {/* --- Content maps: episodes and shorts, side by side ----------- */}
+        {/* TWO COLUMNS, ALWAYS THE SAME WAY ROUND (owner, 2026-10-14): long
+            episodes in series on the left, standalone shorts on the right, so
+            the two plans never read as one list. */}
+        {maps.length > 0 && (
+          <div className="maps-split">
+            {[false, true].map((shorts) => {
+              const mine = maps.filter((m) => m.shorts === shorts);
+              return (
+                <div key={String(shorts)} className="maps-col stack">
+                  <div className="eyebrow">{shorts ? 'Shorts' : 'Episodes'}</div>
+                  {mine.length === 0 && (
+                    <p className="faint tiny" style={{ margin: 0 }}>
+                      No {shorts ? 'shorts' : 'episode'} map for this channel yet.
+                    </p>
+                  )}
+                  {mine.map((m) => (
+                    <MapPanel
+                      key={m.id}
+                      map={m}
+                      loaded={mapItem}
+                      go={go}
+                      onLoad={(item) => {
+                        const r = channel.routes.find((x) => x.formatId === m.formatId);
+                        if (r) setRoute(r);
+                        setTopic(item.topic);
+                        // Shorts are filed loose: only an episode takes a series.
+                        if (!m.shorts) {
+                          setSeriesTitle(item.seriesTitle);
+                          setNewSeries(!channel.seriesTitles.includes(item.seriesTitle));
+                        }
+                        setMapItem(item.key);
+                      }}
+                    />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* --- What this channel has already covered -------------------- */}
         {!channel.fiction && covered && covered.entries.length > 0 && (

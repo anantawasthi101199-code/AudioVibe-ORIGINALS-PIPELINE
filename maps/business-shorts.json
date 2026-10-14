@@ -1,778 +1,708 @@
 {
   "id": "business-shorts",
   "channelId": "business-decoded",
-  "title": "Business Decoded Shorts: 100 Company Stories",
+  "title": "100 Company Stories",
   "formatId": "biz-short",
-  "series": [
+  "shorts": [
     {
       "number": 1,
-      "title": "Food and Drink Empires",
-      "note": "Kitchens, cafes and snacks that became household names around the world.",
-      "episodes": [
-        {
-          "number": 1,
-          "title": "Starbucks: How a Seattle Coffee Bean Shop Took Over the World",
-          "covers": "Three friends selling beans in 1971, Howard Schultz's trip to Milan, the idea of the 'third place' between home and work, and the expansion that put a store on almost every high street.",
-          "subject": "Starbucks",
-          "source": "Starbucks official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 2,
-          "title": "KFC: The Colonel Who Started Again at Sixty-Five",
-          "covers": "Harland Sanders frying chicken at a roadside petrol station, his secret blend, selling franchises from the back of his car in old age, and how the brand spread across the globe.",
-          "subject": "KFC",
-          "source": "KFC official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 3,
-          "title": "Domino's: The Pizza Chain That Sold Speed",
-          "covers": "Two brothers buying one pizzeria in Michigan in 1960, the bet on delivery, the famous thirty-minute promise, and the later reinvention as a technology company that happens to make pizza.",
-          "subject": "Domino's Pizza",
-          "source": "Domino's Pizza official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 4,
-          "title": "Nutella: The Chocolate Spread Born from a Shortage",
-          "covers": "Pietro Ferrero stretching scarce cocoa with hazelnuts in post-war Italy, the jar that became Nutella, and how one family built Kinder, Ferrero Rocher and Tic Tac while staying private.",
-          "subject": "Ferrero",
-          "source": "Ferrero official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 5,
-          "title": "Heinz: The Ketchup That Promised Purity",
-          "covers": "Henry John Heinz bottling horseradish in clear glass, the '57 varieties' slogan, his campaign for food safety laws, and how ketchup became the brand's global calling card.",
-          "subject": "Heinz",
-          "source": "Heinz official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 6,
-          "title": "Kellogg's: The Breakfast Born in a Health Sanitarium",
-          "covers": "Two brothers at a Michigan health resort, the accidental flake, the bitter split over adding sugar, and the advertising that turned cereal into the default morning meal.",
-          "subject": "Kellogg's",
-          "source": "Kellogg's official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 7,
-          "title": "Haribo: The Gold Bear Made in a Back Kitchen",
-          "covers": "Hans Riegel starting with a sack of sugar and a copper kettle in Bonn in 1920, the dancing bear sweet, rebuilding after the war, and growing into the world's best-known gummy maker.",
-          "subject": "Haribo",
-          "source": "Haribo official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 8,
-          "title": "Lindt: The Accident That Made Chocolate Melt",
-          "covers": "Rodolphe Lindt leaving a machine running in 1879 and inventing conching, the smooth chocolate that followed, the merger with Sprüngli, and the premium brand it became.",
-          "subject": "Lindt",
-          "source": "Lindt official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 9,
-          "title": "Guinness: The 9,000-Year Lease in Dublin",
-          "covers": "Arthur Guinness signing a famous lease at St James's Gate in 1759, the switch to dark porter, the export trade, and the advertising and record book that made the name global.",
-          "subject": "Guinness",
-          "source": "Guinness official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 10,
-          "title": "Nando's: The Peri-Peri Chicken That Crossed Continents",
-          "covers": "Two friends buying a Portuguese-Mozambican restaurant in Johannesburg in 1987, the peri-peri sauce, the move into the UK, and how a chicken chain built a cult following.",
-          "subject": "Nando's",
-          "source": "Nando's official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Starbucks: How a Seattle Coffee Bean Shop Took Over the World",
+      "covers": "Three friends selling beans in 1971, Howard Schultz's trip to Milan, the idea of the 'third place' between home and work, and the expansion that put a store on almost every high street.",
+      "subject": "Starbucks",
+      "source": "Starbucks official company history, annual reports and reputable business journalism"
     },
     {
       "number": 2,
-      "title": "Shops We All Know",
-      "note": "Retailers that changed how the world buys everyday things.",
-      "episodes": [
-        {
-          "number": 11,
-          "title": "Zara: The Shop That Makes Clothes in Weeks, Not Months",
-          "covers": "Amancio Ortega making bathrobes in A Coruña, the first Zara store in 1975, the fast design-to-shelf system, and how Inditex became the world's biggest fashion retailer.",
-          "subject": "Inditex Zara",
-          "source": "Inditex Zara official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 12,
-          "title": "H&M: The Swedish Store That Made Fashion Cheap",
-          "covers": "Erling Persson opening a women's clothing shop in Västerås in 1947 after seeing American retail, low prices on high volumes, and the designer collaborations that drew queues.",
-          "subject": "H&M",
-          "source": "H&M official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 13,
-          "title": "Costco: The Warehouse That Charges You to Shop",
-          "covers": "Jim Sinegal and Jeffrey Brotman opening a Seattle warehouse in 1983, the membership-fee model, tiny margins, the hot dog price that never changes, and fierce customer loyalty.",
-          "subject": "Costco",
-          "source": "Costco official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 14,
-          "title": "Aldi: Two Brothers, One Shop, Two Empires",
-          "covers": "Karl and Theo Albrecht taking over their mother's shop in Essen, the no-frills discount formula, the split into Aldi Nord and Aldi Süd, and their spread across Europe, the US and Australia.",
-          "subject": "Aldi",
-          "source": "Aldi official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 15,
-          "title": "Primark: Low Prices Without a Website",
-          "covers": "Arthur Ryan opening the first Penneys in Dublin in 1969, the move into Britain under the Primark name, the bargain-fashion formula and the choice to stay mostly offline.",
-          "subject": "Primark",
-          "source": "Primark official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 16,
-          "title": "Sephora: The Store That Let You Touch the Make-Up",
-          "covers": "Dominique Mandonnaud's open-sell perfume shops in France, the Sephora name, joining LVMH, and how letting customers test everything changed beauty retail.",
-          "subject": "Sephora",
-          "source": "Sephora official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 17,
-          "title": "Decathlon: The Sports Shop That Designs Its Own Gear",
-          "covers": "Michel Leclercq opening a big sports store near Lille in 1976, the shift to in-house brands like Quechua, and how affordable equipment made it a global retailer.",
-          "subject": "Decathlon",
-          "source": "Decathlon official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 18,
-          "title": "Trader Joe's: The Grocery Store With a Personality",
-          "covers": "Joe Coulombe's California convenience stores, the Hawaiian-shirt theme, a small range of own-label products, and its sale to the family behind Aldi Nord.",
-          "subject": "Trader Joe's",
-          "source": "Trader Joe's official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 19,
-          "title": "Marks & Spencer: From a Penny Bazaar to a British Institution",
-          "covers": "Michael Marks selling goods from a market stall in Leeds in 1884, the partnership with Tom Spencer, the St Michael label, and the food halls that defined its later years.",
-          "subject": "Marks & Spencer",
-          "source": "Marks & Spencer official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 20,
-          "title": "7-Eleven: The Ice House That Became a Corner Shop",
-          "covers": "An ice dock in Dallas selling eggs and milk in 1927, the opening hours that gave it its name, the Japanese partner that ended up owning it, and its spread across Asia.",
-          "subject": "7-Eleven",
-          "source": "7-Eleven official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Zara: The Shop That Makes Clothes in Weeks, Not Months",
+      "covers": "Amancio Ortega making bathrobes in A Coruña, the first Zara store in 1975, the fast design-to-shelf system, and how Inditex became the world's biggest fashion retailer.",
+      "subject": "Inditex Zara",
+      "source": "Inditex Zara official company history, annual reports and reputable business journalism"
     },
     {
       "number": 3,
-      "title": "Tech That Runs the World",
-      "note": "The companies behind the screens, chips and software most people use daily.",
-      "episodes": [
-        {
-          "number": 21,
-          "title": "Google: The Search Engine Built in a Garage",
-          "covers": "Larry Page and Sergey Brin's PageRank research at Stanford, the garage office, the ad model that paid for free search, and the growth into Android, YouTube and Alphabet.",
-          "subject": "Google",
-          "source": "Google official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 22,
-          "title": "Facebook: From a Dorm Room to Three Billion Users",
-          "covers": "Mark Zuckerberg's Harvard network in 2004, the spread to other campuses, the News Feed, buying Instagram and WhatsApp, and the rename to Meta.",
-          "subject": "Facebook Meta",
-          "source": "Facebook Meta official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 23,
-          "title": "Nvidia: The Graphics Card Maker That Powered a Revolution",
-          "covers": "Three engineers meeting at a Denny's diner in 1993, chips for video games, the CUDA bet that let graphics chips do general computing, and becoming one of the world's most valuable companies.",
-          "subject": "Nvidia",
-          "source": "Nvidia official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 24,
-          "title": "Intel: The Company That Put a Brain in Every Computer",
-          "covers": "Robert Noyce and Gordon Moore leaving Fairchild in 1968, memory chips, the first microprocessor, the 'Intel Inside' campaign and its long run at the heart of the PC.",
-          "subject": "Intel",
-          "source": "Intel official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 25,
-          "title": "Oracle: The Database Built From a CIA Project Name",
-          "covers": "Larry Ellison and two partners reading a research paper on relational databases, the first commercial SQL product named after a CIA project, aggressive selling, and growth into a business software giant.",
-          "subject": "Oracle",
-          "source": "Oracle official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 26,
-          "title": "Adobe: The Software That Shaped Every Page",
-          "covers": "John Warnock and Charles Geschke leaving Xerox PARC with PostScript, desktop publishing, Photoshop and the PDF, and the switch to subscription software.",
-          "subject": "Adobe",
-          "source": "Adobe official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 27,
-          "title": "Salesforce: The Company That Said 'No Software'",
-          "covers": "Marc Benioff starting in a San Francisco apartment in 1999, selling business software over the internet by subscription, and becoming the leader in customer management tools.",
-          "subject": "Salesforce",
-          "source": "Salesforce official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 28,
-          "title": "Spotify: The Swedish Answer to Music Piracy",
-          "covers": "Daniel Ek and Martin Lorentzon building a fast, legal alternative to file sharing, the long fight for record label deals, free tier with ads, and the move into podcasts.",
-          "subject": "Spotify",
-          "source": "Spotify official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 29,
-          "title": "Canva: The Design Tool Started From a Teaching Job",
-          "covers": "Melanie Perkins teaching design software in Perth and finding it too hard, the yearbook business that came first, hundreds of investor rejections, and Canva's global rise.",
-          "subject": "Canva",
-          "source": "Canva official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 30,
-          "title": "Zoom: The Video Call App That Became a Verb",
-          "covers": "Eric Yuan leaving Cisco to build simpler video meetings, years of steady growth, and the sudden explosion of users when the world went into lockdown in 2020.",
-          "subject": "Zoom",
-          "source": "Zoom official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Google: The Search Engine Built in a Garage",
+      "covers": "Larry Page and Sergey Brin's PageRank research at Stanford, the garage office, the ad model that paid for free search, and the growth into Android, YouTube and Alphabet.",
+      "subject": "Google",
+      "source": "Google official company history, annual reports and reputable business journalism"
     },
     {
       "number": 4,
-      "title": "Apps That Grew Overnight",
-      "note": "Startups that went from an idea to millions of users in a few years.",
-      "episodes": [
-        {
-          "number": 31,
-          "title": "Uber: The Taxi Company With No Taxis",
-          "covers": "Garrett Camp and Travis Kalanick failing to find a cab in Paris, black cars on demand in San Francisco, rapid global expansion, fights with regulators and the leadership change that followed.",
-          "subject": "Uber",
-          "source": "Uber official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 32,
-          "title": "Stripe: Two Irish Brothers Who Fixed Online Payments",
-          "covers": "Patrick and John Collison from rural Tipperary, seven lines of code to accept payments, winning over developers, and building the plumbing behind much of internet commerce.",
-          "subject": "Stripe",
-          "source": "Stripe official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 33,
-          "title": "Duolingo: The Green Owl That Made Language Learning a Game",
-          "covers": "Luis von Ahn, the inventor of CAPTCHA, wanting free education for all, the game-like lessons and streaks, and the mascot that became an internet celebrity.",
-          "subject": "Duolingo",
-          "source": "Duolingo official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 34,
-          "title": "WhatsApp: The Messaging App With No Adverts",
-          "covers": "Jan Koum and Brian Acton, two former Yahoo engineers, a status app that became a messenger, a tiny team serving hundreds of millions, and the 19 billion dollar sale to Facebook.",
-          "subject": "WhatsApp",
-          "source": "WhatsApp official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 35,
-          "title": "Instagram: The Photo App Sold for a Billion With Thirteen Staff",
-          "covers": "Kevin Systrom and Mike Krieger dropping a check-in app called Burbn, filters for phone photos, a million users in two months, and the sale to Facebook in 2012.",
-          "subject": "Instagram",
-          "source": "Instagram official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 36,
-          "title": "TikTok: The App That Learned What You Like",
-          "covers": "Zhang Yiming founding ByteDance in Beijing, the recommendation engine behind news app Toutiao, buying Musical.ly, and building the short-video app that swept the world.",
-          "subject": "ByteDance TikTok",
-          "source": "ByteDance TikTok official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 37,
-          "title": "Discord: The Chat App Born From a Failed Game",
-          "covers": "Jason Citron selling one startup and building a game that flopped, the voice chat tool the team made for themselves, and its growth from gamers to communities of every kind.",
-          "subject": "Discord",
-          "source": "Discord official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 38,
-          "title": "Figma: Design That Lives in the Browser",
-          "covers": "Dylan Field and Evan Wallace at Brown University, years building a design tool that runs in a web page, the real-time collaboration that won teams over, and Adobe's failed takeover.",
-          "subject": "Figma",
-          "source": "Figma official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 39,
-          "title": "Dropbox: The Startup That Began With a Forgotten USB Stick",
-          "covers": "Drew Houston leaving his USB drive at home on a bus trip, a demo video that drew a huge waiting list, the referral scheme that grew it, and becoming a public company.",
-          "subject": "Dropbox",
-          "source": "Dropbox official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 40,
-          "title": "Slack: The Work Chat Tool That Came Out of a Game",
-          "covers": "Stewart Butterfield, also behind Flickr, building an online game that failed, keeping the internal messaging tool, and growing it into a workplace standard bought by Salesforce.",
-          "subject": "Slack",
-          "source": "Slack official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Uber: The Taxi Company With No Taxis",
+      "covers": "Garrett Camp and Travis Kalanick failing to find a cab in Paris, black cars on demand in San Francisco, rapid global expansion, fights with regulators and the leadership change that followed.",
+      "subject": "Uber",
+      "source": "Uber official company history, annual reports and reputable business journalism"
     },
     {
       "number": 5,
-      "title": "On the Move",
-      "note": "Cars, planes, scooters and parcels: the businesses of getting around.",
-      "episodes": [
-        {
-          "number": 41,
-          "title": "Ferrari: The Racing Team That Sells Cars to Pay for It",
-          "covers": "Enzo Ferrari driving for Alfa Romeo, founding his own team, selling road cars to fund racing, the prancing horse badge, and the scarcity that keeps the brand so valuable.",
-          "subject": "Ferrari",
-          "source": "Ferrari official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 42,
-          "title": "Tesla: The Electric Car Startup Everyone Said Would Fail",
-          "covers": "Martin Eberhard and Marc Tarpenning founding Tesla in 2003, Elon Musk's investment, the Roadster, near-bankruptcy, the Model 3 production struggle, and becoming the most valuable carmaker.",
-          "subject": "Tesla",
-          "source": "Tesla official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 43,
-          "title": "Harley-Davidson: The Motorbike Built in a Backyard Shed",
-          "covers": "William Harley and the Davidson brothers in a Milwaukee shed in 1903, military orders in two world wars, nearly collapsing in the 1980s, and the loyal owners who saved it.",
-          "subject": "Harley-Davidson",
-          "source": "Harley-Davidson official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 44,
-          "title": "Ryanair: The Airline That Made Flying Cheap",
-          "covers": "A small Irish airline flying from Waterford in 1985, nearly failing, copying Southwest's low-cost model, Michael O'Leary's no-frills approach, and becoming Europe's biggest carrier.",
-          "subject": "Ryanair",
-          "source": "Ryanair official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 45,
-          "title": "Southwest: The Airline Sketched on a Napkin",
-          "covers": "Herb Kelleher and Rollin King drawing a triangle of Texas cities, years of legal fights to take off, quick turnarounds, one plane type, and decades of profits in a hard industry.",
-          "subject": "Southwest Airlines",
-          "source": "Southwest Airlines official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 46,
-          "title": "Emirates: The Airline That Started With Two Borrowed Planes",
-          "covers": "Dubai launching an airline in 1985 with leased aircraft, building a hub between East and West, giant Airbus A380s, and turning a desert city into a global connection point.",
-          "subject": "Emirates airline",
-          "source": "Emirates airline official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 47,
-          "title": "FedEx: The Idea That Got a C Grade",
-          "covers": "Fred Smith's university paper on overnight delivery, the first night of flights in 1973, gambling company money in Las Vegas to make payroll, and building the hub-and-spoke system.",
-          "subject": "FedEx",
-          "source": "FedEx official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 48,
-          "title": "Boeing: From a Seaplane Shed to the Jumbo Jet",
-          "covers": "William Boeing building a seaplane in Seattle in 1916, mail planes and bombers, the 707 that opened the jet age, the 747, and the safety crises of recent years.",
-          "subject": "Boeing",
-          "source": "Boeing official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 49,
-          "title": "Volvo: The Car Company That Gave Away Its Best Invention",
-          "covers": "Two Swedes starting a car company in Gothenburg in 1927, the focus on safety, sharing the three-point seatbelt patent for free, and its later ownership by Ford and then Geely.",
-          "subject": "Volvo Cars",
-          "source": "Volvo Cars official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 50,
-          "title": "Vespa: The Scooter Made by an Aircraft Factory",
-          "covers": "Piaggio's bombed-out plant in post-war Italy, Enrico Piaggio's need for cheap transport, the wasp-shaped scooter of 1946, Roman Holiday, and Vespa as a style icon.",
-          "subject": "Piaggio Vespa",
-          "source": "Piaggio Vespa official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Ferrari: The Racing Team That Sells Cars to Pay for It",
+      "covers": "Enzo Ferrari driving for Alfa Romeo, founding his own team, selling road cars to fund racing, the prancing horse badge, and the scarcity that keeps the brand so valuable.",
+      "subject": "Ferrari",
+      "source": "Ferrari official company history, annual reports and reputable business journalism"
     },
     {
       "number": 6,
-      "title": "Play and Entertainment",
-      "note": "Toys, films, games and characters that grew into businesses.",
-      "episodes": [
-        {
-          "number": 51,
-          "title": "LEGO: The Toy Company That Almost Broke",
-          "covers": "Ole Kirk Christiansen's wooden toys in Billund, the plastic brick of 1958, too many products and losses in the early 2000s, and the comeback built on films and licensed sets.",
-          "subject": "LEGO",
-          "source": "LEGO official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 52,
-          "title": "Barbie: The Doll That Made Mattel",
-          "covers": "Ruth and Elliot Handler starting Mattel in a garage, Ruth seeing her daughter play with paper dolls, the launch of Barbie in 1959, and the doll's many reinventions.",
-          "subject": "Mattel Barbie",
-          "source": "Mattel Barbie official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 53,
-          "title": "Hasbro: From Pencil Cases to Monopoly and Transformers",
-          "covers": "The Hassenfeld brothers selling textile remnants in Rhode Island, pencil boxes, Mr Potato Head, G.I. Joe, and buying Milton Bradley and Parker Brothers.",
-          "subject": "Hasbro",
-          "source": "Hasbro official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 54,
-          "title": "Disney: The Mouse That Built an Empire",
-          "covers": "Walt and Roy Disney's cartoon studio, losing Oswald the rabbit, creating Mickey Mouse, the gamble on Snow White, Disneyland, and the modern company of parks and franchises.",
-          "subject": "Walt Disney Company",
-          "source": "Walt Disney Company official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 55,
-          "title": "Marvel: The Comic Book Company That Went Bankrupt, Then Ruled Cinema",
-          "covers": "Timely Comics in 1939, Stan Lee and Jack Kirby's heroes of the 1960s, bankruptcy in 1996, the risky film studio, Iron Man, and the sale to Disney.",
-          "subject": "Marvel Entertainment",
-          "source": "Marvel Entertainment official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 56,
-          "title": "Pixar: The Computer Lab That Steve Jobs Saved",
-          "covers": "Lucasfilm's graphics division, Steve Jobs buying it in 1986, years of losses selling computers, short films, and Toy Story, the first fully computer-animated feature.",
-          "subject": "Pixar",
-          "source": "Pixar official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 57,
-          "title": "Pokémon: The Boy Who Collected Insects",
-          "covers": "Satoshi Tajiri's childhood bug hunting, Game Freak, the Game Boy link cable, Pokémon Red and Green in 1996, the cards and cartoon, and Pokémon Go.",
-          "subject": "The Pokémon Company",
-          "source": "The Pokémon Company official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 58,
-          "title": "Angry Birds: The Game That Came After 51 Failures",
-          "covers": "Three students in Finland founding Rovio, dozens of games that went nowhere, the bird-flinging hit of 2009, merchandise and films, and the difficulty of a second hit.",
-          "subject": "Rovio Angry Birds",
-          "source": "Rovio Angry Birds official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 59,
-          "title": "Atari: The Company That Started the Video Game Business",
-          "covers": "Nolan Bushnell and Ted Dabney founding Atari in 1972, Pong in a bar, the home console, the sale to Warner, and the crash of 1983 that changed the industry.",
-          "subject": "Atari",
-          "source": "Atari official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 60,
-          "title": "Electronic Arts: Treating Game Makers Like Rock Stars",
-          "covers": "Trip Hawkins leaving Apple in 1982, putting developers' names on the box, John Madden Football and FIFA, and growing into one of the largest game publishers.",
-          "subject": "Electronic Arts",
-          "source": "Electronic Arts official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "LEGO: The Toy Company That Almost Broke",
+      "covers": "Ole Kirk Christiansen's wooden toys in Billund, the plastic brick of 1958, too many products and losses in the early 2000s, and the comeback built on films and licensed sets.",
+      "subject": "LEGO",
+      "source": "LEGO official company history, annual reports and reputable business journalism"
     },
     {
       "number": 7,
-      "title": "What We Wear",
-      "note": "Watches, jeans, boots and razors: brands people carry every day.",
-      "episodes": [
-        {
-          "number": 61,
-          "title": "Rolex: The Watch Company Owned by a Charity",
-          "covers": "Hans Wilsdorf founding a watch business in London in 1905, the waterproof Oyster, the move to Geneva, and why the company is owned by a foundation rather than shareholders.",
-          "subject": "Rolex",
-          "source": "Rolex official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 62,
-          "title": "Levi's: The Gold Rush Trousers That Became Jeans",
-          "covers": "Levi Strauss selling dry goods in San Francisco, tailor Jacob Davis's riveted work trousers, the patent of 1873, and denim's journey from miners to fashion.",
-          "subject": "Levi Strauss",
-          "source": "Levi Strauss official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 63,
-          "title": "Ray-Ban: The Glasses Made for Pilots",
-          "covers": "Bausch & Lomb's anti-glare lenses for US airmen in the 1930s, the Aviator and Wayfarer, film stardom, and the Italian company Luxottica that bought the brand.",
-          "subject": "Luxottica Ray-Ban",
-          "source": "Luxottica Ray-Ban official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 64,
-          "title": "Dr. Martens: The Army Doctor's Boot That Joined the Punks",
-          "covers": "A German doctor with an injured ankle designing an air-cushioned sole, the British Griggs family making the 1460 boot in 1960, and its adoption by workers, skinheads and punks.",
-          "subject": "Dr. Martens",
-          "source": "Dr. Martens official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 65,
-          "title": "Patagonia: The Company That Told You Not to Buy Its Jacket",
-          "covers": "Yvon Chouinard forging climbing pitons, moving into clothing, the 'Don't Buy This Jacket' advert, and giving the company away to fight climate change.",
-          "subject": "Patagonia",
-          "source": "Patagonia official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 66,
-          "title": "Gillette: The Razor You Throw Away",
-          "covers": "King C. Gillette, a travelling salesman, inventing the disposable blade, the razor-and-blades model, supplying soldiers in World War One, and its sale to Procter & Gamble.",
-          "subject": "Gillette",
-          "source": "Gillette official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 67,
-          "title": "Crocs: The Ugly Shoe That Made a Fortune",
-          "covers": "Three friends from Colorado selling a foam boating shoe in 2002, a rapid craze, a crash and near collapse, and the surprising comeback through collaborations and charms.",
-          "subject": "Crocs",
-          "source": "Crocs official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 68,
-          "title": "Converse: The Basketball Shoe Named After a Salesman",
-          "covers": "Marquis Mills Converse's rubber shoe company, the All Star of 1917, Chuck Taylor selling them gym to gym, bankruptcy, and Nike buying it in 2003.",
-          "subject": "Converse",
-          "source": "Converse official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 69,
-          "title": "Swatch: The Plastic Watch That Saved Swiss Watchmaking",
-          "covers": "Cheap Japanese quartz watches nearly destroying the Swiss industry, Nicolas Hayek merging struggling makers, and the colourful plastic Swatch of 1983 that turned it around.",
-          "subject": "Swatch",
-          "source": "Swatch official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 70,
-          "title": "Gucci: The Hotel Porter Who Built a Fashion House",
-          "covers": "Guccio Gucci watching luggage at the Savoy in London, his leather shop in Florence, family feuds and a murder, and Tom Ford's revival in the 1990s.",
-          "subject": "Gucci",
-          "source": "Gucci official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Rolex: The Watch Company Owned by a Charity",
+      "covers": "Hans Wilsdorf founding a watch business in London in 1905, the waterproof Oyster, the move to Geneva, and why the company is owned by a foundation rather than shareholders.",
+      "subject": "Rolex",
+      "source": "Rolex official company history, annual reports and reputable business journalism"
     },
     {
       "number": 8,
-      "title": "Europe's Quiet Giants",
-      "note": "Companies that are enormous but rarely talked about outside business pages.",
-      "episodes": [
-        {
-          "number": 71,
-          "title": "Nestlé: The Baby Food That Grew Into the World's Biggest Food Company",
-          "covers": "Henri Nestlé's infant cereal in 1867, the merger with the Anglo-Swiss Condensed Milk Company, Nescafé, KitKat and Nespresso, and the controversies along the way.",
-          "subject": "Nestlé",
-          "source": "Nestlé official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 72,
-          "title": "Heineken: The Brewery Bought by a 22-Year-Old",
-          "covers": "Gerard Adriaan Heineken buying an Amsterdam brewery in 1864, the special yeast, export to America after Prohibition, and Freddy Heineken's marketing genius.",
-          "subject": "Heineken",
-          "source": "Heineken official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 73,
-          "title": "Philips: The Light Bulb Factory That Lit Up Europe",
-          "covers": "Gerard and Anton Philips making bulbs in Eindhoven in 1891, radios, the compact cassette and the CD, and the shift into health technology.",
-          "subject": "Philips",
-          "source": "Philips official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 74,
-          "title": "ASML: The Dutch Company Every Chip Maker Needs",
-          "covers": "A joint venture between Philips and ASM in a shed beside a factory in 1984, decades betting on lithography, and the extreme ultraviolet machines only it can make.",
-          "subject": "ASML",
-          "source": "ASML official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 75,
-          "title": "Maersk: The Shipping Company That Moves the World's Goods",
-          "covers": "A Danish captain and his son starting a steamship company in 1904, the shift to container ships, and growing into one of the largest shipping lines on earth.",
-          "subject": "Maersk",
-          "source": "Maersk official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 76,
-          "title": "Carlsberg: The Brewery That Gave Science Its Profits",
-          "covers": "J.C. Jacobsen naming a brewery after his son in 1847, the lab that purified lager yeast and shared it freely, and the foundation that owns the company and funds research.",
-          "subject": "Carlsberg",
-          "source": "Carlsberg official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 77,
-          "title": "Novo Nordisk: The Insulin Makers Who Became Europe's Most Valuable Company",
-          "covers": "A Danish professor bringing insulin back from Canada in 1923, two rival companies that later merged, and the diabetes and weight-loss medicines that made it huge.",
-          "subject": "Novo Nordisk",
-          "source": "Novo Nordisk official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 78,
-          "title": "Nokia: From Paper Mill to Phones and Back to Networks",
-          "covers": "A Finnish paper mill in 1865, rubber boots and cables, the mobile phone years when Nokia led the world, losing to the smartphone, and the reinvention in network equipment.",
-          "subject": "Nokia",
-          "source": "Nokia official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 79,
-          "title": "Ericsson: The Telephone Repair Shop That Connected the World",
-          "covers": "Lars Magnus Ericsson repairing telegraph equipment in Stockholm in 1876, building telephones and exchanges, and becoming a leader in mobile network technology.",
-          "subject": "Ericsson",
-          "source": "Ericsson official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 80,
-          "title": "AB InBev: The Brewers Who Bought Almost Everyone",
-          "covers": "Three Brazilian investors running the beer company Brahma, the strict cost-cutting culture, mergers with Interbrew, Anheuser-Busch and SABMiller, and owning a quarter of the world's beer.",
-          "subject": "AB InBev",
-          "source": "AB InBev official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Nestlé: The Baby Food That Grew Into the World's Biggest Food Company",
+      "covers": "Henri Nestlé's infant cereal in 1867, the merger with the Anglo-Swiss Condensed Milk Company, Nescafé, KitKat and Nespresso, and the controversies along the way.",
+      "subject": "Nestlé",
+      "source": "Nestlé official company history, annual reports and reputable business journalism"
     },
     {
       "number": 9,
-      "title": "India: Old Names and New",
-      "note": "Indian businesses beyond the main India series, from biscuits to apps.",
-      "episodes": [
-        {
-          "number": 81,
-          "title": "Zomato: From Scanned Menus to Food Delivery",
-          "covers": "Deepinder Goyal scanning restaurant menus at his Delhi office in 2008, the restaurant listing site, the move into delivery, and the public listing in 2021.",
-          "subject": "Zomato",
-          "source": "Zomato official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 82,
-          "title": "Paytm: The Mobile Wallet That Rode Demonetisation",
-          "covers": "Vijay Shekhar Sharma from a small town in Uttar Pradesh, phone recharges, the digital wallet, the cash ban of 2016 that sent users soaring, and the regulatory troubles that followed.",
-          "subject": "Paytm",
-          "source": "Paytm official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 83,
-          "title": "Nykaa: The Banker Who Started Again at Fifty",
-          "covers": "Falguni Nayar leaving investment banking to sell beauty products online in 2012, building trust in a new market, and becoming one of India's richest self-made women.",
-          "subject": "Nykaa",
-          "source": "Nykaa official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 84,
-          "title": "Wipro: The Vegetable Oil Company That Became an IT Giant",
-          "covers": "Western India Vegetable Products in 1945, Azim Premji taking over at twenty-one after his father's death, the move into computers, and his record-setting philanthropy.",
-          "subject": "Wipro",
-          "source": "Wipro official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 85,
-          "title": "HDFC Bank: The Bank That Was Built to Be Boring",
-          "covers": "HDFC starting in housing finance in 1977, Aditya Puri building a new private bank from 1994, careful lending, and growing into India's largest private bank.",
-          "subject": "HDFC Bank",
-          "source": "HDFC Bank official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 86,
-          "title": "Royal Enfield: The British Motorbike That Became Indian",
-          "covers": "An English firm making guns and bikes, the Bullet supplied to the Indian Army, the Indian factory outliving the British parent, and the revival under Eicher Motors.",
-          "subject": "Royal Enfield",
-          "source": "Royal Enfield official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 87,
-          "title": "Parle-G: The Biscuit That Fed a Nation",
-          "covers": "The Chauhan family's confectionery factory in Mumbai in 1929, the glucose biscuit of 1939, a price kept low for decades, and becoming one of the best-selling biscuits in the world.",
-          "subject": "Parle Products",
-          "source": "Parle Products official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 88,
-          "title": "Dabur: A Doctor's Medicines That Became a Consumer Brand",
-          "covers": "Dr S.K. Burman making Ayurvedic remedies in Calcutta in 1884, Chyawanprash and hair oil, and building a modern company around traditional products.",
-          "subject": "Dabur",
-          "source": "Dabur official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 89,
-          "title": "Titan: The Watch That Took On the Government's Factory",
-          "covers": "Tata and a Tamil Nadu state company launching Titan in 1984 against the state-owned HMT, quartz watches, and later growth into jewellery with Tanishq and eyewear.",
-          "subject": "Titan watches",
-          "source": "Titan watches official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 90,
-          "title": "Bajaj: 'Hamara Bajaj' and the Scooter With a Waiting List",
-          "covers": "Jamnalal Bajaj's trading firm, Rahul Bajaj building scooters under the licence raj with ten-year waiting lists, and the shift to motorcycles that kept it ahead.",
-          "subject": "Bajaj Auto",
-          "source": "Bajaj Auto official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Zomato: From Scanned Menus to Food Delivery",
+      "covers": "Deepinder Goyal scanning restaurant menus at his Delhi office in 2008, the restaurant listing site, the move into delivery, and the public listing in 2021.",
+      "subject": "Zomato",
+      "source": "Zomato official company history, annual reports and reputable business journalism"
     },
     {
       "number": 10,
-      "title": "Rising Markets",
-      "note": "Businesses from South-East Asia, Africa and Latin America that beat the odds.",
-      "episodes": [
-        {
-          "number": 91,
-          "title": "Grab: The Taxi App Two Classmates Built for South-East Asia",
-          "covers": "Anthony Tan and Tan Hooi Ling's Harvard business plan, safer taxis in Kuala Lumpur, beating Uber in the region, and growing into payments and food delivery.",
-          "subject": "Grab Holdings",
-          "source": "Grab Holdings official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 92,
-          "title": "Shopee: The Gaming Company That Became an Online Shop",
-          "covers": "Forrest Li founding Garena in Singapore to publish games, the hit Free Fire, and using game profits to build the shopping app Shopee across the region.",
-          "subject": "Sea Limited Shopee",
-          "source": "Sea Limited Shopee official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 93,
-          "title": "Jollibee: The Ice Cream Parlour That Beat McDonald's",
-          "covers": "Tony Tan Caktiong's ice cream shop in Manila in 1975, adding hot food, sweet spaghetti and Chickenjoy for Filipino tastes, and winning its home market against global chains.",
-          "subject": "Jollibee",
-          "source": "Jollibee official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 94,
-          "title": "Singapore Airlines: The Airline of a Country Without Domestic Flights",
-          "covers": "The split from Malaysia-Singapore Airlines in 1972, the Singapore Girl, betting on service and new planes, and staying among the world's best-rated airlines.",
-          "subject": "Singapore Airlines",
-          "source": "Singapore Airlines official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 95,
-          "title": "M-Pesa: Money Sent by Text Message",
-          "covers": "A Kenyan mobile network and a British aid-funded trial in 2007, people sending money from basic phones, and how it reshaped banking for millions.",
-          "subject": "Safaricom M-Pesa",
-          "source": "Safaricom M-Pesa official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 96,
-          "title": "Dangote: The Trader Who Built Africa's Biggest Business",
-          "covers": "Aliko Dangote borrowing from his uncle to trade goods in Lagos, moving into cement, sugar and flour, and his giant oil refinery.",
-          "subject": "Dangote Group",
-          "source": "Dangote Group official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 97,
-          "title": "Jumia: Trying to Build Africa's Amazon",
-          "covers": "Founders launching online shopping in Lagos in 2012, delivering without street addresses, cash on delivery, the stock market listing, and the hard road to profit.",
-          "subject": "Jumia",
-          "source": "Jumia official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 98,
-          "title": "Bimbo: The Mexican Bakery That Bakes for the World",
-          "covers": "The Servitje family starting a bakery in Mexico City in 1945, sliced bread wrapped in cellophane, and buying brands until it became the world's biggest baker.",
-          "subject": "Grupo Bimbo",
-          "source": "Grupo Bimbo official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 99,
-          "title": "Cemex: The Cement Company That Treated Concrete Like Pizza",
-          "covers": "A small cement plant in Monterrey in 1906, Lorenzo Zambrano's expansion abroad, GPS-tracked trucks that delivered on time like pizza, and the debt crisis of 2008.",
-          "subject": "Cemex",
-          "source": "Cemex official company history, annual reports and reputable business journalism"
-        },
-        {
-          "number": 100,
-          "title": "Corona: The Mexican Beer Served With a Lime",
-          "covers": "Cervecería Modelo founded in Mexico City in 1925, the clear bottle, the lime wedge, becoming the top imported beer in America, and the takeover by AB InBev.",
-          "subject": "Grupo Modelo Corona",
-          "source": "Grupo Modelo Corona official company history, annual reports and reputable business journalism"
-        }
-      ]
+      "title": "Grab: The Taxi App Two Classmates Built for South-East Asia",
+      "covers": "Anthony Tan and Tan Hooi Ling's Harvard business plan, safer taxis in Kuala Lumpur, beating Uber in the region, and growing into payments and food delivery.",
+      "subject": "Grab Holdings",
+      "source": "Grab Holdings official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 11,
+      "title": "KFC: The Colonel Who Started Again at Sixty-Five",
+      "covers": "Harland Sanders frying chicken at a roadside petrol station, his secret blend, selling franchises from the back of his car in old age, and how the brand spread across the globe.",
+      "subject": "KFC",
+      "source": "KFC official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 12,
+      "title": "H&M: The Swedish Store That Made Fashion Cheap",
+      "covers": "Erling Persson opening a women's clothing shop in Västerås in 1947 after seeing American retail, low prices on high volumes, and the designer collaborations that drew queues.",
+      "subject": "H&M",
+      "source": "H&M official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 13,
+      "title": "Facebook: From a Dorm Room to Three Billion Users",
+      "covers": "Mark Zuckerberg's Harvard network in 2004, the spread to other campuses, the News Feed, buying Instagram and WhatsApp, and the rename to Meta.",
+      "subject": "Facebook Meta",
+      "source": "Facebook Meta official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 14,
+      "title": "Stripe: Two Irish Brothers Who Fixed Online Payments",
+      "covers": "Patrick and John Collison from rural Tipperary, seven lines of code to accept payments, winning over developers, and building the plumbing behind much of internet commerce.",
+      "subject": "Stripe",
+      "source": "Stripe official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 15,
+      "title": "Tesla: The Electric Car Startup Everyone Said Would Fail",
+      "covers": "Martin Eberhard and Marc Tarpenning founding Tesla in 2003, Elon Musk's investment, the Roadster, near-bankruptcy, the Model 3 production struggle, and becoming the most valuable carmaker.",
+      "subject": "Tesla",
+      "source": "Tesla official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 16,
+      "title": "Barbie: The Doll That Made Mattel",
+      "covers": "Ruth and Elliot Handler starting Mattel in a garage, Ruth seeing her daughter play with paper dolls, the launch of Barbie in 1959, and the doll's many reinventions.",
+      "subject": "Mattel Barbie",
+      "source": "Mattel Barbie official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 17,
+      "title": "Levi's: The Gold Rush Trousers That Became Jeans",
+      "covers": "Levi Strauss selling dry goods in San Francisco, tailor Jacob Davis's riveted work trousers, the patent of 1873, and denim's journey from miners to fashion.",
+      "subject": "Levi Strauss",
+      "source": "Levi Strauss official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 18,
+      "title": "Heineken: The Brewery Bought by a 22-Year-Old",
+      "covers": "Gerard Adriaan Heineken buying an Amsterdam brewery in 1864, the special yeast, export to America after Prohibition, and Freddy Heineken's marketing genius.",
+      "subject": "Heineken",
+      "source": "Heineken official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 19,
+      "title": "Paytm: The Mobile Wallet That Rode Demonetisation",
+      "covers": "Vijay Shekhar Sharma from a small town in Uttar Pradesh, phone recharges, the digital wallet, the cash ban of 2016 that sent users soaring, and the regulatory troubles that followed.",
+      "subject": "Paytm",
+      "source": "Paytm official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 20,
+      "title": "Shopee: The Gaming Company That Became an Online Shop",
+      "covers": "Forrest Li founding Garena in Singapore to publish games, the hit Free Fire, and using game profits to build the shopping app Shopee across the region.",
+      "subject": "Sea Limited Shopee",
+      "source": "Sea Limited Shopee official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 21,
+      "title": "Domino's: The Pizza Chain That Sold Speed",
+      "covers": "Two brothers buying one pizzeria in Michigan in 1960, the bet on delivery, the famous thirty-minute promise, and the later reinvention as a technology company that happens to make pizza.",
+      "subject": "Domino's Pizza",
+      "source": "Domino's Pizza official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 22,
+      "title": "Costco: The Warehouse That Charges You to Shop",
+      "covers": "Jim Sinegal and Jeffrey Brotman opening a Seattle warehouse in 1983, the membership-fee model, tiny margins, the hot dog price that never changes, and fierce customer loyalty.",
+      "subject": "Costco",
+      "source": "Costco official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 23,
+      "title": "Nvidia: The Graphics Card Maker That Powered a Revolution",
+      "covers": "Three engineers meeting at a Denny's diner in 1993, chips for video games, the CUDA bet that let graphics chips do general computing, and becoming one of the world's most valuable companies.",
+      "subject": "Nvidia",
+      "source": "Nvidia official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 24,
+      "title": "Duolingo: The Green Owl That Made Language Learning a Game",
+      "covers": "Luis von Ahn, the inventor of CAPTCHA, wanting free education for all, the game-like lessons and streaks, and the mascot that became an internet celebrity.",
+      "subject": "Duolingo",
+      "source": "Duolingo official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 25,
+      "title": "Harley-Davidson: The Motorbike Built in a Backyard Shed",
+      "covers": "William Harley and the Davidson brothers in a Milwaukee shed in 1903, military orders in two world wars, nearly collapsing in the 1980s, and the loyal owners who saved it.",
+      "subject": "Harley-Davidson",
+      "source": "Harley-Davidson official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 26,
+      "title": "Hasbro: From Pencil Cases to Monopoly and Transformers",
+      "covers": "The Hassenfeld brothers selling textile remnants in Rhode Island, pencil boxes, Mr Potato Head, G.I. Joe, and buying Milton Bradley and Parker Brothers.",
+      "subject": "Hasbro",
+      "source": "Hasbro official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 27,
+      "title": "Ray-Ban: The Glasses Made for Pilots",
+      "covers": "Bausch & Lomb's anti-glare lenses for US airmen in the 1930s, the Aviator and Wayfarer, film stardom, and the Italian company Luxottica that bought the brand.",
+      "subject": "Luxottica Ray-Ban",
+      "source": "Luxottica Ray-Ban official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 28,
+      "title": "Philips: The Light Bulb Factory That Lit Up Europe",
+      "covers": "Gerard and Anton Philips making bulbs in Eindhoven in 1891, radios, the compact cassette and the CD, and the shift into health technology.",
+      "subject": "Philips",
+      "source": "Philips official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 29,
+      "title": "Nykaa: The Banker Who Started Again at Fifty",
+      "covers": "Falguni Nayar leaving investment banking to sell beauty products online in 2012, building trust in a new market, and becoming one of India's richest self-made women.",
+      "subject": "Nykaa",
+      "source": "Nykaa official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 30,
+      "title": "Jollibee: The Ice Cream Parlour That Beat McDonald's",
+      "covers": "Tony Tan Caktiong's ice cream shop in Manila in 1975, adding hot food, sweet spaghetti and Chickenjoy for Filipino tastes, and winning its home market against global chains.",
+      "subject": "Jollibee",
+      "source": "Jollibee official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 31,
+      "title": "Nutella: The Chocolate Spread Born from a Shortage",
+      "covers": "Pietro Ferrero stretching scarce cocoa with hazelnuts in post-war Italy, the jar that became Nutella, and how one family built Kinder, Ferrero Rocher and Tic Tac while staying private.",
+      "subject": "Ferrero",
+      "source": "Ferrero official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 32,
+      "title": "Aldi: Two Brothers, One Shop, Two Empires",
+      "covers": "Karl and Theo Albrecht taking over their mother's shop in Essen, the no-frills discount formula, the split into Aldi Nord and Aldi Süd, and their spread across Europe, the US and Australia.",
+      "subject": "Aldi",
+      "source": "Aldi official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 33,
+      "title": "Intel: The Company That Put a Brain in Every Computer",
+      "covers": "Robert Noyce and Gordon Moore leaving Fairchild in 1968, memory chips, the first microprocessor, the 'Intel Inside' campaign and its long run at the heart of the PC.",
+      "subject": "Intel",
+      "source": "Intel official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 34,
+      "title": "WhatsApp: The Messaging App With No Adverts",
+      "covers": "Jan Koum and Brian Acton, two former Yahoo engineers, a status app that became a messenger, a tiny team serving hundreds of millions, and the 19 billion dollar sale to Facebook.",
+      "subject": "WhatsApp",
+      "source": "WhatsApp official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 35,
+      "title": "Ryanair: The Airline That Made Flying Cheap",
+      "covers": "A small Irish airline flying from Waterford in 1985, nearly failing, copying Southwest's low-cost model, Michael O'Leary's no-frills approach, and becoming Europe's biggest carrier.",
+      "subject": "Ryanair",
+      "source": "Ryanair official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 36,
+      "title": "Disney: The Mouse That Built an Empire",
+      "covers": "Walt and Roy Disney's cartoon studio, losing Oswald the rabbit, creating Mickey Mouse, the gamble on Snow White, Disneyland, and the modern company of parks and franchises.",
+      "subject": "Walt Disney Company",
+      "source": "Walt Disney Company official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 37,
+      "title": "Dr. Martens: The Army Doctor's Boot That Joined the Punks",
+      "covers": "A German doctor with an injured ankle designing an air-cushioned sole, the British Griggs family making the 1460 boot in 1960, and its adoption by workers, skinheads and punks.",
+      "subject": "Dr. Martens",
+      "source": "Dr. Martens official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 38,
+      "title": "ASML: The Dutch Company Every Chip Maker Needs",
+      "covers": "A joint venture between Philips and ASM in a shed beside a factory in 1984, decades betting on lithography, and the extreme ultraviolet machines only it can make.",
+      "subject": "ASML",
+      "source": "ASML official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 39,
+      "title": "Wipro: The Vegetable Oil Company That Became an IT Giant",
+      "covers": "Western India Vegetable Products in 1945, Azim Premji taking over at twenty-one after his father's death, the move into computers, and his record-setting philanthropy.",
+      "subject": "Wipro",
+      "source": "Wipro official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 40,
+      "title": "Singapore Airlines: The Airline of a Country Without Domestic Flights",
+      "covers": "The split from Malaysia-Singapore Airlines in 1972, the Singapore Girl, betting on service and new planes, and staying among the world's best-rated airlines.",
+      "subject": "Singapore Airlines",
+      "source": "Singapore Airlines official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 41,
+      "title": "Heinz: The Ketchup That Promised Purity",
+      "covers": "Henry John Heinz bottling horseradish in clear glass, the '57 varieties' slogan, his campaign for food safety laws, and how ketchup became the brand's global calling card.",
+      "subject": "Heinz",
+      "source": "Heinz official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 42,
+      "title": "Primark: Low Prices Without a Website",
+      "covers": "Arthur Ryan opening the first Penneys in Dublin in 1969, the move into Britain under the Primark name, the bargain-fashion formula and the choice to stay mostly offline.",
+      "subject": "Primark",
+      "source": "Primark official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 43,
+      "title": "Oracle: The Database Built From a CIA Project Name",
+      "covers": "Larry Ellison and two partners reading a research paper on relational databases, the first commercial SQL product named after a CIA project, aggressive selling, and growth into a business software giant.",
+      "subject": "Oracle",
+      "source": "Oracle official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 44,
+      "title": "Instagram: The Photo App Sold for a Billion With Thirteen Staff",
+      "covers": "Kevin Systrom and Mike Krieger dropping a check-in app called Burbn, filters for phone photos, a million users in two months, and the sale to Facebook in 2012.",
+      "subject": "Instagram",
+      "source": "Instagram official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 45,
+      "title": "Southwest: The Airline Sketched on a Napkin",
+      "covers": "Herb Kelleher and Rollin King drawing a triangle of Texas cities, years of legal fights to take off, quick turnarounds, one plane type, and decades of profits in a hard industry.",
+      "subject": "Southwest Airlines",
+      "source": "Southwest Airlines official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 46,
+      "title": "Marvel: The Comic Book Company That Went Bankrupt, Then Ruled Cinema",
+      "covers": "Timely Comics in 1939, Stan Lee and Jack Kirby's heroes of the 1960s, bankruptcy in 1996, the risky film studio, Iron Man, and the sale to Disney.",
+      "subject": "Marvel Entertainment",
+      "source": "Marvel Entertainment official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 47,
+      "title": "Patagonia: The Company That Told You Not to Buy Its Jacket",
+      "covers": "Yvon Chouinard forging climbing pitons, moving into clothing, the 'Don't Buy This Jacket' advert, and giving the company away to fight climate change.",
+      "subject": "Patagonia",
+      "source": "Patagonia official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 48,
+      "title": "Maersk: The Shipping Company That Moves the World's Goods",
+      "covers": "A Danish captain and his son starting a steamship company in 1904, the shift to container ships, and growing into one of the largest shipping lines on earth.",
+      "subject": "Maersk",
+      "source": "Maersk official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 49,
+      "title": "HDFC Bank: The Bank That Was Built to Be Boring",
+      "covers": "HDFC starting in housing finance in 1977, Aditya Puri building a new private bank from 1994, careful lending, and growing into India's largest private bank.",
+      "subject": "HDFC Bank",
+      "source": "HDFC Bank official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 50,
+      "title": "M-Pesa: Money Sent by Text Message",
+      "covers": "A Kenyan mobile network and a British aid-funded trial in 2007, people sending money from basic phones, and how it reshaped banking for millions.",
+      "subject": "Safaricom M-Pesa",
+      "source": "Safaricom M-Pesa official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 51,
+      "title": "Kellogg's: The Breakfast Born in a Health Sanitarium",
+      "covers": "Two brothers at a Michigan health resort, the accidental flake, the bitter split over adding sugar, and the advertising that turned cereal into the default morning meal.",
+      "subject": "Kellogg's",
+      "source": "Kellogg's official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 52,
+      "title": "Sephora: The Store That Let You Touch the Make-Up",
+      "covers": "Dominique Mandonnaud's open-sell perfume shops in France, the Sephora name, joining LVMH, and how letting customers test everything changed beauty retail.",
+      "subject": "Sephora",
+      "source": "Sephora official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 53,
+      "title": "Adobe: The Software That Shaped Every Page",
+      "covers": "John Warnock and Charles Geschke leaving Xerox PARC with PostScript, desktop publishing, Photoshop and the PDF, and the switch to subscription software.",
+      "subject": "Adobe",
+      "source": "Adobe official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 54,
+      "title": "TikTok: The App That Learned What You Like",
+      "covers": "Zhang Yiming founding ByteDance in Beijing, the recommendation engine behind news app Toutiao, buying Musical.ly, and building the short-video app that swept the world.",
+      "subject": "ByteDance TikTok",
+      "source": "ByteDance TikTok official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 55,
+      "title": "Emirates: The Airline That Started With Two Borrowed Planes",
+      "covers": "Dubai launching an airline in 1985 with leased aircraft, building a hub between East and West, giant Airbus A380s, and turning a desert city into a global connection point.",
+      "subject": "Emirates airline",
+      "source": "Emirates airline official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 56,
+      "title": "Pixar: The Computer Lab That Steve Jobs Saved",
+      "covers": "Lucasfilm's graphics division, Steve Jobs buying it in 1986, years of losses selling computers, short films, and Toy Story, the first fully computer-animated feature.",
+      "subject": "Pixar",
+      "source": "Pixar official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 57,
+      "title": "Gillette: The Razor You Throw Away",
+      "covers": "King C. Gillette, a travelling salesman, inventing the disposable blade, the razor-and-blades model, supplying soldiers in World War One, and its sale to Procter & Gamble.",
+      "subject": "Gillette",
+      "source": "Gillette official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 58,
+      "title": "Carlsberg: The Brewery That Gave Science Its Profits",
+      "covers": "J.C. Jacobsen naming a brewery after his son in 1847, the lab that purified lager yeast and shared it freely, and the foundation that owns the company and funds research.",
+      "subject": "Carlsberg",
+      "source": "Carlsberg official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 59,
+      "title": "Royal Enfield: The British Motorbike That Became Indian",
+      "covers": "An English firm making guns and bikes, the Bullet supplied to the Indian Army, the Indian factory outliving the British parent, and the revival under Eicher Motors.",
+      "subject": "Royal Enfield",
+      "source": "Royal Enfield official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 60,
+      "title": "Dangote: The Trader Who Built Africa's Biggest Business",
+      "covers": "Aliko Dangote borrowing from his uncle to trade goods in Lagos, moving into cement, sugar and flour, and his giant oil refinery.",
+      "subject": "Dangote Group",
+      "source": "Dangote Group official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 61,
+      "title": "Haribo: The Gold Bear Made in a Back Kitchen",
+      "covers": "Hans Riegel starting with a sack of sugar and a copper kettle in Bonn in 1920, the dancing bear sweet, rebuilding after the war, and growing into the world's best-known gummy maker.",
+      "subject": "Haribo",
+      "source": "Haribo official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 62,
+      "title": "Decathlon: The Sports Shop That Designs Its Own Gear",
+      "covers": "Michel Leclercq opening a big sports store near Lille in 1976, the shift to in-house brands like Quechua, and how affordable equipment made it a global retailer.",
+      "subject": "Decathlon",
+      "source": "Decathlon official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 63,
+      "title": "Salesforce: The Company That Said 'No Software'",
+      "covers": "Marc Benioff starting in a San Francisco apartment in 1999, selling business software over the internet by subscription, and becoming the leader in customer management tools.",
+      "subject": "Salesforce",
+      "source": "Salesforce official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 64,
+      "title": "Discord: The Chat App Born From a Failed Game",
+      "covers": "Jason Citron selling one startup and building a game that flopped, the voice chat tool the team made for themselves, and its growth from gamers to communities of every kind.",
+      "subject": "Discord",
+      "source": "Discord official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 65,
+      "title": "FedEx: The Idea That Got a C Grade",
+      "covers": "Fred Smith's university paper on overnight delivery, the first night of flights in 1973, gambling company money in Las Vegas to make payroll, and building the hub-and-spoke system.",
+      "subject": "FedEx",
+      "source": "FedEx official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 66,
+      "title": "Pokémon: The Boy Who Collected Insects",
+      "covers": "Satoshi Tajiri's childhood bug hunting, Game Freak, the Game Boy link cable, Pokémon Red and Green in 1996, the cards and cartoon, and Pokémon Go.",
+      "subject": "The Pokémon Company",
+      "source": "The Pokémon Company official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 67,
+      "title": "Crocs: The Ugly Shoe That Made a Fortune",
+      "covers": "Three friends from Colorado selling a foam boating shoe in 2002, a rapid craze, a crash and near collapse, and the surprising comeback through collaborations and charms.",
+      "subject": "Crocs",
+      "source": "Crocs official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 68,
+      "title": "Novo Nordisk: The Insulin Makers Who Became Europe's Most Valuable Company",
+      "covers": "A Danish professor bringing insulin back from Canada in 1923, two rival companies that later merged, and the diabetes and weight-loss medicines that made it huge.",
+      "subject": "Novo Nordisk",
+      "source": "Novo Nordisk official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 69,
+      "title": "Parle-G: The Biscuit That Fed a Nation",
+      "covers": "The Chauhan family's confectionery factory in Mumbai in 1929, the glucose biscuit of 1939, a price kept low for decades, and becoming one of the best-selling biscuits in the world.",
+      "subject": "Parle Products",
+      "source": "Parle Products official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 70,
+      "title": "Jumia: Trying to Build Africa's Amazon",
+      "covers": "Founders launching online shopping in Lagos in 2012, delivering without street addresses, cash on delivery, the stock market listing, and the hard road to profit.",
+      "subject": "Jumia",
+      "source": "Jumia official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 71,
+      "title": "Lindt: The Accident That Made Chocolate Melt",
+      "covers": "Rodolphe Lindt leaving a machine running in 1879 and inventing conching, the smooth chocolate that followed, the merger with Sprüngli, and the premium brand it became.",
+      "subject": "Lindt",
+      "source": "Lindt official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 72,
+      "title": "Trader Joe's: The Grocery Store With a Personality",
+      "covers": "Joe Coulombe's California convenience stores, the Hawaiian-shirt theme, a small range of own-label products, and its sale to the family behind Aldi Nord.",
+      "subject": "Trader Joe's",
+      "source": "Trader Joe's official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 73,
+      "title": "Spotify: The Swedish Answer to Music Piracy",
+      "covers": "Daniel Ek and Martin Lorentzon building a fast, legal alternative to file sharing, the long fight for record label deals, free tier with ads, and the move into podcasts.",
+      "subject": "Spotify",
+      "source": "Spotify official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 74,
+      "title": "Figma: Design That Lives in the Browser",
+      "covers": "Dylan Field and Evan Wallace at Brown University, years building a design tool that runs in a web page, the real-time collaboration that won teams over, and Adobe's failed takeover.",
+      "subject": "Figma",
+      "source": "Figma official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 75,
+      "title": "Boeing: From a Seaplane Shed to the Jumbo Jet",
+      "covers": "William Boeing building a seaplane in Seattle in 1916, mail planes and bombers, the 707 that opened the jet age, the 747, and the safety crises of recent years.",
+      "subject": "Boeing",
+      "source": "Boeing official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 76,
+      "title": "Angry Birds: The Game That Came After 51 Failures",
+      "covers": "Three students in Finland founding Rovio, dozens of games that went nowhere, the bird-flinging hit of 2009, merchandise and films, and the difficulty of a second hit.",
+      "subject": "Rovio Angry Birds",
+      "source": "Rovio Angry Birds official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 77,
+      "title": "Converse: The Basketball Shoe Named After a Salesman",
+      "covers": "Marquis Mills Converse's rubber shoe company, the All Star of 1917, Chuck Taylor selling them gym to gym, bankruptcy, and Nike buying it in 2003.",
+      "subject": "Converse",
+      "source": "Converse official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 78,
+      "title": "Nokia: From Paper Mill to Phones and Back to Networks",
+      "covers": "A Finnish paper mill in 1865, rubber boots and cables, the mobile phone years when Nokia led the world, losing to the smartphone, and the reinvention in network equipment.",
+      "subject": "Nokia",
+      "source": "Nokia official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 79,
+      "title": "Dabur: A Doctor's Medicines That Became a Consumer Brand",
+      "covers": "Dr S.K. Burman making Ayurvedic remedies in Calcutta in 1884, Chyawanprash and hair oil, and building a modern company around traditional products.",
+      "subject": "Dabur",
+      "source": "Dabur official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 80,
+      "title": "Bimbo: The Mexican Bakery That Bakes for the World",
+      "covers": "The Servitje family starting a bakery in Mexico City in 1945, sliced bread wrapped in cellophane, and buying brands until it became the world's biggest baker.",
+      "subject": "Grupo Bimbo",
+      "source": "Grupo Bimbo official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 81,
+      "title": "Guinness: The 9,000-Year Lease in Dublin",
+      "covers": "Arthur Guinness signing a famous lease at St James's Gate in 1759, the switch to dark porter, the export trade, and the advertising and record book that made the name global.",
+      "subject": "Guinness",
+      "source": "Guinness official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 82,
+      "title": "Marks & Spencer: From a Penny Bazaar to a British Institution",
+      "covers": "Michael Marks selling goods from a market stall in Leeds in 1884, the partnership with Tom Spencer, the St Michael label, and the food halls that defined its later years.",
+      "subject": "Marks & Spencer",
+      "source": "Marks & Spencer official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 83,
+      "title": "Canva: The Design Tool Started From a Teaching Job",
+      "covers": "Melanie Perkins teaching design software in Perth and finding it too hard, the yearbook business that came first, hundreds of investor rejections, and Canva's global rise.",
+      "subject": "Canva",
+      "source": "Canva official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 84,
+      "title": "Dropbox: The Startup That Began With a Forgotten USB Stick",
+      "covers": "Drew Houston leaving his USB drive at home on a bus trip, a demo video that drew a huge waiting list, the referral scheme that grew it, and becoming a public company.",
+      "subject": "Dropbox",
+      "source": "Dropbox official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 85,
+      "title": "Volvo: The Car Company That Gave Away Its Best Invention",
+      "covers": "Two Swedes starting a car company in Gothenburg in 1927, the focus on safety, sharing the three-point seatbelt patent for free, and its later ownership by Ford and then Geely.",
+      "subject": "Volvo Cars",
+      "source": "Volvo Cars official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 86,
+      "title": "Atari: The Company That Started the Video Game Business",
+      "covers": "Nolan Bushnell and Ted Dabney founding Atari in 1972, Pong in a bar, the home console, the sale to Warner, and the crash of 1983 that changed the industry.",
+      "subject": "Atari",
+      "source": "Atari official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 87,
+      "title": "Swatch: The Plastic Watch That Saved Swiss Watchmaking",
+      "covers": "Cheap Japanese quartz watches nearly destroying the Swiss industry, Nicolas Hayek merging struggling makers, and the colourful plastic Swatch of 1983 that turned it around.",
+      "subject": "Swatch",
+      "source": "Swatch official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 88,
+      "title": "Ericsson: The Telephone Repair Shop That Connected the World",
+      "covers": "Lars Magnus Ericsson repairing telegraph equipment in Stockholm in 1876, building telephones and exchanges, and becoming a leader in mobile network technology.",
+      "subject": "Ericsson",
+      "source": "Ericsson official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 89,
+      "title": "Titan: The Watch That Took On the Government's Factory",
+      "covers": "Tata and a Tamil Nadu state company launching Titan in 1984 against the state-owned HMT, quartz watches, and later growth into jewellery with Tanishq and eyewear.",
+      "subject": "Titan watches",
+      "source": "Titan watches official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 90,
+      "title": "Cemex: The Cement Company That Treated Concrete Like Pizza",
+      "covers": "A small cement plant in Monterrey in 1906, Lorenzo Zambrano's expansion abroad, GPS-tracked trucks that delivered on time like pizza, and the debt crisis of 2008.",
+      "subject": "Cemex",
+      "source": "Cemex official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 91,
+      "title": "Nando's: The Peri-Peri Chicken That Crossed Continents",
+      "covers": "Two friends buying a Portuguese-Mozambican restaurant in Johannesburg in 1987, the peri-peri sauce, the move into the UK, and how a chicken chain built a cult following.",
+      "subject": "Nando's",
+      "source": "Nando's official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 92,
+      "title": "7-Eleven: The Ice House That Became a Corner Shop",
+      "covers": "An ice dock in Dallas selling eggs and milk in 1927, the opening hours that gave it its name, the Japanese partner that ended up owning it, and its spread across Asia.",
+      "subject": "7-Eleven",
+      "source": "7-Eleven official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 93,
+      "title": "Zoom: The Video Call App That Became a Verb",
+      "covers": "Eric Yuan leaving Cisco to build simpler video meetings, years of steady growth, and the sudden explosion of users when the world went into lockdown in 2020.",
+      "subject": "Zoom",
+      "source": "Zoom official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 94,
+      "title": "Slack: The Work Chat Tool That Came Out of a Game",
+      "covers": "Stewart Butterfield, also behind Flickr, building an online game that failed, keeping the internal messaging tool, and growing it into a workplace standard bought by Salesforce.",
+      "subject": "Slack",
+      "source": "Slack official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 95,
+      "title": "Vespa: The Scooter Made by an Aircraft Factory",
+      "covers": "Piaggio's bombed-out plant in post-war Italy, Enrico Piaggio's need for cheap transport, the wasp-shaped scooter of 1946, Roman Holiday, and Vespa as a style icon.",
+      "subject": "Piaggio Vespa",
+      "source": "Piaggio Vespa official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 96,
+      "title": "Electronic Arts: Treating Game Makers Like Rock Stars",
+      "covers": "Trip Hawkins leaving Apple in 1982, putting developers' names on the box, John Madden Football and FIFA, and growing into one of the largest game publishers.",
+      "subject": "Electronic Arts",
+      "source": "Electronic Arts official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 97,
+      "title": "Gucci: The Hotel Porter Who Built a Fashion House",
+      "covers": "Guccio Gucci watching luggage at the Savoy in London, his leather shop in Florence, family feuds and a murder, and Tom Ford's revival in the 1990s.",
+      "subject": "Gucci",
+      "source": "Gucci official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 98,
+      "title": "AB InBev: The Brewers Who Bought Almost Everyone",
+      "covers": "Three Brazilian investors running the beer company Brahma, the strict cost-cutting culture, mergers with Interbrew, Anheuser-Busch and SABMiller, and owning a quarter of the world's beer.",
+      "subject": "AB InBev",
+      "source": "AB InBev official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 99,
+      "title": "Bajaj: 'Hamara Bajaj' and the Scooter With a Waiting List",
+      "covers": "Jamnalal Bajaj's trading firm, Rahul Bajaj building scooters under the licence raj with ten-year waiting lists, and the shift to motorcycles that kept it ahead.",
+      "subject": "Bajaj Auto",
+      "source": "Bajaj Auto official company history, annual reports and reputable business journalism"
+    },
+    {
+      "number": 100,
+      "title": "Corona: The Mexican Beer Served With a Lime",
+      "covers": "Cervecería Modelo founded in Mexico City in 1925, the clear bottle, the lime wedge, becoming the top imported beer in America, and the takeover by AB InBev.",
+      "subject": "Grupo Modelo Corona",
+      "source": "Grupo Modelo Corona official company history, annual reports and reputable business journalism"
     }
   ]
 }

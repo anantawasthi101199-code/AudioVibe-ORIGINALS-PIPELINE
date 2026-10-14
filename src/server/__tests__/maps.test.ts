@@ -5,12 +5,14 @@
 import path from 'path';
 import { loadAllMaps, loadMaps, mapSubject, viewOf, ContentMap } from '../maps';
 import { loadPersona } from '../../canon/load';
+import { loadFormat } from '../../formats/load';
 
 const map: ContentMap = {
   id: 'm',
   channelId: 'c',
   title: 'M',
   formatId: 'myth-story',
+  shorts: false,
   series: [
     { number: 1, title: 'One', note: '', episodes: [1, 2].map((n) => ({ number: n, title: `T${n}`, covers: 'x.', source: 's' })) },
     { number: 2, title: 'Two', note: '', episodes: [{ number: 3, title: 'T3?', covers: 'y.', source: 's' }] },
@@ -59,6 +61,8 @@ describe('a content map', () => {
     for (const m of maps) {
       // A map in a format its channel does not make could never be started.
       expect(loadPersona(m.channelId).formats).toContain(m.formatId);
+      // Shorts in a short format, episodes in a long one.
+      expect(loadFormat(m.formatId).kind === 'short').toBe(m.shorts);
       const numbers = m.series.flatMap((s) => s.episodes.map((e) => e.number));
       expect(new Set(numbers).size).toBe(numbers.length);
     }
@@ -73,7 +77,7 @@ describe('a content map', () => {
     expect(mapSubject('business-by-country/40')).toBe('Sega');
     expect(mapSubject('hindu-mythology/1')).toBeNull();
     // The shorts map names its companies the same way.
-    const shorts = loadMaps('business-decoded').find((m) => m.id === 'business-shorts')!;
+    const shorts = loadMaps('business-decoded').find((m) => m.shorts)!;
     expect(shorts.series.flatMap((s) => s.episodes).every((e) => e.subject && e.subject.length < 30)).toBe(true);
     expect(mapSubject('business-shorts/1')).toBe('Starbucks');
     expect(mapSubject(undefined)).toBeNull();
