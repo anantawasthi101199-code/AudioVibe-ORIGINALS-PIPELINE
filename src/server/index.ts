@@ -105,7 +105,7 @@ import { repoRoot, runsDir } from '../config';
 import { backUpRecords, r2Store, runKey, sweepArchive } from '../archive/r2';
 import { archiveDownload } from './archiveNow';
 import { releaseDue } from '../publish/release';
-import { seedPreparedRuns } from './seedMaps';
+import { seedMapImages, seedPreparedRuns } from './seedMaps';
 import {
   createSeriesJob,
   discardRun,
@@ -813,6 +813,7 @@ export const serve = async (opts: ServeOptions = {}): Promise<http.Server> => {
   // missing run, which the log names.
   try {
     seedPreparedRuns((m) => console.log(m));
+    seedMapImages((m) => console.log(m));
   } catch (e) {
     console.error(`map scripts not seeded: ${(e as Error).message}`);
   }

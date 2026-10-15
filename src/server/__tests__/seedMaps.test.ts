@@ -9,7 +9,8 @@ import { Run } from '../../run/store';
 import { scriptSchema } from '../../script/write';
 import { runs } from '../catalog';
 import { loadAllMaps, loadMaps, viewOf } from '../maps';
-import { seedPreparedRuns } from '../seedMaps';
+import { seedMapImages, seedPreparedRuns } from '../seedMaps';
+import { suppliedArt } from '../../art/supplied';
 
 describe('seeding runs from a map', () => {
   const env = { ...process.env };
@@ -74,5 +75,19 @@ describe('seeding runs from a map', () => {
     seedPreparedRuns();
     expect(Run.open(a!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).not.toBe('Old text.');
     expect(Run.open(b!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).toBe('Old text.');
+  });
+
+  it('PUTS A MAP SERIES COVER IN PLACE, and never over one somebody chose', () => {
+    const art = fs.mkdtempSync(path.join(os.tmpdir(), 'seed-art-'));
+    const name = 'series-the-foundations-of-hindu-mythology';
+    expect(seedMapImages(() => undefined, art)).toBeGreaterThan(0);
+    const placed = suppliedArt(path.join(art, 'mythic-archives'), name);
+    expect(placed).toMatch(/\.supplied\.jpg$/);
+
+    // A person's own choice stays: the next start places nothing over it.
+    fs.rmSync(placed!);
+    fs.writeFileSync(path.join(art, 'mythic-archives', `${name}.supplied.png`), 'chosen by hand');
+    seedMapImages(() => undefined, art);
+    expect(fs.readFileSync(suppliedArt(path.join(art, 'mythic-archives'), name)!, 'utf8')).toBe('chosen by hand');
   });
 });

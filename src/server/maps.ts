@@ -47,6 +47,8 @@ const episodeSchema = z.object({
    * off the topic otherwise, and a map's long topic reads as nonsense.
    */
   subject: z.string().min(1).optional(),
+  /** A picture made for this item, relative to the repo: becomes its run's cover (seedMaps). */
+  image: z.string().min(1).optional(),
 });
 
 /**
@@ -60,6 +62,8 @@ const seriesSchema = z.array(
     number: z.number().int().positive(),
     title: z.string().min(1).max(80),
     note: z.string().default(''),
+    /** A 16:9 picture for the series, relative to the repo: becomes its series cover (seedMaps). */
+    cover: z.string().min(1).optional(),
     episodes: z.array(episodeSchema).min(1),
   })
 );

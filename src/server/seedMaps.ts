@@ -28,6 +28,12 @@ import { blankScript, fillBlank, handwrittenGate, startHandwritten } from '../pi
 import { Run } from '../run/store';
 import { currentOutro, setOutro } from '../script/outro';
 import { scriptSchema } from '../script/write';
+import fs from 'fs';
+import path from 'path';
+import { repoRoot } from '../config';
+import { saveSuppliedArt, suppliedArt } from '../art/supplied';
+import { seriesKey } from '../publish/seriesRegistry';
+import { EPISODE_SHAPE, SHAPES } from './art';
 import { runs } from './catalog';
 import { loadAllMaps, preparedScriptFor, topicFor } from './maps';
 import { topicUsed } from './topicPicks';
@@ -86,6 +92,51 @@ export const seedPreparedRuns = (log: (message: string) => void = () => undefine
     }
   }
   return seeded;
+};
+
+/**
+ * PICTURES MADE FOR A MAP become the studio's art (owner, 2026-10-15): a series'
+ * `cover` its series cover, an item's `image` its run's cover. Made outside the
+ * studio (ChatGPT, see the foundry-scripts skill) and committed beside the
+ * scripts, so a push is all it takes.
+ *
+ * NEVER OVER A PICTURE SOMEBODY CHOSE. Only where no supplied picture exists
+ * yet; to replace one, remove it in the studio first. A series cover reaches
+ * AudioVibe with the series' first episode; for a series already live, set it
+ * in the studio too (the platform copy is not touched from here).
+ */
+export const seedMapImages = (
+  log: (message: string) => void = () => undefined,
+  artRoot = path.join(repoRoot(), 'art'),
+): number => {
+  let placed = 0;
+  const place = (file: string, dir: string, name: string, shape: typeof EPISODE_SHAPE, what: string) => {
+    if (suppliedArt(dir, name)) return;
+    try {
+      saveSuppliedArt(dir, name, fs.readFileSync(path.join(repoRoot(), file)), shape);
+      placed++;
+      log(`map: ${what} picture from ${file}`);
+    } catch (e) {
+      log(`map: ${what} picture not used: ${(e as Error).message}`);
+    }
+  };
+  for (const map of loadAllMaps()) {
+    const mine = runs({ channelId: map.channelId });
+    for (const series of map.series) {
+      if (series.cover && !map.shorts) {
+        const name = `series-${seriesKey(map.channelId, series.title).split('#')[1]}`;
+        place(series.cover, path.join(artRoot, map.channelId), name, SHAPES.series, `series "${series.title}"`);
+      }
+      for (const ep of series.episodes) {
+        if (!ep.image) continue;
+        const key = `${map.id}/${ep.number}`;
+        const run = mine.filter((r) => r.mapItem === key && r.state !== 'failed' && r.state !== 'abandoned')[0];
+        if (!run) continue;
+        place(ep.image, path.dirname(Run.open(run.id).mediaPath('cover.png')), 'cover', EPISODE_SHAPE, key);
+      }
+    }
+  }
+  return placed;
 };
 
 const SEED_EVENT = 'blank filled with the script written for this map item; nothing was paid for';
