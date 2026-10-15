@@ -1,0 +1,608 @@
+{
+  "id": "psyche-shorts",
+  "channelId": "psyche-session",
+  "title": "100 Questions About Your Mind",
+  "formatId": "psych-short",
+  "shorts": [
+    {
+      "number": 1,
+      "title": "Why You Remember the One Bad Comment",
+      "covers": "The negativity bias: why one criticism outweighs ten compliments, and why the brain is built that way.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 2,
+      "title": "Why Crying Can Make You Feel Better",
+      "covers": "What tears are for, and why a good cry sometimes helps and sometimes does not.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 3,
+      "title": "Why You Attract the Same Kind of Partner",
+      "covers": "How early relationships shape who feels familiar, and why familiar is not always good for you.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 4,
+      "title": "Why You Cannot Focus Anymore",
+      "covers": "What constant interruptions do to attention, and how long it really takes to get back into a task.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 5,
+      "title": "Why You Talk to Yourself",
+      "covers": "Inner speech: why we narrate our lives in our heads, and why talking to yourself in the third person can calm you down.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 6,
+      "title": "Why You Bite Your Nails",
+      "covers": "Body-focused habits like nail biting and skin picking: why they happen and what helps.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 7,
+      "title": "How Babies Learn to Talk",
+      "covers": "How babies go from crying to sentences, and what parents' baby talk actually does.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 8,
+      "title": "Why You Get Songs Stuck in Your Head",
+      "covers": "Earworms: why a few bars of a song loop in your head, and the odd trick that can stop them.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 9,
+      "title": "What Is Depression, Really?",
+      "covers": "How depression is different from sadness, the main signs, and why it is treatable.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 10,
+      "title": "The Stanford Prison Experiment Retold",
+      "covers": "What really happened in the 1971 study that seemed to show anyone can become cruel, and why its story fell apart.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 11,
+      "title": "Confirmation Bias: Seeing What You Expect",
+      "covers": "Why we notice evidence that agrees with us and skip what does not, and a simple way to catch yourself doing it.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 12,
+      "title": "Why You Feel Nervous Before Good Things",
+      "covers": "Why excitement and nerves feel almost the same in the body, and how naming it as excitement helps.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 13,
+      "title": "Attachment Styles Explained",
+      "covers": "Secure, anxious and avoidant: what attachment research actually says about adults, and what it does not.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 14,
+      "title": "The Myth of Multitasking",
+      "covers": "Why the brain switches between tasks instead of doing them at once, and what that costs.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 15,
+      "title": "Why Your Self-Image Is Usually Wrong",
+      "covers": "Why we are bad at seeing ourselves, and how others often see us more clearly.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 16,
+      "title": "Why You Eat When You Are Not Hungry",
+      "covers": "Emotional and habit eating, and why willpower is not the answer.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 17,
+      "title": "Why Toddlers Have Tantrums",
+      "covers": "What is happening in a young brain during a meltdown, and why staying calm works.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 18,
+      "title": "Why Time Speeds Up as You Get Older",
+      "covers": "Why summers felt endless as a child and years fly by now, and how new experiences slow time down.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 19,
+      "title": "Panic Attacks: What Is Happening",
+      "covers": "Why a panic attack feels like a heart attack, why it cannot hurt you, and how they are treated.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 20,
+      "title": "The Invisible Gorilla",
+      "covers": "In a famous test half the viewers missed a person in a gorilla suit walking through a basketball game. What it says about attention.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 21,
+      "title": "The Spotlight Effect",
+      "covers": "Why you feel everyone noticed the stain on your shirt, and how little attention other people are actually paying.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 22,
+      "title": "Why Music Changes Your Mood",
+      "covers": "How a song can lift or sink your mood in seconds, and why sad songs can feel comforting.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 23,
+      "title": "Why Arguments Spiral",
+      "covers": "How small disagreements escalate, and the research on how couples who stay happy argue differently.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 24,
+      "title": "Flow: When Time Disappears",
+      "covers": "What flow is, why it feels so good, and the conditions that make it more likely.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 25,
+      "title": "Self-Esteem Versus Self-Compassion",
+      "covers": "Why chasing high self-esteem can backfire, and what being kind to yourself does instead.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 26,
+      "title": "Why Shopping Feels Good",
+      "covers": "The little lift of buying something, why it fades, and when it becomes a problem.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 27,
+      "title": "The Teenage Brain",
+      "covers": "Why teenagers take more risks and feel things more intensely, and why it is a stage of growth, not a fault.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 28,
+      "title": "Why You Cannot Tickle Yourself",
+      "covers": "How the brain predicts your own touch and cancels it out.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 29,
+      "title": "OCD Is Not About Being Tidy",
+      "covers": "What obsessive compulsive disorder really involves, and why the joke version gets it wrong.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 30,
+      "title": "Little Albert and the White Rat",
+      "covers": "A 1920 experiment taught a baby to fear a rat, and what it showed about learned fear, and how unethical it was.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 31,
+      "title": "The Sunk Cost Trap",
+      "covers": "Why you sit through a bad film because you paid for the ticket, and how to let go of what you cannot get back.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 32,
+      "title": "Jealousy and Envy: What Is the Difference?",
+      "covers": "Envy wants what someone else has, jealousy fears losing what you have. What each one is telling you.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 33,
+      "title": "Why Breakups Hurt So Much",
+      "covers": "Why heartbreak can feel physical, and what the brain is doing while you get over someone.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 34,
+      "title": "Why Deadlines Work",
+      "covers": "Why a deadline can make you suddenly productive, and how to use that without panic.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 35,
+      "title": "Introverts and Extroverts: What the Research Says",
+      "covers": "What these words really mean, why most people are somewhere in between, and what the research gets wrong in pop culture.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 36,
+      "title": "Why You Check the Fridge Again",
+      "covers": "Why we repeat small checking habits, from the fridge to the front door lock.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 37,
+      "title": "Why Siblings Are So Different",
+      "covers": "How children in the same family can turn out so differently.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 38,
+      "title": "Why You See Faces in Things",
+      "covers": "Pareidolia: why you see faces in clouds, plugs and toast.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 39,
+      "title": "ADHD in Adults",
+      "covers": "Why many adults are only diagnosed now, and what ADHD looks like beyond childhood.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 40,
+      "title": "Harlow's Monkeys and the Need for Comfort",
+      "covers": "Baby monkeys chose a soft cloth mother over a wire one with milk, and changed how we think about love and care.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 41,
+      "title": "Why Bad Luck Feels Personal",
+      "covers": "How the brain looks for patterns and blame, and why random bad things feel like they are aimed at you.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 42,
+      "title": "Why You Feel Homesick",
+      "covers": "What homesickness is, why it can hit adults too, and what helps it pass.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 43,
+      "title": "Why Some People Talk Over You",
+      "covers": "Interrupting, from nervous excitement to wanting control, and how to handle it.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 44,
+      "title": "Decision Fatigue",
+      "covers": "Why choices get harder as the day goes on, and why some people wear the same clothes every day.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 45,
+      "title": "Why You Feel Older or Younger Than Your Age",
+      "covers": "Subjective age: why people feel a different age from their birthday, and why it matters for health.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 46,
+      "title": "Why You Doomscroll",
+      "covers": "Why bad news is so hard to stop reading, and what it does to your mood.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 47,
+      "title": "Imaginary Friends",
+      "covers": "Why so many children have imaginary friends, and what it says about their minds.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 48,
+      "title": "Why You Jump at Shadows at Night",
+      "covers": "How the brain fills gaps in the dark with threats, and why it errs on the side of fear.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 49,
+      "title": "What Happens When You See a Therapist",
+      "covers": "What the first session is like, what you talk about, and how to find someone who fits.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 50,
+      "title": "The Robbers Cave Experiment",
+      "covers": "Two groups of boys at a summer camp became enemies within days, and the study of how they made peace.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 51,
+      "title": "The Planning Fallacy",
+      "covers": "Why everything takes longer than you think, even when you know it always does.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 52,
+      "title": "Nostalgia: Why the Past Looks Golden",
+      "covers": "Why we remember old times as better than they were, and how nostalgia can actually lift your mood.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 53,
+      "title": "People-Pleasing: Where It Comes From",
+      "covers": "Why some people find it hard to put their own needs first, and what helps them change.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 54,
+      "title": "Why Meetings Drain You",
+      "covers": "What makes some meetings exhausting, from performing for others to feeling unheard.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 55,
+      "title": "Do People Really Change?",
+      "covers": "What long-term studies show about personality changing across life, and how much you can change on purpose.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 56,
+      "title": "Why Gambling Hooks People",
+      "covers": "How near misses and unpredictable rewards keep people playing, and the signs of a problem.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 57,
+      "title": "Why Childhood Memories Disappear",
+      "covers": "Childhood amnesia: why most people remember almost nothing before the age of three or four.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 58,
+      "title": "Why Moods Spread From Person to Person",
+      "covers": "Emotional contagion: how we catch each other's feelings, from laughter to stress, without noticing.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 59,
+      "title": "Seasonal Affective Disorder",
+      "covers": "Why some people's mood drops every winter, and what light and routine can do.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 60,
+      "title": "Rosenhan's Fake Patients",
+      "covers": "In 1973 healthy people got themselves admitted to psychiatric hospitals, and later investigators questioned what really happened.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 61,
+      "title": "Why You Trust a Confident Person",
+      "covers": "How confidence can feel like competence, and why the most certain voice in the room is not always right.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 62,
+      "title": "Why Some Days You Feel Flat for No Reason",
+      "covers": "Low mood without a clear cause: what might be going on, and when to pay attention to it.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 63,
+      "title": "Why You Feel Awkward at Parties",
+      "covers": "Why small talk feels hard, and the research showing people like us more than we think after a conversation.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 64,
+      "title": "Fear of Failure",
+      "covers": "Why the fear of failing can stop you starting, and how people learn to try anyway.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 65,
+      "title": "Why You Hate Hearing Your Own Voice",
+      "covers": "Why your recorded voice sounds strange to you, and nobody else.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 66,
+      "title": "Why You Cannot Stop at One Episode",
+      "covers": "How autoplay and cliffhangers keep you watching, and how to take back the off switch.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 67,
+      "title": "Do Birth Order Effects Exist?",
+      "covers": "Are first-borns bossy and youngest children charming? What large studies actually found.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 68,
+      "title": "The Tip-of-the-Tongue Feeling",
+      "covers": "Why you can know a word, feel it, and still not say it.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 69,
+      "title": "Talking to a Friend Who Is Struggling",
+      "covers": "What to say, what to avoid, and how to help someone without having to fix everything.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 70,
+      "title": "The Power of Expectations: The Pygmalion Study",
+      "covers": "Teachers told some pupils were about to bloom saw those pupils improve. What the study found, and its limits.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 71,
+      "title": "The Halo Effect",
+      "covers": "Why we assume a good-looking or likeable person is also clever and kind.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 72,
+      "title": "Awe: The Feeling of Something Bigger",
+      "covers": "What awe does to the mind, from making us feel small to making us kinder.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 73,
+      "title": "Why It Is Hard to Say Sorry",
+      "covers": "What stops people apologising, and what makes an apology actually work.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 74,
+      "title": "The Sunday Scaries",
+      "covers": "Why the end of the weekend fills some people with dread, and what it can tell you.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 75,
+      "title": "The Fear of Missing Out",
+      "covers": "Why seeing other people's plans makes you anxious, and what FOMO is really about.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 76,
+      "title": "Why Clutter Stresses You Out",
+      "covers": "What a messy space does to attention and mood, and why tidying can feel so satisfying.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 77,
+      "title": "Why Children Ask Why",
+      "covers": "What the endless questions of a four-year-old are doing for their brain.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 78,
+      "title": "Why You Think of Answers in the Shower",
+      "covers": "Why ideas arrive when you stop trying, and what the wandering mind is doing.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 79,
+      "title": "Postnatal Depression",
+      "covers": "Why it can follow a baby's birth, the signs to look out for, and that fathers can have it too.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 80,
+      "title": "Why We Feel Losses More Than Gains",
+      "covers": "Kahneman and Tversky showed losing ten pounds feels worse than finding ten feels good, and changed economics.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 81,
+      "title": "Hindsight: I Knew It All Along",
+      "covers": "Why outcomes look obvious after they happen, and how it makes us judge past decisions unfairly.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 82,
+      "title": "Embarrassment: The Social Emotion",
+      "covers": "Why embarrassment exists, why others like you more for showing it, and why it fades faster than you expect.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 83,
+      "title": "The Silent Treatment",
+      "covers": "Why going quiet in a conflict hurts both people, and what to do instead.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 84,
+      "title": "Why Praise Can Backfire",
+      "covers": "How praising talent instead of effort changes how people handle a challenge.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 85,
+      "title": "Why Labels Can Shape You",
+      "covers": "How being told you are shy, clever or difficult as a child can turn into who you become.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 86,
+      "title": "Why You Leave Things to the Last Minute at the Airport",
+      "covers": "Why some people are always early and others always rushing, and what is really going on.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 87,
+      "title": "Screen Time and Children: What We Know",
+      "covers": "What the research says, what it does not, and why the content matters more than the minutes.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 88,
+      "title": "Why Your Phone Buzzes When It Did Not",
+      "covers": "Phantom vibrations: why most phone users feel buzzes that never happened.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 89,
+      "title": "Eating Disorders: More Than Food",
+      "covers": "What eating disorders are, who they affect, and why early help matters.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 90,
+      "title": "The Learned Helplessness Studies",
+      "covers": "How research on giving up led, decades later, to a surprising new finding about hope.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 91,
+      "title": "Why Free Feels So Good",
+      "covers": "How the word free makes us choose things we would not otherwise want.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 92,
+      "title": "Why Gratitude Is More Than a Trend",
+      "covers": "What studies show about noticing good things, and why it works for some people and not others.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 93,
+      "title": "How to Disagree Without Falling Out",
+      "covers": "What research on conflict says about listening, curiosity and staying on the same side.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 94,
+      "title": "Perfectionism: When Good Is Never Enough",
+      "covers": "The difference between high standards and perfectionism, and why one helps and the other hurts.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 95,
+      "title": "Your Name and Your Life",
+      "covers": "Do names affect how people treat us? What the studies found, and what turned out to be a myth.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 96,
+      "title": "Why You Keep Things You Do Not Need",
+      "covers": "The endowment effect: why we value things more just because we own them.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 97,
+      "title": "How Play Builds a Mind",
+      "covers": "Why play is not wasted time for children, and what they learn from it.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 98,
+      "title": "Why Some People Love Horror Films",
+      "covers": "Why being scared in a safe place can feel good.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 99,
+      "title": "When to Get Help for Your Mental Health",
+      "covers": "The signs that it is time to talk to a doctor, and where to start in the UK.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    },
+    {
+      "number": 100,
+      "title": "Wait for It: The Marshmallow Test Revisited",
+      "covers": "What the famous test of children's self-control really predicted, and what newer studies changed.",
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+    }
+  ]
+}

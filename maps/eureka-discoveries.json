@@ -1,0 +1,223 @@
+{
+  "id": "eureka-discoveries",
+  "channelId": "eureka-tales",
+  "title": "The Discoveries That Made Our World",
+  "formatId": "told-story",
+  "series": [
+    {
+      "number": 1,
+      "title": "The Body Revealed",
+      "note": "How people worked out what is really inside us, from the first honest dissections to the discovery of germs.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Vesalius: The Doctor Who Looked for Himself",
+          "covers": "For 1,300 years doctors trusted an ancient Roman's descriptions of the body. In the 1540s Andreas Vesalius cut open real bodies in Padua, found Galen was wrong in hundreds of places, and published the first accurate book of human anatomy.",
+          "source": "Vesalius, De humani corporis fabrica (1543), and histories of Renaissance anatomy"
+        },
+        {
+          "number": 2,
+          "title": "William Harvey and the Circle of Blood",
+          "covers": "Everyone believed the liver made new blood all the time. William Harvey measured how much the heart pumped, did the sums, and showed in 1628 that the same blood goes round and round.",
+          "source": "Harvey, De Motu Cordis (1628), and histories of physiology"
+        },
+        {
+          "number": 3,
+          "title": "Leeuwenhoek's Tiny Animals",
+          "covers": "A Dutch cloth merchant ground his own lenses, looked at a drop of pond water in the 1670s, and saw a world of living things nobody had imagined.",
+          "source": "Leeuwenhoek's letters to the Royal Society and histories of microscopy"
+        },
+        {
+          "number": 4,
+          "title": "Semmelweis: The Doctor Who Said Wash Your Hands",
+          "covers": "In 1840s Vienna, women were dying of fever after giving birth on one ward and not the other. Ignaz Semmelweis worked out why, told doctors to wash their hands, and was mocked for it.",
+          "source": "Semmelweis's 1861 book on childbed fever and medical histories"
+        },
+        {
+          "number": 5,
+          "title": "John Snow and the Broad Street Pump",
+          "covers": "In 1854 cholera killed hundreds in Soho, London. A doctor mapped every death, found they clustered round one water pump, and had its handle removed.",
+          "source": "John Snow, On the Mode of Communication of Cholera (1855)"
+        },
+        {
+          "number": 6,
+          "title": "Pasteur and the Invisible Enemy",
+          "covers": "Louis Pasteur showed that tiny living things turn wine sour and make us ill, saved France's silk and wine industries, and made the first rabies vaccine.",
+          "source": "Histories of Louis Pasteur and germ theory"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "The Universe Revealed",
+      "note": "How we found our place in space, one stubborn observer at a time.",
+      "episodes": [
+        {
+          "number": 7,
+          "title": "Copernicus Moves the Earth",
+          "covers": "A Polish churchman spent decades on a book that put the Sun, not the Earth, at the centre, and only saw it printed as he was dying in 1543.",
+          "source": "Copernicus, De revolutionibus (1543), and histories of astronomy"
+        },
+        {
+          "number": 8,
+          "title": "Galileo and the Telescope",
+          "covers": "In 1609 Galileo pointed a homemade telescope at the sky, saw moons circling Jupiter and mountains on the Moon, and ended up on trial.",
+          "source": "Galileo, Sidereus Nuncius (1610), and the records of his 1633 trial"
+        },
+        {
+          "number": 9,
+          "title": "Kepler and the Shape of the Orbits",
+          "covers": "Johannes Kepler spent years trying to make Mars move in a perfect circle, and finally accepted that planets travel in ellipses.",
+          "source": "Kepler, Astronomia Nova (1609), and histories of Tycho Brahe's data"
+        },
+        {
+          "number": 10,
+          "title": "Newton and the Pull of Everything",
+          "covers": "Isaac Newton worked out that the force pulling an apple down is the same force holding the Moon in its orbit, and wrote the laws that explain both.",
+          "source": "Newton, Principia (1687), and histories of the plague years at Woolsthorpe"
+        },
+        {
+          "number": 11,
+          "title": "Henrietta Leavitt Measures the Stars",
+          "covers": "Paid to count stars on glass plates at Harvard, Henrietta Leavitt noticed a pattern in flickering stars that let astronomers measure the distance to anything.",
+          "source": "Leavitt's 1912 paper and histories of the Harvard computers"
+        },
+        {
+          "number": 12,
+          "title": "Hubble and the Expanding Universe",
+          "covers": "In the 1920s Edwin Hubble showed that our galaxy is one of countless others, and that they are all rushing away from each other.",
+          "source": "Hubble's 1929 paper and histories of cosmology"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Taming Electricity",
+      "note": "From sparks in a laboratory to a wired world.",
+      "episodes": [
+        {
+          "number": 13,
+          "title": "Benjamin Franklin and the Kite",
+          "covers": "Franklin wanted to prove lightning was electricity, flew a kite into a storm in 1752, and invented the lightning rod.",
+          "source": "Franklin's letters on electricity and histories of early electrical science"
+        },
+        {
+          "number": 14,
+          "title": "Volta Builds the First Battery",
+          "covers": "A quarrel over twitching frogs' legs led Alessandro Volta to stack metal discs and soaked card in 1800, and make the first steady electric current.",
+          "source": "Volta's 1800 letter to the Royal Society and histories of Galvani and Volta"
+        },
+        {
+          "number": 15,
+          "title": "Michael Faraday and the Spinning Wire",
+          "covers": "A bookbinder's apprentice with no formal schooling made a wire spin round a magnet, and discovered how to make electricity from movement.",
+          "source": "Faraday's diary and Experimental Researches in Electricity"
+        },
+        {
+          "number": 16,
+          "title": "The War of the Currents",
+          "covers": "Thomas Edison backed direct current, Nikola Tesla and George Westinghouse backed alternating current, and the fight to light America turned ugly.",
+          "source": "Histories of Edison, Tesla, Westinghouse and the 1893 Chicago World's Fair"
+        },
+        {
+          "number": 17,
+          "title": "Marconi Sends a Signal Across the Ocean",
+          "covers": "A young Italian believed radio waves could carry messages around the curve of the Earth, and in 1901 heard three clicks across the Atlantic.",
+          "source": "Histories of Guglielmo Marconi and early wireless"
+        },
+        {
+          "number": 18,
+          "title": "The Transistor: A Switch That Changed Everything",
+          "covers": "At Bell Labs in 1947, three physicists made a tiny switch from a crystal, and it became the building block of every computer and phone.",
+          "source": "Histories of Bell Labs and the 1947 point-contact transistor"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Inside the Atom",
+      "note": "How scientists cracked open the smallest thing in nature, and what came out.",
+      "episodes": [
+        {
+          "number": 19,
+          "title": "Marie Curie and the Glowing Element",
+          "covers": "Working in a leaky shed in Paris, Marie and Pierre Curie boiled tonnes of ore to find radium and polonium, and Marie became the first person to win two Nobel prizes.",
+          "source": "Marie Curie's writings and biographies, and Nobel Prize records"
+        },
+        {
+          "number": 20,
+          "title": "Rutherford Finds the Nucleus",
+          "covers": "In 1909 Ernest Rutherford's team fired tiny particles at gold foil, and a few bounced straight back. It was like a shell bouncing off tissue paper.",
+          "source": "Rutherford's 1911 paper and histories of the Geiger-Marsden experiment"
+        },
+        {
+          "number": 21,
+          "title": "Lise Meitner Splits the Atom",
+          "covers": "In 1938, a refugee from Nazi Germany walked in the snow with her nephew and worked out that the uranium atom had split in two, and was left out of the Nobel prize.",
+          "source": "Meitner and Frisch's 1939 paper and histories of nuclear fission"
+        },
+        {
+          "number": 22,
+          "title": "The Neutron and the Chain Reaction",
+          "covers": "James Chadwick found the neutron in 1932, and a physicist waiting at a London traffic light realised neutrons could set off a chain reaction.",
+          "source": "Histories of Chadwick and Leo Szilard"
+        },
+        {
+          "number": 23,
+          "title": "The Night the Desert Turned to Glass",
+          "covers": "In July 1945 scientists in New Mexico tested the first atomic bomb, and its flash turned the desert sand to green glass.",
+          "source": "Histories of the Manhattan Project and the Trinity test"
+        },
+        {
+          "number": 24,
+          "title": "The Atom That Lights Your Home",
+          "covers": "How the same physics became nuclear power stations, from the first reactor under a Chicago stadium to the power grid.",
+          "source": "Histories of Chicago Pile-1 and civil nuclear power"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Reading the Earth",
+      "note": "How people learned to read the planet's own history in its rocks, fossils and ice.",
+      "episodes": [
+        {
+          "number": 25,
+          "title": "Mary Anning: The Fossil Hunter of Lyme",
+          "covers": "A carpenter's daughter on the Dorset coast found the first complete ichthyosaur skeleton as a girl, and helped prove creatures could become extinct.",
+          "source": "Histories of Mary Anning and early palaeontology"
+        },
+        {
+          "number": 26,
+          "title": "Darwin and the Finches",
+          "covers": "A young naturalist's five-year voyage on HMS Beagle gave him the clues, and it took him twenty more years to publish what they meant.",
+          "source": "Darwin, The Voyage of the Beagle and On the Origin of Species (1859)"
+        },
+        {
+          "number": 27,
+          "title": "Wegener and the Drifting Continents",
+          "covers": "In 1912 a weather scientist noticed the coasts of Africa and South America fit like a jigsaw, said the continents moved, and was laughed at for decades.",
+          "source": "Wegener, The Origin of Continents and Oceans, and histories of plate tectonics"
+        },
+        {
+          "number": 28,
+          "title": "Marie Tharp Maps the Ocean Floor",
+          "covers": "Kept off research ships because she was a woman, Marie Tharp drew the first map of the Atlantic floor from sounding data and found a great rift running down it.",
+          "source": "Histories of Marie Tharp and Bruce Heezen's ocean floor maps"
+        },
+        {
+          "number": 29,
+          "title": "The Asteroid That Ended the Dinosaurs",
+          "covers": "In 1980 a father and son found a thin layer of a rare metal in rock all over the world, and argued that a giant asteroid had wiped out the dinosaurs.",
+          "source": "Alvarez et al. (1980) and the discovery of the Chicxulub crater"
+        },
+        {
+          "number": 30,
+          "title": "What Ice Remembers",
+          "covers": "Scientists drilled kilometres down into Antarctic and Greenland ice and found bubbles of ancient air that record the planet's climate for 800,000 years.",
+          "source": "Histories of polar ice core research and the EPICA and Vostok cores"
+        }
+      ]
+    }
+  ]
+}

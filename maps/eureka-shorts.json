@@ -1,0 +1,608 @@
+{
+  "id": "eureka-shorts",
+  "channelId": "eureka-tales",
+  "title": "100 Science Stories",
+  "formatId": "science-short",
+  "shorts": [
+    {
+      "number": 1,
+      "title": "The Chocolate Bar That Melted: The Microwave Oven",
+      "covers": "An engineer working on radar in 1945 noticed the chocolate bar in his pocket had melted, and invented the microwave oven.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 2,
+      "title": "Jenner and the Milkmaids",
+      "covers": "Edward Jenner noticed milkmaids who caught cowpox did not get smallpox, and in 1796 tested his idea on a boy called James Phipps.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 3,
+      "title": "The Dog Who Orbited the Earth",
+      "covers": "In 1957 the Soviet Union sent a stray dog called Laika into orbit, and the story of what happened to her stayed secret for decades.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 4,
+      "title": "The Fish That Came Back From Extinction",
+      "covers": "In 1938 a museum curator in South Africa spotted a strange blue fish on a fishing boat, a coelacanth, thought extinct for 66 million years.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 5,
+      "title": "Who Invented the Light Bulb?",
+      "covers": "Edison is remembered, but dozens of inventors raced to make a bulb that lasted, and the real story is about the filament.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 6,
+      "title": "Eratosthenes Measures the Earth",
+      "covers": "Around 240 BC a librarian in Egypt measured the size of the whole Earth using a stick's shadow and a camel journey.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 7,
+      "title": "Why Is the Sky Blue?",
+      "covers": "The answer came from a Victorian scientist working out how sunlight scatters off the tiny molecules of air.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 8,
+      "title": "The Man Who Breathed Laughing Gas",
+      "covers": "In 1799 a young Humphry Davy breathed nitrous oxide in Bristol, wrote about the giggles, and missed that it could stop pain.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 9,
+      "title": "The Year Without a Summer",
+      "covers": "In 1815 a volcano erupted in Indonesia, and the next summer snow fell in June in America and crops failed across Europe.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 10,
+      "title": "The Antikythera Mechanism",
+      "covers": "In 1901 divers found a lump of corroded bronze in a Greek shipwreck, and it turned out to be a 2,000-year-old astronomical computer.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 11,
+      "title": "The Glowing Screen: Rontgen and X-Rays",
+      "covers": "In 1895 Wilhelm Rontgen saw a screen glow across his dark lab, and days later took the first X-ray, of his wife's hand.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 12,
+      "title": "The Day Surgery Stopped Hurting",
+      "covers": "In 1846, in front of a packed theatre in Boston, a dentist put a patient to sleep with ether, and the surgeon cut without a scream.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 13,
+      "title": "Gagarin's 108 Minutes",
+      "covers": "In 1961 a former foundry worker became the first person in space, and landed by parachute in a field in front of a startled farmer.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 14,
+      "title": "Jane Goodall and the Termite Fishing Chimp",
+      "covers": "In 1960 a young Englishwoman in Tanzania watched a chimpanzee strip a twig to fish for termites, and changed what we thought made humans special.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 15,
+      "title": "The Telephone and the Race to the Patent Office",
+      "covers": "Alexander Graham Bell filed his telephone patent on the same day in 1876 as a rival, and the argument lasted for years.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 16,
+      "title": "Zero: The Number That Was Nothing",
+      "covers": "How Indian mathematicians turned nothing into a number, and how it travelled to Europe.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 17,
+      "title": "Archimedes and the Bath",
+      "covers": "The story of how a Greek scientist worked out whether the king's crown was pure gold, and ran down the street shouting eureka.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 18,
+      "title": "Pavlov's Dogs",
+      "covers": "A Russian scientist studying digestion noticed his dogs drooled before the food arrived, and discovered learned reflexes.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 19,
+      "title": "How We Learned to Forecast the Weather",
+      "covers": "After a storm sank a ship in 1859, Robert FitzRoy started the first public weather forecasts, and was mocked when they were wrong.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 20,
+      "title": "How the Pyramids Were Built",
+      "covers": "What archaeologists have found about the workers, ramps and tools that built the Great Pyramid, from their own villages and notes.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 21,
+      "title": "The Sweet Hands: How Saccharin Was Found",
+      "covers": "In 1879 a chemist forgot to wash his hands before dinner, noticed his bread tasted sweet, and traced it back to his experiment.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 22,
+      "title": "Lister and the Clean Operation",
+      "covers": "Joseph Lister read Pasteur's work on germs and started spraying carbolic acid in his operating theatre in Glasgow, and his patients stopped dying.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 23,
+      "title": "Apollo 13: Successful Failure",
+      "covers": "In 1970 an oxygen tank exploded on the way to the Moon, and the crew and engineers had to improvise a way home with a lunar lander.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 24,
+      "title": "How Bats See in the Dark",
+      "covers": "An Italian priest in the 1790s blindfolded bats and plugged their ears, and the answer took 150 years and a microphone to confirm.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 25,
+      "title": "Barcode: Lines Drawn in the Sand",
+      "covers": "In 1948 an engineer on a Miami beach dragged his fingers through the sand and drew the idea for the barcode.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 26,
+      "title": "The Longitude Prize",
+      "covers": "Ships kept running aground because sailors could not work out how far east or west they were, until a carpenter built a clock that kept time at sea.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 27,
+      "title": "Galileo and the Leaning Tower",
+      "covers": "Did Galileo really drop balls from the Leaning Tower of Pisa? What he actually did, and why heavy and light things fall together.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 28,
+      "title": "Benjamin Franklin's Daylight Saving Joke",
+      "covers": "How a joke letter about Parisians sleeping late turned, over a century later, into changing the clocks.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 29,
+      "title": "The Ozone Hole",
+      "covers": "In 1985 British scientists in Antarctica found a hole in the ozone layer, and the world banned the chemicals causing it.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 30,
+      "title": "Reading the Rosetta Stone",
+      "covers": "In 1822 Jean-Francois Champollion cracked Egyptian hieroglyphs using a stone with the same text in three scripts.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 31,
+      "title": "Superglue: The Failure That Stuck",
+      "covers": "A chemist trying to make clear plastic gun sights in 1942 found a liquid that stuck to everything, and only years later saw what it was good for.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 32,
+      "title": "Insulin: The Dogs, the Doctor and the Dying Children",
+      "covers": "In 1922 in Toronto, a young surgeon and his student found a way to treat diabetes, and children close to death woke up.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 33,
+      "title": "Hidden Figures: The Women Who Did the Maths",
+      "covers": "Before electronic computers, a group of Black women mathematicians at NASA calculated the paths that took astronauts into orbit.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 34,
+      "title": "The Dance of the Honeybees",
+      "covers": "Karl von Frisch discovered that honeybees tell each other where flowers are by dancing a figure of eight.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 35,
+      "title": "The World Wide Web: Tim Berners-Lee's Proposal",
+      "covers": "In 1989 a scientist at CERN wrote a proposal his boss called vague but exciting, and it became the web.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 36,
+      "title": "Codebreakers of Bletchley Park",
+      "covers": "How mathematicians and crossword solvers in a country house broke the German Enigma code in the Second World War.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 37,
+      "title": "How Rainbows Work",
+      "covers": "Isaac Newton split sunlight with a prism in a darkened room and showed that white light is made of every colour.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 38,
+      "title": "The Scientist Who Infected Himself With Yellow Fever",
+      "covers": "In 1900 a team in Cuba proved mosquitoes spread yellow fever, and one of them died proving it.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 39,
+      "title": "The Eruption of Vesuvius",
+      "covers": "In AD 79 a volcano buried Pompeii, and a young Roman called Pliny wrote down what he saw from across the bay.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 40,
+      "title": "Roman Concrete That Gets Stronger",
+      "covers": "Why Roman harbour walls still stand after 2,000 years in the sea, while modern concrete crumbles in decades.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 41,
+      "title": "The Glass That Did Not Shatter",
+      "covers": "In 1903 a French chemist dropped a glass flask that cracked but held together, because a plastic coating had dried inside it. It became safety glass.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 42,
+      "title": "The Stethoscope: A Rolled-Up Piece of Paper",
+      "covers": "In 1816 a French doctor too embarrassed to put his ear to a young woman's chest rolled a sheet of paper into a tube, and heard her heart clearly.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 43,
+      "title": "The Hubble Telescope's Blurry Start",
+      "covers": "In 1990 the most expensive telescope ever launched sent back blurry pictures, because a mirror was ground wrong by a hair's width.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 44,
+      "title": "The Peppered Moth",
+      "covers": "During the Industrial Revolution, soot turned Britain's tree trunks black, and black moths took over. It became famous evidence of natural selection.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 45,
+      "title": "The Toilet That Flushed: Victorian London's Great Stink",
+      "covers": "In the hot summer of 1858 the stench of the Thames shut Parliament, and Joseph Bazalgette built the sewers that saved London.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 46,
+      "title": "Ada Lovelace and the First Program",
+      "covers": "In 1843 Ada Lovelace wrote notes on a machine that was never built, including what is now called the first computer program.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 47,
+      "title": "Einstein's Miracle Year",
+      "covers": "In 1905 a patent clerk in Switzerland published four papers that changed physics, including the most famous equation in the world.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 48,
+      "title": "Sir Isaac Newton's Needle",
+      "covers": "To understand colour, Newton pushed a blunt needle around the back of his own eye and recorded what he saw.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 49,
+      "title": "Tsunami: The Girl Who Knew the Signs",
+      "covers": "In 2004 a ten-year-old British girl on a beach in Thailand remembered a geography lesson, and saved about a hundred people.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 50,
+      "title": "The Library of Alexandria",
+      "covers": "What the greatest library of the ancient world held, and how it really disappeared.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 51,
+      "title": "Goodyear and the Hot Stove",
+      "covers": "Charles Goodyear spent years and all his money trying to make rubber stop melting, until a mixture of rubber and sulphur dropped on a hot stove.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 52,
+      "title": "Dorothy Hodgkin Solves the Shapes of Medicines",
+      "covers": "Using X-rays and years of patient work, Dorothy Hodgkin worked out the shape of penicillin, vitamin B12 and insulin.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 53,
+      "title": "Voyager's Golden Record",
+      "covers": "In 1977 two spacecraft left Earth carrying a golden record of music, greetings and sounds, in case anyone ever finds them.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 54,
+      "title": "The Deep Sea Vents",
+      "covers": "In 1977 scientists diving off the Galapagos found hot springs on the sea floor, and life thriving there with no sunlight at all.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 55,
+      "title": "Who Invented the Bicycle?",
+      "covers": "From a wooden running machine in 1817 to the chain-driven safety bicycle, it took seventy years to make a bike anyone could ride.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 56,
+      "title": "Florence Nightingale's Chart",
+      "covers": "Florence Nightingale used a new kind of chart to show that more soldiers died from dirty hospitals than from battle wounds.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 57,
+      "title": "The Speed of Light, Measured",
+      "covers": "In 1676 a Danish astronomer noticed Jupiter's moons were late, and worked out that light takes time to travel.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 58,
+      "title": "Mendel's Peas",
+      "covers": "A monk in a monastery garden in Brno crossed thousands of pea plants and discovered the laws of inheritance, and nobody noticed for 35 years.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 59,
+      "title": "Why Earthquakes Happen",
+      "covers": "How a scientist studying the 1906 San Francisco earthquake worked out that rock bends like a spring and then snaps.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 60,
+      "title": "Stonehenge: Moving the Stones",
+      "covers": "How the builders of Stonehenge moved giant stones from Wales, more than 200 kilometres away, 5,000 years ago.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 61,
+      "title": "The Heartbeat Mistake: The Pacemaker",
+      "covers": "In 1956 an engineer fitted the wrong resistor to a heart rhythm recorder, heard a steady pulse, and realised he had made a pacemaker.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 62,
+      "title": "The First Heart Transplant",
+      "covers": "In 1967 in Cape Town, Christiaan Barnard's team put a donor's heart into a dying man, and the world held its breath.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 63,
+      "title": "Pluto: The Planet That Was Demoted",
+      "covers": "Pluto was found by a farm boy in 1930, and in 2006 astronomers voted it out of the list of planets.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 64,
+      "title": "Elephants That Talk Through the Ground",
+      "covers": "How researchers discovered elephants talk to each other with rumbles too low for human ears, carried for miles through the ground.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 65,
+      "title": "The Fridge: Keeping Food Cold Without Ice",
+      "covers": "How scientists learned to move heat with gas and pressure, and replaced the iceman who once delivered blocks of ice.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 66,
+      "title": "The Metre: Measuring the World in the Revolution",
+      "covers": "During the French Revolution two astronomers spent seven years measuring a line from Dunkirk to Barcelona to define the metre.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 67,
+      "title": "Why Do Things Glow When Hot?",
+      "covers": "A problem about the colour of hot metal led Max Planck in 1900 to the strange idea that energy comes in little packets.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 68,
+      "title": "The Miller-Urey Experiment",
+      "covers": "In 1952 two chemists sent sparks through a flask of gases and water, and made the building blocks of life.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 69,
+      "title": "The Gulf Stream: A River in the Ocean",
+      "covers": "Benjamin Franklin noticed mail ships from England took weeks longer than merchant ships, and mapped a river of warm water in the Atlantic.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 70,
+      "title": "The Baghdad Battery",
+      "covers": "A clay jar with a copper tube inside was found near Baghdad, and people have argued for decades about whether it made electricity.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 71,
+      "title": "Mauve: The Colour Made From Coal Tar",
+      "covers": "In 1856 an eighteen-year-old trying to make a malaria drug made a purple dye instead, and started the modern chemical industry.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 72,
+      "title": "Polio and the Sugar Cube",
+      "covers": "How Jonas Salk's injection and Albert Sabin's drops on a sugar cube took polio from a terror of every summer to the edge of extinction.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 73,
+      "title": "Landing on a Comet",
+      "covers": "In 2014 a probe the size of a washing machine landed on a speeding comet after a ten-year journey, and bounced.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 74,
+      "title": "The Tree Network Under the Forest",
+      "covers": "How a Canadian forest scientist found trees sharing food and signals through fungi in the soil.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 75,
+      "title": "The Printing Press",
+      "covers": "Around 1450 Johannes Gutenberg combined movable metal letters, oil ink and a wine press, and books became affordable.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 76,
+      "title": "Pi: The Never-Ending Number",
+      "covers": "How mathematicians chased the digits of pi for 4,000 years, from ancient Babylon to supercomputers.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 77,
+      "title": "The Experiment That Showed Light Was a Wave",
+      "covers": "In 1801 Thomas Young shone light through two slits and saw stripes on the wall, and the result is still strange today.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 78,
+      "title": "The Cavendish Experiment: Weighing the Earth",
+      "covers": "In 1798 a shy scientist used lead balls and a wire in a shed to weigh the whole planet.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 79,
+      "title": "Snowflakes: No Two Alike",
+      "covers": "A Vermont farmer called Wilson Bentley photographed more than 5,000 snowflakes from 1885, and never found two the same.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 80,
+      "title": "Damascus Steel",
+      "covers": "Swords from the medieval Middle East held a sharp edge and a wavy pattern, and the method was lost for centuries.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 81,
+      "title": "The Slinky: A Spring That Walked",
+      "covers": "In 1943 a naval engineer knocked a spring off a shelf, watched it walk down a stack of books, and turned it into a toy.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 82,
+      "title": "The Doctor Who Swallowed Bacteria",
+      "covers": "Nobody believed stomach ulcers were caused by germs, so in 1984 an Australian doctor drank a dish of bacteria to prove it.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 83,
+      "title": "The First Picture of a Black Hole",
+      "covers": "In 2019 telescopes around the world worked together as one Earth-sized dish to photograph the shadow of a black hole.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 84,
+      "title": "Why Dodos Disappeared",
+      "covers": "The dodo lived safely on Mauritius until sailors arrived in 1598, and within a century there were none left.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 85,
+      "title": "Photography: The First Picture",
+      "covers": "In 1826 a Frenchman pointed a box at his courtyard for hours, and made the oldest surviving photograph.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 86,
+      "title": "The Seven Bridges of Konigsberg",
+      "covers": "In 1736 a puzzle about walking over seven bridges once each led Leonhard Euler to invent a whole new branch of maths.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 87,
+      "title": "Why Ice Floats",
+      "covers": "Most things shrink when they freeze, but water expands, and that one odd fact keeps lakes and oceans alive.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 88,
+      "title": "Michelson and Morley's Failed Experiment",
+      "covers": "In 1887 two scientists tried to measure the invisible substance light travelled through, found nothing, and that nothing changed physics.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 89,
+      "title": "The Greenhouse Effect, Discovered in 1856",
+      "covers": "An American scientist called Eunice Foote filled glass jars with different gases, left them in the sun, and found carbon dioxide trapped the most heat.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 90,
+      "title": "Ancient Brain Surgery",
+      "covers": "Skulls thousands of years old have neat holes drilled in them, and the bone shows many patients survived.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 91,
+      "title": "Cosmic Static: The Echo of the Big Bang",
+      "covers": "In 1964 two radio astronomers could not get rid of a hiss in their antenna, even after cleaning out pigeon droppings. It was the afterglow of the Big Bang.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 92,
+      "title": "The Smallpox Hunters",
+      "covers": "How a global team tracked down the last cases of smallpox, village by village, until in 1980 it became the first human disease ever wiped out.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 93,
+      "title": "The Pale Blue Dot",
+      "covers": "In 1990, as Voyager 1 left the solar system, it turned round and photographed Earth as a tiny speck in a beam of sunlight.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 94,
+      "title": "The Monarch Butterfly's Journey",
+      "covers": "For decades nobody knew where North America's monarch butterflies went in winter, until a tagging project found the mountain in Mexico.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 95,
+      "title": "The Smoke Alarm: A Gas Detector That Kept Going Off",
+      "covers": "In the 1930s a Swiss physicist trying to build a poison gas detector noticed that cigarette smoke set it off, and the smoke alarm began.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 96,
+      "title": "Alan Turing's Question",
+      "covers": "In 1950 Alan Turing asked whether machines could think, and suggested a test that is still argued over today.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 97,
+      "title": "The Higgs Boson Hunt",
+      "covers": "It took fifty years and the biggest machine ever built to find the particle that gives other particles their mass.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 98,
+      "title": "The Slowest Experiment in the World",
+      "covers": "In 1927 a professor in Brisbane poured tar pitch into a funnel to show it flows, and a drop falls about once a decade. Nobody has ever seen one fall.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 99,
+      "title": "Ball Lightning",
+      "covers": "For centuries people reported glowing balls floating through rooms in storms, and in 2012 scientists in China finally recorded one by accident.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    },
+    {
+      "number": 100,
+      "title": "Greek Fire",
+      "covers": "The Byzantine Empire had a liquid fire that burned on water and saved Constantinople, and its recipe is still unknown.",
+      "source": "Histories of science, the original papers where available, and reputable science journalism"
+    }
+  ]
+}

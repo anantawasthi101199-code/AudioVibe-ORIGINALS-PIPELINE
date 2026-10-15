@@ -1,0 +1,159 @@
+{
+  "id": "uk-true-crime",
+  "channelId": "crime-files",
+  "title": "UK True Crime Files",
+  "formatId": "case-in-full",
+  "series": [
+    {
+      "number": 1,
+      "title": "UK True Crime Files",
+      "note": "Real crimes, the evidence left behind, and the investigations that changed British justice, told in chronological order.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Jack the Ripper: The Killer Who Vanished into Victorian London",
+          "covers": "The autumn of 1888 brought a series of murders to Whitechapel, east London, and turned the district into the focus of a national and international investigation. This episode reconstructs the lives of the women whose deaths became associated with the name Jack the Ripper, the conditions of Victorian Whitechapel, the police investigation and the letters claiming to come from the killer. It explores witness accounts, the limits of Victorian forensic methods, competition between police forces and the press's role in creating a public mystery that continues today. It ends by separating what historical records establish from the many theories about the killer's identity.",
+          "source": "Metropolitan Police records, contemporary newspapers and surviving correspondence. Many purported Ripper letters cannot be reliably attributed to the murderer."
+        },
+        {
+          "number": 2,
+          "title": "The Brides in the Bath: Three Marriages, Three Deaths",
+          "covers": "England, early twentieth century · Serial murder and forensic evidence George Joseph Smith married multiple women under different identities. Three of his wives died in baths, and what initially appeared to be separate domestic tragedies became the subject of a murder investigation. The episode follows the discovery of the pattern, the reconstruction of the marriages, the investigation of the deaths and the courtroom evidence that helped establish a case against Smith. It also examines the role of medical testimony and experimental demonstrations in explaining how apparently accidental deaths could be investigated as deliberate killings.",
+          "source": "Contemporary trial reporting, medical testimony and surviving court records. Technical claims about the drowning mechanism should be checked against reliable historical and forensic sources."
+        },
+        {
+          "number": 3,
+          "title": "Dr Crippen: The Murder Case That Crossed the Atlantic",
+          "covers": "When Cora Crippen disappeared, suspicion eventually fell on her husband, Dr Hawley Harvey Crippen. He fled Britain with Ethel Le Neve, but the investigation followed them across the Atlantic. This episode explores the discovery of human remains at the Crippen home, the search for the couple, the use of wireless communication aboard a ship and the forensic testimony presented at trial. It examines how a developing technology helped investigators pursue a suspect across international waters, while distinguishing contemporary claims from what the evidence could actually demonstrate.",
+          "source": "Trial transcripts where available, contemporary reporting, and historical analysis of the forensic evidence."
+        },
+        {
+          "number": 4,
+          "title": "The Fingerprint Revolution: When a Mark Could Identify a Suspect",
+          "covers": "Late nineteenth century to early twentieth century · Forensic history Before DNA profiling and modern digital databases, investigators needed ways to distinguish one person from another using physical evidence. Fingerprints offered a new possibility, but their use required collection methods, comparison standards and confidence that courts could scrutinise. The episode follows the development of fingerprint identification in British policing, the establishment of the Metropolitan Police fingerprint bureau in 1901 and the gradual shift towards evidence-led identification. It explains the difference between finding a fingerprint and proving who left it, setting up the forensic stories explored later in the series.",
+          "source": "Police history, early fingerprint records and documented criminal cases in which fingerprints contributed to identification."
+        },
+        {
+          "number": 5,
+          "title": "The Yorkshire Ripper: The Warning Signs Police Missed",
+          "covers": "Peter Sutcliffe's crimes triggered an extensive investigation across northern England. As the attacks continued, detectives faced mounting pressure, a growing body of evidence and a flood of public information. The episode reconstructs the investigation, including the misleading communications that diverted attention, the management of suspect information and the leads that were not pursued effectively enough. It concludes with Sutcliffe's arrest and the subsequent official examination of the investigation, including the Byford report. The central question is how a major police operation could continue for years without identifying the offender despite receiving information that ultimately proved important. The victims' lives and the impact on their communities remain central to the narrative.",
+          "source": "Byford report, police records and reliable victim-centred historical accounts."
+        },
+        {
+          "number": 6,
+          "title": "The Great Train Robbery: The Night Britain Lost Millions",
+          "covers": "In August 1963, a gang stopped a travelling mail train and stole millions of pounds in cash. The scale of the operation, its planning and the subsequent manhunt made it one of Britain's most notorious robberies. The story follows the preparation, the train's interception, the hideout, the mistakes made after the robbery and the police work that eventually brought many of the gang members to court. It also examines fingerprints and other traces left behind, including evidence recovered from everyday objects. The episode considers the gap between the popular image of a perfectly executed heist and the practical reality of a crime whose proceeds were difficult to conceal and whose participants left evidence behind.",
+          "source": "National Archives files, trial material and contemporary reporting."
+        },
+        {
+          "number": 7,
+          "title": "The Guildford Four: How False Confessions Shook British Justice",
+          "covers": "Bomb attacks on pubs in Guildford and Woolwich led to convictions that were later quashed. The case of Gerry Conlon and the other members of the Guildford Four became a major example of the dangers of unreliable confessions and flawed criminal proceedings. This episode traces the attacks, the arrests, the evidence used at trial, the challenges to the convictions and the eventual Court of Appeal decision. It explains the difference between a conviction being legally overturned and every historical question about a crime being resolved.",
+          "source": "The official 1994 inquiry report and the court decisions concerning the convictions."
+        },
+        {
+          "number": 8,
+          "title": "Colin Pitchfork: The DNA Breakthrough That Cleared an Innocent Suspect",
+          "covers": "A murder investigation involving schoolgirls in Leicestershire became a turning point in forensic science. DNA profiling helped show that an early suspect was innocent and later helped investigators identify Colin Pitchfork. The episode explains how DNA profiling emerged, how a mass screening exercise was used, why a confession about providing samples helped expose the actual offender, and how scientific evidence was presented in the criminal investigation. It also explores the limits of DNA: a genetic match must be interpreted alongside the collection process, the circumstances and other evidence.",
+          "source": "Government forensic-science accounts, contemporary investigation records and court evidence."
+        },
+        {
+          "number": 9,
+          "title": "Hillsborough: The Disaster and the Long Fight for Truth",
+          "covers": "On 15 April 1989, a fatal crowd crush at Hillsborough Stadium killed Liverpool supporters. The subsequent history involved official inquiries, disputed accounts, years of campaigning by bereaved families and a succession of investigations. The episode explains the events at the stadium, the original findings, the evidence later examined by the Hillsborough Independent Panel and the fresh inquests that concluded in 2016 that the victims had been unlawfully killed. It also covers the investigations into the actions of police and other organisations, distinguishing findings of inquiries from criminal verdicts. This is not a conventional murder case. It belongs in a true crime documentary series because the questions of causation, accountability and the handling of evidence became central to a long-running investigation. The narrative must avoid implying that every person investigated was convicted of an offence.",
+          "source": "Hillsborough Independent Panel material, inquest findings and the IOPC's December 2025 investigation report."
+        },
+        {
+          "number": 10,
+          "title": "Stephen Lawrence: A Family's Fight for Justice",
+          "covers": "Stephen Lawrence was murdered in a racist attack in south-east London in April 1993. His parents' campaign for justice exposed serious failures in the original police investigation and prompted a public inquiry. The episode follows the initial investigation, the treatment of witnesses, the Macpherson inquiry, subsequent forensic developments and the 2012 convictions of Gary Dobson and David Norris. It also explains why the case continued to raise questions after those convictions, including later scrutiny of investigative decisions and the handling of information about other possible suspects.",
+          "source": "The Macpherson report, the Ellison review, court proceedings and parliamentary research. The convictions of two men should not be confused with a final resolution of every issue surrounding the case."
+        },
+        {
+          "number": 11,
+          "title": "Harold Shipman: The Doctor Nobody Suspected",
+          "covers": "Greater Manchester, 1970s to 2000s · Serial murder and institutional oversight Harold Shipman was a general practitioner who murdered patients under his care. The case raised difficult questions about the trust placed in doctors, the recording of deaths and the ability of institutions to recognise a pattern hidden among apparently ordinary events. The episode begins with the professional trust surrounding a family doctor, then follows the suspicions that triggered police involvement, the investigation of patient records and the evidence presented at trial. It examines the wider Shipman Inquiry and the earlier police investigation that failed to uncover wrongdoing when it had the opportunity.",
+          "source": "The official Shipman Inquiry reports, including the second report on the 1998 police investigation."
+        },
+        {
+          "number": 12,
+          "title": "Fred and Rosemary West: The Investigation at Cromwell Street",
+          "covers": "The investigation into Fred and Rosemary West revealed the murders of multiple victims and exposed the terrible reality hidden behind the doors of a family home. This episode traces the investigation that began with concerns about a missing young woman, the search of the Wests' property, the recovery and identification of remains, and the legal proceedings that followed. It also considers the difficulties of reconstructing events across years, particularly when accounts are incomplete and some victims' experiences cannot be fully recovered.",
+          "source": "Court records, police accounts, inquest material and victim-centred reporting. Fred West died before trial; Rosemary West was convicted. Their legal outcomes must be clearly distinguished."
+        },
+        {
+          "number": 13,
+          "title": "The Moors Murders: The Children Who Never Came Home",
+          "covers": "This episode reconstructs the disappearances and murders of children associated with Ian Brady and Myra Hindley, placing the cases within the social landscape of 1960s Manchester. It follows the investigation, the evidence that connected the offenders to the crimes, the trials and the continuing efforts to locate the remains of victims. The narrative will prioritise the children and their families rather than the notoriety of the perpetrators. It will explain the distinction between established findings, statements made by the offenders and claims about evidence that has never been recovered.",
+          "source": "Trial records, police accounts, contemporary reporting and documented searches for victims' remains."
+        },
+        {
+          "number": 14,
+          "title": "The Disappearance of Suzy Lamplugh: The Search for an Answer",
+          "covers": "Estate agent Suzy Lamplugh disappeared after arranging to meet a prospective client. Her disappearance led to a long-running investigation and decades of questions about what happened after she left her workplace. The episode establishes the known timeline, examines the investigation and the attention given to potential suspects, and explains how a missing-person inquiry can develop when a body is never found. It will distinguish people who were investigated or publicly discussed from anyone proven responsible.",
+          "source": "Metropolitan Police statements, the Suzy Lamplugh Trust's historical material and reliable reporting. The case remains unresolved, so the episode must not present a theory as a conclusion."
+        },
+        {
+          "number": 15,
+          "title": "The Evidence Beneath the Ground: How Searches Reopen Old Cases",
+          "covers": "A burial site can preserve evidence for decades, but finding human remains is only the beginning of an investigation. This episode explores how investigators search properties and landscapes, identify remains, establish dates and examine the circumstances of a death. The narrative will use documented British cases, including the West investigation, to explain how excavation strategy, forensic anthropology and the careful recording of evidence contribute to a prosecution. It will also address contamination risks and the difference between discovering remains and proving who committed a crime.",
+          "source": "Forensic archaeology publications, official case reports and court evidence. This is a thematic episode rather than a claim that one single case represents all forensic searches."
+        },
+        {
+          "number": 16,
+          "title": "Cold Cases: When Investigators Return to the Beginning",
+          "covers": "Late twentieth century to the present · Unsolved crime review What happens when an investigation runs out of leads? This episode explores how detectives reopen cases using preserved evidence, fresh witness interviews, improved DNA techniques and modern databases. Through carefully selected documented British examples, it will follow the practical stages of a cold-case review: checking the original timeline, reassessing witness reliability, testing old exhibits and evaluating whether new evidence genuinely changes the case. It will also explain why some investigations remain unresolved despite technological advances.",
+          "source": "Police cold-case appeals, forensic-science publications and documented case reviews."
+        },
+        {
+          "number": 17,
+          "title": "DNA Evidence: The Science That Changed British Criminal Justice",
+          "covers": "Building on the Colin Pitchfork case, this episode explains how DNA profiling developed from a scientific technique into an important investigative tool. It follows the stages from collecting a biological sample to generating a profile, comparing it with other samples and presenting the result in court. The story will explain what a DNA match can establish, why mixed or degraded samples create difficulties, and how contamination, statistical interpretation and the possibility of innocent transfer must be considered. It will also explore how forensic evidence can clear a suspect as well as implicate one.",
+          "source": "Government forensic-science material, peer-reviewed research and judicial guidance on DNA evidence."
+        },
+        {
+          "number": 18,
+          "title": "The Invisible Witness: Fingerprints, Fibres and Trace Evidence",
+          "covers": "A suspect may leave behind evidence without realising it: a fingerprint on an object, fibres transferred between surfaces or material that links two locations. This episode follows how investigators collect and compare these traces. Using documented cases, it explains the strengths and limitations of physical evidence, the importance of maintaining a reliable chain of custody and why a trace found at a crime scene does not automatically prove when or how it was deposited.",
+          "source": "Forensic-science standards, expert testimony and documented cases where trace evidence materially affected the investigation."
+        },
+        {
+          "number": 19,
+          "title": "The Digital Crime Scene: Phones, Messages and Online Evidence",
+          "covers": "Modern investigations can involve location records, messages, computer files, online accounts and CCTV footage. These sources can help reconstruct events, but they also introduce new questions about authenticity, context and privacy. This episode explains how digital evidence is preserved, examined and placed into a timeline. It explores the difference between a device's recorded location and a person's proven whereabouts, the limitations of timestamps, and why an authentic message can still be misinterpreted when separated from its context.",
+          "source": "College of Policing guidance, official digital-forensics publications and court judgments involving digital evidence."
+        },
+        {
+          "number": 20,
+          "title": "The Criminal Underworld: Robberies, Networks and the Money Trail",
+          "covers": "Organised crime depends on more than the person who commits an offence. It can involve planning, intermediaries, stolen property, financial arrangements and networks that help offenders avoid detection. The Great Train Robbery provides a starting point for understanding how investigators reconstructed the roles of individual participants. The episode then examines how financial records, communications and relationships can connect suspects to a wider operation, using additional documented cases only where they support a clear comparison.",
+          "source": "National Archives records, court proceedings and National Crime Agency publications."
+        },
+        {
+          "number": 21,
+          "title": "The Birmingham Six: Six Convictions, Sixteen Years Lost",
+          "covers": "Following the Birmingham pub bombings of November 1974, six men were convicted and spent years in prison before their convictions were quashed in 1991. The case exposed serious problems surrounding forensic evidence, confessions and the reliability of the original proceedings. The episode reconstructs the arrests, trial, challenges to the evidence and eventual appeal. It will distinguish the Court of Appeal's decision to quash the convictions from the separate question of establishing the full responsibility for the bombings.",
+          "source": "Court of Appeal material, parliamentary records and the official inquiry into the Guildford and Woolwich convictions."
+        },
+        {
+          "number": 22,
+          "title": "When a Conviction Falls Apart: How Appeals Re-examine Evidence",
+          "covers": "Modern criminal justice · Appeals and miscarriages of justice A criminal trial produces a verdict, but that does not mean the evidence can never be reconsidered. This episode explores how appeals work, how fresh evidence can emerge and how courts examine whether a conviction is safe. The Guildford Four and Birmingham Six provide the historical foundations, while further documented examples can demonstrate different routes by which a conviction may be challenged. The episode will explain the role of the Court of Appeal and the Criminal Cases Review Commission, without suggesting that every unsuccessful appeal proves innocence or every overturned conviction has the same cause.",
+          "source": "Criminal appeal judgments, Criminal Cases Review Commission publications and official legal guidance."
+        },
+        {
+          "number": 23,
+          "title": "When the Police Are Investigated: Misconduct, Evidence and Accountability",
+          "covers": "What happens when the conduct of investigators becomes part of the case? Drawing on Hillsborough and the Stephen Lawrence investigation, this episode explores the difference between investigative mistakes, misconduct allegations, proven wrongdoing and wider institutional findings. It follows the role of independent inquiries, police oversight bodies, public disclosure and judicial scrutiny. It also examines how families and campaigners can keep a case in the public eye when official explanations have failed to answer their questions.",
+          "source": "Macpherson report, Ellison review, IOPC investigations and official inquiry findings. The episode must accurately reflect the outcomes of individual investigations and must not imply criminal guilt where charges were not brought or convictions were not obtained."
+        },
+        {
+          "number": 24,
+          "title": "The Cases Britain Still Cannot Close",
+          "covers": "The series ends with a return to cases that still leave important questions unanswered. Jack the Ripper and Suzy Lamplugh offer two very different examples of how a case can remain unresolved across generations. The episode revisits the original evidence, the strongest documented developments and the reasons various questions remain open. It explores how public fascination can generate useful leads but also create myths, false certainty and unfair suspicion of people who were never convicted. The conclusion draws together the series' major themes: the value of evidence, the limits of forensic science, the importance of fair investigations and the need to remember victims as people rather than merely as names in a case file.",
+          "source": "National Archives records, current police appeals and carefully verified case histories. Only developments confirmed by reliable sources at the time of recording should be described as current."
+        }
+      ]
+    }
+  ]
+}

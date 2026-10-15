@@ -1,0 +1,608 @@
+{
+  "id": "crime-files-shorts",
+  "channelId": "crime-files",
+  "title": "100 Cases in Three Minutes",
+  "formatId": "case-short",
+  "shorts": [
+    {
+      "number": 1,
+      "title": "The Day the Mona Lisa Vanished",
+      "covers": "In 1911 a handyman walked out of the Louvre with the Mona Lisa under his smock, and the world's most famous painting was missing for two years.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 2,
+      "title": "The Man Who Sold the Eiffel Tower",
+      "covers": "In 1925 a con man called Victor Lustig convinced scrap metal dealers that Paris was selling the Eiffel Tower, and took their money.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 3,
+      "title": "The First Murder Solved by a Fingerprint",
+      "covers": "In 1892 in Argentina, a bloody thumbprint on a door frame revealed who had killed two children, the first murder solved by fingerprints.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 4,
+      "title": "Escape From Alcatraz",
+      "covers": "In 1962 three men slipped out of the most secure prison in America using spoons, fake heads made of plaster and a raft of raincoats.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 5,
+      "title": "Charley Ross: The First Ransom Kidnapping",
+      "covers": "In 1874 two men lured a four-year-old boy into a wagon in Philadelphia, and America learned what a ransom note was.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 6,
+      "title": "Lizzie Borden and the Axe",
+      "covers": "In 1892 a couple were killed with a hatchet in Fall River, Massachusetts, and their daughter was tried and acquitted.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 7,
+      "title": "The Zodiac Cipher, Cracked After Fifty Years",
+      "covers": "The Zodiac killer sent police coded letters in 1969, and in 2020 three amateur codebreakers finally solved one of them.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 8,
+      "title": "How Al Capone Was Really Caught",
+      "covers": "The most famous gangster in America was never convicted of violence, and in 1931 he went to prison for not paying his taxes.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 9,
+      "title": "Kim Philby: The Spy at the Top",
+      "covers": "A senior British intelligence officer had been working for the Soviet Union for decades, and slipped away to Moscow in 1963.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 10,
+      "title": "Adolf Beck: The Wrong Man Twice",
+      "covers": "In 1896 an innocent man was convicted of crimes committed by a lookalike, and his case led to Britain's Court of Criminal Appeal.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 11,
+      "title": "The Antwerp Diamond Heist",
+      "covers": "In 2003 thieves beat ten layers of security at the Antwerp Diamond Centre, and were caught because of a half-eaten sandwich dumped in a forest.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 12,
+      "title": "Charles Ponzi and His Famous Scheme",
+      "covers": "In 1920 a man in Boston promised investors huge profits from postal coupons, and paid early investors with new investors' money.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 13,
+      "title": "Marie Lafarge and the Arsenic Test",
+      "covers": "In 1840 a French widow was tried for poisoning her husband, and a new chemical test for arsenic was put on trial with her.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 14,
+      "title": "The Wooden Keys of Pretoria Prison",
+      "covers": "In 1979 three political prisoners in South Africa carved wooden keys for ten locked doors and walked out of a maximum security jail.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 15,
+      "title": "The Kidnapping of Frank Sinatra Jr",
+      "covers": "In 1963 the singer's nineteen-year-old son was taken from a hotel room at Lake Tahoe, and released after his father paid.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 16,
+      "title": "10 Rillington Place",
+      "covers": "In 1950 Timothy Evans was hanged for murders in a London house, and three years later the real killer was found living there.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 17,
+      "title": "The Somerton Man",
+      "covers": "In 1948 a man was found dead on an Australian beach with a scrap of paper reading 'it is finished' sewn into his trousers.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 18,
+      "title": "The St Valentine's Day Massacre",
+      "covers": "In 1929 gunmen dressed as police lined seven men up against a garage wall in Chicago, and the killing turned the public against the gangs.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 19,
+      "title": "Klaus Fuchs: The Atomic Spy",
+      "covers": "A physicist on the atomic bomb project passed its secrets to Moscow, and confessed in 1950 to a British interrogator.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 20,
+      "title": "Oscar Slater: Eighteen Years for Nothing",
+      "covers": "In 1909 a man was convicted of a Glasgow murder on weak evidence, and Arthur Conan Doyle campaigned for his release.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 21,
+      "title": "Hatton Garden: The Pensioners' Heist",
+      "covers": "Over an Easter weekend in 2015, a gang of men in their sixties and seventies drilled through a vault wall in London's jewellery quarter.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 22,
+      "title": "The Country That Did Not Exist",
+      "covers": "In the 1820s Gregor MacGregor sold land, titles and passage to Poyais, a Central American country he had invented, and settlers sailed to find it.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 23,
+      "title": "The Jigsaw Murders",
+      "covers": "In 1935 body parts were found in a Scottish ravine, and scientists rebuilt the victims from them, using a photograph to prove who one of them was.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 24,
+      "title": "Ronnie Biggs Goes Over the Wall",
+      "covers": "In 1965 one of the Great Train Robbers escaped from Wandsworth Prison over a rope ladder and spent decades on the run.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 25,
+      "title": "The Getty Kidnapping",
+      "covers": "In 1973 the grandson of the richest man in the world was kidnapped in Rome, and his grandfather refused to pay until an ear arrived in the post.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 26,
+      "title": "Let Him Have It: Derek Bentley",
+      "covers": "In 1953 a nineteen-year-old was hanged for a shooting he did not commit, over four words whose meaning was argued for decades.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 27,
+      "title": "The Isdal Woman",
+      "covers": "In 1970 a burned body was found in a Norwegian valley, with false identities, coded notes and labels cut from every piece of clothing.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 28,
+      "title": "The Kray Twins",
+      "covers": "Twin brothers ran a criminal empire in 1960s London, mixing with celebrities, until a detective called Nipper Read brought them down.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 29,
+      "title": "The Rosenbergs",
+      "covers": "In 1953 an American couple were executed for passing atomic secrets to the Soviet Union, in a case that still divides opinion.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 30,
+      "title": "Stefan Kiszko: The Science That Freed Him",
+      "covers": "In 1976 a shy tax clerk was convicted of a murder he could not have committed, and medical evidence proved it sixteen years later.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 31,
+      "title": "The Gardner Museum Robbery",
+      "covers": "In 1990 two men dressed as police officers talked their way into a Boston museum and left with thirteen works of art that have never been found.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 32,
+      "title": "The Tichborne Claimant",
+      "covers": "In the 1860s a butcher from Australia claimed to be the lost heir to a great English fortune, and the heir's mother accepted him.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 33,
+      "title": "The Acid Bath Murderer",
+      "covers": "In 1949 John Haigh believed that dissolving his victims in acid meant he could never be convicted, and a few gallstones proved him wrong.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 34,
+      "title": "Dillinger's Wooden Gun",
+      "covers": "In 1934 the bank robber John Dillinger escaped from an Indiana jail using a gun he had carved from wood and blackened with shoe polish.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 35,
+      "title": "The Chowchilla Bus Kidnapping",
+      "covers": "In 1976 three men hijacked a school bus in California and buried twenty-six children in a truck underground. The children dug their way out.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 36,
+      "title": "Ruth Ellis: The Last Woman Hanged",
+      "covers": "In 1955 a nightclub manager shot her lover outside a London pub, and became the last woman executed in Britain.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 37,
+      "title": "Who Put Bella in the Wych Elm?",
+      "covers": "In 1943 four boys found a skeleton hidden inside a tree in Worcestershire, and soon messages began appearing on walls.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 38,
+      "title": "Lucky Luciano and the Commission",
+      "covers": "A Sicilian-born gangster reorganised the American Mafia in the 1930s, and was later convicted on the evidence of the women who worked for him.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 39,
+      "title": "Aldrich Ames: The Spy Who Bought a Jaguar",
+      "covers": "A CIA officer sold the names of America's agents in Moscow, and was caught partly because he was spending far more than he earned.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 40,
+      "title": "Sally Clark and the Misused Statistic",
+      "covers": "In 1999 a solicitor was convicted of killing her two baby sons, on a statistic that was badly wrong, and was freed in 2003.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 41,
+      "title": "The Tunnel Under the Brazilian Bank",
+      "covers": "In 2005 a gang dug an eighty-metre tunnel from a fake gardening business into the Central Bank of Brazil in Fortaleza and took millions in cash.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 42,
+      "title": "The Man Who Forged Vermeer",
+      "covers": "Han van Meegeren sold fake Vermeer paintings to Nazi leader Hermann Goering, and after the war had to paint one in court to prove he was a forger, not a traitor.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 43,
+      "title": "The Ladder That Solved the Lindbergh Case",
+      "covers": "A wood scientist traced the home-made ladder used in the 1932 kidnapping of Charles Lindbergh's baby back to a timber yard and a floorboard.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 44,
+      "title": "The Spy Who Escaped Wormwood Scrubs",
+      "covers": "In 1966 the double agent George Blake climbed out of a London prison on a rope ladder of knitting needles and ended up in Moscow.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 45,
+      "title": "Patty Hearst: Victim or Robber?",
+      "covers": "In 1974 a newspaper heiress was kidnapped by a radical group, and weeks later was filmed holding a rifle in a bank robbery.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 46,
+      "title": "The Green River Killer",
+      "covers": "For nearly twenty years a killer escaped police near Seattle, until in 2001 new DNA testing linked him to the crimes.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 47,
+      "title": "The Hinterkaifeck Murders",
+      "covers": "In 1922 a family on a remote Bavarian farm was killed, after days of footprints in the snow and strange noises in the attic.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 48,
+      "title": "Pablo Escobar's Last Rooftop",
+      "covers": "The richest drug lord in history built an empire in Colombia, and was shot dead on a rooftop in Medellin in 1993.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 49,
+      "title": "Robert Hanssen: The Spy Inside the FBI",
+      "covers": "For more than twenty years an FBI agent sold secrets to Moscow, leaving packages under a footbridge in a Virginia park.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 50,
+      "title": "Andrew Malkinson: Seventeen Years Wrongly Jailed",
+      "covers": "In 2004 a man was convicted of a rape in Greater Manchester, and in 2023 DNA evidence finally cleared him.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 51,
+      "title": "The Securitas Depot Robbery",
+      "covers": "In 2006 a gang kidnapped a cash depot manager and his family in Kent, and walked away with more than fifty million pounds.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 52,
+      "title": "Bernie Madoff's Fifty-Billion-Dollar Lie",
+      "covers": "For decades a respected Wall Street figure ran the largest investment fraud in history, until the 2008 crash made it impossible to hide.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 53,
+      "title": "Catching the Golden State Killer",
+      "covers": "In 2018 investigators found a man who had committed crimes across California decades earlier, by matching DNA through a family history website.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 54,
+      "title": "El Chapo's Tunnel",
+      "covers": "In 2015 the drug lord Joaquin Guzman disappeared through a hole in his shower into a mile-long tunnel with a motorbike on rails.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 55,
+      "title": "The Kidnapping of Freddy Heineken",
+      "covers": "In 1983 the head of the Heineken beer company was kidnapped in Amsterdam and held in a hidden cell for three weeks.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 56,
+      "title": "BTK and the Floppy Disk",
+      "covers": "In 2005 a serial killer who had taunted police in Kansas for thirty years was caught by information hidden in a floppy disk he sent them.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 57,
+      "title": "The Villisca Axe Murders",
+      "covers": "In 1912 eight people were killed in a house in a small Iowa town, and no one was ever convicted.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 58,
+      "title": "Whitey Bulger: The Informant Who Ran Boston",
+      "covers": "A Boston gangster spent years as an FBI informant while running his gang, then disappeared for sixteen years.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 59,
+      "title": "Mata Hari: Dancer, Spy or Scapegoat?",
+      "covers": "In 1917 a famous dancer was shot by a French firing squad as a German spy, on evidence historians now question.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 60,
+      "title": "Lindy Chamberlain and the Dingo",
+      "covers": "In 1980 a baby disappeared from a campsite near Uluru, and her mother was convicted of murder before a jacket found in the desert cleared her.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 61,
+      "title": "The Walkie-Talkie Robbery",
+      "covers": "In 1971 a radio enthusiast in London overheard robbers talking as they tunnelled into a Baker Street bank vault, and nobody believed him.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 62,
+      "title": "Theranos: The Blood Test That Did Not Work",
+      "covers": "Elizabeth Holmes promised a machine that could run hundreds of tests from a drop of blood, and built a nine-billion-dollar company on it.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 63,
+      "title": "The Brick Through the Windscreen",
+      "covers": "In 2003 a brick thrown from a bridge killed a lorry driver in Surrey, and police found the thrower through a relative's DNA, the first conviction of its kind.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 64,
+      "title": "The Great Libby Prison Escape",
+      "covers": "In 1864 more than a hundred Union officers tunnelled out of a Confederate prison in Richmond, through a cellar full of rats.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 65,
+      "title": "Natascha Kampusch: Eight Years Hidden",
+      "covers": "In 1998 a ten-year-old girl was taken on her way to school in Vienna, and in 2006 she ran from her captor's garden.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 66,
+      "title": "Son of Sam and the Parking Ticket",
+      "covers": "In 1977 the gunman terrorising New York was traced through a parking ticket on his car near the scene of the last shooting.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 67,
+      "title": "Lord Lucan Vanishes",
+      "covers": "In 1974 the family nanny was killed at a London house, and the aristocrat named by an inquest disappeared that night and was never seen again.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 68,
+      "title": "The Gangster Brought Down by His Deputy",
+      "covers": "John Gotti was called the Teflon Don because charges never stuck, until his own underboss testified against him in 1992.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 69,
+      "title": "The Portland Spy Ring",
+      "covers": "In 1961 police uncovered a Soviet spy ring working from a bungalow in a London suburb, with a radio hidden in the house.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 70,
+      "title": "The Central Park Five",
+      "covers": "In 1989 five teenagers were convicted of an attack in New York, and in 2002 the real attacker confessed and DNA confirmed it.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 71,
+      "title": "The Knightsbridge Safe Deposit Robbery",
+      "covers": "In 1987 a man rented a safe deposit box in London, then came back with friends, tied up the staff and emptied the vault.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 72,
+      "title": "The Fake Heiress of New York",
+      "covers": "Anna Sorokin posed as a rich German heiress called Anna Delvey and lived in luxury hotels on other people's money, until she was caught in 2017.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 73,
+      "title": "The Flies That Found a Killer",
+      "covers": "In thirteenth-century China, an investigator called Song Ci laid out the villagers' sickles in the sun, and the flies gathered on one.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 74,
+      "title": "Jack Sheppard: London's Escape Artist",
+      "covers": "In the 1720s a young thief escaped from London's prisons four times, and thousands came to watch him hang.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 75,
+      "title": "Elizabeth Smart Comes Home",
+      "covers": "In 2002 a fourteen-year-old was taken from her bedroom in Salt Lake City, and a TV appeal led to her rescue nine months later.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 76,
+      "title": "The Unabomber's Brother",
+      "covers": "In 1996 the man behind seventeen years of mail bombs was caught after his own brother recognised his writing in a newspaper.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 77,
+      "title": "The Max Headroom Broadcast Hijack",
+      "covers": "In 1987 someone in a mask broke into two Chicago television broadcasts, and the hijackers were never found.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 78,
+      "title": "The Real Peaky Blinders",
+      "covers": "Long before the television series, street gangs in Victorian Birmingham earned the name, and the truth is rougher than the drama.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 79,
+      "title": "The Illegals: Spies Next Door",
+      "covers": "In 2010 the FBI arrested ten Russian sleeper agents living ordinary lives in American suburbs, and swapped them in Vienna.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 80,
+      "title": "Sacco and Vanzetti",
+      "covers": "In 1927 two Italian immigrants were executed in Massachusetts for a robbery and murder, after a trial that was criticised around the world.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 81,
+      "title": "The Lufthansa Heist",
+      "covers": "In 1978 robbers took millions in cash from a cargo building at New York's Kennedy Airport, and almost everyone involved was dead within months.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 82,
+      "title": "Bre-X: The Gold Mine Full of Nothing",
+      "covers": "In the 1990s a Canadian company announced one of the biggest gold finds ever in Indonesia, and the samples turned out to have been salted with gold.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 83,
+      "title": "The Two Men Called Will West",
+      "covers": "In 1903 an American prison found two men with the same name and the same face, and it helped fingerprints replace body measurements.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 84,
+      "title": "The Con Man Who Kept Escaping",
+      "covers": "Steven Russell escaped from Texas prisons again and again by pretending to be a doctor, a judge and even a dying man.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 85,
+      "title": "Jaycee Dugard: Eighteen Years in a Backyard",
+      "covers": "In 1991 an eleven-year-old was snatched from a street in California, and was found alive in 2009 because two police officers noticed something odd.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 86,
+      "title": "The Lambeth Poisoner",
+      "covers": "In 1892 a doctor poisoned women in south London, then wrote letters accusing others, and his own letters gave him away.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 87,
+      "title": "The Black Dahlia",
+      "covers": "In 1947 the body of a young woman was found in Los Angeles, and the case became one of the most famous unsolved murders in America.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 88,
+      "title": "The Richardson Gang",
+      "covers": "In 1960s south London a gang of brothers ran businesses and a reputation for brutal punishments, until a trial in 1967.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 89,
+      "title": "The Gunpowder Plot",
+      "covers": "In 1605 a group of conspirators hid barrels of gunpowder under the Houses of Parliament, and an anonymous letter gave them away.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 90,
+      "title": "The Cardiff Three",
+      "covers": "In 1990 three men were convicted of a Cardiff murder after a confession taken in hours of shouting, and later cleared.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 91,
+      "title": "D.B. Cooper: The Hijacker Who Jumped",
+      "covers": "In 1971 a man hijacked a plane over Washington state, took a ransom, and parachuted into the night. He was never identified.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 92,
+      "title": "Catch Me If You Can, Fact or Fiction?",
+      "covers": "Frank Abagnale's story of posing as a pilot, doctor and lawyer became a Hollywood film, and researchers later found much of it was untrue.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 93,
+      "title": "Every Contact Leaves a Trace",
+      "covers": "Edmond Locard set up one of the first crime laboratories in Lyon, and his simple idea that every contact leaves a trace still guides crime scenes.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 94,
+      "title": "The Helicopter Escapes",
+      "covers": "A French bank robber escaped from prison by helicopter, then used another helicopter to free his friends.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 95,
+      "title": "The Wrong Woman: Muriel McKay",
+      "covers": "In 1969 two brothers kidnapped a newspaper executive's wife in London by mistake, and became the first people in Britain convicted of murder without a body found.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 96,
+      "title": "The Wallace Case",
+      "covers": "In 1931 a Liverpool insurance agent went looking for an address that did not exist, and came home to find his wife murdered.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 97,
+      "title": "The Princes in the Tower",
+      "covers": "In 1483 two young princes disappeared inside the Tower of London, and the question of what happened to them has never been settled.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 98,
+      "title": "The Great Brink's Robbery",
+      "covers": "In 1950 eleven men robbed a Brink's depot in Boston of millions, and were caught days before the time limit for prosecution ran out.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 99,
+      "title": "The Profumo Affair",
+      "covers": "In 1963 a British government minister lied to Parliament about an affair, in a scandal tangled up with a Soviet naval attache.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    },
+    {
+      "number": 100,
+      "title": "Sam Hallam: Seven Years for Nothing",
+      "covers": "In 2005 a teenager from east London was convicted of a murder on shaky identification evidence, and his conviction was quashed in 2012.",
+      "source": "court records, contemporary newspaper reporting and published histories of the case"
+    }
+  ]
+}

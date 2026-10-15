@@ -1,0 +1,223 @@
+{
+  "id": "psyche-mind-basics",
+  "channelId": "psyche-session",
+  "title": "How Your Mind Works",
+  "formatId": "psych-episode",
+  "series": [
+    {
+      "number": 1,
+      "title": "How Memory Really Works",
+      "note": "What memory is, why it fails, and why it is less like a recording than you think.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Why You Forget Almost Everything",
+          "covers": "In the 1880s Hermann Ebbinghaus memorised thousands of nonsense syllables and drew the forgetting curve. Why most of what we learn fades within days, and what slows it down.",
+          "source": "Ebbinghaus (1885) and reviews of spacing and retrieval practice"
+        },
+        {
+          "number": 2,
+          "title": "False Memories: Remembering What Never Happened",
+          "covers": "Elizabeth Loftus showed that a single word in a question can change what witnesses remember, and that whole false memories can be planted.",
+          "source": "Loftus and Palmer (1974), the 'lost in the mall' studies, and reviews of eyewitness memory"
+        },
+        {
+          "number": 3,
+          "title": "The Man Who Could Not Make New Memories",
+          "covers": "After brain surgery in 1953, Henry Molaison could no longer form new memories, and what he could still learn changed our understanding of the brain.",
+          "source": "Corkin's work on patient H.M. and reviews of memory systems"
+        },
+        {
+          "number": 4,
+          "title": "Why Smells Bring Back the Past",
+          "covers": "Why a smell can drop you into a childhood memory more vividly than a photograph, and what is special about the route smell takes in the brain.",
+          "source": "Reviews of odour-evoked autobiographical memory"
+        },
+        {
+          "number": 5,
+          "title": "Why You Walk Into a Room and Forget Why",
+          "covers": "The doorway effect: how the brain files memories by the place you were in, and why moving between rooms resets it.",
+          "source": "Radvansky's doorway studies and event segmentation research"
+        },
+        {
+          "number": 6,
+          "title": "How to Actually Remember Things",
+          "covers": "What the research says works: testing yourself, spacing it out, explaining it to someone, and why rereading feels useful but is not.",
+          "source": "Dunlosky et al. (2013) review of learning techniques"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Understanding Emotions",
+      "note": "What feelings are, what they are for, and what to do with the hard ones.",
+      "episodes": [
+        {
+          "number": 7,
+          "title": "What Is an Emotion For?",
+          "covers": "Why we have feelings at all, how emotions push us to act, and why the same feeling can be useful one day and unhelpful the next.",
+          "source": "Reviews of the functions of emotion and appraisal theory"
+        },
+        {
+          "number": 8,
+          "title": "Anger: The Emotion That Wants to Fix Things",
+          "covers": "What happens in the body and mind when you get angry, why venting does not help, and what does.",
+          "source": "Bushman (2002) on venting and reviews of anger regulation"
+        },
+        {
+          "number": 9,
+          "title": "Fear and Anxiety: The Alarm That Goes Off Too Easily",
+          "covers": "The difference between fear and anxiety, why the brain's alarm system misfires, and why avoiding things makes anxiety grow.",
+          "source": "NHS guidance on anxiety and reviews of the fear and avoidance cycle"
+        },
+        {
+          "number": 10,
+          "title": "Grief: Why Loss Hurts Like a Wound",
+          "covers": "What grief does to the mind and body, why the famous five stages are not a timetable, and how people live alongside loss.",
+          "source": "Bonanno's research on grief and resilience and reviews of the dual process model"
+        },
+        {
+          "number": 11,
+          "title": "Why Happiness Wears Off",
+          "covers": "Hedonic adaptation: why a new job, a new phone or a lottery win stops making us happier, and what keeps its effect longer.",
+          "source": "Brickman et al. (1978) and reviews of hedonic adaptation"
+        },
+        {
+          "number": 12,
+          "title": "Shame and Guilt: Two Different Feelings",
+          "covers": "Guilt says I did something bad, shame says I am bad. Why that difference matters, and why shame hides while guilt repairs.",
+          "source": "Tangney's research on shame and guilt"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "The Social Brain",
+      "note": "How other people shape what we think, do and feel.",
+      "episodes": [
+        {
+          "number": 13,
+          "title": "First Impressions in a Tenth of a Second",
+          "covers": "How quickly we judge faces, why those snap judgements stick, and when they are wrong.",
+          "source": "Willis and Todorov (2006) and reviews of first impressions"
+        },
+        {
+          "number": 14,
+          "title": "Going Along With the Group",
+          "covers": "In the 1950s Solomon Asch asked people to match lines, and many gave an obviously wrong answer because everyone else had. Why we conform.",
+          "source": "Asch's conformity experiments and later replications"
+        },
+        {
+          "number": 15,
+          "title": "Why Ordinary People Obey",
+          "covers": "Stanley Milgram's shock experiment, what it really showed, what later researchers found in the files, and why it still matters.",
+          "source": "Milgram (1963), Perry's archive work and modern replications"
+        },
+        {
+          "number": 16,
+          "title": "The Bystander Effect",
+          "covers": "Why a crowd can watch someone in trouble and nobody helps, the real story behind the case that made it famous, and how to break it.",
+          "source": "Darley and Latane (1968) and later reviews of bystander intervention"
+        },
+        {
+          "number": 17,
+          "title": "Loneliness: Alone in a Crowd",
+          "covers": "Why loneliness is about the quality of connection more than the number of people, and what it does to the body.",
+          "source": "Holt-Lunstad's research on social connection and reviews of loneliness"
+        },
+        {
+          "number": 18,
+          "title": "How Friendships Form and Fade",
+          "covers": "How many hours it takes to make a friend, why adult friendships are harder, and what keeps them going.",
+          "source": "Hall (2018) on hours to friendship and Dunbar's research on social networks"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Habits and Motivation",
+      "note": "Why we do what we do, again and again, and how to change it.",
+      "episodes": [
+        {
+          "number": 19,
+          "title": "How a Habit Forms",
+          "covers": "The loop of cue, routine and reward, how long a habit really takes to form, and why it is not 21 days.",
+          "source": "Lally et al. (2010) on habit formation and Wood's habit research"
+        },
+        {
+          "number": 20,
+          "title": "Dopamine Is Not the Pleasure Chemical",
+          "covers": "What dopamine actually does, why it is about wanting more than liking, and what that means for screens and snacks.",
+          "source": "Berridge's research on wanting and liking and reviews of reward"
+        },
+        {
+          "number": 21,
+          "title": "Is Willpower a Muscle?",
+          "covers": "The idea that willpower runs out like fuel became famous, then failed to replicate. What we know now about self-control.",
+          "source": "Baumeister's ego depletion research and the replication studies that followed"
+        },
+        {
+          "number": 22,
+          "title": "Why Goals Fail and What Helps",
+          "covers": "Why big resolutions fade by February, and what research says about small steps, if-then plans and tracking.",
+          "source": "Gollwitzer's implementation intentions research and reviews of goal setting"
+        },
+        {
+          "number": 23,
+          "title": "Doing It Because You Want To",
+          "covers": "Why rewards can kill the joy of something you already loved, and what makes motivation last.",
+          "source": "Deci and Ryan's self-determination theory and the overjustification studies"
+        },
+        {
+          "number": 24,
+          "title": "Breaking a Habit You Do Not Want",
+          "covers": "Why stopping a habit is harder than starting one, and how changing the cue and the setting works better than trying harder.",
+          "source": "Wood's research on habit change and reviews of habit reversal"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Stress and Recovery",
+      "note": "What stress does to the mind and body, and how people come back from it.",
+      "episodes": [
+        {
+          "number": 25,
+          "title": "What Stress Does to Your Body",
+          "covers": "The fight or flight response, what cortisol and adrenaline do, and why stress that never switches off wears you down.",
+          "source": "NHS stress guidance and reviews of the stress response"
+        },
+        {
+          "number": 26,
+          "title": "Burnout: More Than Being Tired",
+          "covers": "What burnout is, the three signs researchers look for, and why rest alone does not always fix it.",
+          "source": "Maslach's burnout research and the WHO description of burnout"
+        },
+        {
+          "number": 27,
+          "title": "Worry Versus Anxiety Disorders",
+          "covers": "Everyone worries. When does worry become an anxiety disorder, and what are the signs it is time to get help?",
+          "source": "NHS guidance on generalised anxiety disorder and NICE guidance"
+        },
+        {
+          "number": 28,
+          "title": "How Therapy Actually Works",
+          "covers": "What happens in talking therapy, the difference between CBT and other kinds, and what the evidence says about who it helps.",
+          "source": "NICE guidance on talking therapies and reviews of psychotherapy outcomes"
+        },
+        {
+          "number": 29,
+          "title": "Why Some People Bounce Back",
+          "covers": "What resilience really is, why it is more common than we think, and the things that help people recover after hard times.",
+          "source": "Bonanno's resilience research and reviews of protective factors"
+        },
+        {
+          "number": 30,
+          "title": "Calming Down: What Works in the Moment",
+          "covers": "Breathing, naming the feeling, moving your body: which quick ways of calming down have real evidence behind them.",
+          "source": "Reviews of slow breathing, affect labelling and exercise for stress"
+        }
+      ]
+    }
+  ]
+}
