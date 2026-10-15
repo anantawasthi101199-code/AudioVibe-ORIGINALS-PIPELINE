@@ -156,6 +156,16 @@ export const REGENERATE_ALLOWANCE_PENCE = { short: 15, long: 100 } as const;
  * token that then sits in the environment of a command that had no business
  * holding it.
  */
+/**
+ * HOW AUDIO REACHES THE PLATFORM (owner, 2026-10-15): `railway` uploads it to
+ * the API like any app upload; `direct` PUTs it straight into R2 through a
+ * one-time URL and sends the API only its key, saving the API's own copy out
+ * to R2. Direct falls back to railway on any failure, so it is safe to turn on
+ * before the platform supports it. FOUNDRY_UPLOAD_ROUTE, default railway.
+ */
+export const uploadRoute = (): 'railway' | 'direct' =>
+  process.env.FOUNDRY_UPLOAD_ROUTE?.trim().toLowerCase() === 'direct' ? 'direct' : 'railway';
+
 export const platformUrl = (): { url: string; isProduction: boolean } => {
   const url = required('AUDIOVIBE_API_URL').replace(/\/+$/, '');
 

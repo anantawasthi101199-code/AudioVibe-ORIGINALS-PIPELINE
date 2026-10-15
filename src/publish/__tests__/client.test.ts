@@ -328,4 +328,59 @@ describe('AudioVibeClient', () => {
       fs.rmSync(cover, { force: true });
     });
   });
+
+  describe('direct to R2 (FOUNDRY_UPLOAD_ROUTE=direct)', () => {
+    const mp3 = () => {
+      const p = path.join(dir, 'final.mp3');
+      fs.writeFileSync(p, Buffer.from('ID3 fake mp3'));
+      return p;
+    };
+    const directClient = (t: ReturnType<typeof spyTransport>, putStatus = 200) => {
+      const puts: Array<{ url: string; bytes: number; type: string }> = [];
+      const c = new AudioVibeClient(
+        'https://staging.example.com', 'tok', t.post, t.get, undefined,
+        async (url, body, type) => {
+          puts.push({ url, bytes: body.length, type });
+          return { status: putStatus, text: '' };
+        },
+        () => 'direct', () => undefined,
+      );
+      return { c, puts };
+    };
+    const staged = { status: 201, json: { data: { key: 'tmp/uploads/studio/k.mp3', url: 'https://r2.example/put' } }, text: '' };
+
+    it('PUTS THE AUDIO TO R2 and sends only its key to the API', async () => {
+      const t = spyTransport([staged, audioOk]);
+      const { c, puts } = directClient(t);
+      await c.publish({ ...base(), audioPath: mp3() });
+      expect(t.posts[0]!.url).toBe('https://staging.example.com/api/audios/ingest/stage');
+      expect(puts).toEqual([{ url: 'https://r2.example/put', bytes: 12, type: 'audio/mpeg' }]);
+      expect(t.posts[1]!.form.get('staged_key')).toBe('tmp/uploads/studio/k.mp3');
+      expect(t.posts[1]!.form.get('audio')).toBeNull();
+    });
+
+    it('falls back to the API upload when the platform has no stage route', async () => {
+      const t = spyTransport([{ status: 404, json: null, text: 'Not found' }, audioOk]);
+      const { c, puts } = directClient(t);
+      await c.publish({ ...base(), audioPath: mp3() });
+      expect(puts).toEqual([]);
+      expect(t.posts[1]!.form.get('audio')).toBeTruthy();
+      expect(t.posts[1]!.form.get('staged_key')).toBeNull();
+    });
+
+    it('falls back when R2 refuses the PUT, so direct never fails a publish', async () => {
+      const t = spyTransport([staged, audioOk]);
+      const { c } = directClient(t, 403);
+      await c.publish({ ...base(), audioPath: mp3() });
+      expect(t.posts[1]!.form.get('audio')).toBeTruthy();
+    });
+
+    it('sends anything but an MP3 the API way without asking', async () => {
+      const t = spyTransport([audioOk]);
+      const { c } = directClient(t);
+      await c.publish(base());
+      expect(t.posts).toHaveLength(1);
+      expect(t.posts[0]!.form.get('audio')).toBeTruthy();
+    });
+  });
 });

@@ -22,6 +22,7 @@ import { fileBlob } from './mime';
 import { z } from 'zod';
 import { BeatTiming } from '../render/assemble';
 import { ProvenancePayload } from './provenance';
+import { uploadRoute } from '../config';
 
 export interface PublishInput {
   title: string;
@@ -119,6 +120,14 @@ export type JsonPut = (
   body: unknown
 ) => Promise<{ status: number; json: unknown; text: string }>;
 
+/** A raw-bytes PUT to a presigned URL, injected so tests never reach the network. */
+export type BinaryPut = (url: string, body: Buffer, contentType: string) => Promise<{ status: number; text: string }>;
+
+export const nodeBinaryPut: BinaryPut = async (url, body, contentType) => {
+  const res = await fetch(url, { method: 'PUT', headers: { 'content-type': contentType }, body: new Uint8Array(body) });
+  return { status: res.status, text: await res.text() };
+};
+
 export const nodeJsonPut: JsonPut = async (url, headers, body) => {
   const res = await fetch(url, {
     method: 'PUT',
@@ -168,8 +177,39 @@ export class AudioVibeClient {
     private token: string,
     private post: MultipartPost = nodeMultipartPost,
     private get: HttpGet = nodeHttpGet,
-    private put: JsonPut = nodeJsonPut
+    private put: JsonPut = nodeJsonPut,
+    private putFile: BinaryPut = nodeBinaryPut,
+    private route: () => 'railway' | 'direct' = uploadRoute,
+    private log: (message: string) => void = (m) => console.log(m)
   ) {}
+
+  /**
+   * Put the audio straight into R2 and return its key, or null to send it the
+   * railway way. ANY failure is a null: an older platform without the stage
+   * route, an expired URL, a network blip. Direct is a saving, never a new way
+   * for a publish to fail.
+   */
+  private async stageAudio(audioPath: string): Promise<string | null> {
+    if (this.route() !== 'direct' || path.extname(audioPath).toLowerCase() !== '.mp3') return null;
+    try {
+      const res = await this.post(`${this.baseUrl}/api/audios/ingest/stage`, { authorization: `Bearer ${this.token}` }, new FormData());
+      const data = (res.json as { data?: { key?: string; url?: string } } | null)?.data;
+      if (res.status < 200 || res.status >= 300 || !data?.key || !data.url) {
+        this.log(`upload: direct not available (${res.status}), sending through the API`);
+        return null;
+      }
+      const put = await this.putFile(data.url, fs.readFileSync(audioPath), 'audio/mpeg');
+      if (put.status < 200 || put.status >= 300) {
+        this.log(`upload: R2 refused the direct upload (${put.status}), sending through the API`);
+        return null;
+      }
+      this.log('upload: audio sent straight to R2');
+      return data.key;
+    } catch (e) {
+      this.log(`upload: direct failed (${(e as Error).message}), sending through the API`);
+      return null;
+    }
+  }
 
   /**
    * Change a published audio's title and description (2026-10-06). The
@@ -356,11 +396,9 @@ export class AudioVibeClient {
     }
 
     const form = await this.baseForm(input);
-    form.append(
-      'audio',
-      fileBlob(fs.readFileSync(input.audioPath), input.audioPath),
-      path.basename(input.audioPath)
-    );
+    const staged = await this.stageAudio(input.audioPath);
+    if (staged) form.append('staged_key', staged);
+    else form.append('audio', fileBlob(fs.readFileSync(input.audioPath), input.audioPath), path.basename(input.audioPath));
 
     // The disclosure. Sent explicitly rather than inferred from the account,
     // because is_ai_generated is a fact about the ITEM: a show could in
