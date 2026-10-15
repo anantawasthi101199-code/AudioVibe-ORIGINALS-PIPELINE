@@ -472,252 +472,408 @@ channels:
       # alone, because a respelling can only make those worse.
       - word: Kali Yuga
         sayAs: KUH-lee YOO-guh
+        ipa: /kəlɪ juɡə/
       - word: Kali
         sayAs: KUH-lee
+        ipa: /kəlɪ/
       - word: Yuga
         sayAs: YOO-guh
+        ipa: /juɡə/
       - word: yugas
         sayAs: YOO-guz
+        ipa: /juɡəz/
       - word: Krita
         sayAs: KRIT-uh
+        ipa: /kɾɪt̪ə/
       - word: Treta
         sayAs: TRAY-tuh
+        ipa: /t̪ɾeːt̪aː/
       - word: Dvapara
         sayAs: DVAH-puh-ruh
+        ipa: /d̪ʋaːpəɾə/
       - word: Nasadiya Sukta
         sayAs: nah-SAH-dee-yuh SOOK-tuh
+        ipa: /naːsəd̪iːjə suːkt̪ə/
       - word: Rig Veda
         sayAs: rig VAY-duh
+        ipa: /ɾɪɡ ʋeːd̪ə/
       - word: Veda
         sayAs: VAY-duh
+        ipa: /ʋeːd̪ə/
       - word: Vedas
         sayAs: VAY-duz
+        ipa: /ʋeːd̪əz/
       - word: Puranas
         sayAs: poo-RAH-nuz
+        ipa: /puɾaːɳəz/
       - word: Purana
         sayAs: poo-RAH-nuh
+        ipa: /puɾaːɳə/
       - word: Bhagavata
         sayAs: BHAH-guh-vuh-tuh
+        ipa: /bʱaːɡəʋət̪ə/
       - word: Mahabharata
         sayAs: muh-hah-BHAH-ruh-tuh
+        ipa: /məɦaːbʱaːɾət̪ə/
       - word: Trimurti
         sayAs: trih-MOOR-tee
+        ipa: /t̪ɾɪmuːɾt̪iː/
       - word: Narayana
         sayAs: nah-RAH-yuh-nuh
+        ipa: /naːɾaːjəɳə/
       - word: Shesha
         sayAs: SHAY-shuh
+        ipa: /ʃeːʂə/
       - word: Ananta
         sayAs: uh-NUN-tuh
+        ipa: /ənən̪t̪ə/
       - word: yoga nidra
         sayAs: YOH-guh NID-ruh
+        ipa: /joːɡə nɪd̪ɾaː/
       - word: Tapa
         sayAs: TUH-puh
+        ipa: /t̪əpə/
       - word: Sanaka
         sayAs: SUH-nuh-kuh
+        ipa: /sənəkə/
       - word: Sanandana
         sayAs: suh-NUN-duh-nuh
+        ipa: /sənən̪d̪ənə/
       - word: Sanatana
         sayAs: suh-NAH-tuh-nuh
+        ipa: /sənaːt̪ənə/
       - word: Sanatkumara
         sayAs: suh-nut-koo-MAH-ruh
+        ipa: /sənət̪kumaːɾə/
       - word: Rudra
         sayAs: ROOD-ruh
+        ipa: /ɾud̪ɾə/
       - word: Rudras
         sayAs: ROOD-ruz
+        ipa: /ɾud̪ɾəz/
       - word: Manu
         sayAs: MUH-noo
+        ipa: /mənu/
       - word: Shatarupa
         sayAs: shuh-tuh-ROO-puh
+        ipa: /ʃət̪əɾuːpaː/
       - word: manava
         sayAs: MAH-nuh-vuh
+        ipa: /maːnəʋə/
       - word: Saraswati
         sayAs: suh-RUSS-wuh-tee
+        ipa: /səɾəsʋət̪iː/
       - word: veena
         sayAs: VEE-nuh
+        ipa: /ʋiːɳaː/
       - word: Satyaloka
         sayAs: SUT-yuh-loh-kuh
+        ipa: /sət̪jəloːkə/
       - word: Vaikuntha
         sayAs: vai-KOON-tuh
+        ipa: /ʋɛːkuɳʈʰə/
       - word: Sudarshana
         sayAs: soo-DUR-shuh-nuh
+        ipa: /sud̪əɾʃənə/
       - word: Garuda
         sayAs: GUH-roo-duh
+        ipa: /ɡəɾuɖə/
       - word: Lakshmi
         sayAs: LUCK-shmee
+        ipa: /ləkʂmiː/
       - word: dharma
         sayAs: DHUR-muh
+        ipa: /d̪ʱəɾmə/
       - word: Dharma
         sayAs: DHUR-muh
+        ipa: /d̪ʱəɾmə/
       - word: Kailasa
         sayAs: kai-LAH-suh
+        ipa: /kɛːlaːsə/
       - word: Ganga
         sayAs: GUNG-gah
+        ipa: /ɡəŋɡaː/
       - word: Nandi
         sayAs: NUN-dee
+        ipa: /nən̪d̪iː/
       - word: Parvati
         sayAs: PAR-vuh-tee
+        ipa: /paːɾʋət̪iː/
       - word: ketaki
         sayAs: KAY-tuh-kee
+        ipa: /keːt̪əkiː/
       - word: Bhairava
         sayAs: BHAI-ruh-vuh
+        ipa: /bʱɛːɾəʋə/
       - word: linga
         sayAs: LING-guh
+        ipa: /lɪŋɡə/
       - word: Tiruvannamalai
         sayAs: tih-roo-vun-nah-MAH-lai
+        ipa: /t̪iɾuʋəɳɳaːməlɐj/
       - word: Pushkar
         sayAs: POOSH-kur
+        ipa: /puʂkəɾ/
       - word: Vaishnavas
         sayAs: VAISH-nuh-vuz
+        ipa: /ʋɛːʂɳəʋəz/
       - word: Shaivas
         sayAs: SHAI-vuz
+        ipa: /ʃɛːʋəz/
       - word: Shaktas
         sayAs: SHAAK-tuz
+        ipa: /ʃaːkt̪əz/
       - word: Devi
         sayAs: DAY-vee
+        ipa: /d̪eːʋiː/
       - word: Harihara
         sayAs: huh-ree-HUH-ruh
+        ipa: /ɦəɾɪɦəɾə/
       - word: Kashyapa
         sayAs: KUSH-yuh-puh
+        ipa: /kəʃjəpə/
       - word: Daksha
         sayAs: DUCK-shuh
+        ipa: /d̪əkʂə/
       - word: Aditi
         sayAs: UH-dih-tee
+        ipa: /əd̪ɪt̪iː/
       - word: Adityas
         sayAs: AH-dit-yuz
+        ipa: /aːd̪ɪt̪jəz/
       - word: Diti
         sayAs: DIH-tee
+        ipa: /d̪ɪt̪iː/
       - word: Danu
         sayAs: DUH-noo
+        ipa: /d̪ənu/
       - word: Daityas
         sayAs: DAIT-yuz
+        ipa: /d̪ɛːt̪jəz/
       - word: Danavas
         sayAs: DAH-nuh-vuz
+        ipa: /d̪aːnəʋəz/
       - word: deva
         sayAs: DAY-vuh
+        ipa: /d̪eːʋə/
       - word: devas
         sayAs: DAY-vuz
+        ipa: /d̪eːʋəz/
       - word: asura
         sayAs: uh-SOO-ruh
+        ipa: /əsuɾə/
       - word: asuras
         sayAs: uh-SOO-ruz
+        ipa: /əsuɾəz/
       - word: rishi
         sayAs: RISH-ee
+        ipa: /ɾɪʂiː/
       - word: Svarga
         sayAs: SVUR-guh
+        ipa: /sʋəɾɡə/
       - word: Amaravati
         sayAs: uh-muh-RAH-vuh-tee
+        ipa: /əməɾaːʋət̪iː/
       - word: Airavata
         sayAs: ai-RAH-vuh-tuh
+        ipa: /ɛːɾaːʋət̪ə/
       - word: vajra
         sayAs: VUJ-ruh
+        ipa: /ʋəd͡ʒɾə/
       - word: soma
         sayAs: SO-muh
+        ipa: /soːmə/
       - word: Soma
         sayAs: SO-muh
+        ipa: /soːmə/
       - word: Vritra
         sayAs: VRIT-ruh
+        ipa: /ʋɾɪt̪ɾə/
       - word: Agni
         sayAs: UG-nee
+        ipa: /əɡniː/
       - word: Surya
         sayAs: SOOR-yuh
+        ipa: /suːɾjə/
       - word: Vayu
         sayAs: VAH-yoo
+        ipa: /ʋaːju/
       - word: Chandra
         sayAs: CHUN-druh
+        ipa: /t͡ʃən̪d̪ɾə/
       - word: Varuna
         sayAs: vuh-ROO-nuh
+        ipa: /ʋəɾuɳə/
       - word: makara
         sayAs: MUH-kuh-ruh
+        ipa: /məkəɾə/
       - word: Yama
         sayAs: YUH-muh
+        ipa: /jəmə/
       - word: Kubera
         sayAs: koo-BAY-ruh
+        ipa: /kubeːɾə/
       - word: Alaka
         sayAs: UH-luh-kah
+        ipa: /ələkaː/
       - word: Gandharvas
         sayAs: gun-DHAR-vuz
+        ipa: /ɡən̪d̪ʱəɾʋəz/
       - word: Apsaras
         sayAs: UP-suh-ruz
+        ipa: /əpsəɾəz/
       - word: Yakshas
         sayAs: YUCK-shuz
+        ipa: /jəkʂəz/
       - word: Ashvins
         sayAs: USH-vinz
+        ipa: /əʃʋɪnz/
       - word: Vasus
         sayAs: VUH-sooz
+        ipa: /ʋəsuz/
       - word: koti
         sayAs: KOH-tee
+        ipa: /koːʈiː/
       - word: Brihaspati
         sayAs: brih-HUS-puh-tee
+        ipa: /bɾɪɦəspət̪iː/
       - word: Shukra
         sayAs: SHOOK-ruh
+        ipa: /ʃukɾə/
       - word: Narada
         sayAs: NAH-ruh-duh
+        ipa: /naːɾəd̪ə/
       - word: Meru
         sayAs: MAY-roo
+        ipa: /meːɾu/
       - word: Jambudvipa
         sayAs: jum-boo-DVEE-puh
+        ipa: /d͡ʒəmbud̪ʋiːpə/
       - word: yojanas
         sayAs: YOH-juh-nuz
+        ipa: /joːd͡ʒənəz/
       - word: yojana
         sayAs: YOH-juh-nuh
+        ipa: /joːd͡ʒənə/
       - word: Lokaloka
         sayAs: LOH-kah-LOH-kuh
+        ipa: /loːkaːloːkə/
       - word: Bharata
         sayAs: BHAH-ruh-tuh
+        ipa: /bʱaːɾət̪ə/
       - word: Bhuloka
         sayAs: BHOO-loh-kuh
+        ipa: /bʱuːloːkə/
       - word: Bhuvarloka
         sayAs: bhoo-VAR-loh-kuh
+        ipa: /bʱuʋəɾloːkə/
       - word: Svarloka
         sayAs: SVAR-loh-kuh
+        ipa: /sʋəɾloːkə/
       - word: Dhruva
         sayAs: DHROO-vuh
+        ipa: /d̪ʱɾuʋə/
       - word: Maharloka
         sayAs: muh-HAR-loh-kuh
+        ipa: /məɦəɾloːkə/
       - word: Janaloka
         sayAs: JUH-nuh-loh-kuh
+        ipa: /d͡ʒənəloːkə/
       - word: Tapoloka
         sayAs: TUH-poh-loh-kuh
+        ipa: /t̪əpoːloːkə/
       - word: Patalas
         sayAs: PAH-tuh-luz
+        ipa: /paːt̪aːləz/
       - word: Patala
         sayAs: PAH-tuh-luh
+        ipa: /paːt̪aːlə/
       - word: Atala
         sayAs: UH-tuh-luh
+        ipa: /ət̪ələ/
       - word: Vitala
         sayAs: VIH-tuh-luh
+        ipa: /ʋɪt̪ələ/
       - word: Nitala
         sayAs: NIH-tuh-luh
+        ipa: /nɪt̪ələ/
       - word: Gabhastimat
         sayAs: guh-BHUS-tih-mut
+        ipa: /ɡəbʱəst̪ɪmət̪/
       - word: Mahatala
         sayAs: muh-HAH-tuh-luh
+        ipa: /məɦaːt̪ələ/
       - word: Sutala
         sayAs: SOO-tuh-luh
+        ipa: /sut̪ələ/
       - word: Nagas
         sayAs: NAH-guz
+        ipa: /naːɡəz/
       - word: Bali
         sayAs: BUH-lee
+        ipa: /bəlɪ/
       - word: Narakas
         sayAs: NUH-ruh-kuz
+        ipa: /nəɾəkəz/
       - word: Bhima
         sayAs: BHEEM
+        ipa: /bʱiːmə/
       - word: Draupadi
         sayAs: DROW-puh-dee
+        ipa: /d̪ɾɔːpəd̪iː/
       - word: Satya
         sayAs: SUT-yuh
+        ipa: /sət̪jə/
       - word: Parikshit
         sayAs: puh-RIKSH-it
+        ipa: /pəɾiːkʂɪt̪/
       - word: Vyasa
         sayAs: VYAH-suh
+        ipa: /ʋjaːsə/
       - word: Keshava
         sayAs: KAY-shuh-vuh
+        ipa: /keːʃəʋə/
       - word: Markandeya
         sayAs: mar-KUN-day-yuh
+        ipa: /maːɾkəɳɖeːjə/
       - word: Shambhala
         sayAs: SHUM-bhuh-luh
+        ipa: /ʃəmbʱələ/
       - word: Kalki
         sayAs: KUL-kee
+        ipa: /kəlkiː/
+      # Original-language sounds on ElevenLabs (2026-10-15): the big names get an /IPA/
+      # form only; sayAs is the word itself, so the OpenAI draft voice is unchanged.
+      - word: Ramayana
+        sayAs: Ramayana
+        ipa: /ɾaːmaːjəɳə/
+      - word: Vishnu
+        sayAs: Vishnu
+        ipa: /ʋɪʂɳu/
+      - word: Shiva
+        sayAs: Shiva
+        ipa: /ʃɪʋə/
+      - word: Brahma
+        sayAs: Brahma
+        ipa: /bɾəɦmaː/
+      - word: Indra
+        sayAs: Indra
+        ipa: /ɪn̪d̪ɾə/
+      - word: Hanuman
+        sayAs: Hanuman
+        ipa: /ɦənumaːn/
+      - word: Krishna
+        sayAs: Krishna
+        ipa: /kɾɪʂɳə/
+      - word: Ganesha
+        sayAs: Ganesha
+        ipa: /ɡəɳeːʃə/
+      - word: Rama
+        sayAs: Rama
+        ipa: /ɾaːmə/
+      - word: Sita
+        sayAs: Sita
+        ipa: /siːt̪aː/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
