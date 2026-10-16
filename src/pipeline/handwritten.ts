@@ -24,6 +24,7 @@ import { GateFinding, GateReport } from '../qa/gate';
 import { renderResultSchema, renderScript } from '../render/assemble';
 import { musicFor } from '../render/musicFor';
 import { Run } from '../run/store';
+import { withOutro } from '../script/outro';
 import { measure } from '../script/style';
 import { Script, WORDS_PER_SECOND, fullText, scriptSchema } from '../script/write';
 import { budgetFor, targetFor } from './budget';
@@ -99,6 +100,13 @@ export const fillBlank = (
 };
 
 /**
+ * THE OUTRO IS ON BY DEFAULT (owner, 2026-10-16): a hand-written script ends on
+ * the channel's outro unless somebody unticks it. A source-only format has none.
+ */
+export const withDefaultOutro = (script: Script, persona: Persona, format: EpisodeFormat, topic: string): Script =>
+  format.sourceOnly ? script : withOutro(script, persona, format.kind === 'short' ? 'short' : 'long', topic);
+
+/**
  * Create the run's artifacts. Called once, when the blank is made. With a
  * prepared script (a content map item that has one), the blank opens filled in.
  */
@@ -107,8 +115,9 @@ export const startHandwritten = (
   prepared: { text: string; title: string; description: string } | null = null,
 ): Script => {
   const persona = loadPersona(run.manifest.personaId);
-  const blank = blankScript(persona, formatForRun(run), run.manifest.topic);
-  const script = prepared ? fillBlank(blank, prepared.text, prepared) : blank;
+  const format = formatForRun(run);
+  const blank = blankScript(persona, format, run.manifest.topic);
+  const script = withDefaultOutro(prepared ? fillBlank(blank, prepared.text, prepared) : blank, persona, format, run.manifest.topic);
   const none = 'none: written by hand';
   run.writeArtifact('corpus', { sources: [], rejected: [] });
   run.writeArtifact('claims', { claims: [], unsupported: [] });

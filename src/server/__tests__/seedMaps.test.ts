@@ -11,6 +11,7 @@ import { runs } from '../catalog';
 import { loadAllMaps, loadMaps, viewOf } from '../maps';
 import { seedMapImages, seedPreparedRuns } from '../seedMaps';
 import { suppliedArt } from '../../art/supplied';
+import { currentOutro, setOutro } from '../../script/outro';
 
 describe('seeding runs from a map', () => {
   const env = { ...process.env };
@@ -75,6 +76,22 @@ describe('seeding runs from a map', () => {
     seedPreparedRuns();
     expect(Run.open(a!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).not.toBe('Old text.');
     expect(Run.open(b!.runId).readArtifact('script', scriptSchema).beats[0]!.turns[0]!.text).toBe('Old text.');
+  });
+
+  it('THE OUTRO IS ON BY DEFAULT, and one somebody removed stays removed', () => {
+    const [a, b] = seedPreparedRuns();
+    expect(currentOutro(Run.open(a!.runId).readArtifact('script', scriptSchema))).not.toBeNull();
+
+    // Seeded before the default: no outro and nobody chose. Removed on purpose: stays off.
+    for (const id of [a!.runId, b!.runId]) {
+      const run = Run.open(id);
+      run.writeArtifact('script', setOutro(run.readArtifact('script', scriptSchema), null));
+    }
+    Run.open(b!.runId).journal({ stage: 'script', event: 'outro removed by anant' });
+
+    seedPreparedRuns();
+    expect(currentOutro(Run.open(a!.runId).readArtifact('script', scriptSchema))).not.toBeNull();
+    expect(currentOutro(Run.open(b!.runId).readArtifact('script', scriptSchema))).toBeNull();
   });
 
   it('PUTS A MAP SERIES COVER IN PLACE, and never over one somebody chose', () => {

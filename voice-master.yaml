@@ -1250,6 +1250,367 @@ channels:
       - word: Mabinogion
         sayAs: mab-ih-NOG-yon
         ipa: /mabɪˈnɔɡjɔn/
+      # Original-language sounds (2026-10-16), Mythic shorts 1-63 and Norse 1.
+      - word: Izanagi
+        sayAs: ee-zah-NAH-gee
+        ipa: /izanaɡi/
+      - word: Izanami
+        sayAs: ee-zah-NAH-mee
+        ipa: /izanami/
+      - word: Yomi
+        sayAs: YOH-mee
+        ipa: /jomi/
+      - word: Amaterasu
+        sayAs: ah-mah-teh-RAH-soo
+        ipa: /amateɾasu/
+      - word: Susanoo
+        sayAs: soo-sah-NOH-oh
+        ipa: /susanoː/
+      - word: Uzume
+        sayAs: oo-ZOO-meh
+        ipa: /uzume/
+      - word: Izumo
+        sayAs: EE-zoo-moh
+        ipa: /izumo/
+      - word: Orochi
+        sayAs: oh-ROH-chee
+        ipa: /oɾot͡ɕi/
+      - word: Kushinada
+        sayAs: koo-shee-NAH-dah
+        ipa: /kuɕinada/
+      - word: Oki
+        sayAs: OH-kee
+        ipa: /oki/
+      - word: Inaba
+        sayAs: ee-NAH-bah
+        ipa: /inaba/
+      - word: Urashima
+        sayAs: oo-RAH-shee-mah
+        ipa: /uɾaɕima/
+      - word: Taro
+        sayAs: TAH-roh
+        ipa: /taɾoː/
+      - word: Momotaro
+        sayAs: moh-moh-TAH-roh
+        ipa: /momotaɾoː/
+      - word: Onigashima
+        sayAs: oh-nee-GAH-shee-mah
+        ipa: /oniɡaɕima/
+      - word: Pangu
+        sayAs: PAHN-goo
+        ipa: /pʰanku/
+      - word: Nüwa
+        sayAs: NYOO-wah
+        ipa: /nyˈwa/
+      - word: Gonggong
+        sayAs: GONG-gong
+        ipa: /kʊŋkʊŋ/
+      - word: Yi
+        sayAs: yee
+        ipa: /iː/
+      - word: Yao
+        sayAs: yow
+        ipa: /jɑʊ/
+      - word: Chang'e
+        sayAs: CHAHNG-uh
+        ipa: /ʈʂʰɑŋɤ/
+      - word: Kunlun
+        sayAs: KOON-loon
+        ipa: /kʰwənlwən/
+      - word: Wukong
+        sayAs: woo-KONG
+        ipa: /uːkʊŋ/
+      - word: Vasilisa
+        sayAs: vah-see-LEE-sah
+        ipa: /vəsʲɪˈlʲisə/
+      - word: Baba Yaga
+        sayAs: BAH-bah yah-GAH
+        ipa: /ˈbabə jɪˈɡa/
+      - word: Koschei
+        sayAs: kuh-SHAY
+        ipa: /kɐˈɕːej/
+      - word: Marya
+        sayAs: MAR-yah
+        ipa: /ˈmarʲjə/
+      - word: Ivan
+        sayAs: ee-VAHN
+        ipa: /ɪˈvan/
+      - word: Elena
+        sayAs: yeh-LYEH-nah
+        ipa: /jɪˈlʲenə/
+      - word: Sadko
+        sayAs: saht-KOH
+        ipa: /sɐtˈko/
+      - word: Novgorod
+        sayAs: NOV-guh-rut
+        ipa: /ˈnovɡərət/
+      - word: Ilya
+        sayAs: eel-YAH
+        ipa: /ɪˈlʲja/
+      - word: Murom
+        sayAs: MOO-rum
+        ipa: /ˈmurəm/
+      - word: Tecuciztecatl
+        sayAs: teh-kwees-TEH-kahtl
+        ipa: /tekʷsisˈtekat͡ɬ/
+      - word: Nanahuatzin
+        sayAs: nah-nah-WAHT-seen
+        ipa: /nanaˈwat͡sin/
+      - word: Quetzalcoatl
+        sayAs: ket-sahl-KOH-ahtl
+        ipa: /ket͡salˈkoaːt͡ɬ/
+      - word: Tollan
+        sayAs: TOHL-lahn
+        ipa: /ˈtolːan/
+      - word: Tezcatlipoca
+        sayAs: tes-kah-tlee-POH-kah
+        ipa: /teskatɬiˈpoka/
+      - word: Coatepec
+        sayAs: koh-ah-TEH-pek
+        ipa: /koaˈtepek/
+      - word: Coatlicue
+        sayAs: koh-ah-TLEE-kweh
+        ipa: /koaˈt͡ɬikʷe/
+      - word: Coyolxauhqui
+        sayAs: koh-yohl-SHAU-kee
+        ipa: /kojolˈʃawki/
+      - word: Huitzilopochtli
+        sayAs: weet-see-loh-POHCH-tlee
+        ipa: /wit͡siloˈpot͡ʃt͡ɬi/
+      - word: Anansi
+        sayAs: ah-NAHN-see
+        ipa: /aˈnansi/
+      - word: Nyame
+        sayAs: NYAH-meh
+        ipa: /ˈɲame/
+      - word: Onini
+        sayAs: oh-NEE-nee
+        ipa: /oˈnini/
+      - word: Osebo
+        sayAs: oh-SEH-boh
+        ipa: /oˈsɛbɔ/
+      - word: Mmoboro
+        sayAs: m-moh-BOH-roh
+        ipa: /m̩mɔˈbɔrɔ/
+      - word: Mmoatia
+        sayAs: m-moh-AH-tee-ah
+        ipa: /m̩mɔˈatia/
+      - word: Ntikuma
+        sayAs: n-tee-KOO-mah
+        ipa: /n̩tiˈkuma/
+      - word: Nimue
+        sayAs: NIM-oo-ay
+        ipa: /ˈnɪmueɪ/
+      - word: Pellinore
+        sayAs: PEL-in-or
+        ipa: /ˈpɛlɪnɔːr/
+      - word: Carbonek
+        sayAs: KAR-buh-nek
+        ipa: /ˈkɑːrbənɛk/
+      - word: Iseult
+        sayAs: ih-SOOLT
+        ipa: /ɪˈsuːlt/
+      - word: Uther
+        sayAs: YOO-ther
+        ipa: /ˈjuːθər/
+      - word: Erysichthon
+        sayAs: err-ih-SIK-thon
+        ipa: /ɛrɪˈsɪkθɒn/
+      - word: Ceyx
+        sayAs: SEE-iks
+        ipa: /ˈsiːɪks/
+      - word: Alcyone
+        sayAs: al-SY-oh-nee
+        ipa: /ælˈsaɪəni/
+      - word: Silenus
+        sayAs: sy-LEE-nus
+        ipa: /saɪˈliːnəs/
+      - word: Pactolus
+        sayAs: pak-TOH-lus
+        ipa: /pækˈtoʊləs/
+      - word: Phrygia
+        sayAs: FRIJ-ee-uh
+        ipa: /ˈfrɪdʒiə/
+      - word: Baucis
+        sayAs: BAW-sis
+        ipa: /ˈbɔːsɪs/
+      - word: Philemon
+        sayAs: fih-LEE-mun
+        ipa: /fɪˈliːmən/
+      - word: Phaethon
+        sayAs: FAY-uh-thon
+        ipa: /ˈfeɪəθɒn/
+      - word: Paphos
+        sayAs: PAF-os
+        ipa: /ˈpæfɒs/
+      - word: Utnapishtim
+        sayAs: oot-nah-PISH-teem
+        ipa: /utnaˈpiʃtim/
+      - word: Inanna
+        sayAs: ee-NAHN-nah
+        ipa: /iˈnanːa/
+      - word: Ninshubur
+        sayAs: nin-SHOO-boor
+        ipa: /ninˈʃubur/
+      - word: Dumuzi
+        sayAs: doo-MOO-zee
+        ipa: /duˈmuzi/
+      - word: Apsu
+        sayAs: AHP-soo
+        ipa: /ˈapsuː/
+      - word: Tiamat
+        sayAs: TEE-ah-maht
+        ipa: /ˈtiʔamat/
+      - word: Kingu
+        sayAs: KIN-goo
+        ipa: /ˈkinɡu/
+      - word: Marduk
+        sayAs: MAR-dook
+        ipa: /ˈmarduk/
+      - word: Adapa
+        sayAs: AH-dah-pah
+        ipa: /ˈadapa/
+      - word: Eridu
+        sayAs: EH-ree-doo
+        ipa: /ˈeridu/
+      - word: Ea
+        sayAs: EH-ah
+        ipa: /ˈeʔa/
+      - word: Anu
+        sayAs: AH-noo
+        ipa: /ˈanu/
+      - word: Etana
+        sayAs: eh-TAH-nah
+        ipa: /eˈtaːna/
+      - word: Shamash
+        sayAs: SHAH-mahsh
+        ipa: /ˈʃamaʃ/
+      - word: Sekhmet
+        sayAs: SEK-met
+        ipa: /ˈsɛkmɛt/
+      - word: Duat
+        sayAs: DOO-aht
+        ipa: /ˈduːɑːt/
+      - word: Apep
+        sayAs: AH-pep
+        ipa: /ˈɑːpɛp/
+      - word: Ani
+        sayAs: AH-nee
+        ipa: /ˈɑːni/
+      - word: Tír na nÓg
+        sayAs: teer nuh NOHG
+        ipa: /tʲiːɾʲ n̪ˠə n̪ˠoːɡ/
+      - word: Fionnuala
+        sayAs: fin-NOO-lah
+        ipa: /fʲɪˈn̪ˠuəlˠə/
+      - word: Lir
+        sayAs: leer
+        ipa: /lʲɪɾʲ/
+      - word: Aoife
+        sayAs: EE-fuh
+        ipa: /ˈiːfʲə/
+      - word: Derravaragh
+        sayAs: derr-uh-VARR-uh
+        ipa: /ˌdɛrəˈværə/
+      - word: Fionn
+        sayAs: fyun
+        ipa: /fʲʊn̪ˠ/
+      - word: Finnegas
+        sayAs: FIN-uh-gus
+        ipa: /ˈfʲɪn̪ˠəɡəsˠ/
+      - word: Demne
+        sayAs: DEV-nyuh
+        ipa: /ˈdʲɛvʲnʲə/
+      - word: Oisín
+        sayAs: uh-SHEEN
+        ipa: /ˈɔʃiːnʲ/
+      - word: Fianna
+        sayAs: FEE-uh-nuh
+        ipa: /ˈfʲiən̪ˠə/
+      - word: Niamh
+        sayAs: NEE-uv
+        ipa: /n̠ʲiəw/
+      - word: Deirdre
+        sayAs: DEER-druh
+        ipa: /ˈdʲɛɾʲdʲɾʲə/
+      - word: Naoise
+        sayAs: NEE-shuh
+        ipa: /ˈn̪ˠiːʃə/
+      - word: Pwyll
+        sayAs: POO-ihlh
+        ipa: /pʊɨ̯ɬ/
+      - word: Dyfed
+        sayAs: DUV-ed
+        ipa: /ˈdəvɛd/
+      - word: Arawn
+        sayAs: AR-own
+        ipa: /ˈarau̯n/
+      - word: Annwn
+        sayAs: AN-noon
+        ipa: /ˈanʊn/
+      - word: Hafgan
+        sayAs: HAV-gan
+        ipa: /ˈhavɡan/
+      - word: Väinämöinen
+        sayAs: VAI-na-moi-nen
+        ipa: /ˈʋæi̯næˌmøi̯nen/
+      - word: Joukahainen
+        sayAs: YOH-kah-hai-nen
+        ipa: /ˈjou̯kɑˌhɑi̯nen/
+      - word: Aino
+        sayAs: EYE-noh
+        ipa: /ˈɑi̯no/
+      - word: Shahnameh
+        sayAs: shah-nah-MEH
+        ipa: /ʃɒːhnɒːˈme/
+      - word: Rostam
+        sayAs: ROS-tahm
+        ipa: /rosˈtæm/
+      - word: Rakhsh
+        sayAs: rakhsh
+        ipa: /ræxʃ/
+      - word: Samangan
+        sayAs: sah-mahn-GAHN
+        ipa: /sæmænˈɡɒːn/
+      - word: Tahmineh
+        sayAs: tah-mee-NEH
+        ipa: /tæhmiːˈne/
+      - word: Sohrab
+        sayAs: soh-RAHB
+        ipa: /sohˈrɒːb/
+      - word: Zahhak
+        sayAs: zah-HAHK
+        ipa: /zæhˈhɒːk/
+      - word: Titicaca
+        sayAs: tee-tee-KAH-kah
+        ipa: /titiˈkaka/
+      - word: Cusco
+        sayAs: KOOS-koh
+        ipa: /ˈkusko/
+      - word: Manco
+        sayAs: MAHN-koh
+        ipa: /ˈmanko/
+      - word: Cápac
+        sayAs: KAH-pahk
+        ipa: /ˈqʰapaq/
+      - word: Mama Ocllo
+        sayAs: MAH-mah OHK-yoh
+        ipa: /ˈmama ˈoqʎo/
+      - word: Viracocha
+        sayAs: vee-rah-KOH-chah
+        ipa: /wiɾaˈqut͡ʃa/
+      - word: Unkulunkulu
+        sayAs: oon-koo-loon-KOO-loo
+        ipa: /unkuluˈŋkuːlu/
+      - word: Kaggen
+        sayAs: KAH-gen
+        ipa: /ˈkaɡən/
+      - word: Popol Vuh
+        sayAs: POH-pohl VOO
+        ipa: /ˈpopol ˈwuʔ/
+      - word: K'iche'
+        sayAs: kee-CHEH
+        ipa: /kʼiˈt͡ʃeʔ/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

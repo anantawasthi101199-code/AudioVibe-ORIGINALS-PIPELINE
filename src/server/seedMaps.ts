@@ -24,7 +24,7 @@
 import { loadPersona } from '../canon/load';
 import { recordMade } from '../catalogue/covered';
 import { formatForRun } from '../formats/forRun';
-import { blankScript, fillBlank, handwrittenGate, startHandwritten } from '../pipeline/handwritten';
+import { blankScript, fillBlank, handwrittenGate, startHandwritten, withDefaultOutro } from '../pipeline/handwritten';
 import { Run } from '../run/store';
 import { currentOutro, setOutro } from '../script/outro';
 import { scriptSchema } from '../script/write';
@@ -188,8 +188,13 @@ const refreshFromFile = (
     if (!untouched) return;
     const before = run.readArtifact('script', scriptSchema);
     const prepared = preparedScriptFor(channelId, key)!;
-    const filled = fillBlank(blankScript(loadPersona(channelId), formatForRun(run), run.manifest.topic), prepared.text, prepared);
-    const after = setOutro(filled, currentOutro(before));
+    const persona = loadPersona(channelId);
+    const format = formatForRun(run);
+    const filled = fillBlank(blankScript(persona, format, run.manifest.topic), prepared.text, prepared);
+    // The outro somebody chose, or none they chose, is kept; one nobody has
+    // chosen yet takes the default (on), so runs seeded before it get it too.
+    const chosen = run.readJournal().some((e) => e.stage === 'script' && /^outro /.test(e.event));
+    const after = chosen ? setOutro(filled, currentOutro(before)) : withDefaultOutro(filled, persona, format, run.manifest.topic);
     if (JSON.stringify(after) === JSON.stringify(before)) return;
     run.writeArtifact('script', after);
     run.writeArtifact('qa', handwrittenGate(run, after));
