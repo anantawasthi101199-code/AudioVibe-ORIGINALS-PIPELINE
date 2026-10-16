@@ -50,6 +50,7 @@ import { currentOutro, outroOptions, setOutro } from '../script/outro';
 import { cutStories } from '../pipeline/anthology';
 import { regate } from '../qa/regate';
 import { Run, runLabel, stopRequests } from '../run/store';
+import { prepareRevoice, replacedAudio } from '../publish/revoice';
 import { readArchive } from '../archive/record';
 import { COUNTRIES, MAX_COUNTRIES, countriesByName } from '../news/countries';
 import { blankScript, fillBlank, startHandwritten } from '../pipeline/handwritten';
@@ -707,6 +708,39 @@ export const regenerateRun = (id: string, who: string | null = null, body: unkno
   run.noteRegeneration();
   run.journal({ stage: 'render', event: `regenerating as a new take${who ? `, asked by ${who}` : ''}` });
 
+  return runLaneJob(run, who);
+};
+
+/**
+ * A PUBLISHED piece takes the voice another run already made of the same
+ * script, and replaces its live audio when it is next published (owner,
+ * 2026-10-16: Hindu episode 1 re-voiced with the new pronunciations in a copy,
+ * "just replace the audio, keep everything same"). Nothing is paid for twice:
+ * the copy's voiced parts move across with their keys, so voicing the
+ * published run reuses every one. The copy is then discarded. Title,
+ * description, picture and series are the published run's own and stay.
+ */
+export const adoptVoice = (id: string, body: unknown, who: string | null = null) => {
+  const run = openRun(id);
+  const { from } = z.object({ from: z.string().min(1) }).parse(body ?? {});
+  const source = openRun(from);
+  if (source.id === run.id) throw new HttpError(400, 'a run cannot take its own voice');
+  if (jobs.isRunning(jobs.forRun(run.id)?.id ?? '') || jobs.isRunning(jobs.forRun(source.id)?.id ?? '')) {
+    throw new HttpError(409, 'one of the two runs is working; try when it stops');
+  }
+  if (!run.isComplete('publish') || replacedAudio(run)) throw new HttpError(400, 'only a published run can take another voice');
+  if (!source.isComplete('render') || source.manifest.abandoned) throw new HttpError(400, `"${from}" has no finished voice`);
+  const said = (r: Run) => JSON.stringify(r.readArtifact('script', scriptSchema).beats.map((b) => b.turns.map((t) => [t.speaker, t.text])));
+  if (said(run) !== said(source)) throw new HttpError(400, 'the two scripts are not word for word the same, so the voice would not match');
+
+  prepareRevoice(run, { tag: 'revoice', engine: source.manifest.voiceEngine === 'openai' ? 'openai' : 'elevenlabs', who });
+  const to = path.join(run.dir, 'media');
+  fs.mkdirSync(to, { recursive: true });
+  for (const name of fs.readdirSync(path.join(source.dir, 'media'))) {
+    if (/^\d{2}-.+\.mp3(\.key)?$/.test(name)) fs.copyFileSync(path.join(source.dir, 'media', name), path.join(to, name));
+  }
+  run.journal({ stage: 'render', event: `took the voice made in ${source.id}${who ? `, asked by ${who}` : ''}` });
+  source.abandon(`its voice went to ${run.id}`);
   return runLaneJob(run, who);
 };
 

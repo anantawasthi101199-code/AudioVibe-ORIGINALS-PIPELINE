@@ -70,6 +70,7 @@ import {
   approveRun,
   resumeRun,
   regenerateRun,
+  adoptVoice,
   stopRun,
   audioDownloadFile,
   audioDownloadName,
@@ -706,6 +707,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/regenerate' && req.method === 'POST') {
         return send(res, 202, regenerateRun(id ?? '', user, await readBody(req)));
+      }
+      if (pathname === '/api/run/adopt-voice' && req.method === 'POST') {
+        return send(res, 202, adoptVoice(id ?? '', await readBody(req), user));
       }
       if (pathname === '/api/run/take' && req.method === 'POST') {
         const { take } = ((await readBody(req)) ?? {}) as { take?: number };

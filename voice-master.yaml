@@ -324,6 +324,382 @@ channels:
       - word: Benioff
         sayAs: BEN-ee-off
         ipa: /ˈbɛnioʊf/
+      # Original-language sounds (2026-10-16), every map script so far.
+      - word: Gujarat
+        sayAs: guj-uh-RAHT
+        ipa: /ɡʊd͡ʒəɾaːt/
+      - word: Gujarati
+        sayAs: guj-uh-RAH-tee
+        ipa: /ɡʊd͡ʒəɾaːt̪iː/
+      - word: Ratanji
+        sayAs: ruh-TUN-jee
+        ipa: /ɾət̪ənd͡ʒiː/
+      - word: Navajbai
+        sayAs: nuh-VAHJ-bye
+        ipa: /nəʋaːd͡ʒbaːiː/
+      - word: Ratan
+        sayAs: RUH-tun
+        ipa: /ɾət̪ən/
+      - word: Navsari
+        sayAs: nuv-SAH-ree
+        ipa: /nəʋsaːɾiː/
+      - word: Kurla
+        sayAs: KOOR-lah
+        ipa: /kʊɾlaː/
+      - word: Swadeshi
+        sayAs: swuh-DAY-shee
+        ipa: /sʋəd̪eːʃiː/
+      - word: Svadeshi
+        sayAs: swuh-DAY-shee
+        ipa: /sʋəd̪eːʃiː/
+      - word: Sakchi
+        sayAs: SUCK-chee
+        ipa: /saːkt͡ʃiː/
+      - word: Meherbai
+        sayAs: MEH-her-bye
+        ipa: /meɦəɾbaːiː/
+      - word: Nowroji
+        sayAs: now-ROH-jee
+        ipa: /nəʊɾoːd͡ʒiː/
+      - word: Saklatwala
+        sayAs: suk-lut-WAH-lah
+        ipa: /səklətʋaːlaː/
+      - word: Cyrus Mistry
+        sayAs: SY-rus MIS-tree
+        ipa: /saɪɾəs mɪst̪ɾiː/
+      - word: Mistry
+        sayAs: MIS-tree
+        ipa: /mɪst̪ɾiː/
+      - word: Chandrasekaran
+        sayAs: chun-druh-SAY-kuh-run
+        ipa: /t͡ʃən̪d̪ɾəseːkəɾən/
+      - word: Dhirajlal
+        sayAs: dhee-RAHJ-lahl
+        ipa: /d̪ʱiːɾaːd͡ʒlaːl/
+      - word: Dalaya
+        sayAs: duh-LAH-yah
+        ipa: /d̪əlaːjaː/
+      - word: Kerala
+        sayAs: KAY-ruh-luh
+        ipa: /keːɾələ/
+      - word: Karnataka
+        sayAs: kur-NAH-tuh-kuh
+        ipa: /kəɾnaːʈəkə/
+      - word: Mysore
+        sayAs: my-SORE
+        ipa: /maɪsuːɾ/
+      - word: Kanpur
+        sayAs: KAHN-poor
+        ipa: /kaːnpʊɾ/
+      - word: Patni
+        sayAs: PUT-nee
+        ipa: /pəʈniː/
+      - word: Dinesh
+        sayAs: dih-NAYSH
+        ipa: /d̪ɪneːʃ/
+      - word: Raghavan
+        sayAs: RAH-guh-vun
+        ipa: /ɾaːɡʱəʋən/
+      - word: Murthys
+        sayAs: MOOR-teez
+        ipa: /muːɾt̪iːz/
+      - word: Vishal Sikka
+        sayAs: vih-SHAHL SIK-kah
+        ipa: /ʋɪʃaːl sɪkkaː/
+      - word: Salil Parekh
+        sayAs: SUH-lil PAH-rekh
+        ipa: /səlɪl paːɾəkʰ/
+      - word: Parekh
+        sayAs: PAH-rekh
+        ipa: /paːɾəkʰ/
+      - word: Aadhaar
+        sayAs: AH-dhaar
+        ipa: /aːd̪ʱaːɾ/
+      - word: Akshata
+        sayAs: UK-shuh-tah
+        ipa: /əkʂət̪aː/
+      - word: Wipro
+        sayAs: WIP-roh
+        ipa: /ʋɪpɾoː/
+      - word: Chimanlal
+        sayAs: CHIM-un-lahl
+        ipa: /t͡ʃɪmənlaːl/
+      - word: Suryakant
+        sayAs: SOOR-yuh-kahnt
+        ipa: /suːɾjəkaːn̪t̪/
+      - word: Arvind
+        sayAs: UR-vind
+        ipa: /əɾʋɪn̪d̪/
+      - word: Gaiwadi
+        sayAs: guy-WAH-dee
+        ipa: /ɡaɪʋaːɽiː/
+      - word: Laxman
+        sayAs: LUCK-shmun
+        ipa: /ləkʂmən/
+      - word: Pongal
+        sayAs: PONG-gul
+        ipa: /poŋɡəl/
+      - word: Aditya Birla
+        sayAs: AH-dit-yuh BIR-lah
+        ipa: /aːd̪ɪt̪jə bɪɾlaː/
+      - word: Aditya Puri
+        sayAs: AH-dit-yuh POO-ree
+        ipa: /aːd̪ɪt̪jə puːɾiː/
+      - word: Aditya
+        sayAs: AH-dit-yuh
+        ipa: /aːd̪ɪt̪jə/
+      - word: Zomato
+        sayAs: zoh-MAH-toh
+        ipa: /zoːmaːʈoː/
+      - word: Deepinder Goyal
+        sayAs: DEE-pin-der GOH-yul
+        ipa: /d̪iːpɪn̪d̪əɾ ɡoːjəl/
+      - word: Paytm
+        sayAs: PAY-tee-em
+        ipa: /peːʈiːem/
+      - word: Vijay Shekhar Sharma
+        sayAs: VIJ-ay SHAY-khur SHUR-mah
+        ipa: /ʋɪd͡ʒeː ʃeːkʰəɾ ʃəɾmaː/
+      - word: Aligarh
+        sayAs: UL-ee-gurh
+        ipa: /əliːɡəɽʱ/
+      - word: Falguni Nayar
+        sayAs: FAHL-goo-nee NAI-yur
+        ipa: /pʰaːlɡʊniː naːjəɾ/
+      - word: Kotak Mahindra
+        sayAs: KOH-tuk muh-HIN-druh
+        ipa: /koːʈək məɦɪn̪d̪ɾaː/
+      - word: Nykaa
+        sayAs: NIGH-kah
+        ipa: /naɪkaː/
+      - word: Amalner
+        sayAs: UM-ul-nair
+        ipa: /əməlneːɾ/
+      - word: Azim Premji
+        sayAs: uh-ZEEM PRAYM-jee
+        ipa: /əziːm pɾeːmd͡ʒiː/
+      - word: Premji
+        sayAs: PRAYM-jee
+        ipa: /pɾeːmd͡ʒiː/
+      - word: Siddhartha
+        sayAs: sid-DHAR-tuh
+        ipa: /sɪd̪d̪ʱaːɾt̪ʰə/
+      - word: Amancio Ortega
+        sayAs: ah-MAHN-thee-oh or-TAY-gah
+        ipa: /aˈmanθjo oɾˈteɣa/
+      - word: Ortega
+        sayAs: or-TAY-gah
+        ipa: /oɾˈteɣa/
+      - word: Coruña
+        sayAs: koh-ROON-yah
+        ipa: /koˈɾuɲa/
+      - word: Rosalía Mera
+        sayAs: roh-sah-LEE-ah MAY-rah
+        ipa: /rosaˈli.a ˈmeɾa/
+      - word: Inditex
+        sayAs: IN-dee-tex
+        ipa: /indiˈteks/
+      - word: Massimo Dutti
+        sayAs: MAHS-see-moh DOOT-tee
+        ipa: /ˈmassimo ˈdutti/
+      - word: Bershka
+        sayAs: BAIRSH-kah
+        ipa: /ˈbeɾʃka/
+      - word: Enzo
+        sayAs: EN-tsoh
+        ipa: /ˈɛntso/
+      - word: Modena
+        sayAs: MOH-deh-nah
+        ipa: /ˈmɔːdena/
+      - word: Maranello
+        sayAs: mah-rah-NEL-loh
+        ipa: /maraˈnɛllo/
+      - word: Scuderia
+        sayAs: skoo-deh-REE-ah
+        ipa: /skudeˈriːa/
+      - word: Il Giornale
+        sayAs: eel jor-NAH-leh
+        ipa: /il dʒorˈnaːle/
+      - word: Pietro Ferrero
+        sayAs: PYEH-troh fer-REH-roh
+        ipa: /ˈpjɛːtro ferˈrɛːro/
+      - word: Ferrero
+        sayAs: fer-REH-roh
+        ipa: /ferˈrɛːro/
+      - word: Giandujot
+        sayAs: jahn-doo-YOH
+        ipa: /dʒanduˈjɔt/
+      - word: Michele
+        sayAs: mee-KEH-leh
+        ipa: /miˈkɛːle/
+      - word: Giovanni
+        sayAs: joh-VAHN-nee
+        ipa: /dʒoˈvanni/
+      - word: Rocher
+        sayAs: roh-SHAY
+        ipa: /ʁɔʃe/
+      - word: Luxottica
+        sayAs: loo-KSOT-tee-kah
+        ipa: /lukˈsɔttika/
+      - word: Nestlé
+        sayAs: NES-lay
+        ipa: /nɛsle/
+      - word: Henri
+        sayAs: ahn-REE
+        ipa: /ɑ̃ʁi/
+      - word: Vevey
+        sayAs: veh-VAY
+        ipa: /vəvɛ/
+      - word: Farine Lactée
+        sayAs: fah-REEN lahk-TAY
+        ipa: /faʁin lakte/
+      - word: Mandonnaud
+        sayAs: mahn-doh-NOH
+        ipa: /mɑ̃dɔno/
+      - word: Limoges
+        sayAs: lee-MOHZH
+        ipa: /limɔʒ/
+      - word: Vuitton
+        sayAs: vwee-TOHN
+        ipa: /vɥitɔ̃/
+      - word: Dior
+        sayAs: dee-OR
+        ipa: /djɔʁ/
+      - word: Lille
+        sayAs: leel
+        ipa: /lil/
+      - word: Michel
+        sayAs: mee-SHEL
+        ipa: /miʃɛl/
+      - word: HAns RIegel BOnn
+        sayAs: HAHNS REE-gel BON
+        ipa: /ˈhans ˈʁiːɡl̩ ˈbɔn/
+      - word: Gertrud
+        sayAs: GAIR-troot
+        ipa: /ˈɡɛʁtʁuːt/
+      - word: Wilsdorf
+        sayAs: VILS-dorf
+        ipa: /ˈvɪlsdɔʁf/
+      - word: Albrecht
+        sayAs: AHL-brekht
+        ipa: /ˈalbʁɛçt/
+      - word: Aldi Nord
+        sayAs: AHL-dee NORT
+        ipa: /ˈaldi ˈnɔʁt/
+      - word: Aldi Süd
+        sayAs: AHL-dee ZOOT
+        ipa: /ˈaldi ˈzyːt/
+      - word: Klaus Märtens
+        sayAs: KLOWS MAIR-tens
+        ipa: /ˈklaʊs ˈmɛʁtn̩s/
+      - word: Märtens
+        sayAs: MAIR-tens
+        ipa: /ˈmɛʁtn̩s/
+      - word: Essen
+        sayAs: ES-sen
+        ipa: /ˈɛsn̩/
+      - word: Eberhard
+        sayAs: AY-ber-hart
+        ipa: /ˈeːbɐhaʁt/
+      - word: Adriaan Heineken
+        sayAs: AH-dree-ahn HAY-neh-ken
+        ipa: /ˈaːdriaːn ˈɦɛinəkə(n)/
+      - word: Heineken
+        sayAs: HAY-neh-ken
+        ipa: /ˈɦɛinəkən/
+      - word: Hooiberg
+        sayAs: HOY-berkh
+        ipa: /ˈɦoːjbɛrx/
+      - word: Frederik
+        sayAs: FRAY-deh-rik
+        ipa: /ˈfreːdərɪk/
+      - word: Eindhoven
+        sayAs: INT-hoh-ven
+        ipa: /ˈɛintɦoːvə(n)/
+      - word: Ole Kirk Christiansen
+        sayAs: OH-leh KEERK KRIS-tyan-sen
+        ipa: /ˈoːlə ˈkiɐ̯k ˈkʰʁestjænsn̩/
+      - word: Billund
+        sayAs: BIL-loon
+        ipa: /ˈbilunˀ/
+      - word: Erling Persson
+        sayAs: AIR-ling PAIR-son
+        ipa: /ˈæːɭɪŋ ˈpæːʂɔn/
+      - word: Västerås
+        sayAs: VES-teh-rohs
+        ipa: /vɛstɛˈroːs/
+      - word: Hennes
+        sayAs: HEN-nes
+        ipa: /ˈhɛnːɛs/
+      - word: Mauritz Widforss
+        sayAs: MOW-rits VEED-fors
+        ipa: /ˈmaʊrɪts ˈviːdfɔʂ/
+      - word: Maersk
+        sayAs: MAIRSK
+        ipa: /mɛɐ̯sk/
+      - word: Mærsk Mc-Kinney Møller
+        sayAs: MAIRSK mak-KIN-ee MUR-ler
+        ipa: /mɛɐ̯sk mækˈkʰini ˈmølɐ/
+      - word: Svendborg
+        sayAs: SVEN-bor
+        ipa: /ˈsvɛnbɒːˀ/
+      - word: Jacobsen
+        sayAs: YAH-kob-sen
+        ipa: /ˈjæːkʰʌpsn̩/
+      - word: Sergey Brin
+        sayAs: SAIR-gay BRIN
+        ipa: /sʲɪrˈɡʲej ˈbrʲin/
+      - word: Jensen Huang
+        sayAs: JEN-sen HWAHNG
+        ipa: /ˈdʒɛnsən xwɑŋ/
+      - word: Zhang Yiming
+        sayAs: JAHNG ee-MING
+        ipa: /ʈʂɑŋ imiŋ/
+      - word: Fujian
+        sayAs: foo-JYEN
+        ipa: /fut͡ɕjɛn/
+      - word: Douyin
+        sayAs: doh-YIN
+        ipa: /toʊin/
+      - word: Hooi Ling
+        sayAs: HOY LING
+        ipa: /hoɪ liŋ/
+      - word: Kuala Lumpur
+        sayAs: KWAH-lah LOOM-poor
+        ipa: /ˈkualə ˈlumpʊr/
+      - word: Caktiong
+        sayAs: kahk-TYONG
+        ipa: /kakˈtjoŋ/
+      - word: Cubao
+        sayAs: koo-BOW
+        ipa: /kuˈbaʊ/
+      - word: Kyiv
+        sayAs: KEE-yiv
+        ipa: /ˈkɪjiu̯/
+      - word: Koum
+        sayAs: KOOM
+        ipa: /kum/
+      - word: Dangote
+        sayAs: dahn-GOH-teh
+        ipa: /daŋɡoːte/
+      - word: Aliko
+        sayAs: ah-LEE-koh
+        ipa: /aliko/
+      - word: Safaricom
+        sayAs: sah-FAH-ree-kom
+        ipa: /safaɾikom/
+      - word: M-Pesa
+        sayAs: em-PEH-sah
+        ipa: /ɛm ˈpɛsa/
+      - word: Chouinard
+        sayAs: SHWEE-nard
+        ipa: /ʃwinaʁ/
+      - word: Malachowsky
+        sayAs: mal-uh-KOW-skee
+        ipa: /ˌmæləˈkaʊski/
+      - word: Ypsilanti
+        sayAs: ip-sih-LAN-tee
+        ipa: /ˌɪpsɪˈlænti/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -421,6 +797,19 @@ channels:
       - word: Raytheon
         sayAs: RAY-thee-on
         ipa: /ˈreɪθiɒn/
+      # Original-language sounds (2026-10-16), every map script so far.
+      - word: Andreas
+        sayAs: an-DRAY-us
+        ipa: /anˈdreːas/
+      - word: Nicolaus
+        sayAs: nee-koh-LOWS
+        ipa: /nikoˈlaːus/
+      - word: Georg
+        sayAs: GAY-ork
+        ipa: /ˈɡeːɔʁk/
+      - word: Wittenberg
+        sayAs: VIT-en-bairk
+        ipa: /ˈvɪtn̩bɛʁk/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -524,7 +913,14 @@ channels:
       number before the meaning, says plainly where knowledge runs out, never
       builds suspense, never dramatises, never softens. Warm in manner, exact in
       substance; the trust comes from precision.
-    pronounce: []
+    pronounce:
+      # Original-language sounds (2026-10-16), every map script so far.
+      - word: Nikolai Anichkov
+        sayAs: nee-kah-LAI ah-NEECH-kof
+        ipa: /nʲɪkɐˈlaj ɐˈnʲitɕkəf/
+      - word: Anichkov
+        sayAs: ah-NEECH-kof
+        ipa: /ɐˈnʲitɕkəf/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -609,6 +1005,10 @@ channels:
       - word: Lustig
         sayAs: LUS-tig
         ipa: /ˈlʊstɪɡ/
+      # Original-language sounds (2026-10-16), every map script so far.
+      - word: Vincenzo
+        sayAs: veen-CHEN-tsoh
+        ipa: /vinˈtʃɛntso/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -1659,7 +2059,14 @@ channels:
       Never clinical, never a lecture, never bright and breezy about something
       hard. Kind without pity: the steadiness of the voice is part of what
       helps.
-    pronounce: []
+    pronounce:
+      # Original-language sounds (2026-10-16), every map script so far.
+      - word: Hermann Ebbinghaus
+        sayAs: HAIR-mahn EB-bing-hows
+        ipa: /ˈhɛʁman ˈɛbɪŋhaʊs/
+      - word: Ebbinghaus
+        sayAs: EB-bing-hows
+        ipa: /ˈɛbɪŋhaʊs/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
