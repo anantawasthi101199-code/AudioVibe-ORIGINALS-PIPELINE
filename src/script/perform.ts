@@ -424,7 +424,8 @@ export const performScript = async (
       ...original,
       turns: reply.beats[i]!.turns.map((t, j) => ({
         speaker: speakerFor(t.speaker, original.turns[j]),
-        text: stripUnknownTags(t.text, input.persona.audioTags?.use).replace(/\s+/g, ' ').trim(),
+        // Free tags unless the channel keeps a list (narration.ts FREE_TAGS).
+        text: (input.persona.audioTags ? stripUnknownTags(t.text, input.persona.audioTags.use) : t.text).replace(/\s+/g, ' ').trim(),
       })) as Turn[],
     }));
 

@@ -35,13 +35,11 @@
 #               that direction (steadiness and colour). They are the values the
 #               channels already had on 2026-10-07, so GPT sounds unchanged.
 #
-# TAG RULES. `use` is the vocabulary that suits the voice: the optional tag pass
-# draws only from it. `never` is removed
-# from the text before ElevenLabs speaks it, whoever put it there, because a
-# serious voice told to [laugh] or a news voice told to [whisper] breaks the
-# channel. Tags describe the VOICE only: no sound effects, no music, no accents.
-# A free-text tag is allowed and often best on v4: "[low, steady]" beats a vague
-# one-word tag that the model might read as a sound cue.
+# TAG RULES (owner, 2026-10-16): NO FIXED LIST. Writers use any free-text
+# delivery tag that fits ("[low, steady]", "[with quiet awe]"), and nothing is
+# removed at render. Tags describe the VOICE only: no sound effects, no music,
+# no accents. A channel can still be given `tags: { use: [...], never: [...] }`
+# here to restrict it, but none has one.
 #
 # PRONUNCIATION. `sayAs` is a respelling both engines can read; stressed
 # syllable in capitals. It replaces the word, whole-word and case-sensitive,
@@ -105,11 +103,6 @@ channels:
       hype. Lets a surprising number land with a beat before it, keeps years and
       figures crisp, and speeds up only when the story does. Sounds like a
       friend explaining over coffee, not a presenter selling anything.
-    tags:
-      use: [warmly, curious, thoughtful, wry, "dry, amused", delighted, "matter-of-fact", quietly impressed, emphatic, pause, short pause, snappy, slowly,
-            leaning in, with a smile, with a knowing smile, with a grin, serious, grave, sombre, softly, incredulous, determined, confident, relieved, proudly,
-            satisfied, rueful, exasperated, measured, reflective, knowingly, explaining, conversational, building, quickening, slowing down, firmly, boldly]
-      never: [shouts, laughs, crying, whispers, sings, gasps, sarcastic, excited]
     # Names from the Business by Country scripts, series 1 (India), 2026-10-13.
     pronounce:
       - word: Jamsetji
@@ -195,9 +188,6 @@ channels:
       delight, never showing off and never calling anybody a genius. Precise
       with names and dates; the wonder is in what happened, not in the voice
       performing it.
-    tags:
-      use: [curious, amazed, delighted, "excited, but controlled", thoughtful, playful, lightly amused, warmly, pause, short pause, slowly, rushed]
-      never: [grim, whispers, shouts, crying, sarcastic, ominous]
     pronounce:
       - word: tetrafluoroethylene
         sayAs: TET-ruh-FLOOR-oh-ETH-uh-leen
@@ -249,9 +239,6 @@ channels:
       personality in the explaining and none in the facts. Every attribution is
       said plainly ("The Guardian reports"), contested claims sound exactly as
       neutral as settled ones, and nothing is dramatised.
-    tags:
-      use: [serious, thoughtful, warmly, "matter-of-fact", "calm, clear", concerned, pause, short pause]
-      never: [excited, grim, whispers, shouts, laughs, crying, sarcastic, amazed, gasps, sighs, playful, ominous]
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
@@ -307,9 +294,6 @@ channels:
       number before the meaning, says plainly where knowledge runs out, never
       builds suspense, never dramatises, never softens. Warm in manner, exact in
       substance; the trust comes from precision.
-    tags:
-      use: [thoughtful, softly, warmly, "calm, clear", "matter-of-fact", reassuring, "dry, understated", pause, short pause]
-      never: [excited, whispers, grim, shouts, laughs, crying, gasps, amazed, sarcastic, ominous, dramatic]
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
@@ -360,9 +344,6 @@ channels:
       somebody's worst year is not a thing to sound thrilled by. Victims get a
       name and a life, said with care. No performed dread, no ominous pauses
       the facts have not earned.
-    tags:
-      use: [serious, quietly, somber, "low, steady", hushed, thoughtful, "measured, restrained", compassionate, pause, long pause, slowly]
-      never: [excited, laughs, shouts, amazed, sarcastic, playful, crying, gasps, whispers, mischievously]
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
@@ -423,11 +404,6 @@ channels:
       dread and mystery, lifts and quickens as tension builds, lands each reveal
       after a beat of silence. Tells it from inside the world of the story,
       never amused by the people who told it and never a movie-trailer voice.
-    tags:
-      use: [hushed, quietly, whispers, slowly, drawn out, awed, mischievously, tender, ominous, building tension, warmly, serious, "low, steady", pause, long pause,
-            softly, gently, thoughtful, curious, reverently, with wonder, in awe, darkly, intense, calmly, lightly, leaning in, with a gentle smile, knowingly,
-            slyly, playfully, delighted, proudly, brightly, measured, breathes in]
-      never: [laughs, shouts, sarcastic, crying, snappy, excited]
     pronounce:
       - word: Vetala
         sayAs: vay-TAH-lah
@@ -922,9 +898,6 @@ channels:
       Never clinical, never a lecture, never bright and breezy about something
       hard. Kind without pity: the steadiness of the voice is part of what
       helps.
-    tags:
-      use: [softly, warmly, gently, thoughtful, reassuring, "knowing, lightly amused", sighs, exhales, pause, short pause, slowly]
-      never: [shouts, grim, excited, laughs, sarcastic, crying, gasps, amazed, ominous]
     pronounce: []
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.

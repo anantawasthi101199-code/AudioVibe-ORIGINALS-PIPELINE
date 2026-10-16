@@ -310,11 +310,11 @@ describe('writeBeat', () => {
     expect(w.seen[0]!.prompt).toContain('[c1]');
   });
 
-  it('strips audio tags the renderer does not know', async () => {
-    // The provider speaks anything bracketed it does not recognise, so an
-    // invented tag becomes a host saying "thoughtful" out loud mid-sentence.
+  it('keeps free-text tags: no channel has a fixed list (owner, 2026-10-16)', async () => {
+    // Eleven v4 performs a free-text direction; the GPT draft voice has every
+    // tag removed before it speaks, so none is ever read aloud.
     const beat = await writeBeat(ctx(), fakeWriter(soloTurns(`[ponderous] ${GOOD} [laughs]`)));
-    expect(beat.turns[0]!.text).not.toContain('[ponderous]');
+    expect(beat.turns[0]!.text).toContain('[ponderous]');
     expect(beat.turns[0]!.text).toContain('[laughs]');
   });
 

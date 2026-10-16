@@ -61,9 +61,16 @@ describe('the tag pass', () => {
     expect(out.rejected).toBe(1);
   });
 
-  it('removes tags the channel never uses or did not list', async () => {
-    const { client } = replying([{ i: 0, text: '[laughs] And then [thunder rumbling] the corpse spoke.' }]);
+  it('KEEPS ANY FREE-TEXT TAG when the channel has no fixed list (the default)', async () => {
+    const { client } = replying([{ i: 0, text: '[with quiet awe] And then the corpse spoke.' }]);
     const out = await tagPass(script(['And then the corpse spoke.']), channel, client);
+    expect(out.script.beats[0]!.turns[0]!.text).toBe('[with quiet awe] And then the corpse spoke.');
+  });
+
+  it('a channel that keeps a list still loses tags it did not list', async () => {
+    const listed = { ...channel, tags: { use: ['hushed'], never: ['laughs'] } };
+    const { client } = replying([{ i: 0, text: '[laughs] And then [thunder rumbling] the corpse spoke.' }]);
+    const out = await tagPass(script(['And then the corpse spoke.']), listed, client);
     expect(out.script.beats[0]!.turns[0]!.text).toBe('And then the corpse spoke.');
   });
 

@@ -63,10 +63,14 @@ describe('fixed outros', () => {
 });
 
 describe("each host's own voice tags", () => {
-  it('reach the writer, and survive the strip that removes unknown tags', () => {
-    const persona = loadPersona('crime-files');
-    expect(tagGuidance(persona)).toContain('[low, steady]');
-    expect(stripUnknownTags('[low, steady] It was late. [bananas] Cold.', persona.audioTags?.use)).toBe(
+  it('NO FIXED LIST: every channel writes any free-text tag (owner, 2026-10-16)', () => {
+    for (const id of Object.keys(loadVoiceMaster()!.channels)) {
+      const persona = loadPersona(id);
+      expect(persona.audioTags).toBeUndefined();
+      expect(tagGuidance(persona)).toContain('any short delivery direction');
+    }
+    // A list, where one is ever given back, still filters.
+    expect(stripUnknownTags('[low, steady] It was late. [bananas] Cold.', ['low, steady'])).toBe(
       '[low, steady] It was late.  Cold.'
     );
   });

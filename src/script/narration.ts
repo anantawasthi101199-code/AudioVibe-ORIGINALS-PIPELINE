@@ -126,13 +126,23 @@ export const NARRATION_GUIDANCE = [
  * provider that does not understand a tag would SPEAK it, which is why
  * script/dialogue.ts strips anything outside the known list rather than hoping.
  */
+/**
+ * ANY TAG THAT FITS (owner, 2026-10-16): no fixed vocabulary. Eleven v4 reads a
+ * free-text direction as performance, and the GPT draft voice has every tag
+ * removed before it speaks, so nothing is ever read aloud.
+ */
+export const FREE_TAGS =
+  'Use any short delivery direction that fits the moment, free text in square brackets: ' +
+  '[warmly], [hushed], [with quiet awe], [building], [low, steady], [tender], [incredulous], [pause]. ' +
+  'Tags describe the VOICE only: never sound effects, music or accents.';
+
 export const NARRATION_TAGS = [
   'Mark delivery with a tag in square brackets, on its own before the sentence it affects.',
   // THE LIST IS NOT ADVICE, IT IS THE VOCABULARY. Anything outside it would be
   // SPOKEN by the voice rather than performed, so script/dialogue.ts strips
   // unknown tags - which means an unlisted tag is silently lost rather than
   // wrong. Naming them is the one part of this that has to be prescriptive.
-  'The available tags: [excited] [curious] [serious] [grim] [quietly] [whispers] [rushed] [slowly] [drawn out] [wry] [warmly] [pauses]. Anything else is discarded.',
+  FREE_TAGS,
   // The rule against performing gravity the facts have not earned belongs to
   // the show, not to the tag list, and this repeated it. The persona's taboos
   // already carry it into the same prompt.
@@ -162,4 +172,6 @@ export const tagGuidance = (persona: Persona): string =>
       `placed right before the words it changes, from THIS LIST ONLY: ${bracket(persona.audioTags.use)}. ` +
       `Use one only where the delivery genuinely changes, about one every three or four ` +
       `sentences and never more than one per sentence. Most sentences get none.`
-    : '';
+    : `DELIVERY TAGS. Mark how a line is said with a tag in square brackets, placed right ` +
+      `before the words it changes. ${FREE_TAGS} Put one wherever the delivery genuinely ` +
+      `changes, and never more than one per sentence.`;

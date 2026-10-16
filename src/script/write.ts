@@ -477,7 +477,8 @@ const beatReplySchema = z.object({
   claimIds: z.array(z.string()).default([]),
 });
 
-const parseTurns = (raw: unknown, hostTags: readonly string[] = []): { turns: Turn[]; claimIds: string[] } => {
+/** `hostTags` undefined: the channel has no fixed list, so every tag stays (narration.ts FREE_TAGS). */
+const parseTurns = (raw: unknown, hostTags?: readonly string[]): { turns: Turn[]; claimIds: string[] } => {
   const parsed = beatReplySchema.parse(raw);
 
   return {
@@ -486,7 +487,7 @@ const parseTurns = (raw: unknown, hostTags: readonly string[] = []): { turns: Tu
     // host saying "thoughtful" out loud mid-sentence.
     turns: parsed.turns.map((t) => ({
       speaker: t.speaker.trim(),
-      text: stripUnknownTags(t.text, hostTags).replace(/\s+/g, ' ').trim(),
+      text: (hostTags ? stripUnknownTags(t.text, hostTags) : t.text).replace(/\s+/g, ' ').trim(),
     })),
     claimIds: parsed.claimIds,
   };

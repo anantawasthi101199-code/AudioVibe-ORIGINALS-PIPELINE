@@ -55,12 +55,15 @@ const channelSchema = z
     personality: text,
     /** How this host speaks, in plain English. Used by the tag pass. */
     delivery: text,
+    // NO FIXED LIST BY DEFAULT (owner, 2026-10-16): without `tags`, a channel's
+    // writers use any free-text delivery tag and nothing is removed at render.
     tags: z
       .object({
-        use: z.array(text).min(1),
+        use: z.array(text).default([]),
         never: z.array(text).default([]),
       })
-      .strict(),
+      .strict()
+      .default({ use: [], never: [] }),
     pronounce: z
       .array(z.object({ word: text, sayAs: text, ipa: text.optional() }).strict())
       .default([]),
@@ -163,7 +166,7 @@ export const applyVoiceMaster = (raw: unknown, entry: ChannelVoice, label: strin
     'It shows in how the host talks and reacts, never in an invented personal life: ' +
     'no memories, family, childhood or places they have been.';
 
-  persona.audioTags = { use: entry.tags.use, never: entry.tags.never };
+  persona.audioTags = entry.tags.use.length ? { use: entry.tags.use, never: entry.tags.never } : undefined;
 
   delete persona.signoff;
   delete persona.signoffShort;

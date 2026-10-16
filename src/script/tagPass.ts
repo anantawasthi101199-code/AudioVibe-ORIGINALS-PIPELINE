@@ -1,3 +1,4 @@
+import { FREE_TAGS } from './narration';
 /**
  * The optional tag pass: one cheap model call that ADDS ElevenLabs audio tags
  * to an approved script, and is not allowed to change a single word.
@@ -53,7 +54,9 @@ export const tagPassSystem = (channel: ChannelVoice): string =>
     '',
     `HOW THEY SOUND: ${channel.delivery}`,
     '',
-    `THE ONLY TAGS YOU MAY USE: ${channel.tags.use.map((t) => `[${t}]`).join(' ')}`,
+    channel.tags.use.length
+      ? `THE ONLY TAGS YOU MAY USE: ${channel.tags.use.map((t) => `[${t}]`).join(' ')}`
+      : `TAGS: ${FREE_TAGS}`,
     channel.tags.never.length
       ? `NEVER USE: ${channel.tags.never.map((t) => `[${t}]`).join(' ')}. They break this voice.`
       : '',
@@ -127,7 +130,10 @@ export const tagPass = async (
       unchanged += 1;
       continue;
     }
-    const cleaned = onlyAllowedTags(proposed, [...channel.tags.use, ...existingTags(line.text)]);
+    // No fixed list (the default since 2026-10-16): every proposed tag stays.
+    const cleaned = channel.tags.use.length
+      ? onlyAllowedTags(proposed, [...channel.tags.use, ...existingTags(line.text)])
+      : proposed;
     if (!sameWords(cleaned, line.text)) {
       rejected += 1;
       continue;
