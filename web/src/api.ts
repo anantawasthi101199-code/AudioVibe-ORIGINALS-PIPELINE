@@ -126,6 +126,8 @@ export interface RunSummary {
   artKey: string | null;
   /** The series an episode publishes into, or null. */
   seriesTitle: string | null;
+  /** `<mapId>/<number>` when it came from a content map, else null. */
+  mapItem: string | null;
   /** A label to find it by, shown as a pill; null when none. */
   tag: string | null;
   id: string;

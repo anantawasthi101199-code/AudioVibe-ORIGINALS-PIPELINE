@@ -29,6 +29,7 @@ import {
   type CoveredView,
   type MapView,
   type SeasonView,
+  type RunSummary,
 } from '../api';
 import { ErrorNote, StatePill } from '../components/bits';
 import { Count, Info, PlayButton } from '../components/Info';
@@ -36,6 +37,31 @@ import { ImagePicker } from '../components/ImagePicker';
 import { MapPanel } from '../components/MapPanel';
 
 /** A long description: its first sentence, and the rest behind "more". */
+/**
+ * The runs list, SEGMENTED (owner, 2026-10-16): every short in one place as
+ * S001, S002..., and episodes by series, each series counting again from E001.
+ * Order is the map's number, else when it was made. Discarded runs sit last
+ * and take no number, so a discarded copy never shifts the ones that count.
+ */
+export const groupRuns = (runs: RunSummary[]) => {
+  const order = (r: RunSummary) => Number(r.mapItem?.split('/').pop() ?? Infinity);
+  const sorted = [...runs].sort((a, b) => order(a) - order(b) || a.createdAt.localeCompare(b.createdAt));
+  const live = sorted.filter((r) => r.state !== 'abandoned');
+  const isShort = (r: RunSummary) => r.short !== null || /^s\d/.test(r.label);
+  const numbered = (rs: RunSummary[], p: string) =>
+    rs.map((r, i) => ({ run: r, num: `${p}${String(i + 1).padStart(3, '0')}` }));
+  const series = new Map<string, RunSummary[]>();
+  for (const r of live.filter((r) => !isShort(r))) {
+    const t = r.seriesTitle ?? 'No series';
+    series.set(t, [...(series.get(t) ?? []), r]);
+  }
+  return [
+    ...[...series].map(([title, rs], i) => ({ title: `S${i + 1}: ${title}`, rows: numbered(rs, 'E') })),
+    { title: 'Shorts', rows: numbered(live.filter(isShort), 'S') },
+    { title: 'Discarded', rows: sorted.filter((r) => r.state === 'abandoned').map((r) => ({ run: r, num: '' })) },
+  ].filter((g) => g.rows.length);
+};
+
 const Brief = ({ text }: { text: string }) => {
   const m = /^(.{40,220}?[.!?])\s+(.+)$/s.exec(text);
   if (!m) return <>{text}</>;
@@ -1258,14 +1284,19 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
           {runs.length === 0 ? (
             <p className="panel-body faint">Never run.</p>
           ) : (
+            groupRuns(runs).map((g) => (
+            <details key={g.title} className="fold" open={g.title !== 'Discarded'}>
+            <summary className="panel-body">
+              {g.title} <span className="pill">{g.rows.length}</span>
+            </summary>
             <div className="queue-list">
-              {runs.map((r) => (
+              {g.rows.map(({ run: r, num }) => (
                 <button key={r.id} className="queue-row" onClick={() => go(`/r/${r.id}`)}>
                   {r.hasAudio ? <PlayButton id={r.id} src={api.audioUrl(r.id, r.audioKey)} /> : null}
                   <span className="queue-main">
-                    <span className="queue-title">{r.title ?? r.topic}</span>
+                    <span className="queue-title">{num ? <span className="mono">{num} </span> : null}{r.title ?? r.topic}</span>
                     <span className="muted">
-                      {r.label} · {r.tag ? <span className="pill hold">{r.tag}</span> : null} {r.seriesTitle ? `${r.seriesTitle} · ` : ''}{ago(r.createdAt)}
+                      {r.label} · {r.tag ? <span className="pill hold">{r.tag}</span> : null} {ago(r.createdAt)}
                       {r.workingBy ? ` · ${r.workingBy} started it` : r.heldBy ? ` · ${r.heldBy} has it open` : ''}
                     </span>
                   </span>
@@ -1277,6 +1308,8 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
                 </button>
               ))}
             </div>
+            </details>
+            ))
           )}
         </section>
         </div>
