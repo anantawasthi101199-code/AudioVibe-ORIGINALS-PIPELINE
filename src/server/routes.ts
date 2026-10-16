@@ -114,7 +114,8 @@ export const getChannel = (id: string) => {
     sets: queue.sets.filter((t) => !isHidden(id, t)),
     /** Suggestions kept for next time, by format id. */
     savedSuggestions: picksFor(id).saved,
-    runs: runs({ channelId: id, limit: 50, live: jobs.liveRunIds() }),
+    // Every run: runs() reads them all anyway, and a cap hid the oldest shorts.
+    runs: runs({ channelId: id, live: jobs.liveRunIds() }),
     budgetPence: episodeBudgetPence(),
     // BOTH NUMBERS, for both kinds: what each is meant to cost (a warning) and
     // the hard ceiling that stops it. The start form shows the one it will use.
