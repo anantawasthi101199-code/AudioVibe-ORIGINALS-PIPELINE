@@ -13,7 +13,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/001-why-we-need-sleep.txt",
         "title": "Why Do We Need Sleep at All?",
         "description": "We spend a third of our lives asleep and nobody is quite sure why. What a teenager who stayed awake for eleven days, and a discovery about the brain at night, have told us."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/001.jpg"
     },
     {
       "number": 2,
@@ -24,7 +25,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/002-what-are-hiccups-for.txt",
         "title": "What Are Hiccups For?",
         "description": "Everyone gets them, a man in America had them for 68 years, and scientists still argue about why we have them at all. The strange science of the hiccup."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/002.jpg"
     },
     {
       "number": 3,
@@ -35,7 +37,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/003-how-vaccines-train-your-body.txt",
         "title": "How Do Vaccines Train Your Body?",
         "description": "A vaccine is a harmless preview of a germ, shown to your immune system before the real thing arrives. How it works, why some need boosters, and what the evidence says about safety."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/003.jpg"
     },
     {
       "number": 4,

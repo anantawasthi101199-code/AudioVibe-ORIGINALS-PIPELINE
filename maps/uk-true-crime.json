@@ -18,7 +18,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/01-jack-the-ripper.txt",
             "title": "Jack the Ripper: Five Women of Whitechapel",
             "description": "In the autumn of 1888, five women were murdered in the poorest streets of east London, and the killer was never caught. The story of the investigation, the letters, and the women at its centre."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/01.jpg"
         },
         {
           "number": 2,
@@ -29,7 +30,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/02-the-brides-in-the-bath.txt",
             "title": "The Brides in the Bath",
             "description": "Three women married the same man under different names, and each was found dead in her bath. It took a newspaper report, two suspicious readers, and a pathologist's experiment to show how."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/02.jpg"
         },
         {
           "number": 3,
@@ -163,7 +165,8 @@
           "covers": "The series ends with a return to cases that still leave important questions unanswered. Jack the Ripper and Suzy Lamplugh offer two very different examples of how a case can remain unresolved across generations. The episode revisits the original evidence, the strongest documented developments and the reasons various questions remain open. It explores how public fascination can generate useful leads but also create myths, false certainty and unfair suspicion of people who were never convicted. The conclusion draws together the series' major themes: the value of evidence, the limits of forensic science, the importance of fair investigations and the need to remember victims as people rather than merely as names in a case file.",
           "source": "National Archives records, current police appeals and carefully verified case histories. Only developments confirmed by reliable sources at the time of recording should be described as current."
         }
-      ]
+      ],
+      "cover": "CONTENT/True-Crime/Images/UK-True-Crime-Files/series-01.jpg"
     }
   ]
 }

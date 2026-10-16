@@ -13,7 +13,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/001-the-mona-lisa-vanishes.txt",
         "title": "The Day the Mona Lisa Vanished",
         "description": "In 1911 a handyman walked out of the Louvre with the Mona Lisa hidden under his smock. For two years nobody knew where it was, and the empty space on the wall drew bigger crowds than the painting ever had."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/001.jpg"
     },
     {
       "number": 2,
@@ -24,7 +25,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/002-the-man-who-sold-the-eiffel-tower.txt",
         "title": "The Man Who Sold the Eiffel Tower",
         "description": "In 1925 a con man read that the Eiffel Tower was expensive to repair. He posed as a government official, called in scrap metal dealers, and sold it to one of them."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/002.jpg"
     },
     {
       "number": 3,
@@ -35,7 +37,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/003-first-fingerprint-murder.txt",
         "title": "The First Murder Solved by a Fingerprint",
         "description": "In 1892, in a small town in Argentina, two children were killed and their mother blamed a neighbour. A police inspector found a bloody thumbprint on a door frame, and it pointed somewhere else."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/003.jpg"
     },
     {
       "number": 4,

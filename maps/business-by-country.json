@@ -31,7 +31,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/02-reliance.txt",
             "title": "Reliance: How Dhirubhai Built an Empire",
             "description": "From a clerk's job in Aden and a tiny office in Masjid Bunder to the world's biggest refinery and Jio. Dhirubhai Ambani's bold bets, the 1977 share sale, and the arguments that followed him."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/02.jpg"
         },
         {
           "number": 3,
@@ -43,7 +44,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/03-amul.txt",
             "title": "Amul: The Farmers Who Owned the Dairy",
             "description": "A 1946 milk strike in Kaira, an engineer who never meant to stay, and a cooperative owned by millions of farmers. How Amul made fairness the business model."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/03.jpg"
         },
         {
           "number": 4,
@@ -55,7 +57,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/04-infosys.txt",
             "title": "Infosys: Seven Engineers and $250",
             "description": "Seven engineers, ten thousand rupees from Sudha Murty's savings, and a decade of waiting for phone lines. How Infosys nearly sold out, then helped build India's IT industry."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/04.jpg"
         },
         {
           "number": 5,
@@ -67,7 +70,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/05-asian-paints.txt",
             "title": "Asian Paints: The Garage That Beat Giants",
             "description": "Four friends in a Bombay garage in 1942 took on the big paint companies by selling small packs in small towns, and by buying a computer before almost anyone else in India."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/05.jpg"
         },
         {
           "number": 6,
@@ -79,7 +83,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/06-haldirams.txt",
             "title": "Haldiram's: From Bikaner Bhujia to a Brand",
             "description": "A young man in a desert town made his family's crunchy snack thinner and sharper, and named it after a maharaja. His grandsons turned it into one of India's biggest food companies, and fought over the name."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/06.jpg"
         },
         {
           "number": 7,
@@ -126,7 +131,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/11-tesco.txt",
             "title": "Tesco: From a Market Stall to a Giant",
             "description": "A young man back from the First World War spent his savings on surplus food and sold it from a barrow in east London. His business became Britain's biggest retailer, and nearly lost its way twice."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/11.jpg"
         },
         {
           "number": 12,
@@ -177,7 +183,8 @@
           "subject": "Burberry",
           "source": "Burberry official company history, annual reports and reputable business journalism"
         }
-      ]
+      ],
+      "cover": "CONTENT/Buisness-Decoded/Images/Business-by-Country/series-02.jpg"
     },
     {
       "number": 3,

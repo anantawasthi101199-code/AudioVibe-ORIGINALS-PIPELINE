@@ -14,7 +14,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/001-starbucks.txt",
         "title": "Starbucks: From One Bean Shop to the World",
         "description": "In 1971 Starbucks sold coffee beans and never poured a single cup. Then a young salesman walked into an espresso bar in Milan, and saw a different business entirely."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/001.jpg"
     },
     {
       "number": 2,
@@ -26,7 +27,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/002-zara.txt",
         "title": "Zara: New Clothes in Weeks, Not Months",
         "description": "A shop boy who left school at fourteen built the world's biggest fashion business by doing one thing faster than anyone else: getting new clothes into shops in a few weeks."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/002.jpg"
     },
     {
       "number": 3,
@@ -38,7 +40,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/003-google.txt",
         "title": "Google: The Search Engine Built in a Garage",
         "description": "Two students tried to sell their search engine for under a million dollars and were turned down. Then they rented a garage, and Google grew into one of the biggest companies in history."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/003.jpg"
     },
     {
       "number": 4,
@@ -734,7 +737,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/061-haribo.txt",
         "title": "Haribo: The Gold Bear Made in a Back Kitchen",
         "description": "In 1920 a sweet maker in Bonn started a business with a sack of sugar, a copper kettle and a bicycle. His wife delivered the sweets, and his dancing bear became the most famous gummy in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/061.jpg"
     },
     {
       "number": 62,
@@ -746,7 +750,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/062-decathlon.txt",
         "title": "Decathlon: Every Sport Under One Roof",
         "description": "In 1976 a young Frenchman opened a huge shop near Lille selling equipment for every sport at low prices. Then Decathlon started designing its own gear, and became the world's biggest sports retailer."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/062.jpg"
     },
     {
       "number": 63,
@@ -758,7 +763,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/063-salesforce.txt",
         "title": "Salesforce: The Company That Said No Software",
         "description": "A young executive quit a giant software company to sell business software over the internet. He marketed it with a crossed-out symbol and fake protesters, and built one of the biggest software firms on Earth."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/063.jpg"
     },
     {
       "number": 64,

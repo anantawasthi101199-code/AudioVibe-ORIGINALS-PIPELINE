@@ -13,7 +13,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/001-osiris-and-set.txt",
         "title": "Osiris and Set: The King in the Box",
         "description": "A jealous brother builds a beautiful chest, shaped to fit one man exactly. Then he invites the king of Egypt to a feast, and offers it as a prize to whoever fits inside."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/001.jpg"
     },
     {
       "number": 2,
@@ -24,7 +25,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/002-gilgamesh-and-enkidu.txt",
         "title": "Gilgamesh and Enkidu: King Meets His Match",
         "description": "The gods made a wild man from clay to stop a cruel king. The two met in a doorway, fought until the walls shook, and became the most famous friends in the world's oldest story."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/002.jpg"
     },
     {
       "number": 3,
@@ -35,7 +37,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/003-cu-chulainn.txt",
         "title": "Cú Chulainn: The Boy and the Hound",
         "description": "A small boy arrives late at a feast, and the guard dog is already loose in the dark. What he does next gives him the name Ireland's greatest hero is known by forever."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/003.jpg"
     },
     {
       "number": 4,
@@ -673,7 +676,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/061-the-shipwrecked-sailor.txt",
         "title": "The Shipwrecked Sailor and the Serpent King",
         "description": "A sailor is the only survivor of a storm and wakes on a magical island. Then the trees crack, the ground shakes, and a giant golden serpent comes looking for him."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/061.jpg"
     },
     {
       "number": 62,
@@ -684,7 +688,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/062-nergal-and-ereshkigal.txt",
         "title": "Nergal and Ereshkigal: Marrying Death",
         "description": "The queen of the dead cannot leave her dark kingdom, so the gods send her a share of their feast. One young god refuses to stand for her messenger, and she demands that he come down to her."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/062.jpg"
     },
     {
       "number": 63,
@@ -695,7 +700,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/063-branwen.txt",
         "title": "Branwen: The Insult That Started a War",
         "description": "A Welsh princess is married to the King of Ireland, and then mistreated in his kitchen. She trains a starling to carry a letter across the sea to her giant brother."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/063.jpg"
     },
     {
       "number": 64,

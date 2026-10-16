@@ -18,7 +18,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/01-your-gut-is-more-than-a-food-pipe.txt",
             "title": "Your Gut Is More Than a Food Pipe",
             "description": "What actually happens to a sandwich after you swallow it? Follow one lunch through the whole digestive system, from a surgeon who watched digestion through a hole in a man's side to what the latest measurements show."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/01.jpg"
         },
         {
           "number": 2,
@@ -56,7 +57,8 @@
           "covers": "What can someone realistically do to support digestive health? Bring together dietary variety, appropriate fibre intake, fluids, physical activity, regular eating patterns and individual symptom management. Misconception to correct: A perfect diet, a detox or a supplement routine is not required to maintain a healthy digestive system.",
           "source": "NHS guidance, NICE IBS recommendations and condition-specific dietary guidance."
         }
-      ]
+      ],
+      "cover": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/series-01.jpg"
     },
     {
       "number": 2,
@@ -72,7 +74,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/08-cholesterol-why-your-body-needs-it.txt",
             "title": "Cholesterol: Why Your Body Needs It",
             "description": "Your body makes cholesterol on purpose and could not live without it. So why do doctors worry when it is high? A century of research, from rabbits to rare genes, explains the numbers on a cholesterol test."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/08.jpg"
         },
         {
           "number": 9,
@@ -104,7 +107,8 @@
           "covers": "When do lifestyle changes suffice, and when do medicines add important protection? Explain statins, absolute versus relative risk reduction, treatment monitoring, common concerns about side effects and additional lipid-lowering options. Misconception to correct: Taking medication does not mean someone has failed at healthy living; lifestyle and medicines can complement each other. Safety: Discuss pregnancy-related considerations for lipid-lowering treatment where relevant, with advice to the individual from their clinician.",
           "source": "NHS guidance, NICE guidance and recent systematic reviews"
         }
-      ]
+      ],
+      "cover": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/series-02.jpg"
     },
     {
       "number": 3,

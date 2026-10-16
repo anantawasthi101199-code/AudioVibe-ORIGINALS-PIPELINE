@@ -18,7 +18,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/01-vesalius.txt",
             "title": "Vesalius: The Doctor Who Looked for Himself",
             "description": "For 1,300 years, doctors learned the human body from an ancient Roman's books, without checking. In the 1540s a young professor in Padua climbed down from his chair, picked up the knife, and found the books were wrong."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/01.jpg"
         },
         {
           "number": 2,
@@ -50,7 +51,8 @@
           "covers": "Louis Pasteur showed that tiny living things turn wine sour and make us ill, saved France's silk and wine industries, and made the first rabies vaccine.",
           "source": "Histories of Louis Pasteur and germ theory"
         }
-      ]
+      ],
+      "cover": "CONTENT/Eureka-Tales/Images/Discoveries/series-01.jpg"
     },
     {
       "number": 2,
@@ -66,7 +68,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/07-copernicus.txt",
             "title": "Copernicus Moves the Earth",
             "description": "For more than a thousand years, everyone knew the Earth stood still at the centre of everything. A Polish churchman worked out that it didn't, then waited thirty years to say so, and saw his book only as he was dying."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/07.jpg"
         },
         {
           "number": 8,
@@ -98,7 +101,8 @@
           "covers": "In the 1920s Edwin Hubble showed that our galaxy is one of countless others, and that they are all rushing away from each other.",
           "source": "Hubble's 1929 paper and histories of cosmology"
         }
-      ]
+      ],
+      "cover": "CONTENT/Eureka-Tales/Images/Discoveries/series-02.jpg"
     },
     {
       "number": 3,

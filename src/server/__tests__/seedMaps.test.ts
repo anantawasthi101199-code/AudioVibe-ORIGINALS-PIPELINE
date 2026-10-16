@@ -84,8 +84,18 @@ describe('seeding runs from a map', () => {
     const placed = suppliedArt(path.join(art, 'mythic-archives'), name);
     expect(placed).toMatch(/\.supplied\.jpg$/);
 
+    // A newer map picture replaces one the map placed.
+    const mapCover = path.join(__dirname, '..', '..', '..', loadAllMaps().find((m) => m.id === 'hindu-mythology')!.series[0]!.cover!);
+    const original = fs.readFileSync(mapCover);
+    try {
+      fs.writeFileSync(mapCover, Buffer.concat([original, Buffer.from('changed')]));
+      expect(seedMapImages(() => undefined, art)).toBeGreaterThan(0);
+    } finally {
+      fs.writeFileSync(mapCover, original);
+    }
+
     // A person's own choice stays: the next start places nothing over it.
-    fs.rmSync(placed!);
+    fs.rmSync(suppliedArt(path.join(art, 'mythic-archives'), name)!);
     fs.writeFileSync(path.join(art, 'mythic-archives', `${name}.supplied.png`), 'chosen by hand');
     seedMapImages(() => undefined, art);
     expect(fs.readFileSync(suppliedArt(path.join(art, 'mythic-archives'), name)!, 'utf8')).toBe('chosen by hand');

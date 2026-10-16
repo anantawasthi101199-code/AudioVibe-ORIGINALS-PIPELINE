@@ -18,7 +18,8 @@
             "file": "CONTENT/Mythic-Archives/Scripts/Norse-Mythology/01-before-the-beginning-ginnungagap.txt",
             "title": "Before the Beginning: Ginnungagap",
             "description": "Before the gods, before the earth, there was a yawning gap between a world of ice and a world of fire. The Norse story of how everything began, as a disguised king heard it in a hall of shields."
-          }
+          },
+          "image": "CONTENT/Mythic-Archives/Images/Norse-Mythology/001.jpg"
         },
         {
           "number": 2,
@@ -74,7 +75,8 @@
           "covers": "The early prosperity of the gods, the arrival of new threats, and the first signs of the disasters to come.",
           "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
         }
-      ]
+      ],
+      "cover": "CONTENT/Mythic-Archives/Images/Norse-Mythology/series-01.jpg"
     },
     {
       "number": 2,

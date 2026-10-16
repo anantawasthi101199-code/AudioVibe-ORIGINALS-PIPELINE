@@ -18,7 +18,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/01-why-you-forget-almost-everything.txt",
             "title": "Why You Forget Almost Everything",
             "description": "You read a whole chapter, and a week later you can barely remember a page. That isn't a bad memory. A scientist who memorised thousands of nonsense words worked out why, and what actually helps."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/01.jpg"
         },
         {
           "number": 2,
@@ -50,7 +51,8 @@
           "covers": "What the research says works: testing yourself, spacing it out, explaining it to someone, and why rereading feels useful but is not.",
           "source": "Dunlosky et al. (2013) review of learning techniques"
         }
-      ]
+      ],
+      "cover": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/series-01.jpg"
     },
     {
       "number": 2,
@@ -66,7 +68,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/07-what-is-an-emotion-for.txt",
             "title": "What Is an Emotion For?",
             "description": "Your heart pounds, your face gets hot, and you wish you could just switch it off. But emotions aren't faults in the system. What they are actually for, and what to do with a feeling you didn't ask for."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/07.jpg"
         },
         {
           "number": 8,
@@ -98,7 +101,8 @@
           "covers": "Guilt says I did something bad, shame says I am bad. Why that difference matters, and why shame hides while guilt repairs.",
           "source": "Tangney's research on shame and guilt"
         }
-      ]
+      ],
+      "cover": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/series-02.jpg"
     },
     {
       "number": 3,

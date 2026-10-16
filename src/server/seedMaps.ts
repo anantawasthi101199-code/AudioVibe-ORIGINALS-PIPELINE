@@ -28,6 +28,7 @@ import { blankScript, fillBlank, handwrittenGate, startHandwritten } from '../pi
 import { Run } from '../run/store';
 import { currentOutro, setOutro } from '../script/outro';
 import { scriptSchema } from '../script/write';
+import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { repoRoot } from '../config';
@@ -105,15 +106,32 @@ export const seedPreparedRuns = (log: (message: string) => void = () => undefine
  * AudioVibe with the series' first episode; for a series already live, set it
  * in the studio too (the platform copy is not touched from here).
  */
+const sha1 = (b: Buffer): string => createHash('sha1').update(b).digest('hex');
+
+/** Placed before records were kept: the first Hindu Mythology series cover, untitled. */
+const LEGACY_PLACED = new Set(['f7443a47623d2d6bb8826988ef775b5b2283ca5b']);
+
 export const seedMapImages = (
   log: (message: string) => void = () => undefined,
   artRoot = path.join(repoRoot(), 'art'),
 ): number => {
   let placed = 0;
   const place = (file: string, dir: string, name: string, shape: typeof EPISODE_SHAPE, what: string) => {
-    if (suppliedArt(dir, name)) return;
+    // A RECORD OF WHAT THE MAP PLACED (2026-10-16): `<name>.from-map` holds the
+    // sha1 of the bytes put there. A supplied picture whose bytes still match
+    // was placed from the map, so a newer map picture replaces it; one that
+    // does not match (or has no record) was chosen by a person and stays.
+    const record = path.join(dir, `${name}.from-map`);
+    const bytes = fs.readFileSync(path.join(repoRoot(), file));
+    const existing = suppliedArt(dir, name);
+    if (existing) {
+      const now = sha1(fs.readFileSync(existing));
+      const ours = fs.existsSync(record) ? fs.readFileSync(record, 'utf8').trim() === now : LEGACY_PLACED.has(now);
+      if (!ours || now === sha1(bytes)) return;
+    }
     try {
-      saveSuppliedArt(dir, name, fs.readFileSync(path.join(repoRoot(), file)), shape);
+      saveSuppliedArt(dir, name, bytes, shape);
+      fs.writeFileSync(record, sha1(bytes));
       placed++;
       log(`map: ${what} picture from ${file}`);
     } catch (e) {
