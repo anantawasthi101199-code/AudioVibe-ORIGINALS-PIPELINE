@@ -13,7 +13,12 @@
           "number": 1,
           "title": "Your Gut Is More Than a Food Pipe",
           "covers": "What actually happens to food after you swallow it? Follow a meal through the mouth, stomach, small intestine and colon. Explain digestion, nutrient absorption, digestive secretions and waste formation. Misconception to correct: Food does not simply sit in the stomach until it disappears, and bowel movements do not directly measure how much nutrition the body has absorbed.",
-          "source": "NIDDK digestive-system resources and established gastrointestinal physiology reviews."
+          "source": "NIDDK digestive-system resources and established gastrointestinal physiology reviews.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/01-your-gut-is-more-than-a-food-pipe.txt",
+            "title": "Your Gut Is More Than a Food Pipe",
+            "description": "What actually happens to a sandwich after you swallow it? Follow one lunch through the whole digestive system, from a surgeon who watched digestion through a hole in a man's side to what the latest measurements show."
+          }
         },
         {
           "number": 2,
@@ -62,7 +67,12 @@
           "number": 8,
           "title": "Cholesterol: Why Does Your Body Need It?",
           "covers": "If cholesterol is necessary for life, why can high cholesterol be harmful? Explain cholesterol's roles in cell membranes and hormone production, how lipoproteins transport fats through blood, and the differences between LDL, HDL, triglycerides and non-HDL cholesterol. Misconception to correct: Cholesterol is not inherently toxic, and HDL should not be interpreted as a simple protective score.",
-          "source": "NHS, British Heart Foundation and current lipid-management guidance."
+          "source": "NHS, British Heart Foundation and current lipid-management guidance.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/08-cholesterol-why-your-body-needs-it.txt",
+            "title": "Cholesterol: Why Your Body Needs It",
+            "description": "Your body makes cholesterol on purpose and could not live without it. So why do doctors worry when it is high? A century of research, from rabbits to rare genes, explains the numbers on a cholesterol test."
+          }
         },
         {
           "number": 9,

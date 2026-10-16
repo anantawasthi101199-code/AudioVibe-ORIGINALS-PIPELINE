@@ -1,0 +1,683 @@
+{
+  "id": "norse-mythology",
+  "channelId": "mythic-archives",
+  "title": "Norse Mythology",
+  "formatId": "myth-story",
+  "series": [
+    {
+      "number": 1,
+      "title": "Before the Gods: The Beginning of Everything",
+      "note": "",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Before the Beginning: The Great Void Called Ginnungagap",
+          "covers": "The primordial gap between the realms of ice and fire, and the strange conditions from which the world emerges.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Norse-Mythology/01-before-the-beginning-ginnungagap.txt",
+            "title": "Before the Beginning: Ginnungagap",
+            "description": "Before the gods, before the earth, there was a yawning gap between a world of ice and a world of fire. The Norse story of how everything began, as a disguised king heard it in a hall of shields."
+          }
+        },
+        {
+          "number": 2,
+          "title": "Ymir: The Giant Whose Body Became the World",
+          "covers": "The first primordial giant, his origins, and the extraordinary birth of the earliest beings.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 3,
+          "title": "Audhumla: The Cosmic Cow Who Revealed the First God",
+          "covers": "The mysterious cow whose milk nourishes Ymir and whose licking of the ice reveals Buri.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 4,
+          "title": "Odin and His Brothers: The Murder That Created the World",
+          "covers": "Odin, Vili, and Ve defeat Ymir and transform his body into the landscape of the cosmos.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 5,
+          "title": "How the Gods Created the First Humans",
+          "covers": "Ask and Embla, the creation of humanity, and the gifts that make human life possible.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 6,
+          "title": "Yggdrasil: The World Tree That Holds the Cosmos Together",
+          "covers": "The great ash tree, its roots and wells, and the beings that live around or threaten it.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 7,
+          "title": "The Nine Realms: A Journey Through the Norse Universe",
+          "covers": "Asgard, Midgard, Jotunheim, and the other realms, with a note that the surviving sources do not provide one perfectly consistent map.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 8,
+          "title": "The Norns: The Three Beings Who Shape Destiny",
+          "covers": "Urd, Verdandi, and Skuld, their association with fate, and the relationship between destiny and the gods.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 9,
+          "title": "The First War: The Aesir and Vanir Clash",
+          "covers": "The conflict between the two divine groups, its mysterious causes, and the settlement that follows.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 10,
+          "title": "The Golden Age of the Gods: Why Peace Could Not Last",
+          "covers": "The early prosperity of the gods, the arrival of new threats, and the first signs of the disasters to come.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "The Rise of the Gods and the Defences of Asgard",
+      "note": "",
+      "episodes": [
+        {
+          "number": 11,
+          "title": "Asgard: The Fortress of the Gods",
+          "covers": "The home of the Aesir, their halls, their councils, and the meaning of divine power.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 12,
+          "title": "Valhalla: Odin's Hall of the Slain",
+          "covers": "The warriors chosen by the Valkyries, their life in Odin's hall, and their preparation for the final battle.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 13,
+          "title": "The Builder of Asgard's Wall: The Deal That Nearly Cost the Gods Everything",
+          "covers": "The mysterious builder, the impossible deadline, the horse Svadilfari, and Loki's intervention.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 14,
+          "title": "The Birth of Sleipnir: How Loki Became the Mother of an Eight-Legged Horse",
+          "covers": "Loki's transformation, the birth of Sleipnir, and the horse that becomes Odin's extraordinary mount.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 15,
+          "title": "The Mead of Poetry: How Odin Stole the Gift of Inspiration",
+          "covers": "Kvasir's death, the creation of the magical mead, and Odin's dangerous quest to acquire it.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 16,
+          "title": "Idunn and the Golden Apples That Kept the Gods Young",
+          "covers": "Idunn's apples, the gods' dependence on her, and the crisis caused by her abduction.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 17,
+          "title": "The Theft of Thor's Hammer: How the Gods Nearly Lost Their Greatest Weapon",
+          "covers": "The giant Thrym steals Mjölnir and demands Freyja as his bride, forcing Thor into a humiliating disguise.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 18,
+          "title": "The Wedding of Thor: The Battle Hidden Beneath a Bridal Veil",
+          "covers": "Thor poses as Freyja, retrieves his hammer, and turns the wedding feast into a battle.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 19,
+          "title": "The Master Smiths: The Treasures Forged for the Gods",
+          "covers": "The dwarven craftsmen and the creation of Mjölnir, Draupnir, Gungnir, and other legendary treasures.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 20,
+          "title": "The Walls of Asgard: Why the Gods Could Never Feel Completely Safe",
+          "covers": "Revisit the gods' defences, their enemies, and the growing awareness that their security is temporary.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "The Great Norse Gods",
+      "note": "",
+      "episodes": [
+        {
+          "number": 21,
+          "title": "Odin: The Allfather Who Sacrificed Everything for Wisdom",
+          "covers": "Odin's pursuit of knowledge, his missing eye, his ravens, and his willingness to pay terrible prices for understanding.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 22,
+          "title": "Thor: The Thunder God Who Protected Humanity",
+          "covers": "Thor's strength, Mjölnir, his role as a defender against giants, and his surprisingly comic adventures.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 23,
+          "title": "Freyja: The Goddess of Love, Magic, and War",
+          "covers": "Freyja's associations with desire, seiðr magic, gold, and the warriors she receives after battle.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 24,
+          "title": "Freyr: The God Who Traded His Sword for Love",
+          "covers": "Freyr's connection with fertility and prosperity, his love for Gerðr, and the consequences of surrendering his weapon.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 25,
+          "title": "Tyr: The God Who Sacrificed His Hand",
+          "covers": "Tyr's connection with courage and law, and the deception required to bind Fenrir.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 26,
+          "title": "Heimdall: The Watchman Who Never Sleeps",
+          "covers": "Heimdall's extraordinary senses, his role guarding the Bifrost, and his part in Ragnarök.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 27,
+          "title": "Frigg: The Queen Who Knew More Than She Could Reveal",
+          "covers": "Frigg's position among the gods, her knowledge of fate, and her desperate efforts to protect Baldr.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 28,
+          "title": "Baldr: The Beloved God Whose Death Began the End",
+          "covers": "Baldr's dreams, the efforts to protect him, Loki's plot, and the tragedy that shakes the divine world.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 29,
+          "title": "Hel: The Ruler of the Realm of the Dead",
+          "covers": "Hel's origins, her domain, and the distinction between her realm and the warriors' destinations associated with Odin and Freyja.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 30,
+          "title": "Bragi, Idunn, and the Gods Who Guard Memory and Youth",
+          "covers": "Poetry, storytelling, renewal, and the place of lesser-known deities in the divine community.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Loki: The Trickster Who Helped Destroy the Gods",
+      "note": "",
+      "episodes": [
+        {
+          "number": 31,
+          "title": "Who Is Loki? The God Who Never Belonged Anywhere",
+          "covers": "Loki's giant ancestry, his relationship with Odin and the Aesir, and his shifting role as helper and adversary.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 32,
+          "title": "Loki and the Golden Hair: The Mischief That Created the Gods' Greatest Treasures",
+          "covers": "Loki cuts Sif's hair and must arrange for the dwarves to create replacements and other magical treasures.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 33,
+          "title": "Loki's Strange Children: Fenrir, Jörmungandr, and Hel",
+          "covers": "The prophecies surrounding Loki's offspring and the gods' attempts to control their dangerous futures.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 34,
+          "title": "The Binding of Fenrir: Why Tyr Lost His Hand",
+          "covers": "The growing wolf, the gods' fear, the magical chain Gleipnir, and Tyr's sacrifice.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 35,
+          "title": "Jörmungandr: The Serpent That Circled the World",
+          "covers": "The World Serpent's growth, its place in the ocean, and its destined confrontation with Thor.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 36,
+          "title": "Loki and the Death of Baldr",
+          "covers": "The mistletoe, Hodr, the fatal trick, and the moment Loki's relationship with the gods becomes irreparably damaged.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 37,
+          "title": "Loki's Punishment: Bound Beneath the Poisonous Serpent",
+          "covers": "The gods' revenge, Loki's bonds, Sigyn's loyalty, and the mythological explanation associated with earthquakes.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 38,
+          "title": "Loki at Ragnarök: The Trickster's Final Betrayal",
+          "covers": "Loki's release, his return against the gods, and his final confrontation with Heimdall.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Giants, Monsters, Dwarves, and Magical Beings",
+      "note": "",
+      "episodes": [
+        {
+          "number": 39,
+          "title": "The Jötnar: Were the Giants Really the Gods' Enemies?",
+          "covers": "The giant families, their relationships with the gods, and why giants can be enemies, ancestors, lovers, or sources of wisdom.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 40,
+          "title": "The Dwarves: The Master Craftsmen Beneath the Earth",
+          "covers": "Dwarven craftsmanship, magical objects, and their role in shaping the fortunes of gods and heroes.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 41,
+          "title": "The Valkyries: Odin's Choosers of the Slain",
+          "covers": "The supernatural women who select fallen warriors and carry them to their destinations.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 42,
+          "title": "The Einherjar: The Warriors Preparing for the End of the World",
+          "covers": "The chosen dead in Valhalla, their daily battles and feasts, and their role in Odin's preparations.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 43,
+          "title": "The Draugr: The Restless Dead of Norse Legend",
+          "covers": "Undead guardians of graves and treasure, the threats they pose, and their place in later saga literature.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 44,
+          "title": "The Níðhöggr: The Dragon Gnawing at the Roots of the World",
+          "covers": "The creature beneath Yggdrasil, its associations with destruction, and the imagery of cosmic decay.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 45,
+          "title": "The Eagle, the Squirrel, and the Stag: The Strange Life of Yggdrasil",
+          "covers": "Ratatoskr, the eagle, Níðhöggr, and the creatures that inhabit or trouble the world tree.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 46,
+          "title": "The Huldra, Land Spirits, and Hidden Folk",
+          "covers": "Later Scandinavian folklore about supernatural beings, with clear distinctions between folklore and the older Eddic myths.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 47,
+          "title": "The Magical Objects of Norse Mythology",
+          "covers": "Mjölnir, Gungnir, Draupnir, Skíðblaðnir, and other objects whose powers change the course of stories.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 48,
+          "title": "The Monsters of Ragnarök: Who Will Destroy the Gods?",
+          "covers": "Fenrir, Jörmungandr, the fire giant Surtr, and the forces that converge at the end of the world.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Thor's Greatest Adventures",
+      "note": "",
+      "episodes": [
+        {
+          "number": 49,
+          "title": "Thor's Journey to Útgarða-Loki: The Challenges No One Could Win",
+          "covers": "Thor, Loki, and their companions arrive at a giant's stronghold and discover that their contests are built on illusions.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 50,
+          "title": "Thor Tries to Lift a Cat: The Secret Behind an Impossible Challenge",
+          "covers": "Thor's humiliating contest with a cat that is actually connected to the Midgard Serpent.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 51,
+          "title": "Thor and the Old Woman Who Defeated Him",
+          "covers": "Thor wrestles Elli, old age personified, and discovers the limits of even divine strength.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 52,
+          "title": "Thor's Fishing Trip: The Day He Nearly Caught the World Serpent",
+          "covers": "Thor and the giant Hymir go fishing, and Thor hooks Jörmungandr in one of the most dramatic encounters in Norse mythology.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 53,
+          "title": "Thor and the Giant Hrungnir: The Duel That Shook the Heavens",
+          "covers": "The challenge posed by Hrungnir, the duel, and the strange weaponry involved in Thor's victory.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 54,
+          "title": "Thor and Geirröd: The Journey into a Giant's Trap",
+          "covers": "Loki's involvement, the perilous journey, and the objects that help Thor survive Geirröd's attempts to kill him.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 55,
+          "title": "Thor's Journey to the Land of the Giants",
+          "covers": "A connected exploration of Thor's journeys into Jötunheim and the recurring struggle between strength and cunning.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 56,
+          "title": "The Giant Who Challenged the Gods to a Contest",
+          "covers": "Revisit the themes of trickery, illusion, and how giants expose the limitations of the gods.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 57,
+          "title": "Thor, Loki, and the Price of Their Adventures",
+          "covers": "How the gods' victories often come through bargains, disguises, and unexpected consequences.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 58,
+          "title": "Thor's Final Battle: The Serpent That Will Kill the Thunder God",
+          "covers": "The prophecy of Thor and Jörmungandr's final encounter, leading directly into Ragnarök.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "The Legendary Heroes: Dragons, Cursed Gold, and Broken Oaths",
+      "note": "",
+      "episodes": [
+        {
+          "number": 59,
+          "title": "The Völsungs: The Family Marked by Destiny",
+          "covers": "The ancestry of the Völsung family, the sword Gram, and the heroic legacy inherited by Sigurd.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 60,
+          "title": "Sigmund and the Sword in the Tree",
+          "covers": "The mysterious sword embedded in a tree, the challenge to claim it, and the beginning of the family's tragedies.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 61,
+          "title": "Sigurd the Dragon-Slayer: The Quest for Fafnir's Gold",
+          "covers": "Sigurd's training, his encounter with the dragon Fafnir, and the acquisition of the cursed treasure.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 62,
+          "title": "The Dragon's Blood: The Secret That Gave Sigurd Wisdom",
+          "covers": "Sigurd's encounter with the dragon's blood, the birds' warnings, and the knowledge that changes his fate.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 63,
+          "title": "Brynhild: The Valkyrie Who Fell into an Endless Tragedy",
+          "covers": "Brynhild's origins, her punishment, and her relationship with Sigurd in the surviving traditions.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 64,
+          "title": "The Broken Promise: How Sigurd Lost Brynhild",
+          "covers": "Deception, magic, marriage agreements, and the chain of events that turns love into betrayal.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 65,
+          "title": "Gudrun: The Woman Caught Between Love and Revenge",
+          "covers": "Gudrun's marriage to Sigurd, the murder that transforms her life, and her response to devastating loss.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 66,
+          "title": "The Murder of Sigurd: Why the Greatest Hero Had to Die",
+          "covers": "The conspiracy against Sigurd, the conflicting motives of those closest to him, and the collapse of the Völsung household.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 67,
+          "title": "The Cursed Gold of Andvari: Wealth That Brings Only Destruction",
+          "covers": "Andvari's treasure, the ring Andvaranaut, and the curse that follows the gold through generations.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 68,
+          "title": "Atli and the Niflungs: The Feast That Became a Massacre",
+          "covers": "Gudrun's later marriage, the invitation that conceals a trap, and the destruction of the Niflung warriors.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 69,
+          "title": "Gudrun's Final Revenge",
+          "covers": "Gudrun's response to Atli's crimes and the extreme revenge that concludes this part of the heroic cycle.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        },
+        {
+          "number": 70,
+          "title": "The Völsung Saga: Why No One Could Escape the Curse",
+          "covers": "Connect the major events, family betrayals, and fatal choices that define the Völsung legend.",
+          "source": "The Saga of the Volsungs (William Morris and Eirikr Magnusson translation, 1888) and the heroic poems of the Poetic Edda (Bellows, 1923)"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Ragnarök: The Twilight of the Gods",
+      "note": "",
+      "episodes": [
+        {
+          "number": 71,
+          "title": "Ragnarök: The Prophecy That Haunted the Gods",
+          "covers": "The meaning of the gods' fate, the warnings in Völuspá, and why the end cannot simply be prevented.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 72,
+          "title": "Fimbulwinter: The Three Winters Before the End",
+          "covers": "The terrible winters, social collapse, and the signs that the world's final crisis has begun.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 73,
+          "title": "The Breaking of Bonds: Fenrir and Loki Are Released",
+          "covers": "The release of imprisoned forces, the collapse of restraints, and the gathering of the gods' enemies.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 74,
+          "title": "The Ship of the Dead: Naglfar Sets Sail",
+          "covers": "The ship associated with the final conflict, the forces assembling against the gods, and the approach of the last battle.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 75,
+          "title": "Heimdall Sounds the Gjallarhorn",
+          "covers": "The signal that summons the gods, the awakening of the final battle, and the collapse of the boundary between worlds.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 76,
+          "title": "Odin vs Fenrir: The Death of the Allfather",
+          "covers": "Odin confronts the monstrous wolf and falls in the battle foretold for him.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 77,
+          "title": "Thor vs Jörmungandr: The Last Battle of Thunder and Serpent",
+          "covers": "Thor kills the World Serpent but succumbs to its venom after taking his final steps.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 78,
+          "title": "Loki vs Heimdall: The Final Duel",
+          "covers": "The ancient antagonists face one another in the destruction of the divine order.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 79,
+          "title": "Surtr's Fire: The Burning of the World",
+          "covers": "The fire giant's role, the destruction of the old world, and the collapse of the familiar cosmos.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 80,
+          "title": "After Ragnarök: The World That Rises Again",
+          "covers": "The earth's renewal, the surviving gods and humans, and the hope that emerges after destruction.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Norse Beliefs: Death, Fate, Magic, and the Afterlife",
+      "note": "",
+      "episodes": [
+        {
+          "number": 81,
+          "title": "Valhalla vs Hel: Where Did the Dead Really Go?",
+          "covers": "The different destinations of the dead, the role of Valhalla, Hel, and other traditions about the afterlife.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 82,
+          "title": "Odin's Sacrifice: Why He Hung from the World Tree",
+          "covers": "Odin's self-sacrifice, his suffering, and the acquisition of runic knowledge in Hávamál.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 83,
+          "title": "The Runes: The Mysterious Symbols of Power",
+          "covers": "The runic alphabet, its historical uses, and the magical roles attributed to runes in some literary sources.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 84,
+          "title": "Seiðr: The Norse Art of Prophecy and Magic",
+          "covers": "Seiðr, prophecy, practitioners such as the völur, and the complicated relationship between magic and social expectations.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 85,
+          "title": "Fate in Norse Mythology: Can Even the Gods Change Their Destiny?",
+          "covers": "The Norns, prophecies, and the difference between knowing the future and being able to prevent it.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 86,
+          "title": "Honour, Oaths, and Revenge: The Rules That Governed the Heroic World",
+          "covers": "Kinship, reputation, vengeance, and the moral expectations reflected in heroic poems and sagas.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 87,
+          "title": "Berserkers and Battle-Fury: The Warriors Who Became Legends",
+          "covers": "Literary accounts of berserkers, the tradition of battle-fury, and the distinction between historical evidence and later romanticised portrayals.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 88,
+          "title": "Sacrifice and the Gods: How Did People Worship in the Norse World?",
+          "covers": "Offerings, communal feasts, sacred places, and what the historical evidence can tell us about pre-Christian religious practice.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 89,
+          "title": "The Nine Realms and the Afterlife: A Map of the Norse Cosmos",
+          "covers": "Revisit the realms, cosmic geography, and different destinations associated with the dead.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        },
+        {
+          "number": 90,
+          "title": "What Did the Vikings Actually Believe?",
+          "covers": "Separate the surviving mythology, historical religious practice, modern reconstructions, and popular misconceptions.",
+          "source": "The Poetic Edda (Henry Adams Bellows translation, 1923) and Snorri Sturluson's Prose Edda (Arthur Gilchrist Brodeur translation, 1916)"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Beyond the Eddas: Norse Legends and Their Legacy",
+      "note": "",
+      "episodes": [
+        {
+          "number": 91,
+          "title": "Beowulf: The Hero Who Fought Monsters in a World of Giants",
+          "covers": "Grendel, Grendel's mother, and the dragon, with a clear distinction between the Old English poem and Norse mythology proper.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 92,
+          "title": "Ragnar Lodbrok: The Legendary Viking King",
+          "covers": "The saga traditions surrounding Ragnar, his raids, and the difficulty of separating legendary accounts from history.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 93,
+          "title": "The Saga of the Greenlanders and Erik the Red",
+          "covers": "Norse exploration, settlement traditions, and the historical world in which saga literature developed.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 94,
+          "title": "The Wild Hunt: Odin's Ghostly Ride Across the Sky",
+          "covers": "The later folklore of spectral riders, its regional variations, and the debated connections to older traditions.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 95,
+          "title": "Dwarves, Elves, and Hidden Beings in Scandinavian Folklore",
+          "covers": "The distinctions between beings in medieval texts and later Scandinavian folklore.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 96,
+          "title": "The Poetic Edda: The Poems That Preserved the Gods",
+          "covers": "The mythological and heroic poems, the manuscript tradition, and the challenges of reconstructing older beliefs.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 97,
+          "title": "Snorri Sturluson and the Prose Edda: How We Know the Stories",
+          "covers": "Snorri's role, his medieval context, and why his account must be read alongside other sources.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 98,
+          "title": "From Odin to Tolkien: How Norse Mythology Shaped Fantasy",
+          "covers": "The influence of Norse names, heroic cycles, dwarves, dragons, and apocalyptic themes on modern fantasy.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 99,
+          "title": "Thor in the Modern World: From Ancient God to Popular Culture",
+          "covers": "How the image of Thor has changed through literature, art, comics, film, and other modern adaptations.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        },
+        {
+          "number": 100,
+          "title": "The Norse Mythology Archives: What the Gods Leave Behind",
+          "covers": "A closing synthesis of creation, courage, fate, loss, Ragnarök, and renewal, while reflecting on the limits of what the surviving sources tell us.",
+          "source": "Beowulf (Francis Gummere translation, 1910), the Vinland sagas (Arthur Middleton Reeves translation, 1890), the Prose Edda (Brodeur, 1916) and Scandinavian folklore collections"
+        }
+      ]
+    }
+  ]
+}

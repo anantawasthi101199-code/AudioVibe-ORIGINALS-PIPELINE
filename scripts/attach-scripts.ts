@@ -41,7 +41,17 @@ const ceilingWords = (m: MapFile) => Math.floor(loadFormat(m.formatId).targetSec
 /** Where this map's scripts live: beside the ones it already has. */
 const dirFor = (m: MapFile): string => {
   const has = itemsOf(m).find((i) => i.script);
-  return has ? path.posix.dirname(has.script!.file) : `CONTENT/Scripts/${m.id}`;
+  if (has) return path.posix.dirname(has.script!.file);
+  // A new map: a folder named after it, beside this channel's other scripts.
+  const folder = m.title.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const sibling = fs
+    .readdirSync(path.join(repoRoot(), 'maps'))
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => readMap(f.replace(/\.json$/, '')))
+    .filter((o) => o.channelId === m.channelId)
+    .flatMap(itemsOf)
+    .find((i) => i.script);
+  return sibling ? `${path.posix.dirname(path.posix.dirname(sibling.script!.file))}/${folder}` : `CONTENT/Scripts/${m.id}`;
 };
 
 const next = (mapId: string, count: number) => {

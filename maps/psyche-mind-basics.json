@@ -13,7 +13,12 @@
           "number": 1,
           "title": "Why You Forget Almost Everything",
           "covers": "In the 1880s Hermann Ebbinghaus memorised thousands of nonsense syllables and drew the forgetting curve. Why most of what we learn fades within days, and what slows it down.",
-          "source": "Ebbinghaus (1885) and reviews of spacing and retrieval practice"
+          "source": "Ebbinghaus (1885) and reviews of spacing and retrieval practice",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/01-why-you-forget-almost-everything.txt",
+            "title": "Why You Forget Almost Everything",
+            "description": "You read a whole chapter, and a week later you can barely remember a page. That isn't a bad memory. A scientist who memorised thousands of nonsense words worked out why, and what actually helps."
+          }
         },
         {
           "number": 2,
@@ -56,7 +61,12 @@
           "number": 7,
           "title": "What Is an Emotion For?",
           "covers": "Why we have feelings at all, how emotions push us to act, and why the same feeling can be useful one day and unhelpful the next.",
-          "source": "Reviews of the functions of emotion and appraisal theory"
+          "source": "Reviews of the functions of emotion and appraisal theory",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/07-what-is-an-emotion-for.txt",
+            "title": "What Is an Emotion For?",
+            "description": "Your heart pounds, your face gets hot, and you wish you could just switch it off. But emotions aren't faults in the system. What they are actually for, and what to do with a feeling you didn't ask for."
+          }
         },
         {
           "number": 8,

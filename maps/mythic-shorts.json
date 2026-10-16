@@ -668,19 +668,34 @@
       "number": 61,
       "title": "The Shipwrecked Sailor and the Serpent King",
       "covers": "A sailor is washed up on a magical island ruled by a giant golden serpent, who tells him a sad story and sends him home with treasure.",
-      "source": "The Tale of the Shipwrecked Sailor, in W. M. Flinders Petrie, Egyptian Tales (1895)"
+      "source": "The Tale of the Shipwrecked Sailor, in W. M. Flinders Petrie, Egyptian Tales (1895)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/061-the-shipwrecked-sailor.txt",
+        "title": "The Shipwrecked Sailor and the Serpent King",
+        "description": "A sailor is the only survivor of a storm and wakes on a magical island. Then the trees crack, the ground shakes, and a giant golden serpent comes looking for him."
+      }
     },
     {
       "number": 62,
       "title": "Nergal and Ereshkigal: The God Who Married Death",
       "covers": "A god insults the queen of the dead, is summoned to her kingdom, and the story ends in a strange and stormy marriage.",
-      "source": "Nergal and Ereshkigal, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)"
+      "source": "Nergal and Ereshkigal, in R. W. Rogers, Cuneiform Parallels to the Old Testament (1912)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/062-nergal-and-ereshkigal.txt",
+        "title": "Nergal and Ereshkigal: Marrying Death",
+        "description": "The queen of the dead cannot leave her dark kingdom, so the gods send her a share of their feast. One young god refuses to stand for her messenger, and she demands that he come down to her."
+      }
     },
     {
       "number": 63,
       "title": "Branwen: The Insult That Started a War",
       "covers": "A Welsh princess married to the King of Ireland is mistreated, a starling carries her message home, and her giant brother wades across the sea.",
-      "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Branwen the daughter of Llyr"
+      "source": "The Mabinogion (Lady Charlotte Guest translation, 1849), Branwen the daughter of Llyr",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/063-branwen.txt",
+        "title": "Branwen: The Insult That Started a War",
+        "description": "A Welsh princess is married to the King of Ireland, and then mistreated in his kitchen. She trains a starling to carry a letter across the sea to her giant brother."
+      }
     },
     {
       "number": 64,

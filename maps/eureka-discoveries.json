@@ -13,7 +13,12 @@
           "number": 1,
           "title": "Vesalius: The Doctor Who Looked for Himself",
           "covers": "For 1,300 years doctors trusted an ancient Roman's descriptions of the body. In the 1540s Andreas Vesalius cut open real bodies in Padua, found Galen was wrong in hundreds of places, and published the first accurate book of human anatomy.",
-          "source": "Vesalius, De humani corporis fabrica (1543), and histories of Renaissance anatomy"
+          "source": "Vesalius, De humani corporis fabrica (1543), and histories of Renaissance anatomy",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/01-vesalius.txt",
+            "title": "Vesalius: The Doctor Who Looked for Himself",
+            "description": "For 1,300 years, doctors learned the human body from an ancient Roman's books, without checking. In the 1540s a young professor in Padua climbed down from his chair, picked up the knife, and found the books were wrong."
+          }
         },
         {
           "number": 2,
@@ -56,7 +61,12 @@
           "number": 7,
           "title": "Copernicus Moves the Earth",
           "covers": "A Polish churchman spent decades on a book that put the Sun, not the Earth, at the centre, and only saw it printed as he was dying in 1543.",
-          "source": "Copernicus, De revolutionibus (1543), and histories of astronomy"
+          "source": "Copernicus, De revolutionibus (1543), and histories of astronomy",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/07-copernicus.txt",
+            "title": "Copernicus Moves the Earth",
+            "description": "For more than a thousand years, everyone knew the Earth stood still at the centre of everything. A Polish churchman worked out that it didn't, then waited thirty years to say so, and saw his book only as he was dying."
+          }
         },
         {
           "number": 8,

@@ -1,0 +1,25 @@
+## story
+
+[warmly] This is one of the oldest adventure stories in the world, from ancient Egypt, about a sailor who was shipwrecked on a magical island, and the giant serpent who ruled it.
+
+[lightly] The sailor tells it himself, years later, to cheer up his worried captain. Once, he says, I sailed on the king's business, on a great ship, with a hundred and twenty of the best sailors in Egypt. They could look at the sky and tell you a storm was coming before it came.
+
+[intense] But they did not see this one. A storm hit us in the open sea. The wind howled. A wave rose up as tall as a house, and smashed into the ship. [grave] The ship broke apart, and every man on board was drowned. Every man but me.
+
+[softly] I clung to a piece of wood, and the sea threw me onto an island. For three days I lay alone in the shade of a bush. Then I got up to look for food. [with wonder] And the island was full of it. Figs and grapes, every kind of vegetable, fish and birds. I ate until I was full, and still had to put some down because I could not carry it all.
+
+[thoughtful] I made a fire with a fire stick, and burned an offering to the gods, to thank them for saving me. [pause] And that was when I heard the noise.
+
+## ending
+
+[ominous] A sound like thunder. The trees around me cracked and split. The ground shook. I covered my face, and when I uncovered it, there it was. A serpent, as long as fifteen men lying head to toe. Its scales were gold. Its eyebrows were deep blue stone. It had a beard. It reared up over me, and opened its mouth.
+
+[intense] Who brought you here? it roared. If you do not tell me, I will turn you to ashes. [softly] I was too terrified to speak. So it picked me up gently in its mouth, carried me to its home, and set me down unharmed.
+
+[tender] Then it told me its own story. Once, it said, it had lived on this island with seventy-five serpents of its family, and a little daughter. One day a star fell from the sky, and burned them all, and it alone was left. [gently] If you are brave, it told me, you will hold your children again. In four months a ship will come, and take you home.
+
+[warmly] And it did. As I left, the serpent gave me myrrh and ivory and perfumes, and told me that when I was gone, its island would sink into the sea.
+
+## close
+
+[softly] So the sailor came home rich, and no one ever found that island again, because it had gone back into the waves.

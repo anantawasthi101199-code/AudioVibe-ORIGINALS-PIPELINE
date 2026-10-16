@@ -13,13 +13,23 @@
           "number": 1,
           "title": "Jack the Ripper: The Killer Who Vanished into Victorian London",
           "covers": "The autumn of 1888 brought a series of murders to Whitechapel, east London, and turned the district into the focus of a national and international investigation. This episode reconstructs the lives of the women whose deaths became associated with the name Jack the Ripper, the conditions of Victorian Whitechapel, the police investigation and the letters claiming to come from the killer. It explores witness accounts, the limits of Victorian forensic methods, competition between police forces and the press's role in creating a public mystery that continues today. It ends by separating what historical records establish from the many theories about the killer's identity.",
-          "source": "Metropolitan Police records, contemporary newspapers and surviving correspondence. Many purported Ripper letters cannot be reliably attributed to the murderer."
+          "source": "Metropolitan Police records, contemporary newspapers and surviving correspondence. Many purported Ripper letters cannot be reliably attributed to the murderer.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/01-jack-the-ripper.txt",
+            "title": "Jack the Ripper: Five Women of Whitechapel",
+            "description": "In the autumn of 1888, five women were murdered in the poorest streets of east London, and the killer was never caught. The story of the investigation, the letters, and the women at its centre."
+          }
         },
         {
           "number": 2,
           "title": "The Brides in the Bath: Three Marriages, Three Deaths",
           "covers": "England, early twentieth century · Serial murder and forensic evidence George Joseph Smith married multiple women under different identities. Three of his wives died in baths, and what initially appeared to be separate domestic tragedies became the subject of a murder investigation. The episode follows the discovery of the pattern, the reconstruction of the marriages, the investigation of the deaths and the courtroom evidence that helped establish a case against Smith. It also examines the role of medical testimony and experimental demonstrations in explaining how apparently accidental deaths could be investigated as deliberate killings.",
-          "source": "Contemporary trial reporting, medical testimony and surviving court records. Technical claims about the drowning mechanism should be checked against reliable historical and forensic sources."
+          "source": "Contemporary trial reporting, medical testimony and surviving court records. Technical claims about the drowning mechanism should be checked against reliable historical and forensic sources.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/02-the-brides-in-the-bath.txt",
+            "title": "The Brides in the Bath",
+            "description": "Three women married the same man under different names, and each was found dead in her bath. It took a newspaper report, two suspicious readers, and a pathologist's experiment to show how."
+          }
         },
         {
           "number": 3,

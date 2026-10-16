@@ -8,19 +8,34 @@
       "number": 1,
       "title": "The Chocolate Bar That Melted: The Microwave Oven",
       "covers": "An engineer working on radar in 1945 noticed the chocolate bar in his pocket had melted, and invented the microwave oven.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/001-microwave-oven.txt",
+        "title": "The Microwave Oven: The Melted Chocolate Bar",
+        "description": "In 1945 an engineer working on radar equipment noticed the chocolate bar in his pocket had melted. He tried popcorn next, and invented the microwave oven."
+      }
     },
     {
       "number": 2,
       "title": "Jenner and the Milkmaids",
       "covers": "Edward Jenner noticed milkmaids who caught cowpox did not get smallpox, and in 1796 tested his idea on a boy called James Phipps.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/002-jenner-and-the-milkmaids.txt",
+        "title": "Jenner and the Milkmaids",
+        "description": "A country doctor heard that milkmaids who caught a mild cow disease never caught smallpox. In 1796 he tested the idea on a boy, and invented the first vaccine."
+      }
     },
     {
       "number": 3,
       "title": "The Dog Who Orbited the Earth",
       "covers": "In 1957 the Soviet Union sent a stray dog called Laika into orbit, and the story of what happened to her stayed secret for decades.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/003-laika.txt",
+        "title": "Laika: The Dog Who Orbited the Earth",
+        "description": "In 1957 a stray dog from the streets of Moscow became the first animal to orbit the Earth. For decades the world was told she lived for days. The truth came out in 2002."
+      }
     },
     {
       "number": 4,

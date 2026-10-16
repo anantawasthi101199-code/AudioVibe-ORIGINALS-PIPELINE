@@ -1,0 +1,21 @@
+## story
+
+[leaning in] Salesforce became one of the biggest software companies in the world. Its first logo was the word software, with a red line through it.
+
+[warmly] Its founder was Marc Benioff, who grew up in San Francisco and was a natural salesman. [curious] By his mid-twenties he was one of the youngest vice presidents at Oracle, a giant company that sold software to businesses.
+
+[thoughtful] Back then, business software worked like this. A company paid a huge amount for it, waited months while it was installed on its own computers, and then paid more every time it needed upgrading or fixing. [wry] Big companies hated it. Small ones simply could not afford it.
+
+[determined] Benioff had a different idea. What if you never installed anything? What if the software lived on the internet, and customers simply logged in through a web browser and paid a monthly fee, the way you might pay for electricity? [curious] In 1999, he and three engineers started Salesforce in a rented flat in San Francisco. Its first product helped sales teams keep track of their customers.
+
+[serious] But nobody had heard of them, and their rivals were huge. [pause] So Benioff picked a fight in public.
+
+## rise
+
+[with a smile] He made the No Software symbol his logo. He hired actors to stage a fake protest outside a rival's big conference, carrying signs against old-style software. Journalists wrote about it, and people started paying attention. [knowingly] It worked because the idea was genuinely better: cheaper, faster, and nothing to install. Today we call it the cloud, and almost every business uses software this way.
+
+[building] Salesforce also promised to give one per cent of its shares, its products and its staff time to charity, an idea copied by many other companies. [quietly impressed] It joined the stock market in 2004, bought the work chat app Slack in 2021, and today serves businesses all over the world.
+
+## close
+
+[warmly] It took a salesman who was bold enough to sell against the very thing he was selling.

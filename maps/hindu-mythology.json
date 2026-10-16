@@ -69,7 +69,12 @@
           "number": 6,
           "title": "What Happens When the Universe Ends?",
           "covers": "Pralaya, cosmic dissolution, and cycles of creation and renewal.",
-          "source": "Vishnu Purana (Wilson translation) book 6"
+          "source": "Vishnu Purana (Wilson translation) book 6",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/06-when-the-universe-ends.txt",
+            "title": "When the Universe Ends",
+            "description": "Fire, flood and a sleeping god: how Hindu tradition tells the end of the universe, through the eyes of a sage who survived it, and found a child floating on the dark water."
+          }
         },
         {
           "number": 7,

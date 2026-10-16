@@ -8,19 +8,34 @@
       "number": 1,
       "title": "Why You Remember the One Bad Comment",
       "covers": "The negativity bias: why one criticism outweighs ten compliments, and why the brain is built that way.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/001-the-one-bad-comment.txt",
+        "title": "Why You Remember the One Bad Comment",
+        "description": "Ten people say they loved your work and one person criticises it, and the criticism is the one you replay at night. That isn't you being negative. It's an old survival habit in the brain."
+      }
     },
     {
       "number": 2,
       "title": "Why Crying Can Make You Feel Better",
       "covers": "What tears are for, and why a good cry sometimes helps and sometimes does not.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/002-why-crying-helps.txt",
+        "title": "Why Crying Can Make You Feel Better",
+        "description": "Sometimes a good cry leaves you lighter, and sometimes it just leaves you tired. What tears are actually for, and why the people around you matter."
+      }
     },
     {
       "number": 3,
       "title": "Why You Attract the Same Kind of Partner",
       "covers": "How early relationships shape who feels familiar, and why familiar is not always good for you.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/003-same-kind-of-partner.txt",
+        "title": "Why You Attract the Same Kind of Partner",
+        "description": "New person, new name, same story, and the same way it ends. Why we are drawn to what feels familiar, even when familiar is not good for us."
+      }
     },
     {
       "number": 4,

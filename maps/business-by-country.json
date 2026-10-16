@@ -74,7 +74,12 @@
           "title": "Haldiram's: From a Small Sweets Business to a National Food Brand",
           "covers": "Trace its Bikaner origins, the development of packaged snacks, standardisation, retail distribution and expansion beyond its home market. Explore the challenges of growing a food business while maintaining taste, quality and a recognisable identity.",
           "subject": "Haldiram's",
-          "source": "Haldiram's official company history, annual reports and reputable business journalism"
+          "source": "Haldiram's official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/06-haldirams.txt",
+            "title": "Haldiram's: From Bikaner Bhujia to a Brand",
+            "description": "A young man in a desert town made his family's crunchy snack thinner and sharper, and named it after a maharaja. His grandsons turned it into one of India's biggest food companies, and fought over the name."
+          }
         },
         {
           "number": 7,
@@ -116,7 +121,12 @@
           "title": "Tesco: How a Market Stall Became Britain's Supermarket Giant",
           "covers": "Jack Cohen's early market-stall business, the development of the Tesco name, expansion through stores and acquisitions, self-service retail, supermarket competition and the rise of loyalty programmes.",
           "subject": "Tesco",
-          "source": "Tesco official company history, annual reports and reputable business journalism"
+          "source": "Tesco official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/11-tesco.txt",
+            "title": "Tesco: From a Market Stall to a Giant",
+            "description": "A young man back from the First World War spent his savings on surplus food and sold it from a barrow in east London. His business became Britain's biggest retailer, and nearly lost its way twice."
+          }
         },
         {
           "number": 12,

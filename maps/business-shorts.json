@@ -729,21 +729,36 @@
       "title": "Haribo: The Gold Bear Made in a Back Kitchen",
       "covers": "Hans Riegel starting with a sack of sugar and a copper kettle in Bonn in 1920, the dancing bear sweet, rebuilding after the war, and growing into the world's best-known gummy maker.",
       "subject": "Haribo",
-      "source": "Haribo official company history, annual reports and reputable business journalism"
+      "source": "Haribo official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/061-haribo.txt",
+        "title": "Haribo: The Gold Bear Made in a Back Kitchen",
+        "description": "In 1920 a sweet maker in Bonn started a business with a sack of sugar, a copper kettle and a bicycle. His wife delivered the sweets, and his dancing bear became the most famous gummy in the world."
+      }
     },
     {
       "number": 62,
       "title": "Decathlon: The Sports Shop That Designs Its Own Gear",
       "covers": "Michel Leclercq opening a big sports store near Lille in 1976, the shift to in-house brands like Quechua, and how affordable equipment made it a global retailer.",
       "subject": "Decathlon",
-      "source": "Decathlon official company history, annual reports and reputable business journalism"
+      "source": "Decathlon official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/062-decathlon.txt",
+        "title": "Decathlon: Every Sport Under One Roof",
+        "description": "In 1976 a young Frenchman opened a huge shop near Lille selling equipment for every sport at low prices. Then Decathlon started designing its own gear, and became the world's biggest sports retailer."
+      }
     },
     {
       "number": 63,
       "title": "Salesforce: The Company That Said 'No Software'",
       "covers": "Marc Benioff starting in a San Francisco apartment in 1999, selling business software over the internet by subscription, and becoming the leader in customer management tools.",
       "subject": "Salesforce",
-      "source": "Salesforce official company history, annual reports and reputable business journalism"
+      "source": "Salesforce official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/063-salesforce.txt",
+        "title": "Salesforce: The Company That Said No Software",
+        "description": "A young executive quit a giant software company to sell business software over the internet. He marketed it with a crossed-out symbol and fake protesters, and built one of the biggest software firms on Earth."
+      }
     },
     {
       "number": 64,

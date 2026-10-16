@@ -1,0 +1,71 @@
+## opening
+
+[warmly] Here's a puzzle. Your body makes cholesterol on purpose. Every cell needs it. Without it, you could not live. So why do doctors worry when your cholesterol is high?
+
+[curious] This is one of the most thoroughly studied questions in all of medicine. More than a hundred years of research, enormous long-term studies, large drug trials and, more recently, genetics all point in the same direction.
+
+[gently] So let's work out what cholesterol really is, why your body needs it, and what the numbers on a cholesterol test actually mean.
+
+## belief
+
+[thoughtful] Many people think of cholesterol simply as something bad: a kind of fat in food that clogs your arteries. Eggs and butter are the villains. And then there's the idea of good cholesterol and bad cholesterol, as if there were two different substances, one to eat more of and one to avoid.
+
+[warmly] There is something real in all of that. High levels of some cholesterol in the blood really are linked to heart attacks and strokes. Doctors really do measure two main kinds. And in the 1970s and 80s, public health campaigns told people to cut back on cholesterol in food, especially eggs, so a lot of us grew up hearing it.
+
+[curious] But the real story is more interesting than good and bad. And it starts with rabbits.
+
+## evidence
+
+[serious] In 1913, a young Russian scientist called Nikolai Anichkov fed rabbits a diet with added pure cholesterol. Within weeks, fatty deposits built up in the walls of their arteries, looking very much like the ones found in people who had died of heart disease. [thoughtful] It was a striking result. But rabbits naturally eat only plants, and their bodies handle cholesterol very differently from ours, so for decades many doctors doubted it applied to humans.
+
+[curious] The next big step came in 1948, in a small town in Massachusetts called Framingham. Researchers recruited more than five thousand adults, most of them healthy, and began checking them every couple of years, measuring their blood pressure, their weight, whether they smoked, and their blood cholesterol. They kept following them for decades, and later their children and grandchildren too.
+
+[knowingly] By the early 1960s, Framingham had shown that people with higher cholesterol, higher blood pressure, or who smoked, were much more likely to have heart attacks. It even gave medicine a new phrase: risk factor. A thing that does not guarantee disease, but makes it more likely.
+
+[thoughtful] But a link is not proof of cause. People with high cholesterol might differ in other ways. So researchers needed to test whether lowering it actually helped.
+
+[serious] In 1994, a Scandinavian trial published its results. About four and a half thousand people who already had heart disease were given either a statin, a drug that lowers cholesterol, or a dummy pill, for around five years. [quietly impressed] In the group taking the statin, about thirty per cent fewer people died. Many trials since, in hundreds of thousands of people, have found the same pattern: the more you lower the particular kind of cholesterol called LDL, the more you lower the risk.
+
+[curious] Then genetics gave an even cleaner test. Some people are born with small differences in their genes that give them lower LDL all their lives. In 2006, a study in the United States found that people with one such difference, in a gene called PCSK9, had LDL about a quarter lower than average, and far fewer heart attacks over fifteen years. [thoughtful] You can't choose your genes, so this works almost like a natural experiment. And it pointed the same way: lower LDL, less heart disease.
+
+[serious] The same tools also showed where the simple story was wrong. HDL, the so-called good cholesterol, is linked to lower risk. So, in the 2000s, drug companies made medicines that pushed HDL higher. [grave] One of them, in a large trial in 2006, raised HDL a great deal, and yet more people taking it died, and the trial was stopped. Genetic studies later found that people born with naturally higher HDL were not protected either. So HDL, it seems, is more of a sign of other things going well than something that protects you by itself.
+
+[thoughtful] And eggs? Studies found that for most people, cholesterol in food changes blood cholesterol only a little, because the body makes less of its own when you eat more. In 2015, the official American dietary guidelines dropped their strict daily limit on dietary cholesterol. Saturated fat, from things like fatty meat, butter and pastries, turned out to raise blood LDL more than eggs do.
+
+## mechanism
+
+[warmly] So what is cholesterol? It's a waxy substance, made mostly by your liver, though nearly every cell can make some. And your body uses it for some very important jobs.
+
+[curious] It's part of the outer wall of every cell, helping it stay flexible but firm. It's the raw material for hormones, including the stress hormone cortisol and the sex hormones oestrogen and testosterone. Your skin uses it to make vitamin D in sunlight. And your liver turns it into bile, which helps you digest fat.
+
+[thoughtful] Here's the tricky part. Blood is mostly water, and cholesterol, like oil, does not mix with water. So it can't simply float around on its own. Your body packs it into tiny particles called lipoproteins: little balls with a coat of protein on the outside and fat and cholesterol inside. [with a smile] Think of them as delivery lorries on the road network of your blood.
+
+[building] The main lorries are LDL, low-density lipoprotein, which carries cholesterol out from the liver to the cells that need it. And HDL, high-density lipoprotein, which helps collect spare cholesterol and bring it back to the liver. That's where the names bad and good come from. But they aren't two kinds of cholesterol. They're two kinds of lorry carrying the same cargo.
+
+[serious] Trouble starts when there are too many LDL lorries on the road. Some of them slip into the walls of your arteries and get stuck there. Your immune system reacts, and over many years a fatty swelling called a plaque builds up in the artery wall. [grave] If a plaque narrows an artery, or breaks open and a clot forms, it can block blood flow to the heart or brain. That is a heart attack, or a stroke.
+
+[thoughtful] A cholesterol test usually reports a few numbers. Total cholesterol. LDL. HDL. Triglycerides, a different kind of fat in the blood, used for energy. And sometimes non-HDL cholesterol, which adds up all the lorries that can cause harm.
+
+## disagreement
+
+[thoughtful] On LDL, researchers broadly agree: it is a cause of heart disease, not just a sign of it, and lowering it lowers risk. The arguments are about details.
+
+[curious] One is how low to go, and for whom. Some experts argue that for people at high risk, the lower the better, with no clear floor. Others worry about treating very large numbers of healthy people with medicine for small individual benefits.
+
+[thoughtful] Another is saturated fat. Most health bodies, including the NHS, advise cutting down on it. A vocal minority of researchers argue the evidence is weaker than it seems, and that the type of food matters more than the fat in it. Most reviews still support the main advice, especially replacing saturated fat with unsaturated fats, like those in olive oil, nuts and oily fish.
+
+[curious] And HDL is still a puzzle. Scientists don't fully understand why it tracks with good health if raising it does not help.
+
+## honest
+
+[warmly] So here is the honest answer. Cholesterol is not a poison. Your body needs it and makes it. The problem is too much of it carried in LDL particles, over many years, which slowly damages your arteries. That is one of the best-established findings in medicine.
+
+[thoughtful] A single number doesn't tell you your whole risk. Doctors combine cholesterol with your age, blood pressure, smoking, diabetes and family history to estimate it. And some people have high cholesterol mostly because of their genes. About one person in two hundred and fifty is born with an inherited condition called familial hypercholesterolaemia, which causes very high LDL from childhood.
+
+[serious] In England, the NHS offers a free health check every five years to adults aged forty to seventy-four, which includes a cholesterol test. If you have a close relative who had a heart attack or stroke young, ask your doctor about testing earlier. And if you ever have sudden chest pain or pressure, or feel suddenly very breathless, call emergency services straight away.
+
+## close
+
+[warmly] So, the puzzle we started with. How can something your body needs be harmful?
+
+[softly] It's not the cargo. It's the traffic. Your body needs its delivery lorries. It's when there are too many of them on the road, for too many years, that they start to crash into the walls.

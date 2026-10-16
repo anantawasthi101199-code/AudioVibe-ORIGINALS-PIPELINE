@@ -137,6 +137,193 @@ channels:
         sayAs: nee-LAY-kuh-nee
       - word: Girgaum
         sayAs: gir-GAOM
+      # Original-language sounds (2026-10-16), scripts going live next.
+      - word: Dhirubhai Ambani
+        sayAs: DHEE-roo-bye um-BAH-nee
+        ipa: /d̪ʱiːɾubʱaːiː əmbaːniː/
+      - word: Ambani
+        sayAs: um-BAH-nee
+        ipa: /əmbaːniː/
+      - word: Mukesh
+        sayAs: moo-KAYSH
+        ipa: /mʊkeːʃ/
+      - word: Anil
+        sayAs: UN-il
+        ipa: /ənɪl/
+      - word: Akash
+        sayAs: AH-kaash
+        ipa: /aːkaːʃ/
+      - word: Isha
+        sayAs: EE-shah
+        ipa: /iːʃaː/
+      - word: Anant
+        sayAs: uh-NUNT
+        ipa: /ənən̪t̪/
+      - word: Hirachand
+        sayAs: hee-RAH-chund
+        ipa: /ɦiːɾaːt͡ʃən̪d̪/
+      - word: Chorwad
+        sayAs: CHOR-wahd
+        ipa: /t͡ʃoːɾʋaːɖ/
+      - word: Champaklal
+        sayAs: CHUM-puk-lahl
+        ipa: /t͡ʃəmpəklaːl/
+      - word: Damani
+        sayAs: duh-MAH-nee
+        ipa: /d̪əmaːniː/
+      - word: Naroda
+        sayAs: nuh-ROH-dah
+        ipa: /nəɾoːɖaː/
+      - word: Ahmedabad
+        sayAs: AH-med-uh-baad
+        ipa: /əɦməd̪aːbaːd̪/
+      - word: Hazira
+        sayAs: huh-ZEE-rah
+        ipa: /ɦəziːɾaː/
+      - word: Vimal
+        sayAs: VIM-ul
+        ipa: /ʋɪməl/
+      - word: Jio
+        sayAs: JEE-oh
+        ipa: /d͡ʒiːjoː/
+      - word: Masjid Bunder
+        sayAs: MUS-jid BUN-dur
+        ipa: /məsd͡ʒɪd̪ bən̪d̪əɾ/
+      - word: Sudha Murty
+        sayAs: SOO-dhah MOOR-tee
+        ipa: /suːd̪ʱaː muːɾt̪iː/
+      - word: Murthy
+        sayAs: MOOR-tee
+        ipa: /muːɾt̪iː/
+      - word: Nandan Nilekani
+        sayAs: NUN-dun nih-LAY-kuh-nee
+        ipa: /nən̪d̪ən nɪleːkəɳiː/
+      - word: Gopalakrishnan
+        sayAs: goh-pah-luh-KRISH-nun
+        ipa: /ɡoːpaːləkɾɪʂɳən/
+      - word: Shibulal
+        sayAs: SHIB-oo-lahl
+        ipa: /ʃɪbulaːl/
+      - word: Ashok Arora
+        sayAs: uh-SHOKE uh-ROH-rah
+        ipa: /əʃoːk əɾoːɽaː/
+      - word: Pune
+        sayAs: POO-nay
+        ipa: /puɳeː/
+      - word: Anand
+        sayAs: AH-nund
+        ipa: /aːnən̪d̪/
+      - word: Kaira
+        sayAs: KAI-rah
+        ipa: /kɛːɾaː/
+      - word: Samarkha
+        sayAs: suh-MUR-khah
+        ipa: /səməɾkʰaː/
+      - word: Patel
+        sayAs: puh-TAYL
+        ipa: /pəʈeːl/
+      - word: Sardar Vallabhbhai
+        sayAs: sur-DAAR vul-lubh-BHAI
+        ipa: /səɾd̪aːɾ ʋəlləbʱbʱaːiː/
+      - word: Verghese Kurien
+        sayAs: VUR-geez KOO-ree-un
+        ipa: /ʋəɾɡiːs kuɾijən/
+      - word: Morarji Desai
+        sayAs: moh-RAAR-jee day-SAI
+        ipa: /moːɾaːɾd͡ʒiː d̪eːsaːiː/
+      - word: Jawaharlal Nehru
+        sayAs: juh-WAH-hur-lahl NAY-roo
+        ipa: /d͡ʒəʋaːɦəɾlaːl neːɦɾuː/
+      - word: Lal Bahadur
+        sayAs: lahl buh-HAH-door
+        ipa: /laːl bəɦaːd̪uɾ/
+      - word: Shastri
+        sayAs: SHAAS-tree
+        ipa: /ʃaːst̪ɾiː/
+      - word: Choksey
+        sayAs: CHOKE-see
+        ipa: /t͡ʃoːksiː/
+      - word: Choksi
+        sayAs: CHOKE-see
+        ipa: /t͡ʃoːksiː/
+      - word: Dani
+        sayAs: DAH-nee
+        ipa: /d̪aːniː/
+      - word: Vakil
+        sayAs: vuh-KEEL
+        ipa: /ʋəkiːl/
+      - word: Gattu
+        sayAs: GUT-too
+        ipa: /ɡəʈʈuː/
+      - word: Diwali
+        sayAs: dee-VAH-lee
+        ipa: /d̪iːʋaːliː/
+      - word: Kolkata
+        sayAs: kohl-KAH-tah
+        ipa: /koːlkaːt̪aː/
+      - word: Ganga Bishan
+        sayAs: GUNG-gah BISH-un
+        ipa: /ɡəŋɡaː bɪʃən/
+      - word: Haldiram
+        sayAs: hul-dee-RAAM
+        ipa: /ɦəld̪iːɾaːm/
+      - word: Bikaner
+        sayAs: bee-kah-NAIR
+        ipa: /biːkaːneːɾ/
+      - word: bhujia
+        sayAs: BHOO-jee-yah
+        ipa: /bʱud͡ʒiːjaː/
+      - word: Agarwal
+        sayAs: UG-ur-waal
+        ipa: /əɡəɾʋaːl/
+      - word: Agrawal
+        sayAs: UG-rah-waal
+        ipa: /əɡɾaːʋaːl/
+      - word: Shiv Kishan
+        sayAs: shiv KISH-un
+        ipa: /ʃɪʋ kɪʃən/
+      - word: Manohar Lal
+        sayAs: muh-NOH-hur lahl
+        ipa: /mənoːɦəɾ laːl/
+      - word: Madhusudan
+        sayAs: muh-dhoo-SOO-dun
+        ipa: /məd̪ʱusuːd̪ən/
+      - word: Dungar Sev
+        sayAs: DOONG-gur sayv
+        ipa: /ɖuŋɡəɾ seːʋ/
+      - word: Dungar Singh
+        sayAs: DOONG-gur singh
+        ipa: /ɖuŋɡəɾ sɪŋɡʱ/
+      - word: Nagpur
+        sayAs: NAAG-poor
+        ipa: /naːɡpuːɾ/
+      - word: Thar
+        sayAs: taar
+        ipa: /t̪ʰaːɾ/
+      - word: rasgulla
+        sayAs: rus-GOOL-lah
+        ipa: /ɾəsɡulːaː/
+      - word: gulab jamun
+        sayAs: goo-LAAB JAH-moon
+        ipa: /ɡulaːb d͡ʒaːmun/
+      - word: Riegel
+        sayAs: REE-gul
+        ipa: /ˈʁiːɡl̩/
+      - word: Haribo
+        sayAs: HAH-ree-boh
+        ipa: /ˈhaːʁiboː/
+      - word: Leclercq
+        sayAs: luh-KLAIR
+        ipa: /ləklɛʁ/
+      - word: Quechua
+        sayAs: KECH-wah
+        ipa: /ˈket͡ʃwa/
+      - word: Kalenji
+        sayAs: kah-LEN-jee
+        ipa: /kalɛnd͡ʒi/
+      - word: Benioff
+        sayAs: BEN-ee-off
+        ipa: /ˈbɛnioʊf/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -191,6 +378,49 @@ channels:
     pronounce:
       - word: tetrafluoroethylene
         sayAs: TET-ruh-FLOOR-oh-ETH-uh-leen
+      # Original-language sounds (2026-10-16), scripts going live next.
+      - word: Vesalius
+        sayAs: veh-SAY-lee-us
+        ipa: /vɛˈseɪliəs/
+      - word: Jacobus Sylvius
+        sayAs: jah-KOH-bus SIL-vee-us
+        ipa: /jaˈkoːbʊs ˈsɪlviʊs/
+      - word: Padua
+        sayAs: PAD-yoo-uh
+        ipa: /ˈpaːdova/
+      - word: Leuven
+        sayAs: LUR-vun
+        ipa: /ˈløːvə(n)/
+      - word: Copernicus
+        sayAs: koh-PUR-nih-kus
+        ipa: /koˈpɛrnikus/
+      - word: Torun
+        sayAs: TOR-oon
+        ipa: /ˈtɔruɲ/
+      - word: Frombork
+        sayAs: FROM-bork
+        ipa: /ˈfrɔmbɔrk/
+      - word: Krakow
+        sayAs: KRAH-koof
+        ipa: /ˈkrakuf/
+      - word: Rheticus
+        sayAs: RET-ih-kus
+        ipa: /ˈreːtikʊs/
+      - word: Osiander
+        sayAs: oh-zee-AN-der
+        ipa: /oziˈandɐ/
+      - word: Ptolemy
+        sayAs: TOL-uh-mee
+        ipa: /ˈtɒləmi/
+      - word: Laika
+        sayAs: LIE-kuh
+        ipa: /ˈlajkə/
+      - word: Sputnik
+        sayAs: SPOOT-nik
+        ipa: /ˈsputʲnʲɪk/
+      - word: Raytheon
+        sayAs: RAY-thee-on
+        ipa: /ˈreɪθiɒn/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -344,7 +574,41 @@ channels:
       somebody's worst year is not a thing to sound thrilled by. Victims get a
       name and a life, said with care. No performed dread, no ominous pauses
       the facts have not earned.
-    pronounce: []
+    pronounce:
+      # Original-language sounds (2026-10-16), scripts going live next.
+      - word: Gustafsdotter
+        sayAs: GUS-tahvs-dot-ter
+        ipa: /ˈɡɵ̂sːtafsˌdɔtːɛr/
+      - word: Abberline
+        sayAs: AB-er-line
+        ipa: /ˈæbəlaɪn/
+      - word: Peruggia
+        sayAs: peh-ROO-jah
+        ipa: /peˈrudd͡ʒa/
+      - word: Alfredo Geri
+        sayAs: al-FRAY-doh JEH-ree
+        ipa: /alˈfreːdo ˈd͡ʒɛːri/
+      - word: Necochea
+        sayAs: neh-koh-CHAY-ah
+        ipa: /nekoˈt͡ʃe.a/
+      - word: Francisca Rojas
+        sayAs: fran-SEES-kah ROH-has
+        ipa: /fɾanˈsiska ˈroxas/
+      - word: Eduardo Álvarez
+        sayAs: eh-DWAR-doh AHL-vah-res
+        ipa: /eˈðwaɾðo ˈalβaɾes/
+      - word: Juan Vucetich
+        sayAs: hwan voo-seh-TEECH
+        ipa: /xwan buseˈtit͡ʃ/
+      - word: La Plata
+        sayAs: lah PLAH-tah
+        ipa: /la ˈplata/
+      - word: André Poisson
+        sayAs: ahn-DRAY pwah-SON
+        ipa: /ɑ̃dʁe pwasɔ̃/
+      - word: Lustig
+        sayAs: LUS-tig
+        ipa: /ˈlʊstɪɡ/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -850,6 +1114,142 @@ channels:
       - word: Sita
         sayAs: Sita
         ipa: /siːt̪aː/
+      # Original-language sounds (2026-10-16), scripts going live next.
+      - word: Asuras
+        sayAs: uh-SOO-ruz
+        ipa: /əsuɾəz/
+      - word: Asura
+        sayAs: uh-SOO-ruh
+        ipa: /əsuɾə/
+      - word: pralaya
+        sayAs: pruh-LUH-yuh
+        ipa: /pɾələjə/
+      - word: avatars
+        sayAs: UH-vuh-taarz
+        ipa: /əʋət̪aːɾz/
+      - word: avatar
+        sayAs: UH-vuh-taar
+        ipa: /əʋət̪aːɾ/
+      - word: guru
+        sayAs: GU-roo
+        ipa: /ɡuɾuː/
+      - word: chakra
+        sayAs: CHUK-ruh
+        ipa: /t͡ʃəkɾə/
+      - word: Marichi
+        sayAs: muh-REE-chee
+        ipa: /məɾiːt͡ʃiː/
+      - word: Pandavas
+        sayAs: PAAN-duh-vuz
+        ipa: /paːɳɖəʋəz/
+      - word: Pandava
+        sayAs: PAAN-duh-vuh
+        ipa: /paːɳɖəʋə/
+      - word: Nakula
+        sayAs: NUH-koo-luh
+        ipa: /nəkulə/
+      - word: Sahadeva
+        sayAs: suh-huh-DAY-vuh
+        ipa: /səɦəd̪eːʋə/
+      - word: Kauravas
+        sayAs: KOW-ruh-vuz
+        ipa: /kɔːɾəʋəz/
+      - word: Kaurava
+        sayAs: KOW-ruh-vuh
+        ipa: /kɔːɾəʋə/
+      - word: Duryodhana
+        sayAs: door-YOH-dhuh-nuh
+        ipa: /d̪uɾjoːd̪ʱənə/
+      - word: Ravana
+        sayAs: RAH-vuh-nuh
+        ipa: /ɾaːʋəɳə/
+      - word: Arjuna
+        sayAs: UR-joo-nuh
+        ipa: /əɾd͡ʒunə/
+      - word: Lanka
+        sayAs: LUNG-kaa
+        ipa: /ləŋkaː/
+      - word: Yudhishthira
+        sayAs: yoo-DHISH-tih-ruh
+        ipa: /jud̪ʱɪʂʈʰɪɾə/
+      - word: Snorri Sturluson
+        sayAs: SNOR-ee STUR-loo-son
+        ipa: /ˈsnorːi ˈsturluson/
+      - word: Ginnungagap
+        sayAs: GIN-oong-gah-gahp
+        ipa: /ˈɡinːuŋɡɑˌɡɑp/
+      - word: Niflheim
+        sayAs: NIV-ul-haym
+        ipa: /ˈnivlˌhɛim/
+      - word: Muspelheim
+        sayAs: MOOS-pel-haym
+        ipa: /ˈmuːspɛlˌhɛim/
+      - word: Surtr
+        sayAs: SURT-ur
+        ipa: /ˈsurtr̩/
+      - word: Ymir
+        sayAs: EE-mir
+        ipa: /ˈymir/
+      - word: Gylfi
+        sayAs: GIL-vee
+        ipa: /ˈɡylvi/
+      - word: Gangleri
+        sayAs: GANG-leh-ree
+        ipa: /ˈɡɑŋɡleri/
+      - word: Aesir
+        sayAs: EYE-seer
+        ipa: /ˈɛːsir/
+      - word: Edda
+        sayAs: ED-uh
+        ipa: /ˈɛdːɑ/
+      - word: Odin
+        sayAs: OH-din
+        ipa: /ˈoːðinː/
+      - word: Gilgamesh
+        sayAs: GIL-gah-mesh
+        ipa: /ˈɡilɡaˌmɛʃ/
+      - word: Enkidu
+        sayAs: EN-kee-doo
+        ipa: /ˈɛnkiˌduː/
+      - word: Humbaba
+        sayAs: hoom-BAH-bah
+        ipa: /xumˈbaːba/
+      - word: Uruk
+        sayAs: OO-rook
+        ipa: /ˈuɾuk/
+      - word: Nergal
+        sayAs: NER-gal
+        ipa: /ˈnɛɾɡal/
+      - word: Ereshkigal
+        sayAs: eh-RESH-kee-gal
+        ipa: /eˈɾɛʃkiɡal/
+      - word: Namtar
+        sayAs: NAHM-tar
+        ipa: /ˈnamtaɾ/
+      - word: Cú Chulainn
+        sayAs: koo HUL-in
+        ipa: /kuː ˈxʊlˠən̠ʲ/
+      - word: Sétanta
+        sayAs: SHAY-tan-tuh
+        ipa: /ˈʃeːt̪ˠən̪ˠt̪ˠə/
+      - word: Conchobar
+        sayAs: KON-uh-hur
+        ipa: /ˈkɔn̪ˠəxəɾ/
+      - word: Culann
+        sayAs: KUL-un
+        ipa: /ˈkʊlˠən̪ˠ/
+      - word: Branwen
+        sayAs: BRAN-wen
+        ipa: /ˈbranwɛn/
+      - word: Brân
+        sayAs: brahn
+        ipa: /braːn/
+      - word: Efnysien
+        sayAs: ev-NUSS-yen
+        ipa: /ɛvˈnəsjɛn/
+      - word: Mabinogion
+        sayAs: mab-ih-NOG-yon
+        ipa: /mabɪˈnɔɡjɔn/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

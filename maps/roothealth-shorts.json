@@ -8,19 +8,34 @@
       "number": 1,
       "title": "Why Do We Need Sleep at All?",
       "covers": "What the brain and body do during sleep that they cannot do awake, from clearing waste in the brain to fixing memories, and what one bad night really costs.",
-      "source": "NHS sleep guidance and reviews of sleep and brain clearance research"
+      "source": "NHS sleep guidance and reviews of sleep and brain clearance research",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/001-why-we-need-sleep.txt",
+        "title": "Why Do We Need Sleep at All?",
+        "description": "We spend a third of our lives asleep and nobody is quite sure why. What a teenager who stayed awake for eleven days, and a discovery about the brain at night, have told us."
+      }
     },
     {
       "number": 2,
       "title": "What Are Hiccups For?",
       "covers": "The muscle spasm behind a hiccup, the leading ideas about why we have them, and why most home cures are hit and miss.",
-      "source": "NHS guidance on hiccups and physiology reviews"
+      "source": "NHS guidance on hiccups and physiology reviews",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/002-what-are-hiccups-for.txt",
+        "title": "What Are Hiccups For?",
+        "description": "Everyone gets them, a man in America had them for 68 years, and scientists still argue about why we have them at all. The strange science of the hiccup."
+      }
     },
     {
       "number": 3,
       "title": "How Do Vaccines Train Your Body?",
       "covers": "How a vaccine shows the immune system a harmless preview of a germ, how memory cells remember it, and why some vaccines need boosters.",
-      "source": "NHS vaccination guidance and WHO resources on how vaccines work"
+      "source": "NHS vaccination guidance and WHO resources on how vaccines work",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/003-how-vaccines-train-your-body.txt",
+        "title": "How Do Vaccines Train Your Body?",
+        "description": "A vaccine is a harmless preview of a germ, shown to your immune system before the real thing arrives. How it works, why some need boosters, and what the evidence says about safety."
+      }
     },
     {
       "number": 4,
