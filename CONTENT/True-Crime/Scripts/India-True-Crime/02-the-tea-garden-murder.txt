@@ -1,0 +1,55 @@
+## hook
+
+[low, steady] It is August 1897, on a tea estate in Jalpaiguri, in the far north of Bengal, where the plains meet the foothills of the Himalayas. The monsoon is still on. The tea bushes stand in long green rows across the hills, and the air is heavy and wet.
+
+[measured] In the manager's house, in his room, the manager of the estate, a man named Hriday Nath Ghosh, is found dead. He has been attacked with a blade. The iron safe where the estate kept its money has been opened, and money is missing.
+
+[thoughtful] Among the papers in the room is a small book, a Bengali almanac, the kind of calendar that nearly every household had, listing the days, the festivals and the phases of the moon. On its cover are two faint brown marks.
+
+[softly] Nobody saw who came into that room. [pause] But one of those marks is a thumbprint, and only a few weeks earlier, there had been almost no way to find out whose it was.
+
+## context
+
+[thoughtful] Hriday Nath Ghosh was the manager of the estate. Tea in Bengal was a big business by then. Most of the estates were owned by British companies, and the tea went down the rivers and railways to Calcutta, and from there by ship to the cups of Britain. [measured] A manager ran everything: the workers, the stores, the accounts, and the money that came in and went out. The record says little else about him. It does not keep his age, or what he was like. He lived on the estate, and that week he was doing his job.
+
+[curious] To understand why that thumbprint mattered, you need to know how the police in Bengal identified people in the 1890s. The head of the Bengal Police, an Englishman named Edward Henry, had been using a French method of measuring prisoners: the length of the head, the arm, the middle finger. The measurements were written on cards and filed. [thoughtful] It worked, but it was slow, and two clerks measuring the same man often got slightly different numbers.
+
+[warmly] Henry was interested in fingerprints instead. Scientists had shown that the ridges on our fingertips, the tiny raised lines in the skin, form patterns that stay the same all our lives, and that no two people's are alike. The problem was filing them. If you have thousands of prints, how do you find the one that matches?
+
+[thoughtful] Two Indian officers working under Henry solved it. Azizul Haque was a sub-inspector who was very good with numbers. Hem Chandra Bose worked alongside him. Between them, they worked out a way to sort every set of ten fingerprints by its patterns, loops, whorls and arches, into a code made of numbers. [measured] With that code, a clerk could go straight to a small drawer of cards instead of searching through thousands.
+
+[curious] In 1897, the government of British India agreed to the new system. The office in Calcutta began to collect prisoners' fingerprints alongside their other records. It was the first fingerprint bureau in the world. [pause] It was barely running when the news came from Jalpaiguri.
+
+## investigation
+
+[measured] The police in Jalpaiguri had suspicions. One name came up early: a man called Kangali Charan, who had worked as a servant for Hriday Nath Ghosh. He had been in trouble before. He had been convicted of theft, and had served time in prison.
+
+[thoughtful] That earlier prison sentence turned out to matter more than anything else. Because Kangali Charan had been a prisoner under the new system, his fingerprints had been taken and sent to Calcutta, where they were on a card in the files.
+
+[serious] The almanac from the manager's room was sent to the bureau in Calcutta. The two brown marks on its cover were examined. One was too smudged to use. The other was clearer: the print of a right thumb.
+
+[curious] The officers at the bureau compared it with the cards of known offenders. They looked at the patterns first, to narrow it down. Then they looked closely at the details, the places where a ridge stops, or splits in two, or where a tiny ridge sits between two longer ones. [measured] Those details have to appear in the same order and in the same places in both prints.
+
+[thoughtful] Meanwhile, Kangali Charan had left the area. The police traced him, and he was arrested far from Jalpaiguri, and brought back. [pause] His thumb was printed again.
+
+## turning_point
+
+[low, steady] In Calcutta, the officers laid the new print beside the mark from the almanac, and beside the old card from his prison record. Ridge by ridge, under a magnifying glass, they compared them.
+
+[building] They matched. The brown mark on the cover of that calendar had been made by the right thumb of Kangali Charan.
+
+[serious] For the first time anywhere in the world, a fingerprint bureau had taken a mark from the scene of a killing and given it a name. [measured] Nobody had seen him in the room. Nobody had confessed. The case rested on a smudge on the cover of a calendar, and on a filing system invented a few months before.
+
+[thoughtful] But a match in the bureau was one thing. The question now was whether a court would accept it, and what it would accept it for.
+
+## aftermath
+
+[measured] Kangali Charan was tried in 1898. The court accepted the fingerprint evidence. It agreed that the print was his, and that he had been in the room and touched that almanac.
+
+[thoughtful] But the judge would not convict him of murder. The print showed that he had been there. It did not show, on its own, who had used the blade. [serious] So Kangali Charan was convicted of theft, of the property from the room, and acquitted of the murder. The record says he was sent to prison for two years.
+
+[curious] Even so, the case changed the law. In 1899, the year after the trial, the Indian Evidence Act was amended so that experts on fingerprints could give their opinion in court, in the same way as experts on handwriting. India had written fingerprint evidence into its law before Britain did.
+
+[thoughtful] In 1901, Edward Henry went to London to run the detectives at Scotland Yard, and he took the system with him. It became known around the world as the Henry system. [measured] For many years, the two men who had done so much of the work were barely mentioned. Later, the government gave Azizul Haque and Hem Chandra Bose each a reward of five thousand rupees, and their part in the story is now told much more fairly.
+
+[softly] And in the middle of it all was Hriday Nath Ghosh, the manager of a tea estate in the rain, at the edge of the hills. [gently] The record keeps almost nothing about who he was. What it does keep is that the first time the world used a fingerprint to find out what happened to someone, it was to find out what happened to him.

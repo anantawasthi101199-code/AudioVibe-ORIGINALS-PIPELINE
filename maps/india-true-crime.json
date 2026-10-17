@@ -1,0 +1,198 @@
+{
+  "id": "india-true-crime",
+  "channelId": "crime-files",
+  "title": "India True Crime",
+  "formatId": "case-in-full",
+  "series": [
+    {
+      "number": 1,
+      "title": "Cases That Changed India",
+      "note": "Landmark Indian cases, from colonial courts to the 1990s, told in order: the crimes, the investigations and what each one changed in law, policing or public trust.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Thuggee: The Stranglers of India's Roads",
+          "covers": "In the 1820s and 1830s, travellers on the roads of central and northern India were disappearing without trace. British officials came to believe that gangs known as Thugs befriended travellers, strangled them and buried them, and that the practice was passed down in families. The episode follows William Sleeman and the Thuggee and Dacoity Department, the informers who led officers to grave sites, the Thuggee Act of 1836 and the mass trials that followed. It also explains why historians now question how much of the colonial picture of a single ancient cult was real, and how much was built from confessions given by men hoping to save their own lives. The travellers who never came home stay at the centre.",
+          "source": "Sleeman's own published reports and Ramaseeana (1836), the records of the Thuggee and Dacoity Department, and later historians including Kim Wagner (Thuggee: Banditry and the British in Early Nineteenth-Century India, 2007).",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/India-True-Crime/01-thuggee.txt",
+            "title": "Thuggee: The Stranglers of the Roads",
+            "description": "In the 1830s, travellers on India's roads were vanishing without trace. A British officer set out to find them, and what he dug up became one of the strangest cases of the age."
+          },
+          "image": "CONTENT/True-Crime/Images/India-True-Crime/01.jpg"
+        },
+        {
+          "number": 2,
+          "title": "The Tea Garden Murder: India's First Fingerprint Case",
+          "covers": "In August 1897, the manager of a tea garden in Jalpaiguri, in northern Bengal, was found dead and his safe robbed. A bloodstained thumbprint on a Bengali almanac in the room was matched by the new fingerprint bureau in Calcutta to a former servant, Kangali Charan. The episode tells how Azizul Haque and Hem Chandra Bose, two Indian officers working under Edward Henry, built the classification system that made the match possible, and why the court in 1898 convicted on the theft but not the murder. It is the Indian half of the story told in the UK series' fingerprint episode.",
+          "source": "Records of the Bengal Police and the Calcutta Anthropometric (later Fingerprint) Bureau; Henry's Classification and Uses of Finger Prints (1900); later histories of fingerprinting, including Chandak Sengoopta, Imprint of the Raj (2003).",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/India-True-Crime/02-the-tea-garden-murder.txt",
+            "title": "The Tea Garden Murder",
+            "description": "In 1897, a manager was killed on a tea estate in Bengal. The only witness was a thumbprint on a calendar, and two Indian officers had just made it possible to read."
+          },
+          "image": "CONTENT/True-Crime/Images/India-True-Crime/02.jpg"
+        },
+        {
+          "number": 3,
+          "title": "The Bhawal Sanyasi: The Prince Who Came Back",
+          "covers": "In 1909, Ramendra Narayan Roy, the second prince of the Bhawal estate near Dhaka, died in Darjeeling and was said to have been cremated. Twelve years later, a holy man covered in ash sat down by the river in Dhaka, and people began to say he was the dead prince. The episode follows the claim, the family's split, the wife who said he was an impostor and her brother who was accused of poisoning the prince, and the long trial from 1930 that went from the Dhaka court to the Calcutta High Court and the Privy Council in London. It explains the evidence on both sides, the identity tests the court used, and what happened in 1946, days after the final verdict.",
+          "source": "The judgments of the Dhaka court (Pannalal Basu, 1936), the Calcutta High Court (1940) and the Privy Council (1946); Partha Chatterjee, A Princely Impostor? (2002).",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/India-True-Crime/03-the-bhawal-sanyasi.txt",
+            "title": "The Bhawal Sanyasi: The Prince Who Came Back",
+            "description": "In 1909, a young prince died in Darjeeling. Twelve years later, a holy man covered in ash sat down in Dhaka, and half of Bengal said he was the prince."
+          },
+          "image": "CONTENT/True-Crime/Images/India-True-Crime/03.jpg"
+        },
+        {
+          "number": 4,
+          "title": "The Nanavati Case: The Trial That Divided Bombay",
+          "covers": "On 27 April 1959, Commander Kawas Nanavati, a decorated naval officer, shot Prem Ahuja, a businessman, in Ahuja's flat in Bombay, after his wife Sylvia told him of her affair with Ahuja. A jury found him not guilty; the judge thought the verdict perverse and sent the case to the High Court, which convicted him of murder. The episode follows the shooting, the public campaign led by a Bombay tabloid, the trial, the appeals to the Supreme Court and the pardon in 1964. It explains why the case is often linked to the end of jury trials in India, and how much of that is true. Prem Ahuja, who is usually only the man who was shot, is given his own place in the story.",
+          "source": "Supreme Court of India, K. M. Nanavati v. State of Maharashtra (1961); contemporary reporting in the Bombay press; Bachi Karkaria, In Hot Blood (2017).",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/India-True-Crime/04-the-nanavati-case.txt",
+            "title": "The Nanavati Case: A Trial That Split Bombay",
+            "description": "In 1959, a naval officer walked into a flat in Bombay and fired three shots. A jury set him free, and the case went all the way to India's Supreme Court."
+          },
+          "image": "CONTENT/True-Crime/Images/India-True-Crime/04.jpg"
+        },
+        {
+          "number": 5,
+          "title": "Geeta and Sanjay Chopra: The Lift on Upper Ridge Road",
+          "covers": "On the evening of 26 August 1978, Geeta Chopra, sixteen, and her brother Sanjay, fourteen, children of a naval officer, left home in New Delhi to take part in a youth programme at All India Radio. They accepted a lift and never arrived. The episode follows the search, the finding of their bodies two days later, the public anger that followed, and the arrest of Kuljeet Singh and Jasbir Singh, known as Ranga and Billa, on a train after soldiers recognised them. It covers the trial, the death sentences carried out in January 1982 and the children's bravery awards named after Geeta and Sanjay. No graphic detail beyond what the story needs; the children stay at the centre.",
+          "source": "Supreme Court of India, Kuljeet Singh alias Ranga v. Union of India (1981) and related judgments; contemporary reporting in Delhi newspapers; the Indian Council for Child Welfare on the Geeta Chopra and Sanjay Chopra Awards.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/India-True-Crime/05-geeta-and-sanjay-chopra.txt",
+            "title": "Geeta and Sanjay Chopra",
+            "description": "In August 1978, a sister and brother set off across Delhi to speak on the radio. They accepted a lift, and the city never forgot their names."
+          },
+          "image": "CONTENT/True-Crime/Images/India-True-Crime/05.jpg"
+        },
+        {
+          "number": 6,
+          "title": "Jessica Lal: The Case the Public Reopened",
+          "covers": "In the early hours of 30 April 1999, Jessica Lal, a model working as a celebrity barmaid, was shot dead at a crowded party in a restaurant in south Delhi after refusing to serve a drink. In 2006 the trial court acquitted every accused after witnesses turned hostile. The episode follows the shooting, the investigation, the acquittal, the public campaign led by her sister Sabrina, the Delhi High Court's conviction of Manu Sharma later that year, and the Supreme Court's confirmation in 2010. It explains what a hostile witness is and why the case changed how people in India thought about justice and wealth.",
+          "source": "Delhi High Court, State v. Sidhartha Vashisht alias Manu Sharma (2006); Supreme Court of India, Sidhartha Vashisht v. State (NCT of Delhi) (2010); contemporary reporting."
+        },
+        {
+          "number": 7,
+          "title": "The Tandoor Case: The Fire at Bagiya",
+          "covers": "Late on the night of 2 July 1995, a police constable on patrol in central Delhi saw flames rising from a restaurant called Bagiya. Inside was the body of Naina Sahni. Her husband, Sushil Sharma, a youth politician, was arrested days later. The episode follows the patrol, the investigation, the second post-mortem that changed the case, the conviction in 2003, the Supreme Court's decision in 2013 to change the death sentence to life imprisonment, and Sharma's release in 2018. Naina Sahni stays at the centre.",
+          "source": "Delhi High Court and Supreme Court of India judgments, State v. Sushil Sharma (2003, 2007, 2013); contemporary reporting."
+        },
+        {
+          "number": 8,
+          "title": "The Bhagalpur Blindings: When Police Became the Crime",
+          "covers": "Between 1979 and 1980, police in Bhagalpur, Bihar, blinded more than thirty men in custody, accused or suspected of crimes, by piercing their eyes and pouring acid into them. Journalists exposed it in 1980. The episode follows the men, the reporting, the petitions to the Supreme Court, and the court's rulings in Khatri v. State of Bihar, which established that a poor person accused of a crime has a right to free legal aid from the moment they are first produced before a magistrate. It explains what happened to the officers involved, and what the record does not say.",
+          "source": "Supreme Court of India, Khatri and Others v. State of Bihar (1980-1981); reporting by Arun Sinha and the Indian Express in 1980."
+        }
+      ],
+      "cover": "CONTENT/True-Crime/Images/India-True-Crime/series-01.jpg"
+    },
+    {
+      "number": 2,
+      "title": "India's Most Wanted",
+      "note": "The bandits, killers and fugitives who frightened India, and the long hunts that ended them, told in order.",
+      "episodes": [
+        {
+          "number": 9,
+          "title": "Sultana Daku: The Bandit of the Terai Forests",
+          "covers": "In the early 1920s, the bandit Sultana and his gang robbed travellers and wealthy households across the forests and villages of the United Provinces, in today's Uttar Pradesh, and became a folk hero to some. The episode follows his gang, the special force under Frederick Young sent to catch him, the help Young got from the hunter Jim Corbett, Sultana's capture in 1923, his trial and his hanging in 1924. It separates the legend of the gentleman robber from what the court records show.",
+          "source": "Jim Corbett, My India (1952), the chapter Sultana: India's Robin Hood; colonial court and police records; later historical accounts."
+        },
+        {
+          "number": 10,
+          "title": "Raman Raghav: Murders in the Bombay Night",
+          "covers": "In 1965 and again in 1968, people sleeping on the pavements and in the huts of Bombay's northern suburbs were killed in the night with a blunt weapon. Police arrested Raman Raghav in August 1968. The episode follows the attacks, the fear in the slums, the police search, the confession, the medical evidence on his mind, the trial and the death sentence later changed to life imprisonment in a mental hospital, where he died in 1995. The victims, people with the least protection in the city, stay at the centre.",
+          "source": "Bombay High Court records; the account of investigating officer Ramakant Kulkarni, Footprints on the Sands of Crime (2004); contemporary reporting."
+        },
+        {
+          "number": 11,
+          "title": "Charles Sobhraj: The Escape from Tihar",
+          "covers": "In 1976, Charles Sobhraj, a con man and murderer, was arrested in Delhi after drugging a group of French students. Ten years later he walked out of Tihar Jail after drugging the guards with sweets. The episode follows the travellers he preyed on along the hippie trail in the 1970s, his Indian trials, the escape in March 1986, his recapture in Goa by Inspector Madhukar Zende, and the later conviction in Nepal for murders committed there. It explains why some believed he escaped on purpose, to avoid being sent to Thailand.",
+          "source": "Indian court records; Richard Neville and Julie Clarke, The Life and Crimes of Charles Sobhraj (1979); Supreme Court of Nepal rulings; contemporary reporting."
+        },
+        {
+          "number": 12,
+          "title": "The Joshi-Abhyankar Murders: A Year of Fear in Pune",
+          "covers": "Between January 1976 and March 1977, ten people were killed in a series of break-ins in Pune by four young men from a commercial arts college. The episode follows the households, the fear that spread through the city, the arrests in 1977, the trial and the hangings in 1983. It names the families first and explains what the case did to Pune.",
+          "source": "Supreme Court of India, Rajendra Jakkal and others (1983); contemporary reporting in the Pune and Bombay press."
+        },
+        {
+          "number": 13,
+          "title": "Auto Shankar: The Gangster and the Police",
+          "covers": "In 1988 in Madras, now Chennai, several young women and men disappeared. The investigation led to Gowri Shankar, called Auto Shankar, a criminal who ran a liquor and sex trade with protection from police and politicians. The episode follows the disappearances, the arrests, the trial, his escape and recapture, and his hanging in 1995. It also explains the Supreme Court case over his prison memoir, which became a landmark for the right to privacy and press freedom in India.",
+          "source": "Supreme Court of India, R. Rajagopal v. State of Tamil Nadu (1994); Madras High Court records; contemporary reporting."
+        },
+        {
+          "number": 14,
+          "title": "The Stoneman: Killer of the Pavement Sleepers",
+          "covers": "In 1985 in Bombay, and again in 1989, people sleeping on the streets were killed at night with a heavy stone. Newspapers named the killer the Stoneman. Calcutta saw similar killings in 1989. The episode follows the deaths, the police search, the night patrols, and why nobody was ever charged. The people who died, most of them never named in the press, stay at the centre.",
+          "source": "Contemporary reporting in Bombay and Calcutta; police statements of the time."
+        },
+        {
+          "number": 15,
+          "title": "Veerappan: The Forest and the Twenty-Year Hunt",
+          "covers": "For two decades, Koose Muniswamy Veerappan smuggled sandalwood and ivory from the forests where Tamil Nadu, Karnataka and Kerala meet, and killed forest officers, police and villagers who stood in his way. The episode follows his rise, the killing of forest officer P. Srinivas in 1991, the kidnapping of the film star Rajkumar in 2000, the long task force operation, and his death in an ambush in October 2004. Veerappan was never tried, so the episode attributes what is alleged and keeps the forest officers and villagers at the centre.",
+          "source": "Reports of the Special Task Force; K. Vijay Kumar, Veerappan: Chasing the Brigand (2017); contemporary reporting."
+        },
+        {
+          "number": 16,
+          "title": "Cyanide Mohan: The Teacher with Twenty Victims",
+          "covers": "Between 2003 and 2009, women in Karnataka and nearby were found dead in bus station toilets, apparently by suicide. In 2009, police investigating one missing woman traced a phone and found Mohan Kumar, a former primary school teacher. The episode follows the women, the investigation that connected the deaths, the trials and convictions, and how the case changed the way police looked at deaths ruled as suicide. The women he met, most looking for a marriage, stay at the centre.",
+          "source": "Judgments of the Dakshina Kannada sessions court and the Karnataka High Court; contemporary reporting."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Cons, Heists and Scams",
+      "note": "Forgers, fraudsters and thieves: how India's great cons and robberies worked, how they were uncovered, and what was never recovered.",
+      "episodes": [
+        {
+          "number": 17,
+          "title": "Natwarlal: The Man Who Sold the Taj Mahal",
+          "covers": "Mithilesh Kumar Srivastava, known as Natwarlal, was a con man from Bihar who forged signatures and cheated shopkeepers, jewellers and banks from the 1930s to the 1990s, and was said to have sold the Taj Mahal, the Red Fort and Parliament to foreigners. The episode follows what the records show of his cons, his many arrests and escapes, his last disappearance in 1996, and how much of the legend can be checked.",
+          "source": "Police and court records reported in the press; contemporary reporting; later accounts. Many stories about him cannot be confirmed."
+        },
+        {
+          "number": 18,
+          "title": "Sukumara Kurup: The Man Who Faked His Own Death",
+          "covers": "On the night of 22 January 1984, a car was found burning in a paddy field in Kerala with a body inside. Police at first believed it was Sukumara Kurup, who had a large insurance policy. It was Chacko, a film distribution worker, who had been given a lift. The episode follows Chacko, the investigation that found the truth, the conviction of Kurup's accomplices, and why Kurup has never been found.",
+          "source": "Kerala Police records; judgments in the case against the accomplices; contemporary reporting."
+        },
+        {
+          "number": 19,
+          "title": "Harshad Mehta: The Bull Who Broke the Banks",
+          "covers": "In April 1992, the journalist Sucheta Dalal revealed that the stock market boom in Bombay had been fuelled by money taken out of the banking system. At the centre was Harshad Mehta, a broker known as the Big Bull. The episode follows the banking trick that made it possible, explained simply, the crash, the investigations, the cases, and Mehta's death in custody in 2001 with most of the cases still undecided.",
+          "source": "Joint Parliamentary Committee report (1993); Sucheta Dalal and Debashis Basu, The Scam (1993); court judgments."
+        },
+        {
+          "number": 20,
+          "title": "The Purulia Arms Drop: Guns from the Sky",
+          "covers": "On the night of 17 December 1995, an aircraft flying over Purulia in West Bengal dropped crates of rifles and ammunition onto the fields below. The plane flew on, and was later forced to land in Bombay. The episode follows the villagers who found the crates, the arrests of the British arms dealer Peter Bleach and the Latvian crew, the escape of the man known as Kim Davy, and the questions about who the guns were meant for.",
+          "source": "Calcutta court judgments; CBI statements; reporting by Indian and British press; Peter Bleach's own account, to be attributed."
+        },
+        {
+          "number": 21,
+          "title": "Abdul Karim Telgi: The Stamp Paper Empire",
+          "covers": "In 2001 and 2002, police in Karnataka and Maharashtra discovered that forged stamp paper, the official paper used for legal documents and taxes, had flooded the country. The trail led to Abdul Karim Telgi, a former fruit seller who had built printing presses with machinery from the government's own press. The episode follows the scale of the fraud, the officials involved, the investigation, his convictions and his death in prison in 2017.",
+          "source": "CBI and court records; contemporary reporting."
+        },
+        {
+          "number": 22,
+          "title": "The Stolen Nobel: Tagore's Medal",
+          "covers": "On 25 March 2004, staff at Visva-Bharati University in Santiniketan, West Bengal, discovered that the Nobel Prize medal awarded to Rabindranath Tagore in 1913 had been stolen from the museum, along with other belongings of the poet. The episode follows the theft, the search by state police and the CBI, the replicas given by the Nobel Foundation, and why the medal has never been found. Tagore and the university he built stay at the centre.",
+          "source": "Visva-Bharati statements; CBI statements; contemporary reporting."
+        },
+        {
+          "number": 23,
+          "title": "Subhash Kapoor: The Gods That Went to New York",
+          "covers": "In 2011, an antiques dealer named Subhash Kapoor was arrested at Frankfurt airport and sent to India. He was accused of running one of the largest temple idol theft networks in history, taking bronze and stone deities from temples in Tamil Nadu and selling them through his gallery in New York. The episode follows one stolen bronze from its temple to a museum, the Indian and American investigations, the return of hundreds of objects, and his conviction in Tamil Nadu in 2022.",
+          "source": "Judgment of the Kumbakonam court (2022); Manhattan District Attorney's statements; S. Vijay Kumar, The Idol Thief (2018)."
+        }
+      ]
+    }
+  ]
+}

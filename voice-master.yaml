@@ -1510,6 +1510,205 @@ channels:
       - word: Leatherslade
         sayAs: LETH-er-slayd
         ipa: /ˈlɛðərsleɪd/
+      # India True Crime (2026-10-17): Hindi, Bengali, Gujarati and Parsi names.
+      - word: Thuggee
+        sayAs: THUG-ee
+        ipa: /ʈʰəˈɡiː/
+      - word: Feringeea
+        sayAs: feh-RING-ee-ah
+        ipa: /pʰɪˈrɪŋɡiːaː/
+      - word: Dacoity
+        sayAs: dah-KOY-tee
+        ipa: /ɖəˈkɔɪt̪iː/
+      - word: Jabalpur
+        sayAs: JUB-ul-poor
+        ipa: /ˈd͡ʒəbəlpʊr/
+      - word: Kali
+        sayAs: KAH-lee
+        ipa: /ˈkaːliː/
+      - word: Hindi
+        sayAs: HIN-dee
+        ipa: /ˈɦɪn̪d̪iː/
+      - word: Jalpaiguri
+        sayAs: jul-PIE-goo-ree
+        ipa: /d͡ʒɔlpaiɡuɽi/
+      - word: Hriday Nath Ghosh
+        sayAs: HRID-oy NAATH GHOSH
+        ipa: /ɦridɔe nat̪ʰ ɡʱoʃ/
+      - word: Kangali Charan
+        sayAs: KAHNG-gah-lee CHO-ron
+        ipa: /kaŋɡali t͡ʃɔɾon/
+      - word: Kangali
+        sayAs: KAHNG-gah-lee
+        ipa: /kaŋɡali/
+      - word: Dhaka
+        sayAs: DHAA-kah
+        ipa: /ɖʱaka/
+      - word: Buckland Bund
+        sayAs: BUCK-lund BUND
+        ipa: /ˈbʌklənd bʌnd/
+      - word: Ramendra Narayan Roy
+        sayAs: rah-MEN-dro nah-RAH-yon ROY
+        ipa: /ɾameːnd̪ɾo naɾajon ɾae/
+      - word: Ramendra
+        sayAs: rah-MEN-dro
+        ipa: /ɾameːnd̪ɾo/
+      - word: Bhawal
+        sayAs: BHAH-wahl
+        ipa: /bʱaoal/
+      - word: Darjeeling
+        sayAs: dar-JEE-ling
+        ipa: /d̪arˈd͡ʒiːliŋ/
+      - word: Jaydebpur
+        sayAs: JOY-deb-poor
+        ipa: /d͡ʒɔed̪ebpuɾ/
+      - word: Ranendra
+        sayAs: roh-NEN-dro
+        ipa: /ɾɔnend̪ɾo/
+      - word: Rabindra
+        sayAs: roh-BIN-dro
+        ipa: /ɾobind̪ɾo/
+      - word: Bibhabati Devi
+        sayAs: bib-HAH-bo-tee DAY-bee
+        ipa: /bibʱabot̪i d̪ebi/
+      - word: Bibhabati
+        sayAs: bib-HAH-bo-tee
+        ipa: /bibʱabot̪i/
+      - word: Satyendranath Banerjee
+        sayAs: shot-TEN-dro-naath BAN-er-jee
+        ipa: /ʃot̪ːend̪ɾonat̪ʰ ˈbænəd͡ʒiː/
+      - word: Satyendranath
+        sayAs: shot-TEN-dro-naath
+        ipa: /ʃot̪ːend̪ɾonat̪ʰ/
+      - word: Jyotirmoyee Devi
+        sayAs: JYO-teer-moy-ee DAY-bee
+        ipa: /d͡ʒot̪iɾmoji d̪ebi/
+      - word: Pannalal Basu
+        sayAs: PUN-nah-lahl BOH-shoo
+        ipa: /pannalal boʃu/
+      - word: Basu
+        sayAs: BOH-shoo
+        ipa: /boʃu/
+      - word: Punjab
+        sayAs: pun-JAAB
+        ipa: /pənˈd͡ʒaːb/
+      - word: Partha Chatterjee
+        sayAs: POR-tho CHAT-er-jee
+        ipa: /pɔɾt̪ʰo ˈt͡ʃætəd͡ʒiː/
+      - word: Mumbai
+        sayAs: mum-BYE
+        ipa: /mʊmˈbəiː/
+      - word: Bombay
+        sayAs: bom-BAY
+        ipa: /bɒmˈbeɪ/
+      - word: Nepean
+        sayAs: neh-PEE-un
+        ipa: /nəˈpiːən/
+      - word: Prem Ahuja
+        sayAs: PRAYM ah-HOO-jah
+        ipa: /preːm əˈɦuːd͡ʒaː/
+      - word: Mamie
+        sayAs: MAY-mee
+        ipa: /ˈmeɪmi/
+      - word: Ahuja
+        sayAs: ah-HOO-jah
+        ipa: /əˈɦuːd͡ʒaː/
+      - word: Kawas Manekshaw Nanavati
+        sayAs: KAH-vus MAH-nek-shaw nah-NAH-vuh-tee
+        ipa: /kaːʋəs ˈmaːnəkʃaː naːˈnaːʋəʈiː/
+      - word: Nanavatis
+        sayAs: nah-NAH-vuh-tees
+        ipa: /naːˈnaːʋəʈiːz/
+      - word: Nanavati
+        sayAs: nah-NAH-vuh-tee
+        ipa: /naːˈnaːʋəʈiː/
+      - word: Parsi
+        sayAs: PAR-see
+        ipa: /ˈpaːrsiː/
+      - word: Zoroastrians
+        sayAs: zor-oh-ASS-tree-unz
+        ipa: /ˌzɒrəʊˈæstriənz/
+      - word: Sindhis
+        sayAs: SIN-deez
+        ipa: /ˈsɪn̪d̪ʱiːz/
+      - word: Sindhi
+        sayAs: SIN-dee
+        ipa: /ˈsɪn̪d̪ʱiː/
+      - word: Sind
+        sayAs: SIND
+        ipa: /sɪn̪d̪ʱ/
+      - word: Ahmednagar
+        sayAs: AH-med-nug-ur
+        ipa: /əɦməd̪ˈnəɡər/
+      - word: Jeevan Jyot
+        sayAs: JEE-vun JYOTE
+        ipa: /d͡ʒiːʋən d͡ʒjoːt̪/
+      - word: Provost Marshal
+        sayAs: PROH-voh MAR-shul
+        ipa: /ˌprəʊvəʊ ˈmɑːʃəl/
+      - word: Russi Karanjia
+        sayAs: RUSS-ee kuh-RUN-jee-ah
+        ipa: /ˈrʊsiː kəˈraɲd͡ʒiaː/
+      - word: Ratilal Mehta
+        sayAs: RUT-ee-lahl MAY-tah
+        ipa: /ˈrət̪iːlaːl ˈmeːɦt̪aː/
+      - word: Maharashtra
+        sayAs: mah-hah-RAASH-truh
+        ipa: /məɦaːˈraːʂʈrə/
+      - word: Vijaya Lakshmi Pandit
+        sayAs: vij-uh-YAH LUCK-shmee PUN-dit
+        ipa: /ʋɪd͡ʒəjaː ˈləkʃmiː ˈpən̪ɖɪt̪/
+      - word: Delhi
+        sayAs: Delhi
+        ipa: /ˈdɛli/
+      - word: Dhaula Kuan
+        sayAs: DHOW-lah KWAAN
+        ipa: /d̪ʱɔːlaː kʊãː/
+      - word: Madan Mohan Chopra
+        sayAs: MUD-un MOH-hun CHOH-prah
+        ipa: /mədən ˈmoːɦən ˈt͡ʃoːpraː/
+      - word: Geeta Chopra
+        sayAs: GEE-tah CHOH-prah
+        ipa: /ˈɡiːt̪aː ˈt͡ʃoːpraː/
+      - word: Sanjay Chopra
+        sayAs: SUN-jay CHOH-prah
+        ipa: /ˈsən̪d͡ʒəj ˈt͡ʃoːpraː/
+      - word: Geeta
+        sayAs: GEE-tah
+        ipa: /ˈɡiːt̪aː/
+      - word: Sanjay
+        sayAs: SUN-jay
+        ipa: /ˈsən̪d͡ʒəj/
+      - word: Chopra
+        sayAs: CHOH-prah
+        ipa: /ˈt͡ʃoːpraː/
+      - word: Yuva Vani
+        sayAs: YOO-vah VAH-nee
+        ipa: /ˈjʊʋaː ˈʋaːɳiː/
+      - word: Kuljeet Singh
+        sayAs: KUL-jeet SING
+        ipa: /ˈkʊld͡ʒiːt̪ sɪŋɡʱ/
+      - word: Jasbir Singh
+        sayAs: JUS-beer SING
+        ipa: /ˈd͡ʒəsbiːr sɪŋɡʱ/
+      - word: Singh
+        sayAs: SING
+        ipa: /sɪŋɡʱ/
+      - word: Ranga
+        sayAs: RUNG-gah
+        ipa: /ˈrəŋɡaː/
+      - word: Billa
+        sayAs: BILL-ah
+        ipa: /ˈbɪllaː/
+      - word: Kalka
+        sayAs: KAAL-kah
+        ipa: /ˈkaːlkaː/
+      - word: Howrah
+        sayAs: HOW-rah
+        ipa: /ˈɦaːoɽaː/
+      - word: Tihar
+        sayAs: tih-HAAR
+        ipa: /t̪ɪˈɦaːr/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
