@@ -1,7 +1,8 @@
 /**
- * Laying approved episodes and shorts out across days (owner, 2026-10-08):
- * at most one short and one episode a day per channel, each on the earliest
- * free day from tomorrow, rolling into the next week when a week is full.
+ * Laying approved episodes and shorts out across days (owner, 2026-10-17):
+ * across the whole studio at most two episodes (never two of one series) and
+ * three shorts (at most two from one channel) a day, each on the earliest day
+ * with room from tomorrow.
  */
 import { allocate, weekStart, type Allocatable, type Taken } from '../allocate';
 import type { Cadence } from '../schema';
@@ -17,8 +18,10 @@ const cadence = (over: Partial<Cadence> = {}): Cadence => ({
   ...over,
 });
 
-const shorts = (n: number): Allocatable[] =>
-  Array.from({ length: n }, (_, i) => ({ runId: `s${i + 1}`, kind: 'short' as const }));
+const shorts = (n: number, channelId = 'a', over: Partial<Cadence> = {}): Allocatable[] =>
+  Array.from({ length: n }, (_, i) => ({
+    runId: `${channelId}-s${i + 1}`, kind: 'short' as const, channelId, series: `${channelId}#`, cadence: cadence(over),
+  }));
 
 /** Tuesday 15 September 2026, mid-afternoon. */
 const NOW = new Date('2026-09-15T14:00:00Z');
@@ -46,19 +49,44 @@ describe('weekStart', () => {
   });
 });
 
-const episodes = (n: number): Allocatable[] =>
-  Array.from({ length: n }, (_, i) => ({ runId: `e${i + 1}`, kind: 'episode' as const }));
+const episodes = (n: number, series = 'a#one', over: Partial<Cadence> = {}): Allocatable[] =>
+  Array.from({ length: n }, (_, i) => ({
+    runId: `${series}-e${i + 1}`, kind: 'episode' as const, channelId: series.split('#')[0]!, series, cadence: cadence(over),
+  }));
 
-const run = (items: Allocatable[], taken: Taken[] = [], over: Partial<Cadence> = {}) =>
-  allocate({ cadence: cadence(over), items, taken, from: NOW, timezone: TZ });
+const short = (at: string, channelId = 'a'): Taken => ({ kind: 'short', at: new Date(at), channelId, series: `${channelId}#` });
 
-describe('allocate: one of each kind a day, earliest free day first', () => {
-  it('puts approved shorts on consecutive days from tomorrow, one a day', () => {
-    const out = run(shorts(8));
-    expect(out.map((o) => dayOf(o.at))).toEqual([
-      '2026-09-16', '2026-09-17', '2026-09-18', '2026-09-19',
-      '2026-09-20', '2026-09-21', '2026-09-22', '2026-09-23',
-    ]);
+const run = (items: Allocatable[], taken: Taken[] = []) => allocate({ items, taken, from: NOW, timezone: TZ });
+
+const perDay = (out: { at: Date; kind: string }[]) => {
+  const m = new Map<string, string[]>();
+  for (const o of out) m.set(dayOf(o.at), [...(m.get(dayOf(o.at)) ?? []), o.kind]);
+  return m;
+};
+
+describe('allocate: a studio-wide cap, earliest day with room first', () => {
+  it('holds at most three shorts and two episodes a day across every channel', () => {
+    const out = run([...shorts(6, 'a'), ...shorts(6, 'b'), ...shorts(6, 'c'), ...episodes(4, 'a#one'), ...episodes(4, 'b#two')]);
+    for (const kinds of perDay(out).values()) {
+      expect(kinds.filter((k) => k === 'short').length).toBeLessThanOrEqual(3);
+      expect(kinds.filter((k) => k === 'episode').length).toBeLessThanOrEqual(2);
+    }
+    expect(perDay(out).get('2026-09-16')!.length).toBe(5);
+  });
+
+  it('never puts two episodes of one series on a day', () => {
+    const out = run(episodes(3, 'a#one'));
+    expect(new Set(out.map((o) => dayOf(o.at))).size).toBe(3);
+  });
+
+  it('lets two series of one channel share a day', () => {
+    const out = run([...episodes(1, 'a#one'), ...episodes(1, 'a#two')]);
+    expect(dayOf(out[0]!.at)).toBe(dayOf(out[1]!.at));
+  });
+
+  it('lets one channel have at most two shorts on a day', () => {
+    const out = run(shorts(4, 'a'));
+    expect(out.map((o) => dayOf(o.at))).toEqual(['2026-09-16', '2026-09-16', '2026-09-17', '2026-09-17']);
   });
 
   it('never lands today, or in the past', () => {
@@ -68,44 +96,30 @@ describe('allocate: one of each kind a day, earliest free day first', () => {
     }
   });
 
-  it('lets a short and an episode share a day, at different hours, but never two of one kind', () => {
-    const out = run([...shorts(3), ...episodes(3)]);
-    const byDay = new Map<string, string[]>();
-    for (const o of out) byDay.set(dayOf(o.at), [...(byDay.get(dayOf(o.at)) ?? []), o.kind]);
-    for (const kinds of byDay.values()) {
-      expect(kinds.filter((k) => k === 'short').length).toBeLessThanOrEqual(1);
-      expect(kinds.filter((k) => k === 'episode').length).toBeLessThanOrEqual(1);
+  it('never puts two releases at the same hour on one day', () => {
+    const out = run([...shorts(2, 'a'), ...shorts(1, 'b'), ...episodes(1, 'a#one'), ...episodes(1, 'b#two')]);
+    for (const [date] of perDay(out)) {
+      const hours = out.filter((o) => dayOf(o.at) === date).map((o) => hourOf(o.at));
+      expect(new Set(hours).size).toBe(hours.length);
     }
-    expect([...byDay.values()].every((k) => k.length === 2)).toBe(true);
-    const tomorrow = out.filter((o) => dayOf(o.at) === '2026-09-16');
-    expect(new Set(tomorrow.map((o) => hourOf(o.at))).size).toBe(2);
   });
 
-  it('KEEPS WHAT IS ALREADY APPROVED, and a full week sends the next one to the week after', () => {
-    // Shorts on every day of next week (Mon 21 to Sun 27) and the rest of this one.
-    const taken: Taken[] = Array.from({ length: 12 }, (_, i) => ({
-      kind: 'short' as const,
-      at: new Date(Date.UTC(2026, 8, 16 + i, 10)),
-    }));
-    const [next] = run(shorts(1), taken);
-    expect(dayOf(next!.at)).toBe('2026-09-28'); // the Monday after
-  });
-
-  it('fills a gap before going later', () => {
-    const taken: Taken[] = [
-      { kind: 'short', at: new Date('2026-09-16T10:00:00Z') },
-      { kind: 'short', at: new Date('2026-09-18T10:00:00Z') },
-    ];
+  it('KEEPS WHAT IS ALREADY APPROVED on any channel', () => {
+    const taken = [short('2026-09-16T09:00:00Z', 'x'), short('2026-09-16T10:00:00Z', 'y'), short('2026-09-16T11:00:00Z', 'z')];
     expect(dayOf(run(shorts(1), taken)[0]!.at)).toBe('2026-09-17');
   });
 
+  it('fills a gap before going later', () => {
+    const full = (d: string) => ['x', 'y', 'z'].map((c, i) => short(`2026-09-${d}T0${i + 7}:00:00Z`, c));
+    expect(dayOf(run(shorts(1), [...full('16'), ...full('18')])[0]!.at)).toBe('2026-09-17');
+  });
+
   it('an episode is not held back by shorts on the same days', () => {
-    const taken: Taken[] = [{ kind: 'short', at: new Date('2026-09-16T10:00:00Z') }];
-    expect(dayOf(run(episodes(1), taken)[0]!.at)).toBe('2026-09-16');
+    expect(dayOf(run(episodes(1), [short('2026-09-16T10:00:00Z')])[0]!.at)).toBe('2026-09-16');
   });
 
   it('schedules a kind even when schedule.yaml plans none of it', () => {
-    expect(run(episodes(1), [], { perWeek: { episodes: 0, shorts: 7 } })).toHaveLength(1);
+    expect(run(episodes(1, 'a#one', { perWeek: { episodes: 0, shorts: 7 } }))).toHaveLength(1);
   });
 
   it('puts the episode at the channel slot hour and keeps the short hours civilised', () => {
@@ -127,12 +141,11 @@ describe('allocate: one of each kind a day, earliest free day first', () => {
   it('counts days in the zone across the clock change', () => {
     // British Summer Time ends on Sunday 25 October 2026.
     const out = allocate({
-      cadence: cadence(),
-      items: shorts(4),
+      items: [...shorts(1, 'a'), ...shorts(1, 'b'), ...shorts(1, 'c'), ...shorts(1, 'd')].map((s, i) => ({ ...s, runId: `s${i}` })),
       taken: [],
       from: new Date('2026-10-23T12:00:00Z'),
       timezone: TZ,
     });
-    expect(out.map((o) => dayOf(o.at))).toEqual(['2026-10-24', '2026-10-25', '2026-10-26', '2026-10-27']);
+    expect(out.map((o) => dayOf(o.at))).toEqual(['2026-10-24', '2026-10-24', '2026-10-24', '2026-10-25']);
   });
 });

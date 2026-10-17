@@ -14,8 +14,8 @@
  *   On hold  passed everything and is not wanted now. Comes back whole.
  *
  * APPROVING IS NOT SCHEDULING. It says this may go out; the day comes from
- * the earliest free days: at most one short and one episode a day per
- * channel (2026-10-08), so eight approved shorts go out on the next eight days.
+ * the earliest day with room: across the whole studio at most two episodes
+ * (never two of one series) and three shorts a day (2026-10-17).
  */
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -316,10 +316,9 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
           </span>
           .{' '}
           <Info label="What approving does">
-            Approving says this may go out. Each one gets the earliest free day from tomorrow,
-            with at most one short and one episode a day for {channel.name}, so something goes
-            out every day. When this week is full, the next approval goes to the week after. Publishing
-            now is not limited by this.
+            Approving says this may go out. Each one gets the earliest day with room from tomorrow.
+            Across every channel a day holds at most two episodes, never two of the same series, and
+            three shorts, at most two from one channel. Publishing now is not limited by this.
             <br />
             <br />
             Once approved it moves to the Approved tab and is read-only here. It can only be taken
@@ -359,7 +358,7 @@ export const Publish = ({ id, go }: { id: string; go: (path: string) => void }) 
         <div className="bar">
           <span className="muted">
             {picked.size} chosen. Each gets the next free day from tomorrow:{' '}
-            <strong>at most one short and one episode a day</strong>
+            <strong>at most two episodes and three shorts a day, across every channel</strong>
           </span>
           <span className="spacer" />
           <button className="btn ghost small" onClick={() => setPicked(new Set())}>

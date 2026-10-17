@@ -1,26 +1,21 @@
 /**
  * Giving approved episodes and shorts a day and an hour.
  *
- * ONE OF EACH KIND A DAY, PER CHANNEL, EVERY DAY (owner, 2026-10-08). The rule
- * used to be a weekly quota from schedule.yaml (one episode and three shorts
- * for most channels) with a short never allowed on an episode's day, so eight
- * approved shorts went out over three weeks with silent days between them.
- * Now something goes out on the regular:
+ * A CAP FOR THE WHOLE STUDIO, NOT PER CHANNEL (owner, 2026-10-17). The rule
+ * was one episode and one short a day per channel, so seven channels stacked
+ * seven of each onto the next two days. Now, across every channel:
  *
- *   - At most ONE short and ONE episode on any day, for a channel. Both may go
- *     out on the same day, at different hours.
- *   - Each approval takes the EARLIEST FREE DAY for its kind, from tomorrow.
- *     Approvals already on the calendar keep their days, so the stream stays
- *     gap-free: a short approved when this week is full goes to next week,
- *     and so on.
+ *   - At most TWO episodes a day, and never two of the same series.
+ *   - At most THREE shorts a day, at most two from one channel, so they vary.
+ *   - Each approval takes the EARLIEST DAY WITH ROOM, from tomorrow.
+ *     Approvals already on the calendar keep their days.
  *   - Publishing now is not scheduling, and is not limited by any of this.
  *
  * NEVER TODAY. A batch approved this afternoon publishing its first item an
  * hour later is a burst in miniature, and nobody has listened to it yet.
  *
- * HOURS: the episode at the channel's slot hour; the short at a different,
- * varied hour inside a civilised range, so a channel never posts twice at
- * once and does not read as a machine posting at the same minute daily.
+ * HOURS: the episode at its channel's slot hour; the short at a varied hour
+ * inside a civilised range; never two releases at the same hour on one day.
  */
 import { Cadence } from './schema';
 import { HOUR_SPREAD, instantOfWallClock, weekdayAt } from './slots';
@@ -36,12 +31,18 @@ export type ItemKind = 'episode' | 'short';
 export interface Allocatable {
   runId: string;
   kind: ItemKind;
+  channelId: string;
+  /** The series it belongs to; two episodes of one series never share a day. */
+  series: string;
+  cadence: Cadence;
 }
 
-/** Something already approved for this channel, which holds its day. */
+/** Something already approved, on any channel, which holds its day. */
 export interface Taken {
   kind: ItemKind;
   at: Date;
+  channelId: string;
+  series: string;
 }
 
 export interface Allocated {
@@ -50,8 +51,10 @@ export interface Allocated {
   at: Date;
 }
 
-/** The most of one kind a channel may put out on one day. */
-export const PER_DAY = 1;
+/** The most the whole studio puts out on one day. */
+export const PER_DAY = { episodes: 2, shorts: 3 };
+/** The most shorts one channel puts out on one day. */
+const SHORTS_PER_CHANNEL = 2;
 
 /**
  * The Monday of the week an instant falls in, at midnight, in the zone. Kept
@@ -93,26 +96,42 @@ const shortHour = (cadence: Cadence, dayNumber: number): number => {
 };
 
 export interface AllocateInput {
-  cadence: Cadence;
   /** In the order they should go out. */
   items: Allocatable[];
-  /** Already approved for this channel, so their days are already spent. */
+  /** Already approved on every channel, so their places are already spent. */
   taken: Taken[];
   from: Date;
   timezone: string;
 }
 
-/** Lay items out one of each kind a day, on the earliest free days from tomorrow. */
-export const allocate = (input: AllocateInput): Allocated[] => {
-  const { cadence, items, taken, timezone: tz } = input;
+interface Day {
+  episodes: string[]; // series
+  shorts: string[]; // channel ids
+  hours: Set<number>;
+}
 
-  // How many of each kind each local day already holds.
-  const used = new Map<string, { episode: number; short: number }>();
+const fits = (d: Day, item: Allocatable): boolean =>
+  item.kind === 'episode'
+    ? d.episodes.length < PER_DAY.episodes && !d.episodes.includes(item.series)
+    : d.shorts.length < PER_DAY.shorts &&
+      d.shorts.filter((c) => c === item.channelId).length < SHORTS_PER_CHANNEL;
+
+/** Lay items out within the studio's daily cap, on the earliest days with room from tomorrow. */
+export const allocate = (input: AllocateInput): Allocated[] => {
+  const { items, taken, timezone: tz } = input;
+
+  const days = new Map<string, Day>();
   const day = (date: string) => {
-    if (!used.has(date)) used.set(date, { episode: 0, short: 0 });
-    return used.get(date)!;
+    if (!days.has(date)) days.set(date, { episodes: [], shorts: [], hours: new Set() });
+    return days.get(date)!;
   };
-  for (const t of taken) day(localDate(t.at, tz))[t.kind] += 1;
+  const hourOf = (d: Date) => Number(d.toLocaleString('en-GB', { timeZone: tz, hour: '2-digit', hour12: false }));
+  for (const t of taken) {
+    const d = day(localDate(t.at, tz));
+    if (t.kind === 'episode') d.episodes.push(t.series);
+    else d.shorts.push(t.channelId);
+    d.hours.add(hourOf(t.at));
+  }
 
   const first = addDays(localDate(input.from, tz), 1); // never today
   const out: Allocated[] = [];
@@ -121,13 +140,20 @@ export const allocate = (input: AllocateInput): Allocated[] => {
     for (let n = 0; n < HORIZON_DAYS; n++) {
       const date = addDays(first, n);
       const d = day(date);
-      if (d[item.kind] >= PER_DAY) continue;
+      if (!fits(d, item)) continue;
 
       const dayNumber = Math.round(Date.parse(`${date}T00:00:00Z`) / DAY_MS);
-      const when = at(date, item.kind === 'episode' ? episodeHour(cadence) : shortHour(cadence, dayNumber), tz);
+      let hour = item.kind === 'episode' ? episodeHour(item.cadence) : shortHour(item.cadence, dayNumber);
+      // Never two at the same hour: step to the next free one in the range.
+      for (let k = 0; k < HOUR_RANGE && d.hours.has(hour); k++) {
+        hour = FIRST_HOUR + ((hour - FIRST_HOUR + 1) % HOUR_RANGE);
+      }
+      const when = at(date, hour, tz);
       if (when.getTime() <= input.from.getTime()) continue;
 
-      d[item.kind] += 1;
+      if (item.kind === 'episode') d.episodes.push(item.series);
+      else d.shorts.push(item.channelId);
+      d.hours.add(hour);
       out.push({ runId: item.runId, kind: item.kind, at: when });
       break;
     }

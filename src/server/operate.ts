@@ -41,7 +41,8 @@ import { currentPlan } from '../schedule/current';
 import { dueForRelease, releaseDue } from '../publish/release';
 import { releasingEnabled } from './calendar';
 import { loadSchedule } from '../schedule/load';
-import { PER_DAY, allocate, type ItemKind, type Taken } from '../schedule/allocate';
+import type { Cadence } from '../schedule/schema';
+import { PER_DAY, allocate, type Allocatable, type ItemKind, type Taken } from '../schedule/allocate';
 import { instantOfWallClock } from '../schedule/slots';
 import { publishRun } from '../publish/publishRun';
 import { archiveSoon } from './archiveNow';
@@ -296,18 +297,85 @@ export const nextDue = () => {
   };
 };
 
+// A CHANNEL NOT IN schedule.yaml STILL GETS DAYS: the rule is the same for
+// every channel, and the cadence only supplies its hour.
+const cadenceFor = (channelId: string): Cadence =>
+  loadSchedule().shows[channelId] ?? {
+    everyDays: 7,
+    shortsPerEpisode: 0,
+    autoPublish: false,
+    perWeek: { episodes: 1, shorts: 7 },
+  };
+
+// BY FORMAT, not only by being cut from an episode: a short made directly
+// (a science or health short) is a short, and fills a short's slot.
+const kindOf = (r: RunSummary): ItemKind => {
+  if (r.short !== null) return 'short';
+  try {
+    return loadFormat(Run.open(r.id).manifest.formatId).kind === 'short' ? 'short' : 'episode';
+  } catch {
+    return 'episode';
+  }
+};
+
+const seriesOf = (r: RunSummary) => `${r.channelId}#${r.seriesTitle ?? ''}`;
+
+const allocatable = (r: RunSummary): Allocatable => ({
+  runId: r.id,
+  kind: kindOf(r),
+  channelId: r.channelId,
+  series: seriesOf(r),
+  cadence: cadenceFor(r.channelId),
+});
+
+const takenBy = (list: RunSummary[]): Taken[] =>
+  list.map((r) => ({ kind: kindOf(r), at: new Date(r.releaseAt!), channelId: r.channelId, series: seriesOf(r) }));
+
+/** Take turns: one from each group in order, so neighbours in the queue differ. */
+const interleave = <T>(list: T[], group: (t: T) => string): T[] => {
+  const groups = new Map<string, T[]>();
+  for (const t of list) groups.set(group(t), [...(groups.get(group(t)) ?? []), t]);
+  const out: T[] = [];
+  for (let i = 0; out.length < list.length; i++) for (const g of groups.values()) if (g[i]) out.push(g[i]!);
+  return out;
+};
+
+/**
+ * Lay every approved, unpublished run out again under the studio's cap
+ * (owner, 2026-10-17: the per-channel rule had stacked everything onto the
+ * next two days). Each channel's own order is kept; channels and series take
+ * turns, so neighbouring days differ. The approvals stand, only days move.
+ */
+export const respreadReleases = (who: string | null = null) => {
+  const schedule = loadSchedule();
+  const queued = runs()
+    .filter((r) => r.releaseAt && r.state !== 'published' && Run.open(r.id).manifest.releaseApprovedAt)
+    .sort((x, y) => Date.parse(x.releaseAt!) - Date.parse(y.releaseAt!));
+  const items = [
+    ...interleave(queued.filter((r) => kindOf(r) === 'episode'), seriesOf),
+    ...interleave(queued.filter((r) => kindOf(r) === 'short'), (r) => r.channelId),
+  ].map(allocatable);
+  const placed = allocate({ items, taken: [], from: new Date(), timezone: schedule.timezone });
+  for (const p of placed) {
+    const run = Run.open(p.runId);
+    run.setReleaseAt(p.at);
+    run.journal({ stage: 'publish', event: `moved to ${p.at.toISOString()} by the daily cap${who ? ` (${who})` : ''}` });
+  }
+  return { moved: placed.length, unscheduled: items.length - placed.length, perDay: PER_DAY };
+};
+
 /**
  * Approve runs to go out, and give them days within what the channel can hold.
  *
  * APPROVING IS A DECISION, NOT A SCHEDULE. It says "this may go out"; when is
- * arithmetic, done here: one short and one episode a day at most for this
- * channel, each on the earliest free day from tomorrow, rolling into the next
- * week when this one is full. See schedule/allocate.ts. Publishing now is not
- * limited by any of it.
+ * arithmetic, done here: across the whole studio at most two episodes (never
+ * two of one series) and three shorts a day, each on the earliest day with
+ * room from tomorrow. See schedule/allocate.ts. Publishing now is not limited
+ * by any of it.
  *
- * PER CHANNEL, AND IT REFUSES ANYTHING ELSE. Approving one show must never
- * reach into another's schedule, which an earlier version did by clearing
- * "everything not in this list" across every channel at once.
+ * ONE CHANNEL'S RUNS, AND IT REFUSES ANYTHING ELSE. Other channels' approvals
+ * only count as days already spent; approving one show never moves another's,
+ * which an earlier version did by clearing "everything not in this list".
  *
  * ALREADY-APPROVED RUNS KEEP THEIR DAYS. They are counted as capacity already
  * spent, so approving two more adds two to the end rather than reshuffling a
@@ -322,21 +390,14 @@ export const approveForRelease = (
 
   const persona = loadPersona(channelId);
   const schedule = loadSchedule();
-  // A CHANNEL NOT IN schedule.yaml STILL GETS DAYS: the rule is the same for
-  // every channel, and the cadence only supplies its hour.
-  const cadence = schedule.shows[channelId] ?? {
-    everyDays: 7,
-    shortsPerEpisode: 0,
-    autoPublish: false,
-    perWeek: { episodes: 1, shorts: 7 },
-  };
 
   const foreign = runIds.filter((id) => id.split('/')[0] !== channelId);
   if (foreign.length) {
     throw new HttpError(400, `not ${persona.name}'s runs: ${foreign.join(', ')}`);
   }
 
-  const mine = runs({ channelId, limit: 400 });
+  const all = runs();
+  const mine = all.filter((r) => r.channelId === channelId);
 
   // ONLY WHAT IS FINISHED: voiced, gated over its audio, and passed. An
   // approved run is released without anybody present, so one with no audio
@@ -353,26 +414,11 @@ export const approveForRelease = (
     );
   }
 
-  // BY FORMAT, not only by being cut from an episode: a short made directly
-  // (a science or health short) is a short, and fills a short's slot.
-  const kindOf = (runId: string): ItemKind => {
-    const summary = mine.find((r) => r.id === runId);
-    if (summary && summary.short !== null) return 'short';
-    try {
-      return loadFormat(Run.open(runId).manifest.formatId).kind === 'short' ? 'short' : 'episode';
-    } catch {
-      return 'episode';
-    }
-  };
-
-  // Days already spoken for stay spoken for.
-  const taken: Taken[] = mine
-    .filter((r) => r.releaseAt && !runIds.includes(r.id) && r.state !== 'published')
-    .map((r) => ({ kind: kindOf(r.id), at: new Date(r.releaseAt!) }));
+  // Days already spoken for, on EVERY channel, stay spoken for: the cap is the studio's.
+  const taken = takenBy(all.filter((r) => r.releaseAt && !runIds.includes(r.id) && r.state !== 'published'));
 
   const placed = allocate({
-    cadence,
-    items: runIds.map((runId) => ({ runId, kind: kindOf(runId) })),
+    items: runIds.map((runId) => allocatable(all.find((r) => r.id === runId)!)),
     taken,
     from: new Date(),
     timezone: schedule.timezone,
@@ -397,7 +443,7 @@ export const approveForRelease = (
   return {
     approved: placed.map((p) => ({ runId: p.runId, releaseAt: p.at.toISOString(), kind: p.kind })),
     unscheduled,
-    perDay: { episodes: PER_DAY, shorts: PER_DAY },
+    perDay: PER_DAY,
     timezone: schedule.timezone,
   };
 };
