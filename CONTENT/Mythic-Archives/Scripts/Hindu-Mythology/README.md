@@ -10,6 +10,9 @@ Format `myth-story` (parts: `opening`, `story`, `close`). Narrator: Akira.
 | `hindu-mythology/3` | The Many Gods of Hindu Mythology | `03-the-many-gods.txt` | ~1,940 (~11 min) |
 | `hindu-mythology/4` | The Seven Worlds Above and Below | `04-the-seven-worlds.txt` | ~2,050 (~12 min) |
 | `hindu-mythology/5` | The Four Yugas: The Rise and Fall of the Ages | `05-the-four-yugas.txt` | ~2,180 (~13 min) |
+| `hindu-mythology/7` | Devas and Asuras: The Endless War | `07-devas-and-asuras.txt` | ~1,300 (~8 min) |
+| `hindu-mythology/8` | Karma and Rebirth: Your Next Life | `08-karma-and-rebirth.txt` | ~1,310 (~8 min) |
+| `hindu-mythology/9` | The Saptarishis: The Seven Great Sages | `09-the-saptarishis.txt` | ~1,290 (~8 min) |
 
 ## Putting one into the studio
 
@@ -44,6 +47,15 @@ Sanskrit names from these five episodes were added to the `mythic-archives`
 and the respelling is applied only when the voice reads it.
 
 ## Sources the stories follow
+
+- 7 follows Kacha and Devayani (Mahabharata, Adi Parva, Sambhava section): the three
+  killings, the wine, the lesson inside Shukra, the two curses; parentage of devas and
+  asuras from Kashyapa's wives Aditi, Diti and Danu.
+- 8 follows Shvetaketu and King Pravahana (Chandogya 5.3 to 5.10, Brihadaranyaka 6.2),
+  Yajnavalkya to Janaka (Brihadaranyaka 4.4, the caterpillar), and Gita 2.22.
+- 9 follows Vishnu Purana 1.7 and 3.1 for the mind-born sons and the current seven, and
+  the lotus-stalk story (Mahabharata, Anushasana Parva): check the king's name
+  (Vrishadarbha), the gold-filled figs, and that Shunahsakha's oath is the blessing.
 
 Rig Veda 10.129 (Nasadiya Sukta) and 1.32 (Indra and Vritra); Vishnu Purana
 books 1, 2 and 6; Bhagavata Purana (Brahma in the lotus, Dhruva, Parikshit and

@@ -700,6 +700,114 @@ channels:
       - word: Ypsilanti
         sayAs: ip-sih-LAN-tee
         ipa: /ˌɪpsɪˈlænti/
+      - word: Maruti Suzuki
+        sayAs: muh-ROO-tee soo-ZOO-kee
+        ipa: /mɑːɾʊt̪iː suzuki/
+      - word: Maruti
+        sayAs: muh-ROO-tee
+        ipa: /mɑːɾʊt̪iː/
+      - word: Suzuki
+        sayAs: soo-ZOO-kee
+        ipa: /sɯzɯki/
+      - word: Osamu
+        sayAs: OH-sah-moo
+        ipa: /osamɯ/
+      - word: Harpal Singh
+        sayAs: HUR-paal SING
+        ipa: /ɦəɾpaːl sɪŋɡʱ/
+      - word: Harpal
+        sayAs: HUR-paal
+        ipa: /ɦəɾpaːl/
+      - word: Indira Gandhi
+        sayAs: IN-dih-ruh GAAN-dee
+        ipa: /ɪnd̪ɪɾaː ɡaːndʱiː/
+      - word: Sanjay Gandhi
+        sayAs: SUN-jay GAAN-dee
+        ipa: /sən̪d͡ʒeː ɡaːndʱiː/
+      - word: Indira
+        sayAs: IN-dih-ruh
+        ipa: /ɪnd̪ɪɾaː/
+      - word: Sanjay
+        sayAs: SUN-jay
+        ipa: /sən̪d͡ʒeː/
+      - word: Gandhi
+        sayAs: GAAN-dee
+        ipa: /ɡaːndʱiː/
+      - word: Krishnamurthy
+        sayAs: krish-nuh-MOOR-tee
+        ipa: /kɾɪʃɳəmuːɾt̪ʰiː/
+      - word: Hindustan
+        sayAs: HIN-doo-staan
+        ipa: /ɦɪnd̪ʊst̪aːn/
+      - word: Padmini
+        sayAs: PUD-mih-nee
+        ipa: /pəd̪mɪniː/
+      - word: Hanuman
+        sayAs: HUN-oo-maan
+        ipa: /ɦənʊmaːn/
+      - word: Udyog
+        sayAs: OOD-yog
+        ipa: /ʊd̪joːɡ/
+      - word: Gurgaon
+        sayAs: GUR-gaa-on
+        ipa: /ɡʊɽɡaːʋ̃/
+      - word: Manesar
+        sayAs: MAH-nay-sur
+        ipa: /maːneːsəɾ/
+      - word: Sunil Bharti Mittal
+        sayAs: soo-NEEL BAR-tee MIT-tul
+        ipa: /sʊniːl bʱaːɾt̪iː mɪt̪t̪əl/
+      - word: Sunil
+        sayAs: soo-NEEL
+        ipa: /sʊniːl/
+      - word: Bharti
+        sayAs: BAR-tee
+        ipa: /bʱaːɾt̪iː/
+      - word: Mittal
+        sayAs: MIT-tul
+        ipa: /mɪt̪t̪əl/
+      - word: Ludhiana
+        sayAs: loo-dee-AA-nuh
+        ipa: /lʊd̪ʱɪjaːnaː/
+      - word: Punjab
+        sayAs: pun-JAAB
+        ipa: /pənd͡ʒaːb/
+      - word: Beetel
+        sayAs: BEE-tel
+        ipa: /biːʈel/
+      - word: Zain
+        sayAs: ZAYN
+        ipa: /zeːn/
+      - word: Sachin Bansal
+        sayAs: SUCH-in BUN-sul
+        ipa: /sətʃɪn bənsəl/
+      - word: Sachin
+        sayAs: SUCH-in
+        ipa: /sətʃɪn/
+      - word: Bansal
+        sayAs: BUN-sul
+        ipa: /bənsəl/
+      - word: Binny
+        sayAs: BIN-nee
+        ipa: /bɪnniː/
+      - word: Andhra Pradesh
+        sayAs: AAN-druh pruh-DAYSH
+        ipa: /aːnd̪ʱɾə pɾəd̪eːʃ/
+      - word: Ekart
+        sayAs: EE-kart
+        ipa: /iːkaːɾʈ/
+      - word: Myntra
+        sayAs: MIN-truh
+        ipa: /mɪnt̪ɾaː/
+      - word: PhonePe
+        sayAs: FOHN-pay
+        ipa: /foːnpeː/
+      - word: Bangalore
+        sayAs: BANG-guh-lor
+        ipa: /bæŋɡəlɔːɾ/
+      - word: Mumbai
+        sayAs: mum-BYE
+        ipa: /mʊmbəiː/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -810,6 +918,72 @@ channels:
       - word: Wittenberg
         sayAs: VIT-en-bairk
         ipa: /ˈvɪtn̩bɛʁk/
+      - word: Antonie van Leeuwenhoek
+        sayAs: an-TOH-nee van LAY-ven-hook
+        ipa: /ɑnˈtoːni vɑn ˈleːʋənˌɦuk/
+      - word: Leeuwenhoek
+        sayAs: LAY-ven-hook
+        ipa: /ˈleːʋənˌɦuk/
+      - word: Antonie
+        sayAs: an-TOH-nee
+        ipa: /ɑnˈtoːni/
+      - word: Delft
+        sayAs: DELFT
+        ipa: /dɛlft/
+      - word: Oldenburg
+        sayAs: OL-den-burg
+        ipa: /ˈɔldn̩bʊʁk/
+      - word: Micrographia
+        sayAs: my-kroh-GRAF-ee-uh
+        ipa: /maɪkrəˈɡræfiə/
+      - word: Fabricius
+        sayAs: fuh-BRISH-us
+        ipa: /faˈbrikius/
+      - word: Marcello Malpighi
+        sayAs: mar-CHEL-loh mal-PEE-ghee
+        ipa: /marˈtʃɛllo malˈpiːɡi/
+      - word: Malpighi
+        sayAs: mal-PEE-ghee
+        ipa: /malˈpiːɡi/
+      - word: Ignaz Semmelweis
+        sayAs: IG-nahts ZEM-el-vice
+        ipa: /ˈɪɡnaːts ˈzɛml̩vaɪs/
+      - word: Semmelweis
+        sayAs: ZEM-el-vice
+        ipa: /ˈzɛml̩vaɪs/
+      - word: Ignaz
+        sayAs: IG-nahts
+        ipa: /ˈɪɡnaːts/
+      - word: Kolletschka
+        sayAs: koh-LETCH-kah
+        ipa: /kɔˈlɛtʃka/
+      - word: Buda
+        sayAs: BOO-daw
+        ipa: /ˈbudɒ/
+      - word: Pest
+        sayAs: PESHT
+        ipa: /pɛʃt/
+      - word: coelacanth
+        sayAs: SEE-luh-kanth
+        ipa: /ˈsiːləkænθ/
+      - word: Courtenay-Latimer
+        sayAs: KORT-nee LAT-ih-mer
+        ipa: /ˈkɔːtni ˈlætɪmə/
+      - word: Latimeria
+        sayAs: lat-ih-MEER-ee-uh
+        ipa: /lætɪˈmɪəriə/
+      - word: Eratosthenes
+        sayAs: air-uh-TOSS-thuh-neez
+        ipa: /eratostʰenɛːs/
+      - word: Syene
+        sayAs: sy-EE-nee
+        ipa: /syéːnɛː/
+      - word: Ediswan
+        sayAs: ED-ih-swon
+        ipa: /ˈɛdɪswɒn/
+      - word: Menlo
+        sayAs: MEN-loh
+        ipa: /ˈmɛnloʊ/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -921,6 +1095,72 @@ channels:
       - word: Anichkov
         sayAs: ah-NEECH-kof
         ipa: /ɐˈnʲitɕkəf/
+      - word: Clostridioides difficile
+        sayAs: klos-trid-ee-OY-deez dif-ih-SEEL
+        ipa: /klɒstrɪdiˈɔɪdiːz ˌdɪfɪˈsiːl/
+      - word: Clostridioides
+        sayAs: klos-trid-ee-OY-deez
+        ipa: /klɒstrɪdiˈɔɪdiːz/
+      - word: C. diff
+        sayAs: see diff
+        ipa: /siː dɪf/
+      - word: Eran Elinav
+        sayAs: eh-RAHN EL-ee-nahv
+        ipa: /eˈʁan ˈelinav/
+      - word: Elinav
+        sayAs: EL-ee-nahv
+        ipa: /ˈelinav/
+      - word: Milo
+        sayAs: MEE-loh
+        ipa: /ˈmilo/
+      - word: Sonnenburg
+        sayAs: SON-en-burg
+        ipa: /ˈsɒnənbɜːɡ/
+      - word: Sonnenburgs
+        sayAs: SON-en-burgz
+        ipa: /ˈsɒnənbɜːɡz/
+      - word: Hadza
+        sayAs: HAHD-zah
+        ipa: /ˈhadza/
+      - word: FODMAP
+        sayAs: FOD-map
+        ipa: /ˈfɒdmæp/
+      - word: Monash
+        sayAs: MON-ash
+        ipa: /ˈmɒnæʃ/
+      - word: Azpiroz
+        sayAs: ath-pee-ROTH
+        ipa: /aθpiˈɾoθ/
+      - word: Willem Dicke
+        sayAs: VIL-em DIK-uh
+        ipa: /ˈʋɪləm ˈdɪkə/
+      - word: Dicke
+        sayAs: DIK-uh
+        ipa: /ˈdɪkə/
+      - word: Willem
+        sayAs: VIL-em
+        ipa: /ˈʋɪləm/
+      - word: Biesiekierski
+        sayAs: bee-shuh-KEER-skee
+        ipa: /bʲɛɕɛˈkʲɛrskʲi/
+      - word: Crohn
+        sayAs: KROHN
+        ipa: /kroʊn/
+      - word: calprotectin
+        sayAs: kal-proh-TEK-tin
+        ipa: /kælprəˈtɛktɪn/
+      - word: coeliac
+        sayAs: SEE-lee-ak
+        ipa: /ˈsiːliæk/
+      - word: Guangzhou
+        sayAs: gwahng-JOH
+        ipa: /kwàŋʈʂóu/
+      - word: CGRP
+        sayAs: see gee ar pee
+        ipa: /siː dʒiː ɑː piː/
+      - word: peristalsis
+        sayAs: peh-rih-STAL-sis
+        ipa: /pɛrɪˈstælsɪs/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -1009,6 +1249,42 @@ channels:
       - word: Vincenzo
         sayAs: veen-CHEN-tsoh
         ipa: /vinˈtʃɛntso/
+      - word: Ethel Le Neve
+        sayAs: ETH-ul luh NEEV
+        ipa: /ˈɛθəl lə ˈniːv/
+      - word: Le Neve
+        sayAs: luh NEEV
+        ipa: /lə ˈniːv/
+      - word: Martinettis
+        sayAs: mar-tih-NET-eez
+        ipa: /ˌmɑːtɪˈnɛtiz/
+      - word: Alphonse Bertillon
+        sayAs: al-FONSS bair-tee-YON
+        ipa: /alfɔ̃s bɛʁtijɔ̃/
+      - word: Bertillon
+        sayAs: bair-tee-YON
+        ipa: /bɛʁtijɔ̃/
+      - word: Azizul Haque
+        sayAs: uh-ZEE-zul HUCK
+        ipa: /əziːzʊl ɦəq/
+      - word: Hem Chandra Bose
+        sayAs: HAYM CHUN-druh BOSE
+        ipa: /ɦeːm t͡ʃənd̪ɾə boːs/
+      - word: Faulds
+        sayAs: FOLDZ
+        ipa: /fɔːldz/
+      - word: Rytka
+        sayAs: RIT-kuh
+        ipa: /ˈrɪtkə/
+      - word: Antwerp
+        sayAs: ANT-werp
+        ipa: /ˈæntwɜːp/
+      - word: Hilldrop
+        sayAs: HIL-drop
+        ipa: /ˈhɪldrɒp/
+      - word: Anglin
+        sayAs: ANG-glin
+        ipa: /ˈæŋɡlɪn/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -2011,6 +2287,93 @@ channels:
       - word: K'iche'
         sayAs: kee-CHEH
         ipa: /kʼiˈt͡ʃeʔ/
+      - word: Kacha
+        sayAs: KUH-chuh
+        ipa: /kət͡ʃə/
+      - word: Devayani
+        sayAs: day-VAH-yuh-nee
+        ipa: /d̪eːʋəjaːniː/
+      - word: Shukracharya
+        sayAs: shoo-kruh-CHAR-yuh
+        ipa: /ʃʊkɾaːt͡ʃaːɾjə/
+      - word: Vrishaparva
+        sayAs: vrih-shuh-PAR-vuh
+        ipa: /ʋɾɪʂəpəɾʋaː/
+      - word: Upanishads
+        sayAs: oo-PUH-nih-shudz
+        ipa: /ʊpənɪʂəd̪/
+      - word: Shvetaketu
+        sayAs: shvay-tuh-KAY-too
+        ipa: /ʃʋeːt̪əkeːt̪ʊ/
+      - word: Aruni
+        sayAs: AA-roo-nee
+        ipa: /aːɾʊɳiː/
+      - word: Gautama
+        sayAs: GOW-tuh-muh
+        ipa: /ɡəʊt̪əmə/
+      - word: Panchala
+        sayAs: PAAN-chuh-luh
+        ipa: /paːɲt͡ʃaːlə/
+      - word: Pravahana
+        sayAs: pruh-VAH-huh-nuh
+        ipa: /pɾəʋaːɦəɳə/
+      - word: Brahman
+        sayAs: BRUH-mun
+        ipa: /bɾəɦmən/
+      - word: Yajnavalkya
+        sayAs: yuj-nyuh-VULK-yuh
+        ipa: /jəd͡ʒɲəʋəlkjə/
+      - word: Janaka
+        sayAs: JUH-nuh-kuh
+        ipa: /d͡ʒənəkə/
+      - word: Bhagavad Gita
+        sayAs: BUH-guh-vud GEE-tah
+        ipa: /bʱəɡəʋəd̪ ɡiːt̪aː/
+      - word: Saptarishis
+        sayAs: sup-tuh-RISH-eez
+        ipa: /səpt̪əɾʂɪ/
+      - word: Atri
+        sayAs: UT-ree
+        ipa: /ət̪ɾɪ/
+      - word: Angiras
+        sayAs: UNG-gih-rus
+        ipa: /əŋɡɪɾəs/
+      - word: Pulastya
+        sayAs: poo-LUST-yuh
+        ipa: /pʊləst̪jə/
+      - word: Pulaha
+        sayAs: POO-luh-huh
+        ipa: /pʊləɦə/
+      - word: Kratu
+        sayAs: KRUH-too
+        ipa: /kɾət̪ʊ/
+      - word: Vasishtha
+        sayAs: vuh-SISHT-uh
+        ipa: /ʋəsɪʂʈʰə/
+      - word: Vaivasvata
+        sayAs: vy-VUS-vuh-tuh
+        ipa: /ʋəɪʋəsʋət̪ə/
+      - word: Jamadagni
+        sayAs: juh-muh-DUG-nee
+        ipa: /d͡ʒəməd̪əɡnɪ/
+      - word: Vishvamitra
+        sayAs: vish-vuh-MIT-ruh
+        ipa: /ʋɪʃʋaːmɪt̪ɾə/
+      - word: Bharadvaja
+        sayAs: buh-ruhd-VAH-juh
+        ipa: /bʱəɾəd̪ʋaːd͡ʒə/
+      - word: Arundhati
+        sayAs: uh-ROON-duh-tee
+        ipa: /əɾʊnd̪ʱət̪iː/
+      - word: Vrishadarbha
+        sayAs: vrih-shuh-DUR-buh
+        ipa: /ʋɾɪʂaːd̪əɾbʱə/
+      - word: Yatudhani
+        sayAs: yaa-too-DAA-nee
+        ipa: /jaːt̪ʊd̪ʱaːniː/
+      - word: Shunahsakha
+        sayAs: shoo-nuh-SUH-khuh
+        ipa: /ʃʊnəɦsəkʰə/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -2067,6 +2430,27 @@ channels:
       - word: Ebbinghaus
         sayAs: EB-bing-hows
         ipa: /ˈɛbɪŋhaʊs/
+      - word: Molaison
+        sayAs: MOL-ay-son
+        ipa: /ˈmɒleɪsən/
+      - word: Loftus
+        sayAs: LOFF-tus
+        ipa: /ˈlɒftəs/
+      - word: Proust
+        sayAs: PROOST
+        ipa: /pʁust/
+      - word: Kross
+        sayAs: KROSS
+        ipa: /krɔs/
+      - word: Corkin
+        sayAs: KOR-kin
+        ipa: /ˈkɔːrkɪn/
+      - word: Priya
+        sayAs: PREE-yuh
+        ipa: /pɾɪjaː/
+      - word: H.M.
+        sayAs: aitch em
+        ipa: /eɪtʃ ɛm/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

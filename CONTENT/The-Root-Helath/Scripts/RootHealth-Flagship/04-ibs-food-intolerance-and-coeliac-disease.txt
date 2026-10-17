@@ -1,0 +1,69 @@
+## opening
+
+[warmly] How can the same symptoms, stomach pain, bloating, diarrhoea, come from completely different conditions? And how do doctors tell them apart?
+
+[curious] This is an area with strong evidence in places. Coeliac disease and inflammatory bowel disease are well understood, with clear tests. Other parts, like food sensitivities, are still argued about.
+
+[gently] So let's imagine four people, all with similar tummy troubles, and see what's actually going on in each.
+
+## belief
+
+[thoughtful] A lot of people think of these as different flavours of the same thing. A sensitive stomach. A bit of IBS, a bit of intolerance, maybe some gluten trouble, all much the same, and all fixed by cutting out a food.
+
+[warmly] That's understandable. The symptoms really do overlap. And for many people, changing what they eat really does help. [curious] Some celebrities and diet books in the 2010s made gluten-free eating fashionable, so it's become common to think gluten is a problem for lots of people, and that avoiding it is a healthy choice.
+
+[thoughtful] But behind similar symptoms are some very different things happening in the body. And mixing them up can matter a great deal.
+
+## evidence
+
+[serious] Let's start with the story of coeliac disease, because it began with a famine. In the winter of 1944 to 1945, in the Netherlands, during the Second World War, food was cut off to much of the country. People starved. Bread ran out. [curious] A Dutch children's doctor named Willem Dicke had been treating children with coeliac disease, which caused severe diarrhoea, poor growth and wasting. During the famine, he noticed something extraordinary. The children with coeliac disease got better. And when bread came back after the war, they got sick again.
+
+[thoughtful] In the years that followed, Dicke and his colleagues showed that wheat, and specifically gluten, a protein found in wheat, barley and rye, was the trigger. [softly] Today we know coeliac disease is an autoimmune condition. The immune system reacts to gluten and attacks the lining of the small intestine. It affects about one in a hundred people in the UK, and many of them don't know they have it.
+
+[curious] Next, inflammatory bowel disease, IBD. That's mainly two conditions, Crohn's disease and ulcerative colitis. In both, the gut becomes inflamed, swollen and damaged, and doctors can see that damage with a camera. Crohn's and Colitis UK estimates that around half a million people in the UK live with IBD.
+
+[thoughtful] Then lactose intolerance. Lactose is the natural sugar in milk. To digest it, you need an enzyme called lactase. Most babies make plenty. But in about two thirds of adults worldwide, lactase drops after childhood. It's much less common in people of northern European ancestry. [curious] Undigested lactose goes on to the colon, where bacteria ferment it, making gas and drawing in water. That can mean bloating and diarrhoea. But studies giving people measured doses have found that many with lactose intolerance can manage small amounts, like milk in tea, without symptoms.
+
+[warmly] And irritable bowel syndrome, IBS. It's very common, affecting up to one in ten people or more. People with IBS have real, sometimes severe, pain, bloating, diarrhoea or constipation. But when doctors look at the gut, it appears normal. No inflammation, no damage. [thoughtful] It's a problem with how the gut works and feels, rather than how it looks. That's why it's diagnosed by its pattern of symptoms, once other conditions have been ruled out.
+
+[serious] Telling them apart relies on tests. NICE, which advises the NHS, recommends that people with IBS-type symptoms have a blood test for coeliac disease. That test looks for antibodies, proteins the immune system makes when it reacts to gluten. And they can have a test on a stool sample called faecal calprotectin, which picks up inflammation in the gut, helping separate IBD from IBS.
+
+## mechanism
+
+[curious] So what's physically happening in each of our four people?
+
+[thoughtful] In coeliac disease, the lining of the small intestine is covered with tiny finger-like folds called villi, which soak up nutrients from food. [softly] Picture a shaggy carpet, with a huge surface for absorbing food. When someone with coeliac disease eats gluten, their immune system attacks that lining, and the villi wear down flat, like the carpet worn bare. Food passes through without being properly absorbed. That causes diarrhoea, weight loss, tiredness and low iron.
+
+[serious] In IBD, the immune system attacks the gut wall itself, not because of gluten, but for reasons that are still being worked out, involving genes, gut bacteria and the environment. The inflammation can cause ulcers, bleeding and scarring. Crohn's can affect any part of the gut. Ulcerative colitis affects the colon.
+
+[curious] In lactose intolerance, nothing is damaged at all. It's a missing tool. Without enough lactase, lactose can't be broken down and absorbed in the small intestine. So it travels on to the colon, where bacteria ferment it, making gas, and it draws water in, which loosens stools.
+
+[thoughtful] And in IBS, the gut looks normal, but it moves and feels differently. The muscles may squeeze too fast or too slowly. And the nerves are often more sensitive, so ordinary stretching hurts. The gut and brain are in constant communication, which is why stress can make IBS symptoms flare.
+
+[warmly] Four people, similar symptoms. One has an immune attack triggered by a food. One has an immune attack with no food trigger. One is missing a digestive enzyme. And one has a gut that works and feels differently but isn't damaged.
+
+## disagreement
+
+[curious] The biggest disagreement in this area is about gluten in people who don't have coeliac disease.
+
+[thoughtful] Some people without coeliac disease say gluten makes them feel unwell, and they feel better without it. This has been called non-coeliac gluten sensitivity. In 2011, a group in Melbourne led by Jessica Biesiekierski and Peter Gibson ran a trial where people with IBS who felt better without gluten were given gluten or a dummy, without knowing which. Those on gluten reported more symptoms. [serious] But in 2013, the same group ran a more careful trial, controlling for other carbohydrates in wheat. This time, gluten itself made little difference. Instead, the fructans in wheat, fermentable carbohydrates, seemed more likely to be causing the symptoms.
+
+[curious] So some researchers now think that what many people call gluten sensitivity is mostly a reaction to fructans, or to the expectation of feeling ill. Others argue there is a real gluten-related condition in a small number of people, and that we just don't have a test for it yet.
+
+[thoughtful] What would settle it? A reliable test, a marker in the blood or gut, that picks out people with genuine gluten sensitivity. Until then, it can only be studied through symptoms, which are hard to measure.
+
+## honest
+
+[warmly] So how can similar symptoms come from different conditions? Because they're different processes, an immune attack, inflammation, a missing enzyme, or a sensitive gut, that happen to produce similar feelings.
+
+[thoughtful] IBS is not the same as inflammatory bowel disease. IBD involves real damage. IBS doesn't. And coeliac disease isn't a preference to avoid gluten. It's an autoimmune condition that needs proper diagnosis and lifelong care.
+
+[serious] There's one point the NHS and NICE are clear on. People being tested for coeliac disease should keep eating gluten until the tests are done, and not start a gluten-free diet without medical advice first. Avoiding gluten beforehand can make the tests unreliable, and the condition can be missed.
+
+[softly] What's still open is whether non-coeliac gluten sensitivity exists as its own condition, and why IBD starts in the first place.
+
+## close
+
+[warmly] Think back to that winter in the Netherlands, when bread ran out, and a doctor noticed that the children he was treating were getting better.
+
+[softly] Sometimes, the most important clue isn't in what's there. It's in what's missing.

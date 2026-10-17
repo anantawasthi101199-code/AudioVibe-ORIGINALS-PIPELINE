@@ -25,19 +25,34 @@
           "number": 2,
           "title": "The Hidden Ecosystem Inside Your Gut",
           "covers": "What are gut bacteria doing inside us, and do we need to change them? Introduce the gut microbiome, its relationship with digestion, fermentation, microbial metabolites and immune function. Misconception to correct: There is no single universally ideal microbiome score that guarantees good health.",
-          "source": "Recent human studies, systematic reviews of microbiome interventions and reviews distinguishing association from causation."
+          "source": "Recent human studies, systematic reviews of microbiome interventions and reviews distinguishing association from causation.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/02-the-hidden-ecosystem-inside-your-gut.txt",
+            "title": "The Hidden Ecosystem Inside Your Gut",
+            "description": "Trillions of microbes live in your gut, digesting what you cannot and talking to your immune system. But is there such a thing as a perfect gut, and can a test tell you if you have one?"
+          }
         },
         {
           "number": 3,
           "title": "Bloating, Gas and Your Gut's Sensitivity",
           "covers": "Why can an ordinary meal leave one person comfortable and another feeling painfully bloated? Explain gas production, fermentation, gut movement, abdominal distension and visceral sensitivity, the way internal sensations are perceived. Misconception to correct: Bloating does not automatically mean food intolerance, a damaged gut or an unhealthy microbiome. Safety: Persistent or worsening symptoms, blood in the stool, unexplained weight loss or significant bowel changes warrant clinical assessment.",
-          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+          "source": "NHS guidance, NICE guidance and recent systematic reviews",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/03-bloating-gas-and-your-guts-sensitivity.txt",
+            "title": "Bloating, Gas and Your Gut's Sensitivity",
+            "description": "Two people eat the same meal. One feels fine. The other feels painfully bloated. Often the difference is not how much gas there is, but how the gut handles it and how sensitive it is."
+          }
         },
         {
           "number": 4,
           "title": "IBS, Food Intolerance and Coeliac Disease",
           "covers": "How can similar symptoms come from different conditions? Compare irritable bowel syndrome (IBS), lactose intolerance, coeliac disease and inflammatory bowel disease without suggesting that they are interchangeable. Misconception to correct: IBS is not the same as inflammatory bowel disease, and coeliac disease is not simply a preference to avoid gluten. Safety: People being assessed for coeliac disease should not start a gluten-free diet before testing without medical advice, because avoiding gluten can make diagnostic tests less reliable.",
-          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+          "source": "NHS guidance, NICE guidance and recent systematic reviews",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/04-ibs-food-intolerance-and-coeliac-disease.txt",
+            "title": "IBS, Food Intolerance and Coeliac Disease",
+            "description": "Stomach pain, bloating and loose stools can come from very different things. A Dutch doctor noticed one of them during a famine, when bread ran out and sick children got better."
+          }
         },
         {
           "number": 5,

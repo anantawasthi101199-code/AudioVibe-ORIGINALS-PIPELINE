@@ -1,0 +1,53 @@
+## hook
+
+[leaning in] In 1995, if you had one of India's first mobile phones, a single minute of talking could cost you about sixteen rupees. [a beat] And that was not only to make a call. You paid to receive one too.
+
+[curious] A phone was a luxury for the rich. Today, in India, a vegetable seller, a taxi driver and a student in a small village all carry one, and calls cost next to nothing. One of the companies that made that happen started with a young man selling bicycle parts in Punjab.
+
+[warmly] Hey, I'm Adrian, and this is Business Decoded. Today, the story of Airtel and its founder, Sunil Mittal: the false starts, the giant gamble on mobile phones, and the strange decision that let him make calls cheaper than anyone thought possible.
+
+## beginnings
+
+[warmly] So let's go back to the very beginning. Sunil Bharti Mittal was born in 1957 in Ludhiana, an industrial city in Punjab, in the north of India. His father was a politician, a member of parliament. [thoughtful] But Sunil did not want politics. He wanted to build a business.
+
+[curious] In 1976, at about eighteen, he borrowed around twenty thousand rupees from his father and set up his first venture with friends, making parts for bicycles. Ludhiana was the bicycle capital of India, so it made sense. [matter-of-fact] It made a small profit. But Sunil could see that he would never grow very big supplying a few local bicycle makers.
+
+[determined] So he moved to Mumbai, India's business capital, and tried something else. He began importing small portable generators from Japan, made by Suzuki. In India in those days, the power often cut out, and shops and homes needed backup. [delighted] The generators sold very well.
+
+[grave] Then, in the early 1980s, the government banned the import of these generators, to protect two Indian companies that had been given licences to make them. Overnight, Sunil's business was gone. [thoughtful] It was a hard lesson in how much the government controlled who could do what.
+
+[curious] He looked for the next thing. And in the mid-1980s he found it: telephones. The old Indian phone was heavy and black, with a round dial you turned with your finger. Mittal began making push-button phones, which were new to India, with a partner from abroad, under the name Beetel. Then fax machines and cordless phones. [knowingly] The phone business was where he finally felt at home.
+
+[warmly] By the early 1990s, his company, called Bharti after his middle name, was a successful maker of phones. [pause] And then the government announced something that would change his life.
+
+## struggle
+
+[building] In 1991, India opened up its economy. The old Licence Raj, the rule that you needed government permission for almost everything, began to loosen. And in 1992, the government said it would hand out licences to run mobile phone networks, city by city.
+
+[serious] For Mittal, it was the chance of a lifetime, and a huge risk. Building a mobile network meant towers, radio equipment, offices and staff, before a single customer paid a rupee. It cost far more money than his phone-making business had. [determined] He brought in partners from abroad, who had the know-how and some of the cash. In 1994 his group won the licence for Delhi, the capital.
+
+[curious] In 1995 they launched the service under a new brand name: Airtel. [grave] And for years, it was a hard road. Calls were expensive, the handsets were expensive, and only businesspeople and the wealthy bought them. The licence fees the government charged were heavy. Several of the companies that had won licences in other cities went bust or sold out.
+
+[thoughtful] Mittal kept buying. When other operators were in trouble, he bought their licences, region by region, until Airtel covered more and more of India. [serious] It meant borrowing a lot of money and taking on more and more risk. [pause] And it raised the real question. How do you make money in a country where most people can only afford to pay very little?
+
+## rise
+
+[building] And then came the move that changed everything. In 2004, Airtel did something no big phone company had done before. It decided not to own or run its own network.
+
+[curious] It sounds mad. A phone company that does not run its own phones. [thoughtful] But here's how it worked. Airtel signed long deals with equipment makers, Ericsson, Nokia and Siemens, to build and run the network for it. And it handed its computer systems, the billing and customer records, to IBM. Crucially, Airtel did not pay for all the equipment up front. It paid these companies according to how much the network was used, and how many customers it had.
+
+[knowingly] An everyday comparison: instead of buying a fleet of delivery vans, you pay a delivery company per parcel. If business is slow, you pay less. If it booms, you pay more, but you are earning more too. [warmly] This meant Airtel's costs grew only as its customers grew. And so it could afford to charge tiny amounts per minute and still make a profit, by having enormous numbers of customers.
+
+[delighted] Meanwhile, the rules changed. From 2003, people no longer had to pay to receive calls. Prepaid cards meant you could top up just a few rupees at a time, with no contract and no bank account. Small shops all over India sold top-ups. [quietly impressed] Airtel's customers went from millions to tens of millions, and then to over a hundred million.
+
+[curious] Mittal went abroad too. In 2010 Airtel bought the African mobile business of a company called Zain, for about ten point seven billion dollars, and took its low-cost model to more than a dozen African countries.
+
+[serious] It was not all smooth. The deal in Africa was hard work and expensive for years. And in 2016, a rival named Jio, backed by Mukesh Ambani of Reliance, India's richest man, launched with free calls and very cheap data. [grave] It set off a brutal price war. Several competitors merged or disappeared. Airtel's profits fell hard. But it stayed in the fight, and it survived as one of the two biggest mobile companies in India.
+
+## ending
+
+[warmly] Today Airtel has hundreds of millions of customers across India and Africa. It sells mobile calls, internet, home broadband, and money transfers by phone.
+
+[reflective] What did it take? A founder who kept going after the government wiped out his business. The nerve to gamble everything on mobile phones when they were a rich person's toy. And one strange idea: paying others to run the network, so the cost of a call could fall low enough for almost anybody.
+
+[warmly] It began with a young man in Ludhiana, making parts for bicycles. [softly] It ended with a phone in the pocket of a farmer, a cook and a schoolchild, ringing for almost nothing.

@@ -25,19 +25,34 @@
           "number": 2,
           "title": "False Memories: Remembering What Never Happened",
           "covers": "Elizabeth Loftus showed that a single word in a question can change what witnesses remember, and that whole false memories can be planted.",
-          "source": "Loftus and Palmer (1974), the 'lost in the mall' studies, and reviews of eyewitness memory"
+          "source": "Loftus and Palmer (1974), the 'lost in the mall' studies, and reviews of eyewitness memory",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/02-false-memories.txt",
+            "title": "False Memories: Remembering What Never Was",
+            "description": "You can remember something clearly, in colour, with feelings attached, and it can still be wrong. A psychologist showed how one word in a question can change what people saw."
+          }
         },
         {
           "number": 3,
           "title": "The Man Who Could Not Make New Memories",
           "covers": "After brain surgery in 1953, Henry Molaison could no longer form new memories, and what he could still learn changed our understanding of the brain.",
-          "source": "Corkin's work on patient H.M. and reviews of memory systems"
+          "source": "Corkin's work on patient H.M. and reviews of memory systems",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/03-the-man-who-could-not-remember.txt",
+            "title": "The Man Who Could Not Make New Memories",
+            "description": "In 1953, surgery left one young man unable to form a single new memory. And yet, day after day, he got better at a task he could not remember ever doing."
+          }
         },
         {
           "number": 4,
           "title": "Why Smells Bring Back the Past",
           "covers": "Why a smell can drop you into a childhood memory more vividly than a photograph, and what is special about the route smell takes in the brain.",
-          "source": "Reviews of odour-evoked autobiographical memory"
+          "source": "Reviews of odour-evoked autobiographical memory",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/04-why-smells-bring-back-the-past.txt",
+            "title": "Why Smells Bring Back the Past",
+            "description": "One breath of a certain soap or a certain kitchen, and you are seven years old again. Smell takes a shortcut in the brain that sight and sound do not."
+          }
         },
         {
           "number": 5,

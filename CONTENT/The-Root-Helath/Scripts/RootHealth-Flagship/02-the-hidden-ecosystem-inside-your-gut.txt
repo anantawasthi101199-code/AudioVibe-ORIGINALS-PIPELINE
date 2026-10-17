@@ -1,0 +1,67 @@
+## opening
+
+[warmly] What are the bacteria in your gut actually doing in there? And is changing them worth doing?
+
+[curious] You may have seen yoghurt drinks that promise to top up your good bacteria, or home kits that send you a score for your gut. It's one of the busiest areas in all of medical research right now. [thoughtful] And the honest picture is a mix: some parts are very well established, some rest on mice, and a lot is still being worked out.
+
+[gently] So let's follow one ordinary bowl of porridge, through to the part of the gut where most of these microbes live, and see what's known.
+
+## belief
+
+[thoughtful] Here's the belief many people hold now. Inside each of us there's a balance of good and bad bacteria. If the good ones win, you're healthy. If the bad ones take over, you get ill. So a healthy gut is one with the right bacteria, and you can fix yours by eating the right things, taking probiotics, or testing it and following the advice.
+
+[warmly] That belief isn't silly. It comes from real science. Since about 2007, big projects such as the Human Microbiome Project in the United States have mapped the microbes living in and on people, and found an enormous variety. Thousands of studies have linked differences in gut bacteria to all sorts of conditions. [curious] And some of the findings in animals have been genuinely startling.
+
+[thoughtful] So it makes sense to think there's a right answer, a perfect gut you could aim for. Let's look at what the studies actually found.
+
+## evidence
+
+[curious] Start with the numbers. For years, people quoted that bacteria outnumber our own cells by ten to one. In 2016, a team in Israel, led by Ron Milo, did the sums again more carefully. They estimated about thirty-eight trillion bacteria in a typical man, most of them in the colon, the large bowel, and about thirty trillion human cells. [with a smile] So roughly one to one. Still a staggering number of passengers.
+
+[thoughtful] What are they doing? Our porridge gives a clue. Oats contain fibre, the tough part of plants that our own digestive juices cannot break down. It passes through the stomach and small intestine mostly untouched, and arrives in the colon. There, bacteria feed on it. This is fermentation, the same kind of process that turns milk into yoghurt. [curious] And as they ferment fibre, they make substances called short-chain fatty acids. One of them, butyrate, is a main source of fuel for the cells lining your colon. This part is well established, from decades of work in people and in the lab.
+
+[serious] The more dramatic findings came from mice. Researchers can raise germ-free mice, animals born and kept in sterile bubbles with no microbes at all. Those mice have weak immune systems in the gut, and their guts develop differently. [curious] In 2013, Jeffrey Gordon's group in St Louis took gut bacteria from pairs of human twins, where one twin was obese and one was lean, and put them into germ-free mice. The mice that got bacteria from the obese twin gained more body fat than those that got bacteria from the lean twin, on the same diet. [thoughtful] That was in mice. It shows gut bacteria can affect weight in an animal. It does not show the same thing happens in people in the same way.
+
+[warmly] In people, the clearest evidence comes from one illness. Clostridioides difficile, often called C. diff, is a bacterium that can take over the gut after a course of antibiotics has killed off many of the usual microbes, causing severe, repeated diarrhoea. [curious] In 2013, a Dutch trial gave people with repeated C. diff infection a faecal transplant, a carefully screened sample of a healthy donor's stool, put into their gut. About eighty per cent were free of the infection after the first transplant, compared with about a third of those given standard antibiotics. [thoughtful] That trial was small, forty-three people, and stopped early because the difference was so large. In England, NICE, the body that advises the NHS on treatments, now recommends faecal transplant for repeated C. diff that has not responded to antibiotics.
+
+[serious] For probiotics, pills or drinks containing live bacteria, the evidence is much more mixed. Reviews suggest some probiotics may reduce diarrhoea caused by antibiotics. But for healthy people, there's little good evidence they do much. [curious] And in 2018, a team in Israel led by Eran Elinav gave people probiotics after a course of antibiotics. Their own gut bacteria took longer to recover than in people who had no probiotics. That was a small study, and it needs repeating.
+
+[thoughtful] Diet does change the microbes, and quickly. In 2021, a team at Stanford in California, led by Justin and Erica Sonnenburg, put thirty-six healthy adults on either a high-fibre diet or a diet with lots of fermented foods, like yoghurt, kefir and kimchi, for ten weeks. The fermented food group's gut bacteria became more varied, and some blood markers of inflammation went down. [a beat] The high-fibre group's variety did not rise over those ten weeks, which surprised the researchers.
+
+## mechanism
+
+[curious] So what's physically going on? Your colon is the last part of the gut, about a metre and a half long, and it's where food that you haven't digested ends up. It's warm, it's dark, there's very little oxygen, and food keeps arriving. For bacteria, it's ideal.
+
+[thoughtful] First, the fermentation. Bacteria break down fibre into short-chain fatty acids. Butyrate is used directly by the cells lining the colon. Others are absorbed into the blood, and in lab studies they affect how the body handles sugar, fat and appetite. [softly] The bacteria are, in effect, digesting for you, and handing over some of what they make.
+
+[curious] Second, the barrier. The inside of your colon is lined with a thin layer of cells, covered with mucus, a slippery gel. Bacteria live in and above that mucus. The cells and the mucus keep them in the gut, out of your bloodstream. When the bacteria are well fed with fibre, they help keep that barrier in good repair. [thoughtful] In mice fed very little fibre, some bacteria start eating the mucus itself instead, and the barrier thins.
+
+[serious] Third, the immune system. Much of your immune system sits right beside the gut lining. It's constantly sampling what's on the other side, and learning which microbes are harmless and which are dangerous. [warmly] Think of it as border guards learning, over time, which travellers are regulars and which are trouble. Germ-free mice, with no bacteria to learn from, have badly trained border guards.
+
+[thoughtful] And there's a step nobody has fully shown in people yet. We know that bacteria make substances that reach the blood. We know those substances affect cells in the lab and in mice. What isn't clear is how much any of that changes health in ordinary people, eating ordinary diets.
+
+## disagreement
+
+[curious] So where do the experts disagree? The biggest argument is about the idea of a good gut.
+
+[thoughtful] On one side, researchers like the Sonnenburgs argue that variety, many different kinds of microbes, is usually a sign of a healthy gut. They point to studies of people such as the Hadza, hunter-gatherers in Tanzania, who eat a lot of fibre and have far more varied gut bacteria than people in cities. And large surveys, such as the American Gut Project in 2018, found that people who ate more than thirty different kinds of plant food a week had more varied gut bacteria than people who ate ten or fewer.
+
+[serious] On the other side, many researchers warn that this is association, not proof. People who eat thirty plants a week differ in lots of ways. They may exercise more, smoke less, or be wealthier. [thoughtful] And gut bacteria vary hugely between healthy people. Two perfectly healthy people can have very different microbes. Some illnesses come with more variety, not less. So, they argue, there is no single ideal microbiome that everyone should aim for, and no agreed score that tells you whether yours is healthy.
+
+[curious] That's why most experts are cautious about home gut tests. They can tell you which microbes were in one sample, on one day. But nobody has yet shown that following their advice improves health.
+
+[thoughtful] What would settle it? Large, long trials in people. Thousands of people, over years, given a specific change, and followed to see whether they stay healthier, not just whether their bacteria change. Those trials are hard and expensive, and very few have been done.
+
+## honest
+
+[warmly] So, what are the bacteria in your gut doing? A great deal. They ferment fibre that you can't digest, feed the lining of your colon, help keep that lining in good repair, and help train your immune system. That part is solid.
+
+[thoughtful] And is changing them worth doing? For one illness, repeated C. diff infection, changing them works dramatically. For most other things, we don't know yet. [serious] There is no single ideal gut, and no test that can tell you whether yours is healthy.
+
+[softly] What's still open is the biggest question of all. Which of the many links between bacteria and illness are causes, and which are side effects of something else. That will take years more work in people, not mice.
+
+## close
+
+[warmly] Think back to that bowl of porridge. Most of it you digest yourself. But some of it travels a long way, untouched, to the very end of your gut, where trillions of tiny passengers have been waiting for it.
+
+[softly] They've been eating your leftovers your whole life. We're only just starting to learn what they give back.

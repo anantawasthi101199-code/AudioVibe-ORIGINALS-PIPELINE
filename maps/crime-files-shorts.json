@@ -44,19 +44,34 @@
       "number": 4,
       "title": "Escape From Alcatraz",
       "covers": "In 1962 three men slipped out of the most secure prison in America using spoons, fake heads made of plaster and a raft of raincoats.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/004-escape-from-alcatraz.txt",
+        "title": "Escape From Alcatraz",
+        "description": "In June 1962 three men vanished from the most secure prison in America, leaving dummy heads made of plaster in their beds. They were never seen again."
+      }
     },
     {
       "number": 5,
       "title": "Charley Ross: The First Ransom Kidnapping",
       "covers": "In 1874 two men lured a four-year-old boy into a wagon in Philadelphia, and America learned what a ransom note was.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/005-charley-ross.txt",
+        "title": "Charley Ross: The First Ransom Kidnapping",
+        "description": "In 1874 two men in a horse-drawn wagon offered sweets to two small boys outside their home in Philadelphia. Only one came back, and America learned what a ransom note was."
+      }
     },
     {
       "number": 6,
       "title": "Lizzie Borden and the Axe",
       "covers": "In 1892 a couple were killed with a hatchet in Fall River, Massachusetts, and their daughter was tried and acquitted.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/006-lizzie-borden.txt",
+        "title": "Lizzie Borden and the Hatchet",
+        "description": "In 1892 a wealthy couple were killed with a hatchet in their home in Fall River, Massachusetts. Their daughter Lizzie was charged with the murders, tried, and acquitted."
+      }
     },
     {
       "number": 7,

@@ -10,6 +10,9 @@ Format `biz-episode` (parts: `hook`, `beginnings`, `struggle`, `rise`, `ending`)
 | `business-by-country/3` | Amul: How India's Farmers Challenged the Dairy Trade | `03-amul.txt` | ~1,850 (~11 min) |
 | `business-by-country/4` | Infosys: The Small Startup That Helped Build India's IT Industry | `04-infosys.txt` | ~1,850 (~11 min) |
 | `business-by-country/5` | Asian Paints: How a Local Manufacturer Beat Bigger Rivals | `05-asian-paints.txt` | ~1,800 (~10.5 min) |
+| `business-by-country/7` | Maruti Suzuki: A Car for Every Indian | `07-maruti-suzuki.txt` | ~1,390 (~8 min) |
+| `business-by-country/8` | Airtel: Phones for Hundreds of Millions | `08-airtel.txt` | ~1,150 (~7 min) |
+| `business-by-country/9` | Flipkart: Two Friends Take On Amazon | `09-flipkart.txt` | ~1,120 (~7 min) |
 
 Minutes are at the studio's 2.85 words a second; voiced with tags and pauses they run longer.
 
@@ -44,6 +47,19 @@ has checked them automatically. Most worth a look:
 
 Allegations (Reliance and the licence raj, the Indian Express campaign) are attributed
 and said to have been denied; keep them that way.
+
+Written 2026-10-17, from memory, check before publishing:
+
+- Maruti: first car handed over 14 December 1983 to Harpal Singh, price about 47,500
+  rupees; Maruti Ltd wound up 1977; Suzuki stake 26% then 40% (1987), 50% (1992),
+  majority 2002; renamed 2007; the 2012 Manesar violence; about 2 million cars a year
+  and about four in ten of new cars sold.
+- Airtel: the 20,000-rupee loan in 1976; the generator import ban; Delhi licence 1994,
+  launch 1995; the 2004 outsourcing deals (Ericsson, Nokia, Siemens, IBM); Zain Africa
+  about $10.7bn in 2010; calls about 16 rupees a minute in 1995.
+- Flipkart: October 2007, about 4 lakh rupees; the first order (Leaving Microsoft to Change
+  the World) is the company's own story; cash on delivery 2010; Bezos's $2bn in 2014;
+  Walmart about 77% for about $16bn, May 2018.
 
 ## Who's who and tags
 

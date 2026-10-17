@@ -1,0 +1,17 @@
+## mystery
+
+[curious] Did you know someone measured the size of the whole Earth more than two thousand years ago, without ever leaving Egypt? [warmly] This is the story of Eratosthenes, and how he did it with a stick, a shadow and some very clever thinking. It begins in Alexandria, around 240 BC.
+
+## story
+
+[thoughtful] Alexandria was a great Greek city on the coast of Egypt, and it had the most famous library in the ancient world. Eratosthenes was its chief librarian, a man interested in everything: maths, poetry, maps and the stars. [matter-of-fact] Like other educated Greeks, he already knew the Earth was round. The question was how big.
+
+[curious] Then he heard something curious. Far to the south, in a town called Syene, on one day each year, the longest day of summer, at exactly midday, the sun shone straight down to the bottom of a deep well. That meant the sun was directly overhead. A stick standing straight up there would cast no shadow at all.
+
+[building] So, on that same day, at midday, Eratosthenes looked at a tall upright stick in Alexandria. And it did cast a shadow, a short one. [thoughtful] Here's the idea. The sun is so far away that its rays arrive in straight, parallel lines. If the ground were flat, sticks in both towns would cast the same shadow. A shadow in one and none in the other meant the ground between them was curved. And the size of that shadow told him by how much.
+
+[with quiet awe] He measured the angle. It came to about one-fiftieth of a full circle. [curious] So the distance from Alexandria to Syene must be one-fiftieth of the way round the whole Earth. And that distance was known, because travellers, possibly with camel caravans, had measured it: about five thousand stadia, a Greek unit of length.
+
+## close
+
+[delighted] Five thousand times fifty: two hundred and fifty thousand stadia, all the way round the Earth. [warmly] Nobody knows exactly how long his stadium was, but by most estimates his answer comes close to the real distance of about forty thousand kilometres, worked out from one shadow on one day.

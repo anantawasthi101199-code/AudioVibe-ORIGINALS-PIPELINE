@@ -91,21 +91,36 @@
           "title": "Maruti Suzuki: How a Car Partnership Changed Indian Motoring",
           "covers": "Begin with the ambition to produce a people's car, the creation of Maruti Udyog, the partnership with Suzuki and the expansion of affordable passenger vehicles. Examine how manufacturing capability, service networks and pricing changed the market.",
           "subject": "Maruti Suzuki",
-          "source": "Maruti Suzuki official company history, annual reports and reputable business journalism"
+          "source": "Maruti Suzuki official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/07-maruti-suzuki.txt",
+            "title": "Maruti Suzuki: A Car for Every Indian",
+            "description": "In 1983 most Indians had never owned a car, and the few on the road were thirty years out of date. Then a government company teamed up with a small Japanese carmaker and built one that a family could actually afford."
+          }
         },
         {
           "number": 8,
           "title": "Airtel: How Mobile Phones Became Affordable for Millions",
           "covers": "Follow Sunil Mittal's early ventures, the development of mobile telecommunications, network partnerships, competition and the economics of providing connectivity to a vast population.",
           "subject": "Airtel",
-          "source": "Airtel official company history, annual reports and reputable business journalism"
+          "source": "Airtel official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/08-airtel.txt",
+            "title": "Airtel: Phones for Hundreds of Millions",
+            "description": "In 1995 a mobile call in India cost sixteen rupees a minute, even to receive one. A bicycle-parts trader from Punjab bet everything on making calls cheap enough for almost everyone."
+          }
         },
         {
           "number": 9,
           "title": "Flipkart: How Two Former Amazon Employees Challenged Indian Retail",
           "covers": "Explore the early online bookstore, cash on delivery, logistics, the expansion into general e-commerce, the battle with Amazon and Walmart's acquisition of a controlling stake.",
           "subject": "Flipkart",
-          "source": "Flipkart official company history, annual reports and reputable business journalism"
+          "source": "Flipkart official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/09-flipkart.txt",
+            "title": "Flipkart: Two Friends Take On Amazon",
+            "description": "In 2007 two young engineers left Amazon to sell books online from a flat in Bangalore. Eleven years later, Walmart paid sixteen billion dollars for most of what they built."
+          }
         },
         {
           "number": 10,

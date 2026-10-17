@@ -1,0 +1,17 @@
+## mystery
+
+[curious] Did you know Thomas Edison did not invent the light bulb? Dozens of people made bulbs that glowed before him. [warmly] This is the story of the race to make one that actually lasted, and it was all about a tiny thread inside the glass. It begins in the early 1800s, when the only lights were flames.
+
+## story
+
+[thoughtful] For centuries, after dark meant candles, oil lamps and gas. Then scientists found that if you push electricity through a thin wire, the wire gets so hot it glows. That glowing wire is called a filament. [serious] The problem was, a white-hot filament burns up in seconds, because of the oxygen in the air. So inventors tried putting it inside a glass bulb, and sucking out the air.
+
+[curious] For decades, they tried everything. Platinum, which did not burn, but cost a fortune. Strips of carbon, which glowed nicely but burned through. [warmly] In England, a chemist named Joseph Swan spent years on it. In 1879 he showed a working bulb with a carbon filament to an audience in Newcastle, and soon his own house was among the first in the world lit by electric bulbs. [serious] But his early bulbs did not last long.
+
+[determined] In America, Edison had a whole team in his laboratory at Menlo Park in New Jersey, and he set them to test material after material. They used new, better pumps that sucked almost all the air out of the bulb. In October 1879, they baked a cotton thread until it was pure carbon, and it glowed for more than thirteen hours. [delighted] Then they tried carbon made from bamboo, and some of those bulbs lasted more than a thousand hours.
+
+[thoughtful] But a bulb alone is useless. Edison's real triumph was the whole system: the power station, the cables under the streets, the switches and meters. In 1882 he lit up part of New York.
+
+## close
+
+[warmly] So who invented the light bulb? Many people did, step by step, and Swan and Edison made it practical at almost the same time. They even ended up joining forces in Britain, in a company called Ediswan. [curious] And the bulbs that lit homes for most of the next century used a different thread entirely, made of a metal called tungsten.

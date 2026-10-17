@@ -25,19 +25,34 @@
           "number": 2,
           "title": "William Harvey and the Circle of Blood",
           "covers": "Everyone believed the liver made new blood all the time. William Harvey measured how much the heart pumped, did the sums, and showed in 1628 that the same blood goes round and round.",
-          "source": "Harvey, De Motu Cordis (1628), and histories of physiology"
+          "source": "Harvey, De Motu Cordis (1628), and histories of physiology",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/02-harvey.txt",
+            "title": "William Harvey and the Circle of Blood",
+            "description": "For fourteen hundred years, doctors believed the liver made fresh blood all day long. An English doctor did some simple sums about the heart, and showed the same blood goes round and round."
+          }
         },
         {
           "number": 3,
           "title": "Leeuwenhoek's Tiny Animals",
           "covers": "A Dutch cloth merchant ground his own lenses, looked at a drop of pond water in the 1670s, and saw a world of living things nobody had imagined.",
-          "source": "Leeuwenhoek's letters to the Royal Society and histories of microscopy"
+          "source": "Leeuwenhoek's letters to the Royal Society and histories of microscopy",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/03-leeuwenhoek.txt",
+            "title": "Leeuwenhoek's Tiny Animals",
+            "description": "A Dutch cloth seller with no scientific training made his own tiny lenses, looked into a drop of lake water in 1674, and saw it swarming with life nobody had ever seen."
+          }
         },
         {
           "number": 4,
           "title": "Semmelweis: The Doctor Who Said Wash Your Hands",
           "covers": "In 1840s Vienna, women were dying of fever after giving birth on one ward and not the other. Ignaz Semmelweis worked out why, told doctors to wash their hands, and was mocked for it.",
-          "source": "Semmelweis's 1861 book on childbed fever and medical histories"
+          "source": "Semmelweis's 1861 book on childbed fever and medical histories",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/04-semmelweis.txt",
+            "title": "Semmelweis: The Doctor Who Said Wash Hands",
+            "description": "In 1840s Vienna, mothers were dying of fever after giving birth on one hospital ward, and far fewer on the ward next door. One young doctor worked out why, and almost nobody listened."
+          }
         },
         {
           "number": 5,

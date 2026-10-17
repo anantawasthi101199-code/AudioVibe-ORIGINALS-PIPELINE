@@ -44,19 +44,34 @@
       "number": 4,
       "title": "Is a Migraine Just a Bad Headache?",
       "covers": "What happens in the brain during a migraine, why some people see flashing lights first, and the treatments that help.",
-      "source": "NHS migraine guidance and NICE headache guidance"
+      "source": "NHS migraine guidance and NICE headache guidance",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/004-is-a-migraine-just-a-bad-headache.txt",
+        "title": "Is a Migraine Just a Bad Headache?",
+        "description": "People who get migraines often hear they should just take a painkiller and push through. But a migraine is something happening across the whole brain, and sometimes it starts with flashing lights."
+      }
     },
     {
       "number": 5,
       "title": "Does Reading in Dim Light Ruin Your Eyes?",
       "covers": "Whether the old warning is true, what dim light really does to your eyes, and what does cause short sight in children.",
-      "source": "NHS eye health guidance and research on myopia and outdoor time"
+      "source": "NHS eye health guidance and research on myopia and outdoor time",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/005-does-reading-in-dim-light-ruin-your-eyes.txt",
+        "title": "Does Reading in Dim Light Ruin Your Eyes?",
+        "description": "Generations of children were told off for reading under the covers with a torch. But what actually harms children's eyesight turns out to be something else entirely."
+      }
     },
     {
       "number": 6,
       "title": "What Does SPF Really Mean?",
       "covers": "What the number on sun cream measures, the difference between UVA and UVB, and how much you need to put on.",
-      "source": "NHS sun safety guidance and the British Association of Dermatologists"
+      "source": "NHS sun safety guidance and the British Association of Dermatologists",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/006-what-does-spf-really-mean.txt",
+        "title": "What Does SPF Really Mean?",
+        "description": "Factor 30 or factor 50? The number on a bottle of sun cream only tells you about one kind of sunlight, and almost everyone uses much less than the test does."
+      }
     },
     {
       "number": 7,

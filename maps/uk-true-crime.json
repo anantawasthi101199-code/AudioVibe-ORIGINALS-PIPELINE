@@ -37,19 +37,34 @@
           "number": 3,
           "title": "Dr Crippen: The Murder Case That Crossed the Atlantic",
           "covers": "When Cora Crippen disappeared, suspicion eventually fell on her husband, Dr Hawley Harvey Crippen. He fled Britain with Ethel Le Neve, but the investigation followed them across the Atlantic. This episode explores the discovery of human remains at the Crippen home, the search for the couple, the use of wireless communication aboard a ship and the forensic testimony presented at trial. It examines how a developing technology helped investigators pursue a suspect across international waters, while distinguishing contemporary claims from what the evidence could actually demonstrate.",
-          "source": "Trial transcripts where available, contemporary reporting, and historical analysis of the forensic evidence."
+          "source": "Trial transcripts where available, contemporary reporting, and historical analysis of the forensic evidence.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/03-dr-crippen.txt",
+            "title": "Dr Crippen: The Murder That Crossed the Sea",
+            "description": "In 1910 a music hall singer vanished from her home in north London. Her husband said she had gone to America. Then he fled across the Atlantic, and a ship's wireless set gave him away."
+          }
         },
         {
           "number": 4,
           "title": "The Fingerprint Revolution: When a Mark Could Identify a Suspect",
           "covers": "Late nineteenth century to early twentieth century · Forensic history Before DNA profiling and modern digital databases, investigators needed ways to distinguish one person from another using physical evidence. Fingerprints offered a new possibility, but their use required collection methods, comparison standards and confidence that courts could scrutinise. The episode follows the development of fingerprint identification in British policing, the establishment of the Metropolitan Police fingerprint bureau in 1901 and the gradual shift towards evidence-led identification. It explains the difference between finding a fingerprint and proving who left it, setting up the forensic stories explored later in the series.",
-          "source": "Police history, early fingerprint records and documented criminal cases in which fingerprints contributed to identification."
+          "source": "Police history, early fingerprint records and documented criminal cases in which fingerprints contributed to identification.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/04-the-fingerprint-revolution.txt",
+            "title": "The Fingerprint Revolution",
+            "description": "In 1905 an elderly couple were attacked in their shop in Deptford. The only clue was a thumbprint on a cash box tray, and Britain had never convicted anyone of murder on a fingerprint before."
+          }
         },
         {
           "number": 5,
           "title": "The Yorkshire Ripper: The Warning Signs Police Missed",
           "covers": "Peter Sutcliffe's crimes triggered an extensive investigation across northern England. As the attacks continued, detectives faced mounting pressure, a growing body of evidence and a flood of public information. The episode reconstructs the investigation, including the misleading communications that diverted attention, the management of suspect information and the leads that were not pursued effectively enough. It concludes with Sutcliffe's arrest and the subsequent official examination of the investigation, including the Byford report. The central question is how a major police operation could continue for years without identifying the offender despite receiving information that ultimately proved important. The victims' lives and the impact on their communities remain central to the narrative.",
-          "source": "Byford report, police records and reliable victim-centred historical accounts."
+          "source": "Byford report, police records and reliable victim-centred historical accounts.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/05-the-yorkshire-ripper.txt",
+            "title": "The Yorkshire Ripper: The Missed Warnings",
+            "description": "For more than five years, one of the biggest police investigations in British history failed to stop a man who killed thirteen women. Detectives had spoken to him nine times."
+          }
         },
         {
           "number": 6,

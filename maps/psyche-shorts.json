@@ -44,19 +44,34 @@
       "number": 4,
       "title": "Why You Cannot Focus Anymore",
       "covers": "What constant interruptions do to attention, and how long it really takes to get back into a task.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/004-why-you-cannot-focus.txt",
+        "title": "Why You Cannot Focus Anymore",
+        "description": "You sit down to do one thing, check one message, and suddenly twenty minutes have gone. It is not a weak will. It is what interruptions do to attention."
+      }
     },
     {
       "number": 5,
       "title": "Why You Talk to Yourself",
       "covers": "Inner speech: why we narrate our lives in our heads, and why talking to yourself in the third person can calm you down.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/005-why-you-talk-to-yourself.txt",
+        "title": "Why You Talk to Yourself",
+        "description": "You mutter your way through a recipe, or argue with someone in the shower. That inner voice is helping you, and using your own name can make it kinder."
+      }
     },
     {
       "number": 6,
       "title": "Why You Bite Your Nails",
       "covers": "Body-focused habits like nail biting and skin picking: why they happen and what helps.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/006-why-you-bite-your-nails.txt",
+        "title": "Why You Bite Your Nails",
+        "description": "Your hand drifts to your mouth while you watch television or think hard, and you only notice after. Nail biting is a habit that soothes, and it can be untangled."
+      }
     },
     {
       "number": 7,

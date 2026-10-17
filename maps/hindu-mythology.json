@@ -85,19 +85,34 @@
           "number": 7,
           "title": "Devas vs Asuras: Why Are the Gods Always at War?",
           "covers": "The relationship between devas and asuras, their rivalries, and why the conflict is more complicated than good versus evil.",
-          "source": "Mahabharata (Ganguli translation) Adi Parva; Shatapatha Brahmana (Eggeling translation)"
+          "source": "Mahabharata (Ganguli translation) Adi Parva; Shatapatha Brahmana (Eggeling translation)",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/07-devas-and-asuras.txt",
+            "title": "Devas and Asuras: The Endless War",
+            "description": "The gods and the demons are brothers, born of one father. And when the demons learn the secret of bringing the dead back to life, the gods send one young man into their kingdom to steal it."
+          }
         },
         {
           "number": 8,
           "title": "Karma and Rebirth: What Determines Your Next Life?",
           "covers": "Actions and consequences, samsara, and rebirth as explained through Hindu traditions.",
-          "source": "Brihadaranyaka and Chandogya Upanishads (Muller translation); Bhagavad Gita"
+          "source": "Brihadaranyaka and Chandogya Upanishads (Muller translation); Bhagavad Gita",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/08-karma-and-rebirth.txt",
+            "title": "Karma and Rebirth: Your Next Life",
+            "description": "A proud young scholar is asked five questions by a king, about where we go when we die, and he cannot answer a single one. His father has to go and learn the answer for himself."
+          }
         },
         {
           "number": 9,
           "title": "The Saptarishis: The Seven Great Sages",
           "covers": "The rishis, their roles in transmitting knowledge, and their place in cosmic cycles.",
-          "source": "Mahabharata (Ganguli translation); Vishnu Purana (Wilson translation) book 3"
+          "source": "Mahabharata (Ganguli translation); Vishnu Purana (Wilson translation) book 3",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/09-the-saptarishis.txt",
+            "title": "The Saptarishis: The Seven Great Sages",
+            "description": "Seven sages wander a land dying of drought, starving, and still refusing a king's gold. Then someone steals the only food they have left, and each of them swears an oath."
+          }
         },
         {
           "number": 10,

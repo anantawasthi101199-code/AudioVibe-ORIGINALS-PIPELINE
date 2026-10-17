@@ -1,0 +1,53 @@
+## opening
+
+[warmly] This is the story of William Harvey, an English doctor who, in 1628, proved that blood goes round the body in a circle. The heart pumps it out through the arteries, and it comes back through the veins, the same blood, over and over again.
+
+[curious] It sounds obvious to us now. But for about fourteen hundred years, every doctor in Europe believed something quite different. They believed the liver made new blood, all day, every day, out of the food we eat, and that the body used it up, like a fire burns wood.
+
+[thoughtful] There are three people in this story. Galen, a Roman doctor of the second century, whose books every doctor still learned from. Fabricius, Harvey's teacher in Italy, who found something strange inside the veins. And Harvey himself, a small, dark-haired, quick-tempered man, who became doctor to two kings of England.
+
+[warmly] By the end, you'll know how he worked it out, and the one piece of the puzzle he could never see with his own eyes.
+
+## before
+
+[thoughtful] Let's start with what everyone believed. Galen had taught that food went from the stomach to the liver, and there it was turned into dark blood. That blood flowed out along the veins, like water from a spring, and was soaked up by the body as food. [curious] Some of it went into the right side of the heart, and seeped through tiny invisible holes in the wall in the middle of the heart, to the left side. There it mixed with air from the lungs and became a brighter blood, which went out along the arteries carrying a kind of life force. The body used it up, and the liver made more.
+
+[matter-of-fact] It was a complete system, and it explained a lot. And for over a thousand years, almost no one questioned it.
+
+[warmly] William Harvey was born in 1578 in Folkestone, a small port on the south coast of England, the eldest of seven sons of a farmer and merchant. He studied at Cambridge. Then, like many ambitious young doctors, he went to Italy, to Padua, which had the best medical school in Europe.
+
+[curious] His teacher there was Fabricius, a famous anatomist, someone who studies how the body is built. Fabricius had found that the veins in our arms and legs have tiny flaps inside them, like little doors. He called them valves. [thoughtful] He thought they were there to slow the blood down as it flowed out from the liver, so it would not all rush to the hands and feet at once. Harvey was fascinated by them. He kept wondering what they were really for.
+
+[warmly] Back in London, Harvey became a doctor at St Bartholomew's Hospital, and later physician to King James the First, and then to King Charles the First. He was successful and respected. [curious] And all the while, in his spare time, he was cutting open animals to watch the heart at work. [pause] Because the more he looked, the less Galen's story made sense.
+
+## wrong
+
+[thoughtful] The first problem was simply seeing it. In a warm-blooded animal, a dog or a pig, the heart beats so fast that Harvey said it was like a flash of lightning. You could not tell what was happening. [curious] So he turned to cold-blooded animals, frogs, snakes, eels, fish, whose hearts beat slowly. And he watched dying animals, whose hearts slowed down as they weakened. Now he could see each beat clearly.
+
+[serious] And what he saw was a pump. The heart squeezed hard, and pushed blood out into the arteries. You could feel it: every squeeze of the heart matched a throb in the arteries, the pulse you feel in your wrist. [thoughtful] Galen had thought the arteries pulled the blood in by swelling themselves. Harvey could see that the heart was pushing it.
+
+[curious] Then came the step that was really his own. He did some sums. He looked at how much blood the heart holds and pushes out with each beat. He guessed low, on purpose, so nobody could say he was exaggerating. Say about half an ounce, a spoonful or two. And say the heart beats a thousand times in half an hour, which is slower than it really does.
+
+[building] Even with those small numbers, the answer was huge. In half an hour, the heart pushes out more blood than there is in the whole body. In a day, it pumps out many times a person's own weight in blood. [incredulous] How could the liver possibly make that much new blood, every day, out of food? You would have to eat a mountain. And where would all that blood go? [a beat] It could not be made new. It had to be the same blood, going round and round.
+
+[thoughtful] So he tested it on people, with a simple experiment you could almost do yourself. He tied a band very tightly round someone's upper arm. That stopped the blood in the arteries, which lie deep inside. Below the band, the arm went cold and pale. [curious] Then he loosened the band a little, just enough for blood to get through the deep arteries, but still tight enough to squash the veins near the skin. Now the veins below the band swelled up like ropes. Blood was coming down the arm through the arteries and could not get back up through the veins.
+
+[with quiet awe] And then the valves, the little doors his teacher had found. Harvey pressed a finger on a swollen vein and pushed the blood along it. Towards the heart, it moved easily. Away from the heart, it stopped dead at the next valve. [softly] The valves were not there to slow the blood flowing out. They were there to make sure it only ever flowed one way. Back to the heart.
+
+## payoff
+
+[warmly] In 1628 Harvey published his findings in a small book, only seventy-two pages long, printed in Frankfurt in Germany. Its title, in Latin, means On the Motion of the Heart and Blood in Animals. [thoughtful] And it said exactly what we started with. The heart is a pump. It pushes blood out through the arteries to every part of the body, and the blood comes back through the veins to the heart, and goes round again. A circle.
+
+[serious] Many doctors hated it. It meant that almost everything they had learned was wrong. Some said he was mad. A friend later wrote that, after the book came out, fewer patients came to see him, because people thought he was cracked in the head. [thoughtful] Others attacked his sums, or insisted Galen must be right anyway.
+
+[curious] And there was one real hole in Harvey's case, and he knew it. If blood goes out through the arteries and comes back through the veins, somewhere at the far ends they must be joined. But he could never find the joins. They were too small to see. He was sure they were there, because his sums said they had to be. He just could not show them to anyone.
+
+[warmly] Slowly, younger doctors tested his experiments and found them right. Within about twenty or thirty years, most of Europe's doctors had come round. Harvey lived to see it. He died in 1657, at the age of seventy-nine, respected and honoured.
+
+[with quiet awe] And four years after his death, in 1661, an Italian anatomist named Marcello Malpighi looked at the lung of a frog through one of the new microscopes, a tube with lenses that made tiny things look big. And there they were. Tiny blood vessels, thinner than hairs, joining the ends of the arteries to the ends of the veins. We call them capillaries. Harvey's circle was closed.
+
+## close
+
+[warmly] Remember those sums, worked out by a doctor who guessed low on purpose, so nobody could call him a liar. A spoonful of blood, a thousand beats, half an hour. That was all it took to bring down fourteen hundred years of medicine.
+
+[thoughtful] Harvey proved the circle with numbers and a band around an arm. But the last piece of it, the tiny joins, needed a new kind of eye. [curious] And at around the same time, a cloth merchant in Holland was grinding glass lenses in his workshop, and about to see more than anyone had ever seen.

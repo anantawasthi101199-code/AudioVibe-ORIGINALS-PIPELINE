@@ -1,0 +1,51 @@
+## opening
+
+[warmly] This is the story of Antonie van Leeuwenhoek, a cloth merchant in the Dutch town of Delft, who, in the 1670s, became the first person ever to see bacteria and other tiny living things, using microscopes he built himself.
+
+[curious] He had no university education. He could not read Latin, the language of science in those days. He ran a shop selling cloth, ribbons and buttons. And yet, sitting at his window with a lens no bigger than a grain of rice, he found a whole world of life inside a drop of water, a world nobody had imagined.
+
+[thoughtful] There are three people in this story. Leeuwenhoek himself. Robert Hooke, a brilliant English scientist who had written a famous book about the microscope. And Henry Oldenburg, the secretary of the Royal Society in London, a club of scientists who read Leeuwenhoek's letters and had to decide whether to believe them.
+
+[warmly] By the end, you'll know what he saw, how he did it, and how a shopkeeper persuaded the cleverest people in England that it was real.
+
+## before
+
+[warmly] Antonie van Leeuwenhoek was born in Delft in 1632. Delft was a busy, prosperous town of canals and brick houses, famous for its blue and white pottery. His father made baskets. [thoughtful] When Antonie was sixteen, he went to Amsterdam to work for a cloth merchant, and there he learned something that changed his life. Cloth merchants used small magnifying glasses to look closely at fabric, to count the threads and check the quality.
+
+[matter-of-fact] He came back to Delft, married, and opened his own cloth shop. He became a respected man in the town, and got a job looking after the town hall. He seemed set for an ordinary life.
+
+[curious] But in 1665, Robert Hooke in London published a famous book called Micrographia, which means small drawings. It was full of amazing pictures of things seen through a microscope: the eye of a fly, the point of a needle, a flea as big as a dinner plate. [thoughtful] Hooke's microscope was a tube with two lenses, one at each end. The pictures were exciting, but that kind of microscope could only make things look about thirty or fifty times bigger, and the image was often blurred.
+
+[determined] Leeuwenhoek decided to make his own. And he went about it differently. Instead of a tube with two lenses, he used just one tiny lens, a little bead of glass, carefully ground and polished, smaller than a pea. He set it in a hole between two small brass plates, about the size of a matchbox. On the back was a pin, where he put the thing he wanted to look at, with screws to move it closer and further away. [curious] To use it, you held it right up to your eye, towards the light, like looking through a keyhole.
+
+[with quiet awe] It sounds simple. But his lenses were so good that they could make things look about two hundred times bigger, or more, and much sharper than anyone else's. He made hundreds of these little microscopes in his life. [thoughtful] He started by looking at everything. The sting of a bee. The skin of his own hand. The mould on bread. [pause] And then, in 1674, he looked at water.
+
+## wrong
+
+[curious] Two hours from Delft there was a lake. In summer its water turned cloudy, with green streaks in it, and the local people said it was because of the dew. Leeuwenhoek took a little of that water home in a glass, and looked at a drop of it through his lens.
+
+[with quiet awe] And it was alive. Among the green threads, there were tiny creatures, swimming. Some were round, some oval. Some had little legs near their heads, or fine hairs that waved. They darted, turned, stopped and went again. [delighted] He wrote that the motion of most of them was so fast, and so varied, upwards, downwards and round about, that it was wonderful to see. Some were a thousand times smaller than the smallest creature anyone had ever seen with their eyes.
+
+[thoughtful] He called them animalcules, little animals. Today we would call many of them protists: tiny living things, each just one cell, the smallest building block of life.
+
+[curious] Through a doctor friend in Delft, he had started writing letters to the Royal Society in London. And now he sent them news of this. [serious] But in 1676 he wrote a letter that went much further. He had soaked peppercorns in water, to find out why pepper tastes hot. And in that pepper water he found animals even tinier than before, so small that he worked out you could fit many thousands of them in the space of a single grain of sand.
+
+[grave] In London, this was very hard to believe. A shopkeeper in Holland, who wrote in Dutch, not Latin, who was not a trained scientist, who would not show anyone how he made his lenses, was claiming to see millions of living things in a drop of water. Many of the members thought he must be mistaken, or imagining things. [pause] So they decided to test him.
+
+## payoff
+
+[thoughtful] The Royal Society asked Robert Hooke, their best microscope man, to repeat the experiment. In 1677 he made pepper water, and looked. [a beat] At first he saw nothing. His microscopes were not as good as Leeuwenhoek's. So he made a new, stronger lens, more like Leeuwenhoek's tiny bead. [delighted] And there they were. Tiny creatures, swimming in the water, just as the Dutchman had said.
+
+[warmly] Leeuwenhoek had also sent signed letters from respected people in Delft, a priest, a lawyer, others, who had looked through his lenses and confirmed what they had seen. Between those letters and Hooke's experiment, the Society was convinced. [quietly impressed] In 1680, they made the cloth merchant a Fellow, a full member of the most famous scientific club in the world.
+
+[curious] And he kept looking, for the rest of his long life. He saw red blood cells. He saw tiny sperm cells swimming. In 1683, he scraped the white stuff from between his teeth, mixed it with water, and saw tiny living things moving in it, which we now know were bacteria. [with a smile] He wrote that there were more animals living in the scum on the teeth in a man's mouth than there were people in a whole kingdom.
+
+[with quiet awe] And in 1688, looking at the clear tail of a tadpole and the fin of a little fish, he saw something else. Blood, moving along tiny vessels, round from the arteries into the veins. The joins that William Harvey had known must be there, and had never seen.
+
+[thoughtful] He never told anyone exactly how he made his best lenses. He wrote more than five hundred letters to the Royal Society, all in Dutch. He died in Delft in 1723, at the age of ninety, still looking. [softly] Only a handful of his little brass microscopes survive today.
+
+## close
+
+[warmly] Remember the drop of cloudy lake water that the local people said was caused by dew. To everybody else, it was just dirty water. To Leeuwenhoek, holding a tiny bead of glass up to the light, it was a city full of living things.
+
+[thoughtful] It would take nearly two hundred more years for anyone to understand that some of those tiny living things can make us sick. [curious] And one of the first to come close was a doctor in Vienna, watching mothers die, and asking why.

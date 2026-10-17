@@ -1,0 +1,55 @@
+## hook
+
+[low, steady] It's half past seven on the morning of Monday, the twenty-seventh of March, 1905, on Deptford High Street, in south-east London. A young shop assistant named William Jones arrives for work at Chapman's, a shop selling paint, oil and household goods.
+
+[thoughtful] The shop should be open by now. It isn't. The shutters are still down. The door is locked. He knocks, and nobody answers. [measured] Jones fetches a friend from a shop nearby, and together they force their way in through the back.
+
+[grave] Inside, they find the manager, Thomas Farrow, dead. Upstairs, his wife, Ann, is lying badly hurt in bed. A small cash box lies empty on the floor.
+
+[softly] There are no witnesses inside the shop. Nobody has confessed. And the only real clue is a mark on the inside of that cash box, so small it could be wiped away with a sleeve.
+
+## context
+
+[warmly] Thomas Farrow was seventy-one, and his wife Ann was sixty-five. They had run Chapman's for years, living above the shop. They were a familiar, quiet couple on a busy street. [thoughtful] Every week, Thomas collected the takings, a few pounds in coins, and kept them in the cash box, ready to be handed over to the owner on Mondays.
+
+[curious] To understand why that cash box mattered, you need to know how police in Britain identified people in 1905. For most of the nineteenth century, they relied on names, descriptions and their own memories. Criminals simply gave a false name. [thoughtful] In the 1880s, a French police clerk named Alphonse Bertillon came up with a system of careful body measurements: the length of the head, the arm, the foot. It worked better, but it was slow, and two measurers often got slightly different numbers.
+
+[warmly] Meanwhile, people had been noticing fingerprints. In India, in the 1850s, a British official named William Herschel had used handprints to sign contracts. In 1880 a Scottish doctor working in Japan, Henry Faulds, wrote to a science journal suggesting fingerprints left at crime scenes could identify criminals. And the scientist Francis Galton studied thousands of prints, and showed they stay the same for life, and that no two people's are alike.
+
+[thoughtful] The missing piece was a way to file them, so you could find one print among thousands. In British India, a police chief named Edward Henry, with two Indian officers, Azizul Haque and Hem Chandra Bose, worked out a system that sorted prints by their patterns: loops, whorls and arches. [curious] In 1901, Henry became head of detectives at Scotland Yard, and in July that year he set up the Fingerprint Branch.
+
+[measured] In 1902, a burglar named Harry Jackson became the first person convicted in Britain on fingerprint evidence, from a thumbprint left in fresh paint on a windowsill. [serious] But that was burglary. No jury in Britain had yet convicted anyone of murder on a fingerprint. [pause] And now there was a thumbprint in Deptford.
+
+## investigation
+
+[thoughtful] Ann Farrow never recovered enough to say what happened. She died four days later, on the thirty-first of March. Now it was a double murder.
+
+[serious] The scene told the police a little. Whoever had done this had come in early, probably when Thomas opened the door. Two masks, made from black stockings, were found on the floor. So there were probably two of them. [measured] The cash box had been forced open and emptied.
+
+[curious] Police officers had learned, by 1905, not to handle things carelessly at a scene. The cash box tray, the shallow metal tray inside it, was carefully picked up and taken to Scotland Yard. On its underside was a greasy mark: a thumbprint.
+
+[thoughtful] At the Fingerprint Branch, a detective sergeant named Charles Collins examined it. He checked it against the prints of the Farrows, and of the police officers who had been at the scene. It didn't match any of them. Then he checked it against the files of known criminals, about eighty thousand sets by then. [measured] No match.
+
+[serious] Meanwhile, ordinary detective work went on. Witnesses came forward. A milkman and his young helper had seen two men leaving the shop that morning, around half past seven. A woman named Ellen Stanton had seen two men running along a nearby road. [thoughtful] One name kept coming up: two brothers who lived locally, Alfred and Albert Stratton, young men with no regular jobs and a poor reputation. Alfred's girlfriend told police he had got rid of his coat and changed the colour of his boots, with black polish, the day after the killings. [measured] On the second of April, nearly a week after the attack, the police picked up the brothers. Their fingerprints were taken.
+
+## turning_point
+
+[low, steady] Back at Scotland Yard, Sergeant Collins laid the Strattons' prints next to the photograph of the thumbprint from the cash box tray, and began to compare them under a magnifying glass, line by line.
+
+[curious] A fingerprint is made of ridges, raised lines in the skin, forming loops and swirls. What makes a print unique isn't the general shape. It's the tiny details: where a ridge ends, where it splits in two, where a short ridge sits between two long ones. [thoughtful] Collins looked for those details in both prints, in the same places.
+
+[building] And in Alfred Stratton's right thumb, he found them. Eleven points of agreement, where the details matched exactly. [measured] The thumbprint on the cash box tray was Alfred Stratton's.
+
+[serious] But that only showed that Alfred Stratton had touched the tray. To convict him of murder, it would have to persuade a jury, twelve ordinary people, who had probably never heard of fingerprinting, that a smudge on a piece of metal could only have come from one person in the world.
+
+## aftermath
+
+[measured] The trial of Alfred and Albert Stratton began at the Old Bailey in May 1905. The eyewitnesses weren't much help. The milkman could not clearly identify either man. [thoughtful] So the fingerprint had to carry the case.
+
+[curious] Collins showed the jury large photographs of the two prints side by side, with the matching points marked. He explained what a ridge was, and where they ended and split. [serious] The defence brought in their own expert, who argued that the prints were different. But it came out in court that he had also offered his services to the prosecution, and his evidence was weakened.
+
+[grave] The jury found both brothers guilty of murder. Alfred and Albert Stratton were hanged at Wandsworth Prison on the twenty-third of May, 1905. It was the first murder conviction in Britain based on fingerprint evidence.
+
+[thoughtful] What the case showed is the difference between finding a print and proving whose it is. The print had been found on the first morning. It took a filing system, trained officers, and a careful explanation in court, before it could say a name. [measured] Within a few years, fingerprint evidence was used routinely in British courts, and forces across the country and the world set up their own bureaus.
+
+[softly] And at the centre of it all were Thomas and Ann Farrow, an old couple who opened their shop on Deptford High Street one Monday morning, as they always did. [gently] Their names are the reason anyone remembers that thumbprint at all.

@@ -1,0 +1,53 @@
+## opening
+
+[warmly] This is the story of Ignaz Semmelweis, a young Hungarian doctor in Vienna, who in 1847 worked out that doctors were carrying a deadly fever to new mothers on their own hands, and that washing them could stop it.
+
+[serious] In his hospital, there were two wards where women came to give birth. On one, run by doctors, about one mother in every ten was dying of a fever in the days after her baby was born. On the other, run by midwives, far fewer died. Nobody could explain it. The women themselves knew, and they begged not to be sent to the doctors' ward.
+
+[thoughtful] There are three people in this story. Semmelweis. Jakob Kolletschka, his friend and teacher, whose death gave him the answer. And Johann Klein, his boss, who did not want to hear it.
+
+[warmly] By the end, you'll know how he solved it, what happened when he did, and why one of the most important discoveries in medicine nearly destroyed the man who made it.
+
+## before
+
+[thoughtful] Ignaz Semmelweis was born in 1818 in Buda, one half of what is now Budapest, in Hungary. His father ran a shop selling groceries. He went to Vienna, the grand capital of the Austrian Empire, to study law, but switched to medicine. [warmly] He was friendly, emotional, and a little awkward, and he spoke German with a strong Hungarian accent.
+
+[curious] In 1846 he got a job as an assistant in the maternity department of the Vienna General Hospital, one of the biggest hospitals in the world. Poor women came there to give birth for free. In return, they were used to teach students. [matter-of-fact] The department was split into two clinics. The First Clinic was where medical students trained, taught by doctors. The Second Clinic was where midwives trained.
+
+[grave] And the women feared the First Clinic. The killer was called childbed fever. A few days after giving birth, a mother would get a fever, then terrible pain, and then very often she would die. In some months, more than one in ten mothers in the First Clinic died of it. In the Second Clinic, it was usually far fewer, two or three in a hundred.
+
+[serious] Women knew this. Semmelweis saw them on their knees, begging to be taken to the other clinic. Some, he noticed, had their babies on the way to the hospital, in the street, and then came in afterwards. [curious] And here was something odd. Those street births hardly ever got the fever.
+
+[thoughtful] Nobody knew what caused the fever. Many doctors believed it was bad air, a kind of poisonous mist called miasma, or something about the weather, or the women's fear. [determined] But Semmelweis kept asking the same question. Both clinics were in the same building, breathing the same air. Why was one so much worse?
+
+## wrong
+
+[curious] So he tested every idea he could think of, one at a time. Was it the way the women lay to give birth? In the Second Clinic, the midwives had women lie on their side. So he had the First Clinic do the same. Nothing changed.
+
+[thoughtful] Was it fear? In the First Clinic, when a woman was dying, a priest walked through the ward ringing a bell, past all the other mothers, to give her the last rites. Maybe the sound of that bell frightened them to death. [a beat] So Semmelweis asked the priest to take another route, without the bell. Nothing changed.
+
+[serious] Was it the students? Perhaps they were rough when examining women. But the midwives examined women too. He was running out of ideas. And the women kept dying.
+
+[grave] Then, in March 1847, his friend Jakob Kolletschka died. Kolletschka was a professor of forensic medicine, the doctor who cuts open dead bodies to find out how they died. During one of those examinations, a student's knife slipped and cut Kolletschka's finger. [darkly] Within days, he was terribly ill, with a high fever and spreading infection. And he died.
+
+[hushed] Semmelweis read the report of what had been found in his friend's body. And he realised it was the same thing he saw in the mothers who died of childbed fever. The same damage, in the same way. [pause] Kolletschka had died of childbed fever. And he had caught it from a dead body.
+
+[building] And then everything fell into place. Every morning, the doctors and students in the First Clinic started their day in the dissecting room, cutting open bodies, including the bodies of women who had died of the fever. Then they walked straight to the maternity ward and examined women in labour, with their bare hands. [intense] They washed, perhaps, with soap and water, but their hands still smelled of the dead. The midwives never did dissections. And the women who gave birth in the street were hardly examined at all.
+
+## payoff
+
+[warmly] So Semmelweis believed that the doctors were carrying something from the dead bodies on their hands, tiny particles of death, as he put it, into the women. And in May 1847 he made a rule. Every doctor and student had to scrub their hands in a bowl of chlorinated lime, a strong bleach, before examining a woman. The bleach was chosen because it got rid of the smell of the dissecting room, and if the smell was gone, he thought, so was whatever caused it.
+
+[delighted] The results came at once. Within months, deaths in the First Clinic fell from around one in ten to about one or two in a hundred, as low as the midwives' clinic. In some months, not one mother died.
+
+[serious] It should have been a triumph. Instead, many doctors were offended. Semmelweis was telling them that they, the gentlemen of medicine, were killing their patients. [thoughtful] And he had no proof of what the deadly something was. Germs, the tiny living things that cause disease, had not been discovered yet. It sounded like guesswork. [grave] His boss, Professor Johann Klein, never accepted it. In 1849, Semmelweis's job was not renewed, and he left Vienna.
+
+[thoughtful] He went home to Hungary and worked in a hospital in Pest, the other half of Budapest. He brought in handwashing there too, and deaths fell there too. In 1861 he finally published a book about it all. [serious] But the book was attacked. And Semmelweis grew bitter and angry. He wrote furious open letters to famous doctors, calling them murderers.
+
+[grave] In 1865, his behaviour had become so strange that he was taken, without being told the truth, to an asylum near Vienna, a hospital for the mentally ill. He tried to leave and was beaten by the guards. [softly] Two weeks later, he was dead, at the age of forty-seven, from an infected wound. The same kind of infection that he had spent his life fighting.
+
+## close
+
+[thoughtful] Only a few years later, in the 1860s, the French scientist Louis Pasteur showed that tiny living germs cause things to rot, and a British surgeon, Joseph Lister, began cleaning wounds and instruments to kill them. Slowly, the world caught up with Semmelweis.
+
+[warmly] Remember that priest, walking through the ward with his bell, and Semmelweis sending him another way, trying anything to save the mothers. The answer had never been the bell, or the air, or the fear. [softly] It was on the doctors' own hands. And all it took to wash it away was a bowl of bleach by the door.

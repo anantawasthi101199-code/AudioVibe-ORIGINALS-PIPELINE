@@ -44,19 +44,34 @@
       "number": 4,
       "title": "The Fish That Came Back From Extinction",
       "covers": "In 1938 a museum curator in South Africa spotted a strange blue fish on a fishing boat, a coelacanth, thought extinct for 66 million years.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/004-coelacanth.txt",
+        "title": "The Fish That Came Back From Extinction",
+        "description": "In 1938 a young museum curator in South Africa spotted a strange blue fish on a trawler. Scientists thought it had died out 66 million years ago."
+      }
     },
     {
       "number": 5,
       "title": "Who Invented the Light Bulb?",
       "covers": "Edison is remembered, but dozens of inventors raced to make a bulb that lasted, and the real story is about the filament.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/005-the-light-bulb.txt",
+        "title": "Who Really Invented the Light Bulb?",
+        "description": "Everybody says Edison. But for decades, dozens of inventors had made bulbs that glowed. The real race was to find a thread that would not burn out."
+      }
     },
     {
       "number": 6,
       "title": "Eratosthenes Measures the Earth",
       "covers": "Around 240 BC a librarian in Egypt measured the size of the whole Earth using a stick's shadow and a camel journey.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/006-eratosthenes.txt",
+        "title": "Eratosthenes Measures the Earth",
+        "description": "Over two thousand years ago, a librarian in Egypt worked out the size of the whole planet. All he needed was a stick, the sun, and the distance to another town."
+      }
     },
     {
       "number": 7,
