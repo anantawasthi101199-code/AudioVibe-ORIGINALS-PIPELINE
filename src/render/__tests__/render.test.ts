@@ -562,6 +562,36 @@ describe('rendering an episode as one request', () => {
   });
 });
 
+describe('an engine with a hard request cap', () => {
+  it('splits an over-long beat but never groups beats', async () => {
+    const sent: string[] = [];
+    const tts = {
+      name: 'fake',
+      maxRequestChars: 9000,
+      async synthesise(req: { text: string }) {
+        sent.push(req.text);
+        return { audio: Buffer.alloc(2000), provider: 'fake', model: 'm', voiceId: 'v', costPence: 1 };
+      },
+    } as unknown as TtsProvider;
+
+    const beats = [
+      { beatId: 'story', beatType: 'story', turns: [{ speaker: 'host', text: 'Word word word. '.repeat(1100) }] },
+      { beatId: 'close', beatType: 'outro', turns: [{ speaker: 'host', text: 'Bye now.' }] },
+    ];
+
+    await renderScript(
+      { beats, voices: { host: voice }, beatPathFor: (n) => `/tmp/${n}`, outputPath: '/tmp/out.wav' },
+      tts,
+      { writeFile: () => undefined, probe: async () => 200, trailing: async () => 0.3, concat: async () => undefined }
+    );
+
+    // 17,600 characters in two pieces, then the close on its own.
+    expect(sent).toHaveLength(3);
+    expect(sent.every((t) => t.length <= 9000)).toBe(true);
+    expect(sent[2]).toBe('Bye now.');
+  });
+});
+
 describe('the gap belongs between files, not between beats', () => {
   it('puts no silence between beats that share one audio file', () => {
     // CONFLATING THE TWO PUT EVERY LATER TIMESTAMP OUT the moment beats began

@@ -824,14 +824,13 @@ export const renderScript = async (
       // See splitForSynthesis for the render this cost. Each piece still gets
       // the stitching context of its neighbours, so the voice carries across an
       // internal seam the same way it carries across a beat boundary.
-      const pieces = tts.maxInputChars
-        ? splitForSynthesis(request.text, tts.maxInputChars)
-        : [request.text];
+      const limit = tts.maxInputChars ?? tts.maxRequestChars;
+      const pieces = limit ? splitForSynthesis(request.text, limit) : [request.text];
 
       if (pieces.length > 1) {
         onProgress?.(
           `${i + 1}/${groups.length}: ${beat.beatId} is ${request.text.length} characters, ` +
-            `past the ${tts.maxInputChars} this engine takes. Sending it in ${pieces.length} pieces.`
+            `past the ${limit} this engine takes. Sending it in ${pieces.length} pieces.`
         );
 
         const pieceFiles: string[] = [];

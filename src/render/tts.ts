@@ -111,6 +111,12 @@ export interface TtsProvider {
    * for any engine whose real limit is unknown.
    */
   readonly maxInputChars?: number;
+  /**
+   * The most one request may carry, used ONLY to split a beat that is too long,
+   * never to group beats. For an engine that renders a beat at a time but has a
+   * hard cap (Eleven: 10,000 characters).
+   */
+  readonly maxRequestChars?: number;
 
   readonly name: string;
   synthesise(req: SynthesisRequest): Promise<SynthesisResult>;
@@ -224,6 +230,13 @@ export class ElevenLabsTts implements TtsProvider {
    * drops to eleven_multilingual_v2 for cost would otherwise start announcing
    * its own stage directions and nothing would flag it.
    */
+  /**
+   * Eleven refuses a request over 10,000 characters (text_too_long), which a
+   * long single-story beat reached at 17,417. 9,000 leaves room for the IPA
+   * swaps forVoice makes after the split.
+   */
+  readonly maxRequestChars = 9000;
+
   get understandsTags(): boolean {
     return /v[34]/.test(this.model);
   }
