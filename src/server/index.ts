@@ -115,6 +115,7 @@ import {
   publishRunJob,
   approveForRelease,
   cancelRelease,
+  respreadReleases,
   recheckChannel,
   recordToken,
   releaseNow,
@@ -740,6 +741,9 @@ export const createServer = (): http.Server =>
       }
       if (pathname === '/api/run/reschedule' && req.method === 'POST') {
         return send(res, 200, rescheduleRelease(id ?? '', await readBody(req)));
+      }
+      if (pathname === '/api/calendar/respread' && req.method === 'POST') {
+        return send(res, 200, respreadReleases(user));
       }
       if (pathname === '/api/run/cancel' && req.method === 'POST') {
         return send(res, 200, cancelRelease(id ?? ''));

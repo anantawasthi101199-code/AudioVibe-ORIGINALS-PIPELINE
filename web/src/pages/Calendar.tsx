@@ -254,6 +254,19 @@ export const Calendar = ({ go }: { go: (path: string) => void }) => {
           <button className="btn ghost small" onClick={() => setMonth(shift(month, 1))}>
             ›
           </button>
+          {/* Lays every approved run out again: at most two episodes (two series) and three shorts a day. */}
+          <button
+            className="btn ghost small"
+            disabled={view.queue.length === 0}
+            onClick={() =>
+              void api
+                .respread()
+                .then(() => load(month))
+                .catch((e: Error) => setError(e.message))
+            }
+          >
+            Spread out
+          </button>
         </div>
       </div>
 

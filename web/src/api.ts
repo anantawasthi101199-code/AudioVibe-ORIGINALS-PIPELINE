@@ -860,6 +860,9 @@ export const api = {
       body: JSON.stringify({ wall }),
     }),
 
+  respread: () =>
+    call<{ moved: number; unscheduled: number }>('/api/calendar/respread', { method: 'POST' }),
+
   cancelRelease: (runId: string) =>
     call<{ ok: true }>(`/api/run/cancel?id=${encodeURIComponent(runId)}`, { method: 'POST' }),
 
