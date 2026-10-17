@@ -1285,7 +1285,9 @@ export const Channel = ({ id, go }: { id: string; go: (path: string) => void }) 
             <p className="panel-body faint">Never run.</p>
           ) : (
             groupRuns(runs).map((g) => (
-            <details key={g.title} className="fold" open={g.title !== 'Discarded'}>
+            // Every group starts shut (owner, 2026-10-17), on every visit; keyed by
+            // channel too, so moving between channels never carries one open.
+            <details key={`${channel.id}:${g.title}`} className="fold">
             <summary className="panel-body">
               {g.title} <span className="pill">{g.rows.length}</span>
             </summary>
