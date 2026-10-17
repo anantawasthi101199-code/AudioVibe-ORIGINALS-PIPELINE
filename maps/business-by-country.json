@@ -96,7 +96,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/07-maruti-suzuki.txt",
             "title": "Maruti Suzuki: A Car for Every Indian",
             "description": "In 1983 most Indians had never owned a car, and the few on the road were thirty years out of date. Then a government company teamed up with a small Japanese carmaker and built one that a family could actually afford."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/07.jpg"
         },
         {
           "number": 8,
@@ -108,7 +109,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/08-airtel.txt",
             "title": "Airtel: Phones for Hundreds of Millions",
             "description": "In 1995 a mobile call in India cost sixteen rupees a minute, even to receive one. A bicycle-parts trader from Punjab bet everything on making calls cheap enough for almost everyone."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/08.jpg"
         },
         {
           "number": 9,
@@ -120,7 +122,8 @@
             "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/09-flipkart.txt",
             "title": "Flipkart: Two Friends Take On Amazon",
             "description": "In 2007 two young engineers left Amazon to sell books online from a flat in Bangalore. Eleven years later, Walmart paid sixteen billion dollars for most of what they built."
-          }
+          },
+          "image": "CONTENT/Buisness-Decoded/Images/Business-by-Country/09.jpg"
         },
         {
           "number": 10,

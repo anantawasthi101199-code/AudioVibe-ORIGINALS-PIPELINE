@@ -65,7 +65,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/005-ferrari.txt",
         "title": "Ferrari: The Racing Team That Sells Cars",
         "description": "Enzo Ferrari only wanted to win races. To pay for it, he started selling road cars to wealthy drivers, and turned scarcity into one of the most valuable brands in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/005.jpg"
     },
     {
       "number": 6,
@@ -77,7 +78,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/006-lego.txt",
         "title": "LEGO: The Toy Company That Almost Broke",
         "description": "A Danish carpenter made wooden toys to survive the Great Depression. His family turned a plastic brick into the world's favourite toy, then nearly lost it all."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/006.jpg"
     },
     {
       "number": 7,
@@ -89,7 +91,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/007-rolex.txt",
         "title": "Rolex: The Watch Company Owned by a Charity",
         "description": "A German orphan in London decided that people would one day wear their watches on their wrists. Rolex became the world's best-known watch, and today a charitable foundation owns it."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/007.jpg"
     },
     {
       "number": 8,
@@ -101,7 +104,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/008-nestle.txt",
         "title": "Nestlé: From Baby Food to Food Giant",
         "description": "A chemist in a small Swiss town mixed milk, flour and sugar to feed babies who could not be breastfed. That recipe grew into the biggest food company in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/008.jpg"
     },
     {
       "number": 9,
@@ -113,7 +117,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/009-zomato.txt",
         "title": "Zomato: From Scanned Menus to Delivery",
         "description": "Two office workers in Delhi watched colleagues queue to read a pile of paper menus. They scanned them, put them online, and built one of India's biggest food delivery companies."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/009.jpg"
     },
     {
       "number": 10,
@@ -125,7 +130,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/010-grab.txt",
         "title": "Grab: The Taxi App Built for South-East Asia",
         "description": "Two business school classmates wanted taxis in Malaysia to be safer. Their app beat Uber in South-East Asia and became the region's everyday app for rides, food and payments."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/010.jpg"
     },
     {
       "number": 11,
@@ -149,7 +155,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/012-h-and-m.txt",
         "title": "H&M: The Swedish Shop for Cheap Fashion",
         "description": "A Swedish shopkeeper saw how American stores sold clothes in huge numbers at low prices. He opened one small shop called Hennes, meaning hers, and it grew into one of the world's biggest fashion chains."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/012.jpg"
     },
     {
       "number": 13,
@@ -161,7 +168,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/013-facebook.txt",
         "title": "Facebook: From a Dorm Room to Billions",
         "description": "In 2004 a nineteen-year-old student built a website for his university friends. It spread to every campus in America, then the world, and three billion people now use it every month."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/013.jpg"
     },
     {
       "number": 14,
@@ -185,7 +193,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/015-tesla.txt",
         "title": "Tesla: The Car Startup Expected to Fail",
         "description": "Two engineers believed electric cars could be fast and fun. Tesla nearly went bankrupt in 2008 and again during the Model 3, then became the most valuable car company in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/015.jpg"
     },
     {
       "number": 16,
@@ -209,7 +218,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/017-levis.txt",
         "title": "Levi's: Gold Rush Trousers That Became Jeans",
         "description": "A tailor in Nevada put metal rivets in a working man's trousers so they would stop tearing. He needed a partner to pay for the patent, and wrote to the cloth seller Levi Strauss."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/017.jpg"
     },
     {
       "number": 18,
@@ -221,7 +231,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/018-heineken.txt",
         "title": "Heineken: The Brewery Bought by a 22-Year-Old",
         "description": "In 1864, a young man in Amsterdam persuaded his mother to buy the city's biggest brewery. His family turned it into one of the most famous beers in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/018.jpg"
     },
     {
       "number": 19,
@@ -233,7 +244,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/019-paytm.txt",
         "title": "Paytm: The Wallet That Rode Demonetisation",
         "description": "One night in 2016, India cancelled most of its banknotes. A phone payment app run by a teacher's son from a small town was ready, and millions signed up within weeks."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/019.jpg"
     },
     {
       "number": 20,
@@ -257,7 +269,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/021-dominos.txt",
         "title": "Domino's: The Pizza Chain That Sold Speed",
         "description": "Two brothers bought one struggling pizza shop in Michigan with borrowed money. One of them swapped his half for a Volkswagen Beetle. The other built the biggest pizza company in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/021.jpg"
     },
     {
       "number": 22,
@@ -269,7 +282,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/022-costco.txt",
         "title": "Costco: The Shop That Charges You to Enter",
         "description": "Costco makes customers pay a yearly fee just to walk in, sells fewer products than a supermarket, and has kept its hot dog at the same price since 1985. Millions of people love it."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/022.jpg"
     },
     {
       "number": 23,
@@ -281,7 +295,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/023-nvidia.txt",
         "title": "Nvidia: The Graphics Chip Maker Behind AI",
         "description": "Three engineers met in a roadside diner in 1993 to plan a company making graphics chips for video games. Those chips turned out to be exactly what modern artificial intelligence needed."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/023.jpg"
     },
     {
       "number": 24,
@@ -305,7 +320,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/025-harley-davidson.txt",
         "title": "Harley-Davidson: The Bike Built in a Shed",
         "description": "Two young men in Milwaukee built a motorised bicycle in a small wooden shed in 1903. Harley-Davidson survived wars, Japanese rivals and near ruin, saved in the end by the people who rode them."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/025.jpg"
     },
     {
       "number": 26,
@@ -317,7 +333,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/026-hasbro.txt",
         "title": "Hasbro: From Pencil Cases to Monopoly",
         "description": "Three immigrant brothers in America sold leftover cloth, then pencil cases, then toys. Their company sold the first toy ever advertised on television, and now makes Monopoly, Nerf and Transformers."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/026.jpg"
     },
     {
       "number": 27,
@@ -329,7 +346,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/027-ray-ban.txt",
         "title": "Ray-Ban: The Glasses Made for Pilots",
         "description": "American pilots in the 1920s and 30s were suffering from headaches and sore eyes caused by the glare of the sky. An eyewear company made them special green lenses, and Ray-Ban was born."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/027.jpg"
     },
     {
       "number": 28,
@@ -341,7 +359,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/028-philips.txt",
         "title": "Philips: The Bulb Factory That Lit Up Europe",
         "description": "A father and son bought an empty factory in a small Dutch town to make light bulbs. A younger brother who loved selling joined them, and the company grew into Philips, maker of the cassette tape and the CD."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/028.jpg"
     },
     {
       "number": 29,
@@ -377,7 +396,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/031-nutella.txt",
         "title": "Nutella: The Spread Born from a Shortage",
         "description": "After the Second World War, chocolate was scarce in Italy. A pastry maker stretched it with local hazelnuts, and his family turned that recipe into Nutella, Kinder and Ferrero Rocher."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/031.jpg"
     },
     {
       "number": 32,
@@ -389,7 +409,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/032-aldi.txt",
         "title": "Aldi: Two Brothers, One Shop, Two Empires",
         "description": "Two brothers took over their mother's small grocery shop in a German mining town after the war. They built a cheap, no-frills supermarket, then fell out and split the business in two."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/032.jpg"
     },
     {
       "number": 33,
@@ -401,7 +422,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/033-intel.txt",
         "title": "Intel: The Brain Inside Every Computer",
         "description": "Two engineers left their company in 1968 to start Intel. Three years later, their team fitted a whole computer processor onto a single chip, and the age of personal computers began."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/033.jpg"
     },
     {
       "number": 34,
@@ -413,7 +435,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/034-whatsapp.txt",
         "title": "WhatsApp: The Messaging App With No Adverts",
         "description": "A teenager who arrived in America from Ukraine with his mother and lived on food stamps built a messaging app with a friend. He signed its 19 billion dollar sale outside the welfare office where he once queued."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/034.jpg"
     },
     {
       "number": 35,
@@ -425,7 +448,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/035-ryanair.txt",
         "title": "Ryanair: The Airline That Made Flying Cheap",
         "description": "A tiny Irish airline that began with one fifteen-seat plane was losing money fast. Then it copied a cheap American airline, cut everything it could, and became the biggest airline in Europe."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/035.jpg"
     },
     {
       "number": 36,
@@ -449,7 +473,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/037-dr-martens.txt",
         "title": "Dr. Martens: The Doctor's Boot Punks Loved",
         "description": "A German army doctor hurt his ankle skiing and designed a boot with a soft air-cushioned sole. A family of English bootmakers added yellow stitching, and it became the boot of workers, then rebels."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/037.jpg"
     },
     {
       "number": 38,
@@ -461,7 +486,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/038-asml.txt",
         "title": "ASML: The Machine Every Chip Maker Needs",
         "description": "Every advanced computer chip in the world is made on machines from one company in a small Dutch town. ASML began in a leaky shed in 1984, and spent decades building a machine others gave up on."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/038.jpg"
     },
     {
       "number": 39,
@@ -473,7 +499,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/039-wipro.txt",
         "title": "Wipro: From Cooking Oil to IT Giant",
         "description": "When his father died suddenly, a twenty-one-year-old student came home from America to run the family's cooking oil company. Azim Premji turned it into one of India's biggest technology firms."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/039.jpg"
     },
     {
       "number": 40,
@@ -497,7 +524,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/041-heinz.txt",
         "title": "Heinz: The Ketchup That Promised Purity",
         "description": "Other food sellers hid cheap fillers in dark bottles. A young man in Pittsburgh put his horseradish in clear glass so customers could see what they were buying, and built the most famous ketchup in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/041.jpg"
     },
     {
       "number": 42,
@@ -509,7 +537,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/042-primark.txt",
         "title": "Primark: Low Prices Without a Website",
         "description": "An Irish businessman opened one cheap clothing shop in Dublin in 1969. Primark grew across Europe and America selling fashion at rock-bottom prices, almost without selling online at all."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/042.jpg"
     },
     {
       "number": 43,
@@ -521,7 +550,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/043-oracle.txt",
         "title": "Oracle: A Database Named After a CIA Project",
         "description": "A college dropout read a research paper that a giant computer company was ignoring, and built a database from it. He named it after a CIA project he had worked on, and Oracle became a software giant."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/043.jpg"
     },
     {
       "number": 44,
@@ -545,7 +575,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/045-southwest.txt",
         "title": "Southwest: The Airline Sketched on a Napkin",
         "description": "Two men drew a triangle between three Texas cities on a napkin. Big airlines fought them in court for years before their first flight, and Southwest became the most copied airline in the world."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/045.jpg"
     },
     {
       "number": 46,
@@ -593,7 +624,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/049-hdfc-bank.txt",
         "title": "HDFC Bank: Built on Purpose to Be Boring",
         "description": "A banker who was sixty-six years old started India's first home loan company. His company then built a bank that grew by being careful, and became India's biggest private bank."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/049.jpg"
     },
     {
       "number": 50,
@@ -605,7 +637,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/050-m-pesa.txt",
         "title": "M-Pesa: Money Sent by Text Message",
         "description": "In Kenya, most people had no bank account, and sending money home meant trusting a bus driver with cash. A phone company tested a simple text message service, and changed how a whole country handles money."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/050.jpg"
     },
     {
       "number": 51,
@@ -641,7 +674,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/053-adobe.txt",
         "title": "Adobe: The Software That Shaped Every Page",
         "description": "Two scientists could not get their employer to sell their invention for printing pages, so they left and started Adobe in 1982. They went on to make Photoshop and the PDF."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/053.jpg"
     },
     {
       "number": 54,
@@ -689,7 +723,8 @@
         "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/057-gillette.txt",
         "title": "Gillette: The Razor You Throw Away",
         "description": "A travelling salesman was told by his boss to invent something people would use once and throw away. Shaving one morning with a blunt razor, he had the idea that built Gillette."
-      }
+      },
+      "image": "CONTENT/Buisness-Decoded/Images/Shorts/057.jpg"
     },
     {
       "number": 58,
