@@ -61,13 +61,23 @@
           "number": 5,
           "title": "John Snow and the Broad Street Pump",
           "covers": "In 1854 cholera killed hundreds in Soho, London. A doctor mapped every death, found they clustered round one water pump, and had its handle removed.",
-          "source": "John Snow, On the Mode of Communication of Cholera (1855)"
+          "source": "John Snow, On the Mode of Communication of Cholera (1855)",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/05-john-snow.txt",
+            "title": "John Snow and the Broad Street Pump",
+            "description": "In 1854 cholera killed hundreds of people in a few streets of Soho. A London doctor walked the streets, marked every death on a map, and found they all led back to one water pump."
+          }
         },
         {
           "number": 6,
           "title": "Pasteur and the Invisible Enemy",
           "covers": "Louis Pasteur showed that tiny living things turn wine sour and make us ill, saved France's silk and wine industries, and made the first rabies vaccine.",
-          "source": "Histories of Louis Pasteur and germ theory"
+          "source": "Histories of Louis Pasteur and germ theory",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/06-pasteur.txt",
+            "title": "Pasteur and the Invisible Enemy",
+            "description": "A French chemist found that tiny living things make wine sour and milk go off, saved France's silkworms, and in 1885 risked everything on a nine-year-old boy bitten by a mad dog."
+          }
         }
       ],
       "cover": "CONTENT/Eureka-Tales/Images/Discoveries/series-01.jpg"
@@ -93,7 +103,12 @@
           "number": 8,
           "title": "Galileo and the Telescope",
           "covers": "In 1609 Galileo pointed a homemade telescope at the sky, saw moons circling Jupiter and mountains on the Moon, and ended up on trial.",
-          "source": "Galileo, Sidereus Nuncius (1610), and the records of his 1633 trial"
+          "source": "Galileo, Sidereus Nuncius (1610), and the records of his 1633 trial",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/08-galileo-and-the-telescope.txt",
+            "title": "Galileo and the Telescope",
+            "description": "In 1609 an Italian professor built his own telescope, pointed it at the night sky, and saw mountains on the Moon and moons circling Jupiter. Twenty-four years later, he was on trial."
+          }
         },
         {
           "number": 9,

@@ -80,19 +80,34 @@
       "number": 7,
       "title": "The Zodiac Cipher, Cracked After Fifty Years",
       "covers": "The Zodiac killer sent police coded letters in 1969, and in 2020 three amateur codebreakers finally solved one of them.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/007-zodiac-cipher.txt",
+        "title": "The Zodiac Cipher, Cracked After Fifty Years",
+        "description": "In 1969 a killer in California sent a newspaper a coded letter that nobody could read. Fifty-one years later, three amateur codebreakers in three countries finally cracked it."
+      }
     },
     {
       "number": 8,
       "title": "How Al Capone Was Really Caught",
       "covers": "The most famous gangster in America was never convicted of violence, and in 1931 he went to prison for not paying his taxes.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/008-al-capone.txt",
+        "title": "How Al Capone Was Really Caught",
+        "description": "The most famous gangster in America ran a city on bribes and guns, and nobody could prove a single killing. In 1931 he went to prison for not paying his taxes."
+      }
     },
     {
       "number": 9,
       "title": "Kim Philby: The Spy at the Top",
       "covers": "A senior British intelligence officer had been working for the Soviet Union for decades, and slipped away to Moscow in 1963.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/009-kim-philby.txt",
+        "title": "Kim Philby: The Spy at the Top",
+        "description": "One of the most senior officers in British intelligence had secretly worked for the Soviet Union since he was a student. In 1963 he slipped away from Beirut and turned up in Moscow."
+      }
     },
     {
       "number": 10,

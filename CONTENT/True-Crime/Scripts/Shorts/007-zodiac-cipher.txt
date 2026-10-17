@@ -1,0 +1,19 @@
+## who_and_what
+
+[low, steady] It's the eighth of November, 1969, in San Francisco. A greetings card arrives in the post at the offices of the San Francisco Chronicle, the city's big daily newspaper. [measured] Inside is a sheet of paper covered in three hundred and forty symbols, letters, backwards letters, triangles and dots, in seventeen neat columns.
+
+[thoughtful] It was the latest letter from a man who called himself the Zodiac. Over the past year, in the towns and countryside around San Francisco, he had shot or stabbed seven people, and five of them died. Two teenagers on their first date, parked on a quiet road. A young waitress and mother, sitting in her car with a friend. A student, picnicking by a lake. And a taxi driver in the city itself.
+
+[serious] He wrote to the newspapers to boast about it. One earlier coded letter had been solved within a week, by a schoolteacher and his wife working at their kitchen table. It said he killed because he enjoyed it, and it did not give his name.
+
+[thoughtful] This new one was harder. The police tried. Government codebreakers tried. Thousands of amateurs tried, for years, and then for decades. [pause] Nobody could read it.
+
+## ending
+
+[measured] In 2020, three amateur codebreakers took it on together: an American web designer, an Australian mathematician and a Belgian computer programmer. They wrote software to try hundreds of thousands of ways the symbols might have been shuffled. [thoughtful] The breakthrough came when they realised the message had been written in a pattern, read diagonally across the grid, a step down and two across each time.
+
+[serious] In December 2020 they read it. It was the killer boasting again, saying he was not afraid of the gas chamber, and that he was not the man a television show had named. The FBI confirmed the solution was right.
+
+[softly] The code was broken. The man who wrote it was never identified, and nobody has ever been charged with the murders.
+
+[gently] Fifty years on, what is remembered is who they were: the two teenagers on their first date, a young mother, a student by a lake, and a taxi driver, who all set out on an ordinary evening and never came home.

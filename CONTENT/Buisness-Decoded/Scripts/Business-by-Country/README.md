@@ -72,3 +72,17 @@ list in `voice-master.yaml` is avoided, since it is removed at render.
 
 The harder Indian names are in the `business-decoded` `pronounce` list in
 `voice-master.yaml`. The scripts keep the real spelling.
+
+## Written 2026-10-17
+
+| Map item | Title | File | Words (spoken) |
+|---|---|---|---|
+| `business-by-country/10` | Zerodha: Zero Barriers to the Stock Market | `10-zerodha.txt` | 1112 |
+| `business-by-country/12` | Rolls-Royce: Two Men and a Perfect Engine | `12-rolls-royce.txt` | 1092 |
+| `business-by-country/13` | Virgin: The Brand That Kept Moving On | `13-virgin.txt` | 1126 |
+
+### Facts: check before publishing
+
+- Zerodha: the brothers' birth years (1979, 1986); launch 15 August 2010; free delivery and Kite in 2015; largest by active clients 2019; SEBI's 'nine in ten' F&O losses; Groww overtaking on customers; 2024 F&O rules cutting income.
+- Rolls-Royce: the 20 pound start in 1884; lunch 4 May 1904 at the Midland Hotel; Rolls killed 12 July 1910; bankruptcy 4 February 1971; car split 1973; BMW from 2003 at Goodwood; about 671m pound settlement in 2017; about 9,000 jobs cut in 2020.
+- Virgin: Student at 16; 1971 tax arrest and settlement; Tubular Bells 1973; first Virgin Atlantic flight June 1984, Gatwick to Newark; BA dirty-tricks damages 1993; Virgin Records to EMI for about 560m pounds in 1992; Alsbury 2014; Branson's flight July 2021; Virgin Orbit 2023; Delta's stake.

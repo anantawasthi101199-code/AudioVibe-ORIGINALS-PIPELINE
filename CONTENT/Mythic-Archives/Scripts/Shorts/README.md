@@ -52,3 +52,17 @@ Each follows the source named on its map item, told plainly from memory of that 
 - Huitzilopochtli: the 1978 Coyolxauhqui stone found at the Templo Mayor.
 - Kaggen: the moon made from his shoe after the eland is killed, from Bleek and Lloyd.
 - Gawain: the green belt worn by the court afterwards, as the poem ends.
+
+## Written 2026-10-17
+
+| Map item | Title | File | Words (spoken) |
+|---|---|---|---|
+| `mythic-shorts/64` | Kaguya-hime: The Princess From the Moon | `064-kaguya-hime.txt` | 489 |
+| `mythic-shorts/65` | Yu the Great: The Man Who Tamed the Flood | `065-yu-the-great.txt` | 422 |
+| `mythic-shorts/66` | The Sampo: The Magic Mill of Plenty | `066-the-sampo.txt` | 408 |
+
+### Facts: check before publishing
+
+- Kaguya-hime: the five tasks paraphrased; the Emperor's three years of letters; burned on the highest mountain (Fuji, not named).
+- Yu: the stolen self-growing soil comes from the Shanhaijing tradition rather than the Shujing; Gun's body cut open after three years; dragon and turtle helpers; thirteen years, three doors.
+- Sampo: forged from a swan feather tip, milk, a barley grain and wool (runo 10); the crane waking Pohjola; Louhi as an eagle; pieces to the sea and to Finland, the lid to Pohjola (runo 43).

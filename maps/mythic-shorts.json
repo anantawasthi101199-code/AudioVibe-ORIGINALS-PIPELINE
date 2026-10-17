@@ -764,19 +764,34 @@
       "number": 64,
       "title": "Kaguya-hime: The Princess From the Moon",
       "covers": "A bamboo cutter finds a tiny girl glowing inside a stalk, she sets impossible tasks for her suitors, and the moon people come to take her back.",
-      "source": "The Tale of the Bamboo Cutter, in F. Victor Dickins, Japanese Texts (1906)"
+      "source": "The Tale of the Bamboo Cutter, in F. Victor Dickins, Japanese Texts (1906)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/064-kaguya-hime.txt",
+        "title": "Kaguya-hime: The Princess From the Moon",
+        "description": "An old bamboo cutter finds a tiny girl glowing inside a bamboo stalk. She grows into the most beautiful woman in Japan, and then the moon people come to take her home."
+      }
     },
     {
       "number": 65,
       "title": "Yu the Great: The Man Who Tamed the Flood",
       "covers": "After his father fails to hold back a world flood with stolen soil, Yu spends thirteen years digging channels and never goes home.",
-      "source": "The Shujing (James Legge translation, 1865), the tribute of Yu, and E. T. C. Werner (1922)"
+      "source": "The Shujing (James Legge translation, 1865), the tribute of Yu, and E. T. C. Werner (1922)",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/065-yu-the-great.txt",
+        "title": "Yu the Great: The Man Who Tamed the Flood",
+        "description": "A great flood covers ancient China. One man's father fails to stop it and dies. The son spends thirteen years digging, and walks past his own front door three times without going in."
+      }
     },
     {
       "number": 66,
       "title": "The Sampo: The Magic Mill of Plenty",
       "covers": "A smith forges a mill that grinds out grain, salt and gold, and the heroes of Kalevala sail north to steal it back.",
-      "source": "The Kalevala (John Martin Crawford translation, 1888), runos 10 and 39 to 43"
+      "source": "The Kalevala (John Martin Crawford translation, 1888), runos 10 and 39 to 43",
+      "script": {
+        "file": "CONTENT/Mythic-Archives/Scripts/Shorts/066-the-sampo.txt",
+        "title": "The Sampo: The Magic Mill of Plenty",
+        "description": "A smith forges a magic mill that grinds out grain, salt and gold, to win a bride from the dark north. Years later, three heroes sail north to steal it back, and the sea itself fights them."
+      }
     },
     {
       "number": 67,

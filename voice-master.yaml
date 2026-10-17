@@ -808,6 +808,66 @@ channels:
       - word: Mumbai
         sayAs: mum-BYE
         ipa: /mʊmbəiː/
+      - word: Satoshi Tajiri
+        sayAs: sah-TOH-shee tah-JEE-ree
+        ipa: /sa̠toɕi ta̠dʑiɾi/
+      - word: Satoshi
+        sayAs: sah-TOH-shee
+        ipa: /sa̠toɕi/
+      - word: Tajiri
+        sayAs: tah-JEE-ree
+        ipa: /ta̠dʑiɾi/
+      - word: Machida
+        sayAs: mah-CHEE-dah
+        ipa: /ma̠tɕida̠/
+      - word: Pokémon
+        sayAs: POH-kay-mon
+        ipa: /pokemoɴ/
+      - word: Nintendo
+        sayAs: nin-TEN-doh
+        ipa: /nʲinteɴdo/
+      - word: Tokyo
+        sayAs: TOH-kyoh
+        ipa: /toːkʲoː/
+      - word: Citron
+        sayAs: SIT-ron
+        ipa: /ˈsɪtrən/
+      - word: OpenFeint
+        sayAs: OH-pen-faint
+        ipa: /ˈoʊpənfeɪnt/
+      - word: Nithin Kamath
+        sayAs: NITH-in KAH-muth
+        ipa: /n̪it̪in kaːmət̪/
+      - word: Nikhil Kamath
+        sayAs: NIK-hil KAH-muth
+        ipa: /n̪ikʰil kaːmət̪/
+      - word: Nithin
+        sayAs: NITH-in
+        ipa: /n̪it̪in/
+      - word: Nikhil
+        sayAs: NIK-hil
+        ipa: /n̪ikʰil/
+      - word: Kamath
+        sayAs: KAH-muth
+        ipa: /kaːmət̪/
+      - word: Zerodha
+        sayAs: zeh-ROH-dhah
+        ipa: /zeːroːd̪ʱaː/
+      - word: rodha
+        sayAs: ROH-dhah
+        ipa: /roːd̪ʱaː/
+      - word: SEBI
+        sayAs: SEH-bee
+        ipa: /ˈseːbiː/
+      - word: Groww
+        sayAs: GROW
+        ipa: /ɡroʊ/
+      - word: Llangattock
+        sayAs: hlan-GAT-uck
+        ipa: /ɬanˈɡatɔk/
+      - word: Volkswagen
+        sayAs: VOLKS-wah-gen
+        ipa: /ˈfɔlksvaːɡn̩/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -984,6 +1044,90 @@ channels:
       - word: Menlo
         sayAs: MEN-loh
         ipa: /ˈmɛnloʊ/
+      - word: Sumbawa
+        sayAs: soom-BAH-wah
+        ipa: /sumˈbawa/
+      - word: Tambora
+        sayAs: tahm-BOR-ah
+        ipa: /tamˈbora/
+      - word: Krakatoa
+        sayAs: krak-uh-TOH-uh
+        ipa: /kraˈkatau/
+      - word: Pinatubo
+        sayAs: pee-nah-TOO-boh
+        ipa: /pinɐˈtubo/
+      - word: Rayleigh
+        sayAs: RAY-lee
+        ipa: /ˈreɪli/
+      - word: Tyndall
+        sayAs: TIN-dul
+        ipa: /ˈtɪndəl/
+      - word: Humphry Davy
+        sayAs: HUM-free DAY-vee
+        ipa: /ˈhʌmfri ˈdeɪvi/
+      - word: Davy
+        sayAs: DAY-vee
+        ipa: /ˈdeɪvi/
+      - word: Geneva
+        sayAs: Geneva
+        ipa: /dʒəˈniːvə/
+      - word: Galileo Galilei
+        sayAs: gal-ih-LAY-oh gal-ih-LAY-ee
+        ipa: /ɡaliˈlɛːo ɡaliˈlɛːi/
+      - word: Galileo
+        sayAs: gal-ih-LAY-oh
+        ipa: /ɡaliˈlɛːo/
+      - word: Galilei
+        sayAs: gal-ih-LAY-ee
+        ipa: /ɡaliˈlɛːi/
+      - word: Galilean
+        sayAs: gal-ih-LAY-un
+        ipa: /ˌɡælɪˈleɪən/
+      - word: Cosimo de' Medici
+        sayAs: KOH-zee-moh deh MED-ee-chee
+        ipa: /ˈkɔːzimo de ˈmɛːditʃi/
+      - word: Cosimo
+        sayAs: KOH-zee-moh
+        ipa: /ˈkɔːzimo/
+      - word: Medici
+        sayAs: MED-ee-chee
+        ipa: /ˈmɛːditʃi/
+      - word: Maffeo Barberini
+        sayAs: mah-FAY-oh bar-beh-REE-nee
+        ipa: /mafˈfɛːo barbeˈriːni/
+      - word: Maria Celeste
+        sayAs: mah-REE-ah cheh-LES-teh
+        ipa: /maˈriːa tʃeˈlɛste/
+      - word: Simplicio
+        sayAs: sim-PLEE-choh
+        ipa: /simˈpliːtʃo/
+      - word: Pisa
+        sayAs: PEE-zah
+        ipa: /ˈpiːza/
+      - word: Louis Pasteur
+        sayAs: LOO-ee pas-TUR
+        ipa: /lwi pastœʁ/
+      - word: Pasteur
+        sayAs: pas-TUR
+        ipa: /pastœʁ/
+      - word: Joseph Meister
+        sayAs: JOH-zef MY-ster
+        ipa: /ʒozɛf mɛstɛʁ/
+      - word: Meister
+        sayAs: MY-ster
+        ipa: /mɛstɛʁ/
+      - word: Lille
+        sayAs: LEEL
+        ipa: /lil/
+      - word: Alsace
+        sayAs: al-ZASS
+        ipa: /alzas/
+      - word: Robert Koch
+        sayAs: ROH-bert KOKH
+        ipa: /ˈʁoːbɛʁt kɔx/
+      - word: Koch
+        sayAs: KOKH
+        ipa: /kɔx/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -1176,6 +1320,33 @@ channels:
       - word: UVB
         sayAs: you vee bee
         ipa: /juː viː biː/
+      - word: Élie Metchnikoff
+        sayAs: ay-LEE MECH-nih-koff
+        ipa: /eli ˈmʲetɕnʲɪkəf/
+      - word: Metchnikoff
+        sayAs: MECH-nih-koff
+        ipa: /ˈmʲetɕnʲɪkəf/
+      - word: Weizmann
+        sayAs: WITES-mun
+        ipa: /ˈvaɪtsman/
+      - word: Otago
+        sayAs: oh-TAH-goh
+        ipa: /oʊˈtɑːɡoʊ/
+      - word: Eran Segal
+        sayAs: eh-RAHN SEH-gal
+        ipa: /eˈʁan ˈseɡal/
+      - word: Segal
+        sayAs: SEH-gal
+        ipa: /ˈseɡal/
+      - word: Lactobacillus
+        sayAs: LAK-toh-buh-SIL-us
+        ipa: /ˌlæktoʊbəˈsɪləs/
+      - word: FODMAPs
+        sayAs: FOD-maps
+        ipa: /ˈfɒdmæps/
+      - word: Burkitt
+        sayAs: BUR-kit
+        ipa: /ˈbɜːkɪt/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -1300,6 +1471,45 @@ channels:
       - word: Anglin
         sayAs: ANG-glin
         ipa: /ˈæŋɡlɪn/
+      - word: Konstantin Volkov
+        sayAs: kon-stan-TEEN vol-KOFF
+        ipa: /kənstɐnʲˈtʲin vɐlˈkof/
+      - word: Konstantin
+        sayAs: kon-stan-TEEN
+        ipa: /kənstɐnʲˈtʲin/
+      - word: Volkov
+        sayAs: vol-KOFF
+        ipa: /vɐlˈkof/
+      - word: Al Capone
+        sayAs: Al Capone
+        ipa: /æl kəˈpoʊn/
+      - word: Capone
+        sayAs: Capone
+        ipa: /kəˈpoʊn/
+      - word: Philby
+        sayAs: Philby
+        ipa: /ˈfɪlbi/
+      - word: Beirut
+        sayAs: bay-ROOT
+        ipa: /bajˈruːt/
+      - word: Istanbul
+        sayAs: Istanbul
+        ipa: /isˈtanbuɫ/
+      - word: Alcatraz
+        sayAs: Alcatraz
+        ipa: /ˈælkətræz/
+      - word: Giuseppe Conlon
+        sayAs: joo-ZEP-ay KON-lun
+        ipa: /dʒuˈzɛppe ˈkɒnlən/
+      - word: Giuseppe
+        sayAs: joo-ZEP-ay
+        ipa: /dʒuˈzɛppe/
+      - word: Bridego
+        sayAs: BRID-ee-goh
+        ipa: /ˈbrɪdiɡoʊ/
+      - word: Leatherslade
+        sayAs: LETH-er-slayd
+        ipa: /ˈlɛðərsleɪd/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -2389,6 +2599,93 @@ channels:
       - word: Shunahsakha
         sayAs: shoo-nuh-SUH-khuh
         ipa: /ʃʊnəɦsəkʰə/
+      - word: Kaguya-hime
+        sayAs: kah-GOO-yah HEE-meh
+        ipa: /ka̠ɡɯja̠ çime/
+      - word: Buddha
+        sayAs: Buddha
+        ipa: /ˈbʊd̪d̪ʱə/
+      - word: Shun
+        sayAs: SHOON
+        ipa: /ʂwə̂n/
+      - word: Yu
+        sayAs: YOO
+        ipa: /ŷ/
+      - word: Gun
+        sayAs: GWUN
+        ipa: /kwə̀n/
+      - word: Pohjola
+        sayAs: POH-yoh-lah
+        ipa: /ˈpohjolɑ/
+      - word: Louhi
+        sayAs: LOH-hee
+        ipa: /ˈlouhi/
+      - word: Sampo
+        sayAs: SAHM-poh
+        ipa: /ˈsɑmpo/
+      - word: Ilmarinen
+        sayAs: IL-mah-ree-nen
+        ipa: /ˈilmɑrinen/
+      - word: Svetasvatara Upanishad
+        sayAs: shvay-TAHSH-vuh-tuh-ruh oo-PUN-ee-shud
+        ipa: /ʃʋeːt̪aːʃʋət̪ərə upəniʂəd̪/
+      - word: Svetasvatara
+        sayAs: shvay-TAHSH-vuh-tuh-ruh
+        ipa: /ʃʋeːt̪aːʃʋət̪ərə/
+      - word: Upanishad
+        sayAs: oo-PUN-ee-shud
+        ipa: /upəniʂəd̪/
+      - word: Mount Kailash
+        sayAs: Mount KAI-lahsh
+        ipa: /maʊnt kaɪlaːʃ/
+      - word: Kailash
+        sayAs: KAI-lahsh
+        ipa: /kaɪlaːʃ/
+      - word: Sama
+        sayAs: SAH-muh
+        ipa: /saːmə/
+      - word: Yajur
+        sayAs: YUH-joor
+        ipa: /jəd͡ʒur/
+      - word: Atharva
+        sayAs: uh-THAR-vuh
+        ipa: /ət̪ʰərʋə/
+      - word: Uddalaka
+        sayAs: ood-DAH-luh-kuh
+        ipa: /ud̪d̪aːləkə/
+      - word: Kartikeya
+        sayAs: kar-ti-KAY-yuh
+        ipa: /kaːrt̪ikeːjə/
+      - word: Daruvana
+        sayAs: DAH-roo-vuh-nuh
+        ipa: /d̪aːruʋənə/
+      - word: Sati
+        sayAs: SUH-tee
+        ipa: /sət̪iː/
+      - word: Prajapati
+        sayAs: pruh-JAH-puh-tee
+        ipa: /prəd͡ʒaːpət̪i/
+      - word: Virabhadra
+        sayAs: vee-ruh-BHUD-ruh
+        ipa: /ʋiːrəbʱəd̪rə/
+      - word: Sanskrit
+        sayAs: Sanskrit
+        ipa: /səŋskr̩t̪ə/
+      - word: Hinduism
+        sayAs: Hinduism
+        ipa: /ˈhɪnduːɪzəm/
+      - word: Himalayas
+        sayAs: him-AH-luh-yuz
+        ipa: /ɦɪmaːləj/
+      - word: Tamil
+        sayAs: TUH-mil
+        ipa: /t̪əmiɻ/
+      - word: Hindi
+        sayAs: HIN-dee
+        ipa: /ɦɪnd̪iː/
+      - word: Bengali
+        sayAs: ben-GAH-lee
+        ipa: /bɛŋˈɡɔːli/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -2466,6 +2763,33 @@ channels:
       - word: H.M.
         sayAs: aitch em
         ipa: /eɪtʃ ɛm/
+      - word: Samaritans
+        sayAs: Samaritans
+        ipa: /səˈmærɪtənz/
+      - word: Gabriel Radvansky
+        sayAs: GAY-bree-ul rad-VAN-skee
+        ipa: /ˈɡeɪbriəl rædˈvænski/
+      - word: Radvansky
+        sayAs: rad-VAN-skee
+        ipa: /rædˈvænski/
+      - word: Henry Roediger
+        sayAs: HEN-ree ROH-dih-ger
+        ipa: /ˈhɛnri ˈroʊdɪɡər/
+      - word: Roediger
+        sayAs: ROH-dih-ger
+        ipa: /ˈroʊdɪɡər/
+      - word: Jeffrey Karpicke
+        sayAs: JEF-ree KAR-pik
+        ipa: /ˈdʒɛfri ˈkɑːrpɪk/
+      - word: Karpicke
+        sayAs: KAR-pik
+        ipa: /ˈkɑːrpɪk/
+      - word: Dunlosky
+        sayAs: dun-LOSS-kee
+        ipa: /dʌnˈlɒski/
+      - word: Bushman
+        sayAs: BOOSH-mun
+        ipa: /ˈbʊʃmən/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

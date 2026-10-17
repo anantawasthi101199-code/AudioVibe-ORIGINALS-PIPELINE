@@ -1,0 +1,59 @@
+## opening
+
+[warmly] You've just finished a course of antibiotics, and you're standing in the supermarket in front of a fridge full of little yoghurt drinks. Billions of live bacteria, it says. Supports your gut. [curious] Do any of these products actually do what they promise?
+
+[thoughtful] The evidence is mixed, and it depends heavily on which product, for which problem. For a few uses there are decent trials. For most of what's on the shelf, the evidence is thin, or missing.
+
+## belief
+
+[thoughtful] The belief goes like this. Your gut is full of bacteria, good and bad. Antibiotics, stress or a poor diet knock out the good ones. So swallowing good bacteria tops them back up, and your gut, and maybe your mood and immune system, gets healthier.
+
+[warmly] It's a sensible-sounding idea, and it's old. In the early 1900s, a Russian scientist working in Paris, Élie Metchnikoff, who later won a Nobel Prize for his work on immunity, noticed that some Bulgarian villagers who drank a lot of soured milk lived to a great age. [curious] He argued that the bacteria in it pushed out harmful microbes in the gut, and he drank soured milk himself every day.
+
+[thoughtful] And the core of it is true. The bacteria in our gut really do matter for health, and antibiotics really do disturb them. The question is whether a pot or a capsule changes that in a useful way.
+
+## evidence
+
+[thoughtful] First, the words. A probiotic is defined by international health bodies as live microorganisms that, given in adequate amounts, give a health benefit. [curious] A prebiotic is something different. It's a food for the bacteria already in you, usually a type of fibre, like inulin, found in onions, leeks and chicory. And fermented foods, like yoghurt, kefir, sauerkraut and kimchi, contain live microbes, but aren't necessarily probiotics in the strict sense.
+
+[thoughtful] Now, the strongest evidence. Antibiotics can cause diarrhoea, because they disturb the gut's bacteria. In 2019, a Cochrane review, a careful summary of all the good trials, looked at children given probiotics alongside antibiotics. [measured] Across thirty-three trials and about six thousand children, diarrhoea fell from roughly nineteen in a hundred children to about eight in a hundred, with certain strains at higher doses. Reviews in adults have found smaller benefits, and the quality of the evidence is weaker.
+
+[curious] But for tummy bugs in children, the picture changed. In 2018, two large, well-run trials in the United States and Canada gave more than eighteen hundred children with gastroenteritis, an infection of the gut, either a probiotic or a dummy. [thoughtful] The probiotics made no difference to how long or how badly they were ill.
+
+[thoughtful] For irritable bowel syndrome, IBS, trials point in different directions. Some strains help some symptoms in some people. In 2020, the American Gastroenterological Association reviewed the evidence and advised against using probiotics for most digestive conditions outside research trials. [measured] NICE, which sets guidance in England, takes a gentler line for IBS. It says people who want to try a probiotic should take it for at least four weeks, keep an eye on their symptoms, and stop if nothing improves.
+
+[curious] Then fermented foods. In 2021, a team at Stanford University in California put thirty-six healthy adults on either a diet high in fermented foods, or one high in fibre, for ten weeks. [thoughtful] The fermented food group ended up with more varied gut bacteria and lower levels of several markers of inflammation in the blood. It was a small study, in healthy people, and it measured markers rather than illness. But it was one of the first proper trials of everyday fermented food.
+
+[serious] Finally, the home gut tests. You post off a stool sample, and get back a report on your bacteria with advice to buy certain foods or supplements. [thoughtful] The problem is that nobody has agreed what a healthy gut microbiome looks like. People's bacteria differ enormously, and change from week to week. In 2024, an international group of gut experts published a joint statement warning that these tests can't diagnose anything, and shouldn't be used to guide treatment.
+
+## mechanism
+
+[thoughtful] So what could a probiotic physically do? When you swallow live bacteria, most of them are killed by stomach acid, so products use hardy strains or protective capsules. [curious] The survivors travel to the intestine. There, they might compete with harmful bacteria for space and food, make acids that some harmful microbes dislike, and send signals to the immune cells lining the gut, which sit just under its surface.
+
+[thoughtful] Here's the step that's often missing. Most probiotic bacteria don't settle in. They pass through, and within days of stopping, they're mostly gone. [knowingly] Think of them as visitors walking through a busy town rather than new residents moving in. They might still do something useful on the way through, but they don't usually replace what's already there.
+
+[curious] And effects depend on the exact strain. Two products both labelled Lactobacillus can contain different strains, with different effects, just as two dogs from the same breed can behave very differently. A finding for one strain doesn't carry over to another.
+
+[thoughtful] Prebiotics work the other way round. They feed bacteria you already have, especially kinds that make short-chain fatty acids, small molecules that fuel the gut lining. But because they're fermented, they also make gas, and in a sensitive gut they can cause bloating.
+
+## disagreement
+
+[curious] So where do the experts disagree? In 2018, a team at the Weizmann Institute in Israel, led by Eran Elinav and Eran Segal, did something unusual. They looked directly inside people's guts, not just at their stools. [thoughtful] They found that probiotic bacteria settled in some people and were pushed out by others, depending on the bacteria they already had. And in people who had just taken antibiotics, a probiotic actually delayed their own bacteria returning to normal, compared with doing nothing.
+
+[thoughtful] Other researchers argue those studies were small, used one particular mix of strains, and shouldn't be used to dismiss probiotics in general, especially where trials show benefits, like antibiotic diarrhoea in children. [curious] What would settle it? Large trials, testing specific strains for specific problems, with independent funding, and measuring things people actually care about, like days of illness, rather than changes in markers.
+
+## honest
+
+[warmly] So which products have meaningful evidence? A few. Certain probiotic strains, taken alongside antibiotics, reduce diarrhoea, most clearly in children. For IBS, some strains help some people, and it's reasonable to try one for a month and see. For most other claims, the evidence isn't there yet.
+
+[thoughtful] A plausible mechanism isn't the same as a proven benefit. A product labelled probiotic is not automatically effective for every condition, or for any condition at all, and probiotic supplements are sold as foods in the UK, not tested like medicines.
+
+[serious] And they're not risk-free for everyone. They can cause wind and bloating. In people who are seriously ill, have a weakened immune system, a central line, a tube into a large vein, or in very premature babies, there have been rare cases of the bacteria getting into the bloodstream. The NHS says people with a weakened immune system should check with a doctor before taking them.
+
+[softly] What's still open is which strains help which people, and why the same capsule settles into one gut and passes straight through another.
+
+## close
+
+[warmly] Think back to Metchnikoff, in Paris, a century ago, drinking his soured milk every day because of villagers in Bulgaria who lived to a great age.
+
+[softly] More than a hundred years later, the bacteria he was betting on are still mostly passing through, and science is still working out which of them, if any, he was right about.

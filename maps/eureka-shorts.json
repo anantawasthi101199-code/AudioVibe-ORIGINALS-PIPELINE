@@ -80,19 +80,34 @@
       "number": 7,
       "title": "Why Is the Sky Blue?",
       "covers": "The answer came from a Victorian scientist working out how sunlight scatters off the tiny molecules of air.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/007-why-is-the-sky-blue.txt",
+        "title": "Why Is the Sky Blue?",
+        "description": "Sunlight is white, so why is the sky blue and the sunset red? A Victorian lord worked it out on paper, and the answer is the air itself."
+      }
     },
     {
       "number": 8,
       "title": "The Man Who Breathed Laughing Gas",
       "covers": "In 1799 a young Humphry Davy breathed nitrous oxide in Bristol, wrote about the giggles, and missed that it could stop pain.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/008-laughing-gas.txt",
+        "title": "The Man Who Breathed Laughing Gas",
+        "description": "In 1799 a twenty-year-old chemist breathed a strange gas from a silk bag, laughed, and wrote that it might stop pain in surgery. Then nobody tried it for forty-four years."
+      }
     },
     {
       "number": 9,
       "title": "The Year Without a Summer",
       "covers": "In 1815 a volcano erupted in Indonesia, and the next summer snow fell in June in America and crops failed across Europe.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/009-year-without-a-summer.txt",
+        "title": "The Year Without a Summer",
+        "description": "In June 1816 snow fell in New England and crops failed across Europe. The cause was a volcano on an island halfway round the world, and it took a century to connect them."
+      }
     },
     {
       "number": 10,

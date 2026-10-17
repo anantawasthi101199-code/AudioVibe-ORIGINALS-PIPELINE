@@ -828,21 +828,36 @@
       "title": "Discord: The Chat App Born From a Failed Game",
       "covers": "Jason Citron selling one startup and building a game that flopped, the voice chat tool the team made for themselves, and its growth from gamers to communities of every kind.",
       "subject": "Discord",
-      "source": "Discord official company history, annual reports and reputable business journalism"
+      "source": "Discord official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/064-discord.txt",
+        "title": "Discord: The Chat App Born From a Failed Game",
+        "description": "A team built a fantasy battle game for the iPad, and almost nobody played it. The voice chat they made for themselves became Discord."
+      }
     },
     {
       "number": 65,
       "title": "FedEx: The Idea That Got a C Grade",
       "covers": "Fred Smith's university paper on overnight delivery, the first night of flights in 1973, gambling company money in Las Vegas to make payroll, and building the hub-and-spoke system.",
       "subject": "FedEx",
-      "source": "FedEx official company history, annual reports and reputable business journalism"
+      "source": "FedEx official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/065-fedex.txt",
+        "title": "FedEx: The Idea That Got a C Grade",
+        "description": "A student wrote a paper about flying parcels overnight, and the story goes he got a C. Years later, to keep his planes flying, he took the company's last money to a blackjack table."
+      }
     },
     {
       "number": 66,
       "title": "Pokémon: The Boy Who Collected Insects",
       "covers": "Satoshi Tajiri's childhood bug hunting, Game Freak, the Game Boy link cable, Pokémon Red and Green in 1996, the cards and cartoon, and Pokémon Go.",
       "subject": "The Pokémon Company",
-      "source": "The Pokémon Company official company history, annual reports and reputable business journalism"
+      "source": "The Pokémon Company official company history, annual reports and reputable business journalism",
+      "script": {
+        "file": "CONTENT/Buisness-Decoded/Scripts/Shorts/066-pokemon.txt",
+        "title": "Pokémon: The Boy Who Collected Insects",
+        "description": "A boy in the suburbs of Tokyo filled jars with beetles and swapped them with friends. He grew up to turn that feeling into Pokémon, the biggest media franchise in the world."
+      }
     },
     {
       "number": 67,

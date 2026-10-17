@@ -1,0 +1,53 @@
+## hook
+
+[leaning in] In 2010, buying shares in India usually meant paying your broker a slice of every trade, sometimes half a per cent, whether you made money or not. [curious] Then two brothers in Bangalore started charging a flat twenty rupees a trade, about twenty pence, and nothing at all for simply buying shares to keep.
+
+[warmly] Within ten years, their company, Zerodha, had more active customers than any other stockbroker in India. And they did it without taking a single rupee from outside investors.
+
+[thoughtful] This is the story of Nithin and Nikhil Kamath, two brothers who skipped the usual paths, and how their low-cost, do-it-yourself broker grew into one of the most profitable start-ups in the country, while trying to stay trusted in a business where trust is everything.
+
+[warmly] Hey, I'm Adrian, and this is Business Decoded.
+
+## beginnings
+
+[warmly] Two people to know. Nithin Kamath, the older brother, born in 1979. And Nikhil Kamath, his younger brother, born in 1986. [matter-of-fact] Together they founded Zerodha. That's the whole cast.
+
+[warmly] So let's go back to the very beginning. The brothers grew up in Bangalore, in the south of India, a city that would later become the centre of the country's technology industry. Their father worked for a bank. An ordinary middle-class home.
+
+[curious] Nithin started trading shares in 1997, when he was just seventeen. For years he did it on the side. In his early twenties, he worked night shifts in a call centre, answering phones for foreign customers, and then traded shares on the Indian market during the day. [thoughtful] Nikhil went further. He dropped out of school at fourteen, without finishing his exams. He got a job in a call centre too, and started trading with money his family let him manage.
+
+[thoughtful] To understand what they did next, you need to know what a stockbroker is. You cannot just walk into a stock exchange and buy shares. A broker does it for you, and charges a fee called brokerage. [knowingly] In India in the 2000s, most brokers charged a percentage of the trade. Buy a lakh of rupees of shares, that's a hundred thousand, and you might pay three or five hundred rupees in brokerage, every time, in and out.
+
+[curious] By the mid-2000s, Nithin was working as a sub-broker, a smaller firm that finds customers for a big broker. He saw the same problems over and over. The fees were high. The trading software was clumsy. And many brokers made their money by getting customers to trade as much as possible, whether it was good for them or not.
+
+[determined] So on the fifteenth of August, 2010, India's Independence Day, the brothers launched their own broker in Bangalore. [with a smile] They called it Zerodha. Zero, plus rodha, a Sanskrit word meaning barrier. Zero barriers.
+
+## struggle
+
+[building] But it didn't stay easy for long. Their idea was simple: charge a flat twenty rupees for a trade, however big. But the brothers had very little money, and they refused to take venture capital, money from investors who buy a slice of a young company and expect it to grow fast and sell.
+
+[serious] So there was no money for adverts. Zerodha had to grow by word of mouth, one trader telling another. In the first years, it signed up customers slowly, a few thousand at a time. [thoughtful] The big banks that owned brokers, with branches all over India, barely noticed them.
+
+[curious] And there was a deeper problem. Stockbroking in India is tightly controlled by SEBI, the Securities and Exchange Board of India, the government body that polices the markets. A broker holds its customers' money and shares. One mistake, one crash in its systems on a busy day, and people lose money and trust very quickly. [serious] A tiny company with almost no money had to build software, paperwork and safety checks as good as a giant's.
+
+[thoughtful] Signing up was slow too. Back then, opening a trading account in India meant filling in thick paper forms, posting copies of documents, and waiting for weeks. [softly] For a broker that lived online, every customer who gave up halfway through the forms was a customer lost.
+
+## rise
+
+[building] And then came the move that changed everything. In 2015, Zerodha launched Kite, its own trading platform, clean, fast and easy to use on a phone. [delighted] And in the same year, it announced that buying shares to hold for the long term, what traders call delivery, would cost no brokerage at all. Free.
+
+[thoughtful] Why did that work? Think about a corner shop that sells milk at cost, to get you through the door. Zerodha made its money from traders who bought and sold often, at twenty rupees a time. The free long-term investing brought in millions of ordinary savers, and some of them, later, became traders. [knowingly] And because the company was built on software, not branches, each extra customer cost it very little.
+
+[curious] They also gave away knowledge. Zerodha's free learning site, Varsity, explained shares, markets and risk in plain English, chapter by chapter. Then India changed around them. Cheap mobile data arrived from 2016, and opening an account moved online, with identity checks done by phone in minutes.
+
+[building] By 2019, Zerodha had more active customers than any other broker in India, ahead of big bank-owned rivals. [delighted] Then, in 2020, the pandemic arrived. Millions of young Indians, stuck at home, opened trading accounts for the first time. Zerodha's customer numbers soared into the millions, and its profits with them.
+
+[serious] There were hard parts too. On some busy trading days its systems slowed or went down, and customers who could not sell in time were furious. [thoughtful] And there was an uncomfortable truth in its own industry. SEBI found that around nine in ten people trading risky contracts called futures and options lost money. A large share of brokers' income came from exactly that kind of trading. [knowingly] Nithin Kamath said so in public, more than once, and Zerodha added warnings. In 2024, SEBI tightened the rules on those trades, and Zerodha's income fell.
+
+## ending
+
+[warmly] Today Zerodha serves millions of customers and handles a large share of all trading in India. In the most recent years, a newer rival called Groww has overtaken it on customer numbers. [quietly impressed] But Zerodha still makes thousands of crores of rupees a year, much of it as profit, and the brothers still own most of it themselves.
+
+[reflective] What did it take? A price so simple everybody could understand it. Patience to grow slowly, with no investors' money to burn. And software good enough that one small team could serve millions, from one city.
+
+[softly] From a seventeen-year-old trading on the side and a fourteen-year-old who left school, to a company that took the barriers out of the Indian stock market, starting at twenty rupees a trade.

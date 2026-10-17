@@ -130,7 +130,12 @@
           "title": "Zerodha: How a Bootstrapped Startup Challenged Traditional Stockbroking",
           "covers": "Follow Nithin and Nikhil Kamath's venture, the problems traders faced, low-cost brokerage, technology-led operations and the challenge of growing a financial business while managing trust, compliance and market risk.",
           "subject": "Zerodha",
-          "source": "Zerodha official company history, annual reports and reputable business journalism"
+          "source": "Zerodha official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/10-zerodha.txt",
+            "title": "Zerodha: Zero Barriers to the Stock Market",
+            "description": "Two brothers from Bangalore who dropped out of the usual paths took on India's old stockbrokers with a flat fee of twenty rupees and no outside money at all."
+          }
         }
       ],
       "cover": "CONTENT/Buisness-Decoded/Images/Business-by-Country/series-01.jpg"
@@ -158,14 +163,24 @@
           "title": "Rolls-Royce: How Engineering Excellence Became a Global Business",
           "covers": "Henry Royce's engineering background, Charles Rolls's sales business, the creation of their partnership and the development of the brand. Distinguish the modern luxury-car manufacturer from the separate aerospace-engineering company, and explore the latter's financial crises and restructuring.",
           "subject": "Rolls-Royce",
-          "source": "Rolls-Royce official company history, annual reports and reputable business journalism"
+          "source": "Rolls-Royce official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/12-rolls-royce.txt",
+            "title": "Rolls-Royce: Two Men and a Perfect Engine",
+            "description": "A poor engineer who once sold newspapers and a rich young aristocrat who sold cars met for lunch in Manchester in 1904. Their name ended up on luxury cars and on the engines of half the world's jets."
+          }
         },
         {
           "number": 13,
           "title": "Virgin: How Richard Branson Built a Brand That Kept Entering New Industries",
           "covers": "Start with Virgin Records, then explore the expansion into airlines and other ventures. Examine how the brand transferred across industries, which ventures succeeded, which struggled and why branding alone cannot guarantee a viable business.",
           "subject": "Virgin Group",
-          "source": "Virgin Group official company history, annual reports and reputable business journalism"
+          "source": "Virgin Group official company history, annual reports and reputable business journalism",
+          "script": {
+            "file": "CONTENT/Buisness-Decoded/Scripts/Business-by-Country/13-virgin.txt",
+            "title": "Virgin: The Brand That Kept Moving On",
+            "description": "A schoolboy with a student magazine became the owner of a record label, an airline, trains, phones and a space company. Some of them soared, and some of them flopped, all under one name."
+          }
         },
         {
           "number": 14,

@@ -61,13 +61,23 @@
           "number": 5,
           "title": "Why You Walk Into a Room and Forget Why",
           "covers": "The doorway effect: how the brain files memories by the place you were in, and why moving between rooms resets it.",
-          "source": "Radvansky's doorway studies and event segmentation research"
+          "source": "Radvansky's doorway studies and event segmentation research",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/05-walk-into-a-room-and-forget-why.txt",
+            "title": "Why You Walk Into a Room and Forget Why",
+            "description": "You get up for something, step through a doorway, and it is gone. Your memory is fine: your brain files things by where you were, and a doorway closes the file."
+          }
         },
         {
           "number": 6,
           "title": "How to Actually Remember Things",
           "covers": "What the research says works: testing yourself, spacing it out, explaining it to someone, and why rereading feels useful but is not.",
-          "source": "Dunlosky et al. (2013) review of learning techniques"
+          "source": "Dunlosky et al. (2013) review of learning techniques",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/06-how-to-actually-remember-things.txt",
+            "title": "How to Actually Remember Things",
+            "description": "You read your notes again and again, and it all feels familiar, until the test. Research on hundreds of studies shows what really works, and why rereading tricks you."
+          }
         }
       ],
       "cover": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/series-01.jpg"
@@ -93,7 +103,12 @@
           "number": 8,
           "title": "Anger: The Emotion That Wants to Fix Things",
           "covers": "What happens in the body and mind when you get angry, why venting does not help, and what does.",
-          "source": "Bushman (2002) on venting and reviews of anger regulation"
+          "source": "Bushman (2002) on venting and reviews of anger regulation",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/08-anger-the-emotion-that-wants-to-fix-things.txt",
+            "title": "Anger: The Emotion That Wants to Fix Things",
+            "description": "Your face goes hot, your jaw clenches and the words come out before you can stop them. Anger is trying to put something right. Here is why venting makes it worse, and what calms it."
+          }
         },
         {
           "number": 9,

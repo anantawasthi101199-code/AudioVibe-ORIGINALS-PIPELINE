@@ -60,3 +60,17 @@ Written from well-known company history, not checked against a fetched source. M
 - Costco: the hot dog "I'll kill you" story is told as a story; membership numbers.
 - Nvidia: the 2012 image contest on two gaming cards. Ray-Ban: 1936 lens, 1937 name. Philips: the tsar's palace order is told as a story.
 - Nykaa: shares nearly doubled on listing day. Jollibee: founded 1975, renamed 1978, McDonald's arrived 1981.
+
+## Written 2026-10-17
+
+| Map item | Title | File | Words (spoken) |
+|---|---|---|---|
+| `business-shorts/64` | Discord: The Chat App Born From a Failed Game | `064-discord.txt` | 374 |
+| `business-shorts/65` | FedEx: The Idea That Got a C Grade | `065-fedex.txt` | 383 |
+| `business-shorts/66` | Pokémon: The Boy Who Collected Insects | `066-pokemon.txt` | 359 |
+
+### Facts: check before publishing
+
+- Discord: OpenFeint sold to GREE for about $104m (2011); Fates Forever 2014; launch 2015; Microsoft's reported ~$12bn approach in 2021.
+- FedEx: the C grade is told as a story (Smith says he does not recall); 17 April 1973, 14 jets, 186 parcels, 25 cities; the Las Vegas $5,000 to $27,000 story; 1977 air-cargo deregulation.
+- Pokémon: Tajiri born 1965, Machida; Game Freak magazine then company 1989; six years of development; Red and Green February 1996; card game 1996, anime 1997; Go 2016.

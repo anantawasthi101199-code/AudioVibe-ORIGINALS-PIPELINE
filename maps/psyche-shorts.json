@@ -80,19 +80,34 @@
       "number": 7,
       "title": "How Babies Learn to Talk",
       "covers": "How babies go from crying to sentences, and what parents' baby talk actually does.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/007-how-babies-learn-to-talk.txt",
+        "title": "How Babies Learn to Talk",
+        "description": "You find yourself talking to a baby in a high, sing-song voice, and you feel a bit silly. That voice is one of the best language lessons there is."
+      }
     },
     {
       "number": 8,
       "title": "Why You Get Songs Stuck in Your Head",
       "covers": "Earworms: why a few bars of a song loop in your head, and the odd trick that can stop them.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/008-songs-stuck-in-your-head.txt",
+        "title": "Why You Get Songs Stuck in Your Head",
+        "description": "A few seconds of a song you don't even like play over and over in your head all day. Here is why earworms happen, and the odd, simple trick that can stop one."
+      }
     },
     {
       "number": 9,
       "title": "What Is Depression, Really?",
       "covers": "How depression is different from sadness, the main signs, and why it is treatable.",
-      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing"
+      "source": "Peer-reviewed psychology research, NHS guidance where relevant, and reputable psychology writing",
+      "script": {
+        "file": "CONTENT/Psyche-Session/Scripts/Shorts/009-what-is-depression.txt",
+        "title": "What Is Depression, Really?",
+        "description": "Feeling sad and being depressed are different things. Here is how to tell them apart, the signs to notice, and why depression is one of the most treatable problems there is."
+      }
     },
     {
       "number": 10,

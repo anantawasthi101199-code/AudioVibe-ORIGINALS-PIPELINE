@@ -80,19 +80,34 @@
       "number": 7,
       "title": "Is Lactic Acid Why Your Muscles Ache?",
       "covers": "Why muscles are sore a day or two after exercise, why lactic acid is not to blame, and what helps recovery.",
-      "source": "Reviews of delayed onset muscle soreness and exercise physiology research"
+      "source": "Reviews of delayed onset muscle soreness and exercise physiology research",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/007-lactic-acid-and-sore-muscles.txt",
+        "title": "Is Lactic Acid Why Your Muscles Ache?",
+        "description": "Two days after your first run in ages, you can barely walk down the stairs. It is not lactic acid. Here is what is really going on in your muscles, and what helps."
+      }
     },
     {
       "number": 8,
       "title": "Paracetamol or Ibuprofen?",
       "covers": "How the two most common painkillers work differently, which suits which kind of pain, and the safety limits for each.",
-      "source": "NHS guidance on paracetamol and ibuprofen"
+      "source": "NHS guidance on paracetamol and ibuprofen",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/008-paracetamol-or-ibuprofen.txt",
+        "title": "Paracetamol or Ibuprofen?",
+        "description": "You have a headache, a sprained ankle or a fever, and two boxes in the cupboard. They work in different ways, suit different pain, and each has its own safety limits."
+      }
     },
     {
       "number": 9,
       "title": "Why Do People Get Hay Fever?",
       "covers": "How the immune system mistakes pollen for a threat, what causes the sneezing and itching, and the treatments that help.",
-      "source": "NHS hay fever guidance"
+      "source": "NHS hay fever guidance",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/009-why-do-people-get-hay-fever.txt",
+        "title": "Why Do People Get Hay Fever?",
+        "description": "It is a sunny day in June, and your eyes are streaming. Pollen is harmless, so why does your body treat it like an invader? Here is what is happening, and what helps."
+      }
     },
     {
       "number": 10,

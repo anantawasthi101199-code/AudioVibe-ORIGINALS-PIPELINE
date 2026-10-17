@@ -121,7 +121,12 @@
           "number": 10,
           "title": "The Sacred Books: Where Do These Stories Come From?",
           "covers": "An accessible introduction to the Vedas, Upanishads, epics, Puranas, and regional traditions.",
-          "source": "Rig Veda (Griffith translation); Upanishads (Muller translation); Mahabharata (Ganguli translation)"
+          "source": "Rig Veda (Griffith translation); Upanishads (Muller translation); Mahabharata (Ganguli translation)",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/10-the-sacred-books.txt",
+            "title": "The Sacred Books: Where the Stories Come From",
+            "description": "Hymns that were memorised for three thousand years, a teacher who explained the universe with a bowl of salt water, and an epic dictated to Ganesha. A journey through the books behind Hindu mythology."
+          }
         }
       ]
     },
@@ -134,13 +139,23 @@
           "number": 11,
           "title": "Who Is Shiva? The God Who Stands Outside the Rules",
           "covers": "Shiva's ascetic life, cosmic role, symbols, and seemingly contradictory nature.",
-          "source": "Shiva Purana; Svetasvatara Upanishad"
+          "source": "Shiva Purana; Svetasvatara Upanishad",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/11-who-is-shiva.txt",
+            "title": "Who Is Shiva? The God Outside the Rules",
+            "description": "He lives on a frozen mountain, covers himself in ash, wears a snake for a necklace and is also the gentlest of husbands. A story of Shiva walking into a forest of proud sages shows who he really is."
+          }
         },
         {
           "number": 12,
           "title": "How Shiva Married Sati: The Love That Ended in Tragedy",
           "covers": "Sati, Daksha's sacrifice, Shiva's grief, and the destruction of Daksha's ritual.",
-          "source": "Shiva Purana, Rudra Samhita, Sati Khanda; Bhagavata Purana book 4"
+          "source": "Shiva Purana, Rudra Samhita, Sati Khanda; Bhagavata Purana book 4",
+          "script": {
+            "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/12-shiva-and-sati.txt",
+            "title": "How Shiva Married Sati, and How It Ended",
+            "description": "A princess who loved the wild god of the mountains married him against her father's wishes. Then her father held a great sacrifice, and invited everyone except her husband."
+          }
         },
         {
           "number": 13,

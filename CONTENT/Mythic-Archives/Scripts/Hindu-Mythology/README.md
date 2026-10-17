@@ -61,3 +61,17 @@ Rig Veda 10.129 (Nasadiya Sukta) and 1.32 (Indra and Vritra); Vishnu Purana
 books 1, 2 and 6; Bhagavata Purana (Brahma in the lotus, Dhruva, Parikshit and
 the bull); Shiva Purana (the pillar of fire); Mahabharata, Vana Parva (Bhima
 and Hanuman; Markandeya on the end of the Kali Yuga and Kalki).
+
+## Written 2026-10-17
+
+| Map item | Title | File | Words (spoken) |
+|---|---|---|---|
+| `hindu-mythology/10` | The Sacred Books: Where the Stories Come From | `10-the-sacred-books.txt` | 1148 |
+| `hindu-mythology/11` | Who Is Shiva? The God Outside the Rules | `11-who-is-shiva.txt` | 954 |
+| `hindu-mythology/12` | How Shiva Married Sati, and How It Ended | `12-shiva-and-sati.txt` | 949 |
+
+### Facts: check before publishing
+
+- 10: Shvetaketu and Uddalaka, salt in water (Chandogya 6.13, 'you are that'); Vyasa and Ganesha's two conditions; the broken tusk as pen is a popular tradition outside the critical text.
+- 11: Daruvana as told in several Puranas; the tiger, snakes, deer and dwarf sent by the sages is the southern telling (Kurma Purana, Koil Puranam) more than the Shiva Purana's own version.
+- 12: Daksha's insult at the gathering (Bhagavata 4.2); Sati's death by inner yogic fire (Bhagavata 4.4); Virabhadra from the lock of hair; the goat's head. Stops before the body and the Shakti Peethas (item 13).

@@ -1,0 +1,21 @@
+## story
+
+[leaning in] Discord is where tens of millions of people talk every single day, about games, homework, music and almost anything else. It began as a side project, inside a game that failed.
+
+[warmly] The man behind it is Jason Citron, an American who loved video games from childhood. [curious] In 2008 he started a company called OpenFeint, which let people playing games on their phones compare scores and challenge friends. In 2011 he sold it to a Japanese games company for about a hundred and four million dollars.
+
+[determined] He could have stopped. Instead, he started again. His new company built a big, ambitious battle game for the iPad called Fates Forever, where teams of players fought each other online. It came out in 2014. [softly] And very few people played it. The money was running out.
+
+[thoughtful] But while they made the game, Citron and his team had a problem of their own. They played other games together every night, and the tools for talking to each other were awful. You had to type in the address of a server, the voice kept dropping, and the programs slowed your computer down. [a beat] So the team quietly built their own. A chat app where you clicked one link and you were in, talking, with clear sound.
+
+[pause] Then they made the hard call. They stopped the game, and bet the whole company on the chat app.
+
+## rise
+
+[building] They called it Discord, and launched it in 2015. Gamers found it on online forums, and it spread from friend group to friend group, because every person who joined had to invite the rest. [knowingly] It worked because it fixed a problem the team had lived with themselves every night, and it was free, simple and fast.
+
+[warmly] Soon it was not just gamers. Study groups, fan clubs, artists and neighbours set up their own spaces on it, which Discord calls servers. During the lockdowns of 2020, millions more arrived, and the company changed its slogan to describe a place to talk, for anyone. [quietly impressed] In 2021, Microsoft reportedly offered around twelve billion dollars to buy it, and Discord said no.
+
+## close
+
+[warmly] It took a team willing to give up the game they had spent years on, and keep the thing they had built just to talk to each other.

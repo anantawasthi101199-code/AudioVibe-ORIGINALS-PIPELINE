@@ -61,19 +61,34 @@
           "number": 5,
           "title": "Fibre, Fermentation and the Foods Your Gut Uses",
           "covers": "Why can one type of fibre help digestion while another makes symptoms worse? Explain soluble and insoluble fibre, fermentation, stool consistency and short-chain fatty acids. Misconception to correct: More fibre is not automatically better for every person or every digestive condition.",
-          "source": "Human intervention studies and clinical dietary guidance for constipation and IBS."
+          "source": "Human intervention studies and clinical dietary guidance for constipation and IBS.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/05-fibre-fermentation-and-your-gut.txt",
+            "title": "Fibre, Fermentation and Your Gut",
+            "description": "You were told to eat more fibre, added bran to breakfast, and spent the afternoon bloated. Why one fibre helps and another makes things worse, and what your gut bacteria do with it."
+          }
         },
         {
           "number": 6,
           "title": "Probiotics, Prebiotics and Gut-Health Marketing",
           "covers": "Which gut-health products have meaningful evidence behind them? Explain probiotics, prebiotics, fermented foods, commercial microbiome tests and the difference between a plausible mechanism and a proven clinical benefit. Misconception to correct: A product labelled \"probiotic\" is not automatically effective for every condition. Safety: Supplements can have side effects and may be unsuitable for some medically vulnerable people.",
-          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+          "source": "NHS guidance, NICE guidance and recent systematic reviews",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/06-probiotics-prebiotics-and-marketing.txt",
+            "title": "Probiotics and Gut-Health Marketing",
+            "description": "The supermarket shelf is full of live yoghurt drinks, capsules and home gut tests. Which have real evidence behind them, which are a plausible idea dressed up as proof, and who should be careful."
+          }
         },
         {
           "number": 7,
           "title": "Building a Gut-Health Routine Without Obsessing Over Food",
           "covers": "What can someone realistically do to support digestive health? Bring together dietary variety, appropriate fibre intake, fluids, physical activity, regular eating patterns and individual symptom management. Misconception to correct: A perfect diet, a detox or a supplement routine is not required to maintain a healthy digestive system.",
-          "source": "NHS guidance, NICE IBS recommendations and condition-specific dietary guidance."
+          "source": "NHS guidance, NICE IBS recommendations and condition-specific dietary guidance.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/07-a-gut-health-routine-without-obsessing.txt",
+            "title": "A Gut-Health Routine Without Obsessing",
+            "description": "Your phone is full of gut-health rules, and now every meal feels like a test. What the evidence says a healthy gut actually needs, which turns out to be ordinary, and when to see a doctor."
+          }
         }
       ],
       "cover": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/series-01.jpg"

@@ -1,0 +1,23 @@
+## story
+
+[warmly] This is a story from the Kalevala, the great song of Finland, about a magic mill that made a whole country rich, and the fight to steal it.
+
+[curious] Far in the north lay Pohjola, a cold, dark land ruled by a fierce old woman called Louhi. She had a daughter, and she made a promise: whoever forges me the Sampo can marry her. [thoughtful] The Sampo was a mill. Not for one thing, but for everything. A mill that would grind out riches all by itself.
+
+[determined] The greatest smith in the world, Ilmarinen, took up the challenge. He built a forge and lit a fire, and into it he threw the tip of a swan's feather, the milk of a cow, a single grain of barley, and a tuft of sheep's wool. [with quiet awe] For three days he worked the fire. And out of it came the Sampo, with a bright lid of many colours.
+
+[delighted] It began to grind at once. One side ground grain. One side ground salt. One side ground gold. A whole measure of each, every single day. [darkly] Louhi was delighted. She locked the Sampo inside a mountain of copper, behind nine locks, and its roots grew deep into the earth. Pohjola became rich. [softly] And Ilmarinen went home without his bride.
+
+[serious] Years later, the land in the south was poor. So three heroes set sail to bring the Sampo home: Ilmarinen, the old wise singer Väinämöinen, and a reckless young warrior. [pause] They reached Pohjola, and Väinämöinen took up his harp.
+
+## ending
+
+[hushed] He played, and everyone in Pohjola fell asleep. The heroes opened the nine locks, ploughed up the Sampo's roots with a great ox, and carried it to their boat. [building] But as they rowed away, the young warrior began to sing for joy, so loudly that a crane woke up, and woke Louhi.
+
+[grave] She sent fog, then wind, then a monster from the deep. Then she turned herself into a gigantic eagle, with a hundred warriors under her wings, and swooped on the boat. Her claws closed around the Sampo. [softly] And as she lifted it, it slipped, fell into the sea, and broke into pieces.
+
+[tender] The waves carried the pieces to the shores of Finland, and the land there grew rich at last. Louhi flew home with only the painted lid.
+
+## close
+
+[gently] And the biggest pieces of the Sampo sank to the bottom of the sea, where they lie among the treasures of the deep, still out of anyone's reach.

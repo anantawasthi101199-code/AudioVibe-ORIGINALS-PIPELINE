@@ -1,0 +1,59 @@
+## opening
+
+[warmly] Here's a puzzle a lot of people have lived. You're a bit bunged up, so you do what everyone says, and eat more fibre. Bran flakes for breakfast, wholemeal everything. [curious] And by the afternoon you're more bloated and uncomfortable than before. So why can one kind of fibre help your digestion, while another makes it worse?
+
+[thoughtful] The evidence here is strong in places. Large studies over decades link fibre to better health, and there are good trials on fibre for constipation. What suits each individual gut is much less certain.
+
+## belief
+
+[thoughtful] The common belief is simple. Fibre is good for you, so more fibre is better, for everyone.
+
+[warmly] That belief has a real history. In the 1960s and 70s, a British surgeon working in Uganda, Denis Burkitt, noticed that the rural Africans he treated ate far more fibre than people in Britain, passed much bigger, softer stools, and rarely had bowel cancer, diverticular disease or constipation. [curious] He became famous for saying that a country's health could be judged by the size of its stools. His ideas helped turn fibre into a health message around the world.
+
+[thoughtful] And on average, the message holds up. Most people in the UK eat too little fibre. So the advice to eat more is sensible for most people, most of the time. The question is whether it applies to everyone, and to every kind of fibre.
+
+## evidence
+
+[thoughtful] First, the big picture. In 2019, a team led by Andrew Reynolds at the University of Otago in New Zealand combined the results of about a hundred and eighty-five long-term studies, following people for years, and fifty-eight clinical trials. [measured] People who ate the most fibre, around twenty-five to twenty-nine grams a day, had roughly fifteen to thirty per cent lower rates of heart disease, stroke, type two diabetes and bowel cancer than people who ate the least. [softly] Most of that comes from observing people, rather than randomly assigning them diets, so part of it may come from people who eat fibre also living healthier lives in other ways.
+
+[thoughtful] In the UK, the government's nutrition advisers recommended in 2015 that adults aim for thirty grams of fibre a day. On average, adults eat around twenty.
+
+[curious] Now, the bran. When researchers sorted fibre into types, the picture split. Fibre that dissolves in water, called soluble fibre, found in oats, beans, lentils, fruit and a seed husk called psyllium, has good trial evidence for easing constipation. [thoughtful] Fibre that doesn't dissolve, insoluble fibre, found in wheat bran and the skins of some fruit and vegetables, adds bulk. It helps some people with constipation. But in trials in people with irritable bowel syndrome, IBS, a common condition where the gut is extra sensitive, bran often made bloating and pain worse.
+
+[measured] That's why NICE, the body that sets clinical guidance in England, advises that people with IBS cut down on insoluble fibre like bran, and says soluble fibre, like oats or psyllium, may help instead.
+
+[curious] Then came another twist. In the 2000s, researchers at Monash University in Australia, led by Peter Gibson and Sue Shepherd, studied a group of carbohydrates found in foods like onions, garlic, wheat, beans and some fruits. Many of these are fibres, or behave like them. [thoughtful] They called them FODMAPs, a mouthful of an abbreviation for sugars and fibres that gut bacteria ferment quickly. In trials, a diet low in them, guided by a dietitian, reduced symptoms in roughly half to three quarters of people with IBS. [softly] So some of the most fibre-rich foods are the ones that cause symptoms in a sensitive gut.
+
+## mechanism
+
+[thoughtful] So what's physically happening? Fibre is the part of plant food your own body can't digest. It passes through the stomach and small intestine mostly untouched, and arrives in the large intestine, the colon, the last part of the gut, about a metre and a half long.
+
+[curious] Soluble fibre soaks up water and forms a gel. You can see it in a bowl of porridge left to cool. In the gut, that gel softens the stool and makes it easier to pass. [thoughtful] Insoluble fibre doesn't form a gel. It holds on to water and adds bulk, and it can speed things along. In some guts that's helpful. In a sensitive gut, more bulk and more speed can mean cramping.
+
+[curious] Then the bacteria take over. Trillions of them live in your colon, and many fibres are food for them. They break them down by fermentation, the same kind of process that turns grape juice into wine, without oxygen. [knowingly] That fermentation makes gas, mostly hydrogen, carbon dioxide and in some people methane. It also makes substances called short-chain fatty acids. One of them, butyrate, is the main fuel for the cells lining your colon.
+
+[thoughtful] So when you suddenly add a lot of fermentable fibre, the bacteria have a feast, and make a lot of gas quickly. In most people, the gut stretches a little and nothing much is felt. [softly] But in people with a sensitive gut, that same stretch is felt as bloating and pain. It's like the same volume of music being pleasant in one room and painful in another, depending on the walls.
+
+[thoughtful] And the stool itself is the visible result. Doctors use a chart, created at a hospital in Bristol in the 1990s, that sorts stools into seven types, from hard little lumps to watery. The soft, smooth types in the middle are the aim, and the type of fibre you eat helps decide where you land.
+
+## disagreement
+
+[thoughtful] So where do the experts disagree? The first argument is about cause. Reynolds and colleagues argue the trials back up the long-term studies, with fibre improving weight, blood pressure and cholesterol. [curious] Others point out that people who eat lots of whole grains, beans and vegetables tend to smoke less, exercise more and drink less, and that no study can fully separate the fibre from the life it comes with. Settling it would need very long trials, randomly assigning people to different fibre intakes for decades, which nobody can afford or easily run.
+
+[thoughtful] The second argument is about individuals. In 2015, scientists at the Weizmann Institute in Israel gave people identical meals and found their blood sugar responses varied widely, partly linked to their gut bacteria. [curious] Some researchers think diets will one day be tailored to each person's bacteria. Others say the effects found so far are too small and inconsistent to guide what anyone eats. What would settle it is trials showing that tailored advice actually improves health, compared with ordinary good advice.
+
+## honest
+
+[warmly] So why can one fibre help while another makes things worse? Because fibre is a family of very different things. Soluble fibre forms a gentle gel. Insoluble fibre adds bulk and speed. And many fibres feed bacteria that make gas, which a sensitive gut feels far more than most.
+
+[thoughtful] For the population as a whole, eating more fibre is linked with better health, and most people eat less than the thirty grams advised. But more is not automatically better for every person, or every condition. In IBS, bran often makes things worse. And some conditions, like certain kinds of bowel narrowing in Crohn's disease, need less fibre, on a specialist's advice.
+
+[serious] The NHS advises increasing fibre gradually, with plenty of fluids, to give the gut time to adjust. And some changes are reasons to see a GP rather than adjust your diet: blood in your poo, a change in your bowel habit lasting more than three weeks, losing weight without trying, or pain that won't go away.
+
+[softly] What's still open is how much the bacteria in each person's gut decide which fibre suits them, and whether we'll ever be able to read that well enough to use it.
+
+## close
+
+[warmly] Think back to Denis Burkitt, the surgeon in Uganda, judging a country's health by its stools. He was looking at the end of a process that starts in a bowl of food and ends with trillions of bacteria at work.
+
+[softly] That afternoon bloating after the bran isn't the fibre failing. It's the bacteria eating, in a gut that hears them a little more loudly than most.

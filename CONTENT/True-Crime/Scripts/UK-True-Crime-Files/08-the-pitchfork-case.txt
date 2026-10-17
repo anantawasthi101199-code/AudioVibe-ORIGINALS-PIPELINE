@@ -1,0 +1,45 @@
+## hook
+
+[low, steady] It's the morning of Saturday the second of August, 1986, near the village of Enderby, in Leicestershire, in the English Midlands. [measured] Police searching the fields find the body of a fifteen-year-old girl, Dawn Ashworth, near a footpath called Ten Pound Lane. She had set off on Thursday afternoon to walk home from a friend's house, and never arrived.
+
+[thoughtful] For the people in the villages around Narborough and Enderby, it was the second time. Three years earlier, another fifteen-year-old girl, Lynda Mann, had been killed on a path less than a mile away.
+
+[softly] Within days, the police had a young man in custody, and he confessed. Then a scientist at the local university ran a test nobody had ever used in a murder case before. And it said the police had the wrong man.
+
+## context
+
+[warmly] Lynda Mann was fifteen, a pupil at the local school, who lived in Narborough. On the evening of the twenty-first of November, 1983, she went out to visit a friend and took a shortcut along a dark footpath the locals called the Black Pad. [gently] She was found the next morning. She had been raped and killed. Police took semen samples from the scene, and blood grouping showed the killer had a fairly rare blood type. That was as far as science could go in 1983, and the case went cold.
+
+[warmly] Dawn Ashworth was also fifteen, from Enderby, the next village. She liked music and clothes and was planning her future, like any girl her age. [softly] When she was killed in the same way in 1986, the villages were terrified. Parents walked their daughters everywhere.
+
+[thoughtful] Meanwhile, a few miles away at the University of Leicester, a geneticist named Alec Jeffreys had found something extraordinary. Every person's DNA, the chemical code inside our cells that makes each of us, contains short stretches that repeat, again and again. [curious] And the number of repeats differs from person to person. On the morning of the tenth of September, 1984, Jeffreys looked at an X-ray film from an experiment and saw a pattern of bars, like a supermarket barcode, different for each person. He called it a DNA fingerprint.
+
+## investigation
+
+[measured] After Dawn's death, the police questioned a local seventeen-year-old named Richard Buckland, who worked as a kitchen porter and had learning difficulties. He had been seen near the place. [serious] Under questioning, he confessed to killing Dawn Ashworth. But he denied killing Lynda Mann, and the police were sure the same man had killed both girls.
+
+[thoughtful] The detectives had read about Jeffreys's work. They took samples from the two crime scenes and from Buckland, and drove them to his laboratory. [measured] It took weeks of work. Then Jeffreys gave them his answer, in two parts.
+
+[serious] First, both girls had been killed by the same man. Second, that man was not Richard Buckland. [thoughtful] Government scientists at the Forensic Science Service checked the result and agreed. In November 1986, Buckland was released. He was the first person in the world to be cleared of murder by DNA.
+
+[measured] So the police tried something nobody had done before. In January 1987, they asked every man in the area aged roughly seventeen to thirty-four, around five thousand of them, to give a blood or saliva sample. [thoughtful] It was voluntary, but refusing would draw attention. Men queued at village halls and schools. Samples were first sorted by blood group, and only those with the rare type had the full DNA test.
+
+[serious] Months passed. Thousands of men were cleared. And no match came. [softly] By the summer of 1987, the villages were wondering whether the killer had left, or whether the new science had failed.
+
+## turning_point
+
+[measured] In early August 1987, a group of colleagues from a bakery in Leicester were drinking in a pub. One of them, Ian Kelly, mentioned something. A workmate had persuaded him to give a blood sample in his name, back in January. [thoughtful] The workmate had told him a story about being afraid of the police. Kelly had gone along carrying a passport with his own photograph swapped in.
+
+[serious] One of the women at the table thought about it for weeks, and then went to the police. [measured] The workmate's name was Colin Pitchfork. He was twenty-seven, married with children, a cake decorator at the bakery, and he lived in Littlethorpe, one of the villages. He had previous convictions for indecent exposure.
+
+[measured] Officers arrested him at his home on the nineteenth of September, 1987. He confessed to both murders. [thoughtful] His DNA was tested, and it matched the samples from both crime scenes. The science had not failed. A man had cheated it, and an overheard conversation in a pub had undone him.
+
+## aftermath
+
+[measured] In January 1988, Colin Pitchfork pleaded guilty to both murders at Leicester Crown Court. He was the first person convicted of murder after DNA screening, and he was sentenced to life imprisonment. [thoughtful] Ian Kelly, who gave the sample in his name, was convicted of conspiring to pervert the course of justice, and given a suspended sentence. In 2021 Pitchfork was released on licence, and was recalled to prison within months for breaching its conditions.
+
+[thoughtful] DNA profiling spread around the world. In 1995 Britain set up the first national DNA database. [measured] But the case also shows the limits. A DNA match shows that a person's DNA was there. It does not, on its own, show when, how, or why it got there. Samples can be mixed or contaminated, and a match has to be read alongside how the sample was collected and everything else that is known. [serious] In one later English case, a man was charged with a rape in a city he said he had never visited, because a laboratory had reused a contaminated tray. The charge was dropped.
+
+[thoughtful] And the case began with a wrong confession. Richard Buckland had admitted to a murder he did not commit, and without a brand new test, he might have gone to prison for it.
+
+[gently] Lynda Mann and Dawn Ashworth were fifteen. They walked home along footpaths they had known all their lives. [softly] The science that found their killer came too late for either of them, and it carries their names wherever it is taught.

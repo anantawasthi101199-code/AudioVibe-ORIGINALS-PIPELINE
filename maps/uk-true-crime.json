@@ -73,19 +73,34 @@
           "number": 6,
           "title": "The Great Train Robbery: The Night Britain Lost Millions",
           "covers": "In August 1963, a gang stopped a travelling mail train and stole millions of pounds in cash. The scale of the operation, its planning and the subsequent manhunt made it one of Britain's most notorious robberies. The story follows the preparation, the train's interception, the hideout, the mistakes made after the robbery and the police work that eventually brought many of the gang members to court. It also examines fingerprints and other traces left behind, including evidence recovered from everyday objects. The episode considers the gap between the popular image of a perfectly executed heist and the practical reality of a crime whose proceeds were difficult to conceal and whose participants left evidence behind.",
-          "source": "National Archives files, trial material and contemporary reporting."
+          "source": "National Archives files, trial material and contemporary reporting.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/06-the-great-train-robbery.txt",
+            "title": "The Great Train Robbery",
+            "description": "In August 1963 a gang stopped a night mail train in Buckinghamshire and took two and a half million pounds. They planned it for months, and then left their fingerprints on a Monopoly board."
+          }
         },
         {
           "number": 7,
           "title": "The Guildford Four: How False Confessions Shook British Justice",
           "covers": "Bomb attacks on pubs in Guildford and Woolwich led to convictions that were later quashed. The case of Gerry Conlon and the other members of the Guildford Four became a major example of the dangers of unreliable confessions and flawed criminal proceedings. This episode traces the attacks, the arrests, the evidence used at trial, the challenges to the convictions and the eventual Court of Appeal decision. It explains the difference between a conviction being legally overturned and every historical question about a crime being resolved.",
-          "source": "The official 1994 inquiry report and the court decisions concerning the convictions."
+          "source": "The official 1994 inquiry report and the court decisions concerning the convictions.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/07-the-guildford-four.txt",
+            "title": "The Guildford Four and the False Confessions",
+            "description": "Bombs in two Guildford pubs killed five people in 1974. Four young people were convicted on confessions alone, and spent fifteen years in prison before the case fell apart."
+          }
         },
         {
           "number": 8,
           "title": "Colin Pitchfork: The DNA Breakthrough That Cleared an Innocent Suspect",
           "covers": "A murder investigation involving schoolgirls in Leicestershire became a turning point in forensic science. DNA profiling helped show that an early suspect was innocent and later helped investigators identify Colin Pitchfork. The episode explains how DNA profiling emerged, how a mass screening exercise was used, why a confession about providing samples helped expose the actual offender, and how scientific evidence was presented in the criminal investigation. It also explores the limits of DNA: a genetic match must be interpreted alongside the collection process, the circumstances and other evidence.",
-          "source": "Government forensic-science accounts, contemporary investigation records and court evidence."
+          "source": "Government forensic-science accounts, contemporary investigation records and court evidence.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/08-the-pitchfork-case.txt",
+            "title": "The DNA Breakthrough That Freed a Suspect",
+            "description": "Two fifteen-year-old girls were killed in Leicestershire villages in 1983 and 1986. A young man confessed, and a brand new science proved he was innocent, then found the real killer."
+          }
         },
         {
           "number": 9,

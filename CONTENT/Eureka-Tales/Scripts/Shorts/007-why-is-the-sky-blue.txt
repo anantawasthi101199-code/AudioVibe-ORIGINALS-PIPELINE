@@ -1,0 +1,21 @@
+## mystery
+
+[curious] Did you know the blue of the sky is made by the air itself, the same invisible air you're breathing right now, bouncing sunlight around? [warmly] This is the story of why the sky is blue, and of a Victorian lord who worked it out at his desk in 1871.
+
+[thoughtful] It begins with an old puzzle. Sunlight is white. Isaac Newton had shown that white light is all the colours mixed together, the whole rainbow. So why, when you look up on a clear day, do you see only one of them?
+
+## story
+
+[curious] For centuries, people guessed. Some said the air was faintly blue, like water. Others blamed tiny drops of water or dust floating in the sky.
+
+[thoughtful] In 1859, an Irish scientist in London, John Tyndall, tried something in his laboratory. He shone a beam of white light through a long glass tube filled with a fine mist. Looked at from the side, the mist glowed pale blue. [a beat] Tiny particles, it seemed, threw blue light sideways more than red. But what were the particles in the real sky?
+
+[curious] A young English aristocrat, John Strutt, who later became Lord Rayleigh, took up the question with mathematics. Light, he knew, travels as a wave, and each colour has a different length of wave. Red waves are long. Blue waves are short. [thoughtful] Picture waves at the beach rolling past a thin pole sticking out of the water. The big, long waves barely notice it. The small, choppy ones splash off it in every direction.
+
+[knowingly] In 1871, Rayleigh worked out exactly how strong that splashing is. When light meets something much smaller than its wave, the shorter the wave, the more it is scattered, and not a little more, a great deal more. Blue light is scattered around five times more than red.
+
+[thoughtful] At first, like Tyndall, he thought dust was doing it. But years later, he realised the scattering comes from the air itself. The tiny molecules of nitrogen and oxygen that make up the air are small enough to do it all on their own.
+
+## close
+
+[delighted] So that is the answer. As sunlight pours through the air, the blue part is scattered across the whole sky, and reaches your eyes from every direction, so every direction looks blue. The red and yellow carry on, almost straight. [warmly] And at sunset, when the light crosses far more air to reach you, most of the blue is scattered away before it arrives, and the sun glows orange and red.

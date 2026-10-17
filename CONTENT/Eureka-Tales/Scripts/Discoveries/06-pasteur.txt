@@ -1,0 +1,53 @@
+## opening
+
+[warmly] This is the story of Louis Pasteur, a French chemist, who in the middle of the 1800s showed that tiny living things, far too small to see, turn wine sour and make people and animals ill, and then used that idea to save lives, ending with the first vaccine against rabies, in 1885.
+
+[curious] When Pasteur started, people knew that microbes, tiny creatures seen under a microscope, existed. But most thought they were a result of rotting and disease, not the cause. Many still believed living things could appear out of nothing, maggots out of meat, mould out of bread.
+
+[thoughtful] Pasteur changed that, over about thirty years, one practical problem at a time: a factory, a vineyard, a silk farm, a sheep field, and then a little boy.
+
+[warmly] By the end, you'll know how he proved that germs come from other germs, how he learned to weaken them, and what happened on the July day when he had to decide whether to try his vaccine on a child.
+
+## before
+
+[thoughtful] There are three people to keep in mind. Louis Pasteur. Marie, his wife, who worked beside him and wrote down his experiments as he spoke. And Joseph Meister, a nine-year-old boy from Alsace, who arrives near the end.
+
+[warmly] Pasteur was born in 1822 in eastern France, the son of a tanner, a man who turned animal skins into leather. He was not a star at school. He liked drawing. But he was stubborn and patient, and he became a chemist. [curious] His first discovery was about crystals: he found that some chemicals come in two mirror-image forms, like a left and a right hand.
+
+[thoughtful] In 1856, he was a professor in the northern city of Lille, when a local businessman came to him with a problem. He made alcohol from sugar beet, and his vats kept going wrong, turning sour instead of making alcohol.
+
+[curious] Pasteur took samples and put them under his microscope. In the good vats, he saw round, plump yeast cells, budding. In the sour ones, he saw tiny rods. [knowingly] He realised the yeast was alive, and that it was the yeast that made the alcohol. The rods were different living things, and they made the acid that spoiled it. [delighted] Fermentation, the bubbling that turns grape juice into wine, was the work of life.
+
+[thoughtful] But where did the microbes come from? The old idea said they simply appeared. So around 1860, Pasteur did a beautiful experiment. He put broth into glass flasks, and heated the necks and pulled them out into long, curving swan necks, so air could get in, but dust and microbes got trapped in the bend. [with quiet awe] He boiled the broth. And it stayed clear, for weeks, and then years. Only when he snapped off a neck did it go cloudy with life. Microbes came from other microbes, carried in the air.
+
+## wrong
+
+[serious] Then France's own industries started coming to him. French wine was going sour on the way to customers. In 1864, Pasteur showed that gently heating wine to about fifty-five degrees killed the microbes without ruining the taste. [warmly] We now call that pasteurisation, and it's why milk keeps in your fridge.
+
+[grave] Next came the silk farms of the south. A disease was killing the silkworms, the caterpillars that spin silk, and a whole industry was collapsing. Pasteur knew nothing about silkworms. [determined] He moved there with his family, and spent years studying them. He showed there were really two diseases, and that the farmers could stop them by checking the moths under a microscope and only breeding from healthy ones.
+
+[softly] Those years were terrible for him. Three of his young daughters died, of illnesses no one could treat. And in 1868, aged forty-five, he had a stroke that left his left side partly paralysed. He kept working, with assistants as his hands.
+
+[curious] In 1879, he was studying chicken cholera, a disease of hens. Over the summer holidays, a dish of the germs was left forgotten in the laboratory. When his team injected it into hens afterwards, they hardly got ill. [thoughtful] Then the same hens were given fresh germs, and they didn't get ill at all. [delighted] The old, weakened germs had trained their bodies to resist. Pasteur saw what it meant. You could make a vaccine by weakening a germ in the lab.
+
+[determined] In 1881, he vaccinated sheep against anthrax, in front of crowds and newspapermen, at a farm south-east of Paris. The vaccinated sheep lived. The others died. He was famous.
+
+[grave] Then he turned to rabies. A bite from a rabid dog meant a slow, terrible death, nearly every time, and there was no treatment. He could not see the rabies germ in his microscope at all. [thoughtful] So his team grew it in rabbits, and dried strips of the infected spinal cord in bottles for days, to weaken it more and more. They tested it in dogs. It seemed to work. [pause] Then, on the sixth of July, 1885, a mother arrived at his laboratory in Paris with her son.
+
+## payoff
+
+[serious] Joseph Meister was nine. Two days earlier, a rabid dog had knocked him down on the way to school and bitten him fourteen times. [grave] Without treatment, he would almost certainly die.
+
+[thoughtful] Pasteur was not a medical doctor. He was not allowed to treat patients. The vaccine had never been given to a person. If it failed, or if it gave the boy rabies itself, it could end his career, and might be seen as having killed a child. [softly] He spoke to two doctors he trusted. They examined Joseph, and agreed he was very likely to die without help.
+
+[determined] That evening, a doctor gave Joseph the first injection, using the weakest, most dried-out cord. Over ten days, he had thirteen injections, each one stronger than the last. [thoughtful] Pasteur could hardly sleep. He wrote to his family that he was afraid.
+
+[delighted] Joseph Meister did not get rabies. He went home to Alsace, healthy. [warmly] In October, a fifteen-year-old shepherd boy, bitten while protecting younger children from a rabid dog, was treated and survived too. Soon, bitten people were arriving in Paris from across Europe.
+
+[thoughtful] Historians reading Pasteur's private notebooks in the 1990s found he had tested the vaccine on fewer dogs than he said in public, and taken a bigger risk than he admitted. [measured] But it worked. In 1888, the Pasteur Institute opened in Paris, paid for by donations from around the world, to study germs and make vaccines. Pasteur died in 1895, aged seventy-two.
+
+## close
+
+[warmly] The idea he fought for, that germs come from other germs and cause disease, became the foundation of modern medicine, of vaccines, clean water and safe food.
+
+[softly] And Joseph Meister? When he grew up, he went back to Paris and took a job at the Pasteur Institute, as its caretaker. [gently] For years, he looked after the building where the man who saved his life was buried.

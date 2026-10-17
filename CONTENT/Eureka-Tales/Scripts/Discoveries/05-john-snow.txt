@@ -1,0 +1,55 @@
+## opening
+
+[warmly] This is the story of John Snow, a London doctor, and the summer of 1854, when he worked out that cholera, one of the most feared diseases on Earth, was spreading through drinking water, and proved it with a map and a water pump.
+
+[serious] In the last days of August that year, cholera broke out in Soho, a crowded neighbourhood in the middle of London. In three days, more than a hundred and twenty people died in a few streets. Within a few weeks, more than six hundred. Whole families were lost. People fled the area with whatever they could carry.
+
+[thoughtful] Nearly everybody, including most doctors, believed cholera came from bad air, a poisonous smell rising from rubbish and sewage. John Snow believed something else, and he had believed it for years, with almost nobody listening.
+
+[warmly] By the end of this, you'll know how he tracked the outbreak to a single pump on Broad Street, what happened when he asked for its handle to be taken off, and the tiny clue, found later, that explained how it all began.
+
+## before
+
+[thoughtful] There are three people to hold on to. John Snow, the doctor. Henry Whitehead, a young local vicar who thought Snow was wrong. And a baby girl in a house on Broad Street, whose name we know only because of what happened.
+
+[warmly] John Snow was born in 1813 in York, in the north of England, the son of a labourer. He trained as a doctor, moved to London, and became one of the first experts in anaesthesia, putting patients to sleep for operations with gases. [with a smile] He was so good at it that in 1853 he gave chloroform to Queen Victoria herself, to ease the pain while she gave birth. He was quiet, careful, did not drink alcohol, and he was not much of a socialiser.
+
+[grave] Cholera was terrifying. It struck suddenly. A healthy person could get violent diarrhoea and vomiting in the morning, lose so much water that their skin went blue and wrinkled, and be dead by the evening. It had first reached Britain in 1831, and kept coming back, killing tens of thousands.
+
+[curious] Snow had noticed something about it. Cholera attacked the gut, not the lungs. If it came from bad air, he thought, surely it would start in the lungs. [knowingly] So it must be something people swallowed. In 1849 he published a small booklet arguing that cholera spread through water polluted with sewage. [softly] Hardly anybody was convinced.
+
+[thoughtful] To picture Soho in 1854, imagine narrow streets packed with houses, many families to a building, with no running water inside. People fetched water in buckets from street pumps, which drew it up from wells under the street. Under the same streets were cesspools, pits for human waste, often leaking. Nobody thought the two might meet.
+
+[grave] Then, at the end of August, the deaths began.
+
+## wrong
+
+[serious] On the night of the thirty-first of August, people in the streets around Broad Street began falling ill, dozens at once. By the next day, the doctors could not keep up. [grave] In houses where everyone had been well at breakfast, two or three were dead by night. Within a week, three quarters of the people living nearby had left.
+
+[determined] Snow lived a short walk away. As soon as he heard, he went there. And straight away he suspected the pump at the corner of Broad Street, which was famous for its cool, clear water. [thoughtful] He looked at the water, and it seemed clean. That did not change his mind.
+
+[curious] He went to the government office that recorded every death in London, and got the names and addresses of the people who had died. Then he walked the streets, knocking on doors, asking the families one question. Where did you get your water? [thoughtful] He marked every death as a small black bar on a map of the area. The bars piled up around the Broad Street pump, like a stack of coins, and thinned out further away.
+
+[curious] Then he looked hardest at the cases that did not fit. Close to the pump was a brewery, with about seventy workers. Almost none of them got cholera. [with a smile] The owner told Snow the men were given free beer, and never drank from the pump. A workhouse nearby, a home for the poor with over five hundred people, had only a few deaths. It had its own well.
+
+[thoughtful] And there was a widow living miles away, in Hampstead, in the north of London, who died of cholera that same week, with no cases near her at all. [knowingly] Snow found out that she had once lived on Broad Street, and liked the taste of its water so much that she had a cart bring her a bottle of it every day. Her niece, visiting, drank it too, and died.
+
+[determined] On the seventh of September, Snow went to the local council, the men in charge of the parish, and told them. Take the handle off the pump. [pause] They did not really believe him. But they agreed to try. The next day, the handle was removed.
+
+## payoff
+
+[thoughtful] By then, the outbreak was already slowing. Many people had fled, and many had already died. [measured] So removing the handle did not, on its own, stop it, and Snow's critics said so. But the deaths kept falling, and there was no new wave.
+
+[curious] Here is where the vicar comes in. Henry Whitehead was the young curate of a local church, a priest who had sat with dying parishioners all through the outbreak. He did not believe Snow's water theory, and he set out to disprove it, using his own knowledge of everyone in the parish. [warmly] He interviewed hundreds of people. And slowly, he found Snow was right.
+
+[serious] Then Whitehead found the beginning. At number forty, Broad Street, right next to the pump, a baby girl had fallen ill with diarrhoea at the end of August, before anybody else. Her mother had washed the baby's nappies in a bucket, and emptied the water into the cesspool at the front of the house. [grave] That cesspool was less than a yard from the well. When workers dug it up, they found its walls were crumbling, and waste had been seeping into the drinking water.
+
+[thoughtful] In 1855 Snow published his findings, with his famous map. He also showed something even stronger, in south London. Two water companies supplied houses side by side in the same streets. One took its water from the Thames downstream, where London's sewage flowed in. The other had moved upstream. [knowingly] Houses on the dirty supply had many times more cholera deaths than their neighbours on the cleaner one.
+
+[softly] Even so, the official experts were slow to agree. Snow died in 1858, at only forty-five, before most of them came round.
+
+## close
+
+[thoughtful] Years later, in 1883, the German scientist Robert Koch found the cholera germ under his microscope, a tiny curved bacterium that lives in the gut and travels in dirty water. Snow had been right about all of it, without ever seeing it. [warmly] London built great new sewers to carry waste away from the water, and cholera stopped coming back.
+
+[softly] And if you go to Broadwick Street in Soho today, which is what Broad Street is now called, there's a replica of the pump. [gently] It has no handle.
