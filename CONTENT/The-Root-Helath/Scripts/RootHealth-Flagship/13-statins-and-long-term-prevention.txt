@@ -1,0 +1,59 @@
+## opening
+
+[warmly] Here's a conversation that happens in GP surgeries every day. The doctor says your heart risk is high enough that a statin might help. And you hesitate. You've heard they cause muscle pain. You'd rather fix it with diet. And taking a pill every day for the rest of your life feels like admitting something has gone wrong.
+
+[thoughtful] So when do lifestyle changes do the job, and when do medicines add real protection? Statins are among the most studied medicines in the world, tested in trials involving hundreds of thousands of people over more than thirty years. On the main question, the evidence is about as strong as medicine gets.
+
+## belief
+
+[thoughtful] Many people believe that statins are a shortcut. Healthy people shouldn't need them, they mask the problem rather than fix it, and they cause a lot of side effects, especially aching muscles. Some feel that taking one means they've failed to look after themselves.
+
+[warmly] Those worries come from somewhere real. Statins do have side effects, and some people do get muscle symptoms. Lifestyle really does matter for heart health, as we heard in the last episode. And in 2013, the BMJ, a leading medical journal, published two articles suggesting that around one in five people taking statins had side effects.
+
+[curious] Those articles were widely reported. [pause] What happened to them afterwards is part of this story.
+
+## evidence
+
+[serious] The first statin was found in a mould. In 1973, a Japanese scientist named Akira Endo, searching through thousands of fungi, found a substance that blocked the liver's main cholesterol-making enzyme. Its descendants became the first statin approved for use, in 1987.
+
+[measured] The big trials followed. In 1994, the Scandinavian 4S trial gave about four and a half thousand people with heart disease either a statin or a dummy pill, and found about thirty per cent fewer deaths over five years. In 1995, the West of Scotland study tested a statin in about six and a half thousand men with high cholesterol but no heart disease. Over about five years, the men taking it had about thirty per cent fewer heart attacks and heart deaths. [thoughtful] And in 2002, the Heart Protection Study, run from Oxford in more than twenty thousand people, found benefits even in those whose cholesterol wasn't particularly high.
+
+[curious] Researchers in Oxford then gathered the individual data from all the major trials, through a group called the Cholesterol Treatment Trialists. In 2010, they reported that each drop of one unit in LDL, one millimole per litre, cuts major heart attacks, strokes and heart procedures by about a fifth, each year the treatment continues. The bigger the drop, the bigger the benefit.
+
+[measured] Then there are the side effects. After the 2013 articles, the BMJ corrected them in 2014, saying the one-in-five figure came from studies that couldn't tell which symptoms the statin had actually caused. In 2022, the Cholesterol Treatment Trialists looked at blinded trials, where neither patients nor doctors knew who was taking the statin. Muscle aches were reported almost as often on the dummy pill. [thoughtful] They estimated that statins caused about one extra report of muscle symptoms for every hundred people in the first year, and almost none after that. More than nine in ten of the muscle symptoms people reported weren't caused by the statin. [serious] Statins do slightly raise the chance of developing type 2 diabetes, mainly in people already close to it, and serious muscle damage is very rare.
+
+[curious] A small British trial in 2020, called SAMSON, made the same point in a different way. Sixty people who had stopped statins because of side effects took statin tablets, dummy tablets, or no tablets, in different months, without knowing which. Their symptoms on the dummy tablets were about ninety per cent as bad as on the statin. [thoughtful] It was a small trial, but the symptoms people feel are real. Much of it seems to come from expecting harm.
+
+[measured] For people who can't take statins or need more, newer medicines have been tested in large trials: ezetimibe, which reduces how much cholesterol the gut absorbs, PCSK9 inhibitor injections, and inclisiran, an injection given twice a year, which NICE approved in 2021. All of them lower LDL, and the ones with outcome trials so far reduce heart events, roughly in line with how much they lower it.
+
+## mechanism
+
+[warmly] So how does a statin work? It blocks an enzyme in the liver called HMG-CoA reductase, a key step in the factory line that makes cholesterol.
+
+[thoughtful] With less cholesterol being made inside, the liver cells sense a shortage. As we heard two episodes ago, their response is to make more LDL receptors, the docking stations that pull LDL out of the blood. So the statin lowers blood LDL mainly by making the liver take more of it in. [curious] Think of a household that stops buying bread and starts using up what's already in the freezer.
+
+[serious] Over time, with fewer particles getting trapped, plaques grow more slowly, and their caps become thicker and more stable, so they're less likely to crack. Statins may also calm some inflammation in the artery wall.
+
+[thoughtful] Now, the numbers. A thirty per cent cut in risk is a relative risk reduction. What it means for you depends on where you start. Say your ten-year risk is ten per cent, ten in a hundred. Cut it by thirty per cent, and it falls to about seven in a hundred. That's three people in every hundred who avoid a heart attack or stroke over ten years. That's the absolute risk reduction. [measured] If your risk is twenty per cent, the same thirty per cent cut prevents about six in a hundred. The higher your starting risk, the more a statin does for you in real terms.
+
+[serious] Once you start, NICE advises a blood test after two to three months to check that non-HDL cholesterol has fallen by at least forty per cent, and liver tests at the start, within three months and at a year. Most people take it once a day, and the benefit lasts as long as they keep taking it.
+
+## disagreement
+
+[thoughtful] The main argument is about people at low risk. Some doctors, including the authors of the 2013 BMJ articles, argue that for healthy people, the absolute benefit is small and the evidence on side effects relied too much on data held by drug companies. The Cholesterol Treatment Trialists respond that they hold the individual data from the trials and that the blinded data are clear. [measured] Critics have asked for that data to be made open to independent researchers. Making it public, so others can check the analysis, would do a lot to settle the argument.
+
+[curious] There's also a debate about how low LDL should go. Trials of the newer drugs have taken LDL very low without obvious harm, and some cardiologists say lower is better with no limit for people at highest risk. Others want longer follow-up before treating everyone to very low levels.
+
+## honest
+
+[warmly] So, when do lifestyle changes do the job? When your risk is low, they're usually the main thing, and they protect your heart in ways beyond cholesterol. When your risk is higher, or your cholesterol is high because of your genes, a statin adds protection that diet alone usually can't. The two work together. Taking one doesn't mean you've failed at the other.
+
+[thoughtful] What's uncertain is how much benefit healthy people at lower risk get over a lifetime, and how low LDL should go for everyone. What isn't uncertain is that for people at high risk, statins prevent heart attacks and strokes.
+
+[serious] If you're offered a statin, ask your GP what your risk is, in absolute numbers, and what the statin would change it to. If you get muscle aches, tell your doctor rather than just stopping. Often a different statin or dose works. And statins aren't used in pregnancy. UK advice is to stop them before trying for a baby and while breastfeeding, so if you're planning a pregnancy, talk to your doctor first.
+
+## close
+
+[warmly] So, back to the GP's room, and the hesitation.
+
+[softly] A daily statin isn't an admission that you've failed. For a lot of people, it's the thing that keeps the walks, the olive oil and the years ahead working in the same direction.

@@ -1,0 +1,61 @@
+## opening
+
+[warmly] Here's what a lot of people do after a high cholesterol result. They buy oat milk, a tub of a spread that says it lowers cholesterol, maybe a bottle of fish oil capsules, and they start Googling which foods unclog arteries. So which of those actually make a difference?
+
+[thoughtful] The evidence here is mixed in quality. Some of it comes from large, long trials. A lot of it comes from shorter studies that measure cholesterol rather than heart attacks. It matters which is which, so I'll say each time.
+
+## belief
+
+[thoughtful] The common belief is that there are good foods and bad foods for your heart, and that adding the right ones will fix things. Oats lower cholesterol. Olive oil is good. Butter is bad. Some people go further, and look for one food, juice or supplement that will do the job.
+
+[warmly] That belief has real roots. Many of these foods do have measurable effects, and food companies have been allowed to say so on packets. In 1997, America's food regulator let oat products claim they could lower the risk of heart disease. Plant sterol spreads followed. [curious] So it's natural to think of food as a set of individual remedies.
+
+[thoughtful] And the idea that your heart depends on what you eat goes back to one of the most famous studies in nutrition. [pause] Which is where we'll start.
+
+## evidence
+
+[serious] In 1958, an American scientist called Ancel Keys began the Seven Countries Study, following about thirteen thousand middle-aged men in places from Finland to Japan. Countries where men ate more saturated fat had higher cholesterol and more heart disease. [thoughtful] It was hugely influential, and it was criticised then and since, because comparing countries can't separate fat from everything else that differs between them. So the question needed trials.
+
+[measured] The trials of swapping saturated fat came next, over several decades. In 2020, the Cochrane review, which pools trials carefully, looked at fifteen of them, with about fifty-six thousand people in all. Cutting saturated fat reduced combined heart and circulation events by about seventeen per cent over at least two years. [thoughtful] It didn't clearly change deaths. And the benefit seemed to come mainly when saturated fat was replaced with polyunsaturated fat, the kind in vegetable oils, nuts and seeds, rather than with refined carbohydrate.
+
+[curious] Whole diets have been tested too. In a Spanish trial called PREDIMED, about seven and a half thousand people at high risk were put on a Mediterranean diet with extra olive oil, or with extra nuts, or advised to eat a lower-fat diet. The diets with olive oil or nuts led to about thirty per cent fewer heart attacks, strokes and heart deaths over about five years. [measured] The original paper, from 2013, was withdrawn in 2018 because some participants hadn't been properly randomised, and was republished after reanalysis. The result held up, but it's one trial, and it's worth saying so.
+
+[thoughtful] Soluble fibre is better studied for cholesterol than for heart attacks. Soluble fibre is the kind that turns sticky in water, found in oats, barley, beans and lentils. Pooled trials of oats suggest that about three grams of the fibre called beta-glucan a day, roughly what's in a bowl of porridge and a slice of oat bread, lowers LDL by about five per cent. [curious] Plant sterols, added to some spreads and yoghurts, lower LDL by about seven to ten per cent at the right dose. But nobody has shown that they prevent heart attacks, and NICE doesn't recommend them for that.
+
+[serious] Supplements have mostly disappointed. Large trials of ordinary fish oil capsules, including two in 2018 with more than forty thousand people between them, found no clear reduction in heart attacks or strokes in people without heart disease.
+
+[measured] Some of the strongest evidence isn't about food at all. In 2016, a review of trials covering more than six hundred thousand people found that each ten-point drop in the top blood pressure number cut major heart and circulation events by about a fifth. Stopping smoking cuts the extra risk of a heart attack by about half within a year. And regular physical activity is consistently linked with lower risk, though most of that evidence comes from following people over time rather than from trials.
+
+## mechanism
+
+[warmly] So why do these changes work, when they do? Let's take them one at a time.
+
+[thoughtful] Swapping saturated fat for unsaturated fat works through the liver. As we saw in the last episode, saturated fat seems to make liver cells produce fewer LDL receptors, the docking stations that pull LDL out of the blood. Swap it for unsaturated fat, and receptor numbers recover, and LDL falls.
+
+[curious] Soluble fibre works in the gut. When it meets water, it forms a gel. That gel traps bile, the digestive juice your liver makes from cholesterol. Normally most bile is reabsorbed and reused. When fibre carries it out of the body instead, the liver has to make new bile, and it uses cholesterol from the blood to do it. [thoughtful] It's a bit like a recycling bin being emptied more often, so you have to use up more of what's in the cupboard.
+
+[serious] Lowering blood pressure works on the artery wall. Lower pressure means less strain on the lining, so fewer particles get pushed in and plaques are less likely to crack. Salt matters here, because too much makes the body hold water and raises pressure. So do weight, alcohol and activity.
+
+[thoughtful] Stopping smoking works fastest of all. The chemicals in smoke damage the lining and make platelets stickier, so clots form more easily. Within weeks of stopping, blood becomes less likely to clot. The plaques don't vanish, but they become less likely to cause a heart attack.
+
+[curious] And exercise does several things at once. It lowers blood pressure, improves how the body handles sugar, can raise HDL a little, and helps the lining of the arteries work better. It doesn't usually change LDL much.
+
+## disagreement
+
+[thoughtful] The biggest argument is still about saturated fat. A group of researchers, including the Danish nutrition scientist Arne Astrup, argue that whole foods matter more than the fat inside them. They point out that cheese and yoghurt, which contain plenty of saturated fat, aren't linked with more heart disease in long-term studies, perhaps because of the way the fat is packaged with protein and calcium. [measured] Most health bodies, including the NHS and the World Health Organization, still advise cutting saturated fat, pointing to the Cochrane trials and to the clear effect on LDL. What would settle it is long trials comparing specific foods, not just nutrients, and those are expensive and hard to keep going.
+
+[curious] There's also an argument about one prescription fish oil. A trial called REDUCE-IT, in 2018, found a large benefit from a highly purified form, but the dummy pill was mineral oil, which may itself have raised cholesterol slightly in the comparison group. A similar trial with a different dummy found nothing. Researchers are still arguing about how much of the benefit was real.
+
+## honest
+
+[warmly] So, which changes have the strongest evidence? Stopping smoking, lowering blood pressure, being active, and eating mostly the Mediterranean way, swapping saturated fat for unsaturated fat. Soluble fibre helps your LDL a little. No single food, juice or supplement has been shown to protect your arteries on its own.
+
+[thoughtful] The NHS advises keeping saturated fat to about thirty grams a day for men and twenty for women, eating about thirty grams of fibre a day, and doing about a hundred and fifty minutes of moderate activity a week, the kind that makes you a bit warm and out of breath. The NHS Eatwell Guide shows what that looks like on a plate.
+
+[serious] Lifestyle changes typically lower LDL by somewhere around five to fifteen per cent. For someone with familial hypercholesterolaemia or already high risk, that often isn't enough, and that's not a failure. And if you notice chest pain on exertion when you start exercising, stop, and see a doctor before carrying on.
+
+## close
+
+[warmly] So, back to the shopping basket. The oat milk, the spread, the fish oil.
+
+[softly] Most of the protection was never on the shelf. It's in the walk, the cigarette you don't light, the olive oil instead of the butter, and the years you keep doing them.

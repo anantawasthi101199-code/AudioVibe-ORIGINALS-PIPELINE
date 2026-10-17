@@ -1,0 +1,61 @@
+## opening
+
+[warmly] Here's a situation a lot of people find themselves in. You eat porridge for breakfast, you walk most days, you're not overweight. You go for a health check, and the nurse says your cholesterol is high. And you think: how? What did I do?
+
+[thoughtful] The answer is often that you didn't do anything. The evidence on why cholesterol runs high is strong, built from family studies, Nobel Prize-winning lab work and large genetic studies. And it points, again and again, at the liver and the genes that run it.
+
+## belief
+
+[thoughtful] The common belief is that high cholesterol is a lifestyle problem. You eat too much fatty food, you don't move enough, you carry extra weight, and your cholesterol goes up. Change your habits and it comes back down.
+
+[warmly] That belief is common because it's partly true. Diet does affect cholesterol, especially saturated fat, the kind found in fatty meat, butter, cheese, cakes and pastries. Being very inactive and gaining weight can push the numbers in the wrong direction. And for many people, changing what they eat does lower their LDL a bit.
+
+[curious] Public health messages have leaned on this for good reason. It's something people can act on. [pause] But the people who study cholesterol for a living found something else much earlier, by looking at families.
+
+## evidence
+
+[serious] In 1938, a Norwegian doctor named Carl Müller described families in which very high cholesterol, fatty lumps on the tendons, and heart attacks at a young age all ran together, passing from parent to child. He suspected a single inherited cause. It was the first clear description of a condition now called familial hypercholesterolaemia. Familial means it runs in families. Hypercholesterolaemia just means high cholesterol in the blood.
+
+[curious] For decades, nobody knew what the inherited fault was. Then, in the 1970s, two American scientists, Michael Brown and Joseph Goldstein, studied skin cells taken from children with an extremely severe form of the condition. They found that normal cells have receptors on their surface, little docking stations that catch LDL particles from the blood and pull them inside. [thoughtful] The children's cells had few or none. So LDL piled up in their blood. Brown and Goldstein were awarded the Nobel Prize in 1985 for discovering the LDL receptor.
+
+[measured] Since then, faults in three main genes have been found to cause the condition. One makes the receptor itself. One makes apoB, the part of the LDL particle the receptor grabs. And one makes a protein called PCSK9, which controls how many receptors get destroyed. [serious] Studies of large populations now suggest that about one person in two hundred and fifty has the condition. In the UK, that's somewhere around a quarter of a million people. Most of them have never been diagnosed.
+
+[thoughtful] But here's the twist. When researchers tested the genes of people with very high cholesterol, many of them had no single fault at all. In 2013, a team in London led by Philippa Talmud showed that a lot of these people carried many small, common gene differences, each nudging LDL up a little. Together, they added up to high cholesterol. This is called polygenic, meaning many genes. [curious] It may explain more cases of high cholesterol in otherwise healthy people than the single-gene condition does.
+
+[measured] Diet trials tell a matching story. When people swap saturated fat for unsaturated fat in controlled feeding studies, LDL goes down on average, often by around a tenth. But the response varies a lot from person to person. Some people's LDL barely moves. Others drop sharply. Researchers have known about this variation since the 1960s and still can't fully predict it.
+
+[serious] And then there are other causes, called secondary causes, because the high cholesterol is a side effect of something else. An underactive thyroid gland is a well-known one. So are some kidney and liver conditions, poorly controlled diabetes, and drinking a lot of alcohol, which mainly raises triglycerides, another blood fat. Some medicines can raise cholesterol too, including some steroids, some treatments for HIV, some medicines for severe mental illness, and some acne treatments. [thoughtful] Pregnancy raises cholesterol naturally, which is normal. This is why NICE advises doctors to check for these causes before starting treatment.
+
+## mechanism
+
+[warmly] So what's actually going on? The liver is the control room. It makes cholesterol, it sends it out in particles, and it takes particles back in from the blood using LDL receptors. How much LDL is in your blood depends mostly on how fast the liver clears it.
+
+[thoughtful] Inside each liver cell there's a sensor. When the cell is short of cholesterol, the sensor switches on genes that make more LDL receptors, and more LDL is pulled out of the blood. When the cell has plenty, it makes fewer receptors. [curious] Think of a shop deciding how many staff to put on the tills. More tills open, and the queue outside goes down.
+
+[serious] In familial hypercholesterolaemia, the receptors are faulty, or too few, or destroyed too quickly. So the queue builds up whatever the person eats. LDL is high from birth, and arteries are exposed to it for decades longer than most people's. That's why, untreated, people with the condition can have heart attacks in their thirties, forties or fifties.
+
+[thoughtful] Saturated fat works on the same system. It seems to make the liver cells produce fewer receptors, so LDL clears more slowly. Unsaturated fats don't have that effect. Thyroid hormone also tells the liver to make receptors, so when the thyroid is underactive, receptor numbers fall and LDL rises. Treat the thyroid, and the cholesterol often comes down by itself.
+
+[curious] And the many small gene differences in polygenic high cholesterol each tweak a part of this system a little: the receptor, the particle, or how cholesterol is absorbed from the gut. No single tweak matters much. Together, they set the level.
+
+## disagreement
+
+[thoughtful] On the basics, researchers agree. The arguments are about finding people.
+
+[measured] One argument is whether to test all children. Familial hypercholesterolaemia can be treated, and starting early prevents years of damage. Slovenia tests every child's cholesterol at the age of five. In 2016, a study in England led by David Wald tested about ten thousand toddlers during their routine vaccinations, and when a child had the condition, tested the parents too. It found a child and a parent with the condition in about one family in every two hundred and seventy-three. [thoughtful] Supporters say this finds two generations at once. Others worry about cost, about labelling small children, and about what to do with borderline results. The UK currently relies on testing the relatives of people already diagnosed, called cascade testing. A national trial comparing the two approaches over many years would settle it.
+
+[curious] The other argument is about the people whose LDL hardly moves with diet. Some researchers think they should go to medicine sooner rather than spend a year trying diets that won't work for them. Others say diet still helps the heart in ways beyond the LDL number. There isn't a trial big enough to answer that yet.
+
+## honest
+
+[warmly] So why is your cholesterol high? Often, mostly because of your genes. Your liver is clearing LDL more slowly than average, and that was decided before you were born. Diet can make it higher or lower, but for many people it isn't the main reason.
+
+[thoughtful] That means high LDL is not a verdict on how you live. Plenty of slim, active people who eat well have it. And plenty of people who don't, don't.
+
+[serious] It's worth finding out which kind you have. NICE advises doctors to think about familial hypercholesterolaemia if an adult's total cholesterol is above seven and a half, or if a close relative had heart disease before sixty. If you've been told your cholesterol is very high, or heart attacks came early in your family, ask your GP about testing, for you and for your relatives. Children of someone with the condition have a one in two chance of having it too.
+
+## close
+
+[warmly] So, back to the porridge, the walks and the surprising result.
+
+[softly] It wasn't the breakfast. It was the tills in the shop, and how many of them your genes decided to open.

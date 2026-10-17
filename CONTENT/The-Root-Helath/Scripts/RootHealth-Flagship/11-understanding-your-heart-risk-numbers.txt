@@ -1,0 +1,63 @@
+## opening
+
+[warmly] Imagine you've had an NHS health check, and a letter comes back. Your cholesterol is five point eight. Your blood pressure is a hundred and thirty-five over eighty-five. And your ten-year risk is eight per cent. What are you meant to do with that?
+
+[thoughtful] It's a fair question, and the answer rests on some of the best long-term data in medicine. Risk calculators are built from the health records of millions of people. They're good, and they have known blind spots.
+
+## belief
+
+[thoughtful] A lot of people treat the cholesterol number as the main event. If it's high, you're at risk. If it's normal, you're fine. Some people think of it like a pass or fail score.
+
+[warmly] There's good sense in that. As we've seen in this series, LDL cholesterol really does cause artery disease, and lower is generally better. A cholesterol test is a real measure of a real cause, and it's simple to understand.
+
+[curious] Doctors themselves worked a bit like this for years, treating cholesterol above a certain level and leaving it alone below. [pause] But in the 1990s, they started to look at the problem a different way.
+
+## evidence
+
+[serious] It began with the Framingham Heart Study, in Massachusetts, which started following thousands of adults in 1948. By the 1990s, it had decades of data on who had heart attacks and who didn't. In 1998, researchers published a way to combine several measurements into a single estimate: age, sex, cholesterol, blood pressure, smoking and diabetes. This became the Framingham risk score.
+
+[thoughtful] The key insight was that risks multiply. A sixty-year-old smoker with high blood pressure and slightly high cholesterol could be at far greater risk than a forty-year-old non-smoker with very high cholesterol. One number on its own couldn't show that.
+
+[measured] But Framingham was one town in America, mostly white, studied decades earlier. When researchers checked it against people in Britain in the 2000s, it overestimated risk for many people, and underestimated it for some groups, including people from poorer areas and some ethnic groups.
+
+[curious] So in 2007, a team at the University of Nottingham led by Julia Hippisley-Cox built a British calculator called QRISK. They used anonymised GP records from more than a million people in England and Wales, and followed what happened to them. [thoughtful] Because they had so many records, they could include things Framingham left out: ethnicity, how deprived someone's local area was, and the family history of heart disease.
+
+[measured] The current version, QRISK3, came out in 2017. It's built from the records of more than seven million people. It adds conditions that raise risk, such as chronic kidney disease, rheumatoid arthritis, lupus, migraine, severe mental illness, and taking steroid tablets or certain medicines for mental illness. It's checked again regularly against new records to see how well its predictions match what actually happens.
+
+[serious] NICE, the body that writes clinical guidance in England, uses QRISK3 to guide decisions. Since 2014, NICE has advised that people with a ten-year risk of ten per cent or more should be offered a statin, a cholesterol-lowering medicine, after a conversation about the benefits and harms. Its 2023 update added that people below ten per cent can still choose a statin if they want one.
+
+[thoughtful] NICE also lists the cases where the calculator can underestimate risk. These include people with HIV, people with severe mental illness, people taking medicines that raise blood fats, people with a very high body mass index, and people already on treatment. And it isn't used at all for some groups, such as people with familial hypercholesterolaemia or type 1 diabetes, or people who already have heart disease. Their risk is treated as high from the start.
+
+## mechanism
+
+[warmly] So what does your eight per cent actually mean? It means that out of a hundred people with your numbers, about eight would be expected to have a heart attack or stroke in the next ten years. About ninety-two wouldn't. It can't tell you which group you're in.
+
+[thoughtful] The calculator works by taking each of your measurements and weighting it by how strongly it predicted heart attacks and strokes in those millions of records. Age carries the most weight by far, because artery damage builds up over time. Then come the others.
+
+[curious] Here's what each one is measuring. Cholesterol tells the calculator how many LDL particles are likely to be getting into your artery walls. It usually uses the ratio of total cholesterol to HDL, a better guide than either number alone. Blood pressure tells it how hard the blood is pushing against those walls. High pressure damages the lining, so particles get in more easily. A useful way to think of it is a river in flood, wearing away the banks faster.
+
+[serious] Smoking damages the lining directly and makes blood clot more easily. Diabetes, through high blood sugar, damages the lining too and speeds up plaque. Family history picks up genes that the other numbers miss. Each one adds to the others, and the calculator adds them up.
+
+[thoughtful] For your blood test, NHS guidance gives rough healthy levels. Total cholesterol of five or below. LDL of three or below. Non-HDL, which counts all the harmful particles together, of four or below. HDL of at least one for men and one point two for women. These are guides, not cut-offs, and what matters is the full picture.
+
+## disagreement
+
+[thoughtful] There are two main arguments about all this.
+
+[curious] The first is about young people. Because age matters so much, a thirty-five-year-old with high cholesterol and high blood pressure can have a low ten-year risk, simply because they're young. But they may have a high lifetime risk. The British guidelines group JBS3, in 2014, argued for using a lifetime risk measure, or a heart age, alongside the ten-year figure, so that younger people aren't falsely reassured. [thoughtful] Others say lifetime estimates are less certain, and that there are no trials showing that treating young, low-risk people with medicine for forty years improves how long they live. A long trial in younger adults would settle it, and it would be very hard to run.
+
+[measured] The second argument was about the ten per cent threshold. When NICE lowered it from twenty per cent in 2014, a group of doctors, including some GP leaders, objected. They argued that it would put millions of healthy people on lifelong medicine for a small benefit each, and questioned how complete the side-effect data were. NICE's response was that the trials showed clear benefit at this level, and that the decision is offered, not imposed. That argument has quietened, but not entirely gone away.
+
+## honest
+
+[warmly] So, does one cholesterol result tell you how likely you are to have a heart attack? No. It tells you about one cause. Your risk depends on all of them together, and above all on your age.
+
+[thoughtful] A risk score is a good estimate for a group of people like you. It's not a prediction about you personally. And for some people, it reads too low.
+
+[serious] If your letter shows a number, it's worth asking your GP what went into it, and whether anything about you isn't captured, such as a strong family history, a health condition, or medicines you take. Calculators also don't replace symptoms. Chest pain on exertion, or breathlessness that's new, needs a doctor whatever the number says. And sudden chest pain or pressure means calling 999.
+
+## close
+
+[warmly] So, back to the letter on the kitchen table. Eight per cent.
+
+[softly] Eight people out of a hundred like you. It's not a grade. It's a forecast, like a chance of rain. And unlike the weather, some of what goes into it is yours to change.

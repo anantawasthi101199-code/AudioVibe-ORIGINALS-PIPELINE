@@ -1347,6 +1347,64 @@ channels:
       - word: Burkitt
         sayAs: BUR-kit
         ipa: /ˈbɜːkɪt/
+      # Cholesterol series (2026-10-17).
+      - word: Carl Müller
+        sayAs: KARL MOO-ler
+        ipa: /kɑːɭ ˈmʏlər/
+      - word: Müller
+        sayAs: MOO-ler
+        ipa: /ˈmʏlər/
+      - word: Arne Astrup
+        sayAs: AR-neh AS-trup
+        ipa: /ˈɑːnə ˈɑstʁɔp/
+      - word: Astrup
+        sayAs: AS-trup
+        ipa: /ˈɑstʁɔp/
+      - word: Akira Endo
+        sayAs: ah-KEE-rah EN-doh
+        ipa: /akiɾa endoː/
+      - word: Ira Tabas
+        sayAs: EYE-ruh TAB-us
+        ipa: /ˈaɪrə ˈtæbəs/
+      - word: Philippa Talmud
+        sayAs: fil-IP-uh TAL-mud
+        ipa: /fɪˈlɪpə ˈtælmʊd/
+      - word: Julia Hippisley-Cox
+        sayAs: JOO-lee-uh HIP-iz-lee COX
+        ipa: /ˈdʒuːliə ˈhɪpɪzli kɒks/
+      - word: Ancel Keys
+        sayAs: AN-sel KEEZ
+        ipa: /ˈænsəl kiːz/
+      - word: Framingham
+        sayAs: FRAY-ming-ham
+        ipa: /ˈfreɪmɪŋhæm/
+      - word: PCSK9
+        sayAs: P C S K nine
+        ipa: /piː siː ɛs keɪ naɪn/
+      - word: QRISK3
+        sayAs: Q-risk three
+        ipa: /ˈkjuːrɪsk θriː/
+      - word: QRISK
+        sayAs: Q-risk
+        ipa: /ˈkjuːrɪsk/
+      - word: PREDIMED
+        sayAs: PRED-ee-med
+        ipa: /ˈprɛdɪmɛd/
+      - word: CANTOS
+        sayAs: KAN-tohs
+        ipa: /ˈkæntoʊs/
+      - word: PDAY
+        sayAs: P-day
+        ipa: /ˈpiːdeɪ/
+      - word: JBS3
+        sayAs: J B S three
+        ipa: /dʒeɪ biː ɛs θriː/
+      - word: HMG-CoA
+        sayAs: H M G co-A
+        ipa: /eɪtʃ ɛm dʒiː kəʊ eɪ/
+      - word: REDUCE-IT
+        sayAs: reduce it
+        ipa: /rɪˈdjuːs ɪt/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

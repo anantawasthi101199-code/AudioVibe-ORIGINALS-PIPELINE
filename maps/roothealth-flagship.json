@@ -117,31 +117,61 @@
           "number": 9,
           "title": "How Arteries Change Over Time",
           "covers": "How can a person feel perfectly healthy while cardiovascular disease develops? Explain atherosclerosis, retention of apoB-containing particles in artery walls, inflammatory responses and plaque formation. Misconception to correct: A heart attack is not simply caused by a sudden blockage from eating one fatty meal. Safety: Sudden chest pressure, severe breathlessness or other symptoms suggestive of a heart attack require emergency assessment.",
-          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+          "source": "NHS guidance, NICE guidance and recent systematic reviews",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/09-how-arteries-change-over-time.txt",
+            "title": "How Arteries Change Over Time",
+            "description": "Most heart attacks happen to people who felt perfectly well the day before. What was happening inside their arteries for the thirty years before that?"
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/09.jpg"
         },
         {
           "number": 10,
           "title": "Why Is My Cholesterol High?",
           "covers": "Why do some people have elevated LDL even when they eat reasonably well? Cover inherited variation, familial hypercholesterolaemia, saturated-fat intake, thyroid disorders, some medications and other secondary causes. Misconception to correct: High LDL is not always the result of poor lifestyle choices or excess body weight.",
-          "source": "NICE lipid guidance and familial hypercholesterolaemia recommendations."
+          "source": "NICE lipid guidance and familial hypercholesterolaemia recommendations.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/10-why-is-my-cholesterol-high.txt",
+            "title": "Why Is My Cholesterol High?",
+            "description": "You eat well, you exercise, and your cholesterol test still comes back high. That is far more common than people think, and usually it is not your fault."
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/10.jpg"
         },
         {
           "number": 11,
           "title": "Understanding Your Heart-Risk Numbers",
           "covers": "Does one cholesterol result tell you how likely you are to have a heart attack? Explain lipid profiles, blood pressure, diabetes, smoking, age, family history and multivariable risk assessment. Introduce the role of QRISK3 in UK primary prevention. Misconception to correct: One number cannot describe every person's cardiovascular risk. Safety: Risk calculators have limitations and may underestimate risk in some circumstances.",
-          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+          "source": "NHS guidance, NICE guidance and recent systematic reviews",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/11-understanding-your-heart-risk-numbers.txt",
+            "title": "Understanding Your Heart-Risk Numbers",
+            "description": "A letter says your risk of a heart attack or stroke is eight per cent. What does that number actually mean, and what does it leave out?"
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/11.jpg"
         },
         {
           "number": 12,
           "title": "Food, Fibre, Exercise and the Numbers That Change",
           "covers": "Which lifestyle changes have the strongest evidence for improving cardiovascular health? Explore replacing saturated fats with unsaturated fats, soluble fibre, dietary patterns, physical activity, smoking cessation and blood-pressure management. Misconception to correct: No single food, juice or supplement can guarantee healthy arteries.",
-          "source": "NICE recommendations, NHS Eatwell guidance and systematic reviews of dietary interventions."
+          "source": "NICE recommendations, NHS Eatwell guidance and systematic reviews of dietary interventions.",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/12-food-fibre-exercise-and-your-numbers.txt",
+            "title": "Food, Fibre, Exercise and Your Numbers",
+            "description": "Oats, olive oil, a brisk walk and stopping smoking. Which changes actually move your heart risk, and by how much?"
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/12.jpg"
         },
         {
           "number": 13,
           "title": "Statins, Other Treatments and Long-Term Prevention",
           "covers": "When do lifestyle changes suffice, and when do medicines add important protection? Explain statins, absolute versus relative risk reduction, treatment monitoring, common concerns about side effects and additional lipid-lowering options. Misconception to correct: Taking medication does not mean someone has failed at healthy living; lifestyle and medicines can complement each other. Safety: Discuss pregnancy-related considerations for lipid-lowering treatment where relevant, with advice to the individual from their clinician.",
-          "source": "NHS guidance, NICE guidance and recent systematic reviews"
+          "source": "NHS guidance, NICE guidance and recent systematic reviews",
+          "script": {
+            "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/13-statins-and-long-term-prevention.txt",
+            "title": "Statins and Long-Term Prevention",
+            "description": "Your GP suggests a statin, and you're not sure. What a statin actually does, what the side effects really are, and what thirty per cent means."
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/13.jpg"
         }
       ],
       "cover": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/series-02.jpg"

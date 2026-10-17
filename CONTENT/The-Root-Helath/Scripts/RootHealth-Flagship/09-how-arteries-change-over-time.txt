@@ -1,0 +1,65 @@
+## opening
+
+[warmly] Here's something that puzzles a lot of people. Someone feels completely well. They walk the dog, they go to work, they have never had a day of chest pain. And then, one morning, they have a heart attack. How can something that serious come out of nowhere?
+
+[thoughtful] The answer is that it almost never does come out of nowhere. It just happens somewhere you can't feel. And the evidence for how it happens is strong: decades of post-mortem studies, imaging, genetics and large drug trials, all describing the same slow process.
+
+## belief
+
+[thoughtful] The common picture is plumbing. Fat from your food travels round in your blood and sticks to the inside of your arteries, the way grease builds up in a kitchen pipe. Eat a big fatty meal, and you add another layer. Eventually the pipe blocks, and that's a heart attack.
+
+[warmly] There's a lot that's right in that. Fatty material really does build up in arteries. Diet really does affect how much. And a heart attack really is a blockage: blood stops reaching part of the heart muscle.
+
+[curious] The picture comes from real places, too. Doctors examining people who had died of heart disease saw yellow, fatty deposits lining their arteries, and the comparison with a furred-up pipe was the obvious one to reach for. [pause] It turns out to be wrong in two important ways: where the fat goes, and how the blockage actually happens.
+
+## evidence
+
+[serious] The first surprise came from war. In 1953, American army doctors published the results of post-mortem examinations on about three hundred young soldiers killed in the Korean War. Their average age was twenty-two. [thoughtful] About three quarters of them already had visible signs of fatty build-up in the arteries of the heart. Most of it was mild. But these were fit young men, and it was already there.
+
+[measured] That was one study, in one group of men, at a time when doctors' methods were less exact. So in the 1980s and 1990s, researchers in the United States set up a much larger project, called PDAY. They examined the arteries of about three thousand young people aged fifteen to thirty-four who had died from accidents, injuries or suicide, and they measured the blood cholesterol and smoking habits of each one. [curious] Early fatty changes, called fatty streaks, were present in the main artery of almost everyone, even teenagers. And the more advanced changes were clearly linked to higher LDL cholesterol and to smoking. So the process starts young, and it moves faster with those risks.
+
+[thoughtful] The second surprise was about where the fat is. Pathologists looking down microscopes found that it does not sit on the inner surface of the artery like grease in a pipe. It is inside the artery wall, in the layer just under the lining. In 1995, two researchers, Kevin Jon Williams and Ira Tabas, set out what they called the response-to-retention idea: that particles carrying cholesterol slip into the wall and get trapped there, and that this trapping is the key first step.
+
+[serious] Which particles? The ones carrying a protein called apolipoprotein B, or apoB for short. Each LDL particle carries one molecule of it. Genetic studies and drug trials since then have pointed the same way: the more of these particles in your blood, over more years, the more of them get stuck.
+
+[curious] The third surprise was the immune system. In 1999, an American pathologist named Russell Ross published an influential paper describing atherosclerosis, the medical name for this artery disease, as an inflammatory disease. The body treats the trapped particles as a problem and sends in immune cells. That reaction, he argued, drives the damage.
+
+[measured] For years, that was a theory. Then, in 2017, a trial called CANTOS tested it. About ten thousand people who had already had a heart attack, and had signs of ongoing inflammation in their blood, were given either a drug that blocks one inflammatory signal or a dummy injection. The drug did not change their cholesterol at all. [quietly impressed] Over about four years, the group on the drug had about fifteen per cent fewer heart attacks, strokes and heart deaths. [thoughtful] It also caused more serious infections, so it is not used for this. But it showed that inflammation is part of the cause, not just a side effect.
+
+[serious] The last surprise was about the blockage itself. When researchers studied the plaques responsible for heart attacks, they found that many of them had not been narrowing the artery very much beforehand. The heart attack happened because the plaque broke open, and a blood clot formed on it, within minutes.
+
+## mechanism
+
+[warmly] So let's follow the process from the start. The inside of every artery is lined with a single thin layer of cells called the endothelium. It's smooth, and it controls what passes into the wall.
+
+[thoughtful] LDL particles, the little packages that carry cholesterol around your blood, are small enough to slip through that lining into the wall underneath. Most slip back out again. But some get caught, stuck to the fibres of the wall, like burrs on a wool jumper. The more particles there are in the blood, the more get caught.
+
+[curious] Once trapped, the particles change. They are chemically altered, oxidised, and the lining cells send out signals for help. White blood cells called monocytes squeeze into the wall and turn into larger cells called macrophages, whose job is to swallow debris. [thoughtful] They swallow the altered particles. But they can't break the cholesterol down, so they fill up with fat droplets until they look foamy under a microscope. These are called foam cells, and a cluster of them is a fatty streak. That's what the young soldiers had.
+
+[serious] Over years, this goes on and on. Some foam cells die, and their contents pile up into a soft, fatty core. Muscle cells from the artery wall move in and build a fibrous cap over it, like a scab over a wound. That whole structure, core and cap, is a plaque. [thoughtful] Often the artery stretches outwards to make room, so the channel for blood stays open for a long time, and there are no symptoms at all.
+
+[grave] The danger comes when the cap is thin and inflamed. One day it cracks. The fatty core underneath is exposed to the blood, and the blood treats it like a cut. Platelets, the tiny cells that start a blood clot, gather on it, and a clot forms within minutes. If it blocks an artery feeding the heart, that is a heart attack. If it blocks one feeding the brain, it can cause a stroke.
+
+[thoughtful] So a heart attack is usually sudden in the way a landslide is sudden. The final moment takes minutes. The ground had been changing for decades.
+
+## disagreement
+
+[thoughtful] Researchers broadly agree on the outline. The arguments are about what to target and how to find it.
+
+[curious] One is inflammation. The CANTOS result made some researchers hopeful that anti-inflammatory drugs could protect hearts alongside cholesterol-lowering ones. But another trial in 2018, using a different drug called methotrexate, found no benefit at all. Then two trials of an old, cheap drug called colchicine, in 2019 and 2020, found fewer heart events in people with heart disease, by about a quarter. [thoughtful] Some cardiologists now use it. Others point out that the benefit was mostly in smaller events, and that LDL is still the best-proven target by far. What would settle it is more large trials, run for longer, in different groups of people.
+
+[measured] The other argument is about finding plaque early. A CT scan can measure calcium in the arteries of the heart, which is a sign of older plaque. In the United States, some guidelines use it to help decide on treatment. In the UK, NICE does not recommend it for routine use in people without symptoms. Supporters say it shows the actual disease rather than guessing from risk factors. Critics point out that a zero score does not rule out soft plaque, that the scan involves radiation, and that nobody has yet shown, in a large trial, that scanning people leads to fewer deaths.
+
+## honest
+
+[warmly] So, how can someone feel perfectly healthy while heart disease develops? Because the process happens inside the artery wall, quietly, over decades, and the artery makes room for it. You can't feel a plaque. Most people only find out about one when it cracks.
+
+[thoughtful] What drives it is clear: the number of LDL particles in the blood over many years, along with high blood pressure, smoking and diabetes, which damage the lining and speed it up. What's less settled is how much the inflammation part can be treated directly, and how best to find plaque early.
+
+[serious] And one fatty meal does not cause a heart attack. It's the years that matter, not the dinner. [measured] What matters on the day is knowing the signs. Chest pain or pressure that may spread to the arms, jaw, neck or back, sudden breathlessness, sweating or feeling sick. Some people, often women and older people, have milder or unusual symptoms. If that happens, call 999 straight away. Don't wait to see if it passes.
+
+## close
+
+[warmly] So, the puzzle we started with. The person who was fine yesterday.
+
+[softly] They were fine, in every way they could feel. But the change had started years before, perhaps when they were young. The heart attack was the first day it showed.
