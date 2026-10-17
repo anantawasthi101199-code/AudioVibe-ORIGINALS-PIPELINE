@@ -92,6 +92,23 @@ const signature = (file: string) => {
 
 const sameSig = (a: Take['sig'], b: Take['sig']) => a.bytes === b.bytes && a.mtimeMs === b.mtimeMs;
 
+/**
+ * ONE FILE, TWO NAMES (2026-10-17). The take and media/episode.wav used to be
+ * two full copies of the same WAV, which filled the 4.6 GB volume with 1.7 GB
+ * of duplicates. A hard link costs nothing. It is safe only because nothing
+ * ever writes INTO episode.wav: renderScript removes it before writing a new
+ * voice, and restore below removes it before linking, so a take's bytes are
+ * never touched. A copy is the fallback where a link is refused.
+ */
+const linkOrCopy = (from: string, to: string) => {
+  fs.rmSync(to, { force: true });
+  try {
+    fs.linkSync(from, to);
+  } catch {
+    fs.copyFileSync(from, to);
+  }
+};
+
 /** A run whose current voice is finished: voiced and gated over its audio. */
 const voicedNow = (run: Run): boolean =>
   run.isComplete('render') && run.isComplete('qa') && fs.existsSync(voicePath(run));
@@ -124,9 +141,10 @@ export const syncTakes = (run: Run, by: string | null = null, now = new Date()):
   const dir = path.join(run.dir, 'takes');
   fs.mkdirSync(dir, { recursive: true });
   const name = `take-${String(id).padStart(2, '0')}`;
-  const copy = (from: string, to: string): string | null => {
+  const copy = (from: string, to: string, link = false): string | null => {
     if (!fs.existsSync(from)) return null;
-    fs.copyFileSync(from, path.join(dir, to));
+    if (link) linkOrCopy(from, path.join(dir, to));
+    else fs.copyFileSync(from, path.join(dir, to));
     return path.join('takes', to);
   };
 
@@ -145,7 +163,7 @@ export const syncTakes = (run: Run, by: string | null = null, now = new Date()):
 
   const take: Take = {
     id,
-    file: copy(voicePath(run), `${name}.wav`)!,
+    file: copy(voicePath(run), `${name}.wav`, true)!,
     render: copy(path.join(run.dir, 'render.json'), `${name}.render.json`),
     qa: copy(path.join(run.dir, 'qa.json'), `${name}.qa.json`),
     createdAt: now.toISOString(),
@@ -178,14 +196,16 @@ const restore = (run: Run, record: TakeRecord, id: number): TakeRecord => {
   if (!fs.existsSync(src)) throw new TakeRefused(`take ${id}'s audio is missing`);
 
   fs.mkdirSync(path.dirname(voicePath(run)), { recursive: true });
-  fs.copyFileSync(src, voicePath(run));
+  linkOrCopy(src, voicePath(run));
   if (take.render) fs.copyFileSync(path.join(run.dir, take.render), path.join(run.dir, 'render.json'));
   if (take.qa) fs.copyFileSync(path.join(run.dir, take.qa), path.join(run.dir, 'qa.json'));
   run.markComplete('render');
   run.markComplete('qa');
 
-  // The compressed copy players get is keyed on the WAV's modified time, which
-  // the copy above just changed, so it is remade on the next play.
+  // The compressed copy players get counts as fresh while it is newer than the
+  // WAV. A link keeps the take's own, older time, so the copy of whichever take
+  // played last would pass: remove it, and it is remade on the next play.
+  fs.rmSync(voicePath(run).replace(/\.wav$/, '.play.mp3'), { force: true });
   take.sig = signature(voicePath(run));
   record.chosen = id;
   writeTakes(run, record);

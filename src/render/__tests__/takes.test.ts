@@ -17,8 +17,9 @@ describe('takes', () => {
   let root: string;
   let run: Run;
   const wav = () => path.join(run.dir, 'media', 'episode.wav');
-  /** A new voicing landing in place, as the renderer writes it. */
+  /** A new voicing, as the renderer writes it: a new file, never into the old one. */
   const voiceAgain = (bytes: string) => {
+    fs.rmSync(wav(), { force: true });
     fs.writeFileSync(wav(), bytes);
     const later = new Date(Date.now() + 5_000);
     fs.utimesSync(wav(), later, later);
@@ -34,6 +35,14 @@ describe('takes', () => {
   afterEach(() => {
     delete process.env.FOUNDRY_RUNS_DIR;
     fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  it('a take is the same file as the voice, not a second copy', () => {
+    const record = syncTakes(run, 'anant');
+    const take = path.join(run.dir, record.takes[0]!.file);
+    expect(fs.statSync(take).ino).toBe(fs.statSync(wav()).ino);
+    voiceAgain('a second performance');
+    expect(fs.readFileSync(take, 'utf8')).not.toBe('a second performance'); // take 1 untouched
   });
 
   it('records the first voicing as take 1, chosen', () => {

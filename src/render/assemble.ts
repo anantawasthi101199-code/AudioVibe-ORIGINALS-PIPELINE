@@ -1020,6 +1020,10 @@ export const renderScript = async (
     });
   }
 
+  // A NEW FILE, NEVER WRITTEN INTO THE OLD ONE. episode.wav is a hard link to
+  // the chosen take (render/takes.ts); ffmpeg writing over it in place would
+  // rewrite that take too. Removing the name first leaves the take untouched.
+  fs.rmSync(input.outputPath, { force: true });
   await join(files, input.outputPath, BEAT_GAP_S);
 
   const beatMap = buildBeatMap(timings);
