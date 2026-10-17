@@ -1,12 +1,12 @@
 {
   "id": "uk-true-crime",
   "channelId": "crime-files",
-  "title": "UK True Crime Files",
+  "title": "UK True Crime",
   "formatId": "case-in-full",
   "series": [
     {
       "number": 1,
-      "title": "UK True Crime Files",
+      "title": "UK True Crime",
       "note": "Real crimes, the evidence left behind, and the investigations that changed British justice, told in chronological order.",
       "episodes": [
         {
