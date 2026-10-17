@@ -42,7 +42,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/03-dr-crippen.txt",
             "title": "Dr Crippen: The Murder That Crossed the Sea",
             "description": "In 1910 a music hall singer vanished from her home in north London. Her husband said she had gone to America. Then he fled across the Atlantic, and a ship's wireless set gave him away."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/03.jpg"
         },
         {
           "number": 4,
@@ -53,7 +54,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/04-the-fingerprint-revolution.txt",
             "title": "The Fingerprint Revolution",
             "description": "In 1905 an elderly couple were attacked in their shop in Deptford. The only clue was a thumbprint on a cash box tray, and Britain had never convicted anyone of murder on a fingerprint before."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/04.jpg"
         },
         {
           "number": 5,
@@ -64,7 +66,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/05-the-yorkshire-ripper.txt",
             "title": "The Yorkshire Ripper: The Missed Warnings",
             "description": "For more than five years, one of the biggest police investigations in British history failed to stop a man who killed thirteen women. Detectives had spoken to him nine times."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/05.jpg"
         },
         {
           "number": 6,
