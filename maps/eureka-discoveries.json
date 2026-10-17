@@ -30,7 +30,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/02-harvey.txt",
             "title": "William Harvey and the Circle of Blood",
             "description": "For fourteen hundred years, doctors believed the liver made fresh blood all day long. An English doctor did some simple sums about the heart, and showed the same blood goes round and round."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/02.jpg"
         },
         {
           "number": 3,
@@ -41,7 +42,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/03-leeuwenhoek.txt",
             "title": "Leeuwenhoek's Tiny Animals",
             "description": "A Dutch cloth seller with no scientific training made his own tiny lenses, looked into a drop of lake water in 1674, and saw it swarming with life nobody had ever seen."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/03.jpg"
         },
         {
           "number": 4,
@@ -52,7 +54,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/04-semmelweis.txt",
             "title": "Semmelweis: The Doctor Who Said Wash Hands",
             "description": "In 1840s Vienna, mothers were dying of fever after giving birth on one hospital ward, and far fewer on the ward next door. One young doctor worked out why, and almost nobody listened."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/04.jpg"
         },
         {
           "number": 5,

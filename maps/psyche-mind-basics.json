@@ -30,7 +30,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/02-false-memories.txt",
             "title": "False Memories: Remembering What Never Was",
             "description": "You can remember something clearly, in colour, with feelings attached, and it can still be wrong. A psychologist showed how one word in a question can change what people saw."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/02.jpg"
         },
         {
           "number": 3,
@@ -41,7 +42,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/03-the-man-who-could-not-remember.txt",
             "title": "The Man Who Could Not Make New Memories",
             "description": "In 1953, surgery left one young man unable to form a single new memory. And yet, day after day, he got better at a task he could not remember ever doing."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/03.jpg"
         },
         {
           "number": 4,
@@ -52,7 +54,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/04-why-smells-bring-back-the-past.txt",
             "title": "Why Smells Bring Back the Past",
             "description": "One breath of a certain soap or a certain kitchen, and you are seven years old again. Smell takes a shortcut in the brain that sight and sound do not."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/04.jpg"
         },
         {
           "number": 5,

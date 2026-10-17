@@ -30,7 +30,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/02-the-hidden-ecosystem-inside-your-gut.txt",
             "title": "The Hidden Ecosystem Inside Your Gut",
             "description": "Trillions of microbes live in your gut, digesting what you cannot and talking to your immune system. But is there such a thing as a perfect gut, and can a test tell you if you have one?"
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/02.jpg"
         },
         {
           "number": 3,
@@ -41,7 +42,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/03-bloating-gas-and-your-guts-sensitivity.txt",
             "title": "Bloating, Gas and Your Gut's Sensitivity",
             "description": "Two people eat the same meal. One feels fine. The other feels painfully bloated. Often the difference is not how much gas there is, but how the gut handles it and how sensitive it is."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/03.jpg"
         },
         {
           "number": 4,
@@ -52,7 +54,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/04-ibs-food-intolerance-and-coeliac-disease.txt",
             "title": "IBS, Food Intolerance and Coeliac Disease",
             "description": "Stomach pain, bloating and loose stools can come from very different things. A Dutch doctor noticed one of them during a famine, when bread ran out and sick children got better."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/04.jpg"
         },
         {
           "number": 5,
