@@ -1,15 +1,17 @@
 ## hook
 
-[curious] Is a migraine just a really bad headache? [warmly] Lots of people think so. Take a paracetamol, have a lie down, it'll pass.
+[warmly] You're at your desk, and a shimmering zigzag appears in the corner of your vision. You blink. It's still there. Half an hour later, the pain starts, the light hurts, and someone says, it's just a headache, take a paracetamol. [curious] So is a migraine really just a bad headache?
 
 ## story
 
-[thoughtful] For centuries, doctors thought migraines were about blood vessels in the head swelling. That idea came from the throbbing pain. But over the last few decades, brain scans and research have shown it's much more than that. [serious] A migraine is a condition of the brain and nerves. It often comes in stages. Some people feel tired, hungry or irritable a day before. Then comes the pain, often on one side, usually with feeling sick and finding light and noise unbearable. It can last from a few hours to three days.
+[thoughtful] For a long time, doctors thought migraines were about blood vessels in the head swelling up, because the pain throbs. But brain scans and decades of research have shown it's much more than that. A migraine is a condition of the brain and its nerves, and it often comes in stages.
 
-[curious] And about a third of people with migraine get an aura first. That's a warning, often flashing lights, zigzag lines or a blind spot in your vision, lasting up to an hour. [thoughtful] Researchers think it's caused by a slow wave of electrical activity spreading across the surface of the brain, a bit like a ripple across a pond.
+[curious] It can start a day early, with tiredness, yawning, food cravings or a stiff neck. Then, for about a third of people with migraine, comes the aura: flashing lights, zigzags or a blind spot, lasting up to an hour. [knowingly] That zigzag at your desk is thought to be a slow wave of electrical activity spreading across the back of the brain, the part that handles sight, like a ripple moving across a pond.
 
-[warmly] Researchers have also found a chemical messenger, called CGRP, that helps switch on migraine pain. That discovery led to newer migraine medicines, tested in large trials, which block it.
+[serious] Then the headache phase. Nerves around the brain release a chemical messenger called CGRP, which helps switch the pain on and keep it going. The brain becomes oversensitive, which is why light, noise and even smells can feel unbearable, and why many people feel sick. This part can last from a few hours to three days. [thoughtful] And afterwards, people often feel drained for a day, almost like a hangover.
+
+[warmly] The NHS says migraines are common, affecting around one in five women and one in fifteen men. And the discovery of CGRP led to newer migraine medicines, tested in large trials, that block it.
 
 ## verdict
 
-[serious] So, is a migraine just a bad headache? No. It's a real neurological condition, and the NHS says there are treatments that help, from painkillers and anti-sickness medicines to specific migraine medicines. [gently] If headaches are affecting your life, a GP or pharmacist is the person to ask. And the NHS says to call 999 for a sudden, extremely severe headache, or one with weakness, confusion or slurred speech.
+[warmly] So is a migraine just a bad headache? No. It's a real neurological condition, with stages that start before the pain and carry on after it. [thoughtful] The NHS suggests that painkillers work best taken as soon as symptoms start, and that lying in a dark, quiet room and keeping a diary of possible triggers can help. If migraines are frequent or painkillers aren't working, a GP or pharmacist is the person to ask. [serious] And the NHS says to call 999 for a sudden, extremely severe headache, or one with weakness, confusion or slurred speech. [softly] So that zigzag at your desk isn't you making a fuss. It's your brain giving you a warning.

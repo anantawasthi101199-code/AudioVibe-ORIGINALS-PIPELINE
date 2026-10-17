@@ -39,9 +39,14 @@ beats:
     opens: [the_question]
     constraints:
       - >
-        OPEN WITH THE QUESTION OR THE BELIEF, in everyday words: "Is coffee
-        actually bad for you?" or the thing everybody's aunt says. One or two
-        sentences.
+        OPEN ON A MOMENT THE LISTENER HAS LIVED, in the second person, then the
+        question it raises (owner, 2026-10-17: the shorts were not something
+        people could just listen to). "You're halfway through a film and the
+        hiccups start. You hold your breath. You drink water upside down. Do
+        hiccups actually do anything?" Two to four short sentences.
+      - >
+        OR THE BELIEF, said the way people really say it ("my nan always said
+        reading in the dark would ruin my eyes"), then the question.
       - >
         No greeting, no naming the show. A listener in a feed gave you about
         three seconds.
@@ -59,6 +64,22 @@ beats:
         TELL IT AS A STORY, IN ORDER: where the idea came from, what people
         tested, what they found. People and studies doing things, not a list
         of facts.
+      - >
+        ONE THREAD, START TO FINISH. Every paragraph answers the "but why?" the
+        last one left, so a listener is pulled along. No paragraph that is a
+        list ("it also helps X, Y and Z"); no "common triggers are" roll call.
+        Two things explained properly beat five named in passing.
+      - >
+        KEEP THE LISTENER'S MOMENT FROM THE HOOK IN VIEW. Come back to it at
+        least once in the middle ("so when your eyes ache under the torch,
+        that's..."), so the science is about their life, not a textbook.
+      - >
+        ONE EVERYDAY COMPARISON for the part of the body doing the work, given
+        alongside the real explanation, never instead of it.
+      - >
+        COMPLETE. By the end of this part the question is fully explained: what
+        happens, why, and what it means for an ordinary person. Use the time:
+        about 250 to 300 words here.
       - >
         PLAIN WORDS. Any medical term gets its everyday meaning in the same
         breath, the first time it is said. At most two in the whole short.
@@ -80,7 +101,11 @@ beats:
     constraints:
       - >
         ANSWER THE QUESTION FROM THE OPENING, clearly: true, false, or true
-        with a catch.
+        with a catch, in one sentence the listener could repeat to a friend.
+      - >
+        THEN WHAT IT MEANS IN PRACTICE, attributed: the one or two concrete
+        things a named health body suggests, in everyday terms (how much, how
+        often, what to look out for), so the listener leaves with something.
       - >
         ANY SUGGESTION IS ATTRIBUTED. Say what a named body recommends, as
         theirs: "the NHS suggests", "the WHO advises". Never "you should",
@@ -88,7 +113,12 @@ beats:
       - >
         IF IT CONCERNS SYMPTOMS, say that a doctor or pharmacist is the person
         to ask, in one plain sentence.
-      - STOP THERE. The channel's fixed outro is added after this, word for word; do not write a goodbye or ask for a follow.
+      - >
+        LAND IT. The last sentence goes back to the moment from the hook and
+        turns it ("so next time the hiccups start halfway through the film..."),
+        so the short ends rather than stops. Then STOP. The channel's fixed
+        outro is added after this, word for word; do not write a goodbye or ask
+        for a follow.
     minClaims: 0
 
 tensionCurve: [0.7, 0.9, 0.5]

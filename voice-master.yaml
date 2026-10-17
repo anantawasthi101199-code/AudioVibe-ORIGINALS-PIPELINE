@@ -1161,6 +1161,21 @@ channels:
       - word: peristalsis
         sayAs: peh-rih-STAL-sis
         ipa: /pɛrɪˈstælsɪs/
+      - word: Maiken Nedergaard
+        sayAs: MY-ken NED-er-gor
+        ipa: /ˈmɑjkən ˈneðˀəˌɡɒˀ/
+      - word: Nedergaard
+        sayAs: NED-er-gor
+        ipa: /ˈneðˀəˌɡɒˀ/
+      - word: SPF
+        sayAs: ess pee eff
+        ipa: /ɛs piː ɛf/
+      - word: UVA
+        sayAs: you vee ay
+        ipa: /juː viː eɪ/
+      - word: UVB
+        sayAs: you vee bee
+        ipa: /juː viː biː/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

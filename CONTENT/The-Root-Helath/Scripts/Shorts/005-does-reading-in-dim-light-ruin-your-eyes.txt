@@ -1,15 +1,17 @@
 ## hook
 
-[curious] Will reading in dim light ruin your eyes? [with a smile] It's what parents have told children for generations, usually when they caught them under the covers with a torch.
+[with a smile] You're nine, it's past bedtime, and you're under the covers with a torch and a book. The door opens. [warmly] Turn that off, you'll ruin your eyes. [curious] It's what parents have said for generations. But is it true?
 
 ## story
 
-[thoughtful] The idea makes sense. Reading in low light is hard work. Your eyes strain, they feel tired and dry, and you might get a headache. [warmly] But studies of eye health have found that this strain is temporary. Rest, and it goes away. There's no good evidence that dim light causes lasting damage.
+[thoughtful] It certainly feels true. Reading in dim light is hard work for your eyes. Tiny muscles inside them have to work to keep the words in focus. Your pupils open wide to let in more light. And when you concentrate, you blink less, so your eyes dry out. [knowingly] That's why, after an hour under the covers, your eyes ache and the words start to swim.
 
-[curious] Meanwhile, something else really is happening to children's eyes. Short sight, where faraway things look blurry, has become much more common around the world, especially in East Asia, where in some cities most young adults are now short-sighted. [serious] Researchers looked for the cause. Genes play a part. Lots of close-up work, like reading and screens, may play a part. [thoughtful] But the clearest finding was about time outdoors.
+[warmly] But eye specialists have found that this strain is temporary. Rest your eyes, get some sleep, and it goes away. There's no good evidence that dim light causes lasting damage.
 
-[warmly] In a large trial in Guangzhou, in China, some schools added an extra forty minutes of outdoor activity to every school day. Over three years, fewer of those children became short-sighted than in the schools that didn't. [curious] Scientists think bright daylight helps the eye grow to the right shape. Many studies point the same way.
+[curious] Meanwhile, something else really is happening to children's eyes. Short sight, where faraway things look blurry, has become far more common around the world. It happens when the eyeball grows a little too long, so light focuses just in front of the back of the eye instead of on it. [serious] In parts of East Asia, most young adults in some cities are now short-sighted. So researchers went looking for the cause.
+
+[thoughtful] Genes play a part. Lots of close-up work, reading and screens, may play a part too. But the clearest finding was about time outdoors. [warmly] In a large trial in Guangzhou, in China, published in 2015, some schools added an extra forty minutes of outdoor activity to every school day. Over three years, fewer of those children became short-sighted than in schools that didn't. Scientists think bright daylight helps the growing eye keep its right shape. [softly] So the torch under the covers wasn't the problem. Not enough sunshine might be.
 
 ## verdict
 
-[warmly] So, does reading in dim light ruin your eyes? No. It can make them tired, but it doesn't cause lasting harm. [thoughtful] The NHS encourages children to spend time outdoors, and eye tests are free for children in the UK. If a child is struggling to see the board or squinting a lot, an optician is the person to ask.
+[warmly] So does reading in dim light ruin your eyes? No. It can make them tired and sore for a while, but it doesn't do lasting harm. [thoughtful] Eye health bodies such as the College of Optometrists encourage children to spend time outdoors every day, and in the UK eye tests are free for children. If a child is squinting, sitting very close to the television, or struggling to see the board, an optician is the person to ask. [softly] So the book under the covers can stay. Just make sure there's time in the sunshine the next day.

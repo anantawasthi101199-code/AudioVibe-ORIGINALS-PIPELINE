@@ -1,19 +1,19 @@
 ## hook
 
-[curious] A vaccine is a small injection, and then you get on with your day. So how does that one tiny dose protect you, sometimes for the rest of your life?
+[warmly] You roll up your sleeve. A quick scratch, a plaster, and maybe a sore arm for a day. [curious] So how can one tiny dose protect you from a disease, sometimes for the rest of your life?
 
 ## story
 
-[warmly] Your immune system is like a security team for your body. When a germ gets in, it has to work out what the germ looks like before it can fight it properly. That first time takes days, and while it's figuring it out, you get ill.
+[thoughtful] Start with what happens without a vaccine. When a new germ gets into your body, your immune system has never seen it before. It has to work out what the germ looks like, then build the right weapons to fight it. Those weapons are called antibodies, proteins made to latch onto one particular germ. Building them takes days. And while your body is working it out, the germ is multiplying, and you get ill.
 
-[thoughtful] But once it has beaten an infection, the immune system keeps something behind: memory cells. They remember exactly what that germ looked like. If it ever comes back, they recognise it at once, and the body makes the right weapons, called antibodies, fast enough to stop you getting ill. [knowingly] That's why you usually only get chickenpox once.
+[warmly] But once you've beaten it, something stays behind. Memory cells. Think of them as a security guard who's now seen the burglar's face. If that germ ever comes back, they recognise it at once, and the right antibodies arrive in hours, not days, often before you notice anything. [knowingly] That's why most people only get chickenpox once.
 
-[curious] A vaccine uses that memory, without the danger. It shows the immune system a harmless preview of the germ: a weakened version, a killed version, just one piece of it, or a set of instructions so your own cells make that piece for a little while. Your body practises on it, and builds memory cells, without you catching the disease.
+[curious] A vaccine uses that memory without the danger of the disease. It shows your immune system a harmless preview of the germ. That might be a weakened version, a killed version, one small piece of it, or a set of instructions for your own cells to make that piece for a short while. Your body practises on it, builds memory cells, and you never catch the illness.
 
-[thoughtful] For some germs, the memory fades over time, or the germ changes, which is why some vaccines need a booster, and the flu jab is offered every year.
+[thoughtful] That's also why your arm might ache, or you might feel a bit tired for a day. It's the immune system doing its practice run.
 
-[serious] And when enough people are protected, a germ struggles to spread, which helps protect people who can't be vaccinated, like newborn babies.
+[serious] For some germs, the memory fades over time, or the germ itself changes. That's why some vaccines need a booster, and why the flu jab is offered every year. [warmly] And when enough people are protected, a germ struggles to spread at all, which helps protect people who can't be vaccinated, like newborn babies.
 
 ## verdict
 
-[warmly] So, how do vaccines work? They give your immune system a safe practice run. [serious] The WHO and the NHS describe vaccines as one of the most effective ways to prevent serious disease. Side effects like a sore arm are common and mild, and serious ones are rare.
+[warmly] So how do vaccines work? They give your immune system a safe rehearsal, so it's ready for the real thing. [thoughtful] The NHS and the World Health Organization describe vaccines as one of the most effective ways to prevent serious disease. The NHS says side effects like a sore arm or a mild temperature are common and usually pass in a day or two, and serious reactions are rare. A GP or pharmacist can say which vaccines you're due. [softly] So that sore arm is a good sign. It's your body taking notes.
