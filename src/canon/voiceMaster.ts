@@ -14,6 +14,7 @@ import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import { z } from 'zod';
+import { cachedByFiles } from './fileCache';
 
 const text = z.string().trim().min(1);
 
@@ -119,9 +120,11 @@ export const parseVoiceMaster = (source: string, label = '<inline>'): VoiceMaste
   return result.data;
 };
 
-/** The whole file, or null when there is none (tests, archived fixtures). Read fresh each time: it is small. */
+/** The whole file, or null when there is none (tests, archived fixtures). Parsed again only when it changes. */
 export const loadVoiceMaster = (file = voiceMasterFile()): VoiceMaster | null =>
-  fs.existsSync(file) ? parseVoiceMaster(fs.readFileSync(file, 'utf8'), file) : null;
+  fs.existsSync(file)
+    ? cachedByFiles(`voice-master:${file}`, [file], () => parseVoiceMaster(fs.readFileSync(file, 'utf8'), file))
+    : null;
 
 export const channelVoice = (id: string): ChannelVoice | null =>
   loadVoiceMaster()?.channels[id] ?? null;

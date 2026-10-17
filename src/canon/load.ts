@@ -17,7 +17,8 @@ import path from 'path';
 import YAML from 'yaml';
 import { Persona, personaSchema } from './schema';
 import { isKnownCategory, nearestCategory } from './categories';
-import { applyVoiceMaster, loadVoiceMaster } from './voiceMaster';
+import { applyVoiceMaster, loadVoiceMaster, voiceMasterFile } from './voiceMaster';
+import { cachedByFiles } from './fileCache';
 
 export class PersonaLoadError extends Error {
   constructor(
@@ -67,7 +68,10 @@ export const loadPersona = (id: string, dir = personasDir()): Persona => {
   if (!fs.existsSync(file)) {
     throw new PersonaLoadError(file, ['no such persona file']);
   }
-  const persona = parsePersona(fs.readFileSync(file, 'utf8'), file);
+  // Built from its own file and voice-master.yaml, so a change to either is seen.
+  const persona = cachedByFiles(`persona:${file}`, [file, voiceMasterFile()], () =>
+    parsePersona(fs.readFileSync(file, 'utf8'), file)
+  );
 
   // The id is the filename, and disagreement between them is the kind of thing
   // that produces run artifacts filed under a show that does not exist.

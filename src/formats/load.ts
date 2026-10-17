@@ -10,6 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import { EpisodeFormat, formatSchema } from './schema';
+import { cachedByFiles } from '../canon/fileCache';
 
 export class FormatLoadError extends Error {
   constructor(
@@ -102,7 +103,7 @@ export const loadFormat = (id: string, dir = beatsheetsDir()): EpisodeFormat => 
   if (!fs.existsSync(file)) {
     throw new FormatLoadError(file, ['no such beat sheet']);
   }
-  const format = parseFormat(fs.readFileSync(file, 'utf8'), file);
+  const format = cachedByFiles(`format:${file}`, [file], () => parseFormat(fs.readFileSync(file, 'utf8'), file));
   if (format.id !== id) {
     throw new FormatLoadError(file, [`id is "${format.id}" but the file is named "${id}.yaml"`]);
   }
