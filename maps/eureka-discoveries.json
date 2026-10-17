@@ -66,7 +66,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/05-john-snow.txt",
             "title": "John Snow and the Broad Street Pump",
             "description": "In 1854 cholera killed hundreds of people in a few streets of Soho. A London doctor walked the streets, marked every death on a map, and found they all led back to one water pump."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/05.jpg"
         },
         {
           "number": 6,
@@ -77,7 +78,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/06-pasteur.txt",
             "title": "Pasteur and the Invisible Enemy",
             "description": "A French chemist found that tiny living things make wine sour and milk go off, saved France's silkworms, and in 1885 risked everything on a nine-year-old boy bitten by a mad dog."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/06.jpg"
         }
       ],
       "cover": "CONTENT/Eureka-Tales/Images/Discoveries/series-01.jpg"
@@ -108,7 +110,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/08-galileo-and-the-telescope.txt",
             "title": "Galileo and the Telescope",
             "description": "In 1609 an Italian professor built his own telescope, pointed it at the night sky, and saw mountains on the Moon and moons circling Jupiter. Twenty-four years later, he was on trial."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/08.jpg"
         },
         {
           "number": 9,

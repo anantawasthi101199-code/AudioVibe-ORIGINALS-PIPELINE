@@ -126,7 +126,8 @@
             "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/10-the-sacred-books.txt",
             "title": "The Sacred Books: Where the Stories Come From",
             "description": "Hymns that were memorised for three thousand years, a teacher who explained the universe with a bowl of salt water, and an epic dictated to Ganesha. A journey through the books behind Hindu mythology."
-          }
+          },
+          "image": "CONTENT/Mythic-Archives/Images/Hindu-Mythology/10.jpg"
         }
       ]
     },
@@ -144,7 +145,8 @@
             "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/11-who-is-shiva.txt",
             "title": "Who Is Shiva? The God Outside the Rules",
             "description": "He lives on a frozen mountain, covers himself in ash, wears a snake for a necklace and is also the gentlest of husbands. A story of Shiva walking into a forest of proud sages shows who he really is."
-          }
+          },
+          "image": "CONTENT/Mythic-Archives/Images/Hindu-Mythology/11.jpg"
         },
         {
           "number": 12,
@@ -155,7 +157,8 @@
             "file": "CONTENT/Mythic-Archives/Scripts/Hindu-Mythology/12-shiva-and-sati.txt",
             "title": "How Shiva Married Sati, and How It Ended",
             "description": "A princess who loved the wild god of the mountains married him against her father's wishes. Then her father held a great sacrifice, and invited everyone except her husband."
-          }
+          },
+          "image": "CONTENT/Mythic-Archives/Images/Hindu-Mythology/12.jpg"
         },
         {
           "number": 13,
@@ -205,7 +208,8 @@
           "covers": "Shiva's cosmic dance, its symbolism, and the relationship between destruction and renewal.",
           "source": "Shiva Purana; the Chidambaram temple tradition"
         }
-      ]
+      ],
+      "cover": "CONTENT/Mythic-Archives/Images/Hindu-Mythology/series-02.jpg"
     },
     {
       "number": 3,

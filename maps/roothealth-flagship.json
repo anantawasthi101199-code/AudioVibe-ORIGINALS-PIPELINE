@@ -66,7 +66,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/05-fibre-fermentation-and-your-gut.txt",
             "title": "Fibre, Fermentation and Your Gut",
             "description": "You were told to eat more fibre, added bran to breakfast, and spent the afternoon bloated. Why one fibre helps and another makes things worse, and what your gut bacteria do with it."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/05.jpg"
         },
         {
           "number": 6,
@@ -77,7 +78,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/06-probiotics-prebiotics-and-marketing.txt",
             "title": "Probiotics and Gut-Health Marketing",
             "description": "The supermarket shelf is full of live yoghurt drinks, capsules and home gut tests. Which have real evidence behind them, which are a plausible idea dressed up as proof, and who should be careful."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/06.jpg"
         },
         {
           "number": 7,
@@ -88,7 +90,8 @@
             "file": "CONTENT/The-Root-Helath/Scripts/RootHealth-Flagship/07-a-gut-health-routine-without-obsessing.txt",
             "title": "A Gut-Health Routine Without Obsessing",
             "description": "Your phone is full of gut-health rules, and now every meal feels like a test. What the evidence says a healthy gut actually needs, which turns out to be ordinary, and when to see a doctor."
-          }
+          },
+          "image": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/07.jpg"
         }
       ],
       "cover": "CONTENT/The-Root-Helath/Images/RootHealth-Flagship/series-01.jpg"

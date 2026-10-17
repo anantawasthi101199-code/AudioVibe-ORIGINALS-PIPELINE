@@ -85,7 +85,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/007-zodiac-cipher.txt",
         "title": "The Zodiac Cipher, Cracked After Fifty Years",
         "description": "In 1969 a killer in California sent a newspaper a coded letter that nobody could read. Fifty-one years later, three amateur codebreakers in three countries finally cracked it."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/007.jpg"
     },
     {
       "number": 8,
@@ -96,7 +97,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/008-al-capone.txt",
         "title": "How Al Capone Was Really Caught",
         "description": "The most famous gangster in America ran a city on bribes and guns, and nobody could prove a single killing. In 1931 he went to prison for not paying his taxes."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/008.jpg"
     },
     {
       "number": 9,
@@ -107,7 +109,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/009-kim-philby.txt",
         "title": "Kim Philby: The Spy at the Top",
         "description": "One of the most senior officers in British intelligence had secretly worked for the Soviet Union since he was a student. In 1963 he slipped away from Beirut and turned up in Moscow."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/009.jpg"
     },
     {
       "number": 10,

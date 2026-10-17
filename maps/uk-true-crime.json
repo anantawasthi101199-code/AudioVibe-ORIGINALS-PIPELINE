@@ -78,7 +78,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/06-the-great-train-robbery.txt",
             "title": "The Great Train Robbery",
             "description": "In August 1963 a gang stopped a night mail train in Buckinghamshire and took two and a half million pounds. They planned it for months, and then left their fingerprints on a Monopoly board."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/06.jpg"
         },
         {
           "number": 7,
@@ -89,7 +90,8 @@
             "file": "CONTENT/True-Crime/Scripts/UK-True-Crime-Files/07-the-guildford-four.txt",
             "title": "The Guildford Four and the False Confessions",
             "description": "Bombs in two Guildford pubs killed five people in 1974. Four young people were convicted on confessions alone, and spent fifteen years in prison before the case fell apart."
-          }
+          },
+          "image": "CONTENT/True-Crime/Images/UK-True-Crime-Files/07.jpg"
         },
         {
           "number": 8,

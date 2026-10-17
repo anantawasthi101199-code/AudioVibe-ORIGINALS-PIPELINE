@@ -769,7 +769,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/064-kaguya-hime.txt",
         "title": "Kaguya-hime: The Princess From the Moon",
         "description": "An old bamboo cutter finds a tiny girl glowing inside a bamboo stalk. She grows into the most beautiful woman in Japan, and then the moon people come to take her home."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/064.jpg"
     },
     {
       "number": 65,
@@ -780,7 +781,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/065-yu-the-great.txt",
         "title": "Yu the Great: The Man Who Tamed the Flood",
         "description": "A great flood covers ancient China. One man's father fails to stop it and dies. The son spends thirteen years digging, and walks past his own front door three times without going in."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/065.jpg"
     },
     {
       "number": 66,
@@ -791,7 +793,8 @@
         "file": "CONTENT/Mythic-Archives/Scripts/Shorts/066-the-sampo.txt",
         "title": "The Sampo: The Magic Mill of Plenty",
         "description": "A smith forges a magic mill that grinds out grain, salt and gold, to win a bride from the dark north. Years later, three heroes sail north to steal it back, and the sea itself fights them."
-      }
+      },
+      "image": "CONTENT/Mythic-Archives/Images/Shorts/066.jpg"
     },
     {
       "number": 67,

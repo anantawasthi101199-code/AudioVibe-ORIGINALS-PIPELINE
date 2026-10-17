@@ -85,7 +85,8 @@
         "file": "CONTENT/Eureka-Tales/Scripts/Shorts/007-why-is-the-sky-blue.txt",
         "title": "Why Is the Sky Blue?",
         "description": "Sunlight is white, so why is the sky blue and the sunset red? A Victorian lord worked it out on paper, and the answer is the air itself."
-      }
+      },
+      "image": "CONTENT/Eureka-Tales/Images/Shorts/007.jpg"
     },
     {
       "number": 8,
@@ -96,7 +97,8 @@
         "file": "CONTENT/Eureka-Tales/Scripts/Shorts/008-laughing-gas.txt",
         "title": "The Man Who Breathed Laughing Gas",
         "description": "In 1799 a twenty-year-old chemist breathed a strange gas from a silk bag, laughed, and wrote that it might stop pain in surgery. Then nobody tried it for forty-four years."
-      }
+      },
+      "image": "CONTENT/Eureka-Tales/Images/Shorts/008.jpg"
     },
     {
       "number": 9,
@@ -107,7 +109,8 @@
         "file": "CONTENT/Eureka-Tales/Scripts/Shorts/009-year-without-a-summer.txt",
         "title": "The Year Without a Summer",
         "description": "In June 1816 snow fell in New England and crops failed across Europe. The cause was a volcano on an island halfway round the world, and it took a century to connect them."
-      }
+      },
+      "image": "CONTENT/Eureka-Tales/Images/Shorts/009.jpg"
     },
     {
       "number": 10,

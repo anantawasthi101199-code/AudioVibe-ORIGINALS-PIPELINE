@@ -66,7 +66,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/05-walk-into-a-room-and-forget-why.txt",
             "title": "Why You Walk Into a Room and Forget Why",
             "description": "You get up for something, step through a doorway, and it is gone. Your memory is fine: your brain files things by where you were, and a doorway closes the file."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/05.jpg"
         },
         {
           "number": 6,
@@ -77,7 +78,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/06-how-to-actually-remember-things.txt",
             "title": "How to Actually Remember Things",
             "description": "You read your notes again and again, and it all feels familiar, until the test. Research on hundreds of studies shows what really works, and why rereading tricks you."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/06.jpg"
         }
       ],
       "cover": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/series-01.jpg"
