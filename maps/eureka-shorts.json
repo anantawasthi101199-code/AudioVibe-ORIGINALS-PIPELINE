@@ -121,7 +121,8 @@
         "file": "CONTENT/Eureka-Tales/Scripts/Shorts/010-antikythera-mechanism.txt",
         "title": "The Antikythera Mechanism",
         "description": "Divers found a lump of green bronze in a Greek shipwreck. It took a hundred years to see it was a computer."
-      }
+      },
+      "image": "CONTENT/Eureka-Tales/Images/Shorts/010.jpg"
     },
     {
       "number": 11,
@@ -132,7 +133,8 @@
         "file": "CONTENT/Eureka-Tales/Scripts/Shorts/011-rontgen-and-x-rays.txt",
         "title": "The Glowing Screen: Rontgen and X-Rays",
         "description": "In 1895 a screen began to glow across a dark lab in Germany. Weeks later, a woman saw the bones of her own hand."
-      }
+      },
+      "image": "CONTENT/Eureka-Tales/Images/Shorts/011.jpg"
     },
     {
       "number": 12,

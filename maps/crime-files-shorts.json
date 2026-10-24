@@ -121,7 +121,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/010-adolf-beck.txt",
         "title": "Adolf Beck: The Wrong Man Twice",
         "description": "In 1896 a London court jailed a man for another man's crimes. Eight years later it did it again."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/010.jpg"
     },
     {
       "number": 11,
@@ -132,7 +133,8 @@
         "file": "CONTENT/True-Crime/Scripts/Shorts/011-antwerp-diamond-heist.txt",
         "title": "The Antwerp Diamond Heist",
         "description": "In 2003 thieves beat the security of one of the safest vaults in the world, and were caught because of a half-eaten sandwich."
-      }
+      },
+      "image": "CONTENT/True-Crime/Images/Shorts/011.jpg"
     },
     {
       "number": 12,

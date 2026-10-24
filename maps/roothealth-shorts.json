@@ -121,7 +121,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/010-eight-glasses-of-water.txt",
         "title": "Do You Need Eight Glasses of Water a Day?",
         "description": "You have heard the rule a hundred times. Where it came from is stranger than the rule itself."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/010.jpg"
     },
     {
       "number": 11,
@@ -132,7 +133,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/011-do-you-need-eight-hours.txt",
         "title": "Do You Really Need Eight Hours?",
         "description": "Eight hours of sleep sounds like science. It started as a slogan."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/011.jpg"
     },
     {
       "number": 12,
@@ -143,7 +145,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/012-why-do-we-get-goosebumps.txt",
         "title": "Why Do We Get Goosebumps?",
         "description": "Cold air, a scary film, a song you love: all three bring the same tiny bumps. They are a leftover from when we were furry."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/012.jpg"
     },
     {
       "number": 13,
