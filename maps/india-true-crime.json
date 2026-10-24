@@ -73,7 +73,12 @@
           "number": 6,
           "title": "Jessica Lal: The Case the Public Reopened",
           "covers": "In the early hours of 30 April 1999, Jessica Lal, a model working as a celebrity barmaid, was shot dead at a crowded party in a restaurant in south Delhi after refusing to serve a drink. In 2006 the trial court acquitted every accused after witnesses turned hostile. The episode follows the shooting, the investigation, the acquittal, the public campaign led by her sister Sabrina, the Delhi High Court's conviction of Manu Sharma later that year, and the Supreme Court's confirmation in 2010. It explains what a hostile witness is and why the case changed how people in India thought about justice and wealth.",
-          "source": "Delhi High Court, State v. Sidhartha Vashisht alias Manu Sharma (2006); Supreme Court of India, Sidhartha Vashisht v. State (NCT of Delhi) (2010); contemporary reporting."
+          "source": "Delhi High Court, State v. Sidhartha Vashisht alias Manu Sharma (2006); Supreme Court of India, Sidhartha Vashisht v. State (NCT of Delhi) (2010); contemporary reporting.",
+          "script": {
+            "file": "CONTENT/True-Crime/Scripts/India-True-Crime/06-jessica-lal.txt",
+            "title": "Jessica Lal: The Case the Public Reopened",
+            "description": "In 1999 a model was shot in front of a crowded party in Delhi. Seven years later a court said nobody had done it, and the country refused to accept that."
+          }
         },
         {
           "number": 7,

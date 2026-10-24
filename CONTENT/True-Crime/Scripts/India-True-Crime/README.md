@@ -21,3 +21,13 @@ Chosen for closed cases only: every accused named was convicted, acquitted, has 
 - Bhawal Sanyasi: three brothers' names and order; marriage 1902; death reported 8 May 1909; Buckland Bund 1920-21; sister Jyotirmoyee's recognition, declaration May 1921; suit 1930, trial from 1933, Basu judgment 24 August 1936; High Court 1940, 2-1; Privy Council 30 July 1946; death 1 August 1946 after a stroke; the "man from Punjab" claim.
 - Nanavati: 27 April 1959; Jeevan Jyot, Nepean Sea Road; Metro cinema; revolver signed out on the Ahmednagar pretext; Mamie Ahuja present; Provost Marshal then police; Blitz and Russi Karanjia; the toy revolver and towel story (given as "it was said"); jury 8-1, 21 October 1959; Judge Ratilal Mehta's reference; High Court March 1960; Supreme Court November 1961; pardon 1964 by Vijaya Lakshmi Pandit; Canada, died 2003; ages 37 and about 34.
 - Geeta and Sanjay Chopra: Saturday 26 August 1978; Dhaula Kuan; Yuva Vani at 8pm, father to collect at 9; Jesus and Mary College and Modern School; the witness who reported the car number and the stations passing it on; bodies found 28 August off Upper Ridge Road by a cattle grazier; arrest 8 September 1978 on the Kalka Mail in a soldiers' carriage, handed over in Delhi (check where); convictions 1979; hanged 31 January 1982 in Tihar; ICCW awards created 1978.
+
+## Written 2026-10-24
+
+| Map item | Title | File | Words (spoken) |
+|---|---|---|---|
+| `india-true-crime/6` | Jessica Lal: The Case the Public Reopened | `06-jessica-lal.txt` | 1430 |
+
+### Facts: check before publishing
+
+- Jessica Lal: shot around 2am on Friday 30 April 1999 at Tamarind Court, Qutub Colonnade, Mehrauli; aged 34; the thousand-rupee offer; first shot into the ceiling; silver Tata Safari found abandoned; Manu Sharma in custody about a week later (exact date and place not given); charges filed August 1999; Shayan Munshi's 2001 Hindi-statement retraction and two-guns claim; trial court acquitted all nine on 21 February 2006; the "No One Killed Jessica" front page (Times of India, check); India Gate candle vigil (date not given); Tehelka sting September 2006, as alleged; High Court conviction 18 December 2006, life sentence two days later, Vikas Yadav and one other convicted of destroying evidence; Supreme Court upheld 19 April 2010; perjury proceedings; released June 2020 on the sentence review board's recommendation; Sabrina's 2018 forgiveness letter; film 2011.

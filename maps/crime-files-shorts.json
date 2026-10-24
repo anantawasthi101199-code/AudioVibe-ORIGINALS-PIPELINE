@@ -116,13 +116,23 @@
       "number": 10,
       "title": "Adolf Beck: The Wrong Man Twice",
       "covers": "In 1896 an innocent man was convicted of crimes committed by a lookalike, and his case led to Britain's Court of Criminal Appeal.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/010-adolf-beck.txt",
+        "title": "Adolf Beck: The Wrong Man Twice",
+        "description": "In 1896 a London court jailed a man for another man's crimes. Eight years later it did it again."
+      }
     },
     {
       "number": 11,
       "title": "The Antwerp Diamond Heist",
       "covers": "In 2003 thieves beat ten layers of security at the Antwerp Diamond Centre, and were caught because of a half-eaten sandwich dumped in a forest.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/011-antwerp-diamond-heist.txt",
+        "title": "The Antwerp Diamond Heist",
+        "description": "In 2003 thieves beat the security of one of the safest vaults in the world, and were caught because of a half-eaten sandwich."
+      }
     },
     {
       "number": 12,

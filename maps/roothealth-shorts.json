@@ -116,19 +116,34 @@
       "number": 10,
       "title": "Do You Need Eight Glasses of Water a Day?",
       "covers": "Where the eight-glasses rule came from, how much fluid you really need, and how your body tells you.",
-      "source": "NHS guidance on water and drinks and the European Food Safety Authority's reference values"
+      "source": "NHS guidance on water and drinks and the European Food Safety Authority's reference values",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/010-eight-glasses-of-water.txt",
+        "title": "Do You Need Eight Glasses of Water a Day?",
+        "description": "You have heard the rule a hundred times. Where it came from is stranger than the rule itself."
+      }
     },
     {
       "number": 11,
       "title": "Do You Really Need Eight Hours?",
       "covers": "Where the eight-hour figure comes from, how much sleep adults actually need, why it varies from person to person, and the signs you are not getting enough.",
-      "source": "NHS sleep guidance and the American Academy of Sleep Medicine consensus on adult sleep duration"
+      "source": "NHS sleep guidance and the American Academy of Sleep Medicine consensus on adult sleep duration",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/011-do-you-need-eight-hours.txt",
+        "title": "Do You Really Need Eight Hours?",
+        "description": "Eight hours of sleep sounds like science. It started as a slogan."
+      }
     },
     {
       "number": 12,
       "title": "Why Do We Get Goosebumps?",
       "covers": "The tiny muscles that lift each hair, why cold and fear both trigger them, and what they were for in our furry ancestors.",
-      "source": "Physiology reviews and research on the arrector pili muscles"
+      "source": "Physiology reviews and research on the arrector pili muscles",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/012-why-do-we-get-goosebumps.txt",
+        "title": "Why Do We Get Goosebumps?",
+        "description": "Cold air, a scary film, a song you love: all three bring the same tiny bumps. They are a leftover from when we were furry."
+      }
     },
     {
       "number": 13,

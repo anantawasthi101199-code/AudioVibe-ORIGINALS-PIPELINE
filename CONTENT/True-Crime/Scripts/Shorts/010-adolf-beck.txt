@@ -1,0 +1,21 @@
+## who_and_what
+[low, steady] It's the sixteenth of December, 1895, on Victoria Street, in London. A man in his fifties is walking out of his front door when a woman stops him on the pavement and shouts that he is the man who robbed her.
+
+[thoughtful] His name is Adolf Beck. He was born in Norway, and he has lived a restless life, working in shipping and mining in South America and in business in London. He is a little short of money, but he is a respectable man.
+
+[measured] The woman tells a policeman her story. A few weeks earlier, a smartly dressed gentleman calling himself a lord had charmed her, promised her new clothes and jewels, and then walked off with her own rings and watch. And she is certain Beck is him.
+
+[serious] Beck is arrested. Other women come forward with the same story, about the same charming lord, and one after another they point at Beck. [low, steady] The police remember a swindler called John Smith, who did exactly this in the 1870s, and they decide Beck and Smith are the same man.
+
+[measured] Beck can prove he was in South America in the 1870s. But at his trial at the Old Bailey in March 1896, the judge will not let the jury hear about the earlier crimes at all, so the proof is never put to them. [pause] Beck is convicted, and sentenced to seven years of hard prison labour.
+
+## ending
+[thoughtful] In prison, an official finds a clue in the old records. John Smith was circumcised. Adolf Beck is not. They cannot be the same man. Beck's prison number is quietly changed, but he is not set free. He is released in 1901, still officially guilty.
+
+[serious] In 1904, it happens again. More women are robbed by a charming lord, more women point at Beck, and a second jury convicts him. The judge has doubts, and delays the sentence.
+
+[measured] Then, in July 1904, while Beck sits in a cell, a man is caught pawning rings taken from two actresses. A detective recognises him. He is John Smith, the real swindler, who had been free all along.
+
+[thoughtful] Beck is pardoned and paid compensation. A public inquiry follows, and in 1907 Britain creates the Court of Criminal Appeal, so that a wrong verdict can finally be challenged.
+
+[gently] Adolf Beck did not get long to enjoy his name back. He died poor in a London hospital in 1909, a man who had spent five years in prison for what someone else did.

@@ -1,0 +1,16 @@
+## mystery
+[curious] Did you know that the oldest computer ever found is two thousand years old, made of bronze gears, and spent most of that time at the bottom of the sea? [warmly] This is the story of the Antikythera mechanism, and the century it took to work out what it was.
+
+[thoughtful] It begins in 1900, off Antikythera, a small rocky Greek island between Crete and the mainland. A crew of sponge divers, sheltering from a storm, go down and find the wreck of an ancient Roman-era ship, full of bronze and marble statues.
+
+## story
+[measured] Over the next year, divers brought up treasure after treasure, and it all went to the National Archaeological Museum in Athens. Among it was a shapeless lump of corroded bronze and wood, about the size of a shoebox, the colour of old green copper. Nobody looked at it twice.
+
+[curious] Then, in 1902, an archaeologist called Valerios Stais noticed that the lump had split, and inside it was a gear wheel, with tiny triangular teeth. [incredulous] Gears like that were not supposed to exist in the ancient world. Many experts decided it must be something much later that had fallen onto the wreck.
+
+[thoughtful] Fifty years later, a British historian of science, Derek de Solla Price, took it seriously. With a Greek scientist, he used X-rays to see inside the broken pieces. In 1974 he showed that it held a whole train of interlocking gears, and that it was a calculating machine for the sky.
+
+[measured] But the pieces were crusted shut, and much of it stayed a puzzle. In 2005 a team including the scientist Tony Freeth brought a giant scanner to Athens, the kind used to check engine parts, which could see inside solid metal in slices. [building] Hidden inside were more gears, and thousands of tiny Greek letters that nobody had been able to read.
+
+## close
+[delighted] The letters were an instruction manual. Turn a handle on the side, and dials on the front and back showed where the sun and moon were, the moon's phase, the dates of coming eclipses, and even when the next Olympic Games were due. [warmly] Nothing with gears this fine is known again for well over a thousand years, until the great astronomical clocks of medieval Europe.

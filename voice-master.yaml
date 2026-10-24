@@ -920,6 +920,30 @@ channels:
       with names and dates; the wonder is in what happened, not in the voice
       performing it.
     pronounce:
+      - word: Antikythera
+        sayAs: an-tee-KEE-theh-rah
+        ipa: /an.diˈci.θi.ra/
+      - word: Valerios Stais
+        sayAs: vah-LEH-ree-os STAH-ees
+        ipa: /vaˈle.ri.os ˈsta.is/
+      - word: Derek de Solla Price
+        sayAs: DEH-rick deh SOL-ah PRICE
+        ipa: /ˈdɛrɪk də ˈsɒlə praɪs/
+      - word: Tony Freeth
+        sayAs: Tony Freeth
+        ipa: /ˈtoʊni friːθ/
+      - word: Wilhelm Röntgen
+        sayAs: VIL-helm RENT-gen
+        ipa: /ˈvɪlhɛlm ˈʁœntɡən/
+      - word: Röntgen
+        sayAs: RENT-gen
+        ipa: /ˈʁœntɡən/
+      - word: Würzburg
+        sayAs: VURTS-boorg
+        ipa: /ˈvʏʁtsbʊʁk/
+      - word: Anna Bertha
+        sayAs: AH-nah BEHR-tah
+        ipa: /ˈana ˈbɛʁta/
       - word: tetrafluoroethylene
         sayAs: TET-ruh-FLOOR-oh-ETH-uh-leen
       # Original-language sounds (2026-10-16), scripts going live next.
@@ -1455,6 +1479,60 @@ channels:
       name and a life, said with care. No performed dread, no ominous pauses
       the facts have not earned.
     pronounce:
+      - word: Qutub Minar
+        sayAs: KUH-tub mee-NAR
+        ipa: /qʊˈt̪ʊb mɪˈnaːr/
+      - word: Mehrauli
+        sayAs: meh-ROW-lee
+        ipa: /mɛɦˈɾɔːliː/
+      - word: Jessica Lal
+        sayAs: JESS-ih-kuh LAAL
+        ipa: /ˈdʒɛsɪkə laːl/
+      - word: Sabrina Lal
+        sayAs: sah-BREE-nah LAAL
+        ipa: /səˈbriːnə laːl/
+      - word: Bina Ramani
+        sayAs: BEE-nah rah-MAH-nee
+        ipa: /ˈbiːnaː ɾəˈmaːniː/
+      - word: Malini
+        sayAs: MAH-lih-nee
+        ipa: /ˈmaːlɪniː/
+      - word: Shayan Munshi
+        sayAs: SHAH-yahn MOON-shee
+        ipa: /ˈʃaːjən ˈmʊnʃiː/
+      - word: Manu Sharma
+        sayAs: MUH-noo SHAR-mah
+        ipa: /ˈmənuː ˈʃərmaː/
+      - word: Venod Sharma
+        sayAs: VEH-nod SHAR-mah
+        ipa: /ʋɪˈnoːd̪ ˈʃərmaː/
+      - word: Vikas Yadav
+        sayAs: vih-KAAS YAH-dav
+        ipa: /ʋɪˈkaːs ˈjaːd̪əʋ/
+      - word: Tata Safari
+        sayAs: TAH-tah sah-FAH-ree
+        ipa: /ˈʈaːʈaː səˈfaːɾiː/
+      - word: Haryana
+        sayAs: har-YAH-nah
+        ipa: /ɦəɾˈjaːɳaː/
+      - word: Tehelka
+        sayAs: teh-HEL-kah
+        ipa: /t̪əˈɦəlkaː/
+      - word: Lal
+        sayAs: LAAL
+        ipa: /laːl/
+      - word: Adolf Beck
+        sayAs: AH-dolf BECK
+        ipa: /ˈɑːdɔlf bɛk/
+      - word: Leonardo Notarbartolo
+        sayAs: lay-oh-NAR-doh noh-tar-BAR-toh-loh
+        ipa: /leoˈnardo notarˈbartolo/
+      - word: Notarbartolo
+        sayAs: noh-tar-BAR-toh-loh
+        ipa: /notarˈbartolo/
+      - word: August Van Camp
+        sayAs: OW-gust vahn KAHMP
+        ipa: /ˈʌu̯ɣʏst fɑŋ ˈkɑmp/
       # Original-language sounds (2026-10-16), scripts going live next.
       - word: Gustafsdotter
         sayAs: GUS-tahvs-dot-ter

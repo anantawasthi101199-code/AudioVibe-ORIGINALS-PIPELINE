@@ -116,13 +116,23 @@
       "number": 10,
       "title": "The Antikythera Mechanism",
       "covers": "In 1901 divers found a lump of corroded bronze in a Greek shipwreck, and it turned out to be a 2,000-year-old astronomical computer.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/010-antikythera-mechanism.txt",
+        "title": "The Antikythera Mechanism",
+        "description": "Divers found a lump of green bronze in a Greek shipwreck. It took a hundred years to see it was a computer."
+      }
     },
     {
       "number": 11,
       "title": "The Glowing Screen: Rontgen and X-Rays",
       "covers": "In 1895 Wilhelm Rontgen saw a screen glow across his dark lab, and days later took the first X-ray, of his wife's hand.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/011-rontgen-and-x-rays.txt",
+        "title": "The Glowing Screen: Rontgen and X-Rays",
+        "description": "In 1895 a screen began to glow across a dark lab in Germany. Weeks later, a woman saw the bones of her own hand."
+      }
     },
     {
       "number": 12,
