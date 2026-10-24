@@ -1,11 +1,11 @@
 ## hook
-[low, steady] It is around two o'clock in the morning, on Friday, the thirtieth of April, 1999, in south Delhi. A party has been going since the evening, in the open courtyard of a restaurant called Tamarind Court, in Mehrauli, near the Qutub Minar, the tall red stone tower that every visitor to the city is taken to see.
+[steady] It is around two o'clock in the morning, on Friday, the thirtieth of April, 1999, in south Delhi. A party has been going since the evening, in the open courtyard of a restaurant called Tamarind Court, in Mehrauli, near the Qutub Minar, the tall red stone tower that every visitor to the city is taken to see.
 
 [measured] There are a few hundred guests. Fairy lights hang over the courtyard. There is a bar, and tonight it is being run, as a favour, by two young women: the owner's daughter, and a model called Jessica Lal. She is thirty-four. She has been pouring drinks for hours, and the bar has just closed.
 
-[serious] A group of young men arrives late. One of them asks for a drink. Jessica tells him the bar is shut. He offers her a thousand rupees. She says no.
+[measured] A group of young men arrives late. One of them asks for a drink. Jessica tells him the bar is shut. He offers her a thousand rupees. She says no.
 
-[low, steady] He takes out a pistol. He fires one shot into the ceiling. Then he fires a second time, and Jessica Lal falls behind the bar. [pause] Dozens of people are close enough to see it happen. And seven years later, a court in Delhi will decide that it cannot say who fired that gun.
+[steady] He takes out a pistol. He fires one shot into the ceiling. Then he fires a second time, and Jessica Lal falls behind the bar. [pause] Dozens of people are close enough to see it happen. And seven years later, a court in Delhi will decide that it cannot say who fired that gun.
 
 ## context
 [warmly] Before any of this, here are the people this story needs. Jessica Lal, the model behind the bar. Sabrina Lal, her older sister, who will spend the next eleven years making sure Jessica is not forgotten. Bina Ramani, the restaurant's owner, a well-known Delhi fashion designer, and her daughter Malini, who was working the bar with Jessica. Shayan Munshi, a young model who was standing near the bar that night. And the man accused of firing the gun, Manu Sharma, the son of Venod Sharma, a powerful politician from Haryana, the state next to Delhi.
@@ -14,42 +14,42 @@
 
 [measured] Tamarind Court sat in the Qutub Colonnade, a cluster of smart shops and cafés where Delhi's richer families went to be seen. The party that night was a private one, full of models, business people, journalists and the children of important families.
 
-[serious] That last part matters. In Delhi at the end of the 1990s, the sons of powerful men were often believed to be above the rules. People said it out loud, half as a joke. What happened next would test whether it was true.
+[measured] That last part matters. In Delhi at the end of the 1990s, the sons of powerful men were often believed to be above the rules. People said it out loud, half as a joke. What happened next would test whether it was true.
 
 ## investigation
 [measured] In the minutes after the shots, the courtyard emptied in panic. Jessica was taken to hospital, where she was declared dead. Witnesses told the police that the man who fired had walked out, and driven away from the colonnade in a silver Tata Safari, a large car.
 
-[serious] The car was found abandoned. It belonged to Manu Sharma's family. Within days the police were searching for him, and for the friends who had been with him that night, among them Vikas Yadav, the son of another politician. About a week after the shooting, Manu Sharma was in police custody.
+[measured] The car was found abandoned. It belonged to Manu Sharma's family. Within days the police were searching for him, and for the friends who had been with him that night, among them Vikas Yadav, the son of another politician. About a week after the shooting, Manu Sharma was in police custody.
 
 [thoughtful] The gun was never found. The police said that Manu Sharma's friends had helped him hide it and get away, and those friends were charged too, with destroying evidence and protecting him. In August 1999 the police filed their charges. Manu Sharma was charged with murder.
 
 [measured] On paper, it looked like a strong case. Several people had told the police, that same night, what they saw. Shayan Munshi, the young model standing near the bar, was one of them. His statement named the man who fired.
 
-[serious] Then the trial began, and it moved slowly. Months turned into years. [low, steady] And one by one, in the witness box, the key witnesses changed their stories.
+[measured] Then the trial began, and it moved slowly. Months turned into years. [steady] And one by one, in the witness box, the key witnesses changed their stories.
 
 [thoughtful] In law, this is called a witness turning hostile. A hostile witness is someone who tells the court something different from what they told the police, so that the side who called them can no longer rely on them. It happens in courts everywhere. But in Indian trials of powerful people, it had a reputation. People suspected money, or threats, or both.
 
 [measured] In 2001, Shayan Munshi told the court that his statement had been written down in Hindi, a language he said he could not read well, and that it did not say what he had seen. He now said there had been two men with two guns, and that he could not identify the one who fired. Other witnesses said they had seen nothing, or could not be sure.
 
-[serious] The defence built on that. Two bullet cases had been found, it argued, perhaps from two different guns. With no gun recovered and the eyewitnesses wavering, it said, the police could not prove who had fired.
+[measured] The defence built on that. Two bullet cases had been found, it argued, perhaps from two different guns. With no gun recovered and the eyewitnesses wavering, it said, the police could not prove who had fired.
 
-[low, steady] On the twenty-first of February, 2006, almost seven years after the shooting, the trial court gave its judgment. It acquitted Manu Sharma of murder. It acquitted every one of the nine people charged. [pause] In a courtyard full of people, a woman had been shot, and in the eyes of the law, nobody had done it.
+[steady] On the twenty-first of February, 2006, almost seven years after the shooting, the trial court gave its judgment. It acquitted Manu Sharma of murder. It acquitted every one of the nine people charged. [pause] In a courtyard full of people, a woman had been shot, and in the eyes of the law, nobody had done it.
 
 ## turning_point
 [measured] The next morning, one of India's biggest newspapers put five words across its front page. No One Killed Jessica.
 
-[serious] In the days that followed, something happened that nobody in that courtroom had expected. Ordinary people, many of whom had never heard of Jessica Lal while she was alive, decided they would not accept it. Text messages went round Delhi asking people to come out. Television channels took up the case every night. Petitions filled up with signatures.
+[measured] In the days that followed, something happened that nobody in that courtroom had expected. Ordinary people, many of whom had never heard of Jessica Lal while she was alive, decided they would not accept it. Text messages went round Delhi asking people to come out. Television channels took up the case every night. Petitions filled up with signatures.
 
-[low, steady] And then, in the weeks after the verdict, came the scene that people in Delhi still remember. In the evening, at India Gate, the great stone war memorial in the middle of the capital, thousands of people gathered, holding small candles. Students, office workers, families with children. They stood in the dark around the memorial, each with a little flame cupped in their hands, in silence.
+[steady] And then, in the weeks after the verdict, came the scene that people in Delhi still remember. In the evening, at India Gate, the great stone war memorial in the middle of the capital, thousands of people gathered, holding small candles. Students, office workers, families with children. They stood in the dark around the memorial, each with a little flame cupped in their hands, in silence.
 
 [thoughtful] Sabrina Lal had spent seven years going to court dates, often almost alone. Now she was standing in front of a crowd that had come because of her sister.
 
-[serious] In September 2006, a news magazine called Tehelka broadcast a hidden-camera investigation. It alleged that some of the witnesses in the case had been paid or pressured to change their stories. Those claims were never tested at a criminal trial, but they hardened what the country already felt.
+[measured] In September 2006, a news magazine called Tehelka broadcast a hidden-camera investigation. It alleged that some of the witnesses in the case had been paid or pressured to change their stories. Those claims were never tested at a criminal trial, but they hardened what the country already felt.
 
 [measured] Meanwhile, the Delhi Police had appealed against the acquittal to the Delhi High Court. Under all that public attention, the High Court did something unusual. It heard the appeal day after day, without the long gaps that had dragged out the first trial. [pause] That public pressure was the turning point. Without it, the appeal would most likely have waited for years.
 
 ## aftermath
-[serious] On the eighteenth of December, 2006, the Delhi High Court overturned the acquittal. The judges found that the witnesses who had stood by their accounts, Bina Ramani among them, were believable, and that the case against Manu Sharma was proved. They convicted him of murder. Two days later, he was sentenced to life in prison. Vikas Yadav and another friend were convicted of destroying evidence.
+[measured] On the eighteenth of December, 2006, the Delhi High Court overturned the acquittal. The judges found that the witnesses who had stood by their accounts, Bina Ramani among them, were believable, and that the case against Manu Sharma was proved. They convicted him of murder. Two days later, he was sentenced to life in prison. Vikas Yadav and another friend were convicted of destroying evidence.
 
 [measured] Manu Sharma appealed to the Supreme Court of India. On the nineteenth of April, 2010, almost eleven years after that night at Tamarind Court, the Supreme Court upheld his conviction.
 
@@ -59,4 +59,4 @@
 
 [thoughtful] The case changed how many people in India talked about justice and power. It showed that an acquittal of a well-connected man could be challenged, and it made hostile witnesses a national argument. A Hindi film, No One Killed Jessica, told the story again in 2011.
 
-[softly] But the person at the centre of it was Jessica. A thirty-four-year-old model, standing behind a bar she had agreed to help with as a favour, who said no to a man who wanted one more drink. [gently] Her sister made sure the country never forgot her name.
+[warmly] But the person at the centre of it was Jessica. A thirty-four-year-old model, standing behind a bar she had agreed to help with as a favour, who said no to a man who wanted one more drink. [warmly] Her sister made sure the country never forgot her name.

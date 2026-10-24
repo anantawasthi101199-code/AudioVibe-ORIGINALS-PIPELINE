@@ -1,7 +1,7 @@
 ## who_and_what
-[low, steady] It's Monday morning, the seventeenth of February, 2003, in Antwerp, in Belgium. Two floors under the Antwerp Diamond Centre, a guard opens the door to the vault, and stops.
+[steady] It's Monday morning, the seventeenth of February, 2003, in Antwerp, in Belgium. Two floors under the Antwerp Diamond Centre, a guard opens the door to the vault, and stops.
 
-[serious] The floor is covered in diamonds, gold, jewels and paperwork, ankle deep. The doors of the strongboxes hang open. More than a hundred of them have been emptied.
+[measured] The floor is covered in diamonds, gold, jewels and paperwork, ankle deep. The doors of the strongboxes hang open. More than a hundred of them have been emptied.
 
 [measured] Antwerp is the world's diamond city. Most of the world's rough diamonds pass through a few streets near its railway station, and this vault was meant to be one of the safest places on earth. It had a lock with a hundred million possible combinations, heat sensors that could feel a body, a light sensor, a magnetic alarm on the door and a sensor that could feel the walls being drilled. Ten layers of security in all.
 
@@ -12,7 +12,7 @@
 ## ending
 [thoughtful] That same Monday, August Van Camp was walking his land by a motorway outside Brussels, in a patch of woods where people kept dumping rubbish. He found bin bags of it. Inside were envelopes from the Diamond Centre, diamond certificates, tape from its security cameras, and a half-eaten salami sandwich.
 
-[serious] He called the police. Among the papers was a receipt that led them towards Notarbartolo, and DNA from the sandwich was later matched to him. He was arrested, and in 2005 a Belgian court convicted him, and sentenced him to ten years in prison. Other members of the team were convicted too.
+[measured] He called the police. Among the papers was a receipt that led them towards Notarbartolo, and DNA from the sandwich was later matched to him. He was arrested, and in 2005 a Belgian court convicted him, and sentenced him to ten years in prison. Other members of the team were convicted too.
 
 [measured] Years later, Notarbartolo told a journalist his own version, saying the haul was much smaller and the job was an inside fraud. That claim was never proved.
 

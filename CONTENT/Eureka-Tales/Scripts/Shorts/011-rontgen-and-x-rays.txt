@@ -6,11 +6,11 @@
 ## story
 [measured] Röntgen was experimenting with a glass tube with almost all the air pumped out of it. When a strong electric current runs through a tube like that, it glows. To block out that glow, he had wrapped the tube tightly in black cardboard, and darkened the room completely.
 
-[curious] Then he switched on the current. And across the room, about a metre away, something shone. A small screen, painted with a chemical that glows when certain rays hit it, was lit up a faint green. [a beat, then softly] Nothing visible could be getting out of that cardboard. Yet something was reaching the screen.
+[curious] Then he switched on the current. And across the room, about a metre away, something shone. A small screen, painted with a chemical that glows when certain rays hit it, was lit up a faint green. [a beat] Nothing visible could be getting out of that cardboard. Yet something was reaching the screen.
 
-[building] He tried to block it. A book did not stop it. A pack of cards did not stop it. Wood did not stop it. A sheet of lead did. And when he held a small piece of lead in front of the screen, he saw something that frightened him. On the glowing screen were the bones of his own fingers.
+[measured] He tried to block it. A book did not stop it. A pack of cards did not stop it. Wood did not stop it. A sheet of lead did. And when he held a small piece of lead in front of the screen, he saw something that frightened him. On the glowing screen were the bones of his own fingers.
 
 [thoughtful] For weeks he told almost nobody. He ate and slept in the lab, testing the rays again and again, in case he was wrong. He called them X-rays, because in maths X stands for something unknown.
 
 ## close
-[warmly] On the twenty-second of December, he asked his wife, Anna Bertha, to hold her hand still on a photographic plate for about fifteen minutes. The picture showed her bones and her ring. [delighted] Within weeks, doctors were using X-rays to find broken bones and bullets, and in 1901 Röntgen won the first Nobel Prize in Physics.
+[warmly] On the twenty-second of December, he asked his wife, Anna Bertha, to hold her hand still on a photographic plate for about fifteen minutes. The picture showed her bones and her ring. [warmly] Within weeks, doctors were using X-rays to find broken bones and bullets, and in 1901 Röntgen won the first Nobel Prize in Physics.
