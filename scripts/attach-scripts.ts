@@ -51,7 +51,10 @@ const dirFor = (m: MapFile): string => {
     .filter((o) => o.channelId === m.channelId)
     .flatMap(itemsOf)
     .find((i) => i.script);
-  return sibling ? `${path.posix.dirname(path.posix.dirname(sibling.script!.file))}/${folder}` : `CONTENT/Scripts/${m.id}`;
+  if (sibling) return `${path.posix.dirname(path.posix.dirname(sibling.script!.file))}/${folder}`;
+  // A channel's first map: CONTENT/<Channel-Name>/Scripts/<map title>, like the others.
+  const channel = loadPersona(m.channelId).name.replace(/^The /, '').replace(/[^A-Za-z0-9]+/g, '-');
+  return `CONTENT/${channel}/Scripts/${folder}`;
 };
 
 const next = (mapId: string, count: number) => {

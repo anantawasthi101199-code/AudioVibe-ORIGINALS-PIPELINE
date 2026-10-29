@@ -1,0 +1,119 @@
+{
+  "id": "unknown-hour-cases",
+  "channelId": "unknown-hour",
+  "title": "Unknown Hour Cases",
+  "formatId": "mystery-episode",
+  "series": [
+    {
+      "number": 1,
+      "title": "Vanished",
+      "note": "People and ships that disappeared, in time order. Distinct from The Crime Files: no murder, no trial.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Roanoke: The Colony That Vanished",
+          "covers": "In 1587 about 115 English settlers landed on Roanoke Island in what is now North Carolina, including the first English child born in the Americas, Virginia Dare. When their governor, John White, returned in 1590, they were gone, with one word carved on a post: CROATOAN. The theories: moving to Croatoan Island, joining local peoples, the drought, the Spanish; and what recent archaeology has and has not found.",
+          "source": "John White's account of the 1590 voyage and recent archaeological reports (First Colony Foundation, Hatteras excavations)"
+        },
+        {
+          "number": 2,
+          "title": "The Mary Celeste",
+          "covers": "On 4 December 1872 the crew of the Dei Gratia found the Mary Celeste sailing on her own between the Azores and Portugal: cargo intact, the lifeboat gone, and no sign of Captain Benjamin Briggs, his wife, his two-year-old daughter or the crew. The salvage hearing in Gibraltar, Arthur Conan Doyle's invented version that spread the myths, and the theories: alcohol fumes, a waterspout, a faulty pump.",
+          "source": "The Gibraltar salvage inquiry records and Paul Begg's Mary Celeste: The Greatest Mystery of the Sea"
+        },
+        {
+          "number": 3,
+          "title": "The Flannan Isles Lighthouse Keepers",
+          "covers": "In December 1900 a relief boat reached the lighthouse on Eilean Mor, in the Outer Hebrides of Scotland, and found the three keepers, James Ducat, Thomas Marshall and Donald MacArthur, gone, with a set of oilskins still on its hook. What the Northern Lighthouse Board's superintendent found, the later invented logbook entries, and the theory of a giant wave.",
+          "source": "Superintendent Robert Muirhead's official report (Northern Lighthouse Board) and Keith McCloskey's The Lighthouse"
+        },
+        {
+          "number": 4,
+          "title": "Amelia Earhart's Last Flight",
+          "covers": "On 2 July 1937 the aviator Amelia Earhart and her navigator Fred Noonan disappeared over the Pacific while trying to find tiny Howland Island on a flight around the world. The radio calls, the huge search, and the leading theories: running out of fuel and crashing at sea, or landing on Nikumaroro reef, and what each piece of evidence really shows.",
+          "source": "US Navy and Coast Guard records of the search, and published research by TIGHAR and its critics"
+        },
+        {
+          "number": 5,
+          "title": "Flight 19 and the Bermuda Triangle",
+          "covers": "On 5 December 1945 five US Navy Avenger bombers on a training flight from Fort Lauderdale lost their way and disappeared; a rescue flying boat sent after them also vanished. What the radio transcripts and the Navy board of investigation say, and how this one case built the legend of the Bermuda Triangle.",
+          "source": "The US Navy board of investigation report and the radio transcripts"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Strange Deaths, No Killer",
+      "note": "Deaths with no murderer and no settled cause, in time order. Told with care for the people who died; no graphic detail.",
+      "episodes": [
+        {
+          "number": 6,
+          "title": "Roopkund: The Lake of Skeletons",
+          "covers": "High in the Indian Himalayas, at about 5,000 metres, a small glacial lake in Uttarakhand holds the bones of hundreds of people. A forest ranger found them in 1942. For decades the story was one group killed by a hailstorm, until a 2019 DNA study found they died in separate events about a thousand years apart, including people from the eastern Mediterranean.",
+          "source": "Harney et al. (2019), Nature Communications, and earlier studies of the Roopkund remains"
+        },
+        {
+          "number": 7,
+          "title": "The Dancing Plague of 1518",
+          "covers": "In July 1518 a woman began to dance in a street in Strasbourg and could not stop; within weeks dozens, perhaps hundreds, were dancing, and the city council hired musicians to keep them dancing. What the city records show, and the theories: ergot poisoning from mouldy rye, or mass psychogenic illness in a starving, frightened city.",
+          "source": "Strasbourg city records and John Waller's A Time to Dance, a Time to Die"
+        },
+        {
+          "number": 8,
+          "title": "The Ourang Medan: A Ship of the Dead?",
+          "covers": "Reports from 1948 told of distress calls from a Dutch ship, the Ourang Medan, in Indonesian waters, and a boarding party finding every crewman dead. But no register lists the ship. An episode about the story, the theories (smuggled chemicals, carbon monoxide) and the real possibility that the ship never existed.",
+          "source": "The 1948 to 1952 newspaper reports and later research into ship registers (e.g. Theo Paijmans)"
+        },
+        {
+          "number": 9,
+          "title": "The Dyatlov Pass Incident",
+          "covers": "In February 1959 nine experienced hikers led by Igor Dyatlov died on a slope in the northern Ural Mountains of the Soviet Union, after cutting their way out of their own tent and walking into the snow in their socks. The original inquiry's 'compelling natural force', the many theories, the 2019 Russian review, and the 2021 study in Communications Earth and Environment proposing a small slab avalanche.",
+          "source": "The Soviet case files, the 2019 Russian prosecutor's review, and Gaume and Puzrin (2021)"
+        },
+        {
+          "number": 10,
+          "title": "The Lead Masks",
+          "covers": "In August 1966 two Brazilian electronics technicians, Manoel Pereira da Cruz and Miguel Jose Viana, were found dead on a hill near Niteroi, in suits and raincoats, with lead eye masks beside them and a note with instructions. No injuries, no settled cause, and no one ever charged. What the police and the notes recorded, and the theories.",
+          "source": "Contemporary Brazilian reporting and later investigations of the case"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Signals, Lights and Messages",
+      "note": "Things seen, heard or written that nobody can fully explain, in time order.",
+      "episodes": [
+        {
+          "number": 11,
+          "title": "The Voynich Manuscript",
+          "covers": "A small book on vellum, carbon-dated to the early 1400s, filled with an unknown script and drawings of plants that do not exist, bathing women and star charts. Bought by Wilfrid Voynich in 1912, studied by wartime codebreakers, and still unread. The theories: a lost language, a cipher, a meaningless hoax, and why each one struggles.",
+          "source": "Yale's Beinecke Library (MS 408), the University of Arizona's 2009 carbon dating, and published research"
+        },
+        {
+          "number": 12,
+          "title": "Tunguska: The Forest That Fell",
+          "covers": "On 30 June 1908 an explosion over the Siberian forest near the Tunguska River flattened about 80 million trees across more than two thousand square kilometres, and left no crater. The first expedition, Leonid Kulik's, did not arrive until 1927. What the eyewitnesses said and why most scientists think an asteroid or comet exploded in the air, and what is still argued.",
+          "source": "Kulik's expedition reports and reviews of the Tunguska event in the scientific literature"
+        },
+        {
+          "number": 13,
+          "title": "The Wow! Signal",
+          "covers": "On 15 August 1977 the Big Ear radio telescope in Ohio picked up a 72-second signal so strong that the astronomer Jerry Ehman circled it on the printout and wrote 'Wow!'. It was never heard again. What it was, why it looked like what scientists hoped an alien signal would look like, and the explanations since, including hydrogen clouds.",
+          "source": "Ehman's own account, Big Ear Observatory records, and later published analyses"
+        },
+        {
+          "number": 14,
+          "title": "The Lights of Hessdalen",
+          "covers": "Since about 1981 people in the Hessdalen valley in Norway have seen lights floating over the hills, sometimes for over an hour. Scientists set up an automatic monitoring station in 1998. What the measurements show and the leading theories about what produces them.",
+          "source": "Project Hessdalen's published reports and peer-reviewed studies"
+        },
+        {
+          "number": 15,
+          "title": "The Taos Hum",
+          "covers": "In the early 1990s some residents of Taos, New Mexico, began hearing a low droning hum that most of their neighbours could not hear at all. A 1993 study by scientists failed to find the source. Why only some people hear it, what similar hums in Bristol and elsewhere turned out to be, and what is still open.",
+          "source": "The 1993 Taos Hum investigation and published research on 'the Hum'"
+        }
+      ]
+    }
+  ]
+}

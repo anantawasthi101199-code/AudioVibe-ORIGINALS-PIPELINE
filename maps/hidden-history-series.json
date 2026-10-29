@@ -1,0 +1,119 @@
+{
+  "id": "hidden-history-series",
+  "channelId": "hidden-history",
+  "title": "Hidden History",
+  "formatId": "history-episode",
+  "series": [
+    {
+      "number": 1,
+      "title": "The Last Days of Empires",
+      "note": "Five empires at the moment they ended, in time order: who was in charge, what the last days were like, and what came after. Each episode stands alone.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "The Boy Who Was the Last Emperor of Rome",
+          "covers": "In 476 a teenage emperor, Romulus Augustulus, was quietly removed by the Germanic general Odoacer, who sent the imperial regalia to Constantinople and did not bother to name a successor. How the Western Roman Empire had shrunk to that point, what daily life in Italy was like, and why many people at the time barely noticed it had ended.",
+          "source": "Standard histories of late antiquity (e.g. Peter Heather, Bryan Ward-Perkins) and the surviving chronicles"
+        },
+        {
+          "number": 2,
+          "title": "Constantinople, 1453: The Last Roman City",
+          "covers": "The fifty-three-day siege of Constantinople by the 21-year-old Ottoman sultan Mehmed II: the giant cannon, the chain across the Golden Horn, the ships dragged overland, and the last emperor, Constantine XI, who died on the walls. Told from both sides of the walls.",
+          "source": "Accounts of Nicolo Barbaro, George Sphrantzes and Tursun Beg, and Roger Crowley's 1453"
+        },
+        {
+          "number": 3,
+          "title": "Tenochtitlan: The Fall of the Aztec Capital",
+          "covers": "From 1519 to 1521: Hernan Cortes, the Mexica emperor Moctezuma II, the allies who turned on the Mexica, smallpox, and the siege of the island city of Tenochtitlan. Told using both the Spanish accounts and the Mexica accounts recorded in the Florentine Codex, saying where they differ.",
+          "source": "Bernal Diaz del Castillo, the Florentine Codex (Book 12), Matthew Restall's When Montezuma Met Cortes"
+        },
+        {
+          "number": 4,
+          "title": "The Last Mughal Emperor",
+          "covers": "Bahadur Shah Zafar, an old poet-emperor with almost no power, found himself at the centre of the 1857 uprising against the East India Company. The siege of Delhi, the fall of the city, his trial, and his exile to Rangoon, where he died in 1862.",
+          "source": "William Dalrymple's The Last Mughal and contemporary records of the 1857 uprising"
+        },
+        {
+          "number": 5,
+          "title": "The Last Days of the Romanovs",
+          "covers": "From the abdication of Tsar Nicholas II in March 1917 to the night of 16 to 17 July 1918 in the basement of the Ipatiev House in Yekaterinburg. The family's captivity, the decisions of the Bolsheviks, and the DNA work that finally identified the remains.",
+          "source": "Standard histories (Robert Massie, Helen Rappaport) and the published forensic findings"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Journeys Into the Unknown",
+      "note": "Five great journeys, in time order: who went, why, what they carried, what went wrong, and what they found.",
+      "episodes": [
+        {
+          "number": 6,
+          "title": "Ibn Battuta: Thirty Years on the Road",
+          "covers": "In 1325 a 21-year-old from Tangier set out on the pilgrimage to Mecca and did not come home for nearly thirty years, travelling through Africa, the Middle East, India, the Maldives and China. His time as a judge in Delhi under Sultan Muhammad bin Tughluq, and the book he dictated at the end.",
+          "source": "The Rihla of Ibn Battuta (Gibb translation) and Ross Dunn's The Adventures of Ibn Battuta"
+        },
+        {
+          "number": 7,
+          "title": "Zheng He and the Treasure Fleet",
+          "covers": "Between 1405 and 1433 the Ming admiral Zheng He led seven voyages of enormous ships across the Indian Ocean to India, Arabia and East Africa, then China stopped, burned the records and turned inward. Why the fleets sailed and why they ended.",
+          "source": "Edward Dreyer's Zheng He: China and the Oceans in the Early Ming Dynasty, and Ma Huan's account"
+        },
+        {
+          "number": 8,
+          "title": "Magellan: The First Voyage Around the World",
+          "covers": "In 1519 five ships and about 270 men left Spain; three years later one ship and eighteen men came back. The mutiny, the strait at the bottom of South America, the hunger in the Pacific, Magellan's death in the Philippines, and Juan Sebastian Elcano bringing the Victoria home.",
+          "source": "Antonio Pigafetta's journal and Laurence Bergreen's Over the Edge of the World"
+        },
+        {
+          "number": 9,
+          "title": "Burke and Wills: Crossing Australia",
+          "covers": "In 1860 a lavishly funded expedition set out from Melbourne to cross Australia from south to north. How poor decisions, bad timing and a missed meeting by nine hours led to tragedy, and how the Aboriginal Yandruwandha people kept the one survivor alive.",
+          "source": "State Library of Victoria's Burke and Wills archive and published histories of the expedition"
+        },
+        {
+          "number": 10,
+          "title": "Shackleton: The Ship Crushed in the Ice",
+          "covers": "In 1915 the ship Endurance was crushed by Antarctic sea ice. How Ernest Shackleton's 28 men camped on the ice, sailed lifeboats to Elephant Island, and how six of them crossed 800 miles of the Southern Ocean in a small open boat to fetch help, and every man survived.",
+          "source": "Shackleton's South, Frank Worsley's account, and Alfred Lansing's Endurance"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Rulers Who Changed Everything",
+      "note": "Five rulers at the moment that defined them, in time order. Fair to them and to the people they ruled.",
+      "episodes": [
+        {
+          "number": 11,
+          "title": "Ashoka: The Emperor Who Regretted a War",
+          "covers": "Around 261 BCE the Mauryan emperor Ashoka conquered Kalinga, in eastern India, at a huge cost in lives, and then did something almost no conqueror has done: he carved his regret into stone. His edicts, his turn to Buddhism, and how much of the story historians can confirm.",
+          "source": "Ashoka's edicts (Rock Edict XIII) and Romila Thapar's Asoka and the Decline of the Mauryas"
+        },
+        {
+          "number": 12,
+          "title": "Cleopatra: The Last Pharaoh",
+          "covers": "Cleopatra VII ruled Egypt from 51 to 30 BCE, the last of the Ptolemies, playing Rome's civil wars to keep her kingdom independent. Julius Caesar, Mark Antony, the battle of Actium, and her death. Separating what the ancient writers recorded from Roman propaganda.",
+          "source": "Plutarch's Life of Antony, Cassius Dio, and Stacy Schiff's Cleopatra"
+        },
+        {
+          "number": 13,
+          "title": "Genghis Khan: From Outcast to World Conqueror",
+          "covers": "A boy named Temujin, abandoned with his family on the Mongolian steppe, united the Mongol tribes and in 1206 became Genghis Khan. How he built an army and an empire, the terrible cost to the cities that resisted, and what he left behind.",
+          "source": "The Secret History of the Mongols and standard histories (e.g. Jack Weatherford, Timothy May)"
+        },
+        {
+          "number": 14,
+          "title": "Akbar: The Boy Who Became the Great Mughal",
+          "covers": "In 1556 thirteen-year-old Akbar became Mughal emperor in a garden in Punjab, with his empire nearly lost. How he won it back, expanded it across northern India, married into Rajput families, and held debates between religions in his House of Worship at Fatehpur Sikri.",
+          "source": "Abul Fazl's Akbarnama and modern histories of the Mughal empire"
+        },
+        {
+          "number": 15,
+          "title": "Elizabeth I and the Spanish Armada",
+          "covers": "In 1588 Philip II of Spain sent about 130 ships to invade England and remove Elizabeth I. How the queen got there, the fire ships at Calais, the battle off Gravelines, the storms that wrecked the Armada around Scotland and Ireland, and the speech at Tilbury.",
+          "source": "Garrett Mattingly's The Armada and the National Archives' Armada records"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+# One episode of a serial drama, Midnight Chapters (2026-10-29).
+#
+# WHY THIS SHAPE. The audio serial (Pocket FM, past USD 500m a year in 2026)
+# and the vertical micro-drama (ReelShort, DramaBox, about USD 11-14bn in
+# 2025-26) both run on one engine: every episode ends on a question the
+# listener cannot leave. That engine is built, not found. The season is broken
+# into episode cards FIRST (the map's `covers` holds each card: what happens,
+# what is planted, what pays off, the cliffhanger), and each episode is written
+# against its own card and the NEXT one, never write-then-split. See
+# docs/DRAMA.md for why.
+#
+# THREE PARTS, like myth-story, because the owner heard five-part episodes as
+# five fresh starts. Where we are and the hook; the episode itself, in scenes;
+# the cliffhanger.
+#
+# ONE VOICE TELLS IT. Narrated with dialogue, by the channel's narrator, never a
+# full cast: every line of speech is attributed ("she said") the first time in a
+# scene, because the listener cannot see who is talking.
+
+id: drama-episode
+name: Serial drama episode
+
+research: single
+
+kind: long
+intent: >
+  One episode of a continuing drama, told by one narrator in scenes with
+  dialogue: the listener is placed in the story in under a minute, lives
+  through this episode's turn, and is left on a cliffhanger that the next
+  episode answers.
+
+# 8-13 minutes. A ceiling, never a target.
+targetSeconds: [420, 780]
+
+serialised: true
+
+loops:
+  - id: the_hook
+    question: What happens next?
+
+beats:
+  - id: cold_open
+    type: cold_open
+    seconds: [45, 110]
+    function: >
+      Drop the listener into a moment, then tell them in two or three sentences
+      who these people are and what happened last time.
+    opens: [the_hook]
+    constraints:
+      - >
+        OPEN ON A MOMENT, NOT A SUMMARY. A person, a place, something in their
+        hands, something said. "The letter had been in the bin for an hour
+        before Maya took it out again." Never "In this episode".
+      - >
+        EPISODE ONE: the first scene IS the opening. Introduce at most three
+        people, each with one line on who they are.
+      - >
+        EVERY LATER EPISODE: after the opening moment, two or three plain
+        sentences of "last time" (where we are, who matters, the cliffhanger
+        we left on), then straight on. Assume a fortnight has passed and the
+        names have gone. Never a list, never the whole season.
+      - No greeting, no channel name, no episode number said aloud.
+
+  - id: story
+    type: escalation
+    seconds: [300, 560]
+    function: >
+      This episode's own story, in scenes, in time order, building to the turn
+      the card describes.
+    constraints:
+      - >
+        SCENES, NOT SUMMARY. Each turn is one scene or one jump in time: where
+        we are, who is there, what they do with their hands, what they say. The
+        listener should be able to picture the room.
+      - >
+        DIALOGUE CARRIES THE DRAMA, AND EVERY LINE IS ATTRIBUTED. "Clara put the
+        cup down. 'You're not family,' she said." Name the speaker before or
+        right after their first line in a scene. Never two unattributed lines in
+        a row.
+      - >
+        PEOPLE TALK LIKE PEOPLE. Short lines, interruptions, things left unsaid,
+        a question answered with a question. Nobody explains their own feelings
+        in full sentences ("I feel betrayed because..."). Show it in what they
+        do instead.
+      - >
+        PLANT WHAT THE CARD SAYS TO PLANT, and plant it as something ordinary.
+        A key, a name in a ledger, a habit. It has to matter a little now or its
+        return later sounds convenient.
+      - >
+        PAY OFF WHAT THE CARD SAYS PAYS OFF, by showing the planted thing again
+        so the listener remembers it.
+      - >
+        THE STAKES ARE PERSONAL AND CONCRETE. Money with a figure, a home, a
+        job, a child, a secret somebody will lose. Never "everything".
+      - >
+        ONE NARRATOR, FROM ONE CHARACTER'S SIDE. Follow the lead character; the
+        listener knows what she knows. No jumping into five people's heads.
+      - Six to ten turns. Every turn continues the last one; none restarts.
+
+  - id: cliffhanger
+    type: cliffhanger
+    seconds: [40, 100]
+    function: >
+      The turn that changes what the listener believed, ending on the question
+      the next episode answers. The channel's outro follows.
+    closes: [the_hook]
+    constraints:
+      - >
+        END ON A REVEAL OR A DECISION, NEVER ON "WE'LL FIND OUT". A new fact
+        that makes the last scene mean something else, a door opening on the
+        wrong person, a line of dialogue that cannot be taken back. The last
+        sentence is short and concrete.
+      - >
+        AIM AT THE NEXT CARD. The cliffhanger is the first thing the next
+        episode answers; check it against that card, not just this one.
+      - >
+        THE FINALE (the last card of a season) LANDS INSTEAD: answer the
+        season's question, show where everyone ends up, close on one image the
+        listener met in episode one.
+      - No goodbye, no "stay tuned"; the channel's fixed outro is added after this.
+
+tensionCurve: [0.6, 0.85, 1.0]

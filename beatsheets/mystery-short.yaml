@@ -1,0 +1,62 @@
+# One real unexplained event in three minutes, The Unknown Hour.
+#
+# The short tells the event and the best explanation honestly. It ends on the
+# question that is genuinely still open, never on a fake cliffhanger.
+
+id: mystery-short
+name: Unexplained, in three minutes
+
+research: single
+
+kind: short
+intent: >
+  One real, documented, unexplained event told complete in under three minutes:
+  the strange fact, what happened in order, the best explanation and what it
+  still does not explain.
+
+targetSeconds: [140, 180]
+
+serialised: false
+
+loops:
+  - id: the_question
+    question: What really happened?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [25, 40]
+    function: >
+      The documented fact that does not fit, then what this is the story of,
+      then the first scene.
+    opens: [the_question]
+    constraints:
+      - >
+        LINE ONE: the strange fact, with a date or a number, said plainly.
+      - "LINE TWO: what and where this is, for somebody who has never heard of it."
+      - No greeting, no channel name, no "spooky" or "chilling".
+
+  - id: story
+    type: escalation
+    seconds: [75, 100]
+    function: What happened, in order, from the documented record.
+    constraints:
+      - The people first, as people. AT MOST THREE NAMES.
+      - Time order; only what was recorded, and say who recorded it.
+      - Two or three turns, each continuing the last.
+
+  - id: question
+    type: payoff
+    seconds: [35, 50]
+    function: >
+      The best explanation, attributed, what it does not explain, and the one
+      question still open. The channel's outro follows.
+    closes: [the_question]
+    constraints:
+      - >
+        THE BEST-SUPPORTED EXPLANATION FIRST, attributed, then the one fact it
+        still cannot account for.
+      - The supernatural is reported as a belief, never as what happened.
+      - End on the open question in one plain sentence. No goodbye; the outro follows.
+
+tensionCurve: [0.7, 1.0, 0.6]

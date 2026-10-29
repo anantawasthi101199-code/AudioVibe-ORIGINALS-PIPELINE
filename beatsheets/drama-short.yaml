@@ -1,0 +1,81 @@
+# A complete drama in three minutes, Midnight Chapters (2026-10-29).
+#
+# THE MICRO-DRAMA, MADE FOR EARS. A vertical micro-drama episode is one to three
+# minutes with one turn in it. This is a WHOLE story at that length: a person
+# wants something, something is in the way, and the last line turns the story
+# over. Not an excerpt of a serial and never "to be continued".
+#
+# THE TWIST IS WRITTEN FIRST. The map item's `covers` names the twist; the
+# writer plants it in the setup so that a second listen shows it was there all
+# along. A twist with no plant is a cheat, and listeners say so.
+
+id: drama-short
+name: Three-minute drama
+
+research: single
+
+kind: short
+intent: >
+  One complete story in under three minutes, told by one narrator with
+  dialogue: a person, a want, a problem, and a last line that turns the whole
+  thing over and was planted from the start.
+
+targetSeconds: [140, 180]
+
+serialised: false
+
+loops:
+  - id: the_twist
+    question: What is really going on?
+
+beats:
+  - id: setup
+    type: cold_open
+    seconds: [45, 65]
+    function: >
+      One person in one place at a moment that already has trouble in it, and
+      the thing they want.
+    opens: [the_twist]
+    constraints:
+      - >
+        THE FIRST SENTENCE IS A MOMENT WITH A QUESTION IN IT. "Every night at
+        nine, Mrs Kapoor set two cups on the table, and every night one stayed
+        full." No greeting, no "this is a story about".
+      - >
+        AT MOST THREE PEOPLE IN THE WHOLE SHORT, each named or described the
+        moment they arrive.
+      - >
+        PLANT THE TWIST HERE, in plain sight, as an ordinary detail.
+
+  - id: turn
+    type: escalation
+    seconds: [65, 85]
+    function: >
+      The problem pushes back, in scenes with dialogue, until the person has to
+      act.
+    constraints:
+      - >
+        SCENES AND DIALOGUE, every line attributed. Short lines; people do not
+        explain themselves.
+      - >
+        LEAD THE LISTENER TO THE OBVIOUS READING, fairly. The twist costs
+        nothing if nothing was believed.
+      - Two or three turns, each continuing the last.
+
+  - id: twist
+    type: button
+    seconds: [20, 35]
+    function: >
+      The reveal that turns the story over, and one line that lands it. The
+      channel's outro follows.
+    closes: [the_twist]
+    constraints:
+      - >
+        THE REVEAL USES THE PLANT. The detail from the first part comes back and
+        means something new.
+      - >
+        END ON THE TURN. One or two short sentences after the reveal at most.
+        No moral, no explaining the twist, no "and she never forgot".
+      - No goodbye and no follow ask; the channel's fixed outro is added after this.
+
+tensionCurve: [0.6, 0.85, 1.0]

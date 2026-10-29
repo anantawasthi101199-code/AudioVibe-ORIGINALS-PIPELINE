@@ -23,6 +23,11 @@ import { spokenDate } from '../newsScript';
 import { namesRegion } from '../roundup';
 import { countriesByName } from '../countries';
 
+// No live channel has a desk since 2026-10-29 (global-thread became deep
+// dives); the daily desk and its persona stay in archive/ as this lane's fixture.
+process.env.FOUNDRY_DESKS_DIR = path.resolve(__dirname, '../../../archive/desks');
+process.env.FOUNDRY_PERSONAS_DIR = path.resolve(__dirname, '../../../archive/personas');
+
 const desk = deskSchema.parse({
   id: 'global-thread',
   beat: 'geopolitics',

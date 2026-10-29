@@ -1,0 +1,180 @@
+{
+  "id": "global-thread-conflicts",
+  "channelId": "global-thread",
+  "title": "The World Explained",
+  "formatId": "geo-episode",
+  "series": [
+    {
+      "number": 1,
+      "title": "Israel and Palestine: The Long Road",
+      "note": "The conflict from the end of the Ottoman Empire to the war in Gaza, in time order. FAIRNESS RULES (persona canon): Israeli and Palestinian accounts each in their own terms and at the same length; 'says' for both; casualty figures attributed with source and date; Hamas introduced with the governments that designate it a terrorist organisation; both names for disputed places. The last episode is dated and must be checked against current reporting on the day it is written.",
+      "episodes": [
+        {
+          "number": 1,
+          "title": "Two Peoples, One Land",
+          "covers": "From the Ottoman Empire's Palestine to the British Mandate: Jewish immigration and the Zionist movement, the Arab population already there, the Balfour Declaration of 1917, the British promises to both sides, and the riots and revolt of the 1920s and 1930s.",
+          "source": "Standard histories from more than one perspective (e.g. Rashid Khalidi, Benny Morris, Ian Black's Enemies and Neighbours), the Balfour Declaration and British Mandate documents"
+        },
+        {
+          "number": 2,
+          "title": "1948: Independence and Nakba",
+          "covers": "The UN partition plan of 1947, the war that followed, Israel's declaration of independence in May 1948 and the war with neighbouring Arab states, and the flight and expulsion of about 700,000 Palestinians, which Palestinians call the Nakba, the catastrophe. How each side remembers the same year.",
+          "source": "UN Resolution 181, Benny Morris's 1948, Rashid Khalidi's The Hundred Years' War on Palestine, and UNRWA records"
+        },
+        {
+          "number": 3,
+          "title": "1967: Six Days and Fifty Years",
+          "covers": "The Six-Day War of June 1967, Israel's capture of the West Bank, East Jerusalem, Gaza, the Golan Heights and Sinai, UN Resolution 242, the first settlements, and the 1973 war. What occupation means in daily life, and how Israel's government describes its security needs.",
+          "source": "UN Resolutions 242 and 338, standard histories of 1967 (e.g. Tom Segev, Michael Oren), and B'Tselem and Israeli government documents"
+        },
+        {
+          "number": 4,
+          "title": "Oslo: The Peace That Almost Happened",
+          "covers": "The first intifada from 1987, the secret talks in Norway, the 1993 handshake between Yitzhak Rabin and Yasser Arafat, the Palestinian Authority, Rabin's assassination in 1995, the Camp David summit of 2000 and the second intifada. Why each side says the other let peace fail.",
+          "source": "The Oslo Accords texts and accounts by negotiators on both sides (e.g. Dennis Ross, Saeb Erekat, Shlomo Ben-Ami)"
+        },
+        {
+          "number": 5,
+          "title": "Gaza, Hamas and the Blockade",
+          "covers": "Israel's withdrawal from Gaza in 2005, Hamas winning the 2006 elections and taking control of Gaza in 2007, the Israeli and Egyptian blockade, rockets from Gaza and the wars of 2008, 2014 and 2021. Life in Gaza and life in the Israeli towns nearby.",
+          "source": "UN OCHA reports, Israeli government statements, Human Rights Watch, and reporting from multiple outlets (BBC, Reuters, Times of Israel, Al Jazeera)"
+        },
+        {
+          "number": 6,
+          "title": "October 7 and the War in Gaza",
+          "covers": "The Hamas-led attack on Israel on 7 October 2023, in which about 1,200 people were killed and some 250 taken hostage (Israeli figures), and the war in Gaza that followed, with the Gaza health ministry's death toll, the humanitarian crisis, the ICJ case and the hostage and ceasefire deals. Where it stands as of the date of writing. CHECK ALL CURRENT FACTS ON THE DAY.",
+          "source": "Reporting from multiple outlets on the day of writing, UN OCHA, the ICJ case documents, Israeli government and Gaza health ministry figures, each attributed"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Russia and Ukraine: Brothers at War",
+      "note": "From Kyivan Rus to the war, in time order. Moscow's and Kyiv's accounts each in their own terms. The last episode is dated and checked on the day.",
+      "episodes": [
+        {
+          "number": 7,
+          "title": "Kyiv, Moscow and a Shared Past",
+          "covers": "Kyivan Rus, the medieval state both Russia and Ukraine trace themselves to, the Cossacks, the Russian Empire, the brief Ukrainian independence of 1917 to 1921, and the Holodomor, the famine of 1932 and 1933. Why the same history is told so differently in Moscow and Kyiv.",
+          "source": "Serhii Plokhy's The Gates of Europe, Anne Applebaum's Red Famine, and standard Russian and Ukrainian historical accounts"
+        },
+        {
+          "number": 8,
+          "title": "1991: A New Country and the Nuclear Deal",
+          "covers": "The collapse of the Soviet Union, Ukraine's independence vote of December 1991, the Black Sea Fleet and Crimea, and the Budapest Memorandum of 1994, when Ukraine gave up the world's third-largest nuclear arsenal in exchange for security assurances.",
+          "source": "The Budapest Memorandum text, Plokhy's The Last Empire, and contemporary reporting"
+        },
+        {
+          "number": 9,
+          "title": "East or West: NATO and the Orange Revolution",
+          "covers": "NATO's eastward enlargement from 1999, Russia's objections, the Orange Revolution of 2004 over a disputed election, and the NATO Bucharest summit of 2008. How Moscow describes NATO's expansion and how Kyiv and NATO members describe it.",
+          "source": "NATO summit declarations, Vladimir Putin's 2007 Munich speech, and histories of the period (e.g. M. E. Sarotte's Not One Inch)"
+        },
+        {
+          "number": 10,
+          "title": "2014: Maidan, Crimea and the Donbas",
+          "covers": "President Viktor Yanukovych dropping an EU agreement, the Maidan protests and the deaths in Kyiv in February 2014, his flight, Russia's annexation of Crimea after a referendum most countries rejected, the war in the Donbas, the downing of flight MH17, and the Minsk agreements.",
+          "source": "UN General Assembly Resolution 68/262, the Dutch Safety Board MH17 report, OSCE reports, and reporting from multiple outlets"
+        },
+        {
+          "number": 11,
+          "title": "February 2022: The Invasion",
+          "covers": "The build-up of Russian troops, Putin's stated reasons, the full-scale invasion on 24 February 2022, the battle for Kyiv, Bucha, the retreat from the north, and the Ukrainian counter-offensives of autumn 2022 at Kharkiv and Kherson.",
+          "source": "Kremlin and Ukrainian government statements, UN human rights monitoring mission reports, and reporting from multiple outlets"
+        },
+        {
+          "number": 12,
+          "title": "A War of Attrition and the Search for a Deal",
+          "covers": "The front lines since 2023, drones and the cost in lives on both sides (estimates attributed), Western aid and sanctions, the energy war, and the negotiations and ceasefire talks. Where it stands as of the date of writing. CHECK ALL CURRENT FACTS ON THE DAY.",
+          "source": "Reporting from multiple outlets on the day of writing, government statements from both sides, and UN figures, each attributed"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "The Sanctions Weapon",
+      "note": "How economic sanctions work and whether they do, one country at a time. Explainer series; each episode stands alone.",
+      "episodes": [
+        {
+          "number": 13,
+          "title": "How Sanctions Work",
+          "covers": "Why the US dollar and the SWIFT messaging network give Washington a power no army has: the US Treasury's Office of Foreign Assets Control, secondary sanctions, asset freezes, and the difference between UN, US and EU sanctions. One everyday comparison: a bank closing your account and telling every other bank too.",
+          "source": "US Treasury (OFAC) and EU explanations, and Daniel Drezner and Nicholas Mulder's The Economic Weapon"
+        },
+        {
+          "number": 14,
+          "title": "Iran: Forty Years Under Sanctions",
+          "covers": "From the 1979 hostage crisis to the nuclear programme, the 2015 nuclear deal (the JCPOA), the US withdrawal in 2018, maximum pressure, and what sanctions have done to Iran's economy and its people. How Tehran and Washington each describe it.",
+          "source": "The JCPOA text, IAEA reports, US Treasury actions, and reporting from multiple outlets"
+        },
+        {
+          "number": 15,
+          "title": "Russia: The Biggest Sanctions in History",
+          "covers": "After February 2022: frozen central bank reserves, banks cut from SWIFT, the oil price cap, the companies that left, and how Russia rerouted trade through China, India and the Gulf. What worked, what did not, and the arguments on both sides.",
+          "source": "EU and US sanctions announcements, IMF and World Bank data, and analyses from think tanks of differing views"
+        },
+        {
+          "number": 16,
+          "title": "North Korea: The Most Sanctioned Country",
+          "covers": "UN sanctions since the first nuclear test in 2006, how North Korea earns money anyway (smuggling, ship-to-ship transfers, cybercrime reported by the UN panel of experts), and why its nuclear programme kept growing.",
+          "source": "UN Security Council resolutions and UN Panel of Experts reports"
+        },
+        {
+          "number": 17,
+          "title": "China and the Chip War",
+          "covers": "US export controls on advanced semiconductors and chip-making machines since 2022, the role of Taiwan's TSMC and the Netherlands' ASML, Huawei, and China's response with its own controls on rare minerals. Why chips became the front line between the two biggest economies.",
+          "source": "US Commerce Department rules, Chinese Commerce Ministry statements, and Chris Miller's Chip War"
+        },
+        {
+          "number": 18,
+          "title": "Do Sanctions Actually Work?",
+          "covers": "What the research says about when sanctions change a government's behaviour and when they mostly hurt ordinary people: South Africa, Iraq in the 1990s, Cuba, Iran and Russia. The arguments of supporters and critics, attributed.",
+          "source": "Academic studies of sanctions effectiveness (e.g. Hufbauer et al.) and UN reports"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "India and China: The Roof of the World",
+      "note": "The world's two most populous countries and their disputed Himalayan border, in time order. New Delhi's and Beijing's accounts each in their own terms.",
+      "episodes": [
+        {
+          "number": 19,
+          "title": "A Border Nobody Agreed",
+          "covers": "How the British Empire drew lines across the Himalayas, the McMahon Line of 1914 which Tibet's representatives accepted and China never did, Aksai Chin in the west, and how independent India and the People's Republic of China inherited the dispute.",
+          "source": "The Simla Convention documents, Neville Maxwell's India's China War, and Indian and Chinese official positions"
+        },
+        {
+          "number": 20,
+          "title": "Tibet and the Dalai Lama",
+          "covers": "China's entry into Tibet in 1950, the uprising of 1959, the Dalai Lama's escape to India and the Tibetan government in exile in Dharamshala, and why this still shapes how Beijing sees New Delhi.",
+          "source": "Tsering Shakya's The Dragon in the Land of Snows, Chinese government white papers, and Indian official records"
+        },
+        {
+          "number": 21,
+          "title": "1962: The War in the Mountains",
+          "covers": "The Forward Policy, the month-long war of October and November 1962 in Ladakh and the North-East Frontier, China's advance and unilateral ceasefire, and how the defeat changed India.",
+          "source": "The Henderson Brooks-Bhagat report as published, Indian and Chinese official histories, and Srinath Raghavan's War and Peace in Modern India"
+        },
+        {
+          "number": 22,
+          "title": "Doklam: Seventy-Three Days on a Plateau",
+          "covers": "In 2017 Indian troops stopped Chinese road-builders on the Doklam plateau, territory claimed by both China and Bhutan, and the two armies stood face to face for seventy-three days. Why a road near a narrow strip of Indian land called the Chicken's Neck mattered so much.",
+          "source": "Indian and Chinese foreign ministry statements, Bhutan's government statement, and contemporary reporting"
+        },
+        {
+          "number": 23,
+          "title": "Galwan: Clubs and Stones on a Ridge",
+          "covers": "On 15 June 2020, Indian and Chinese soldiers fought with clubs, stones and bare hands in the Galwan Valley in Ladakh; 20 Indian soldiers were killed, and China later said four of its soldiers died. The agreements that forbid firearms at the border, and the long talks and disengagement that followed.",
+          "source": "Indian Army and government statements, Chinese government statements, and reporting from multiple outlets"
+        },
+        {
+          "number": 24,
+          "title": "Rivals and Trading Partners",
+          "covers": "How India and China compete and depend on each other at once: trade, apps banned after Galwan, the Brahmaputra and its dams, BRICS and the Shanghai Cooperation Organisation, and the border talks. Where it stands as of the date of writing. CHECK ALL CURRENT FACTS ON THE DAY.",
+          "source": "Reporting from multiple outlets on the day of writing, Indian and Chinese government statements, and trade data"
+        }
+      ]
+    }
+  ]
+}

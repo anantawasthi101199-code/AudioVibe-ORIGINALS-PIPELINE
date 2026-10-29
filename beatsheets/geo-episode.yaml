@@ -1,0 +1,115 @@
+# One geopolitical situation, explained in depth, The Global Thread
+# (2026-10-29; the channel moved from a daily news desk to deep dives).
+#
+# WHAT THIS IS. A long conflict or power struggle explained so somebody who has
+# only seen headlines understands it: where it started, how each side tells it,
+# the turning points, and where it stands now. Episodes come in series (one
+# conflict per series, in time order), so an episode can go deep on one period.
+#
+# FAIRNESS IS STRUCTURAL, NOT A TONE. The `sides` part exists so each party's
+# case is told in its own terms, attributed, before anything else is weighed.
+# Casualty figures are always attributed with their source and date. The host
+# has no side and makes no prediction.
+#
+# DATED. "Where it stands now" goes stale; the episode says the month and year
+# it describes ("as of October 2026"). Check current facts before writing it.
+
+id: geo-episode
+name: Geopolitics, in depth
+
+research: single
+
+kind: long
+intent: >
+  One chapter of a long geopolitical story, explained plainly and fairly: the
+  roots, how each side sees it, the turning points of this chapter, where it
+  stands now with the date, and what to watch.
+
+targetSeconds: [600, 1140]
+
+serialised: false
+
+loops:
+  - id: the_situation
+    question: How did it come to this?
+
+beats:
+  - id: opening
+    type: orientation
+    seconds: [60, 120]
+    function: >
+      One concrete moment, then what this chapter is about and why it matters
+      to somebody far away. Hand over out loud.
+    opens: [the_situation]
+    constraints:
+      - >
+        FIRST LINE: A CONCRETE MOMENT OR FACT with a date or a number. "In June
+        2020, soldiers of two nuclear powers fought on a Himalayan ridge with
+        clubs and stones."
+      - >
+        THEN WHAT THIS IS, in plain words: the places, the sides, the years
+        this episode covers. Assume no background at all.
+      - >
+        THEN WHY IT MATTERS TO THE LISTENER in one concrete line: a price, a
+        trade route, a vote at the UN.
+      - Hand over out loud. No greeting, no channel name.
+
+  - id: roots
+    type: context
+    seconds: [180, 320]
+    function: >
+      The history this chapter needs, in time order, with every place, group
+      and term explained the moment it arrives.
+    constraints:
+      - >
+        TIME ORDER, A YEAR AT EVERY STEP. Background before the moment it
+        explains.
+      - >
+        WHO'S WHO: every state, group and leader introduced by what it is
+        ("Hamas, the armed Islamist movement that has governed Gaza since 2007,
+        and which the US, the UK and the EU designate a terrorist
+        organisation").
+      - >
+        ONE EVERYDAY COMPARISON where an idea is hard (a border as a property
+        line nobody signed, sanctions as a bank closing your account).
+      - Four to seven turns, each continuing the last.
+
+  - id: sides
+    type: stakes
+    seconds: [150, 280]
+    function: >
+      How each side tells this story, in its own terms, attributed.
+    constraints:
+      - >
+        EACH SIDE GETS ITS STRONGEST HONEST CASE, in the words its own leaders
+        and people use, attributed ("Israel's government says...", "Palestinian
+        leaders say...", "Moscow argues...", "Kyiv says...").
+      - >
+        SAME LENGTH, SAME TONE, SAME VERBS for each side. "Says" for everyone;
+        never "claims" for one and "says" for the other.
+      - >
+        HUMAN COST ON EVERY SIDE, with figures attributed to who counted them
+        and when ("Gaza's health ministry, run by Hamas, says...; the UN says
+        it considers those figures broadly reliable").
+      - Where international bodies have ruled (the UN, the ICJ), say so plainly.
+
+  - id: now
+    type: payoff
+    seconds: [120, 240]
+    function: >
+      Where it stands as of the date given, and what the listener should watch,
+      in the words of named people, never the host's prediction.
+    closes: [the_situation]
+    constraints:
+      - >
+        SAY THE MONTH AND YEAR: "As of October 2026...". Only facts current at
+        that date.
+      - >
+        WHAT TO WATCH, attributed: talks scheduled, a deadline, a vote. Never
+        "only time will tell", never a forecast in the host's voice.
+      - >
+        END ON ONE CONCRETE PERSON OR PLACE from earlier in the episode, not on
+        a slogan.
+      - No goodbye; the channel's fixed outro is added after this.
+
+tensionCurve: [0.5, 0.8, 1.0, 0.6]

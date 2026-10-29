@@ -1,0 +1,108 @@
+# One true story from history, told whole, Hidden History (2026-10-29).
+#
+# THE MYTH-STORY SHAPE, BECAUSE IT WORKS IN THE EAR. Three parts: where we are
+# and why it matters, the story in order, what became of everyone. The owner
+# heard five-part episodes as five fresh starts; three parts with spoken
+# handovers flow.
+#
+# WHAT MAKES IT HISTORY AND NOT MYTH: dates, real places, and honesty about
+# what we know. Where historians genuinely disagree, the episode says so ONCE,
+# where it matters, and names whose account it is. It never invents dialogue
+# and presents it as recorded: words in quotation marks are words somebody
+# wrote down.
+
+id: history-episode
+name: History, told as a story
+
+research: single
+
+kind: long
+intent: >
+  One true story from history, told in full and in time order by somebody who
+  has read it properly: who these people were, what they wanted, what happened
+  hour by hour where it matters, and what became of them.
+
+targetSeconds: [600, 1140]
+
+serialised: false
+
+loops:
+  - id: the_story
+    question: What happened, and why?
+
+beats:
+  - id: opening
+    type: orientation
+    seconds: [70, 140]
+    function: >
+      A moment from the story, then what this is, where and when, and why it is
+      worth the listener's time. Hand over to the story out loud.
+    opens: [the_story]
+    constraints:
+      - >
+        FIRST LINE: A REAL MOMENT OR A REAL CONTRAST, with a year or a number.
+        "On the morning of the 29th of May 1453, the last Roman emperor took
+        off his purple cloak and went to the walls as an ordinary soldier."
+      - >
+        THEN SAY PLAINLY WHAT THIS IS: the place, the century, the people, in a
+        few words, for somebody who knows nothing about it.
+      - >
+        NAME AT MOST THREE PEOPLE. Everyone else is met when they act.
+      - >
+        END BY HANDING OVER OUT LOUD: "So let's go back to where it began."
+      - No greeting, no channel name, no "today we look at".
+
+  - id: story
+    type: escalation
+    seconds: [440, 820]
+    function: >
+      The story from its beginning, in order, with every person, place and term
+      explained at the moment it is needed.
+    constraints:
+      - >
+        OPEN AS A CONTINUATION, straight into the beginning. Never re-introduce
+        the subject.
+      - >
+        WHO'S WHO WHEN A CAST ARRIVES. A dynasty, two armies, a royal family:
+        stop once and say who each is, how they are related, which side, then
+        carry on. Remind the listener the first time each one acts.
+      - >
+        A DATE OR A STEP AT EVERY TURN. "Three weeks later", "by the spring of
+        1521". Never jump back and forth.
+      - >
+        SCENES THE LISTENER CAN PICTURE: the weather, the walls, what a soldier
+        carried, what a letter said. Physical detail from the record, never
+        invented colour.
+      - >
+        QUOTATION MARKS ONLY FOR RECORDED WORDS, and say who wrote them down.
+        Everything else is told, not dramatised.
+      - >
+        SAY WHY at every why. People in history had reasons; give them.
+      - >
+        WHERE HISTORIANS DISAGREE, SAY IT ONCE, plainly, at that point ("the
+        Spanish accounts say...; the Mexica accounts say..."), then carry on.
+      - >
+        FAIR TO EVERYONE IN IT. Conquerors and conquered, rulers and ruled: the
+        people on the losing side are people, with names where the record has
+        them.
+      - Six to ten turns, each continuing the last.
+
+  - id: legacy
+    type: outro
+    seconds: [90, 180]
+    function: >
+      What became of everyone, what changed because of it, and one thing to walk
+      away with. The channel's outro follows.
+    closes: [the_story]
+    constraints:
+      - >
+        PICK UP FROM WHERE THE STORY STOPPED, by name.
+      - >
+        LAND THE ENDING FIRST: what happened to each main person, plainly.
+      - >
+        THEN WHAT IT CHANGED, concretely: a border, a law, a word we still use,
+        a building still standing. Two or three sentences.
+      - No new names here. No moral. End on one image from earlier.
+      - No goodbye; the channel's fixed outro is added after this.
+
+tensionCurve: [0.45, 1.0, 0.55]

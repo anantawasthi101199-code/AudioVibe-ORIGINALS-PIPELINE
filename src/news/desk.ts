@@ -120,7 +120,10 @@ export const ROUNDUP_FORMAT = 'news-roundup';
 export const newsFormatFor = (desk: Desk, topic: string, fallback: string): string =>
   desk.roundup && topic.trim().toLowerCase() === desk.beat.toLowerCase() ? ROUNDUP_FORMAT : fallback;
 
-export const desksDir = (): string => path.resolve(__dirname, '..', '..', 'desks');
+// The override exists for the news lane's tests: no channel has a desk since
+// global-thread moved to deep dives (2026-10-29), so they read archive/desks.
+export const desksDir = (): string =>
+  process.env.FOUNDRY_DESKS_DIR ?? path.resolve(__dirname, '..', '..', 'desks');
 
 const fileFor = (id: string, dir: string) => path.join(dir, `${id}.yaml`);
 

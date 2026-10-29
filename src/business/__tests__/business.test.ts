@@ -40,7 +40,7 @@ describe('the shipped channel', () => {
     expect(() => assertFormatInLane('news', 'biz-episode')).toThrow(/business format/);
     expect(() => assertFormatInLane('business', 'news-short')).toThrow(/news format/);
     expect(() => assertFormatInLane('business', 'myth-story')).toThrow(/only runs its own/);
-    expect(laneOf(loadPersona('global-thread'))).toBe('news');
+    expect(laneOf(loadPersona('global-thread'))).toBe('story');
     expect(laneOf(loadPersona('mythic-archives'))).toBe('story');
   });
 

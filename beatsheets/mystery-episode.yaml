@@ -1,0 +1,111 @@
+# One real unexplained event, told whole, The Unknown Hour (2026-10-29).
+#
+# WHAT THIS CHANNEL IS AND IS NOT. Real, documented events that still have no
+# settled explanation: a ship found empty, nine hikers dead on a mountain, a
+# signal from space that never came back. NOT legends (Mythic Archives), NOT
+# murders with a court record (The Crime Files), NOT a science puzzle that was
+# solved (Eureka Tales).
+#
+# THE THEORIES PART IS THE CHANNEL. Every leading explanation is given its best
+# case and its biggest problem, and the episode says which one the evidence
+# supports best, attributed. The supernatural is reported as what somebody
+# believed, never as what happened. The mystery is in the facts; nothing is
+# added to make it spookier.
+
+id: mystery-episode
+name: Unexplained, told whole
+
+research: single
+
+kind: long
+intent: >
+  One real, documented, still-unexplained event told in full: the moment, the
+  people, what happened in order, what was found, every serious explanation
+  weighed fairly, and what is still unknown.
+
+targetSeconds: [600, 1140]
+
+serialised: false
+
+loops:
+  - id: the_question
+    question: What really happened?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [60, 120]
+    function: >
+      The strangest documented fact, then what this is, where and when. Hand
+      over to the story out loud.
+    opens: [the_question]
+    constraints:
+      - >
+        FIRST LINE: THE FACT THAT DOES NOT FIT, with a date or a number. "On the
+        4th of December 1872, a ship was found sailing itself across the
+        Atlantic, with a meal laid out and nobody on board."
+      - >
+        THEN WHAT THIS IS: the place, the year, the people involved, in plain
+        words for somebody who has never heard of it.
+      - >
+        THEN THE QUESTION THE EPISODE WILL TAKE SERIOUSLY, in one sentence.
+      - Hand over out loud ("So let's go back to the start.").
+      - No greeting, no channel name, no "spooky", no "chilling".
+
+  - id: story
+    type: escalation
+    seconds: [360, 660]
+    function: >
+      What happened, in time order, from before anything went wrong to the
+      moment it was discovered and investigated.
+    constraints:
+      - >
+        THE PEOPLE FIRST. Who they were before this happened: a job, an age, a
+        reason to be there. They are people, not props in a mystery.
+      - >
+        TIME ORDER, with a date or an hour at each turn. Background before the
+        moment it explains.
+      - >
+        ONLY THE DOCUMENTED. What the logbook said, what the search party found,
+        what the inquiry recorded. Say where each fact comes from when it
+        matters ("the search party's report says...").
+      - >
+        THE DETAIL THAT DOES NOT FIT gets its full weight, and is said plainly,
+        once. Never pile on adjectives to make it eerie.
+      - Five to nine turns, each continuing the last.
+
+  - id: theories
+    type: mechanism
+    seconds: [150, 300]
+    function: >
+      Every serious explanation, its best evidence and its biggest problem, and
+      which one the evidence supports best.
+    constraints:
+      - >
+        EACH THEORY: WHO PROPOSED IT, THE BEST CASE, THE BIGGEST PROBLEM. In
+        that order, in plain words.
+      - >
+        SAY WHICH IS BEST SUPPORTED, attributed ("most investigators now
+        think..."), and why. If none is, say that.
+      - >
+        THE SUPERNATURAL IS REPORTED, NEVER ENDORSED. "Some people in the
+        village believed..." is fine; "something unearthly" is not.
+      - >
+        NEVER ACCUSE A REAL PERSON who was not convicted. A suspect is "a man
+        the police questioned and released", never "the killer".
+
+  - id: close
+    type: outro
+    seconds: [60, 120]
+    function: >
+      What is still unknown, what became of the people, and the one detail to
+      leave with. The channel's outro follows.
+    closes: [the_question]
+    constraints:
+      - >
+        SAY PLAINLY WHAT WE KNOW AND WHAT WE DO NOT, in two sentences.
+      - Remember the people by name. No new names.
+      - End on one concrete image from earlier. No "we may never know".
+      - No goodbye; the channel's fixed outro is added after this.
+
+tensionCurve: [0.6, 1.0, 0.8, 0.5]

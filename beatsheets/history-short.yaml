@@ -1,0 +1,68 @@
+# One astonishing true moment from history in three minutes, Hidden History.
+#
+# The short is the story people did not get taught: a real event so strange or
+# so human that the first line makes you check it was true. One moment, one
+# central person or group, told complete, in order.
+
+id: history-short
+name: History in three minutes
+
+research: single
+
+kind: short
+intent: >
+  One true, surprising moment from history told complete in under three
+  minutes: a hook with a year in it, the story in order, and how it ended.
+
+targetSeconds: [140, 180]
+
+serialised: false
+
+loops:
+  - id: the_moment
+    question: How did that happen?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [25, 40]
+    function: >
+      The surprising true fact, then what this is the story of, then the first
+      scene.
+    opens: [the_moment]
+    constraints:
+      - >
+        LINE ONE: the most surprising true thing in the story, with a year or a
+        number. "In 1932, the Australian army went to war with emus, and lost."
+      - >
+        LINE TWO: what this is the story of, by name and place, for somebody who
+        has never heard of it.
+      - "Then begin: a place, a year, a person, something you could see."
+      - No greeting, no channel name.
+
+  - id: story
+    type: escalation
+    seconds: [80, 105]
+    function: >
+      What happened, in order, with every term explained the moment it arrives.
+    constraints:
+      - People doing things, one after another, with the why in the same breath.
+      - NAME AT MOST THREE PEOPLE. Everyone else is what they did.
+      - Only recorded words in quotation marks, and say who recorded them.
+      - Two or three turns, each continuing the last.
+
+  - id: close
+    type: payoff
+    seconds: [30, 45]
+    function: >
+      How it ended and the one concrete thing it left behind. The channel's
+      outro follows.
+    closes: [the_moment]
+    constraints:
+      - ANSWER THE HOOK completely.
+      - >
+        ONE CONCRETE TRACE: what is still there, what changed, a number. Never
+        "and history was never the same".
+      - No goodbye and no follow ask; the channel's fixed outro is added after this.
+
+tensionCurve: [0.7, 1.0, 0.5]

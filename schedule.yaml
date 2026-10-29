@@ -102,10 +102,38 @@ shows:
     shortsPerEpisode: 0
     autoPublish: false
 
-  # Daily news, shorts only: one report a day. No fixed slot - a report goes
-  # out when it is approved, because news a day late is not news.
+  # Geopolitical deep dives since 2026-10-29 (was daily news): one chapter of a
+  # series a week, shorts between. Saturday, the one free day.
   global-thread:
-    everyDays: 1
-    perWeek: { episodes: 0, shorts: 7 }
+    everyDays: 7
+    slot: { day: sat, hour: 9 }
+    perWeek: { episodes: 1, shorts: 3 }
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  # Added 2026-10-29. Days double up with existing channels at different hours;
+  # the owner's to change.
+  #
+  # A serial trains an expectation: two chapters a week, same evenings, so a
+  # listener waiting on a cliffhanger is never kept long.
+  midnight-chapters:
+    everyDays: 3
+    slot: { day: tue, hour: 21 }
+    perWeek: { episodes: 2, shorts: 3 }
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  hidden-history:
+    everyDays: 7
+    slot: { day: sun, hour: 17 }
+    perWeek: { episodes: 1, shorts: 3 }
+    shortsPerEpisode: 0
+    autoPublish: false
+
+  # Friday night is when people put on something strange.
+  unknown-hour:
+    everyDays: 7
+    slot: { day: fri, hour: 22 }
+    perWeek: { episodes: 1, shorts: 3 }
     shortsPerEpisode: 0
     autoPublish: false

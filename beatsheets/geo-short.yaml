@@ -1,0 +1,63 @@
+# One geopolitical idea in three minutes, The Global Thread (2026-10-29).
+#
+# The short explains ONE thing people hear in the news and never get explained:
+# why a strait matters, what Article 5 does, why one river can start a crisis.
+# Evergreen where possible, so it does not go stale in a week; anything
+# time-bound says the month and year.
+
+id: geo-short
+name: Geopolitics in three minutes
+
+research: single
+
+kind: short
+intent: >
+  One geopolitical idea, place or flashpoint explained in under three minutes:
+  a concrete hook, the explanation with one everyday comparison, and why it
+  matters now, fairly to every side.
+
+targetSeconds: [140, 180]
+
+serialised: false
+
+loops:
+  - id: the_idea
+    question: Why does this matter?
+
+beats:
+  - id: hook
+    type: cold_open
+    seconds: [25, 40]
+    function: >
+      A concrete fact with a number, then what this is about.
+    opens: [the_idea]
+    constraints:
+      - >
+        LINE ONE: a concrete fact with a number. "About a fifth of the world's
+        oil passes through a channel of water twenty-one miles wide."
+      - "LINE TWO: what this is the story of, by name."
+      - No greeting, no channel name.
+
+  - id: explain
+    type: mechanism
+    seconds: [80, 105]
+    function: >
+      How it works and how it came to be, with one everyday comparison, and
+      how each side involved sees it.
+    constraints:
+      - One idea. A year at every step. Every group introduced by what it is.
+      - ONE EVERYDAY COMPARISON that carries the explanation.
+      - Every side's view attributed in the same neutral words.
+      - Two or three turns, each continuing the last.
+
+  - id: close
+    type: payoff
+    seconds: [30, 45]
+    function: >
+      Why it matters now, dated, concrete. The channel's outro follows.
+    closes: [the_idea]
+    constraints:
+      - One concrete consequence (a price, a route, a vote). Month and year if time-bound.
+      - No prediction, no slogan. No goodbye; the outro follows.
+
+tensionCurve: [0.7, 1.0, 0.5]
