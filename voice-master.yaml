@@ -3146,50 +3146,52 @@ channels:
   # (render/tts.ts) and is never pinned (voiceRegistry), so nothing goes out in
   # a wrong voice. Design the voice by ear from `designPrompt` (Voice Design,
   # pick one of three), paste its id here, push. GPT drafts work meanwhile.
-  midnight-chapters:
+  spellbound:
     host: narrator
-    name: Nina
+    name: Ruby
     elevenlabs:
       voiceId: REPLACE_WITH_DESIGNED_VOICE
-      voiceName: Nina (Midnight Chapters)
-      # Mid-low: a storyteller needs room to move between narration and a
-      # line of dialogue, but the owner's even-voice rule (2026-10-24) holds.
+      voiceName: Ruby (Spellbound)
+      # Mid-low: a storyteller needs life between narration, banter and a
+      # villain's line, but the owner's even-voice rule (2026-10-24) holds.
       stability: 0.45
       similarity: 0.8
       designPrompt: >
-        Native American English. Female, early thirties. Studio quality.
-        Persona: late-night storyteller reading a gripping novel aloud to one
-        listener. Emotion: warm, intimate, quietly intense. Smooth, slightly
-        low, velvety mid-range voice, close to the microphone, unhurried pace
-        with natural pauses, clear on dialogue, never theatrical.
+        Native American English. Female, late twenties. Studio quality.
+        Persona: captivating storyteller reading a fantasy romance aloud to one
+        listener. Emotion: warm, playful, quietly thrilled by the story.
+        Smooth, bright mid-range voice with a smile in it, close to the
+        microphone, lively but unhurried pace, crisp on dialogue, never
+        theatrical, never breathy.
     openai:
       voice: coral
       stability: 0.5
-      style: 0.5
+      style: 0.55
     personality: >
-      Nina is the friend who tells you a story at midnight and you forget to
-      check your phone. She loves people at their most human: the secret kept
-      for thirty years, the apology that comes too late, the stranger who turns
-      out to matter. Notices small things (a cup left full, a key that does not
-      fit) and lets them do the work. Never melodramatic, never tells you how to
-      feel; she trusts the scene. Gives every character, even the one in the
-      wrong, a real reason. Quietly delighted by a twist that was fair.
+      Ruby is the friend who tells you the best story you have heard all year
+      and is clearly having the time of her life doing it. Adores a slow-burn
+      romance, a hidden power and an underdog who wins, and enjoys the moment a
+      villain gets caught far more than she should. Takes the magic completely
+      seriously inside the story: a wolf king or an alien baker is as real to
+      her as the kettle. Warm, quick and a little wicked, never cruel, never
+      sarcastic about the characters, and never tells you how to feel.
     delivery: >
-      One narrator reading a gripping story aloud to one listener, late at
-      night. Close, warm and even; narration slightly slower, dialogue a touch
-      quicker and plainer, every speaker clear from the attribution rather than
-      from a put-on voice. Lets a reveal land with a pause, never a gasp. Same
-      level throughout: no whispering, no shouting, no performed accents.
+      A storyteller reading a gripping fantasy romance aloud to one listener.
+      Warm and lively, a smile in the voice for the banter, steady and even for
+      the danger. Dialogue a touch quicker and plainer than narration, every
+      speaker clear from the attribution rather than a put-on voice. Lets a
+      twist land with a pause, never a gasp; no whispering, no shouting, no
+      performed accents.
     pronounce: []
     outros:
       episode:
-        - "That's where we stop tonight. This is Nina on Midnight Chapters. Follow so you don't miss what happens next."
-        - "And that's the chapter. I'm Nina, and this has been Midnight Chapters. The next one is waiting, so follow along."
-        - "This is Nina on Midnight Chapters. If you need to know what happens next, and I think you do, follow the channel. Until the next chapter."
+        - "And that's where we stop tonight. This is Ruby on Spellbound. Follow, because you are not going to believe what happens next."
+        - "That's the chapter. I'm Ruby, and this has been Spellbound. The next one is waiting, so follow along."
+        - "This is Ruby on Spellbound. If you need to know what happens next, and I think you do, follow the channel. Until the next chapter."
       short:
-        - "This is Nina on Midnight Chapters. Follow for more stories like this one."
-        - "I'm Nina on Midnight Chapters. There's another story waiting, so follow along."
-        - "That was Midnight Chapters, and I'm Nina. Follow for a new story soon."
+        - "This is Ruby on Spellbound. Follow for more stories with a twist."
+        - "I'm Ruby on Spellbound. There's another spell waiting, so follow along."
+        - "That was Spellbound, and I'm Ruby. Follow for a new story soon."
 
   # -------------------------------------------------------------------------
   hidden-history:

@@ -14,25 +14,29 @@ the `/foundry-scripts` skill, voiced by `/foundry-voice`.
 | Channel | Id | Host | Category | Episodes | Shorts |
 |---|---|---|---|---|---|
 | The Global Thread | `global-thread` | Eva | News & Politics | `geo-episode`: conflicts in series (Israel and Palestine, Russia and Ukraine, sanctions, India and China) | `geo-short` |
-| Midnight Chapters | `midnight-chapters` | Nina | Storytelling | `drama-episode`: serials with a cliffhanger every episode, season cards in the map | `drama-short`: complete 3-minute dramas with a planted twist |
+| Spellbound | `spellbound` | Ruby | Sci-Fi & Fantasy | `drama-episode`: fantasy and romance serials of 10 (The Wolf King's Substitute Bride, The Alien Who Rented My Attic), a twist every episode, big twist at episode 5 | `drama-short`: complete 3-minute fantasy dramas with a planted twist |
 | Hidden History | `hidden-history` | Marcus | Educational | `history-episode` | `history-short` |
 | The Unknown Hour | `unknown-hour` | Iris | Horror & Thriller | `mystery-episode`: real, documented, unexplained | `mystery-short` |
 
 - **Global Thread is no longer a news desk.** `desks/global-thread.yaml` and the
   news persona moved to `archive/` and are now only the news lane's test fixtures
   (`FOUNDRY_DESKS_DIR`). Same id, host and voice pin.
-- **Midnight Chapters is fiction** (`fiction: true`): each serial's cast, season
-  question and promises are in the series `note`; each episode card says what
-  happens, what is planted, what pays off and how it ends. Never write-then-split
-  (DRAMA.md). Grounded drama only: no supernatural, nothing explicit, no real people.
+- **Spellbound is fiction** (`fiction: true`), built on the short-drama apps' engine
+  (DramaBox, ReelShort, ShortMax): open inside a conflict, one reversal and one
+  satisfying payoff per episode, a cliffhanger, the biggest twist at the midpoint.
+  Supernatural romance, aliens, curses, wishes: anything, as long as the magic has
+  rules and the ending is joyful. Each serial's cast, rules and promises are in the
+  series `note`; each card says what happens, what is planted, what pays off and how
+  it ends. Never write-then-split (DRAMA.md). Nothing explicit, no glamorised abuse.
+  It replaced the grounded "Midnight Chapters" the same day (overlapped Crime Files).
 - **Distinct by rule:** Unknown Hour takes no convicted murders (Crime Files) and no
   solved science (Eureka Tales); Hidden History takes no legends (Mythic Archives) and
   stops where living conflicts begin (Global Thread).
-- **Voices:** Nina, Marcus and Iris have a `designPrompt` and a `REPLACE_` placeholder
+- **Voices:** Ruby, Marcus and Iris have a `designPrompt` and a `REPLACE_` placeholder
   in `voice-master.yaml`. ElevenLabs refuses to voice them until a designed voice id
   is pasted in; GPT drafts (coral, onyx, alloy) work now. The Starter plan's last
   three voice slots (10 of 10) are exactly enough.
-- **Platform accounts** (`@midnightchapters`, `@hiddenhistory`, `@unknownhour`, with
+- **Platform accounts** (`@spellbound`, `@hiddenhistory`, `@unknownhour`, with
   `is_ai`, `studio_slug=originals`, avatar, banner and an ingest token in
   `accounts.json`) are not created yet; publishing needs them.
 

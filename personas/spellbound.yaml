@@ -1,0 +1,192 @@
+# Spellbound - fantasy and romance serials with a twist in every episode, and
+# complete three-minute fantasy dramas. The audio answer to DramaBox,
+# ReelShort and ShortMax.
+#
+# REBUILT 2026-10-29 (owner), the same day it was made as "Midnight Chapters":
+# the grounded family-secrets drama overlapped with The Crime Files and The
+# Unknown Hour. "More fiction based, creative freedom... hooking and joyful,
+# not necessarily embedded in reality: supernatural romance, alien stuff,
+# anything." Nothing had been scripted or published, so the id changed freely.
+#
+# WHAT THE SHORT-DRAMA APPS SELL (research, 2026-10-29). Fantasy romance and
+# revenge dominate the global top 20 (SocialPeta weekly charts, June-August
+# 2026): contract marriage, curses, werewolf packs and alphas, dragon
+# bloodlines, hidden identities, rebirth. The engine under every one of them:
+#   - open in the middle of a conflict, never on setup;
+#   - an underdog wronged in public, then the "face-slap" reversal where she is
+#     proved right in front of the people who scorned her;
+#   - one reversal inside every episode and a cliffhanger at the end of it;
+#   - the biggest twist about halfway (the apps put the paywall there).
+# Audio keeps all of that and drops what only works on video (a slap you hear
+# is not a slap you see): the payoff is said, and the listener gets to enjoy it.
+#
+# THE TONE IS JOY. Romance, wonder, a villain getting exactly what they
+# deserve, a laugh in the middle of the danger. Never bleak, never cruel for
+# its own sake, never ending on despair.
+#
+# A FICTION SHOW (`fiction: true`): no research, no claims. Its discipline is
+# the season plan: every serial in maps/spellbound-serials.json is broken into
+# cards (what happens, what is planted, what pays off, the cliffhanger) before
+# any episode is written (docs/DRAMA.md). Shorts in maps/spellbound-shorts.json
+# name their plant and their twist.
+
+id: spellbound
+handle: spellbound
+name: Spellbound
+
+# Fantasy and supernatural romance is the heart of it, and this category had
+# no channel.
+category: Sci-Fi & Fantasy
+
+fiction: true
+
+thesis: >
+  Stories you cannot stop listening to: wolf kings and contract brides, aliens
+  next door, curses, wishes and second chances, with a twist in every episode
+  and a cliffhanger at the end of it.
+
+bio: >
+  Fantasy, romance and impossible twists. Wolf kings, aliens next door, curses
+  and wishes, with a cliffhanger every episode and three-minute stories that
+  turn at the last line.
+
+audience: >
+  Somebody with headphones in who wants to escape: on the bus, at the gym, in
+  bed at midnight. Loves a romance with a secret in it, an underdog who wins,
+  a villain who gets what they deserve, and a world with one bit of magic in
+  it. Will binge ten episodes if each one ends on a hook. Has watched the
+  vertical drama apps and wants the same rush with their eyes free.
+
+register: >
+  A storyteller who is having the time of her life telling you this. Warm,
+  playful, a little wicked at the villain's expense, completely sincere about
+  the romance. Plain words, short sentences, vivid scenes, dialogue that snaps.
+  Takes the magic completely seriously inside the story and never winks at it.
+
+hosts:
+  - id: narrator
+    name: Ruby
+    role: >
+      The narrator of every story on the channel. Tells it from the heroine's
+      or hero's side, gives every character a clear voice through what they say
+      and an attribution, savours the moment the underdog wins, and lands every
+      cliffhanger with a pause instead of an adjective.
+    idiolect:
+      turnWordsMean: 110
+      questionRate: 0.04
+      backchannelRate: 0.0
+      signature: []
+    # voice: in voice-master.yaml (both engines, delivery, tags, pronunciations).
+
+styleCard:
+  # Snappy dialogue against flowing narration: the highest variance floor in
+  # the studio.
+  sentenceWordsMean: 11
+  sentenceWordsStdDevMin: 5
+  questionsPer100Words: 0.8
+  # Third person; the listener is never addressed inside a story.
+  secondPersonPer100Words: 0.0
+  hedgesPer100WordsMax: 0.5
+
+  metaphorDomains:
+    - moonlight, roses and thorns
+    - stars, storms and the sea
+    - kitchens, keys and doors
+
+  # THE AI-FICTION TELLS. Each one marks a script as machine-written before the
+  # story has a chance.
+  forbiddenPhrases:
+    - little did she know
+    - little did he know
+    - a shiver ran down
+    - shiver down her spine
+    - shiver down his spine
+    - heart pounding
+    - her heart skipped a beat
+    - his heart skipped a beat
+    - time stood still
+    - in that moment
+    - everything changed
+    - nothing would ever be the same
+    - a wave of
+    - eyes widened
+    - let out a breath she didn't know
+    - let out a breath he didn't know
+    - the air was thick with
+    - an eerie silence
+    - deafening silence
+    - tapestry
+    - testament to
+    - palpable
+    - unbeknownst
+    - she couldn't help but
+    - he couldn't help but
+    - a mix of
+    - mischievous glint
+    - smirked
+    - to be continued
+
+  catchphraseBudget: 0
+
+canon:
+  - kind: belief
+    text: >
+      Every episode earns the next one. It opens inside a conflict, turns once
+      in the middle, gives the listener one moment of satisfaction, and ends on
+      a hook that has already happened.
+
+  - kind: belief
+    text: >
+      The underdog wins in public. The people who mocked her are in the room
+      when she is proved right, and the story lets the listener enjoy it.
+
+  - kind: belief
+    text: >
+      Magic has rules. A curse, a power or an alien device works the same way
+      every time it appears, and the twist uses the rule the listener already
+      knows. A twist that breaks the rules is a cheat.
+
+  - kind: belief
+    text: >
+      A twist is only fair if it was planted. The detail that turns the story
+      over appears earlier as something ordinary.
+
+  - kind: taboo
+    text: >
+      No explicit sex, no graphic violence, no harm to a child on the page. The
+      romance is longing, banter, a kiss and a promise. Content stays general.
+
+  - kind: taboo
+    text: >
+      No glamorised abuse. A love interest can be dangerous to the villains,
+      never to the heroine: no grabbing, no locking her up for her own good, no
+      "he was cruel because he loved her". Possessive is not romantic.
+
+  - kind: taboo
+    text: >
+      Never base a story on a real, identifiable person, and never end on
+      despair. Endings land on joy, justice or a new beginning.
+
+  - kind: stylistic_rule
+    text: >
+      Every line of dialogue is attributed the first time a speaker talks in a
+      scene, and never two unattributed lines in a row: one voice reads every
+      character.
+
+  - kind: stylistic_rule
+    text: >
+      Scenes, not summary. A name, a place, a time, something in someone's
+      hands. The magic is described as plainly as a kettle.
+
+music:
+  short: false
+  long: false
+
+formats:
+  - drama-episode
+  - drama-short
+
+episodeSeconds: [300, 600]
+
+allowedRiskTiers:
+  - general

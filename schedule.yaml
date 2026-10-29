@@ -116,7 +116,7 @@ shows:
   #
   # A serial trains an expectation: two chapters a week, same evenings, so a
   # listener waiting on a cliffhanger is never kept long.
-  midnight-chapters:
+  spellbound:
     everyDays: 3
     slot: { day: tue, hour: 21 }
     perWeek: { episodes: 2, shorts: 3 }
