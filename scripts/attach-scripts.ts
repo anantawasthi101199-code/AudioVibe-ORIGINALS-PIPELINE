@@ -5,6 +5,8 @@
  *
  *   npx ts-node --transpile-only scripts/attach-scripts.ts next <mapId> [count]
  *       the next items on that map with no script yet, and what they must fit
+ *   npx ts-node --transpile-only scripts/attach-scripts.ts episodes <channelId> [count]
+ *       a channel's next episodes, rotated across all its series (strict order for fiction)
  *   npx ts-node --transpile-only scripts/attach-scripts.ts check <batch.txt>
  *   npx ts-node --transpile-only scripts/attach-scripts.ts write <batch.txt>
  *
@@ -20,6 +22,7 @@
  * each script next to that map's others and records it on the map item; the
  * next deploy turns each into a held run (seedMaps).
  */
+import { execFileSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { loadPersona } from '../src/canon/load';
@@ -65,6 +68,58 @@ const next = (mapId: string, count: number) => {
   const series = new Map(itemsOf(m).map((i) => [i.number, m.series?.find((s) => s.episodes.includes(i))?.title]));
   for (const i of itemsOf(m).filter((x) => !x.script).slice(0, count)) {
     console.log(`\n${mapId}/${i.number}${series.get(i.number) ? `  [series: ${series.get(i.number)}]` : ''}`);
+    console.log(`  title:   ${i.title}\n  covers:  ${i.covers}\n  source:  ${i.source}${i.subject ? `\n  subject: ${i.subject}` : ''}`);
+  }
+};
+
+/**
+ * The next episodes for a CHANNEL, spread across every series of every one of
+ * its episode maps (owner, 2026-11-02): each pick goes to the series whose last
+ * script was committed longest ago (a series never written in goes first,
+ * earliest on a tie), and within a series always the first unscripted episode.
+ * True rotation with no stored state: git already records when each series was
+ * last served. A fiction channel (a serial) keeps strict order instead, because
+ * episode three cannot be written before episode two.
+ */
+const lastServed = (files: string[]): number => {
+  if (!files.length) return 0;
+  const out = execFileSync('git', ['log', '-1', '--format=%ct', '--', ...files], { cwd: repoRoot(), encoding: 'utf8' }).trim();
+  // Written but not committed yet: served just now.
+  return out ? Number(out) : Date.now() / 1000;
+};
+
+const episodes = (channelId: string, count: number) => {
+  const maps = fs
+    .readdirSync(path.join(repoRoot(), 'maps'))
+    .filter((f) => f.endsWith('.json'))
+    .sort()
+    .map((f) => readMap(f.replace(/\.json$/, '')))
+    .filter((m) => m.channelId === channelId && m.series);
+  const queues = maps.flatMap((m) =>
+    m.series!.map((s) => ({
+      m,
+      s,
+      served: lastServed(s.episodes.flatMap((e) => (e.script ? [e.script.file] : []))),
+      todo: s.episodes.filter((e) => !e.script),
+    })),
+  );
+  const strict = loadPersona(channelId).fiction;
+  const picks: { m: MapFile; s: { title: string }; i: Item }[] = [];
+  for (let round = 1; picks.length < count; round++) {
+    const open = queues.filter((q) => q.todo.length);
+    if (!open.length) break;
+    const q = strict ? open[0]! : open.reduce((best, x) => (x.served < best.served ? x : best));
+    picks.push({ m: q.m, s: q.s, i: q.todo.shift()! });
+    // Served by this batch: after everything already in git, in pick order.
+    q.served = Date.now() / 1000 + round;
+  }
+  console.log(`${channelId}: ${strict ? 'strict order (fiction serial)' : 'rotating across series'}, ${picks.length} picked`);
+  for (const m of new Set(picks.map((p) => p.m))) {
+    const f = loadFormat(m.formatId);
+    console.log(`  ${m.id}: format ${f.id}, parts: ${f.beats.map((b) => b.id).join(', ')}; at most ${ceilingWords(m)} words; files in ${dirFor(m)}/`);
+  }
+  for (const { m, s, i } of picks) {
+    console.log(`\n${m.id}/${i.number}  [series: ${s.title}]`);
     console.log(`  title:   ${i.title}\n  covers:  ${i.covers}\n  source:  ${i.source}${i.subject ? `\n  subject: ${i.subject}` : ''}`);
   }
 };
@@ -138,8 +193,9 @@ const run = (file: string, write: boolean) => {
 
 const [cmd, a, b] = process.argv.slice(2);
 if (cmd === 'next' && a) next(a, Number(b ?? 5));
+else if (cmd === 'episodes' && a) episodes(a, Number(b ?? 3));
 else if ((cmd === 'check' || cmd === 'write') && a) run(a, cmd === 'write');
 else {
-  console.log('usage: attach-scripts.ts next <mapId> [count] | check <batch.txt> | write <batch.txt>');
+  console.log('usage: attach-scripts.ts next <mapId> [count] | episodes <channelId> [count] | check <batch.txt> | write <batch.txt>');
   process.exit(1);
 }
