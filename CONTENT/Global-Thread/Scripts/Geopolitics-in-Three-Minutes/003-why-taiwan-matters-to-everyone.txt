@@ -1,0 +1,15 @@
+## hook
+
+[steady] Your phone almost certainly depends on one island of about twenty-three million people. This is the story of Taiwan, and of why it matters to people who have never been near it.
+
+## explain
+
+[measured] Taiwan sits about a hundred miles off the coast of China. Its main chip company, TSMC, the Taiwan Semiconductor Manufacturing Company, was founded in 1987, and today, by most industry estimates, it makes around nine in every ten of the world's most advanced chips. Those are the small slices of silicon inside phones, cars, and the computers that run artificial intelligence.
+
+[thoughtful] The dispute is older than the chips. In 1949 the Chinese Communists won a civil war, and the defeated Nationalist government fled to Taiwan. It has governed itself ever since, and since the 1990s it has held free elections. Beijing says Taiwan is a province of one China, that it must be reunified, and it has not ruled out force. Taiwan's government says it is already a self-governing country and that only its own people can decide its future. Washington acknowledges Beijing's position without endorsing it. A law from 1979 says the United States will help Taiwan defend itself, and American leaders have long left unclear whether its own forces would ever fight.
+
+[steady] Think of a shop on a disputed street that happens to make the one part every car in town needs. The owners next door say the shop is theirs. The shop says it is not. And everybody in town has a reason to hope that argument never turns into a fight.
+
+## close
+
+[measured] That is why it matters to you. Analysts at Bloomberg Economics have estimated that a war over Taiwan could cost the world around ten trillion dollars. New chip factories are going up in Arizona, Japan and Germany, and TSMC is building some of them. As of November 2026, the most advanced chips are still made overwhelmingly on that one island, a hundred miles from the coast.

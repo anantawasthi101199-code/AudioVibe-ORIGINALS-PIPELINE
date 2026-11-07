@@ -13,7 +13,12 @@
           "number": 1,
           "title": "The Wrong Bride",
           "covers": "WHAT HAPPENS: The Blackthorn pack has paid the Hale family a fortune for Celeste's hand in a marriage contract with their reclusive king. On the wedding morning Celeste refuses to 'marry a monster', and Vivian forces Mira into the dress and the veil instead, telling her she owes them for every meal she has eaten. In the stone chapel of Blackthorn Castle, Kael lifts the veil, and the pack gasps. PLANT P1: Mira hides the silver crescent birthmark on her wrist under a lace glove, as she always has. PLANT P2: one tear falls on the chapel floor, and nobody notices the white rose that opens there. SATISFACTION: when Celeste, watching from the front row, sneers 'She's just the flower girl', Kael says, 'Then she's the only one here who came.' ENDS ON: Kael leans close, breathes in, and his eyes turn gold. 'You're not the woman I was promised,' he says quietly. 'But you're the one my wolf just chose.'",
-          "source": "Original fiction: the season plan in this map"
+          "source": "Original fiction: the season plan in this map",
+          "script": {
+            "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/01-the-wrong-bride.txt",
+            "title": "The Wrong Bride",
+            "description": "Mira Hale was only supposed to carry the flowers. Then her stepsister refused to marry the Wolf King, and somebody had to wear the veil."
+          }
         },
         {
           "number": 2,
@@ -80,7 +85,12 @@
           "number": 11,
           "title": "The Man Who Fell on My Roof",
           "covers": "WHAT HAPPENS: During a storm something crashes into the rooftop garden above Zoe Park's bakery. She climbs up with a rolling pin and finds a very tall, very confused man wrapped in her tablecloth, who says his name is 'Ryan, from Ohio', and asks what the water falling from the sky is for. The bakery is three months from eviction and Zoe has bigger problems, but she lets him sleep in the attic. PLANT P3: when he says 'Ohio', the freckles across his nose glow faintly blue. PLANT P1 and P6: Gran's blue lucky stone by the till hums when he walks past it, and Zoe, who has never had so much as a cold, feels the hum in her teeth. SATISFACTION: he fixes her broken oven in ten seconds by touching it. ENDS ON: the late news reports a meteor strike in Harbor Bay with 'no debris found'. Ryan watches it, and his eyes go silver. 'They've found the crash,' he says. 'Which means they'll find me.'",
-          "source": "Original fiction: the season plan in this map"
+          "source": "Original fiction: the season plan in this map",
+          "script": {
+            "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/11-the-man-who-fell-on-my-roof.txt",
+            "title": "The Man Who Fell on My Roof",
+            "description": "Something crashed into Zoe Park's rooftop garden in the middle of a storm. It said its name was Ryan, from Ohio. It wanted to know what the rain was for."
+          }
         },
         {
           "number": 12,

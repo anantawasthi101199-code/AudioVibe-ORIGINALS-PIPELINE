@@ -13,7 +13,12 @@
           "number": 1,
           "title": "Two Peoples, One Land",
           "covers": "From the Ottoman Empire's Palestine to the British Mandate: Jewish immigration and the Zionist movement, the Arab population already there, the Balfour Declaration of 1917, the British promises to both sides, and the riots and revolt of the 1920s and 1930s.",
-          "source": "Standard histories from more than one perspective (e.g. Rashid Khalidi, Benny Morris, Ian Black's Enemies and Neighbours), the Balfour Declaration and British Mandate documents"
+          "source": "Standard histories from more than one perspective (e.g. Rashid Khalidi, Benny Morris, Ian Black's Enemies and Neighbours), the Balfour Declaration and British Mandate documents",
+          "script": {
+            "file": "CONTENT/Global-Thread/Scripts/The-World-Explained/01-two-peoples-one-land.txt",
+            "title": "Two Peoples, One Land",
+            "description": "In 1917 a British minister signed a letter of sixty-seven words. How promises made to two peoples about one small piece of land began a conflict that is still running."
+          }
         },
         {
           "number": 2,
@@ -56,7 +61,12 @@
           "number": 7,
           "title": "Kyiv, Moscow and a Shared Past",
           "covers": "Kyivan Rus, the medieval state both Russia and Ukraine trace themselves to, the Cossacks, the Russian Empire, the brief Ukrainian independence of 1917 to 1921, and the Holodomor, the famine of 1932 and 1933. Why the same history is told so differently in Moscow and Kyiv.",
-          "source": "Serhii Plokhy's The Gates of Europe, Anne Applebaum's Red Famine, and standard Russian and Ukrainian historical accounts"
+          "source": "Serhii Plokhy's The Gates of Europe, Anne Applebaum's Red Famine, and standard Russian and Ukrainian historical accounts",
+          "script": {
+            "file": "CONTENT/Global-Thread/Scripts/The-World-Explained/07-kyiv-moscow-and-a-shared-past.txt",
+            "title": "Kyiv, Moscow and a Shared Past",
+            "description": "In 2021 Russia's president wrote that Russians and Ukrainians were one people. Seven months later his army crossed the border. The thousand years of history behind that claim."
+          }
         },
         {
           "number": 8,
