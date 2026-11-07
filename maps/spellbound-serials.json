@@ -18,7 +18,8 @@
             "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/01-the-wrong-bride.txt",
             "title": "The Wrong Bride",
             "description": "Mira Hale was only supposed to carry the flowers. Then her stepsister refused to marry the Wolf King, and somebody had to wear the veil."
-          }
+          },
+          "image": "CONTENT/Spellbound/Images/Spellbound-Serials/01.jpg"
         },
         {
           "number": 2,
@@ -74,7 +75,8 @@
           "covers": "FINALE, LANDS: With Kael bleeding in her arms, Mira stands before the whole pack and speaks the truth of the old crime aloud: the Blackthorn lord, the witch's daughter, the century of lies (P3 paid off). Then she tells Kael, in front of everyone, that she chooses him, contract or no contract. Her tears fall on him and white roses cover the chapel (P2 paid off). The curse breaks with a sound like ice cracking on a lake; Lucian's black ring shatters on his finger (P4 paid off), and without its power he is just a man, surrounded by the pack he betrayed, who take him away to answer for it. Kael's wound closes. Back at the castle he tears the one-year contract in half and asks her properly, on one knee, in the chapel where she wore Celeste's veil. LAST IMAGE: white roses climbing the castle walls, and in the town below, a little flower shop with a new sign: 'Mira's'.",
           "source": "Original fiction: the season plan in this map"
         }
-      ]
+      ],
+      "cover": "CONTENT/Spellbound/Images/Spellbound-Serials/series-01.jpg"
     },
     {
       "number": 2,
@@ -90,7 +92,8 @@
             "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/11-the-man-who-fell-on-my-roof.txt",
             "title": "The Man Who Fell on My Roof",
             "description": "Something crashed into Zoe Park's rooftop garden in the middle of a storm. It said its name was Ryan, from Ohio. It wanted to know what the rain was for."
-          }
+          },
+          "image": "CONTENT/Spellbound/Images/Spellbound-Serials/11.jpg"
         },
         {
           "number": 12,
@@ -146,7 +149,8 @@
           "covers": "FINALE, LANDS: Zoe uses the trick in the last page of Gran's notebook: a navigator can turn a gateway around. She reverses it, and Vrell is pulled back through to face Velara's court, where the usurper is already falling to the loyal guard. Orion's countdown (P5 paid off) resets with a new rule: the stone, in the hands of a navigator's heir, can open the gateway once every year. He can be king at home and come back every autumn, or bring his people's ambassador to Harbor Bay. He chooses both, and asks Zoe to be the navigator. LAST IMAGE: a new sign over the bakery, 'Gran's: Out of This World', the blue stone back by the till, and a very tall man standing in the rain on purpose, finally liking it.",
           "source": "Original fiction: the season plan in this map"
         }
-      ]
+      ],
+      "cover": "CONTENT/Spellbound/Images/Spellbound-Serials/series-02.jpg"
     }
   ]
 }

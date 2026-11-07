@@ -157,7 +157,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/013-why-do-we-get-a-fever.txt",
         "title": "Why Do We Get a Fever?",
         "description": "You're shivering under three blankets, and the thermometer says you're burning up. Why your body does that on purpose, when a fever helps, and when it needs a doctor."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/013.jpg"
     },
     {
       "number": 14,
@@ -168,7 +169,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/014-what-is-concussion.txt",
         "title": "What Is Concussion?",
         "description": "A clash of heads on the pitch and you're up again in seconds, saying you're fine. What really happens to the brain inside the skull, and why rest matters."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/014.jpg"
     },
     {
       "number": 15,
@@ -179,7 +181,8 @@
         "file": "CONTENT/The-Root-Helath/Scripts/Shorts/015-do-carrots-help-you-see-in-the-dark.txt",
         "title": "Do Carrots Help You See in the Dark?",
         "description": "Your nan said to eat your carrots, and you'd see in the dark. That idea has a surprising source: a wartime cover story. What vitamin A does for your eyes."
-      }
+      },
+      "image": "CONTENT/The-Root-Helath/Images/Shorts/015.jpg"
     },
     {
       "number": 16,

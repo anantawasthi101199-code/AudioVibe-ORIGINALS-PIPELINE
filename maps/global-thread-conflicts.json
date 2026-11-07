@@ -18,7 +18,8 @@
             "file": "CONTENT/Global-Thread/Scripts/The-World-Explained/01-two-peoples-one-land.txt",
             "title": "Two Peoples, One Land",
             "description": "In 1917 a British minister signed a letter of sixty-seven words. How promises made to two peoples about one small piece of land began a conflict that is still running."
-          }
+          },
+          "image": "CONTENT/Global-Thread/Images/The-World-Explained/01.jpg"
         },
         {
           "number": 2,
@@ -50,7 +51,8 @@
           "covers": "The Hamas-led attack on Israel on 7 October 2023, in which about 1,200 people were killed and some 250 taken hostage (Israeli figures), and the war in Gaza that followed, with the Gaza health ministry's death toll, the humanitarian crisis, the ICJ case and the hostage and ceasefire deals. Where it stands as of the date of writing. CHECK ALL CURRENT FACTS ON THE DAY.",
           "source": "Reporting from multiple outlets on the day of writing, UN OCHA, the ICJ case documents, Israeli government and Gaza health ministry figures, each attributed"
         }
-      ]
+      ],
+      "cover": "CONTENT/Global-Thread/Images/The-World-Explained/series-01.jpg"
     },
     {
       "number": 2,
@@ -66,7 +68,8 @@
             "file": "CONTENT/Global-Thread/Scripts/The-World-Explained/07-kyiv-moscow-and-a-shared-past.txt",
             "title": "Kyiv, Moscow and a Shared Past",
             "description": "In 2021 Russia's president wrote that Russians and Ukrainians were one people. Seven months later his army crossed the border. The thousand years of history behind that claim."
-          }
+          },
+          "image": "CONTENT/Global-Thread/Images/The-World-Explained/07.jpg"
         },
         {
           "number": 8,
@@ -98,7 +101,8 @@
           "covers": "The front lines since 2023, drones and the cost in lives on both sides (estimates attributed), Western aid and sanctions, the energy war, and the negotiations and ceasefire talks. Where it stands as of the date of writing. CHECK ALL CURRENT FACTS ON THE DAY.",
           "source": "Reporting from multiple outlets on the day of writing, government statements from both sides, and UN figures, each attributed"
         }
-      ]
+      ],
+      "cover": "CONTENT/Global-Thread/Images/The-World-Explained/series-02.jpg"
     },
     {
       "number": 3,

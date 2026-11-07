@@ -18,7 +18,8 @@
             "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/01-roanoke-the-colony-that-vanished.txt",
             "title": "Roanoke: The Colony That Vanished",
             "description": "In 1590 a governor came back to his colony in America to find it gone. About 115 people, his daughter and his granddaughter among them. All that was left was one word, cut into a post."
-          }
+          },
+          "image": "CONTENT/Unknown-Hour/Images/Unknown-Hour-Cases/01.jpg"
         },
         {
           "number": 2,
@@ -44,7 +45,8 @@
           "covers": "On 5 December 1945 five US Navy Avenger bombers on a training flight from Fort Lauderdale lost their way and disappeared; a rescue flying boat sent after them also vanished. What the radio transcripts and the Navy board of investigation say, and how this one case built the legend of the Bermuda Triangle.",
           "source": "The US Navy board of investigation report and the radio transcripts"
         }
-      ]
+      ],
+      "cover": "CONTENT/Unknown-Hour/Images/Unknown-Hour-Cases/series-01.jpg"
     },
     {
       "number": 2,
@@ -60,7 +62,8 @@
             "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/06-roopkund-the-lake-of-skeletons.txt",
             "title": "Roopkund: The Lake of Skeletons",
             "description": "High in the Indian Himalayas lies a small lake with hundreds of human skeletons. For decades everyone assumed they died together. In 2019, the DNA said otherwise."
-          }
+          },
+          "image": "CONTENT/Unknown-Hour/Images/Unknown-Hour-Cases/06.jpg"
         },
         {
           "number": 7,
@@ -86,7 +89,8 @@
           "covers": "In August 1966 two Brazilian electronics technicians, Manoel Pereira da Cruz and Miguel Jose Viana, were found dead on a hill near Niteroi, in suits and raincoats, with lead eye masks beside them and a note with instructions. No injuries, no settled cause, and no one ever charged. What the police and the notes recorded, and the theories.",
           "source": "Contemporary Brazilian reporting and later investigations of the case"
         }
-      ]
+      ],
+      "cover": "CONTENT/Unknown-Hour/Images/Unknown-Hour-Cases/series-02.jpg"
     },
     {
       "number": 3,

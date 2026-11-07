@@ -13,7 +13,8 @@
         "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/001-the-genie-who-apologised.txt",
         "title": "The Genie Who Apologised",
         "description": "The genie came out of the lamp on a Tuesday and the first thing he did was say sorry. He knew how she took her tea. He should not have known that."
-      }
+      },
+      "image": "CONTENT/Spellbound/Images/Three-Minute-Spells/001.jpg"
     },
     {
       "number": 2,
@@ -24,7 +25,8 @@
         "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/002-a-call-from-1995.txt",
         "title": "A Call From 1995",
         "description": "The landline had been dead for years. Then it rang, and a laughing young woman said it was 1995 and asked who she was speaking to."
-      }
+      },
+      "image": "CONTENT/Spellbound/Images/Three-Minute-Spells/002.jpg"
     },
     {
       "number": 3,
@@ -35,7 +37,8 @@
         "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/003-extra-cheese-no-gravity.txt",
         "title": "Extra Cheese, No Gravity",
         "description": "Every Friday, the same order. An empty field outside town, a box of gold coins, and a note that made no sense at all. Sam was starting to have questions."
-      }
+      },
+      "image": "CONTENT/Spellbound/Images/Three-Minute-Spells/003.jpg"
     },
     {
       "number": 4,

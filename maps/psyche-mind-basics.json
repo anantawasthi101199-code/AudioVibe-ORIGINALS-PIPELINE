@@ -154,7 +154,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/13-first-impressions-in-a-tenth-of-a-second.txt",
             "title": "First Impressions in a Tenth of a Second",
             "description": "You walk into a room and you've already decided about everyone in it, in less time than a blink. Why your brain does this, why it sticks, and how to give people a second chance."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/13.jpg"
         },
         {
           "number": 14,
@@ -186,7 +187,8 @@
           "covers": "How many hours it takes to make a friend, why adult friendships are harder, and what keeps them going.",
           "source": "Hall (2018) on hours to friendship and Dunbar's research on social networks"
         }
-      ]
+      ],
+      "cover": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/series-03.jpg"
     },
     {
       "number": 4,
@@ -202,7 +204,8 @@
             "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/19-how-a-habit-forms.txt",
             "title": "How a Habit Forms",
             "description": "You've heard it takes 21 days. It doesn't, and that may be the reason you keep giving up. How a habit really forms, how long it really takes, and why missing a day doesn't ruin anything."
-          }
+          },
+          "image": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/19.jpg"
         },
         {
           "number": 20,
@@ -234,7 +237,8 @@
           "covers": "Why stopping a habit is harder than starting one, and how changing the cue and the setting works better than trying harder.",
           "source": "Wood's research on habit change and reviews of habit reversal"
         }
-      ]
+      ],
+      "cover": "CONTENT/Psyche-Session/Images/How-Your-Mind-Works/series-04.jpg"
     },
     {
       "number": 5,

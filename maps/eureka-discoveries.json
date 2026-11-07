@@ -154,7 +154,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/13-benjamin-franklin-and-the-kite.txt",
             "title": "Benjamin Franklin and the Kite",
             "description": "In 1752 a printer in Philadelphia flew a silk kite into a storm cloud to prove what lightning really was. Then he worked out how to stop it burning your house down."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/13.jpg"
         },
         {
           "number": 14,
@@ -186,7 +187,8 @@
           "covers": "At Bell Labs in 1947, three physicists made a tiny switch from a crystal, and it became the building block of every computer and phone.",
           "source": "Histories of Bell Labs and the 1947 point-contact transistor"
         }
-      ]
+      ],
+      "cover": "CONTENT/Eureka-Tales/Images/Discoveries/series-03.jpg"
     },
     {
       "number": 4,
@@ -202,7 +204,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/19-marie-curie-and-the-glowing-element.txt",
             "title": "Marie Curie and the Glowing Element",
             "description": "In a leaky shed in Paris, Marie and Pierre Curie boiled tonnes of ore down to a pinch of something that glowed in the dark. It won two Nobel prizes, and her notebooks are still radioactive."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/19.jpg"
         },
         {
           "number": 20,
@@ -234,7 +237,8 @@
           "covers": "How the same physics became nuclear power stations, from the first reactor under a Chicago stadium to the power grid.",
           "source": "Histories of Chicago Pile-1 and civil nuclear power"
         }
-      ]
+      ],
+      "cover": "CONTENT/Eureka-Tales/Images/Discoveries/series-04.jpg"
     },
     {
       "number": 5,

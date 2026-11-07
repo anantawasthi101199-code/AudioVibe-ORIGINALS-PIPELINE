@@ -18,7 +18,8 @@
             "file": "CONTENT/Hidden-History/Scripts/Hidden-History/01-the-boy-who-was-the-last-emperor-of-rome.txt",
             "title": "The Boy Who Was the Last Emperor of Rome",
             "description": "In 476 the Western Roman Empire ended, and hardly anyone noticed. The last emperor was a teenager. He was given a pension and sent to live by the sea."
-          }
+          },
+          "image": "CONTENT/Hidden-History/Images/Hidden-History/01.jpg"
         },
         {
           "number": 2,
@@ -44,7 +45,8 @@
           "covers": "From the abdication of Tsar Nicholas II in March 1917 to the night of 16 to 17 July 1918 in the basement of the Ipatiev House in Yekaterinburg. The family's captivity, the decisions of the Bolsheviks, and the DNA work that finally identified the remains.",
           "source": "Standard histories (Robert Massie, Helen Rappaport) and the published forensic findings"
         }
-      ]
+      ],
+      "cover": "CONTENT/Hidden-History/Images/Hidden-History/series-01.jpg"
     },
     {
       "number": 2,
@@ -60,7 +62,8 @@
             "file": "CONTENT/Hidden-History/Scripts/Hidden-History/06-ibn-battuta-thirty-years-on-the-road.txt",
             "title": "Ibn Battuta: Thirty Years on the Road",
             "description": "In 1325 a young man left Tangier for Mecca, a trip of about sixteen months. He did not settle at home again for nearly thirty years."
-          }
+          },
+          "image": "CONTENT/Hidden-History/Images/Hidden-History/06.jpg"
         },
         {
           "number": 7,
@@ -86,7 +89,8 @@
           "covers": "In 1915 the ship Endurance was crushed by Antarctic sea ice. How Ernest Shackleton's 28 men camped on the ice, sailed lifeboats to Elephant Island, and how six of them crossed 800 miles of the Southern Ocean in a small open boat to fetch help, and every man survived.",
           "source": "Shackleton's South, Frank Worsley's account, and Alfred Lansing's Endurance"
         }
-      ]
+      ],
+      "cover": "CONTENT/Hidden-History/Images/Hidden-History/series-02.jpg"
     },
     {
       "number": 3,
