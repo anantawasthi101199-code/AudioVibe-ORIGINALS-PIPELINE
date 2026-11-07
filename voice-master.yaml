@@ -1152,6 +1152,54 @@ channels:
       - word: Koch
         sayAs: KOKH
         ipa: /kɔx/
+      - word: Thomas-Francois Dalibard
+        sayAs: toh-MAH frahn-SWAH dah-lee-BAR
+        ipa: /tɔmɑ fʁɑ̃swa dalibaʁ/
+      - word: Marly
+        sayAs: mar-LEE
+        ipa: /maʁli/
+      - word: Leyden
+        sayAs: LIE-dun
+        ipa: /ˈlaɪdən/
+      - word: Richmann
+        sayAs: RIKH-man
+        ipa: /ˈʁɪçman/
+      - word: Sklodowska
+        sayAs: skwo-DOF-skah
+        ipa: /skwɔˈdɔfska/
+      - word: Curie
+        sayAs: KYOOR-ee
+        ipa: /kyʁi/
+      - word: Becquerel
+        sayAs: bek-uh-REL
+        ipa: /bɛkʁɛl/
+      - word: Sorbonne
+        sayAs: sor-BON
+        ipa: /sɔʁbɔn/
+      - word: Irene
+        sayAs: ee-REN
+        ipa: /iʁɛn/
+      - word: Vostok
+        sayAs: vos-TOK
+        ipa: /vɐˈstok/
+      - word: Baikonur
+        sayAs: by-koh-NOOR
+        ipa: /bajkɐˈnur/
+      - word: Poyekhali
+        sayAs: puh-YEH-khuh-lee
+        ipa: /pɐˈjexəlʲɪ/
+      - word: Gagarin
+        sayAs: guh-GAR-in
+        ipa: /ɡɐˈɡarʲɪn/
+      - word: Takhtarova
+        sayAs: takh-TAH-ruh-vuh
+        ipa: /tɐxˈtarəvə/
+      - word: Tanganyika
+        sayAs: tan-gan-YEE-kah
+        ipa: /ˌtæŋɡəˈnjiːkə/
+      - word: Gombe
+        sayAs: GOM-bay
+        ipa: /ˈɡɔmbe/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -1204,7 +1252,73 @@ channels:
       attribution said plainly ("Israel's government says", "Kyiv says"), each
       side's case in the same even tone, human cost said with care, and nothing
       dramatised.
-    pronounce: []
+    pronounce:
+      - word: Eretz Israel
+        sayAs: EH-rets yis-rah-EL
+        ipa: /ˈʔeʁets jisʁaˈʔel/
+      - word: Filastin
+        sayAs: fih-las-TEEN
+        ipa: /filasˈtˤiːn/
+      - word: Hebron
+        sayAs: HEB-ron
+        ipa: /ˈhɛbrɒn/
+      - word: Safed
+        sayAs: tsuh-FAHT
+        ipa: /tsfat/
+      - word: Tiberias
+        sayAs: tie-BEER-ee-us
+        ipa: /taɪˈbɪəriəs/
+      - word: Theodor Herzl
+        sayAs: TAY-oh-dor HAIRT-sul
+        ipa: /ˈteːodoːɐ̯ ˈhɛʁtsl̩/
+      - word: Buraq
+        sayAs: boo-RAHK
+        ipa: /buˈraːq/
+      - word: Hamas
+        sayAs: hah-MAHS
+        ipa: /ħaˈmaːs/
+      - word: Gaza
+        sayAs: GAH-zuh
+        ipa: /ˈɡɑːzə/
+      - word: Kyivan Rus
+        sayAs: KEE-iv-an ROOS
+        ipa: /ˈkiːɪvən ruːs/
+      - word: Kyiv
+        sayAs: KEE-iv
+        ipa: /ˈkɪjiu̯/
+      - word: Dnipro
+        sayAs: dnee-PRO
+        ipa: /dnʲiˈprɔ/
+      - word: Volodymyr
+        sayAs: vo-lo-DEE-meer
+        ipa: /woloˈdɪmɪr/
+      - word: Bohdan Khmelnytsky
+        sayAs: BOH-dan khmel-NITS-kee
+        ipa: /ɦoɡˈdɑn xmɛlʲˈnɪtsʲkɪj/
+      - word: Pereiaslav
+        sayAs: peh-reh-YAH-slav
+        ipa: /pɛrɛˈjɑslɑu̯/
+      - word: Taras Shevchenko
+        sayAs: tah-RAHS shev-CHEN-ko
+        ipa: /tɑˈrɑs ʃɛu̯ˈtʃɛnko/
+      - word: Holodomor
+        sayAs: ho-lo-do-MOR
+        ipa: /ɦolodoˈmɔr/
+      - word: Zelensky
+        sayAs: zeh-LEN-skee
+        ipa: /zɛˈlɛnsʲkɪj/
+      - word: Witkoff
+        sayAs: WIT-koff
+        ipa: /ˈwɪtkɒf/
+      - word: Donbas
+        sayAs: don-BAHS
+        ipa: /donˈbɑs/
+      - word: Hormuz
+        sayAs: hor-MOOZ
+        ipa: /hɔːrˈmuːz/
+      - word: Abu Dhabi
+        sayAs: AH-boo DAH-bee
+        ipa: /ˈæbuː ˈdɑːbi/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Rewritten 2026-10-29 for the deep-dive format: no "every day", no "news".
@@ -1431,6 +1545,9 @@ channels:
       - word: REDUCE-IT
         sayAs: reduce it
         ipa: /rɪˈdjuːs ɪt/
+      - word: Kluger
+        sayAs: KLOO-ger
+        ipa: /ˈkluːɡər/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -1847,6 +1964,36 @@ channels:
       - word: Tihar
         sayAs: tih-HAAR
         ipa: /t̪ɪˈɦaːr/
+      - word: Ponzi
+        sayAs: PON-zee
+        ipa: /ˈpɒnzi/
+      - word: Lafarge
+        sayAs: lah-FARZH
+        ipa: /lafaʁʒ/
+      - word: Capelle
+        sayAs: kah-PEL
+        ipa: /kapɛl/
+      - word: Glandier
+        sayAs: glahn-dee-AY
+        ipa: /ɡlɑ̃dje/
+      - word: Correze
+        sayAs: koh-REZ
+        ipa: /kɔʁɛz/
+      - word: Tulle
+        sayAs: TOOL
+        ipa: /tyl/
+      - word: Orfila
+        sayAs: or-FEE-lah
+        ipa: /ɔʁfila/
+      - word: Moumbaris
+        sayAs: moom-BAR-iss
+        ipa: /mumˈbaris/
+      - word: Vula
+        sayAs: VOO-lah
+        ipa: /ˈvuːla/
+      - word: Jenkin
+        sayAs: JEN-kin
+        ipa: /ˈdʒɛŋkɪn/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -3127,6 +3274,15 @@ channels:
       - word: Bushman
         sayAs: BOOSH-mun
         ipa: /ˈbʊʃmən/
+      - word: Todorov
+        sayAs: TOH-doh-rov
+        ipa: /ˈtɔdorof/
+      - word: Maltz
+        sayAs: MOLTS
+        ipa: /mɔːlts/
+      - word: Lally
+        sayAs: LAL-ee
+        ipa: /ˈlæli/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
@@ -3176,7 +3332,25 @@ channels:
       speaker clear from the attribution rather than a put-on voice. Lets a
       twist land with a pause, never a gasp; no whispering, no shouting, no
       performed accents.
-    pronounce: []
+    pronounce:
+      - word: Kael
+        sayAs: KAYL
+        ipa: /keɪl/
+      - word: Mira
+        sayAs: MEER-uh
+        ipa: /ˈmɪərə/
+      - word: Celeste
+        sayAs: suh-LEST
+        ipa: /səˈlɛst/
+      - word: Okafor
+        sayAs: oh-KAH-for
+        ipa: /oˈkaːfɔ/
+      - word: Moreno
+        sayAs: moh-RAY-no
+        ipa: /moˈɾeno/
+      - word: Centauri
+        sayAs: sen-TOR-ee
+        ipa: /sɛnˈtɔːri/
     outros:
       episode:
         - "And that's where we stop tonight. This is Ruby on Spellbound. Follow, because you are not going to believe what happens next."
@@ -3219,7 +3393,100 @@ channels:
       parts of history, steady and respectful when people suffer. Lets a big
       moment land with a beat before it and speeds up only when the story
       does.
-    pronounce: []
+    pronounce:
+      - word: Romulus Augustulus
+        sayAs: ROM-yoo-lus aw-GUS-tyoo-lus
+        ipa: /ˈrɒmjʊləs ɔːˈɡʌstjʊləs/
+      - word: Augustulus
+        sayAs: aw-GUS-tyoo-lus
+        ipa: /ɔːˈɡʌstjʊləs/
+      - word: Odoacer
+        sayAs: oh-doh-AY-ser
+        ipa: /ˌoʊdoʊˈeɪsər/
+      - word: Alaric
+        sayAs: AL-uh-rik
+        ipa: /ˈælərɪk/
+      - word: Orestes
+        sayAs: oh-RES-teez
+        ipa: /ɒˈrɛstiːz/
+      - word: Julius Nepos
+        sayAs: JOO-lee-us NEE-pos
+        ipa: /ˈdʒuːliəs ˈniːpɒs/
+      - word: Procopius
+        sayAs: pro-KOH-pee-us
+        ipa: /prəˈkoʊpiəs/
+      - word: Placentia
+        sayAs: pluh-SEN-shuh
+        ipa: /pləˈsɛnʃə/
+      - word: Piacenza
+        sayAs: pyah-CHEN-tsah
+        ipa: /pjaˈtʃɛntsa/
+      - word: Anonymus Valesianus
+        sayAs: uh-NON-ih-mus vuh-lee-see-AH-nus
+        ipa: /əˈnɒnɪməs vəˌliːsiˈɑːnəs/
+      - word: Marcellinus
+        sayAs: mar-seh-LIE-nus
+        ipa: /ˌmɑːrsɪˈlaɪnəs/
+      - word: Theodoric
+        sayAs: thee-OD-uh-rik
+        ipa: /θiˈɒdərɪk/
+      - word: Ostrogothic
+        sayAs: os-truh-GOTH-ik
+        ipa: /ˌɒstrəˈɡɒθɪk/
+      - word: Cassiodorus
+        sayAs: kass-ee-oh-DOR-us
+        ipa: /ˌkæsioʊˈdɔːrəs/
+      - word: Ravenna
+        sayAs: ruh-VEN-uh
+        ipa: /raˈvenna/
+      - word: Dalmatia
+        sayAs: dal-MAY-shuh
+        ipa: /dælˈmeɪʃə/
+      - word: Ibn Battuta
+        sayAs: IB-un buh-TOO-tah
+        ipa: /ˈibn batˈtˤuːtˤa/
+      - word: Ibn Juzayy
+        sayAs: IB-un joo-ZAY
+        ipa: /ˈibn dʒuˈzajj/
+      - word: Rihla
+        sayAs: RIH-lah
+        ipa: /ˈriħla/
+      - word: Kilwa
+        sayAs: KIL-wah
+        ipa: /ˈkilwa/
+      - word: Muhammad bin Tughluq
+        sayAs: moo-HAM-mad bin TUG-luk
+        ipa: /muˈħammad bin ˈtuɣluq/
+      - word: Calicut
+        sayAs: KAL-ih-kut
+        ipa: /ˈkælɪkʌt/
+      - word: Quanzhou
+        sayAs: CHWAHN-joe
+        ipa: /tɕʰɥɛ̌n.ʈʂóʊ/
+      - word: Abu Inan
+        sayAs: AH-boo ee-NAHN
+        ipa: /ˈʔabuː ʔiˈnaːn/
+      - word: Fez
+        sayAs: FEZ
+        ipa: /fɛz/
+      - word: Zanzibar
+        sayAs: ZAN-zih-bar
+        ipa: /ˈzænzɪbɑːr/
+      - word: Hamad
+        sayAs: HAH-mad
+        ipa: /ˈħamad/
+      - word: Hamud
+        sayAs: hah-MOOD
+        ipa: /ħaˈmuːd/
+      - word: Khalid
+        sayAs: KHAH-lid
+        ipa: /ˈxaːlid/
+      - word: Stille Nacht
+        sayAs: SHTIL-uh NAKHT
+        ipa: /ˈʃtɪlə naxt/
+      - word: Ploegsteert
+        sayAs: PLOOKH-stairt
+        ipa: /ˈplux.steːrt/
     outros:
       episode:
         - "And that's the story. This is Marcus on Hidden History. Follow for the next one, and I'll see you there."
@@ -3257,7 +3524,88 @@ channels:
       steady and even: the strangeness is in the facts, so the voice never
       performs it. Clear on dates and names, a short pause before the detail
       that does not fit, and the same level all the way through.
-    pronounce: []
+    pronounce:
+      - word: CROATOAN
+        sayAs: kroh-uh-TOH-an
+        ipa: /ˌkroʊəˈtoʊən/
+      - word: Croatoan
+        sayAs: kroh-uh-TOH-an
+        ipa: /ˌkroʊəˈtoʊən/
+      - word: Roanoke
+        sayAs: ROH-uh-noke
+        ipa: /ˈroʊənoʊk/
+      - word: Algonquian
+        sayAs: al-GONG-kwee-an
+        ipa: /ælˈɡɒŋkwiən/
+      - word: Wingina
+        sayAs: win-JEE-nuh
+        ipa: /wɪnˈdʒiːnə/
+      - word: Manteo
+        sayAs: MAN-tee-oh
+        ipa: /ˈmæntioʊ/
+      - word: Hatteras
+        sayAs: HAT-er-us
+        ipa: /ˈhætərəs/
+      - word: Albemarle
+        sayAs: AL-buh-marl
+        ipa: /ˈælbəmɑːrl/
+      - word: Wahunsenacawh
+        sayAs: wah-hun-suh-NAH-kah
+        ipa: /wɑːˌhʌnsəˈnɑːkɑː/
+      - word: Lumbee
+        sayAs: LUM-bee
+        ipa: /ˈlʌmbiː/
+      - word: Roopkund
+        sayAs: ROOP-koond
+        ipa: /ˈruːp.kʊɳɖ/
+      - word: Uttarakhand
+        sayAs: oo-tuh-ruh-KHAND
+        ipa: /ʊt̪.t̪ə.ɾɑːˈkʰəɳɖ/
+      - word: Nanda Devi Raj Jat
+        sayAs: NUN-dah DAY-vee RAHJ JAHT
+        ipa: /ˈnən.d̪ɑː ˈdeː.ʋiː ɾɑːdʒ dʒɑːt̪/
+      - word: Nanda Devi
+        sayAs: NUN-dah DAY-vee
+        ipa: /ˈnən.d̪ɑː ˈdeː.ʋiː/
+      - word: Jasdhaval
+        sayAs: jus-DHAH-val
+        ipa: /dʒəsˈdʱɑː.ʋəl/
+      - word: Kannauj
+        sayAs: kuh-NOWJ
+        ipa: /kən.nɔːdʒ/
+      - word: Madhwal
+        sayAs: MADH-wal
+        ipa: /ˈməd̪ʱ.ʋaːl/
+      - word: Eadaoin Harney
+        sayAs: AY-deen HAR-nee
+        ipa: /ˈeːd̪ˠiːnʲ ˈhɑːrni/
+      - word: Kaspar Hauser
+        sayAs: KAS-par HOW-zer
+        ipa: /ˈkaspaʁ ˈhaʊzɐ/
+      - word: Feuerbach
+        sayAs: FOY-er-bakh
+        ipa: /ˈfɔʏɐbax/
+      - word: Ansbach
+        sayAs: ANS-bakh
+        ipa: /ˈansbax/
+      - word: Woolpit
+        sayAs: WOOL-pit
+        ipa: /ˈwʊlpɪt/
+      - word: Coggeshall
+        sayAs: KOG-shul
+        ipa: /ˈkɒɡʃəl/
+      - word: Calne
+        sayAs: KAHN
+        ipa: /kɑːn/
+      - word: Topsham
+        sayAs: TOP-sum
+        ipa: /ˈtɒpsəm/
+      - word: Dawlish
+        sayAs: DAW-lish
+        ipa: /ˈdɔːlɪʃ/
+      - word: Teignmouth
+        sayAs: TIN-muth
+        ipa: /ˈtɪnməθ/
     outros:
       episode:
         - "That's what we know, and what we don't. This is Iris on The Unknown Hour. Follow for the next one."

@@ -10,9 +10,12 @@ Map `psyche-mind-basics`, format `psych-episode`. Attached with `scripts/attach-
 | `psyche-mind-basics/5` | Why You Walk Into a Room and Forget Why | `05-walk-into-a-room-and-forget-why.txt` | 1027 |
 | `psyche-mind-basics/6` | How to Actually Remember Things | `06-how-to-actually-remember-things.txt` | 1007 |
 | `psyche-mind-basics/8` | Anger: The Emotion That Wants to Fix Things | `08-anger-the-emotion-that-wants-to-fix-things.txt` | 1048 |
+| psyche-mind-basics/13 | First Impressions in a Tenth of a Second | 13-first-impressions-in-a-tenth-of-a-second.txt | 1121 |
+| psyche-mind-basics/19 | How a Habit Forms | 19-how-a-habit-forms.txt | 1105 |
 
 ### Facts: check before publishing
 
 - 5: Radvansky and colleagues 2011 (virtual rooms and real boxes); later studies finding the effect mainly under mental load (not named).
 - 6: Roediger and Karpicke 2006, about 61 against 40 per cent after a week; Dunlosky and colleagues 2013, ten techniques.
 - 8: Bushman 2002, 600 students; the 2024 review of anger-calming methods (not named).
+- Willis and Todorov 2006; liking gap (Boothby 2018); Lally 2010 figures; Maltz 1960.

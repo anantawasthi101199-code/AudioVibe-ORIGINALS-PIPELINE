@@ -23,8 +23,12 @@ Map `crime-files-shorts`, format `case-short`. Attached with `scripts/attach-scr
 |---|---|---|---|
 | `crime-files-shorts/10` | Adolf Beck: The Wrong Man Twice | `010-adolf-beck.txt` | 411 |
 | `crime-files-shorts/11` | The Antwerp Diamond Heist | `011-antwerp-diamond-heist.txt` | 386 |
+| crime-files-shorts/12 | Charles Ponzi and His Famous Scheme | 012-charles-ponzi-and-his-famous-scheme.txt | 412 |
+| crime-files-shorts/13 | Marie Lafarge and the Arsenic Test | 013-marie-lafarge-and-the-arsenic-test.txt | 421 |
+| crime-files-shorts/14 | The Wooden Keys of Pretoria Prison | 014-the-wooden-keys-of-pretoria-prison.txt | 430 |
 
 ### Facts: check before publishing
 
 - Beck: stopped on Victoria Street 16 December 1895; the "lord" swindle; John Smith's 1870s convictions; Old Bailey March 1896, evidence of the earlier crimes excluded, seven years; the circumcision record; released 1901; reconvicted 1904, sentence delayed; Smith caught July 1904 pawning actresses' rings; pardon and compensation; Court of Criminal Appeal 1907; died 1909.
 - Antwerp: discovered Monday 17 February 2003; vault two floors down; "more than a hundred" boxes; the security layers listed; Notarbartolo's office for about two years; over 100 million dollars as investigators' figure; August Van Camp's land by the E19; receipt plus sandwich DNA matched to Notarbartolo; convicted 2005, ten years; his later fraud claim (Wired, 2009).
+- Ponzi coupon numbers and totals; Lafarge dates and sentence; Pretoria door count and route of the escape.

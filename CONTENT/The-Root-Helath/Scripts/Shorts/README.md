@@ -24,9 +24,13 @@ Map `roothealth-shorts`, format `health-short`. Attached with `scripts/attach-sc
 | `roothealth-shorts/10` | Do You Need Eight Glasses of Water a Day? | `010-eight-glasses-of-water.txt` | 423 |
 | `roothealth-shorts/11` | Do You Really Need Eight Hours? | `011-do-you-need-eight-hours.txt` | 417 |
 | `roothealth-shorts/12` | Why Do We Get Goosebumps? | `012-why-do-we-get-goosebumps.txt` | 419 |
+| roothealth-shorts/13 | Why Do We Get a Fever? | 013-why-do-we-get-a-fever.txt | 436 |
+| roothealth-shorts/14 | What Is Concussion? | 014-what-is-concussion.txt | 455 |
+| roothealth-shorts/15 | Do Carrots Help You See in the Dark? | 015-do-carrots-help-you-see-in-the-dark.txt | 485 |
 
 ### Facts: check before publishing
 
 - Water: the 1945 US Food and Nutrition Board line about food; about a fifth from food; NHS 6 to 8 cups or glasses, what counts; 111 / pharmacist wording.
 - Sleep: the eight-hours labour slogan; 2015 AASM and Sleep Research Society consensus (7 or more); NHS 6 to 9 hours; rare short-sleep gene variants.
 - Goosebumps: arrector pili; 2020 mouse study (Harvard, Hsu lab) on hair stem cells; NHS hypothermia signs and 999 wording.
+- NHS thresholds for fever and concussion advice; UK grassroots concussion guidance (21 days); vitamin A amounts; how far the carrot tale was aimed at Germany.

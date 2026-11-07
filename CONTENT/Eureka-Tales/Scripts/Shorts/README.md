@@ -23,8 +23,12 @@ Map `eureka-shorts`, format `science-short`. Attached with `scripts/attach-scrip
 |---|---|---|---|
 | `eureka-shorts/10` | The Antikythera Mechanism | `010-antikythera-mechanism.txt` | 369 |
 | `eureka-shorts/11` | The Glowing Screen: Rontgen and X-Rays | `011-rontgen-and-x-rays.txt` | 323 |
+| eureka-shorts/12 | The Day Surgery Stopped Hurting | 012-the-day-surgery-stopped-hurting.txt | 418 |
+| eureka-shorts/13 | Gagarin's 108 Minutes | 013-gagarins-108-minutes.txt | 469 |
+| eureka-shorts/14 | Jane Goodall and the Termite Fishing Chimp | 014-jane-goodall-and-the-termite-fishing-chimp.txt | 442 |
 
 ### Facts: check before publishing
 
 - Antikythera: wreck found by sponge divers 1900, salvage into 1901; Stais noticed the gear 1902; Price with X-rays (with Karakalos), Gears from the Greeks 1974; 2005 CT scan, Freeth's team; inscriptions as a manual; dials for sun, moon, phase, eclipses, Olympic cycle; nothing comparable for over a thousand years.
 - Röntgen: 8 November 1895, Würzburg, aged 50; the cardboard-wrapped tube and the glowing screen; book, cards, wood, lead; the bones of his own hand; slept in the lab; Anna Bertha's hand 22 December, about fifteen minutes; first Nobel Prize in Physics 1901.
+- Gagarin: altitude, ejection height, farmer account. Goodall: telegram wording is paraphrased; age at death.
