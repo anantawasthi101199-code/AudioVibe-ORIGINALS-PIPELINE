@@ -31,7 +31,7 @@ import { withOverrides } from '../qa/overrides';
 import { Run } from '../run/store';
 import { scriptSchema } from '../script/write';
 import { AudioVibeClient } from './ingest';
-import { publishTokenFor } from './account';
+import { PlatformAccounts, loadAccounts, publishTokenFor } from './account';
 import { ProvenancePayload, buildFictionProvenance, buildProvenance } from './provenance';
 import { findSeries, recordSeries, seriesKey } from './seriesRegistry';
 import { SERIES_COVER_SIZE } from '../art/cover';
@@ -50,6 +50,10 @@ const episodeNumberFor = (run: Run, persona: { id: string; fiction: boolean }): 
   const index = bible.episodes.findIndex((e) => e.id === run.id);
   return index >= 0 ? index + 1 : bible.episodes.length + 1;
 };
+
+/** Read back for up to three minutes: a queued upload is hidden until ready. */
+const COVER_CHECKS = 36;
+const coverCheckGapMs = (): number => Number(process.env.FOUNDRY_COVER_CHECK_MS ?? 5000);
 
 export class PublishRefused extends Error {
   constructor(
@@ -270,6 +274,41 @@ export const publishRun = async (
     seriesId,
     coverPath,
   });
+
+  // NOTHING GOES LIVE WITHOUT ITS PICTURE (owner, 2026-11-07). The platform
+  // swallows a failed cover upload and publishes anyway: an R2 blip on
+  // 2026-11-07 put The Glowing Screen live with no image and a 201. So read
+  // back what it kept, and take the audio down if the picture was lost. With
+  // no publish artifact the run stays due and the next release tick retries.
+  let cover: string | null | undefined;
+  for (let i = 0; i < COVER_CHECKS && cover === undefined; i++) {
+    if (i) await new Promise((done) => setTimeout(done, coverCheckGapMs()));
+    cover = await client.coverOf(result.audioId);
+  }
+  if (cover === null) {
+    run.journal({ stage: 'publish', event: `the platform lost the cover of ${result.audioId}, taking it down` });
+    try {
+      const account = loadAccounts()[persona.id];
+      if (!account) throw new Error(`no account recorded for ${persona.name}`);
+      const api = new PlatformAccounts(platform.url);
+      await api.signInAsChannel(account.email, account.password);
+      await api.deleteAudio(result.audioId);
+    } catch (err) {
+      // Still live, so the run must say so: forgetting it would publish twice.
+      run.writeArtifact('publish', { ...result, publishedAt: new Date().toISOString(), url: platform.url });
+      run.markComplete('publish');
+      throw new PublishRefused(
+        `audio ${result.audioId} IS LIVE WITHOUT ITS COVER and could not be taken down: ${(err as Error).message}`,
+        'Unpublish this run, then publish it again.'
+      );
+    }
+    throw new PublishRefused(
+      'the platform lost the cover, so the audio was taken down again',
+      'Nothing to do: the next release tick retries it.'
+    );
+  }
+  // ponytail: a very long processing queue passes unchecked; the API's own refusal covers it once released.
+  if (cover === undefined) run.journal({ stage: 'publish', event: `cover of ${result.audioId} not readable yet, unchecked` });
 
   run.writeArtifact('publish', {
     ...result,

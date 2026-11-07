@@ -269,6 +269,23 @@ export class AudioVibeClient {
     return id;
   }
 
+  /**
+   * The cover the platform actually kept on a published audio: a URL, null for
+   * none, undefined while it is still processing (hidden from this public read).
+   * NOT the publish response: on the queued path the worker writes cover_url
+   * later, so that response says null for a perfectly good upload.
+   */
+  async coverOf(audioId: string): Promise<string | null | undefined> {
+    const res = await this.get(`${this.baseUrl}/api/audios/${encodeURIComponent(audioId)}`, {});
+    if (res.status === 404) return undefined;
+    if (res.status < 200 || res.status >= 300) {
+      throw new PublishError(res.status, `could not read audio ${audioId}: ${res.text.slice(0, 200)}`);
+    }
+    const audio = (res.json as { data?: { audio?: { cover_url?: string | null; processing_status?: string } } } | null)?.data?.audio;
+    if (audio?.processing_status !== 'ready') return undefined;
+    return audio.cover_url || null;
+  }
+
   /** The fields every studio upload sends, whether card, series or episode. */
   private async baseForm(input: {
     title: string;

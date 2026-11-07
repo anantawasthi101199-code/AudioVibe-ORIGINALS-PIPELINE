@@ -24,11 +24,18 @@ jest.mock('../../art/cover', () => {
 
 const createSeries = jest.fn(async (input: { title: string }) => ({ seriesId: 'series-42', title: input.title }));
 const publish = jest.fn(async (_input: { seriesId?: string; title: string }) => ({ audioId: `audio-${publish.mock.calls.length}`, status: 'processing' }));
+const coverOf = jest.fn(async (_id: string): Promise<string | null | undefined> => 'https://cdn.example.com/c.webp');
+const deleteAudio = jest.fn(async () => undefined);
+jest.mock('../account', () => ({
+  ...jest.requireActual('../account'),
+  loadAccounts: () => ({ 'root-health': { email: 'e', password: 'p' } }),
+  PlatformAccounts: jest.fn().mockImplementation(() => ({ signInAsChannel: jest.fn(async () => undefined), deleteAudio })),
+}));
 jest.mock('../ingest', () => {
   const actual = jest.requireActual('../ingest');
   return {
     ...actual,
-    AudioVibeClient: jest.fn().mockImplementation(() => ({ createSeries, publish })),
+    AudioVibeClient: jest.fn().mockImplementation(() => ({ createSeries, publish, coverOf })),
   };
 });
 
@@ -47,6 +54,8 @@ describe('publishing an episode into its series', () => {
     registry.clear();
     createSeries.mockClear();
     publish.mockClear();
+    coverOf.mockClear();
+    deleteAudio.mockClear();
   });
   afterEach(() => {
     delete process.env.FOUNDRY_RUNS_DIR;
@@ -73,5 +82,20 @@ describe('publishing an episode into its series', () => {
     expect(createSeries.mock.calls[0]![0]).toMatchObject({ title: "Let's Explore the Brain" });
     expect(publish.mock.calls.map((c) => c[0].seriesId)).toEqual(['series-42', 'series-42']);
     expect([first.seriesId, second.seriesId]).toEqual(['series-42', 'series-42']);
+  });
+
+  it('takes the audio down and stays unpublished when the platform lost the cover', async () => {
+    coverOf.mockResolvedValueOnce(null);
+    const run = episode('e003-20261007-no-picture');
+    await expect(publishRun(run, gate, { confirmed: true })).rejects.toThrow(/lost the cover/);
+    expect(deleteAudio).toHaveBeenCalledWith('audio-1');
+    expect(fs.existsSync(path.join(run.dir, 'publish.json'))).toBe(false);
+  });
+
+  it('waits out a queued upload, then publishes', async () => {
+    process.env.FOUNDRY_COVER_CHECK_MS = '1';
+    coverOf.mockResolvedValueOnce(undefined);
+    await expect(publishRun(episode('e004-20261008-queued'), gate, { confirmed: true })).resolves.toBeTruthy();
+    expect(coverOf).toHaveBeenCalledTimes(2);
   });
 });
