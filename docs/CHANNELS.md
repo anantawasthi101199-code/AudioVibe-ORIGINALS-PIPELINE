@@ -8,8 +8,8 @@ Current as of 2026-09-29. If this disagrees with the code, the code is right.
 ## The ten channels (2026-10-29)
 
 Three channels added and one changed on the owner's brief (research and reasoning in
-the commit). All ten make content from maps (`maps/<channel>-*.json`), hand-written by
-the `/foundry-scripts` skill, voiced by `/foundry-voice`.
+the commit). All ten make content from maps (`maps/<channel>-*.json`), hand-written and
+voiced by the `/foundry-voice` skill.
 
 | Channel | Id | Host | Category | Episodes | Shorts |
 |---|---|---|---|---|---|

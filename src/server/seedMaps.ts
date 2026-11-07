@@ -98,7 +98,7 @@ export const seedPreparedRuns = (log: (message: string) => void = () => undefine
 /**
  * PICTURES MADE FOR A MAP become the studio's art (owner, 2026-10-15): a series'
  * `cover` its series cover, an item's `image` its run's cover. Made outside the
- * studio (ChatGPT, see the foundry-scripts skill) and committed beside the
+ * studio (ChatGPT, see the foundry-voice skill) and committed beside the
  * scripts, so a push is all it takes.
  *
  * NEVER OVER A PICTURE SOMEBODY CHOSE. Only where no supplied picture exists

@@ -1,7 +1,7 @@
 /**
  * Hand-written scripts for content map items: see what is next, then check a
  * batch and attach it (owner, 2026-10-15). The writing brief is the
- * `foundry-scripts` Claude skill; this is the mechanical half.
+ * `foundry-voice` Claude skill; this is the mechanical half.
  *
  *   npx ts-node --transpile-only scripts/attach-scripts.ts next <mapId> [count]
  *       the next items on that map with no script yet, and what they must fit
