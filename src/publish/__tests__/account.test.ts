@@ -210,6 +210,11 @@ describe('makePassword', () => {
 });
 
 describe('bioFor', () => {
+  it('claims no listed sources, and a fiction show says it is fiction', () => {
+    expect(bioFor(persona)).not.toMatch(/lists what it read/);
+    expect(bioFor({ ...persona, fiction: true })).toMatch(/fiction/);
+  });
+
   it('says plainly that a machine made it', () => {
     // The card carries the label; the profile should not be where somebody
     // first has to work it out.

@@ -363,11 +363,12 @@ export class PlatformAccounts {
  */
 export const bioFor = (persona: Persona): string => {
   const thesis = (persona.bio ?? persona.thesis).trim().replace(/\s+/g, ' ');
-  // A fiction show read nothing, so it must not claim sources.
+  // NO CLAIM OF LISTED SOURCES (owner, 2026-11-07): hand-written scripts carry
+  // none, so "every episode lists what it read" was untrue. A person reviews
+  // every run before it goes out, which is what this says instead.
   const made = persona.fiction
     ? 'An AudioVibe Originals show. Written and voiced by AI. Every story here is fiction.'
-    : 'An AudioVibe Originals show. Written and voiced by AI, from documents you can check: ' +
-      'every episode lists what it read.';
+    : 'An AudioVibe Originals show. Written and voiced by AI, and checked by people.';
 
   // The API caps a bio, and a truncated final sentence reads as a bug rather
   // than as brevity. The thesis is dropped whole if both will not fit.
