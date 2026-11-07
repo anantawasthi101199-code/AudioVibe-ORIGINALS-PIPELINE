@@ -13,7 +13,12 @@
           "number": 1,
           "title": "The Boy Who Was the Last Emperor of Rome",
           "covers": "In 476 a teenage emperor, Romulus Augustulus, was quietly removed by the Germanic general Odoacer, who sent the imperial regalia to Constantinople and did not bother to name a successor. How the Western Roman Empire had shrunk to that point, what daily life in Italy was like, and why many people at the time barely noticed it had ended.",
-          "source": "Standard histories of late antiquity (e.g. Peter Heather, Bryan Ward-Perkins) and the surviving chronicles"
+          "source": "Standard histories of late antiquity (e.g. Peter Heather, Bryan Ward-Perkins) and the surviving chronicles",
+          "script": {
+            "file": "CONTENT/Hidden-History/Scripts/Hidden-History/01-the-boy-who-was-the-last-emperor-of-rome.txt",
+            "title": "The Boy Who Was the Last Emperor of Rome",
+            "description": "In 476 the Western Roman Empire ended, and hardly anyone noticed. The last emperor was a teenager. He was given a pension and sent to live by the sea."
+          }
         },
         {
           "number": 2,
@@ -50,7 +55,12 @@
           "number": 6,
           "title": "Ibn Battuta: Thirty Years on the Road",
           "covers": "In 1325 a 21-year-old from Tangier set out on the pilgrimage to Mecca and did not come home for nearly thirty years, travelling through Africa, the Middle East, India, the Maldives and China. His time as a judge in Delhi under Sultan Muhammad bin Tughluq, and the book he dictated at the end.",
-          "source": "The Rihla of Ibn Battuta (Gibb translation) and Ross Dunn's The Adventures of Ibn Battuta"
+          "source": "The Rihla of Ibn Battuta (Gibb translation) and Ross Dunn's The Adventures of Ibn Battuta",
+          "script": {
+            "file": "CONTENT/Hidden-History/Scripts/Hidden-History/06-ibn-battuta-thirty-years-on-the-road.txt",
+            "title": "Ibn Battuta: Thirty Years on the Road",
+            "description": "In 1325 a young man left Tangier for Mecca, a trip of about sixteen months. He did not settle at home again for nearly thirty years."
+          }
         },
         {
           "number": 7,

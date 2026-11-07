@@ -13,7 +13,12 @@
           "number": 1,
           "title": "Roanoke: The Colony That Vanished",
           "covers": "In 1587 about 115 English settlers landed on Roanoke Island in what is now North Carolina, including the first English child born in the Americas, Virginia Dare. When their governor, John White, returned in 1590, they were gone, with one word carved on a post: CROATOAN. The theories: moving to Croatoan Island, joining local peoples, the drought, the Spanish; and what recent archaeology has and has not found.",
-          "source": "John White's account of the 1590 voyage and recent archaeological reports (First Colony Foundation, Hatteras excavations)"
+          "source": "John White's account of the 1590 voyage and recent archaeological reports (First Colony Foundation, Hatteras excavations)",
+          "script": {
+            "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/01-roanoke-the-colony-that-vanished.txt",
+            "title": "Roanoke: The Colony That Vanished",
+            "description": "In 1590 a governor came back to his colony in America to find it gone. About 115 people, his daughter and his granddaughter among them. All that was left was one word, cut into a post."
+          }
         },
         {
           "number": 2,
@@ -50,7 +55,12 @@
           "number": 6,
           "title": "Roopkund: The Lake of Skeletons",
           "covers": "High in the Indian Himalayas, at about 5,000 metres, a small glacial lake in Uttarakhand holds the bones of hundreds of people. A forest ranger found them in 1942. For decades the story was one group killed by a hailstorm, until a 2019 DNA study found they died in separate events about a thousand years apart, including people from the eastern Mediterranean.",
-          "source": "Harney et al. (2019), Nature Communications, and earlier studies of the Roopkund remains"
+          "source": "Harney et al. (2019), Nature Communications, and earlier studies of the Roopkund remains",
+          "script": {
+            "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/06-roopkund-the-lake-of-skeletons.txt",
+            "title": "Roopkund: The Lake of Skeletons",
+            "description": "High in the Indian Himalayas lies a small lake with hundreds of human skeletons. For decades everyone assumed they died together. In 2019, the DNA said otherwise."
+          }
         },
         {
           "number": 7,
