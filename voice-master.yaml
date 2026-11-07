@@ -3141,28 +3141,22 @@ channels:
         - "I'm Sarah on Psyche Session. Follow for more little explanations like this one, and I'll see you next time."
 
   # -------------------------------------------------------------------------
-  # Added 2026-10-29 with the channel itself. NO ELEVENLABS VOICE YET: the
-  # REPLACE_ placeholder makes the ElevenLabs engine refuse to voice
-  # (render/tts.ts) and is never pinned (voiceRegistry), so nothing goes out in
-  # a wrong voice. Design the voice by ear from `designPrompt` (Voice Design,
-  # pick one of three), paste its id here, push. GPT drafts work meanwhile.
+  # Added 2026-10-29. Voices chosen 2026-11-07 from the ElevenLabs library on the
+  # owner's word ("select the best orator voices"), by a year of real narration
+  # usage, each with a two-year withdrawal notice and verified on eleven_v4.
+  # Library voices, unlike the designed ones above: an owner can withdraw one, so
+  # the notice period matters if any of these is ever replaced.
   spellbound:
     host: narrator
     name: Ruby
     elevenlabs:
-      voiceId: REPLACE_WITH_DESIGNED_VOICE
+      voiceId: i4CzbCVWoqvD0P1QJCUL  # library voice: Ivy, Spirited, Lively, Daring
       voiceName: Ruby (Spellbound)
       # Mid-low: a storyteller needs life between narration, banter and a
       # villain's line, but the owner's even-voice rule (2026-10-24) holds.
       stability: 0.45
       similarity: 0.8
-      designPrompt: >
-        Native American English. Female, late twenties. Studio quality.
-        Persona: captivating storyteller reading a fantasy romance aloud to one
-        listener. Emotion: warm, playful, quietly thrilled by the story.
-        Smooth, bright mid-range voice with a smile in it, close to the
-        microphone, lively but unhurried pace, crisp on dialogue, never
-        theatrical, never breathy.
+      designPrompt: "None: ElevenLabs library voice (Ivy, Spirited, Lively, Daring)."
     openai:
       voice: coral
       stability: 0.5
@@ -3198,21 +3192,15 @@ channels:
     host: narrator
     name: Marcus
     elevenlabs:
-      voiceId: REPLACE_WITH_DESIGNED_VOICE
+      voiceId: NNl6r8mD7vthiJatiJt1  # library voice: Bradford, Expressive and Articulate
       voiceName: Marcus (Hidden History)
       # Mid: a long told story wants some lift, and dates and names must sound
       # sure.
       stability: 0.5
       similarity: 0.8
       # British, the only one in the studio: history's best-loved audio voices
-      # are British, and it sets this channel apart from Adrian and Ethan. Say
-      # "Native American English" instead if the owner prefers.
-      designPrompt: >
-        Native British English, educated southern accent. Male, early forties.
-        Studio quality. Persona: historian and natural storyteller. Emotion:
-        warm, wry, absorbed in the story. Rich, resonant baritone with crisp
-        articulation, relaxed conversational pace, the sound of somebody who
-        has read the sources and loves telling you what happened.
+      # are British, and it sets this channel apart from Adrian and Ethan.
+      designPrompt: "None: ElevenLabs library voice (Bradford, Expressive and Articulate)."
     openai:
       voice: onyx
       stability: 0.5
@@ -3247,17 +3235,12 @@ channels:
     host: narrator
     name: Iris
     elevenlabs:
-      voiceId: REPLACE_WITH_DESIGNED_VOICE
+      voiceId: KoVIHoyLDrQyd4pGalbs  # library voice: Autumn Veil, Warm and Reflective
       voiceName: Iris (The Unknown Hour)
       # High-mid: the strangeness is in the facts, so the voice stays level.
       stability: 0.55
       similarity: 0.8
-      designPrompt: >
-        Native American English. Female, late thirties. Studio quality.
-        Persona: calm late-night narrator of true unexplained events. Emotion:
-        composed, curious, quietly serious. Low, smooth, steady voice with a
-        clear, measured pace and natural pauses, intimate but never breathy,
-        never dramatic.
+      designPrompt: "None: ElevenLabs library voice (Autumn Veil, Warm and Reflective)."
     openai:
       voice: alloy
       stability: 0.6
