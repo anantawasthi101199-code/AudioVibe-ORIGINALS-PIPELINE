@@ -363,9 +363,11 @@ export class PlatformAccounts {
  */
 export const bioFor = (persona: Persona): string => {
   const thesis = (persona.bio ?? persona.thesis).trim().replace(/\s+/g, ' ');
-  const made =
-    'An AudioVibe Originals show. Written and voiced by AI, from documents you can check: ' +
-    'every episode lists what it read.';
+  // A fiction show read nothing, so it must not claim sources.
+  const made = persona.fiction
+    ? 'An AudioVibe Originals show. Written and voiced by AI. Every story here is fiction.'
+    : 'An AudioVibe Originals show. Written and voiced by AI, from documents you can check: ' +
+      'every episode lists what it read.';
 
   // The API caps a bio, and a truncated final sentence reads as a bug rather
   // than as brevity. The thesis is dropped whole if both will not fit.
