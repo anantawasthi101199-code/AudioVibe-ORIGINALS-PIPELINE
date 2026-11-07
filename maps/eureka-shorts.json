@@ -140,19 +140,34 @@
       "number": 12,
       "title": "The Day Surgery Stopped Hurting",
       "covers": "In 1846, in front of a packed theatre in Boston, a dentist put a patient to sleep with ether, and the surgeon cut without a scream.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/012-the-day-surgery-stopped-hurting.txt",
+        "title": "The Day Surgery Stopped Hurting",
+        "description": "Before 1846, the best surgeon was the fastest one. Then a Boston dentist walked into a packed theatre with a glass flask, and the patient on the table slept."
+      }
     },
     {
       "number": 13,
       "title": "Gagarin's 108 Minutes",
       "covers": "In 1961 a former foundry worker became the first person in space, and landed by parachute in a field in front of a startled farmer.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/013-gagarins-108-minutes.txt",
+        "title": "Gagarin's 108 Minutes",
+        "description": "The first human in space started out casting metal in a foundry. He went round the world once in 1961, jumped out of his capsule, and landed in a field near a very startled farmer."
+      }
     },
     {
       "number": 14,
       "title": "Jane Goodall and the Termite Fishing Chimp",
       "covers": "In 1960 a young Englishwoman in Tanzania watched a chimpanzee strip a twig to fish for termites, and changed what we thought made humans special.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/014-jane-goodall-and-the-termite-fishing-chimp.txt",
+        "title": "Jane Goodall and the Termite Fishing Chimp",
+        "description": "In 1960 a young Englishwoman with no degree watched a chimpanzee strip a twig to catch termites. It forced scientists to rewrite what made humans special."
+      }
     },
     {
       "number": 15,

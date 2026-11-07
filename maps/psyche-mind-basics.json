@@ -149,7 +149,12 @@
           "number": 13,
           "title": "First Impressions in a Tenth of a Second",
           "covers": "How quickly we judge faces, why those snap judgements stick, and when they are wrong.",
-          "source": "Willis and Todorov (2006) and reviews of first impressions"
+          "source": "Willis and Todorov (2006) and reviews of first impressions",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/13-first-impressions-in-a-tenth-of-a-second.txt",
+            "title": "First Impressions in a Tenth of a Second",
+            "description": "You walk into a room and you've already decided about everyone in it, in less time than a blink. Why your brain does this, why it sticks, and how to give people a second chance."
+          }
         },
         {
           "number": 14,
@@ -192,7 +197,12 @@
           "number": 19,
           "title": "How a Habit Forms",
           "covers": "The loop of cue, routine and reward, how long a habit really takes to form, and why it is not 21 days.",
-          "source": "Lally et al. (2010) on habit formation and Wood's habit research"
+          "source": "Lally et al. (2010) on habit formation and Wood's habit research",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/19-how-a-habit-forms.txt",
+            "title": "How a Habit Forms",
+            "description": "You've heard it takes 21 days. It doesn't, and that may be the reason you keep giving up. How a habit really forms, how long it really takes, and why missing a day doesn't ruin anything."
+          }
         },
         {
           "number": 20,

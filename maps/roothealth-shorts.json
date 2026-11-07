@@ -152,19 +152,34 @@
       "number": 13,
       "title": "Why Do We Get a Fever?",
       "covers": "Why the body turns up its own temperature when fighting infection, when a fever is helpful, and when it needs medical attention.",
-      "source": "NHS guidance on fever in adults and children"
+      "source": "NHS guidance on fever in adults and children",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/013-why-do-we-get-a-fever.txt",
+        "title": "Why Do We Get a Fever?",
+        "description": "You're shivering under three blankets, and the thermometer says you're burning up. Why your body does that on purpose, when a fever helps, and when it needs a doctor."
+      }
     },
     {
       "number": 14,
       "title": "What Is Concussion?",
       "covers": "How a knock to the head shakes the brain inside the skull, the warning signs, and why rest and a gradual return matter.",
-      "source": "NHS concussion guidance and sport concussion consensus statements"
+      "source": "NHS concussion guidance and sport concussion consensus statements",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/014-what-is-concussion.txt",
+        "title": "What Is Concussion?",
+        "description": "A clash of heads on the pitch and you're up again in seconds, saying you're fine. What really happens to the brain inside the skull, and why rest matters."
+      }
     },
     {
       "number": 15,
       "title": "Do Carrots Help You See in the Dark?",
       "covers": "How a wartime cover story about British pilots started a famous myth, and what vitamin A really does for vision.",
-      "source": "Historical accounts of the Second World War carrot campaign and NHS guidance on vitamin A"
+      "source": "Historical accounts of the Second World War carrot campaign and NHS guidance on vitamin A",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/015-do-carrots-help-you-see-in-the-dark.txt",
+        "title": "Do Carrots Help You See in the Dark?",
+        "description": "Your nan said to eat your carrots, and you'd see in the dark. That idea has a surprising source: a wartime cover story. What vitamin A does for your eyes."
+      }
     },
     {
       "number": 16,

@@ -1,0 +1,45 @@
+## opening
+
+[warmly] This is the story of Marie Curie, a Polish physicist who, in a leaking wooden shed in Paris, between 1898 and 1902, boiled tonnes of black rock down to one tenth of a gram of a new element that glowed in the dark.
+
+[curious] At the time, scientists thought the atom was the smallest thing there was: solid, simple and unchanging, the final brick in the universe. The work in that shed started to take that idea apart. It revealed that matter could give off energy on its own, without any fuel, and without stopping.
+
+[thoughtful] Marie Curie won the Nobel Prize twice, in two separate sciences, and she is still the only person ever to do that. And it cost her something she did not understand until it was too late.
+
+[warmly] By the end, you'll know how she found radium, what it was doing to her, and why you need to sign a form to read her notebooks today.
+
+## before
+
+[thoughtful] There are three people in this story. Marie, born Maria Sklodowska. Pierre Curie, the quiet French physicist she married. And Henri Becquerel, a professor in Paris, who found the clue that started it all.
+
+[warmly] Maria was born in Warsaw in 1867, when Poland was under Russian rule and women could not go to university there. She and her sister made a pact: Maria would work as a governess to pay for her sister's medical studies in Paris, and then her sister would help her. It took six years. In 1891 she finally arrived at the Sorbonne, in Paris, so poor she sometimes fainted from hunger, and she came first in her physics degree.
+
+[curious] In 1894 she met Pierre, a shy and brilliant man who was an expert in crystals and magnets. He proposed by offering her a shared life of science. They married in 1895, in a plain dark blue dress she could wear afterwards to the lab, and they spent their honeymoon on bicycles.
+
+[thoughtful] In 1896 Becquerel made an odd discovery. He left a lump of uranium, a heavy metal, on a wrapped photographic plate in a dark drawer, and the plate came out fogged. Uranium was giving off some invisible ray, all by itself. Most scientists shrugged. X-rays were the excitement of the day. Marie was looking for a subject for her doctorate, and she chose this one, because nobody had much studied it.
+
+## wrong
+
+[curious] She used a very sensitive measuring device that Pierre and his brother had invented, and started testing every substance she could find. Her first big idea was simple and huge. The strength of the rays depended only on how much uranium there was, and nothing else, not heat, not light, not chemistry. So the rays must be coming from inside the atoms themselves. She gave it a name: radioactivity.
+
+[thoughtful] Then she hit something that made no sense. Pitchblende, a black ore from a mine in Bohemia, was far more radioactive than the uranium inside it could explain. She checked and rechecked. She thought she had made a mistake. There was only one other possibility: the ore held some new element that nobody had ever found, in tiny amounts, and it was immensely powerful.
+
+[warmly] Pierre was so struck that he put aside his own work to join her, and he never went back. In July 1898 they announced the first new element, and she named it polonium, after her lost country. In December they announced a second: radium. But chemists would not believe them. No one could see these elements. To convince anyone they had to have a sample, a real pinch of pure stuff that could be weighed.
+
+## payoff
+
+[curious] They were given a shed, across a yard from the School of Physics, where medical students had once dissected bodies. It had a glass roof that leaked, a dirt floor and no proper hoods, so that the fumes went out into the yard. It was bitterly cold in winter and stifling in summer. The Austrian mine let them have tonnes of the waste ore, for free, because it thought the stuff was worthless. It came in sacks with pine needles still in them.
+
+[warmly] Marie did the heavy work herself. She wrote later that she spent whole days stirring a boiling mass with an iron rod nearly as big as she was. She dissolved it, boiled it, filtered it and separated it, again and again, batch after batch, for almost four years, and all the while she was raising their baby daughter, Irene.
+
+[thoughtful] In 1902 she had it: one tenth of a gram of radium chloride, from several tonnes of ore. It was enough to weigh, and enough to fix radium's place among the elements. They could never quite stay away from it. She wrote in her autobiography about going back to the shed at night, with the bottles and glass tubes glowing on the shelves, a faint blue light in the dark, like little fairy lights. She said it was one of the joys of that time.
+
+[curious] In 1903 the Nobel committee meant to give the physics prize to Pierre and Becquerel, and leave Marie out. A Swedish mathematician warned Pierre, and Pierre insisted. So she became the first woman to win a Nobel. Then, in April 1906, Pierre stepped into a Paris street in the rain and was run over by a heavy horse-drawn cart. He died at once. He was forty-six. She took his teaching post, the first woman to teach at the Sorbonne, and she opened his lecture at the exact sentence where he had stopped.
+
+[warmly] In 1911 she won a second Nobel, in chemistry, for radium and polonium themselves. By then, doctors were using radium to shrink tumours, a treatment that gave people a real chance for the first time. And when the First World War came, she fitted cars with X-ray machines, learned to drive, and took them to the front, with Irene, then seventeen, working beside her. They helped surgeons find the bullets in more than a million soldiers.
+
+## close
+
+[thoughtful] What she did not know was what those beautiful glowing tubes were doing. Her fingers were cracked and burned. She often felt exhausted. She kept a small jar of radium by her bed. She died in July 1934, at sixty-six, of a blood disease now thought to have been caused by all that radiation.
+
+[warmly] A year later, Irene won a Nobel of her own, and the atom that Marie's work had opened went on to give us nuclear medicine and much of modern physics. As for her notebooks, they're stored in lead-lined boxes at the National Library in Paris. They will stay radioactive for another fifteen hundred years. If you want to read them, you sign a form, and you put on protective clothing, to look at the handwriting of a woman stirring a pot in a shed.

@@ -149,7 +149,12 @@
           "number": 13,
           "title": "Benjamin Franklin and the Kite",
           "covers": "Franklin wanted to prove lightning was electricity, flew a kite into a storm in 1752, and invented the lightning rod.",
-          "source": "Franklin's letters on electricity and histories of early electrical science"
+          "source": "Franklin's letters on electricity and histories of early electrical science",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/13-benjamin-franklin-and-the-kite.txt",
+            "title": "Benjamin Franklin and the Kite",
+            "description": "In 1752 a printer in Philadelphia flew a silk kite into a storm cloud to prove what lightning really was. Then he worked out how to stop it burning your house down."
+          }
         },
         {
           "number": 14,
@@ -192,7 +197,12 @@
           "number": 19,
           "title": "Marie Curie and the Glowing Element",
           "covers": "Working in a leaky shed in Paris, Marie and Pierre Curie boiled tonnes of ore to find radium and polonium, and Marie became the first person to win two Nobel prizes.",
-          "source": "Marie Curie's writings and biographies, and Nobel Prize records"
+          "source": "Marie Curie's writings and biographies, and Nobel Prize records",
+          "script": {
+            "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/19-marie-curie-and-the-glowing-element.txt",
+            "title": "Marie Curie and the Glowing Element",
+            "description": "In a leaky shed in Paris, Marie and Pierre Curie boiled tonnes of ore down to a pinch of something that glowed in the dark. It won two Nobel prizes, and her notebooks are still radioactive."
+          }
         },
         {
           "number": 20,

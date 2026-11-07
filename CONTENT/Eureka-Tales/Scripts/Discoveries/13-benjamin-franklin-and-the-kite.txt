@@ -1,0 +1,45 @@
+## opening
+
+[warmly] This is the story of how a printer in Philadelphia proved, in June 1752, that lightning is electricity, using a kite, a key and a length of string, and then used that fact to save more buildings than any fire brigade ever has.
+
+[curious] In the 1700s, lightning was one of the most frightening things in ordinary life. Most people believed it was an act of God. Towns rang their church bells during storms to drive it away, and the ringers, up in tall towers holding wet ropes, were sometimes killed for their trouble. Whole streets of wooden houses burned after a single strike.
+
+[thoughtful] At the same time, electricity was a party trick. Gentlemen rubbed glass tubes, made sparks jump, and gave each other small shocks for fun. Nobody had any good reason to think the tiny spark at a dinner table and the great crack across the sky were the same thing.
+
+[warmly] By the end, you'll know how Benjamin Franklin showed they were, what really happened with that kite, and why almost every tall building you've ever seen has a thin metal strip running down it.
+
+## before
+
+[thoughtful] There are three people to keep in your head. Benjamin Franklin, a printer and newspaper man with almost no schooling. His son William, who was about twenty-one. And a Frenchman called Thomas-Francois Dalibard, who got there first, which we'll come to.
+
+[warmly] Franklin was born in Boston in 1706, the fifteenth of seventeen children of a candle maker, and he left school at ten. He ran away to Philadelphia at seventeen, and built a printing business so successful that by forty-two he could retire to do whatever interested him. What interested him, more than anything, was a glass tube a friend in London had posted to him.
+
+[curious] In the 1740s he started playing with it, and he was brilliant at it, because he had no training to get in the way. He noticed that sparks seemed to jump to sharp metal points from a distance, while a blunt object had to get close. And he had a new toy, the Leyden jar. Picture a glass jar lined with metal foil, which could store up an electric charge, like water held behind a dam, and let it all go in one painful crack.
+
+[thoughtful] He began keeping a list. A spark from a jar and a bolt of lightning, he wrote, were alike in many ways. Both gave light. Both moved in a crooked line. Both made a crack. Both could kill animals and melt metal. Both liked to strike pointed things. It was a very good list. But a list is not a proof.
+
+## wrong
+
+[curious] In 1750 he wrote to a friend in London with a test. Stand a man in a sentry box on a tall tower, with a long iron rod pointing to the sky, and see whether a storm cloud puts electricity into it. The Royal Society in London was not interested, and reportedly laughed at some of his ideas. But his letters were printed as a small book, and it was translated into French.
+
+[warmly] The French king was charmed by it. And on the 10th of May 1752, at Marly, a village outside Paris, Dalibard put up a forty-foot iron rod, exactly as the American had described. A storm came over. A retired soldier who was minding the rod reached out with a brass wire, and sparks jumped from the rod to the wire, with a buzzing sound. The priest of the village came running to see. Franklin's idea had been proved in France, by somebody else, and Franklin did not know.
+
+[thoughtful] He was still waiting. He'd been hoping for the spire of a new church in Philadelphia, and it was not finished. Then it struck him that he didn't need a tower. He could send a wire up with a kite.
+
+## payoff
+
+[curious] Sometime in June 1752, he built one out of a large silk handkerchief and two crossed sticks, because silk could take the rain. He tied a sharp wire to the top, a long hemp string to fly it, and near his hand he tied a metal key. Below the key he added a silk ribbon. He'd hold that ribbon, under a shed roof, to keep it dry, so the charge wouldn't run through him. Only William went with him, and that is partly why we have so little record. By the later account of his friend Joseph Priestley, Franklin wanted to avoid being laughed at if it failed.
+
+[warmly] Here's the bit the pictures get wrong. Lightning never struck that kite. If it had, he would almost certainly have died. A Russian scientist, Georg Richmann, was killed by lightning in St Petersburg the very next year, doing an experiment with a rod. What Franklin wanted was the quiet charge in the air around a storm cloud.
+
+[curious] For a long time nothing happened, and he began to give up. Then he saw the loose threads on the string lift and stand apart from each other, as hair does near a charged balloon. He moved his knuckle towards the key, and a spark jumped. It was the same spark. He charged a Leyden jar from the sky.
+
+[thoughtful] He only told the world in October, in a short note in his own newspaper, and without much detail. Some historians have asked whether it happened exactly as described. The story relies on that note and Priestley's account, written fifteen years later. Franklin never made much fuss about it, and that alone tells you what he thought mattered. It was what came next.
+
+[warmly] If lightning was electricity, and electricity loved sharp points, then you could give it a road. Put a pointed iron rod on your roof, and run a wire down the wall into wet ground, and the charge goes harmlessly into the earth. He published the plan in his almanac in 1753, and he refused to patent it. Rods began going up across America and Europe.
+
+## close
+
+[thoughtful] Not everyone was pleased. Some preachers said it was an insult to interfere with the hand of God, and one blamed an earthquake in Boston on the iron rods. But buildings with them kept standing, and steeples without them kept burning down. In time the bell ringers came down from their towers.
+
+[warmly] Franklin went on to help found a country, and he's on the hundred-dollar bill. But look up at the next church spire or tall office block you pass. There will be a thin strip of metal running from the top down to the ground, and it is doing exactly what a retired printer worked out with a wet handkerchief and a key.
