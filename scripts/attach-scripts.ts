@@ -6,7 +6,7 @@
  *   npx ts-node --transpile-only scripts/attach-scripts.ts next <mapId> [count]
  *       the next items on that map with no script yet, and what they must fit
  *   npx ts-node --transpile-only scripts/attach-scripts.ts episodes <channelId> [count]
- *       a channel's next episodes, rotated across all its series (strict order for fiction)
+ *       a channel's next episodes, rotated across all its series
  *   npx ts-node --transpile-only scripts/attach-scripts.ts check <batch.txt>
  *   npx ts-node --transpile-only scripts/attach-scripts.ts write <batch.txt>
  *
@@ -78,8 +78,8 @@ const next = (mapId: string, count: number) => {
  * script was committed longest ago (a series never written in goes first,
  * earliest on a tie), and within a series always the first unscripted episode.
  * True rotation with no stored state: git already records when each series was
- * last served. A fiction channel (a serial) keeps strict order instead, because
- * episode three cannot be written before episode two.
+ * last served. Order inside a series never changes, so a serial's episode three
+ * still cannot come before its episode two, on any channel.
  */
 const lastServed = (files: string[]): number => {
   if (!files.length) return 0;
@@ -103,17 +103,16 @@ const episodes = (channelId: string, count: number) => {
       todo: s.episodes.filter((e) => !e.script),
     })),
   );
-  const strict = loadPersona(channelId).fiction;
   const picks: { m: MapFile; s: { title: string }; i: Item }[] = [];
   for (let round = 1; picks.length < count; round++) {
     const open = queues.filter((q) => q.todo.length);
     if (!open.length) break;
-    const q = strict ? open[0]! : open.reduce((best, x) => (x.served < best.served ? x : best));
+    const q = open.reduce((best, x) => (x.served < best.served ? x : best));
     picks.push({ m: q.m, s: q.s, i: q.todo.shift()! });
     // Served by this batch: after everything already in git, in pick order.
     q.served = Date.now() / 1000 + round;
   }
-  console.log(`${channelId}: ${strict ? 'strict order (fiction serial)' : 'rotating across series'}, ${picks.length} picked`);
+  console.log(`${channelId}: rotating across series, ${picks.length} picked`);
   for (const m of new Set(picks.map((p) => p.m))) {
     const f = loadFormat(m.formatId);
     console.log(`  ${m.id}: format ${f.id}, parts: ${f.beats.map((b) => b.id).join(', ')}; at most ${ceilingWords(m)} words; files in ${dirFor(m)}/`);
