@@ -15,7 +15,7 @@ the `/foundry-scripts` skill, voiced by `/foundry-voice`.
 |---|---|---|---|---|---|
 | The Global Thread | `global-thread` | Eva | News & Politics | `geo-episode`: conflicts in series (Israel and Palestine, Russia and Ukraine, sanctions, India and China) | `geo-short` |
 | Spellbound | `spellbound` | Ruby | Sci-Fi & Fantasy | `drama-episode`: fantasy and romance serials of 10 (The Wolf King's Substitute Bride, The Alien Who Rented My Attic), a twist every episode, big twist at episode 5 | `drama-short`: complete 3-minute fantasy dramas with a planted twist |
-| Hidden History | `hidden-history` | Marcus | Educational | `history-episode` | `history-short` |
+| Hidden History | `hidden-history` | Marcus | History & Mythology | `history-episode` | `history-short` |
 | The Unknown Hour | `unknown-hour` | Iris | Horror & Thriller | `mystery-episode`: real, documented, unexplained | `mystery-short` |
 
 - **Global Thread is no longer a news desk.** `desks/global-thread.yaml` and the
