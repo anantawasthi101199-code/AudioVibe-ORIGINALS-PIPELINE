@@ -161,28 +161,33 @@ export const releaseDue = async (
     // the winner is already uploading.
     const plan = dueForRelease(now);
 
-    const next = plan.due[0];
-    if (!next) {
-      return { released, failed, held: plan.held, remaining: 0 };
+    // A FAILURE DOES NOT BLOCK THE QUEUE. Until 2026-11-14 a refused run stayed
+    // first in line and was retried every tick, so one OWN_DUPLICATE held every
+    // channel's releases back for six days. Now a refusal is written on the run
+    // (its page says why) and the next due run goes instead. Still at most one
+    // RELEASE per call: only successes count towards the burst limit.
+    for (const next of plan.due) {
+      const run = Run.open(next.runId);
+      const gate = regate(run, run.readArtifact('script', scriptSchema))!;
+
+      say(`releasing "${next.title}" (${next.channelName})`);
+
+      try {
+        // `confirmed` is the approval a person gave when they saved the order,
+        // which is the same act `--yes` is on the command line.
+        const result = await publishRun(run, gate, { confirmed: true, report: say });
+        released.push({ runId: next.runId, audioId: result.audioId, url: result.url });
+        run.clearFailure();
+        break;
+      } catch (err) {
+        const reason = err instanceof PublishRefused ? err.reason : (err as Error).message;
+        failed.push({ runId: next.runId, reason });
+        run.noteFailure(`scheduled release refused: ${reason}`, 'publish');
+        say(`refused: ${reason}`);
+      }
     }
 
-    const run = Run.open(next.runId);
-    const gate = regate(run, run.readArtifact('script', scriptSchema))!;
-
-    say(`releasing "${next.title}" (${next.channelName})`);
-
-    try {
-      // `confirmed` is the approval a person gave when they saved the order,
-      // which is the same act `--yes` is on the command line.
-      const result = await publishRun(run, gate, { confirmed: true, report: say });
-      released.push({ runId: next.runId, audioId: result.audioId, url: result.url });
-    } catch (err) {
-      const reason = err instanceof PublishRefused ? err.reason : (err as Error).message;
-      failed.push({ runId: next.runId, reason });
-      say(`refused: ${reason}`);
-    }
-
-    return { released, failed, held: plan.held, remaining: plan.due.length - 1 };
+    return { released, failed, held: plan.held, remaining: plan.due.length - released.length - failed.length };
   } finally {
     lock.release();
   }
