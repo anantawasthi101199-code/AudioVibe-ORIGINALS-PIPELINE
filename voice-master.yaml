@@ -3606,6 +3606,78 @@ channels:
       - word: Teignmouth
         sayAs: TIN-muth
         ipa: /ˈtɪnməθ/
+      - word: Dei Gratia
+        sayAs: DAY-ee GRAH-tee-uh
+        ipa: /ˈdeɪi ˈɡrɑːtsi.a/
+      - word: Santa Maria
+        sayAs: SAN-tuh muh-REE-uh
+        ipa: /ˈsɐ̃tɐ mɐˈɾiɐ/
+      - word: Deveau
+        sayAs: duh-VOH
+        ipa: /dəˈvo/
+      - word: Solly-Flood
+        sayAs: SOL-ee-FLUD
+        ipa: /ˈsɒli flʌd/
+      - word: Sella
+        sayAs: SEL-uh
+        ipa: /ˈsɛlə/
+      - word: Voynich
+        sayAs: VOY-nitch
+        ipa: /ˈvɔɪnɪtʃ/
+      - word: Jacobus Horcicky
+        sayAs: yah-KOH-bus HOR-chits-kee
+        ipa: /jaˈkoːbus ˈɦor̝t͡ʃɪtskiː/
+      - word: Horcicky
+        sayAs: HOR-chits-kee
+        ipa: /ˈɦor̝t͡ʃɪtskiː/
+      - word: Johannes Marcus Marci
+        sayAs: yo-HAH-nes MAR-kus MAR-tsee
+        ipa: /joˈɦanɛs ˈmarkus ˈmart͡sɪ/
+      - word: Marci
+        sayAs: MAR-tsee
+        ipa: /ˈmart͡sɪ/
+      - word: Athanasius Kircher
+        sayAs: ath-uh-NAY-zhus KEER-kher
+        ipa: /ataˈnaːzi̯ʊs ˈkɪʁçɐ/
+      - word: Kircher
+        sayAs: KEER-kher
+        ipa: /ˈkɪʁçɐ/
+      - word: Mondragone
+        sayAs: mon-dra-GOH-neh
+        ipa: /mondraˈɡoːne/
+      - word: Marcelo Montemurro
+        sayAs: mar-SEH-lo mon-teh-MOO-ro
+        ipa: /maɾˈselo monteˈmuro/
+      - word: Montemurro
+        sayAs: mon-teh-MOO-ro
+        ipa: /monteˈmuro/
+      - word: Elizebeth
+        sayAs: ih-LIZ-uh-beth
+        ipa: /ɪˈlɪzəbəθ/
+      - word: Rio de Janeiro
+        sayAs: REE-oh day zhuh-NAIR-oh
+        ipa: /ˈʁi.u d͡ʒi ʒɐˈnejɾu/
+      - word: Wormell
+        sayAs: WOR-mul
+        ipa: /ˈwɔːrməl/
+      - word: McLellan
+        sayAs: muh-KLEL-un
+        ipa: /məˈklɛlən/
+      - word: Orang Asli
+        sayAs: OH-rahng AHS-lee
+        ipa: /ˈoraŋ ˈasli/
+      - word: Gurkha
+        sayAs: GUR-kuh
+        ipa: /ˈɡʊrkʰa/
+      - word: Mato Grosso
+        sayAs: MAH-too GROH-soo
+        ipa: /ˈmatu ˈɡɾosu/
+      - word: Kalapalo
+        sayAs: kah-lah-PAH-loh
+        ipa: /kalaˈpalo/
+      - word: Rimell
+        sayAs: RIM-ul
+        ipa: /ˈrɪməl/
     outros:
       episode:
         - "That's what we know, and what we don't. This is Iris on The Unknown Hour. Follow for the next one."

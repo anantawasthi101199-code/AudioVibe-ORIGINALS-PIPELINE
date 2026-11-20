@@ -25,7 +25,12 @@
           "number": 2,
           "title": "The Mary Celeste",
           "covers": "On 4 December 1872 the crew of the Dei Gratia found the Mary Celeste sailing on her own between the Azores and Portugal: cargo intact, the lifeboat gone, and no sign of Captain Benjamin Briggs, his wife, his two-year-old daughter or the crew. The salvage hearing in Gibraltar, Arthur Conan Doyle's invented version that spread the myths, and the theories: alcohol fumes, a waterspout, a faulty pump.",
-          "source": "The Gibraltar salvage inquiry records and Paul Begg's Mary Celeste: The Greatest Mystery of the Sea"
+          "source": "The Gibraltar salvage inquiry records and Paul Begg's Mary Celeste: The Greatest Mystery of the Sea",
+          "script": {
+            "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/02-the-mary-celeste.txt",
+            "title": "The Mary Celeste",
+            "description": "A ship found sailing on her own in 1872, cargo safe, lifeboat gone, and ten people missing. What actually made them leave?"
+          }
         },
         {
           "number": 3,
@@ -101,7 +106,12 @@
           "number": 11,
           "title": "The Voynich Manuscript",
           "covers": "A small book on vellum, carbon-dated to the early 1400s, filled with an unknown script and drawings of plants that do not exist, bathing women and star charts. Bought by Wilfrid Voynich in 1912, studied by wartime codebreakers, and still unread. The theories: a lost language, a cipher, a meaningless hoax, and why each one struggles.",
-          "source": "Yale's Beinecke Library (MS 408), the University of Arizona's 2009 carbon dating, and published research"
+          "source": "Yale's Beinecke Library (MS 408), the University of Arizona's 2009 carbon dating, and published research",
+          "script": {
+            "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/11-the-voynich-manuscript.txt",
+            "title": "The Voynich Manuscript",
+            "description": "A small book from the early 1400s, written in a script nobody can read. The best codebreakers of the war tried, and failed."
+          }
         },
         {
           "number": 12,

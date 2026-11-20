@@ -1,0 +1,43 @@
+## hook
+
+[measured] In a library at Yale University there is a small book, about the size of a paperback, written six hundred years ago in an alphabet that matches no other on Earth, and in more than a century of trying, nobody has read a single sentence of it.
+
+[steady] It is called the Voynich Manuscript, after the bookseller who found it in 1912. It has about two hundred and forty pages of vellum, which is calfskin scraped thin and dried to make a page. Every page is covered in a flowing, careful handwriting, and in drawings. Plants that no botanist recognises. Circles of stars. Small naked women bathing in green pools, joined by strange pipes. The library keeps it under the catalogue number MS 408.
+
+[thoughtful] So here is the question this episode takes seriously. Is this book a real message in a language or a code we have not cracked, or is it a beautiful nonsense, made to look like one? So let's go back to the start.
+
+## story
+
+[steady] The trail begins in the early 1600s, in Prague, at the court of the Holy Roman Emperor Rudolf the Second. Rudolf was a ruler who collected strange things: clocks, crystals, alchemists, astronomers. Faint letters on the first page, found under ultraviolet light, spell the name of his court chemist, Jacobus Horcicky, which suggests the book once passed through his hands.
+
+[measured] The first clear written record comes in 1665 or 1666. A doctor in Prague, Johannes Marcus Marci, sent the book to a famous scholar in Rome, Athanasius Kircher, who claimed he could read ancient Egyptian. Marci's letter survived with it, tucked inside the cover. He wrote that he had been told the emperor had paid six hundred gold ducats for it, a fortune, and that people believed the author was Roger Bacon, an English friar from the 1200s. Kircher, as far as we know, never read it either. After that the book disappeared into a Jesuit library in Italy for about two and a half centuries.
+
+[steady] In 1912 a Polish-born bookseller living in London, Wilfrid Voynich, bought a box of old manuscripts from the Jesuits at the Villa Mondragone, a grand house near Rome. He knew rare books well, and this one had him from the moment he opened it. He spent the rest of his life trying to get it read. He believed, like Marci, that Roger Bacon had written it, and that it held lost science.
+
+[thoughtful] Let's look at what he had in his hands, because the details are the whole puzzle. The writing runs left to right, in neat lines, with no crossings out, as if the writer was copying, or knew exactly what he meant. There are about twenty to thirty different letters, depending on how you count. The words repeat in a way normal writing does not. Sometimes the same word appears two or three times in a row. The pictures fall into sections. A long first section of plants, each with text around it, the way an old herbal, a book of healing plants, would look. Then pages of stars and zodiac signs. Then the bathing women. Then jars and roots, like an old pharmacy book. Then pages of pure text, with little stars in the margin, perhaps recipes.
+
+[steady] The first famous attempt came in 1921. A professor at the University of Pennsylvania, William Newbold, announced that he had found tiny shorthand marks hidden inside the letters, visible only under a magnifying glass. He said they proved Roger Bacon had invented the microscope. It was front-page news. In 1931 another scholar, John Manly, showed that the tiny marks were simply cracks in the dried ink. Newbold's reading fell apart.
+
+[measured] Then the professionals arrived. In 1944, near the end of the Second World War, William Friedman, the American cryptologist whose team had broken Japan's diplomatic code, set up a study group to try the Voynich in their spare time. His wife Elizebeth Friedman, a great codebreaker in her own right, worked on it too. They had the best minds and the best methods of the age. They made a full count of the letters. They never read a word. Friedman's own conclusion was that it might be an early attempt at an invented, made-up language, built from scratch.
+
+[steady] Voynich died in 1930. The book passed to his widow, and in 1961 it was sold to a New York dealer, Hans Kraus, who gave it to Yale in 1969, where it still sits in the Beinecke Rare Book and Manuscript Library. You can see every page online.
+
+[pause] Then, in 2009, came the fact that changed the conversation. The University of Arizona carbon-dated four small samples of the vellum. The calves had died between about 1404 and 1438. So the pages are from the early 1400s, more than a century after Roger Bacon, and long before Voynich was born.
+
+## theories
+
+[thoughtful] There are three serious explanations, and each one has a problem.
+
+[measured] The first is that this is a real language, written in its own invented alphabet. Researchers who measure the text, like the physicist Marcelo Montemurro in 2013, say the words behave the way words in real languages do: some are very common, many are rare, and words cluster by topic, so the plant pages share words that the star pages do not. That is very hard to fake by accident. The problem is that no known language fits. The words are short and repetitive, and some have suggested an Asian language, a lost dialect, or Latin in heavy shorthand. Every claimed reading so far, including well-publicised ones in 2017 and 2019, has been rejected by other specialists, because it could not be used to read the next page.
+
+[steady] The second is a cipher, an ordinary language deliberately scrambled. The best case is simple: people in the 1400s did write secrets about medicine and alchemy in code. The problem is that the ciphers we know from that time swap one letter for another, and that would leave the text looking more random, not more repetitive. Friedman's wartime team tried the methods that broke real codes, and none of them worked.
+
+[thoughtful] The third is a hoax, a meaningless text made to sell. In 2004 a British computer scientist, Gordon Rugg, showed that you could produce something very like Voynich words using a simple card with holes in it, slid over a table of syllables, a method that existed in the 1500s. The old suspicion that Voynich himself forged it ended with the carbon dating, and with ink tests that fit the period. But a hoax still has to explain why the words cluster by subject, the way real meaning does.
+
+[measured] So which is best supported? Honestly, none of them has won. Many scholars lean towards a real language or a real system of writing, because of how ordered the text is. But nobody can yet show that, and the hoax idea is still argued seriously.
+
+## close
+
+[steady] Here is what we know. The pages were made in the early 1400s, the book passed through Prague and Rome, and its writing has the patterns of real language. What we do not know is who wrote it, in what language, or what it says.
+
+[thoughtful] Wilfrid Voynich never got his answer, and neither did the Friedmans. The little book sits in its box at Yale, and on one of its pages, beside a plant that grows nowhere, a long line of careful letters waits, exactly as somebody wrote it six hundred years ago.
