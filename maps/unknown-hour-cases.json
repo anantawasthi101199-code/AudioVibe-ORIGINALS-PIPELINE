@@ -30,7 +30,8 @@
             "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/02-the-mary-celeste.txt",
             "title": "The Mary Celeste",
             "description": "A ship found sailing on her own in 1872, cargo safe, lifeboat gone, and ten people missing. What actually made them leave?"
-          }
+          },
+          "image": "CONTENT/Unknown-Hour/Images/Unknown-Hour-Cases/02.jpg"
         },
         {
           "number": 3,
@@ -111,7 +112,8 @@
             "file": "CONTENT/Unknown-Hour/Scripts/Unknown-Hour-Cases/11-the-voynich-manuscript.txt",
             "title": "The Voynich Manuscript",
             "description": "A small book from the early 1400s, written in a script nobody can read. The best codebreakers of the war tried, and failed."
-          }
+          },
+          "image": "CONTENT/Unknown-Hour/Images/Unknown-Hour-Cases/11.jpg"
         },
         {
           "number": 12,

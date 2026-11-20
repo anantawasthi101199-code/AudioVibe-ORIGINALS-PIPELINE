@@ -49,7 +49,8 @@
         "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/004-the-night-nurse.txt",
         "title": "The Night Nurse",
         "description": "A vampire falls for the nurse on the night shift, and dreads the morning she finds out what he is."
-      }
+      },
+      "image": "CONTENT/Spellbound/Images/Three-Minute-Spells/004.jpg"
     },
     {
       "number": 5,
@@ -60,7 +61,8 @@
         "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/005-the-wedding-day-loop.txt",
         "title": "The Wedding Day Loop",
         "description": "Every time Hannah says I do, her wedding day starts again. The caterer seems to know why."
-      }
+      },
+      "image": "CONTENT/Spellbound/Images/Three-Minute-Spells/005.jpg"
     },
     {
       "number": 6,
@@ -71,7 +73,8 @@
         "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/006-the-dragons-accountant.txt",
         "title": "The Dragon's Accountant",
         "description": "Nell is sent to audit a very old client in a mountain cave. The books show four hundred years with no spending at all."
-      }
+      },
+      "image": "CONTENT/Spellbound/Images/Three-Minute-Spells/006.jpg"
     },
     {
       "number": 7,

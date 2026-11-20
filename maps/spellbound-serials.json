@@ -30,7 +30,8 @@
             "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/02-one-year-one-contract.txt",
             "title": "One Year, One Contract",
             "description": "The wolf king wants a queen for a year and nothing more. Mira signs, on one condition of her own."
-          }
+          },
+          "image": "CONTENT/Spellbound/Images/Spellbound-Serials/02.jpg"
         },
         {
           "number": 3,
@@ -109,7 +110,8 @@
             "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/12-thirty-days.txt",
             "title": "Thirty Days",
             "description": "The alien in Zoe's attic pays his rent in gold, ices like a dream, and has a very strange wrist."
-          }
+          },
+          "image": "CONTENT/Spellbound/Images/Spellbound-Serials/12.jpg"
         },
         {
           "number": 13,

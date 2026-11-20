@@ -122,7 +122,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/09-kepler-and-the-shape-of-the-orbits.txt",
             "title": "Kepler and the Shape of the Orbits",
             "description": "Kepler bet he could solve the orbit of Mars in eight days. It took him six years, and the answer was not a circle."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/09.jpg"
         },
         {
           "number": 10,
@@ -259,7 +260,8 @@
             "file": "CONTENT/Eureka-Tales/Scripts/Discoveries/25-mary-anning-the-fossil-hunter-of-lyme.txt",
             "title": "Mary Anning: The Fossil Hunter of Lyme",
             "description": "A poor carpenter's daughter dug sea dragons out of a crumbling cliff, and helped prove that whole kinds of animals had vanished."
-          }
+          },
+          "image": "CONTENT/Eureka-Tales/Images/Discoveries/25.jpg"
         },
         {
           "number": 26,
