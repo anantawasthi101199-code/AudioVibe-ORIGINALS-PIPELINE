@@ -1,0 +1,21 @@
+## mystery
+
+[curious] Did you know that the word eureka, which means I have found it, comes from a Greek mathematician who supposedly jumped out of his bath and ran through the streets without any clothes on?
+
+[warmly] This is the story of Archimedes, and of how he found out whether a king's golden crown was a fake, without damaging it.
+
+[steady] It begins in Syracuse, a Greek city on the island of Sicily, in the 200s BCE, where King Hiero the Second had ordered a new crown of pure gold for the temple.
+
+## story
+
+[thoughtful] Hiero weighed out the gold and gave it to a goldsmith. The crown came back the right weight. But the king heard a rumour that the goldsmith had kept some of the gold for himself and mixed in cheaper silver to make up the weight. The crown was sacred, so it could not be melted down to check. The king asked Archimedes, the cleverest man in the city, to find the answer.
+
+[curious] The idea he needed is density, how much stuff is packed into a space. Gold is much denser than silver, so a lump of gold is smaller than a lump of silver of the same weight. If the crown had silver in it, it would be bigger than a lump of pure gold of the same weight. The question was how to measure the size of something as complicated as a crown.
+
+[warmly] According to the story, Archimedes was getting into a full bath when he saw the water rise and spill over the side. The more of his body went in, the more water came out. That was it. Anything put into water pushes out exactly its own volume of water. He was so excited, the story says, that he leapt out and ran home naked, shouting eureka, eureka.
+
+## close
+
+[thoughtful] He put the crown in a full bowl of water and measured the overflow, then did the same with a lump of pure gold of the same weight. The crown pushed out more water. It was bigger, so it had to contain silver. The goldsmith had cheated.
+
+[curious] Here is the catch. The story comes from a Roman writer, Vitruvius, about two hundred years after Archimedes died, and in 1586 a young Italian mathematician pointed out that the difference in spilled water would be too tiny to see. He suggested Archimedes probably weighed the crown under water instead, using his own law of floating things, which is still taught in every school today.

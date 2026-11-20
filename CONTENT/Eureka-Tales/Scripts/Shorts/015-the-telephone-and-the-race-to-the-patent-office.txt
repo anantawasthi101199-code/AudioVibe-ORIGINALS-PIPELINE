@@ -1,0 +1,21 @@
+## mystery
+
+[curious] Did you know that two different men walked into the US Patent Office with papers for a telephone on the very same day in 1876, and that the fight over who got there first went all the way to the Supreme Court?
+
+[warmly] This is the story of Alexander Graham Bell, a teacher of deaf students, and Elisha Gray, an electrical engineer, and of one day, the 14th of February, Valentine's Day, 1876.
+
+[steady] It begins in Boston, in a cramped workshop above an electrical shop, where Bell and his young assistant, Thomas Watson, spent their nights trying to send the human voice down a wire.
+
+## story
+
+[curious] In the 1870s the telegraph sent messages as clicks of a code. Many inventors were trying to send several messages down one wire at once, using different musical tones, and a few of them realised that if you could send tones, you might send a voice. The idea Bell needed was this: a voice makes the air vibrate, and if a thin sheet of metal vibrates with it, it can make an electric current rise and fall in exactly the same pattern. Send that current down a wire, and at the other end it can make another sheet vibrate, and the voice comes out again.
+
+[thoughtful] Bell's lawyers filed his patent application in Washington on the morning of the 14th of February. Elisha Gray's lawyer filed a caveat the same day, a formal notice that he was working on a similar invention and would soon apply. The office's records listed Bell's application as received first, by a matter of hours. Gray's papers described a transmitter using a needle dipped in liquid, which turned out to be a very good way to make a voice change an electric current.
+
+[curious] Bell got his patent on the 7th of March. Three days later, in Boston, he spoke into a new transmitter that used liquid, much like the one in Gray's papers. According to Bell's own notebook, he said, "Mr. Watson, come here, I want to see you," and Watson, in the next room, heard every word. That is where the argument started. Had Bell seen Gray's idea? Years later a patent office clerk swore that he had shown it to him. Bell denied it, and the clerk's story changed more than once.
+
+## close
+
+[warmly] The courts decided for Bell. His company fought around six hundred lawsuits over the patent, and in 1888 the Supreme Court upheld it, by four votes to three. Gray went on to other inventions and always believed he had been robbed.
+
+[curious] The phone in your pocket still does what that first one did: it turns the shaking of the air into a pattern of electricity, and back into a voice.

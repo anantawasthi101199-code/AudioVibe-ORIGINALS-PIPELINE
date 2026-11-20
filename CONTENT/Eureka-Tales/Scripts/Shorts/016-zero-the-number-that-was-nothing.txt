@@ -1,0 +1,21 @@
+## mystery
+
+[curious] Did you know that for most of history, nothing was not a number at all, and that the zero on every price tag and phone screen was first written down with its own rules by an Indian astronomer in the year 628?
+
+[warmly] This is the story of zero, and of how a dot in Indian manuscripts became a number, then travelled through Baghdad to Europe, where at least one city tried to ban it.
+
+[steady] It begins in India, in the city of Bhinmal, in what is now Rajasthan, where a mathematician called Brahmagupta was writing a great book on astronomy and arithmetic.
+
+## story
+
+[curious] People had long needed a way to show an empty space. The idea that made it possible is called place value. In the number 205, the 2 means two hundreds because of where it sits, and that only works if you can mark the empty tens column in between. The Babylonians, in ancient Iraq, and the Maya, in Central America, both used a mark for an empty place. Indian writers did too, with a dot, which they called shunya, meaning empty. But in all these cases zero was a gap, not a number you could do sums with.
+
+[thoughtful] Brahmagupta went further. In his book, finished in 628, he set out rules for zero as a number in its own right. A number plus zero stays the same. A number times zero is zero. He even worked with negative numbers, which he called debts, and positive ones, which he called fortunes. He got one thing wrong. He said that zero divided by zero is zero. Mathematicians still say you cannot divide by zero at all. But the big step was taken.
+
+[curious] Indian numbers, with their zero, reached Baghdad, the great centre of learning in the Islamic world. Around 825, a scholar there, al-Khwarizmi, wrote a book on how to calculate with them. Arabic speakers called zero sifr, meaning empty, the word that became cipher. In 1202 an Italian, Leonardo of Pisa, later called Fibonacci, who had learned these numbers as a boy in North Africa, published a book showing European merchants how much easier they made the sums. Not everyone was pleased. In 1299, the bankers' guild in Florence banned them in account books, because a zero could easily be changed into a six or a nine.
+
+## close
+
+[warmly] Merchants found them too useful to give up, and by the 1500s the new numbers had won across Europe. Without zero, there would be no decimal point, no algebra as we know it, and no computers, which store everything as ones and zeros.
+
+[curious] The oldest zero in India that everyone agrees on is a small circle carved in a temple at Gwalior, in the year 876, in a list of how many garlands of flowers to give each day.

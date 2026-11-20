@@ -1200,6 +1200,96 @@ channels:
       - word: Gombe
         sayAs: GOM-bay
         ipa: /ˈɡɔmbe/
+      - word: Johannes Kepler
+        sayAs: yo-HAH-nes KEP-ler
+        ipa: /joˈhanəs ˈkɛplɐ/
+      - word: Kepler
+        sayAs: KEP-ler
+        ipa: /ˈkɛplɐ/
+      - word: Tycho Brahe
+        sayAs: TEE-ko BRAH-heh
+        ipa: /ˈtyːɡo ˈbʁɑːə/
+      - word: Tycho
+        sayAs: TEE-ko
+        ipa: /ˈtyːɡo/
+      - word: Weil der Stadt
+        sayAs: VILE dair SHTAHT
+        ipa: /vaɪl deːɐ̯ ˈʃtat/
+      - word: Graz
+        sayAs: GRAHTS
+        ipa: /ɡʁaːts/
+      - word: Astronomia Nova
+        sayAs: as-troh-NOH-mee-uh NOH-vuh
+        ipa: /astroˈnoːmi.a ˈnoːwa/
+      - word: Katharina
+        sayAs: kah-tah-REE-nah
+        ipa: /kataˈʁiːna/
+      - word: Regensburg
+        sayAs: RAY-gens-boorg
+        ipa: /ˈʁeːɡn̩sbʊʁk/
+      - word: Mary Anning
+        sayAs: MAIR-ee AN-ing
+        ipa: /ˈmɛəri ˈænɪŋ/
+      - word: Lyme Regis
+        sayAs: LIME REE-jis
+        ipa: /laɪm ˈriːdʒɪs/
+      - word: Lias
+        sayAs: LYE-us
+        ipa: /ˈlaɪəs/
+      - word: Ichthyosaurus
+        sayAs: ik-thee-uh-SOR-us
+        ipa: /ˌɪkθiəˈsɔːrəs/
+      - word: Georges Cuvier
+        sayAs: ZHORZH koo-vee-AY
+        ipa: /ʒɔʁʒ kyvje/
+      - word: Cuvier
+        sayAs: koo-vee-AY
+        ipa: /kyvje/
+      - word: Elisha Gray
+        sayAs: ih-LYE-shuh GRAY
+        ipa: /ɪˈlaɪʃə ɡreɪ/
+      - word: Bhinmal
+        sayAs: BHEEN-mahl
+        ipa: /bʱiːnmaːl/
+      - word: Rajasthan
+        sayAs: RAH-juh-stahn
+        ipa: /ˈɾaːd͡ʒəsˌt̪ʰaːn/
+      - word: Brahmagupta
+        sayAs: brah-muh-GOOP-tuh
+        ipa: /bɾəɦməˈɡʊpt̪ə/
+      - word: shunya
+        sayAs: SHOON-yuh
+        ipa: /ˈʃuːnjə/
+      - word: al-Khwarizmi
+        sayAs: al-khwah-RIZ-mee
+        ipa: /al.xwaːˈrizmiː/
+      - word: Khwarizmi
+        sayAs: khwah-RIZ-mee
+        ipa: /xwaːˈrizmiː/
+      - word: sifr
+        sayAs: SIFR
+        ipa: /sˤifr/
+      - word: Fibonacci
+        sayAs: fib-oh-NAH-chee
+        ipa: /fiboˈnattʃi/
+      - word: Gwalior
+        sayAs: GWAH-lee-or
+        ipa: /ˈɡʋaːlɪjəɾ/
+      - word: Archimedes
+        sayAs: ar-kih-MEE-deez
+        ipa: /ˌɑːrkɪˈmiːdiːz/
+      - word: Syracuse
+        sayAs: SIR-uh-kyooss
+        ipa: /ˈsɪrəkjuːs/
+      - word: Hiero
+        sayAs: HY-uh-roh
+        ipa: /ˈhaɪəroʊ/
+      - word: Vitruvius
+        sayAs: vih-TROO-vee-us
+        ipa: /wɪˈtruːwi.ʊs/
+      - word: eureka
+        sayAs: yoo-REE-kuh
+        ipa: /ˈhew.rɛː.ka/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a

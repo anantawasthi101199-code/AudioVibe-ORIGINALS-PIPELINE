@@ -1,0 +1,53 @@
+## opening
+
+[warmly] This is the story of Johannes Kepler, a German astronomer who, between 1600 and 1609, spent years fighting with the planet Mars, trying to make it move in a perfect circle, and finally admitted that the planets travel in ellipses, stretched circles, around the Sun.
+
+[curious] For two thousand years, since the ancient Greeks, astronomers had agreed on one thing: the heavens were perfect, and the only perfect shape was the circle. Even Copernicus, who in 1543 put the Sun at the centre instead of the Earth, still used circles. Kepler was a believer in circles too. What made him give them up was a tiny gap between his theory and the sky.
+
+[thoughtful] The gap was about eight minutes of arc. That is roughly a quarter of the width of the full Moon as you see it, a gap you could cover with the edge of a fingernail held at arm's length.
+
+[warmly] By the end, you'll know where that number came from, why Kepler refused to ignore it, and how it set up the laws that Isaac Newton would later explain with gravity.
+
+## before
+
+[thoughtful] There are two people at the centre of this story. Johannes Kepler, the mathematician. And Tycho Brahe, the Danish nobleman who had the best measurements of the sky that anyone had ever made.
+
+[curious] Kepler was born in 1571, in the small town of Weil der Stadt, in south-western Germany. His family was poor and quarrelsome, and he was a sickly child, with poor eyesight, which is not ideal for an astronomer. But at six his mother took him up a hill to see a great comet, and at nine his father showed him an eclipse of the Moon. He was clever enough to win scholarships, and he trained to be a Lutheran minister, until he was sent off to teach mathematics in the town of Graz, in Austria.
+
+[warmly] In 1596, at twenty-four, he published his first book. In it he claimed he had found God's plan for the solar system. There were six known planets, and he thought the spaces between their orbits were set by the five perfect solid shapes of geometry, the cube, the pyramid and three others, nested inside each other like Russian dolls. It was beautiful. It was also wrong. But to test it, he needed better numbers, and there was only one man who had them.
+
+[curious] Tycho Brahe was a very different sort of person. He was rich and loud. He had lost part of his nose in a sword duel as a student, and wore a replacement made of metal. On an island between Denmark and Sweden he had built an observatory, a castle full of giant instruments, and for more than twenty years, without a telescope, which had not yet been invented, he had measured the positions of the planets night after night, more accurately than anyone in history. He guarded those numbers closely.
+
+[thoughtful] By 1600 Tycho had quarrelled with the new Danish king and moved to Prague, as the official mathematician to the Holy Roman Emperor. That February, Kepler, who had been forced out of Graz for being a Protestant, arrived at Tycho's castle outside Prague. Tycho did not hand over all his data. He gave Kepler one planet to work on, the one his assistants had failed with. Mars.
+
+[warmly] Kepler was sure of himself. He bet that he could work out the orbit of Mars in eight days.
+
+## wrong
+
+[curious] Mars was hard for a reason. Its orbit is the most stretched of the planets that can be seen easily, so a circle fits it badly. Kepler started the way everyone did, with circles. He fixed Mars on a circle, then moved the centre of the circle slightly away from the Sun, then made Mars speed up and slow down at particular points. For each version he had to do pages and pages of calculations by hand. There were no calculators, and logarithms, which would speed things up, had not reached him yet. He later called the whole thing his war with Mars.
+
+[thoughtful] In October 1601, Tycho fell ill after a banquet and died within days. Kepler was made imperial mathematician in his place, and, after some arguments with Tycho's family, he kept the observations. Now he had the best data in the world, and nobody looking over his shoulder.
+
+[curious] After years of work, he built a model with circles that was very good. For most of Tycho's observations of Mars, it was right to within two minutes of arc. Any astronomer before him would have been delighted. Then he checked it against two more of Tycho's observations, and there the model was out by eight minutes of arc.
+
+[thoughtful] Earlier astronomers worked with numbers that were often wrong by ten minutes or more, so a gap of eight would have been lost in the errors. But Kepler knew Tycho. He knew the old man's measurements were good to about two minutes. So eight minutes could not be a mistake in the data. It had to be a mistake in the idea.
+
+[pause] He wrote later that God had given him such a careful observer in Tycho, and that because of those eight minutes, which he could not ignore, he would rebuild astronomy from the start. And then he threw away the circle.
+
+## payoff
+
+[curious] He did not jump straight to the right answer. He tried an egg shape first, fatter at one end, and spent about a year on it, and it was wrong as well. Along the way, though, he found something true. He noticed that Mars moves faster when it is close to the Sun and slower when it is far away, and in a very exact way. Imagine a line from the Sun to the planet, sweeping round like the hand of a clock. That line covers equal areas in equal times. When Mars is close, the line is short, so the planet has to move fast to sweep the same area. When it is far, it can move slowly. That became his second law, and he actually found it first.
+
+[warmly] The shape came in 1605. An ellipse is the shape you draw with a loop of string and two pins: put the pins in a board, put the loop round them, pull it tight with a pencil, and go round. Each pin is called a focus. Kepler found that Mars moves on an ellipse with the Sun at one focus. When he worked it through, the eight minutes disappeared. Funnily enough, he had looked at an ellipse earlier, and turned it down. He had to come round to it the long way.
+
+[thoughtful] His book, called Astronomia Nova, the New Astronomy, came out in 1609, delayed by more quarrels with Tycho's family. It set out the first two laws: planets move in ellipses with the Sun at one focus, and the line from the Sun sweeps equal areas in equal times. Ten years later, in 1619, he published a third law, linking how long a planet takes to go round the Sun to how far away it is.
+
+[curious] He could not explain why the planets did this. He guessed at some kind of force coming from the Sun, a little like magnetism, which was close but not right. The explanation came in 1687, when Isaac Newton showed that a single law of gravity, the same pull that makes an apple fall, would make a planet move on exactly Kepler's ellipse.
+
+[thoughtful] Kepler's own life stayed hard. His first wife and several of his children died. From 1615 he spent years defending his elderly mother, Katharina, who had been accused of witchcraft by her neighbours, and in 1621 he won her release. He died in 1630, in the German city of Regensburg, while travelling to collect unpaid wages.
+
+## close
+
+[warmly] Kepler wrote his own epitaph. In it he says that he measured the skies, and that now he measures the shadows of the Earth. His grave was lost a few years later, when soldiers fought over the city during the Thirty Years' War, and nobody knows exactly where he lies.
+
+[curious] But the ellipse is everywhere. Every satellite, every space probe, every planet found around another star is tracked using the laws he dug out of Mars. In 2009 NASA launched a space telescope to look for planets around other stars, and it found thousands of them. They named it Kepler. And all of it goes back to eight minutes of arc, a gap the width of a fingernail, which one stubborn man refused to ignore.

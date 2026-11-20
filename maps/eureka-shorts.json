@@ -176,19 +176,34 @@
       "number": 15,
       "title": "The Telephone and the Race to the Patent Office",
       "covers": "Alexander Graham Bell filed his telephone patent on the same day in 1876 as a rival, and the argument lasted for years.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/015-the-telephone-and-the-race-to-the-patent-office.txt",
+        "title": "The Telephone Race to the Patent Office",
+        "description": "Two inventors filed papers for a telephone on the same day in 1876. Who got there first?"
+      }
     },
     {
       "number": 16,
       "title": "Zero: The Number That Was Nothing",
       "covers": "How Indian mathematicians turned nothing into a number, and how it travelled to Europe.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/016-zero-the-number-that-was-nothing.txt",
+        "title": "Zero: The Number That Was Nothing",
+        "description": "Nothing had to become a number before modern maths could happen. Indian mathematicians made it one."
+      }
     },
     {
       "number": 17,
       "title": "Archimedes and the Bath",
       "covers": "The story of how a Greek scientist worked out whether the king's crown was pure gold, and ran down the street shouting eureka.",
-      "source": "Histories of science, the original papers where available, and reputable science journalism"
+      "source": "Histories of science, the original papers where available, and reputable science journalism",
+      "script": {
+        "file": "CONTENT/Eureka-Tales/Scripts/Shorts/017-archimedes-and-the-bath.txt",
+        "title": "Archimedes and the Bath",
+        "description": "A king suspected his new crown was not pure gold. A Greek mathematician worked it out in the bath."
+      }
     },
     {
       "number": 18,
