@@ -25,7 +25,12 @@
           "number": 2,
           "title": "One Year, One Contract",
           "covers": "WHAT HAPPENS: Kael offers Mira a deal across a long table in his study: one year as his queen in name only, then her freedom and enough money to open her own flower shop. She signs, on one condition of her own: nobody in this castle ever calls her 'the flower girl' again. The pack's nobles sneer at the substitute bride; Lucian is the only one who is kind to her, with a little too much charm. Celeste hears how rich the Blackthorns really are and starts to regret refusing. PLANT P3: old Grandmother Ysolde takes Mira's hand at dinner and whispers, 'The bride who was not chosen.' SATISFACTION: a noblewoman mocks Mira's plain manners; Mira names every flower in the banquet garlands and which ones are poisonous to wolves, and the noblewoman quietly moves her plate. ENDS ON: the first full moon. Kael comes to her door, his hands shaking. 'Lock it,' he says. 'Whatever you hear tonight, don't open it.' The howling starts.",
-          "source": "Original fiction: the season plan in this map"
+          "source": "Original fiction: the season plan in this map",
+          "script": {
+            "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/02-one-year-one-contract.txt",
+            "title": "One Year, One Contract",
+            "description": "The wolf king wants a queen for a year and nothing more. Mira signs, on one condition of her own."
+          }
         },
         {
           "number": 3,
@@ -99,7 +104,12 @@
           "number": 12,
           "title": "Thirty Days",
           "covers": "WHAT HAPPENS: Ryan offers to pay rent with a gold bar, which solves the eviction and creates a lot of new questions. He works the counter in an apron, terrifies customers by eating a whole lemon, and turns out to be brilliant at icing. PLANT P5: Zoe sees thirty tiny lights on the inside of his wrist; one goes out at midnight. PLANT P2: he spends an hour turning the pages of Gran's old recipe notebook, staring at the little star doodles in the margins. SATISFACTION: the rival bakery owner who has been mocking Zoe for years comes in to gloat, tastes Ryan's lemon tart, and buys twelve. ENDS ON: a man in a grey suit walks in and shows a badge: Agent Ray Graves, asking about 'unusual new arrivals'. Ryan is standing right behind the counter, covered in flour.",
-          "source": "Original fiction: the season plan in this map"
+          "source": "Original fiction: the season plan in this map",
+          "script": {
+            "file": "CONTENT/Spellbound/Scripts/Spellbound-Serials/12-thirty-days.txt",
+            "title": "Thirty Days",
+            "description": "The alien in Zoe's attic pays his rent in gold, ices like a dream, and has a very strange wrist."
+          }
         },
         {
           "number": 13,

@@ -44,19 +44,34 @@
       "number": 4,
       "title": "The Night Nurse",
       "covers": "A vampire who can only go out at night falls for a nurse who only works nights, and dreads the day she sees what he is. PLANT: she never eats the hospital biscuits and keeps her blinds shut at noon. TWIST: she is a vampire too, and took the night shift for exactly the same reason.",
-      "source": "Original fiction"
+      "source": "Original fiction",
+      "script": {
+        "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/004-the-night-nurse.txt",
+        "title": "The Night Nurse",
+        "description": "A vampire falls for the nurse on the night shift, and dreads the morning she finds out what he is."
+      }
     },
     {
       "number": 5,
       "title": "The Wedding Day Loop",
       "covers": "A bride relives her wedding day over and over, and every time something disastrous happens. PLANT: the caterer always catches the falling cake one second before it falls. TWIST: the caterer is looping too; he has lived this day fifty times trying to tell her she is marrying the wrong man, and on the fifty-first she listens.",
-      "source": "Original fiction"
+      "source": "Original fiction",
+      "script": {
+        "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/005-the-wedding-day-loop.txt",
+        "title": "The Wedding Day Loop",
+        "description": "Every time Hannah says I do, her wedding day starts again. The caterer seems to know why."
+      }
     },
     {
       "number": 6,
       "title": "The Dragon's Accountant",
       "covers": "A nervous accountant is hired to audit a very old client's 'gold reserves', meeting in a mountain cave. PLANT: the client insists the heating is always on. TWIST: the client is a dragon, and the real problem in the books is that he has spent four hundred years with no one to spend it on; she becomes his first friend and his business partner.",
-      "source": "Original fiction"
+      "source": "Original fiction",
+      "script": {
+        "file": "CONTENT/Spellbound/Scripts/Three-Minute-Spells/006-the-dragons-accountant.txt",
+        "title": "The Dragon's Accountant",
+        "description": "Nell is sent to audit a very old client in a mountain cave. The books show four hundred years with no spending at all."
+      }
     },
     {
       "number": 7,
