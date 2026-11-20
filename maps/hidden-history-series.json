@@ -25,7 +25,12 @@
           "number": 2,
           "title": "Constantinople, 1453: The Last Roman City",
           "covers": "The fifty-three-day siege of Constantinople by the 21-year-old Ottoman sultan Mehmed II: the giant cannon, the chain across the Golden Horn, the ships dragged overland, and the last emperor, Constantine XI, who died on the walls. Told from both sides of the walls.",
-          "source": "Accounts of Nicolo Barbaro, George Sphrantzes and Tursun Beg, and Roger Crowley's 1453"
+          "source": "Accounts of Nicolo Barbaro, George Sphrantzes and Tursun Beg, and Roger Crowley's 1453",
+          "script": {
+            "file": "CONTENT/Hidden-History/Scripts/Hidden-History/02-constantinople-1453.txt",
+            "title": "Constantinople, 1453: The Last Roman City",
+            "description": "Fifty-three days, a giant cannon, a chain across the harbour and ships dragged over a hill. The end of the Roman Empire, from both sides of the walls."
+          }
         },
         {
           "number": 3,
@@ -101,7 +106,12 @@
           "number": 11,
           "title": "Ashoka: The Emperor Who Regretted a War",
           "covers": "Around 261 BCE the Mauryan emperor Ashoka conquered Kalinga, in eastern India, at a huge cost in lives, and then did something almost no conqueror has done: he carved his regret into stone. His edicts, his turn to Buddhism, and how much of the story historians can confirm.",
-          "source": "Ashoka's edicts (Rock Edict XIII) and Romila Thapar's Asoka and the Decline of the Mauryas"
+          "source": "Ashoka's edicts (Rock Edict XIII) and Romila Thapar's Asoka and the Decline of the Mauryas",
+          "script": {
+            "file": "CONTENT/Hidden-History/Scripts/Hidden-History/11-ashoka-the-emperor-who-regretted-a-war.txt",
+            "title": "Ashoka: The Emperor Who Regretted a War",
+            "description": "He won the war that made him master of India, then had his shame carved into stone for everyone to read."
+          }
         },
         {
           "number": 12,

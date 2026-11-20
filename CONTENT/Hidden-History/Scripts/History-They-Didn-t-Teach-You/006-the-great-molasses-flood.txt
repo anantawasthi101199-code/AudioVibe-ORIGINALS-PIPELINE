@@ -1,0 +1,19 @@
+## hook
+
+[measured] On the 15th of January 1919, at lunchtime, a wave of molasses about twenty-five feet high swept through the streets of Boston, and killed twenty-one people.
+
+[steady] This is the story of the Great Molasses Flood, in Boston's North End, a crowded neighbourhood of working families by the harbour.
+
+## story
+
+[steady] On the waterfront stood an enormous steel tank, fifty feet tall and about ninety feet across. It belonged to a company that turned molasses, the thick dark syrup left over from making sugar, into industrial alcohol, much of it for explosives during the First World War. When it was full it held about two and a quarter million gallons. It had been put up in a hurry in 1915. The man in charge, a company treasurer called Arthur Jell, had no engineering training, and the tank was never properly tested. It leaked so badly that local families came with tins to collect the drips. The company's answer was to paint it brown.
+
+[measured] January the 15th was oddly warm for Boston, after a bitter cold spell, and the tank had recently been filled. At about twenty to one, people nearby heard a deep rumbling and a noise like a machine gun, which was the rivets popping out of the steel. Then the tank split open.
+
+[steady] The molasses came out as a brown wave, moving at around thirty-five miles an hour. It knocked buildings off their foundations and bent the steel supports of the elevated railway. People and horses were caught in it. Molasses is so thick that anyone trapped in it struggled to breathe or move, and it cooled and set in the January air. Rescuers waded in waist-deep. Some of the dead were not found for days.
+
+## close
+
+[thoughtful] Twenty-one people died, including children, and about a hundred and fifty were injured. The families sued. After a long hearing, in 1925 the court found the company responsible, and it paid out around six hundred and twenty-eight thousand dollars.
+
+[steady] Because of that hearing, Massachusetts began requiring the plans for structures like this to be checked and signed by qualified engineers, and other states followed. The harbour was brown for months. And Bostonians in the North End would say, for decades after, that on a hot summer day you could still smell it.

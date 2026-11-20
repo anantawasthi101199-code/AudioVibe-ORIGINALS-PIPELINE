@@ -44,19 +44,34 @@
       "number": 4,
       "title": "Saragarhi: 21 Soldiers at the Fort",
       "covers": "On 12 September 1897, 21 Sikh soldiers held a signalling post on the North-West Frontier against thousands of Pashtun tribesmen, to the last man.",
-      "source": "British Indian Army records and histories of the 36th Sikhs"
+      "source": "British Indian Army records and histories of the 36th Sikhs",
+      "script": {
+        "file": "CONTENT/Hidden-History/Scripts/History-They-Didn-t-Teach-You/004-saragarhi-21-soldiers-at-the-fort.txt",
+        "title": "Saragarhi: 21 Soldiers at the Fort",
+        "description": "In 1897 twenty-one soldiers held a tiny signal post against thousands, and their signaller kept sending messages to the end."
+      }
     },
     {
       "number": 5,
       "title": "The Soldier Who Fought On for 29 Years",
       "covers": "Hiroo Onoda, a Japanese officer, kept fighting in the Philippine jungle until 1974, because nobody he trusted had told him the war was over.",
-      "source": "Onoda's memoir No Surrender and contemporary reporting"
+      "source": "Onoda's memoir No Surrender and contemporary reporting",
+      "script": {
+        "file": "CONTENT/Hidden-History/Scripts/History-They-Didn-t-Teach-You/005-the-soldier-who-fought-on-for-29-years.txt",
+        "title": "The Soldier Who Fought On for 29 Years",
+        "description": "Hiroo Onoda kept fighting in a Philippine jungle until 1974, because the man who gave him his orders had not told him to stop."
+      }
     },
     {
       "number": 6,
       "title": "The Great Molasses Flood",
       "covers": "In January 1919 a giant tank burst in Boston and a wave of molasses swept through the streets, killing 21 people.",
-      "source": "Stephen Puleo's Dark Tide and Boston newspaper archives"
+      "source": "Stephen Puleo's Dark Tide and Boston newspaper archives",
+      "script": {
+        "file": "CONTENT/Hidden-History/Scripts/History-They-Didn-t-Teach-You/006-the-great-molasses-flood.txt",
+        "title": "The Great Molasses Flood",
+        "description": "In January 1919 a giant tank in Boston burst, and a wave of molasses swept through the streets at the speed of a car."
+      }
     },
     {
       "number": 7,
