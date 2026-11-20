@@ -176,19 +176,34 @@
       "number": 15,
       "title": "The Kidnapping of Frank Sinatra Jr",
       "covers": "In 1963 the singer's nineteen-year-old son was taken from a hotel room at Lake Tahoe, and released after his father paid.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/015-the-kidnapping-of-frank-sinatra-jr.txt",
+        "title": "The Kidnapping of Frank Sinatra Jr",
+        "description": "In 1963 the singer's nineteen-year-old son was taken at gunpoint from a hotel room at Lake Tahoe."
+      }
     },
     {
       "number": 16,
       "title": "10 Rillington Place",
       "covers": "In 1950 Timothy Evans was hanged for murders in a London house, and three years later the real killer was found living there.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/016-10-rillington-place.txt",
+        "title": "10 Rillington Place",
+        "description": "In 1950 Timothy Evans was hanged for murder. Three years later bodies were found in the house where he had lived."
+      }
     },
     {
       "number": 17,
       "title": "The Somerton Man",
       "covers": "In 1948 a man was found dead on an Australian beach with a scrap of paper reading 'it is finished' sewn into his trousers.",
-      "source": "court records, contemporary newspaper reporting and published histories of the case"
+      "source": "court records, contemporary newspaper reporting and published histories of the case",
+      "script": {
+        "file": "CONTENT/True-Crime/Scripts/Shorts/017-the-somerton-man.txt",
+        "title": "The Somerton Man",
+        "description": "In 1948 a man was found dead on an Adelaide beach with no name, no labels, and two words from a Persian poem."
+      }
     },
     {
       "number": 18,

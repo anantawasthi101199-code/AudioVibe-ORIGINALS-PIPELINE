@@ -188,19 +188,34 @@
       "number": 16,
       "title": "What Does Sunburn Do to Your Skin?",
       "covers": "How ultraviolet light damages the DNA in skin cells, why the skin goes red and peels, and the link to skin cancer.",
-      "source": "NHS sunburn guidance and Cancer Research UK"
+      "source": "NHS sunburn guidance and Cancer Research UK",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/016-what-does-sunburn-do-to-your-skin.txt",
+        "title": "What Does Sunburn Do to Your Skin?",
+        "description": "Red, hot, then peeling. What ultraviolet light really does to your skin, and why it matters long after it stops hurting."
+      }
     },
     {
       "number": 17,
       "title": "Does Stretching Prevent Injury?",
       "covers": "What stretching before and after exercise really does, and what the evidence shows about injury and warming up.",
-      "source": "Systematic reviews of stretching and sports injury"
+      "source": "Systematic reviews of stretching and sports injury",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/017-does-stretching-prevent-injury.txt",
+        "title": "Does Stretching Prevent Injury?",
+        "description": "You touch your toes before every run. Does it actually stop you getting hurt? The evidence is surprising."
+      }
     },
     {
       "number": 18,
       "title": "How Do Painkillers Know Where It Hurts?",
       "covers": "Why a painkiller you swallow eases pain in your foot, how pain signals travel, and how the medicine interrupts them.",
-      "source": "Pharmacology reviews and NHS medicines information"
+      "source": "Pharmacology reviews and NHS medicines information",
+      "script": {
+        "file": "CONTENT/The-Root-Helath/Scripts/Shorts/018-how-do-painkillers-know-where-it-hurts.txt",
+        "title": "How Do Painkillers Know Where It Hurts?",
+        "description": "You swallow a tablet and your stubbed toe feels better. How does the pill find the right spot?"
+      }
     },
     {
       "number": 19,

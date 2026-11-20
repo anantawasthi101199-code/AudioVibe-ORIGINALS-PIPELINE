@@ -12,6 +12,8 @@ Map `psyche-mind-basics`, format `psych-episode`. Attached with `scripts/attach-
 | `psyche-mind-basics/8` | Anger: The Emotion That Wants to Fix Things | `08-anger-the-emotion-that-wants-to-fix-things.txt` | 1048 |
 | psyche-mind-basics/13 | First Impressions in a Tenth of a Second | 13-first-impressions-in-a-tenth-of-a-second.txt | 1121 |
 | psyche-mind-basics/19 | How a Habit Forms | 19-how-a-habit-forms.txt | 1105 |
+| psyche-mind-basics/25 | What Stress Does to Your Body | 25-what-stress-does-to-your-body.txt | 1391 |
+| psyche-mind-basics/9 | Fear and Anxiety: The Oversensitive Alarm | 09-fear-and-anxiety-the-alarm-that-goes-off.txt | 1336 |
 
 ### Facts: check before publishing
 
@@ -19,3 +21,4 @@ Map `psyche-mind-basics`, format `psych-episode`. Attached with `scripts/attach-
 - 6: Roediger and Karpicke 2006, about 61 against 40 per cent after a week; Dunlosky and colleagues 2013, ten techniques.
 - 8: Bushman 2002, 600 students; the 2024 review of anger-calming methods (not named).
 - Willis and Todorov 2006; liking gap (Boothby 2018); Lally 2010 figures; Maltz 1960.
+- Stress (25) and Fear (9): general NHS guidance only; the 4-in, 6-out breathing count is a common suggestion, not an NHS prescription; Samaritans 116 123; NHS Talking Therapies self-referral (England).

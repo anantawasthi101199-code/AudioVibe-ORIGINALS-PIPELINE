@@ -27,6 +27,9 @@ Map `roothealth-shorts`, format `health-short`. Attached with `scripts/attach-sc
 | roothealth-shorts/13 | Why Do We Get a Fever? | 013-why-do-we-get-a-fever.txt | 436 |
 | roothealth-shorts/14 | What Is Concussion? | 014-what-is-concussion.txt | 455 |
 | roothealth-shorts/15 | Do Carrots Help You See in the Dark? | 015-do-carrots-help-you-see-in-the-dark.txt | 485 |
+| roothealth-shorts/16 | What Does Sunburn Do to Your Skin? | 016-what-does-sunburn-do-to-your-skin.txt | 517 |
+| roothealth-shorts/17 | Does Stretching Prevent Injury? | 017-does-stretching-prevent-injury.txt | 490 |
+| roothealth-shorts/18 | How Do Painkillers Know Where It Hurts? | 018-how-do-painkillers-know-where-it-hurts.txt | 466 |
 
 ### Facts: check before publishing
 
@@ -34,3 +37,6 @@ Map `roothealth-shorts`, format `health-short`. Attached with `scripts/attach-sc
 - Sleep: the eight-hours labour slogan; 2015 AASM and Sleep Research Society consensus (7 or more); NHS 6 to 9 hours; rare short-sleep gene variants.
 - Goosebumps: arrector pili; 2020 mouse study (Harvard, Hsu lab) on hair stem cells; NHS hypothermia signs and 999 wording.
 - NHS thresholds for fever and concussion advice; UK grassroots concussion guidance (21 days); vitamin A amounts; how far the carrot tale was aimed at Germany.
+- Sunburn: CRUK "once every two years triples melanoma risk"; NHS treatment and 111 advice; SPF 30 and 4-star UVA; shade 11 to 3.
+- Stretching: Pope et al. 2000 (about 1,500 recruits, 12 weeks); Lauersen 2014 strength training about two thirds fewer injuries; FIFA 11+ about a third; CMO strength guideline twice a week.
+- Painkillers: NSAIDs and prostaglandins; paracetamol mechanism not fully understood.

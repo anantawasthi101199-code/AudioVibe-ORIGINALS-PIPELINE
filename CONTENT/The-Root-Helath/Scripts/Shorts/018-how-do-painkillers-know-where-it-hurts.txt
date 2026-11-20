@@ -1,0 +1,21 @@
+## hook
+
+[warmly] You stub your toe on the bed leg at midnight. It throbs. You take a painkiller, and half an hour later, the toe has calmed right down. But you swallowed it. It went into your stomach. So how did the tablet know to go to your toe?
+
+## story
+
+[steady] Here's the surprising answer: it didn't. A painkiller doesn't travel to where it hurts. It goes everywhere. It's absorbed from your gut into your blood, and your blood carries it round your whole body, to your toe, your elbow, your ears, everywhere. So why does only the toe feel better?
+
+[thoughtful] To understand that, it helps to know how pain works. In your skin and tissues there are special nerve endings, a bit like tiny burglar alarms, that react to damage. When you stub your toe, the damaged cells release chemicals called prostaglandins. They make those nerve endings much more sensitive, so the alarm rings louder and longer, and they help cause the swelling. The nerve sends its signal up to your spinal cord, and from there to your brain. And it's the brain that turns the signal into the feeling of pain.
+
+[warmly] Now, back to the toe. A painkiller like ibuprofen works by blocking the chemical machinery, the enzymes, that your body uses to make prostaglandins. It blocks it all over your body. But your elbow isn't making extra prostaglandins, because your elbow isn't hurt. Only the toe is. So the only place where switching them off makes a difference you can feel is the place where the alarm was ringing.
+
+[steady] Paracetamol is a bit more mysterious. It seems to work mainly inside the brain and spinal cord, turning down how the pain signal is handled, rather than at the toe itself. Researchers have studied it for decades, and they agree it works for many kinds of everyday pain, but they're still working out exactly how. It's one of the most widely used medicines in the world, and its full method is still not completely known.
+
+## verdict
+
+[warmly] So painkillers don't know where it hurts. They go everywhere in your body, but they only make a difference where the pain chemicals are being made, or where the brain is handling the signal.
+
+[steady] The NHS says to read the leaflet that comes with any painkiller, and to ask a pharmacist if you're not sure which one is right for you, especially if you take other medicines or have a health condition. It also says to see a GP if pain is severe, keeps coming back, or doesn't get better.
+
+[warmly] So next time you stub your toe at midnight, the tablet won't go looking for it. It'll be everywhere, and the toe is just the only place that notices.

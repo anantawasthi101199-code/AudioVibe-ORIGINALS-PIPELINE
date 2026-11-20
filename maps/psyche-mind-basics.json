@@ -117,7 +117,12 @@
           "number": 9,
           "title": "Fear and Anxiety: The Alarm That Goes Off Too Easily",
           "covers": "The difference between fear and anxiety, why the brain's alarm system misfires, and why avoiding things makes anxiety grow.",
-          "source": "NHS guidance on anxiety and reviews of the fear and avoidance cycle"
+          "source": "NHS guidance on anxiety and reviews of the fear and avoidance cycle",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/09-fear-and-anxiety-the-alarm-that-goes-off.txt",
+            "title": "Fear and Anxiety: The Oversensitive Alarm",
+            "description": "Your heart races at a phone call or a party invite. Why the brain's alarm misfires, and why avoiding things makes it louder."
+          }
         },
         {
           "number": 10,
@@ -249,7 +254,12 @@
           "number": 25,
           "title": "What Stress Does to Your Body",
           "covers": "The fight or flight response, what cortisol and adrenaline do, and why stress that never switches off wears you down.",
-          "source": "NHS stress guidance and reviews of the stress response"
+          "source": "NHS stress guidance and reviews of the stress response",
+          "script": {
+            "file": "CONTENT/Psyche-Session/Scripts/How-Your-Mind-Works/25-what-stress-does-to-your-body.txt",
+            "title": "What Stress Does to Your Body",
+            "description": "Your heart thumps at an email, your shoulders live up by your ears. What stress actually does in your body, and how to switch it off."
+          }
         },
         {
           "number": 26,

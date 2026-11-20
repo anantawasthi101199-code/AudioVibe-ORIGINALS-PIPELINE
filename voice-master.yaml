@@ -2189,6 +2189,36 @@ channels:
       - word: Jenkin
         sayAs: JEN-kin
         ipa: /ˈdʒɛŋkɪn/
+      - word: Tahoe
+        sayAs: TAH-hoe
+        ipa: /ˈtɑːhoʊ/
+      - word: Sinatra
+        sayAs: sih-NAH-truh
+        ipa: /sɪˈnɑːtrə/
+      - word: Bel Air
+        sayAs: bel AIR
+        ipa: /bɛl ˈɛər/
+      - word: Rillington
+        sayAs: RIL-ing-tun
+        ipa: /ˈrɪlɪŋtən/
+      - word: Pentonville
+        sayAs: PEN-tun-vil
+        ipa: /ˈpɛntənvɪl/
+      - word: Somerton
+        sayAs: SUM-er-tun
+        ipa: /ˈsʌmərtən/
+      - word: Tamam Shud
+        sayAs: tah-MAHM SHOOD
+        ipa: /tæˈmɒːm ʃud/
+      - word: Rubaiyat of Omar Khayyam
+        sayAs: ROO-bye-yaht of OH-mar kye-YAHM
+        ipa: /ɾobɒːʔiːˈjɒːt oˈmaɾ xæjˈjɒːm/
+      - word: Rubaiyat
+        sayAs: ROO-bye-yaht
+        ipa: /ɾobɒːʔiːˈjɒːt/
+      - word: Omar Khayyam
+        sayAs: OH-mar kye-YAHM
+        ipa: /oˈmaɾ xæjˈjɒːm/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Exactly three of each (owner, 2026-10-09): the run page offers them in a
