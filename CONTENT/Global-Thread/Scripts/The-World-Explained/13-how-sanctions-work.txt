@@ -1,0 +1,37 @@
+## opening
+
+[measured] In late February 2022, within days of Russia's full-scale invasion of Ukraine, the United States, the European Union and their allies froze roughly three hundred billion dollars of Russia's central bank reserves, money that Russia owned, held in banks abroad, and suddenly could not touch.
+
+[steady] Nobody fired a shot to do it. It was done with lists, rules and emails. This episode is about that kind of power: economic sanctions. What they are, who imposes them, why the US dollar gives Washington a reach that no other government has, and why the countries on the receiving end call it something very different. We will cover the main tools from the Second World War to now.
+
+[thoughtful] Why does this matter if you live far from any conflict? Because sanctions decide which oil reaches which port, what a tanker costs to insure, and sometimes the price you pay to fill a car. So let's start with where this weapon came from.
+
+## roots
+
+[steady] Cutting an enemy off from trade is very old. Navies have blockaded ports for thousands of years. The modern version was born after the First World War. The historian Nicholas Mulder, in his book The Economic Weapon, describes how the League of Nations, the world body set up in 1920, made the threat of economic isolation its main tool against countries that went to war. The idea was that starving a country of trade could stop a war without fighting one.
+
+[measured] The United States built its own machinery. In 1940, the US Treasury set up an office to freeze the money of countries Germany had invaded, so the Nazis could not get at it. In 1950, during the Korean War, that became the Office of Foreign Assets Control, usually called OFAC. Today OFAC keeps the most important list in the sanctions world, the Specially Designated Nationals list. If your name is on it, any American person or company is forbidden to do business with you, and anything you own that passes through American hands is frozen.
+
+[steady] Here is where the dollar comes in. Most international trade is priced and paid in US dollars, oil above all. When a bank in, say, Singapore pays a bank in Brazil in dollars, that payment almost always passes through an account at a bank in the United States, called a correspondent account. That brief moment, a fraction of a second on an American bank's books, is enough for US law to apply. So OFAC can reach a deal that never touches American soil.
+
+[thoughtful] Here is an everyday way to picture it. Imagine your bank closes your account, and then sends a note to every other bank in town saying, if you open an account for this person, we will stop doing business with you. You are not in prison. But you can no longer be paid, pay rent or buy anything bigger than what fits in your pocket. That second part, the note to every other bank, is what is called secondary sanctions. They punish companies in third countries for dealing with the target. In 2014 the French bank BNP Paribas agreed to pay about nine billion dollars to US authorities for handling dollar payments for Sudan, Iran and Cuba.
+
+[measured] Then there is SWIFT. It is a cooperative based in Belgium that runs the secure messaging network banks use to tell each other about payments, more than eleven thousand institutions in more than two hundred countries. SWIFT does not move money itself, but without it a bank is like a business with no phone line. Iranian banks were cut off from SWIFT in 2012, under EU rules, and again in 2018, and several large Russian banks were cut off in 2022.
+
+[steady] Not all sanctions are the same. There are three main kinds. United Nations sanctions are agreed by the Security Council and bind every country in the world, but any one of the five permanent members can veto them, so they are rare against a great power or its friends. European Union sanctions need every one of the twenty-seven member states to agree, and they apply inside the EU. And then there are sanctions a single country imposes on its own, which is what most American sanctions are. Experts call those unilateral.
+
+## sides
+
+[measured] Governments that impose sanctions make their case like this. The United States Treasury says sanctions are a way to protect national security and to change the behaviour of governments, terrorist groups and criminals without sending troops. The European Union says its sanctions are a foreign policy tool that targets those responsible for wrongdoing, and that it builds in exceptions for food and medicine. Ukraine's government says sanctions on Russia are essential, because they shrink the money Moscow can spend on the war. Supporters point out that the other options are often doing nothing, or fighting.
+
+[steady] Governments on the receiving end make a very different case. Russia's government says Western sanctions are illegal because the UN Security Council never approved them, and calls them economic warfare. Iran's government says decades of American sanctions amount to collective punishment of ordinary Iranians, and blames them for shortages of some medicines. China's government says it opposes unilateral sanctions and what it calls long-arm jurisdiction, meaning American law reaching into other countries' businesses. A UN special rapporteur on the subject, Alena Douhan, has said that broad unilateral sanctions harm human rights.
+
+[thoughtful] Do they work? The researcher Daniel Drezner has argued that sanctions are often aimed at enemies, who are least likely to give in, while the threat of sanctions works better between friends. A long study by economists at the Peterson Institute in Washington found that sanctions partly achieved their goals in roughly a third of cases. The human cost falls on people who made no decisions: patients in Iran who say they cannot find imported drugs, Russian workers whose factories lost parts, and companies in third countries that lose a customer. And the people they target often find ways round them, through other currencies, shell companies or older ships.
+
+## now
+
+[steady] As of November 2026, Russia remains the most heavily sanctioned country in the world, by number of people and companies listed. In October 2025, OFAC added Russia's two biggest oil companies, Rosneft and Lukoil, to its list, and warned foreign banks that dealing with them could bring secondary sanctions. In September 2026 Congress passed a new Russia sanctions law, and in October the President used the waiver in that law to hold back many of its new measures, saying it was in the national interest. Members of both parties in Congress, and Ukraine's president, criticised the decision.
+
+[measured] What to watch, in the words of the people involved. The European Union renews its economic sanctions on Russia every six months, and every member state must agree. The next renewal falls due by the end of January 2027. And the US Treasury publishes its additions to the list almost every week.
+
+[thoughtful] Think back to that Singapore bank paying a bank in Brazil. Every time it does, a payment slides for a fraction of a second through an account in New York, and an office in Washington can decide whether it goes through.

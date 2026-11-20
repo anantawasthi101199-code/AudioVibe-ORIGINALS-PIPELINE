@@ -1319,6 +1319,111 @@ channels:
       - word: Abu Dhabi
         sayAs: AH-boo DAH-bee
         ipa: /ˈæbuː ˈdɑːbi/
+      - word: Mulder
+        sayAs: MUL-der
+        ipa: /ˈmʌldər/
+      - word: BNP Paribas
+        sayAs: B N P pa-ree-BAH
+        ipa: /be ɛn pe paʁiba/
+      - word: Paribas
+        sayAs: pa-ree-BAH
+        ipa: /paʁiba/
+      - word: Alena Douhan
+        sayAs: ah-LYEH-nah DOO-han
+        ipa: /aˈlʲena ˈduɣan/
+      - word: Douhan
+        sayAs: DOO-han
+        ipa: /ˈduɣan/
+      - word: Drezner
+        sayAs: DREZ-ner
+        ipa: /ˈdrɛznər/
+      - word: Rosneft
+        sayAs: ROS-neft
+        ipa: /rɐsˈnʲeftʲ/
+      - word: Lukoil
+        sayAs: LOO-koyl
+        ipa: /lʊˈkojl/
+      - word: Galwan
+        sayAs: GUL-wahn
+        ipa: /ɡəlˈʋaːn/
+      - word: Lhasa
+        sayAs: LAH-suh
+        ipa: /ˈl̥ʰásá/
+      - word: Dalai Lama
+        sayAs: DAH-lye LAH-muh
+        ipa: /ˈdɑːlaɪ ˈlɑːmə/
+      - word: Qing
+        sayAs: CHING
+        ipa: /t͡ɕʰíŋ/
+      - word: Aksai Chin
+        sayAs: UK-sye CHIN
+        ipa: /ˈəksaːɪ t͡ʃɪn/
+      - word: Aksai
+        sayAs: UK-sye
+        ipa: /ˈəksaːɪ/
+      - word: Simla
+        sayAs: SHIM-luh
+        ipa: /ˈʃɪmlaː/
+      - word: McMahon
+        sayAs: muk-MAHN
+        ipa: /məkˈmɑːn/
+      - word: Tawang
+        sayAs: tah-WAHNG
+        ipa: /t̪aˈʋaŋ/
+      - word: Hindi Chini bhai bhai
+        sayAs: HIN-dee CHEE-nee BHY BHY
+        ipa: /ˈɦɪnd̪iː ˈtʃiːniː bʱaːiː bʱaːiː/
+      - word: Xinjiang
+        sayAs: shin-jee-AHNG
+        ipa: /ɕín.tɕjáŋ/
+      - word: Ladakh
+        sayAs: luh-DAHK
+        ipa: /ləˈd̪aːx/
+      - word: Arunachal Pradesh
+        sayAs: ah-roo-NAH-chul pruh-DESH
+        ipa: / əɾʊˈɳaːtʃəl pɾəˈd̪eːʃ/
+      - word: Zangnan
+        sayAs: ZAHNG-nahn
+        ipa: /tsâŋ.nǎn/
+      - word: Depsang
+        sayAs: DEP-sahng
+        ipa: /ˈd̪epsaŋ/
+      - word: Demchok
+        sayAs: DEM-chok
+        ipa: /ˈd̪emtʃok/
+      - word: Jammu
+        sayAs: JUM-moo
+        ipa: /ˈd͡ʒəmmuː/
+      - word: Maharaja Hari Singh
+        sayAs: mah-hah-RAH-jah HUH-ree SING
+        ipa: /məɦaːˈɾaːd͡ʒaː ˈɦəɾiː sɪŋɡʱ/
+      - word: Hari Singh
+        sayAs: HUH-ree SING
+        ipa: /ˈɦəɾiː sɪŋɡʱ/
+      - word: Kargil
+        sayAs: KAR-gil
+        ipa: /ˈkaːɾɡɪl/
+      - word: Azad Kashmir
+        sayAs: ah-ZAHD kush-MEER
+        ipa: /aːˈzaːd kəʃˈmiːɾ/
+      - word: Pahalgam
+        sayAs: puh-HUL-gahm
+        ipa: /pəɦəlˈɡaːm/
+      - word: Indus
+        sayAs: IN-dus
+        ipa: /ˈɪndəs/
+      - word: Ayungin
+        sayAs: ah-YOO-ngin
+        ipa: /aˈjuŋin/
+      - word: "Ren'ai Jiao"
+        sayAs: ren-EYE jee-OW
+        ipa: /ʐə̌n.ây tɕjáʊ/
+      - word: BRP Sierra Madre
+        sayAs: B R P see-ERR-uh MAH-dray
+        ipa: /bi ɑr pi siˈɛrə ˈmɑdreɪ/
+      - word: Brunei
+        sayAs: broo-NYE
+        ipa: /bruːˈnaɪ/
     outros:
       # Owner, 2026-10-07: every outro says who is talking and on which channel.
       # Rewritten 2026-10-29 for the deep-dive format: no "every day", no "news".

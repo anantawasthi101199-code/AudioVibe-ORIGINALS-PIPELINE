@@ -44,19 +44,34 @@
       "number": 4,
       "title": "Kashmir in Three Minutes",
       "covers": "How the partition of 1947 left Kashmir divided and claimed by both India and Pakistan, and why it keeps flaring up.",
-      "source": "UN resolutions, the Simla Agreement, and Indian and Pakistani official positions"
+      "source": "UN resolutions, the Simla Agreement, and Indian and Pakistani official positions",
+      "script": {
+        "file": "CONTENT/Global-Thread/Scripts/Geopolitics-in-Three-Minutes/004-kashmir-in-three-minutes.txt",
+        "title": "Kashmir in Three Minutes",
+        "description": "Two countries, one valley, three wars. How 1947 left Kashmir divided, and why it keeps flaring up."
+      }
     },
     {
       "number": 5,
       "title": "The South China Sea Line",
       "covers": "China's nine-dash line claim, the 2016 tribunal ruling China rejects, and why the Philippines, Vietnam and others care.",
-      "source": "The 2016 Permanent Court of Arbitration award and official statements"
+      "source": "The 2016 Permanent Court of Arbitration award and official statements",
+      "script": {
+        "file": "CONTENT/Global-Thread/Scripts/Geopolitics-in-Three-Minutes/005-the-south-china-sea-line.txt",
+        "title": "The South China Sea Line",
+        "description": "A line on a 1947 map now covers most of a sea that carries trillions of dollars of trade. Who claims what, and what a tribunal said."
+      }
     },
     {
       "number": 6,
       "title": "How the UN Security Council Veto Works",
       "covers": "Five countries can block any Security Council decision, and why that was designed in 1945.",
-      "source": "The UN Charter and UN records of vetoes"
+      "source": "The UN Charter and UN records of vetoes",
+      "script": {
+        "file": "CONTENT/Global-Thread/Scripts/Geopolitics-in-Three-Minutes/006-how-the-un-security-council-veto-works.txt",
+        "title": "How the UN Security Council Veto Works",
+        "description": "Fifteen countries sit on the Security Council, but five can block anything. Why it was built that way in 1945."
+      }
     },
     {
       "number": 7,

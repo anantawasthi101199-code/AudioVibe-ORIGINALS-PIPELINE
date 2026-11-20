@@ -113,7 +113,12 @@
           "number": 13,
           "title": "How Sanctions Work",
           "covers": "Why the US dollar and the SWIFT messaging network give Washington a power no army has: the US Treasury's Office of Foreign Assets Control, secondary sanctions, asset freezes, and the difference between UN, US and EU sanctions. One everyday comparison: a bank closing your account and telling every other bank too.",
-          "source": "US Treasury (OFAC) and EU explanations, and Daniel Drezner and Nicholas Mulder's The Economic Weapon"
+          "source": "US Treasury (OFAC) and EU explanations, and Daniel Drezner and Nicholas Mulder's The Economic Weapon",
+          "script": {
+            "file": "CONTENT/Global-Thread/Scripts/The-World-Explained/13-how-sanctions-work.txt",
+            "title": "How Sanctions Work",
+            "description": "No army can do what one office in the US Treasury does every week. How sanctions work, and who decides."
+          }
         },
         {
           "number": 14,
@@ -156,7 +161,12 @@
           "number": 19,
           "title": "A Border Nobody Agreed",
           "covers": "How the British Empire drew lines across the Himalayas, the McMahon Line of 1914 which Tibet's representatives accepted and China never did, Aksai Chin in the west, and how independent India and the People's Republic of China inherited the dispute.",
-          "source": "The Simla Convention documents, Neville Maxwell's India's China War, and Indian and Chinese official positions"
+          "source": "The Simla Convention documents, Neville Maxwell's India's China War, and Indian and Chinese official positions",
+          "script": {
+            "file": "CONTENT/Global-Thread/Scripts/The-World-Explained/19-a-border-nobody-agreed.txt",
+            "title": "A Border Nobody Agreed",
+            "description": "The world's two biggest countries share a mountain border that has never been agreed. How the lines were drawn, and by whom."
+          }
         },
         {
           "number": 20,
